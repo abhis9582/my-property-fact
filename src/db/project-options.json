@@ -1,0 +1,660 @@
+{
+  "options": [
+    {
+      "value": 100,
+      "name": "Piramal Vaikunth"
+    },
+    {
+      "value": 98,
+      "name": "Kalpataru Parkcity"
+    },
+    {
+      "value": 97,
+      "name": "Godrej Green Estate"
+    },
+    {
+      "value": 96,
+      "name": "Godrej Solitaire"
+    },
+    {
+      "value": 94,
+      "name": "Ashiana Amarah"
+    },
+    {
+      "value": 93,
+      "name": "Max Antara"
+    },
+    {
+      "value": 92,
+      "name": "VTP Blue Waters"
+    },
+    {
+      "value": 91,
+      "name": "VTP Pegasus"
+    },
+    {
+      "value": 90,
+      "name": "VTP Altair"
+    },
+    {
+      "value": 89,
+      "name": "M3M Jewel"
+    },
+    {
+      "value": 88,
+      "name": "M3M Route 65"
+    },
+    {
+      "value": 87,
+      "name": "M3M Paragon 57"
+    },
+    {
+      "value": 86,
+      "name": "M3M 114 Market"
+    },
+    {
+      "value": 85,
+      "name": "M3M Capital Walk"
+    },
+    {
+      "value": 84,
+      "name": "Smart World Orchard Sector 61"
+    },
+    {
+      "value": 83,
+      "name": "Smart World One DXP"
+    },
+    {
+      "value": 82,
+      "name": "Signature Global City 81"
+    },
+    {
+      "value": 81,
+      "name": "Signature Global City 93"
+    },
+    {
+      "value": 80,
+      "name": "Signature Global City 92"
+    },
+    {
+      "value": 79,
+      "name": "Signature Global City 79B"
+    },
+    {
+      "value": 78,
+      "name": "Signature Global City 37d Phase-II"
+    },
+    {
+      "value": 77,
+      "name": "Shriram Esquire"
+    },
+    {
+      "value": 76,
+      "name": "Samridhi Daksh Avenue"
+    },
+    {
+      "value": 75,
+      "name": "Samridhi Luxuriya Avenue"
+    },
+    {
+      "value": 74,
+      "name": "County 107"
+    },
+    {
+      "value": 73,
+      "name": "Gulshan Dynasty"
+    },
+    {
+      "value": 72,
+      "name": "Kalpataru Vista"
+    },
+    {
+      "value": 71,
+      "name": "Prateek Canary"
+    },
+    {
+      "value": 70,
+      "name": "ATS Pious Orchards"
+    },
+    {
+      "value": 69,
+      "name": "Mahagun Medalleo"
+    },
+    {
+      "value": 68,
+      "name": "Godrej Five Gardens"
+    },
+    {
+      "value": 67,
+      "name": "Godrej Athena"
+    },
+    {
+      "value": 65,
+      "name": "Godrej Orchard Estate"
+    },
+    {
+      "value": 64,
+      "name": "Godrej Meadows 2"
+    },
+    {
+      "value": 63,
+      "name": "Godrej Forest Grove"
+    },
+    {
+      "value": 62,
+      "name": "Godrej Sky Greens"
+    },
+    {
+      "value": 61,
+      "name": "Godrej Hill Retreat"
+    },
+    {
+      "value": 60,
+      "name": "Godrej Woodsville"
+    },
+    {
+      "value": 59,
+      "name": "Godrej Urban Park"
+    },
+    {
+      "value": 58,
+      "name": "Godrej Upavan"
+    },
+    {
+      "value": 57,
+      "name": "Godrej Splendour"
+    },
+    {
+      "value": 56,
+      "name": "Godrej Serene"
+    },
+    {
+      "value": 55,
+      "name": "Godrej RKS"
+    },
+    {
+      "value": 54,
+      "name": "Godrej Rejuve"
+    },
+    {
+      "value": 53,
+      "name": "Godrej Country Estate"
+    },
+    {
+      "value": 52,
+      "name": "Godrej Park Retreat"
+    },
+    {
+      "value": 51,
+      "name": "Godrej Palm Retreat"
+    },
+    {
+      "value": 50,
+      "name": "Godrej Nurture Pune"
+    },
+    {
+      "value": 49,
+      "name": "Godrej Green Vistas"
+    },
+    {
+      "value": 48,
+      "name": "Godrej Golf Links"
+    },
+    {
+      "value": 47,
+      "name": "Godrej Connaught One"
+    },
+    {
+      "value": 46,
+      "name": "Godrej Park Greens"
+    },
+    {
+      "value": 45,
+      "name": "Godrej Nest Kandivali"
+    },
+    {
+      "value": 44,
+      "name": "Godrej Meadows"
+    },
+    {
+      "value": 43,
+      "name": "Godrej Horizon"
+    },
+    {
+      "value": 42,
+      "name": "Godrej Green Cove"
+    },
+    {
+      "value": 41,
+      "name": "Godrej Exquisite Kavesar"
+    },
+    {
+      "value": 40,
+      "name": "Godrej Emerald"
+    },
+    {
+      "value": 39,
+      "name": "Godrej Celeste"
+    },
+    {
+      "value": 38,
+      "name": "Godrej Ananda Bangalore"
+    },
+    {
+      "value": 37,
+      "name": "Godrej Bayview Vashi"
+    },
+    {
+      "value": 36,
+      "name": "Godrej Ascend"
+    },
+    {
+      "value": 35,
+      "name": "Godrej Highlands"
+    },
+    {
+      "value": 34,
+      "name": "Omaxe Eternity"
+    },
+    {
+      "value": 31,
+      "name": "Luxe Paradise"
+    },
+    {
+      "value": 30,
+      "name": "Suncity Anantam"
+    },
+    {
+      "value": 28,
+      "name": "ATS Bonheur Avenue"
+    },
+    {
+      "value": 27,
+      "name": "The Islands By Gaurs"
+    },
+    {
+      "value": 26,
+      "name": "Purvanchal Royal City"
+    },
+    {
+      "value": 25,
+      "name": "ATS Picturesque Reprieves"
+    },
+    {
+      "value": 24,
+      "name": "ATS Kingston Heath"
+    },
+    {
+      "value": 23,
+      "name": "ATS Knightsbridge"
+    },
+    {
+      "value": 22,
+      "name": "ATS Floral Pathways"
+    },
+    {
+      "value": 21,
+      "name": "Eldeco Live By The Greens"
+    },
+    {
+      "value": 20,
+      "name": "Ace Starlit"
+    },
+    {
+      "value": 19,
+      "name": "ACE Parkway"
+    },
+    {
+      "value": 18,
+      "name": "Mahagun Manorialle"
+    },
+    {
+      "value": 17,
+      "name": "Tata Eureka Park"
+    },
+    {
+      "value": 16,
+      "name": "Signature Global City 63A"
+    },
+    {
+      "value": 15,
+      "name": "Godrej Nature plus"
+    },
+    {
+      "value": 14,
+      "name": "Godrej Prima"
+    },
+    {
+      "value": 13,
+      "name": "Godrej Nurture"
+    },
+    {
+      "value": 12,
+      "name": "Godrej Woods"
+    },
+    {
+      "value": 11,
+      "name": "Adani Brahma Samsara Vilasa"
+    },
+    {
+      "value": 10,
+      "name": "Suncity Vatsal Valley"
+    },
+    {
+      "value": 8,
+      "name": "Godrej Nest"
+    },
+    {
+      "value": 1,
+      "name": "Birla Navya Sector 63A"
+    },
+    {
+      "value": 232,
+      "name": "Birla Tisya Rajajinagar, Bangalore"
+    },
+    {
+      "value": 231,
+      "name": "Birla Vanya Kalyan Mumbai"
+    },
+    {
+      "value": 230,
+      "name": "Birla Niyaara Worli"
+    },
+    {
+      "value": 229,
+      "name": "Raheja Trinity"
+    },
+    {
+      "value": 228,
+      "name": "Raymond Realty Ten X Habitat"
+    },
+    {
+      "value": 227,
+      "name": "TVS Emerald Aaranya"
+    },
+    {
+      "value": 226,
+      "name": "TVS Emerald Jardin"
+    },
+    {
+      "value": 225,
+      "name": "Tribeca The Ark"
+    },
+    {
+      "value": 224,
+      "name": "Orion One32"
+    },
+    {
+      "value": 223,
+      "name": "Amrapali Dream Valley Enchante"
+    },
+    {
+      "value": 222,
+      "name": "Amrapali Centurian Park Terrace Homes"
+    },
+    {
+      "value": 221,
+      "name": "Godrej Parkland Estate Kurukshetra"
+    },
+    {
+      "value": 220,
+      "name": "Amrapali Dream Valley Phase 2"
+    },
+    {
+      "value": 219,
+      "name": "Amrapali Verona Heights"
+    },
+    {
+      "value": 218,
+      "name": "Amrapali Adarsh Awas Yojna"
+    },
+    {
+      "value": 217,
+      "name": "Raheja Atharva"
+    },
+    {
+      "value": 216,
+      "name": "Raheja Akshara"
+    },
+    {
+      "value": 211,
+      "name": "Prateek Edifice"
+    },
+    {
+      "value": 210,
+      "name": "Prateek Grand Carnesia"
+    },
+    {
+      "value": 209,
+      "name": "Prateek Grand Paeonia"
+    },
+    {
+      "value": 207,
+      "name": "Oberoi Sky City"
+    },
+    {
+      "value": 203,
+      "name": "OMAXE HEIGHTS"
+    },
+    {
+      "value": 202,
+      "name": "Omaxe Royal Residency"
+    },
+    {
+      "value": 201,
+      "name": "ACE 153"
+    },
+    {
+      "value": 200,
+      "name": "Max Estates 128"
+    },
+    {
+      "value": 199,
+      "name": "Gaurs Mulberry Mansions"
+    },
+    {
+      "value": 197,
+      "name": "Godrej 101"
+    },
+    {
+      "value": 195,
+      "name": "Paras Avenue 129"
+    },
+    {
+      "value": 194,
+      "name": "ATS HomeKraft Happy Trails"
+    },
+    {
+      "value": 193,
+      "name": "Embassy Springs"
+    },
+    {
+      "value": 192,
+      "name": "Embassy Boulevard"
+    },
+    {
+      "value": 180,
+      "name": "Assetz Canvas And Cove"
+    },
+    {
+      "value": 175,
+      "name": "M3M The Cullinan"
+    },
+    {
+      "value": 173,
+      "name": "Emaar Imperial Gardens"
+    },
+    {
+      "value": 172,
+      "name": "Emaar Mohali Hills Plot"
+    },
+    {
+      "value": 171,
+      "name": "Emaar DigiHomes"
+    },
+    {
+      "value": 170,
+      "name": "Emaar Emerald Estate"
+    },
+    {
+      "value": 168,
+      "name": "Omaxe Hills"
+    },
+    {
+      "value": 164,
+      "name": "The Address By Gs Tower"
+    },
+    {
+      "value": 163,
+      "name": "Raymond Realty Ten X Era"
+    },
+    {
+      "value": 160,
+      "name": "TVS Emerald Peninsula"
+    },
+    {
+      "value": 159,
+      "name": "TVS Emerald Atrium"
+    },
+    {
+      "value": 156,
+      "name": "Kolte Patil Life Republic Aros"
+    },
+    {
+      "value": 155,
+      "name": "Kolte Patil 24K Stargaze"
+    },
+    {
+      "value": 154,
+      "name": "Kolte Patil Life Republic"
+    },
+    {
+      "value": 153,
+      "name": "Kolte Patil Equa"
+    },
+    {
+      "value": 151,
+      "name": "Hero Homes Mohali"
+    },
+    {
+      "value": 149,
+      "name": "Hero Homes Gurgaon"
+    },
+    {
+      "value": 143,
+      "name": "Hiranandani Flora"
+    },
+    {
+      "value": 142,
+      "name": "Hiranandani Fortune City"
+    },
+    {
+      "value": 141,
+      "name": "Hiranandani Gardens"
+    },
+    {
+      "value": 134,
+      "name": "Prestige Lakeside Habitat"
+    },
+    {
+      "value": 133,
+      "name": "Prestige Lavender Fields"
+    },
+    {
+      "value": 132,
+      "name": "BPTP Astaire Gardens"
+    },
+    {
+      "value": 131,
+      "name": "BPTP Terra"
+    },
+    {
+      "value": 130,
+      "name": "Smart World Gems"
+    },
+    {
+      "value": 129,
+      "name": "M3M Antalya Hills"
+    },
+    {
+      "value": 128,
+      "name": "DLF Gardencity Sector 91 Gurgaon"
+    },
+    {
+      "value": 127,
+      "name": "Signature Global Park 4 And 5 Phase II"
+    },
+    {
+      "value": 126,
+      "name": "Eldeco Acclaim"
+    },
+    {
+      "value": 124,
+      "name": "Godrej Royale Woods"
+    },
+    {
+      "value": 122,
+      "name": "Assetz Marq 3"
+    },
+    {
+      "value": 121,
+      "name": "Assetz 63 Degree East"
+    },
+    {
+      "value": 120,
+      "name": "Assetz Bloom and Dell"
+    },
+    {
+      "value": 119,
+      "name": "Godrej Greens Undri"
+    },
+    {
+      "value": 118,
+      "name": "Lodha Panache"
+    },
+    {
+      "value": 117,
+      "name": "Leisure Park and River View"
+    },
+    {
+      "value": 116,
+      "name": "Golf Homes and Kingswood"
+    },
+    {
+      "value": 115,
+      "name": "Heartbeat City"
+    },
+    {
+      "value": 114,
+      "name": "Gulshan One29"
+    },
+    {
+      "value": 109,
+      "name": "ATS Destinaire"
+    },
+    {
+      "value": 106,
+      "name": "ATS Pristine Golf Villas"
+    },
+    {
+      "value": 105,
+      "name": "ATS Pristine"
+    },
+    {
+      "value": 104,
+      "name": "ATS Le Grandiose"
+    },
+    {
+      "value": 103,
+      "name": "Godrej Carnival"
+    },
+    {
+      "value": 102,
+      "name": "Godrej Parkridge"
+    },
+    {
+      "value": 101,
+      "name": "Godrej River Greens"
+    }
+  ]
+}
