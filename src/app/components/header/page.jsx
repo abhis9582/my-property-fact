@@ -309,7 +309,7 @@ const Header = () => {
                             </div>
                             <div className="smallMenuList">
                                 <ul className="list-inline">
-                                    <li><a href="clients-speak.html">Client's Speak</a></li>
+                                    <li><a href="clients-speak.html">Clients Speak</a></li>
                                     <li><a href="careers.html">Careers</a></li>
                                     <li><a href="contact-us.html">Contact us</a></li>
                                 </ul>
