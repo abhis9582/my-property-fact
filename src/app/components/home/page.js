@@ -14,10 +14,6 @@ export default function Page() {
       <Header />
       <div id="banner" className="banner">
         <picture>
-          {/* <source
-            media="(max-width: 520px)"
-            srcSet=""
-          /> */}
           <Image
             src="/banner-new-4k.jpg"
             alt="Star Estate"
