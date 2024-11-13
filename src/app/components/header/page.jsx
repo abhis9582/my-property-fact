@@ -20,13 +20,13 @@ const Header = () => {
         //   mbMenuContainer.classList.toggle('active');
         // }
         
-        // Toggle class for .header
+        // Toggle className for .header
         const header = document.querySelector('.header');
         if (header) {
           header.classList.toggle('notfixed');
         }
         
-        // Toggle class for body
+        // Toggle className for body
         document.body.classList.toggle('overflow-hidden');  
     }
     return (
@@ -190,15 +190,15 @@ const Header = () => {
                         <span id="menuLine3"></span>
                     </div>
                 </div>
-                <div class="mbMenuContainer" id="mbdiv">
-                    <div class="mbMenu">
-                        <div class="h-100 scroller">
-                            <div class="bigMenuList">
-                                <ul class="list-inline active">
+                <div className="mbMenuContainer" id="mbdiv">
+                    <div className="mbMenu">
+                        <div className="h-100 scroller">
+                            <div className="bigMenuList">
+                                <ul className="list-inline active">
                                     <li><a href="index.html">Home</a></li>
-                                    <li class="mb-hasChild"><a href="javascript:;">City<sup>+</sup></a>
-                                        <div class="dropdown">
-                                            <ul class="list-inline">
+                                    <li className="mb-hasChild"><a href="javascript:;">City<sup>+</sup></a>
+                                        <div className="dropdown">
+                                            <ul className="list-inline">
                                                 <li><a href="city/agra.html">Agra</a></li>
                                                 <li><a href="city/ahmedabad.html">Ahmedabad</a></li>
                                                 <li><a href="city/ayodhya.html">Ayodhya</a></li>
@@ -219,9 +219,9 @@ const Header = () => {
                                             </ul>
                                         </div>
                                     </li>
-                                    <li class="mb-hasChild"><a href="javascript:;">Builder<sup>+</sup></a>
-                                        <div class="dropdown">
-                                            <ul class="list-inline">
+                                    <li className="mb-hasChild"><a href="javascript:;">Builder<sup>+</sup></a>
+                                        <div className="dropdown">
+                                            <ul className="list-inline">
                                                 <li><a href="builder/aba-corp.html">ABA Corp</a></li>
                                                 <li><a href="builder/ace.html">Ace</a></li>
                                                 <li><a href="builder/adani-realty.html">Adani Realty</a></li>
@@ -274,9 +274,9 @@ const Header = () => {
                                             </ul>
                                         </div>
                                     </li>
-                                    <li class="mb-hasChild"><a href="javascript:;">Projects<sup>+</sup></a>
-                                        <div class="dropdown">
-                                            <ul class="list-inline">
+                                    <li className="mb-hasChild"><a href="javascript:;">Projects<sup>+</sup></a>
+                                        <div className="dropdown">
+                                            <ul className="list-inline">
                                                 <li><a href="category/luxury.html">Luxury</a></li>
                                                 <li><a href="category/commercial.html">Commercial</a></li>
                                                 <li><a href="category/residential.html">Residential</a></li>
@@ -286,18 +286,18 @@ const Header = () => {
                                             </ul>
                                         </div>
                                     </li>
-                                    <li class="mb-hasChild"><a href="javascript:;">About Us<sup>+</sup></a>
-                                        <div class="dropdown">
-                                            <ul class="list-inline">
+                                    <li className="mb-hasChild"><a href="javascript:;">About Us<sup>+</sup></a>
+                                        <div className="dropdown">
+                                            <ul className="list-inline">
                                                 <li><a href="about-us.html">About Star Estate</a></li>
                                                 <li><a href="about-us.html#mission">Mission & Vision</a></li>
                                                 <li><a href="about-us.html#who-we-are">Who We Are</a></li>
                                             </ul>
                                         </div>
                                     </li>
-                                    <li class="mb-hasChild"><a href="javascript:;">Media<sup>+</sup></a>
-                                        <div class="dropdown">
-                                            <ul class="list-inline">
+                                    <li className="mb-hasChild"><a href="javascript:;">Media<sup>+</sup></a>
+                                        <div className="dropdown">
+                                            <ul className="list-inline">
                                                 <li><a href="news.html">News</a></li>
                                                 <li><a href="blogs.html">Blogs</a></li>
                                                 <li><a href="events.html">Events</a></li>
@@ -307,23 +307,23 @@ const Header = () => {
                                     </li>
                                 </ul>
                             </div>
-                            <div class="smallMenuList">
-                                <ul class="list-inline">
+                            <div className="smallMenuList">
+                                <ul className="list-inline">
                                     <li><a href="clients-speak.html">Client's Speak</a></li>
                                     <li><a href="careers.html">Careers</a></li>
                                     <li><a href="contact-us.html">Contact us</a></li>
                                 </ul>
                             </div>
-                            <div class="socialMediaLink">
-                                <ul class="list-inline">
+                            <div className="socialMediaLink">
+                                <ul className="list-inline">
                                     <li><a href="https://www.facebook.com/starestate.in" target="_blank"><i
-                                        class="fab fa-facebook-f"></i></a></li>
+                                        className="fab fa-facebook-f"></i></a></li>
                                     <li><a href="https://www.instagram.com/starestate_official/" target="_blank"><i
-                                        class="fab fa-instagram"></i></a></li>
+                                        className="fab fa-instagram"></i></a></li>
                                     <li><a href="https://www.linkedin.com/company/star-estate" target="_blank"><i
-                                        class="fab fa-linkedin-in"></i></a></li>
+                                        className="fab fa-linkedin-in"></i></a></li>
                                     <li><a href="https://www.youtube.com/channel/UCwfDf7Ut8jrkjiBeRnbZUPw" target="_blank"><i
-                                        class="fab fa-youtube"></i></a></li>
+                                        className="fab fa-youtube"></i></a></li>
                                 </ul>
                             </div>
                         </div>
