@@ -14,13 +14,15 @@ export default function Page() {
       <Header />
       <div id="banner" className="banner">
         <picture>
-          <source
+          {/* <source
             media="(max-width: 520px)"
-            srcSet="https://www.starestate.in/assets/images/homebanner/banner-new-sm.webp"
-          />
+            srcSet=""
+          /> */}
           <Image
-            src="https://www.starestate.in/assets/images/homebanner/banner-new-4k.webp"
+            src="/banner-new-4k.jpg"
             alt="Star Estate"
+            layout="fill" 
+            objectFit="cover" 
           />
         </picture>
         <div className="bannerContainer">
