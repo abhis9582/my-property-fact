@@ -3,7 +3,7 @@ export default function DreamProject() {
     <>
       <div className="container my-3">
         <p className="h3 text-center">
-          Find your dream property in the city you&apos;re searching in
+          Find your dream property in the city you are searching in
         </p>
         <div className="d-flex justify-content-center">
           <div className="mx-2 my-2">
