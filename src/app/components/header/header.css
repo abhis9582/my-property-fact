@@ -9109,8 +9109,6 @@ p {
     top: 0;
     left: 0px;
     z-index: 999;
-    border-top: 2px solid var(--corp-color);
-    border-bottom: 1px solid rgb(0 0 0 / 10%);
     transition: top 300ms ease-in-out;
 }
 
@@ -13499,4 +13497,8 @@ aside.topRatedProjectShowcase {
     #banner {
         height: 360px;
     }
+}
+ul{
+    margin-bottom: 0px !important;
+    padding: 10px;
 }

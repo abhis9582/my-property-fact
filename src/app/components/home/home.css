@@ -2113,10 +2113,6 @@
     color: var(--corp-color);
   }
   
-  .career-details ul{
-    margin-bottom: 1rem;
-  }
-  
   .career-details ul li::marker{
     color: var(--corp-color);
   }
