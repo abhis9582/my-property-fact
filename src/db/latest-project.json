@@ -1,46 +1,67 @@
 {
     "testimonial": [
       {
-        "name": "Kristina Draper",
-        "location": "Asian Tourist",
-        "img": "canarybannermob1.webp",
-        "message": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum ducimus animi inventore atque assumenda quidem."
+        "name": "Mahagun Manorialle",
+        "location": "On Request*",
+        "place":"Sector 128, Noida",
+        "banner":"banner-new-4k.jpg",
+        "type": "Residential",
+        "img": "featured-images/ace153bannermob1.webp",
+        "message": ""
       },
       {
-        "name": "Kristina Draper",
-        "location": "Asian Tourist",
-        "img": "canarybannermob1.webp",
-        "message": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum ducimus animi inventore atque assumenda quidem."
+        "name": "Mahagun Manorialle",
+        "location": "On Request*",
+        "banner":"banner-new-4k.jpg",
+        "place":"Sector 128, Noida",
+        "type": "Residential",
+        "img": "featured-images/cullinanbannermob1.webp",
+        "message": ""
       },
       {
-        "name": "Kristina Draper",
-        "location": "Asian Tourist",
-        "img": "canarybannermob1.webp",
-        "message": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum ducimus animi inventore atque assumenda quidem."
+        "name": "Mahagun Manorialle",
+        "location": "On Request*",
+        "banner":"banner-new-4k.jpg",
+        "place":"Sector 128, Noida",
+        "type": "Residential",
+        "img": "featured-images/Islandsbannertab1.webp",
+        "message": ""
       },
       {
-        "name": "Kristina Draper",
-        "location": "Asian Tourist",
-        "img": "canarybannermob1.webp",
-        "message": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum ducimus animi inventore atque assumenda quidem."
+        "name": "Mahagun Manorialle",
+        "location": "On Request*",
+        "banner":"banner-new-4k.jpg",
+        "place":"Sector 128, Noida",
+        "type": "Residential",
+        "img": "featured-images/manoriallebannertab.webp",
+        "message": ""
       },
       {
-        "name": "Kristina Draper",
-        "location": "Asian Tourist",
+        "name": "Mahagun Manorialle",
+        "location": "On Request*",
+        "banner":"banner-new-4k.jpg",
+        "place":"Sector 128, Noida",
+        "type": "Residential",
         "img": "canarybannermob1.webp",
-        "message": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum ducimus animi inventore atque assumenda quidem."
+        "message": ""
       },
       {
-        "name": "Kristina Draper",
-        "location": "Asian Tourist",
-        "img": "canarybannermob1.webp",
-        "message": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum ducimus animi inventore atque assumenda quidem."
+        "name": "Mahagun Manorialle",
+        "location": "On Request*",
+        "banner":"banner-new-4k.jpg",
+        "place":"Sector 128, Noida",
+        "type": "Residential",
+        "img": "featured-images/ace153bannermob1.webp",
+        "message": ""
       },
       {
-        "name": "Kristina Draper",
-        "location": "Asian Tourist",
-        "img": "canarybannermob1.webp",
-        "message": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum ducimus animi inventore atque assumenda quidem."
+        "name": "Mahagun Manorialle",
+        "location": "On Request*",
+        "banner":"banner-new-4k.jpg",
+        "place":"Sector 128, Noida",
+        "type": "Residential",
+        "img": "featured-images/piousorchardsbannermob.webp",
+        "message": ""
       }
     ]
   }
