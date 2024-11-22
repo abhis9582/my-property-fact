@@ -588,27 +588,6 @@ export default function Footer() {
                         <div className="img-fluid"><a href="https://clutch.co/profile/star-estate" target="_blank"><img src="https://www.starestate.in/assets/images/digital-marketers/logo-clutch.png" alt="Clutch"/></a></div>
                     </div> */}
         </div>
-        <div className="footer-bottom">
-          <div className="container-fluid">
-            <div className="footer-logo">
-                  <Link href="/components/home">
-                    {/* <img src={logo} alt="My Property facts" height={70} width={100} /> */}
-                    <p className="logo-text">MY PROPERTY FACT</p>
-                    {/* <span className="logo-text2"></span> */}
-                  </Link>
-              <div className="partner-rera">
-                <p className="mb-0">
-                  <b>RERA No.: UPRERAAGT10202</b> <br />
-                  https://up-rera.in/Agents
-                </p>
-              </div>
-            </div>
-            <div className="copyrights">
-              <p>&copy; Star Estate 2024</p>
-              {/* <p>Designed & Developed by: <img src="https://www.starestate.in/assets/images/ecis.png" alt="Ecorp Infosystem pvt Ltd." /></p> */}
-            </div>
-          </div>
-        </div>
         {/* <!--<div className="enquiryBtn1">
                     <a className="monCall" id="mobPhone" href="tel:7088470884"><i className="fa fa-phone"></i></a>
                     <a className="whatsCall" href="https://api.whatsapp.com/send/?phone=917088470884&text&type=phone_number&app_absent=0" target="_blank"><i className="fab fa-whatsapp"></i></a>
