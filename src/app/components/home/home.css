@@ -29,19 +29,9 @@
   transition: all 300ms ease-in-out;
 }
 
-.readmore .button {
-  display: flex;
-  min-width: 120px;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  padding: 7px 20px;
-  border-radius: 40px;
-  color: #fff;
-  background: var(--corp-color);
-  transition: all 300ms ease-in-out;
+.readmore a{
+  text-decoration: none;
 }
-
 #banner::before {
   content: "";
   position: absolute;
@@ -309,10 +299,11 @@ label {
   height: auto;
   background: none;
   border: none;
-  border-bottom: 1px solid rgba(0 0 0 / 10%);
+  border-bottom: 1px solid rgba(0 0 0 / 20%);
   border-radius: 0;
   transition: all 300ms ease;
   margin: 5px 0;
+  width: 95%;
 }
 
 .form-control:focus {
@@ -1365,6 +1356,7 @@ textarea.form-control {
   color: #7f7f7f;
   font-size: 12.5px;
   padding: 5px 0;
+  text-decoration: none;
 }
 
 .footer-area a:hover {
@@ -1398,6 +1390,7 @@ textarea.form-control {
   display: flex;
   align-items: center;
   column-gap: 10px;
+  font-size: 20px;
 }
 
 .marketersLogo {
@@ -2783,6 +2776,7 @@ aside.topRatedProjectShowcase {
   .btn-container .readmore a,
   .btn-container .readmore button {
     min-width: 100px;
+    text-decoration: none;
   }
 }
 
@@ -3272,6 +3266,9 @@ aside.topRatedProjectShowcase {
   .marketersLogo img {
     width: 120px;
     height: 40px;
+  }
+  .filter-form {
+    border-radius: 15px;
   }
 }
 

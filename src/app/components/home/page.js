@@ -167,7 +167,7 @@ export default function Page() {
         </span>
       </button>
       
-      <p className="h1 text-center mt-5">Latest Projects</p>
+      <p className="h1 text-center">Latest Projects</p>
       <LatestProjects />
       <p className="h1 text-center mt-5">Featured Projects</p>
       <LatestProjects />
