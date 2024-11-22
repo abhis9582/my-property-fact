@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <h1>Hello world</h1>
-      <Link href='/components'>home</Link>
+      <Link href='/components/home'>home</Link>
     </div>
   );
 }
