@@ -444,7 +444,7 @@ export default function Footer() {
                     <h6>Company</h6>
                     <ul className="list-inline">
                       <li>
-                        <a href="about-us.html">About Star Estate</a>
+                        <a href="about-us.html">About My Property Fact</a>
                       </li>
                       <li>
                         <a href="about-us.html#mission">Mission & Vision</a>
