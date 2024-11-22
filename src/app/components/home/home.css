@@ -2580,6 +2580,9 @@ aside.topRatedProjectShowcase {
   border: 2px solid #2b9623;
 }
 
+.latest-project{
+  background-color: #eeece8;
+}
 
 /*responsive*/
 @media (min-width: 540px) {

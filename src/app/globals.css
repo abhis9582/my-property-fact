@@ -12,7 +12,7 @@
 
   /* Webkit Browsers (Chrome, Safari, Edge) */
   ::-webkit-scrollbar {
-    width: 5px;
+    width: 2px;
     height: 12px;
 }
 ::-webkit-scrollbar-track {

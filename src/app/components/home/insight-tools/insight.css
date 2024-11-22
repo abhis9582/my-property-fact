@@ -1,0 +1,13 @@
+.insight-image {
+    height: 225px;
+}
+
+.insight-button {
+    text-align: center;
+    padding: 10px;
+    background: blue;
+}
+.insight-button a{
+    color: #fff;
+    text-decoration: none;
+}
