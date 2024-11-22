@@ -9,8 +9,8 @@ import ProjectOptions from "@/db/project-options.json";
 import { faEnvelope, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import Insight from "./insight-tools/page";
-import FeaturedProjects from "./featured-projects/page";
 import DreamProject from "./dream-project/page";
+import FeaturedProjects from "./featured-projects/page";
 export default function Page() {
   return (
     <>
