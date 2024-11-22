@@ -10,4 +10,26 @@
     box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   }
 
-  
+  /* Webkit Browsers (Chrome, Safari, Edge) */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 12px;
+}
+::-webkit-scrollbar-track {
+    background: #e0e0e0;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: #3b4def;
+    border-radius: 0px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Apply to a div */
+.custom-scroll {
+    height: 300px;
+    overflow: auto;
+    border: 1px solid #ccc;
+}
