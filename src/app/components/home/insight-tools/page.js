@@ -10,7 +10,7 @@ export default function Insight() {
         <p className="h1 text-center mb-4">Insights & Tools</p>
         <div className="row justify-content-center">
           <div className="col-md-3 d-flex justify-content-center">
-            <div>
+            <div className="my-2">
               <img
                 className="insight-image"
                 src="/insight-tools/img-emi.webp"
@@ -29,7 +29,7 @@ export default function Insight() {
             </div>
           </div>
           <div className="col-md-3 d-flex justify-content-center">
-            <div>
+            <div className="my-2">
               <img
                 className="insight-image"
                 src="/insight-tools/img-evaluation-report.webp"
@@ -48,7 +48,7 @@ export default function Insight() {
             </div>
           </div>
           <div className="col-md-3 d-flex justify-content-center">
-            <div>
+            <div className="my-2">
               <img
                 className="insight-image"
                 src="/insight-tools/img-nri.webp"
@@ -67,7 +67,7 @@ export default function Insight() {
             </div>
           </div>
           <div className="col-md-3 d-flex justify-content-center">
-            <div>
+            <div className="my-2">
               <img
                 className="insight-image"
                 src="/insight-tools/img-realty-check.webp"
