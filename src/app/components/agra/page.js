@@ -35,7 +35,7 @@ export default function Agra(){
 <div className="insideBanner">
         <picture>
             <source media="(max-width: 414px)" srcSet="../assets/images/homebanner/banner-new-sm.jpg"/>
-                <Image src="https://startestate.in/assets/images/homebanner/banner-new-4k.jpg" className="h-100 object-cover" alt="About star estate"/>
+                <Image fill src="/banner-new-4k.jpg" className="h-100 object-cover" alt="About star estate" layout="fill" objectFit="cover"/>
                     </picture>
         <div className="bannerContainer">
             <h1 className="h2 text-uppercase">Property in agra</h1>
@@ -68,7 +68,8 @@ export default function Agra(){
                                     <a href="../luxe-paradise.html">
                                         <div className="Project_box_img  ">
                                             <div className="badge badge-sm badge-success badge_approved">RERA Reg No.: UPRERAPRJ9591</div>
-                                            <div className="Image-fluid"><Image src="/canarybannermob1.webp" alt="Luxe Paradise"/></div>
+                                            <div className="Image fill-fluid"><Image fill src="/canarybannermob1.webp" alt="Luxe Paradise"
+                                            layout="fill" objectFit="cover"/></div>
                                             {/* <!-- <div className="badge badge-sm badge-danger badge_newlaunch">
                                                                                             </div> --> */}
                                         </div>
@@ -102,7 +103,7 @@ export default function Agra(){
                                     <a href="../o-p-chains-anthem.html">
                                         <div className="Project_box_img  ">
                                             <div className="badge badge-sm badge-success badge_approved">RERA Reg No.: UPRERAPRJ8530</div>
-                                            <div className="Image-fluid"><Image src="/canarybannermob1.webp" alt="O P Chains Anthem"/></div>
+                                            <div className="Image fill-fluid"><Image fill src="/canarybannermob1.webp" alt="O P Chains Anthem"/></div>
                                             {/* <!-- <div className="badge badge-sm badge-danger badge_newlaunch">
                                                                                             </div> --> */}
                                         </div>
@@ -136,7 +137,7 @@ export default function Agra(){
                                     <a href="../op-chains-anthela.html">
                                         <div className="Project_box_img  ">
                                             <div className="badge badge-sm badge-success badge_approved">RERA Reg No.: UPRERAPRJ9111</div>
-                                            <div className="Image-fluid"><Image src="/canarybannermob1.webp" alt="OP Chains Anthela"/></div>
+                                            <div className="Image fill-fluid"><Image fill src="/canarybannermob1.webp" alt="OP Chains Anthela"/></div>
                                             {/* <!-- <div className="badge badge-sm badge-danger badge_newlaunch">
                                                                                             </div> --> */}
                                         </div>
@@ -170,7 +171,7 @@ export default function Agra(){
                                     <a href="../vrinda-dhani-orchid.html">
                                         <div className="Project_box_img  ">
                                             <div className="badge badge-sm badge-success badge_approved">RERA Reg No.: UPRERAPRJ369719</div>
-                                            <div className="Image-fluid"><Image src="/canarybannermob1.webp" alt="Vrinda Dhani Orchid"/></div>
+                                            <div className="Image fill-fluid"><Image fill src="/canarybannermob1.webp" alt="Vrinda Dhani Orchid"/></div>
                                             {/* <!-- <div className="badge badge-sm badge-danger badge_newlaunch">
                                                                                             </div> --> */}
                                         </div>
@@ -204,7 +205,7 @@ export default function Agra(){
                                     <a href="../rajdarbar-spaces.html">
                                         <div className="Project_box_img  ">
                                             <div className="badge badge-sm badge-success badge_approved">RERA Reg No.: UPRERAPRJ895548/02/2024</div>
-                                            <div className="Image-fluid"><Image src="/canarybannermob1.webp" alt="Rajdarbar Spaces"/></div>
+                                            <div className="Image fill-fluid"><Image fill src="/canarybannermob1.webp" alt="Rajdarbar Spaces"/></div>
                                             {/* <!-- <div className="badge badge-sm badge-danger badge_newlaunch">
                                                                                             </div> --> */}
                                         </div>

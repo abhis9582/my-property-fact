@@ -11,10 +11,10 @@ export default function Eldeco() {
         <picture>
           <source
             media="(max-width: 414px)"
-            srcSet="../assets/images/homebanner/banner-new-sm.jpg"
+            srcSet="/canarybannermob1.webp"
           />
-          <Image
-            src="../assets/images/homebanner/banner-new-4k.jpg"
+          <Image fill
+            src="/canarybannermob1.webp"
             className="h-100 object-cover"
             alt="About star estate"
           />
@@ -87,8 +87,8 @@ export default function Eldeco() {
                         RERA Reg No.: UPRERAPRJ256314
                       </div>
                       <div className="img-fluid">
-                        <Image
-                          src="../uploads/gallery/slider1._1696488519.jpg"
+                        <Image fill
+                          src="/canarybannermob1.webp"
                           alt="Ivory County"
                         />
                       </div>

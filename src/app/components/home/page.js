@@ -8,19 +8,20 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import ProjectOptions from "@/db/project-options.json";
 import { faEnvelope, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
+import Insight from "./insight-tools/page";
+import DreamProject from "./dream-project/page";
+import FeaturedProjects from "./featured-projects/page";
 export default function Page() {
   return (
     <>
       <Header />
       <div id="banner" className="banner">
         <picture>
-          <source
-            media="(max-width: 520px)"
-            srcSet="https://www.starestate.in/assets/images/homebanner/banner-new-sm.webp"
-          />
           <Image
-            src="https://www.starestate.in/assets/images/homebanner/banner-new-4k.webp"
+            src="/banner-new-4k.jpg"
             alt="Star Estate"
+            layout="fill"
+            objectFit="cover"
           />
         </picture>
         <div className="bannerContainer">
@@ -168,16 +169,19 @@ export default function Page() {
           <span>Enquiry</span>
         </span>
       </button>
-      
-      <p className="h1 text-center mt-5">Latest Projects</p>
+      <Insight />
+      <div className="latest-project mt-4 row">
+        <p className="h2 text-center mt-4">Featured Projects</p>
+        <FeaturedProjects />
+      </div>
+      <DreamProject/>
+      <p className="h2 text-center mt-5">Latest Projects</p>
       <LatestProjects />
-      <p className="h1 text-center mt-5">Featured Projects</p>
+      <p className="h2 text-center mt-5">OnGoing Projects</p>
       <LatestProjects />
-      <p className="h1 text-center mt-5">OnGoing Projects</p>
+      <p className="h2 text-center mt-5">Upcoming Projects</p>
       <LatestProjects />
-      <p className="h1 text-center mt-5">Upcoming Projects</p>
-      <LatestProjects />
-      <p className="h1 text-center mt-5">Happy Customers</p>
+      <p className="h2 text-center mt-5">Happy Customers</p>
       <LatestProjects />
 
       <Footer />
