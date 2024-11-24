@@ -10,6 +10,7 @@ import { faEnvelope, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import Insight from "./insight-tools/page";
 import DreamProject from "./dream-project/page";
+import Featured from "./featured/page";
 export default function Page() {
   return (
     <>
@@ -171,7 +172,7 @@ export default function Page() {
       <Insight />
       <div className="latest-project mt-4 row">
         <p className="h2 text-center mt-4">Featured Projects</p>
-        {/* <FeaturedProjects /> */}
+        <Featured />
       </div>
       <DreamProject/>
       <p className="h2 text-center mt-5">Latest Projects</p>

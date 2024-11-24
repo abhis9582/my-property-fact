@@ -4,7 +4,8 @@ import db from "@/db/latest-project.json";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-export default function LatestProjects() {
+
+export default function Featured() {
   const settings = {
     dots: true,
     infinite: true,
