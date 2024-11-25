@@ -84,8 +84,8 @@ export default function Lundhiana() {
           </div>
           <div className="row d-flex flex-wrap mt-3 mb-4">
             {propertiesArray.map((item) => (
-              <div className="col-md-4 mt-4 properties-container">
-                <Link key={item.name} href="https://eldecogroup.com/landing-page/eldecoviviana/index.html">
+              <div key={item.name} className="col-md-4 mt-4 properties-container">
+                <Link href="https://eldecogroup.com/landing-page/eldecoviviana/index.html">
                   <div>
                     <img
                       className="prop-image"
