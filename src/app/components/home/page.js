@@ -15,7 +15,6 @@ import SocialFeed from "./social-feed/page";
 export default function Page() {
   return (
     <>
-      <Header />
       <div id="banner" className="banner">
         <picture>
           <Image
@@ -178,7 +177,6 @@ export default function Page() {
       <DreamProject />
       <NewsViews />
       <SocialFeed />
-      <Footer />
     </>
   );
 }

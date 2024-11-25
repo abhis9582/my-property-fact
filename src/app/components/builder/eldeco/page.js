@@ -6,7 +6,6 @@ import Image from "next/image";
 export default function Eldeco() {
   return (
     <>
-      <Header />
       <div className="insideBanner">
         <picture>
           <source
@@ -155,7 +154,6 @@ export default function Eldeco() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

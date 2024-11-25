@@ -298,12 +298,12 @@ label {
   padding: 0 5 12px;
   height: auto;
   background: none;
-  border: none;
-  border-bottom: 1px solid rgba(0 0 0 / 20%);
-  border-radius: 0;
+  border: none !important;
+  border-bottom: 1px solid rgba(0 0 0 / 20%) !important;
+  border-radius: 0 !important;
   transition: all 300ms ease;
   margin: 5px 0;
-  width: 95%;
+  width: 95% !important;
 }
 
 .form-control:focus {

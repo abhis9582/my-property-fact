@@ -1,0 +1,59 @@
+.city-banner {
+    background-image: url("/localities/new-delhi.jpg");
+    height: auto;
+    height: 300px;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.breadcrumb {
+    background: #eaeaea;
+    background: linear-gradient(to bottom right, #eff0f3, #fff);
+    box-shadow: 3px 3px 3px #e8e6e6, -3px -3px 3px #fff;
+    font-size: 12px;
+    margin-bottom: 0;
+}
+
+.dotted-line {
+    border: none;
+    border-top: 1px dotted #000;
+    /* Customize the color and size as needed */
+    margin: 0;
+}
+
+.property-bottom {
+    font-size: 14px;
+}
+
+.prop-image{
+    margin-top: 12px;
+    min-height: 420px;
+}
+.properties-container{
+    position: relative;
+    cursor: pointer;
+}
+.properties-container a{
+    text-decoration: none;
+    color: black;
+}
+.properties-container::before {
+    background: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 25px 50px 3px #00000014;
+    content: "";
+    left: -16px;
+    inset: -10px;
+    opacity: 0;
+    padding: 5px;
+    position: absolute;
+    transition: all .3s ease-in-out;
+    visibility: hidden;
+    z-index: -1;
+    border-radius: 10px;
+}
+
+.properties-container:hover::before {
+    opacity: 1;
+    visibility: visible;
+}

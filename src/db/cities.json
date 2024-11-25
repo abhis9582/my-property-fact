@@ -1,6 +1,6 @@
 {
     "cities": [
-      { "name": "Lundhiana", "url": "/components/agra" },
+      { "name": "Lundhiana", "url": "/components/cities/lundhiana" },
       { "name": "Ahmedabad", "url": "#" },
       { "name": "Ayodhya", "url": "#" },
       { "name": "Bangalore", "url": "#" },
