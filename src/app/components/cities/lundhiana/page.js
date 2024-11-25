@@ -62,10 +62,10 @@ export default function Lundhiana() {
           >
             <ol className="breadcrumb p-3">
               <li className="breadcrumb-item">
-                <a href="/">Home</a>
+                <Link href="/">Home</Link>
               </li>
               <li className="breadcrumb-item">
-                <a href="#">Projects</a>
+                <Link href="#">Projects</Link>
               </li>
               <li className="breadcrumb-item active">Ludhiana</li>
             </ol>
