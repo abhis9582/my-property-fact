@@ -1,0 +1,74 @@
+.bg-lightgreen{
+    background-color: #fafff9;
+}
+.news-card .inner {
+    display: block;
+    height: 100%;
+    isolation: isolate;
+    position: relative;
+}
+.news-card .inner:before {
+    background-image: linear-gradient(#00000080, #0000, #000000e6, #00000080);
+    background-position-y: 0;
+    background-size: 100% 300%;
+    content: "";
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+    transition: background-position-y .3s ease-in-out;
+    z-index: 1;
+}
+.news-card .inner .card-title {
+    color: #fff;
+    font-weight: 700;
+    inset: 0 0 auto;
+    letter-spacing: 1px;
+    padding: 1rem;
+    position: absolute;
+    text-align: center;
+    text-transform: uppercase;
+    z-index: 2;
+}
+.card-title {
+    color: var(--bs-card-title-color);
+    margin-bottom: var(--bs-card-title-spacer-y);
+}
+.img-fluid, .img-thumbnail {
+    height: auto;
+    max-width: 100%;
+}
+.news-card .inner img {
+    height: 380px;
+    object-fit: cover;
+}
+img {
+    display: block;
+    width: 100%;
+}
+.news-card .inner .arrow {
+    bottom: -40px;
+    color: #fff;
+    left: 50%;
+    opacity: 0;
+    position: absolute;
+    transform: translateX(-50%);
+    transition: all .3s ease-in-out;
+    z-index: 1;
+}
+.news-card .inner .arrow svg {
+    align-items: center;
+    display: flex;
+    height: 40px;
+    justify-content: center;
+    width: 40px;
+}
+.fa-arrow-right:before {
+    content: "\f061";
+}
+.news-card .inner:hover:before {
+    background-position-y: -50%;
+}
+.news-card .inner:hover .arrow {
+    bottom: 1rem;
+    opacity: 1;
+}

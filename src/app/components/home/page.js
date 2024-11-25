@@ -11,6 +11,7 @@ import Image from "next/image";
 import Insight from "./insight-tools/page";
 import DreamProject from "./dream-project/page";
 import Featured from "./featured/page";
+import NewsViews from "./new-views/page";
 export default function Page() {
   return (
     <>
@@ -174,16 +175,8 @@ export default function Page() {
         <p className="h2 text-center mt-4">Featured Projects</p>
         <Featured />
       </div>
-      <DreamProject/>
-      <p className="h2 text-center mt-5">Latest Projects</p>
-      <LatestProjects />
-      <p className="h2 text-center mt-5">OnGoing Projects</p>
-      <LatestProjects />
-      <p className="h2 text-center mt-5">Upcoming Projects</p>
-      <LatestProjects />
-      <p className="h2 text-center mt-5">Happy Customers</p>
-      <LatestProjects />
-
+      <DreamProject />
+      <NewsViews />
       <Footer />
     </>
   );
