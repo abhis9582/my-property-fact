@@ -1,0 +1,42 @@
+.toggleHead {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+.toggleHead .toggleBtn.active {
+    font-weight: 700;
+}
+.toggleHead .toggleBtn {
+    background-color: initial;
+    border: 1px dashed #0003 !important;
+    flex: 0 0 220px;
+    font-size: 14px;
+    isolation: isolate;
+    max-width: 220px;
+    padding: 10px 1rem;
+    position: relative;
+    text-align: center;
+    transition: all .3s ease-in-out;
+}
+.toggleHead .toggleBtn:before {
+    --brdwd: 110px;
+    border-left: var(--brdwd) solid #0000;
+    border-right: var(--brdwd) solid #0000;
+    border-top: 3px solid #c92bb7 !important;
+    content: "";
+    left: calc(50% - var(--brdwd));
+    opacity: 0;
+    position: absolute;
+    top: 100%;
+}
+.toggleHead .toggleBtn.active:before {
+    opacity: 1;
+}
+@media (min-width: 768px) {
+    .toggleHead {
+      flex-wrap: nowrap;  /* Disable wrapping on medium screens and larger */
+    }
+  }

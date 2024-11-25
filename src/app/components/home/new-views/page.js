@@ -15,7 +15,7 @@ export default function NewsViews() {
                 <Link className="inner" href="/awards">
                   <h5 className="card-title">Awards</h5>
                   <div className="img-fluid">
-                    <img src="/news-views/awards-th.webp" alt="" />
+                    <img src="/news-views/awards.jpg" alt="" />
                   </div>
                   <div className="arrow">
                     <FontAwesomeIcon icon={faArrowCircleRight} />
@@ -26,7 +26,7 @@ export default function NewsViews() {
                 <Link className="inner" href="/news">
                   <h5 className="card-title">News</h5>
                   <div className="img-fluid">
-                    <img src="/news-views/news-th.webp" alt="" />
+                    <img src="/news-views/news.jpg" alt="" />
                   </div>
                   <div className="arrow">
                     <FontAwesomeIcon icon={faArrowCircleRight} />
@@ -37,7 +37,7 @@ export default function NewsViews() {
                 <Link className="inner" href="/events">
                   <h5 className="card-title">Events</h5>
                   <div className="img-fluid">
-                    <img src="/news-views/events-th.webp" alt="" />
+                    <img src="/news-views/events.jpg" alt="" />
                   </div>
                   <div className="arrow">
                     <FontAwesomeIcon icon={faArrowCircleRight} />
@@ -48,7 +48,7 @@ export default function NewsViews() {
                 <Link className="inner" href="/blogs">
                   <h5 className="card-title">Blogs</h5>
                   <div className="img-fluid">
-                    <img src="/news-views/blogs-th.webp" alt="" />
+                    <img src="/news-views/blogs.jpg" alt="" />
                   </div>
                   <div className="arrow">
                     <FontAwesomeIcon icon={faArrowCircleRight} />

@@ -12,6 +12,7 @@ import Insight from "./insight-tools/page";
 import DreamProject from "./dream-project/page";
 import Featured from "./featured/page";
 import NewsViews from "./new-views/page";
+import SocialFeed from "./social-feed/page";
 export default function Page() {
   return (
     <>
@@ -177,6 +178,7 @@ export default function Page() {
       </div>
       <DreamProject />
       <NewsViews />
+      <SocialFeed />
       <Footer />
     </>
   );
