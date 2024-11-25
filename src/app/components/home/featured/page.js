@@ -63,9 +63,9 @@ export default function Featured() {
                   height={400}
                   className="rounded-full mb-4"
                 />
-                <div className="row pb-3">
+                <div className="row pb-1">
                   <div className="col-8 text-start">
-                    <h4>{tm.name}</h4>
+                    <h5>{tm.name}</h5>
                   </div>
                   <div className="col-4 text-end">
                     <p>{tm.location}</p>

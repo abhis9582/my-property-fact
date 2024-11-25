@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import ProjectOptions from "@/db/project-options.json";
 import { faEnvelope, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
+import "./home.css";
 import Insight from "./insight-tools/page";
 import DreamProject from "./dream-project/page";
 import Featured from "./featured/page";
