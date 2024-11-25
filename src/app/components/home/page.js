@@ -2,8 +2,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Footer from "../footer/page";
 import Header from "../header/page";
-import LatestProjects from "../latest-properties/page";
-import "./home.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ProjectOptions from "@/db/project-options.json";
 import { faEnvelope, faSearch } from "@fortawesome/free-solid-svg-icons";
