@@ -21,7 +21,7 @@ export default function Lundhiana() {
       image: "/ludhiana/image2.jpg",
     },
     {
-      name: "Godrej Sunrise Estate",
+      name: "Amarpali Estate",
       price: "PRICE ON REQUEST",
       location: "ORAGADAM, LUDHIANA",
       type: "RESIDENTIAL",
