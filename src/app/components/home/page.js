@@ -1,9 +1,6 @@
 "use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Footer from "../footer/page";
-import Header from "../header/page";
 import "bootstrap/dist/css/bootstrap.min.css";
-import ProjectOptions from "@/db/project-options.json";
 import { faEnvelope, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import "./home.css";
@@ -12,9 +9,26 @@ import DreamProject from "./dream-project/page";
 import Featured from "./featured/page";
 import NewsViews from "./new-views/page";
 import SocialFeed from "./social-feed/page";
-export default function Page() {
+import Header from "../header/page";
+import Footer from "../footer/page";
+import { useEffect, useState } from "react";
+import axios from "axios";
+export default function HomePage() {
+  const [typeList, setTypeList] = useState([]);
+  const fetchProjectTypes = async () => {
+    const projectTypesResponse = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`
+    );
+    if (projectTypesResponse) {
+      setTypeList(projectTypesResponse.data);
+    }
+  };
+  useEffect(()=>{
+    fetchProjectTypes();
+  }, [])
   return (
     <>
+    <Header />
       <div id="banner" className="banner">
         <picture>
           <Image
@@ -144,9 +158,9 @@ export default function Page() {
                     title="projectname "
                   >
                     <option value="">Project Options</option>
-                    {ProjectOptions.options.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.name}
+                    {typeList.map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {option.projectTypeName}
                       </option>
                     ))}
                   </select>
@@ -177,6 +191,7 @@ export default function Page() {
       <DreamProject />
       <NewsViews />
       <SocialFeed />
+      <Footer />
     </>
   );
 }

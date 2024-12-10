@@ -2,8 +2,41 @@
 import Link from "next/link";
 import "./header.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import CityList from "@/db/cities.json";
+import { useEffect, useState } from "react";
+import axios from "axios";
 const Header = () => {
+  const [cityList, setCityList] = useState([]);
+  const [builderList, setBuilderList] = useState([]);
+  const [projectTypes, setProjectTypes] = useState([]);
+  const fetchData = async () => {
+    const cityResponse = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}city/all`
+    );
+    if (cityResponse) {
+      setCityList(cityResponse.data);
+    }
+  };
+  const fetchBuilders = async () => {
+    const builderResponse = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}builders/get-all`
+    );
+    if (builderResponse) {
+      setBuilderList(builderResponse.data.builders);
+    }
+  };
+  const fetchProjectTypes = async () => {
+    const projectTypesResponse = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`
+    );    
+    if (projectTypesResponse) {
+      setProjectTypes(projectTypesResponse.data);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+    fetchBuilders();
+    fetchProjectTypes();
+  }, []);
   const openMenu = () => {
     const menuButtons = document.getElementsByClassName("menuBtn");
 
@@ -31,10 +64,15 @@ const Header = () => {
       <header className="header">
         <div className="main-header">
           <div className="logo">
-            <Link href="/components/home">
-              {/* <img src={logo} alt="My Property facts" height={70} width={100} /> */}
-              <p className="logo-text">MY PROPERTY</p>
-              <span className="logo-text2">FACT</span>
+            <Link href="/">
+              <img
+                src="/logo.png"
+                alt="My Property facts"
+                height={70}
+                width={100}
+              />
+              {/* <p className="logo-text">MY PROPERTY</p>
+              <span className="logo-text2">FACT</span> */}
             </Link>
           </div>
           <nav className="navi d-none d-xl-flex">
@@ -46,9 +84,9 @@ const Header = () => {
                   </a>
                   <div className="dropdown dropdown-lg">
                     <ul className="list-inline">
-                      {CityList.cities.map((city) => (
-                        <li key={city.name}>
-                          <Link href={city.url}>{city.name}</Link>
+                      {cityList.map((city) => (
+                        <li key={city.id}>
+                          <Link href={`/city/${city.slugUrl}`}>{city.name}</Link>
                         </li>
                       ))}
                     </ul>
@@ -60,23 +98,23 @@ const Header = () => {
                   </a>
                   <div className="dropdown dropdown-lg">
                     <ul className="list-inline">
-                      {CityList.builders.map((builder) => (
-                        <li key={builder.name}>
-                          <Link href={builder.url}>{builder.name}</Link>
+                      {builderList.map((builder) => (
+                        <li key={builder.id}>
+                          <Link href={`/builder/${builder.slugUrl}`}>{builder.builderName}</Link>
                         </li>
                       ))}
                     </ul>
                   </div>
                 </li>
                 <li className="hasChild">
-                  <a href="#">
+                  <a href="/projects">
                     Projects<sup>+</sup>
                   </a>
                   <div className="dropdown">
                     <ul className="list-inline">
-                      {CityList.categories.map((project) => (
-                        <li key={project.name}>
-                          <Link href={project.url}>{project.name}</Link>
+                      {projectTypes.map((project) => (
+                        <li key={project.id}>
+                          <Link href={`/projects/${project.slugUrl}`}>{project.projectTypeName}</Link>
                         </li>
                       ))}
                     </ul>
@@ -84,23 +122,15 @@ const Header = () => {
                 </li>
                 <li className="hasChild">
                   <a href="#">
-                    About Us<sup>+</sup>
+                    About Us
                   </a>
-                  <div className="dropdown">
-                    <ul className="list-inline">
-                      {CityList.aboutLinks.map((about) => (
-                        <li key={about.name}>
-                          <Link href={about.url}>{about.name}</Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
                 </li>
                 <li className="hasChild">
                   <a href="#">
-                    Media<sup>+</sup>
+                    Media
+                    {/* <sup>+</sup> */}
                   </a>
-                  <div className="dropdown">
+                  {/* <div className="dropdown">
                     <ul className="list-inline">
                       {CityList.resources.map((media) => (
                         <li key={media.name}>
@@ -108,7 +138,7 @@ const Header = () => {
                         </li>
                       ))}
                     </ul>
-                  </div>
+                  </div> */}
                 </li>
                 <li>
                   <a href="clients-speak.html">Clients Speak</a>

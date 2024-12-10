@@ -5,7 +5,7 @@ import {
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "../home/home.css"
+import './footer.css';
 
 export default function Footer() {
   return (
