@@ -30,7 +30,7 @@ export default function AddNewProperty() {
     metaKeyword: "",
     metaDescription: "",
     amenities: "",
-    projectBy: 0,
+    projectBy: "",
     reraNo: "",
     propertyType: "",
     projectConfiguration: ""
@@ -86,6 +86,8 @@ export default function AddNewProperty() {
       setValidated(true);
       return;
     }
+    console.log(formData);
+    
     if (form.checkValidity() === true) {
       const data = new FormData();
       for (let key in formData) {
@@ -392,7 +394,7 @@ export default function AddNewProperty() {
           </Form.Group>
           <Form.Group as={Col} md="4" controlId="validationCustom01">
             <Form.Label>Project By</Form.Label>
-            <Form.Select aria-label="Default select example" name="projectBy">
+            <Form.Select aria-label="Default select example" name="projectBy" onChange={handleChange}>
               <option>Select Builder</option>
               {builderList.map((item) => (
                 <option
@@ -421,7 +423,7 @@ export default function AddNewProperty() {
         <Row className="mb-3">
           <Form.Group as={Col} md="4" controlId="validationCustom01">
             <Form.Label>Project Type</Form.Label>
-            <Form.Select aria-label="Default select example" name="propertyType">
+            <Form.Select aria-label="Default select example" name="propertyType" onChange={handleChange}>
               <option>Select Type</option>
               {projectTypeList.map((item) => (
                 <option

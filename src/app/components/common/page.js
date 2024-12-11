@@ -10,9 +10,7 @@ export default function PropertyContainer(props) {
   const [propertyList, setPropertyList] = useState([]);
   const goToPropertyDetail = (url) => {
     window.open("/" + url, "_blank");
-  };
-  console.log(props, "ghfds");
-  
+  };  
   useEffect(() => {
   }, []);
   return (

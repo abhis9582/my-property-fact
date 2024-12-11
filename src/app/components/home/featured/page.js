@@ -6,6 +6,8 @@ import "./featured.css";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLocation, faLocationCrosshairs, faLocationDot, faMap, faMapLocation, faMapMarked, faMapMarker } from "@fortawesome/free-solid-svg-icons";
 
 export default function Featured() {
   const route = useRouter();
@@ -76,9 +78,6 @@ export default function Featured() {
                 className="p-8 rounded-lg bg-darkGray bg-opacity-10 shadow-md flex flex-col items-center justify-content-center container main-container"
                 onClick={()=>goToPropertyDetail(property.slugURL)}
               >
-                <p className="text-base text-darkGray text-center mt-6 mb-8">
-                  {property.projectName}
-                </p>
                 {/* <Image
                   src={`/${tm.img}`}
                   alt={tm.name}
@@ -98,6 +97,9 @@ export default function Featured() {
                   <div className="col-4 text-end">
                     <p>{property.price}</p>
                   </div>
+                </div>
+                <div>
+                  <p><FontAwesomeIcon icon={faMapMarker} width={8} color="green"/> {property.location}</p>
                 </div>
               </div>
             </aside>

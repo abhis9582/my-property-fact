@@ -24,8 +24,8 @@
     z-index: 1;
 }
 select.form-control {
-    -webkit-appearance: none;
-    appearance: none;
+    /* -webkit-appearance: none;
+    appearance: none; */
     background: url(/static/media/arrow-down.62cd43f….svg) calc(100% - 5px) / 8px no-repeat;
 }
 .readmore .button {

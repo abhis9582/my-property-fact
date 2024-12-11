@@ -1,14 +1,11 @@
 "use client";
-import {
-  faPencil,
-  faTrash,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Form, Modal, Table } from "react-bootstrap";
+import { Button, Col, Form, Modal, Table } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 export default function City() {
   const [showModal, setShowModal] = useState(false);
   const [cityName, setCityName] = useState("");
@@ -18,6 +15,9 @@ export default function City() {
   const [buttonName, setButtonName] = useState("");
   const [validated, setValidated] = useState(false);
   const [id, setId] = useState(0);
+  const [metaTitle, setMetaTitle] = useState("");
+  const [metaKeyword, setMetaKeyWord] = useState("");
+  const [metaDescription, setMetaDescription] = useState("");
   // Function to handle form submission (you can replace it with your own logic)
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,6 +30,9 @@ export default function City() {
     const data = {
       name: cityName,
       state: state,
+      metaTitle: metaTitle,
+      metaKeyWords: metaKeyword,
+      metaDescription: metaDescription,
       id: 0,
     };
     if (id > 0) {
@@ -70,6 +73,9 @@ export default function City() {
     setButtonName("Update City");
     setCityName(data.name);
     setState(data.state);
+    setMetaTitle(data.metaTitle);
+    setMetaDescription(data.metaDescription);
+    setMetaKeyWord(data.metaKeyWords);
     setShowModal(true);
   };
   const openAddModel = () => {
@@ -155,13 +161,58 @@ export default function City() {
                 State is required
               </Form.Control.Feedback>
             </Form.Group>
+            <Form.Group
+              as={Col}
+              md="12"
+              className="mb-3"
+              controlId="exampleForm.ControlTextarea1"
+            >
+              <Form.Label>Meta Title</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="metaTitle"
+                value={metaTitle || ""}
+                onChange={(e)=>setMetaTitle(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group
+              as={Col}
+              md="12"
+              className="mb-3"
+              controlId="exampleForm.ControlTextarea1"
+            >
+              <Form.Label>Meta Keyword</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="metaKeyword"
+                value={metaKeyword || ""}
+                onChange={(e) => setMetaKeyWord(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group
+              as={Col}
+              md="12"
+              className="mb-3"
+              controlId="exampleForm.ControlTextarea1"
+            >
+              <Form.Label>Meta Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="metaKeyword"
+                value={metaDescription || ""}
+                onChange={(e)=>setMetaDescription(e.target.value)}
+              />
+            </Form.Group>
             <Button variant="primary" type="submit">
               {buttonName}
             </Button>
           </Form>
         </Modal.Body>
       </Modal>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 }
