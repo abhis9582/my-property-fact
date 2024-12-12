@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import db from "@/db/latest-project.json";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -48,20 +47,10 @@ export default function LatestProjects() {
   return (
     <>
       <Slider {...settings}>
-        {db.testimonial.map((tm, i) => {
+        {/* {db.testimonial.map((tm, i) => {
           return (
             <aside key={i} className="p-4 container">
               <div className="p-8 rounded-lg bg-darkGray bg-opacity-10 shadow-md flex flex-col items-center justify-content-center container">
-                {/* <svg
-                  id="Layer_1"
-                  data-name="Layer 1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 559.27 546.15"
-                  className="w-10 h-10 fill-green"
-                >
-                  <path d="M336.63,250.54V33.44H553.71v217.1S587.7,503,364.37,512.71V392s85.76,35.63,74.55-141.49Z" />
-                  <path d="M3.71,250.54V33.44H220.79v217.1S254.78,503,31.46,512.71V392S117.21,427.66,106,250.54Z" />
-                </svg> */}
                 <p className="text-base text-darkGray text-center mt-6 mb-8">
                   {tm.message}
                 </p>
@@ -82,7 +71,7 @@ export default function LatestProjects() {
               </div>
             </aside>
           );
-        })}
+        })} */}
       </Slider>
     </>
   );

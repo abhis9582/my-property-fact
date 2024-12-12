@@ -8,11 +8,9 @@ async function fetchSeoData(slug) {
 }
 export async function generateMetadata({ params }) {    
   const url = await params;
-  console.log("fgd",url);
   const response = await fetchSeoData(url.cityname);  
   const title = response.data.metaTitle;
   const desc = response.data.metaDescription;
-  console.log(response);
   return { title: title, descritpion: desc };
 }
 export default async function AllCityProjects({params}){

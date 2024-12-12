@@ -67,7 +67,7 @@ export default function ManageGallery() {
   return (
     <div className="container_fluid">
       <div className="mt-3 d-flex justify-content-between">
-        <p className="h1">Manage Project's Gallery</p>
+        <p className="h1">Manage Project&apos;s Gallery</p>
         <Button className="btn btn-success mb-2" onClick={handleShow}>
           + Add Gallery Image
         </Button>

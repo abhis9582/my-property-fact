@@ -1,18 +1,15 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import './common.css';
-import axios from "axios";
-import Footer from "../footer/page";
+import { useEffect } from "react";
+import "./common.css";
 
 export default function PropertyContainer(props) {
-  const route = useRouter();
-  const [propertyList, setPropertyList] = useState([]);
   const goToPropertyDetail = (url) => {
     window.open("/" + url, "_blank");
-  };  
-  useEffect(() => {
-  }, []);
+  };
+  // Ensure props.data is defined before accessing its properties
+  if (!props.data) {
+    return <div>Loading...</div>; // or any fallback content
+  }
   return (
     <>
       <div
@@ -30,7 +27,9 @@ export default function PropertyContainer(props) {
           <div className="col-8 text-start">
             <h5>{props.data.projectName}</h5>
           </div>
-          <div className="col-4 text-end"><p>{props.data.price}</p></div>
+          <div className="col-4 text-end">
+            <p>{props.data.price}</p>
+          </div>
         </div>
       </div>
     </>
