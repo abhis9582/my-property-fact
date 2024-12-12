@@ -19,7 +19,7 @@ export default function Featured() {
     const fetchData = async () => {
       try {
         const allFeaturedProperties = await axios.get(
-          "http://localhost:8005/properties/get-brief-detail"
+          `${process.env.NEXT_PUBLIC_API_URL}properties/get-brief-detail`
         );
         setFeaturedProperties(allFeaturedProperties.data);
       } catch (error) {
