@@ -15,6 +15,9 @@ export default function Builder() {
   const [validated, setValidated] = useState(false);
   const [id, setId] = useState(0);
   const [builderDesc, setBuilderDesc] = useState("");
+  const [metaTitle, setMetaTitle] = useState("");
+  const [metaKeyword, setMetaKeyword] = useState("");
+  const [metaDesc, setMetaDesc] = useState("");
   // Function to handle form submission (you can replace it with your own logic)
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +30,9 @@ export default function Builder() {
     const data = {
       builderName: builder,
       builderDesc: builderDesc,
+      metaTitle: metaTitle,
+      metaDesc: metaDesc,
+      metaKeyword: metaKeyword,
       id: 0,
     };
     if (id > 0) {
@@ -70,10 +76,17 @@ export default function Builder() {
     setButtonName("Update Builder");
     setBuilder(data.builderName);
     setBuilderDesc(data.builderDesc);
+    setMetaDesc(data.metaDesc);
+    setMetaKeyword(data.metaKeyword);
+    setMetaTitle(data.metaTitle);
     setShowModal(true);
   };
   const openAddModel = () => {
     setBuilder("");
+    setBuilderDesc("");
+    setMetaDesc("");
+    setMetaTitle("");
+    setMetaKeyword("");
     setId(0);
     setTitle("Add New Builder");
     setButtonName("Add Builder");
@@ -105,6 +118,9 @@ export default function Builder() {
           <tr>
             <th>S no</th>
             <th>Builder Name</th>
+            <th>Meta Title</th>
+            <th>Meta Description</th>
+            <th>Meta Keyword</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -113,6 +129,9 @@ export default function Builder() {
             <tr key={item.id}>
               <td>{item.id}</td>
               <td>{item.builderName}</td>
+              <td>{item.metaTitle}</td>
+              <td>{item.metaDesc}</td>
+              <td>{item.metaKeyword}</td>
               <td>
                 <div>
                   <FontAwesomeIcon
@@ -145,8 +164,21 @@ export default function Builder() {
               <Form.Control
                 type="text"
                 placeholder="Enter builder name"
-                value={builder}
+                value={builder || ""}
                 onChange={(e) => setBuilder(e.target.value)}
+                required
+              />
+              <Form.Control.Feedback type="invalid">
+                Builder name is required
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formCityName">
+              <Form.Label>Meta Title</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter meta title"
+                value={metaTitle || ""}
+                onChange={(e) => setMetaTitle(e.target.value)}
                 required
               />
               <Form.Control.Feedback type="invalid">
@@ -166,6 +198,36 @@ export default function Builder() {
                 name="builderDesc"
                 value={builderDesc|| ""}
                 onChange={(e)=>setBuilderDesc(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group
+              as={Col}
+              md="12"
+              className="mb-3"
+              controlId="exampleForm.ControlTextarea1"
+            >
+              <Form.Label>Meta Keyword</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="metaKeyword"
+                value={metaKeyword|| ""}
+                onChange={(e)=>setMetaKeyword(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group
+              as={Col}
+              md="12"
+              className="mb-3"
+              controlId="exampleForm.ControlTextarea1"
+            >
+              <Form.Label>Meta Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="metaDesc"
+                value={metaDesc|| ""}
+                onChange={(e)=>setMetaDesc(e.target.value)}
               />
             </Form.Group>
             <Button variant="primary" type="submit">

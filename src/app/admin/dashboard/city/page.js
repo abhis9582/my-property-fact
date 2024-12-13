@@ -81,6 +81,9 @@ export default function City() {
   const openAddModel = () => {
     setCityName("");
     setState("");
+    setMetaTitle("");
+    setMetaDescription("");
+    setMetaKeyWord("");
     setId(0);
     setTitle("Add New City");
     setButtonName("Add City");
@@ -100,6 +103,9 @@ export default function City() {
             <th>S no</th>
             <th>City Name</th>
             <th>State</th>
+            <th>Meta Title</th>
+            <th>Meta Keyword</th>
+            <th>Meta Description</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -109,6 +115,9 @@ export default function City() {
               <td>{item.id}</td>
               <td>{item.name}</td>
               <td>{item.state}</td>
+              <td>{item.metaTitle}</td>
+              <td>{item.metaKeyWords}</td>
+              <td>{item.metaDescription}</td>
               <td>
                 <div>
                   <FontAwesomeIcon

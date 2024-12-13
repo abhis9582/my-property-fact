@@ -15,6 +15,9 @@ export default function ProjectTypes() {
   const [validated, setValidated] = useState(false);
   const [projectTypeDesc, setProjectTypeDesc] = useState("");
   const [id, setId] = useState(0);
+  const [metaTitle, setMetaTitle] = useState("");
+  const [metaKeyword, setMetaKeyword] = useState("");
+  const [metaDesc, setMetaDesc] = useState("");
   // Function to handle form submission (you can replace it with your own logic)
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +30,9 @@ export default function ProjectTypes() {
     const data = {
       projectTypeName: projectType,
       projectTypeDesc: projectTypeDesc,
+      metaDesc: metaDesc,
+      metaKeyword: metaKeyword,
+      metaTitle: metaTitle,
       id: 0,
     };
     if (id > 0) {
@@ -65,6 +71,9 @@ export default function ProjectTypes() {
     setId(data.id);
     setProjectType(data.projectTypeName);
     setProjectTypeDesc(data.projectTypeDesc);
+    setMetaDesc(data.metaDesc);
+    setMetaTitle(data.metaTitle);
+    setMetaKeyword(data.metaKeyword);
     setTitle("Edit Project Type");
     setButtonName("Update Type");
     setShowModal(true);
@@ -72,6 +81,10 @@ export default function ProjectTypes() {
   const openAddModel = () => {
     setProjectType("");
     setId(0);
+    setMetaDesc("");
+    setMetaTitle("");
+    setMetaKeyword("");
+    setProjectTypeDesc("");
     setTitle("Add New Project Type");
     setButtonName("Add Type");
     setShowModal(true);
@@ -89,6 +102,9 @@ export default function ProjectTypes() {
           <tr>
             <th>S no</th>
             <th>Type</th>
+            <th>Meta Title</th>
+            <th>Meta Description</th>
+            <th>Meta Keyword</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -97,6 +113,9 @@ export default function ProjectTypes() {
             <tr key={item.id}>
               <td>{item.id}</td>
               <td>{item.projectTypeName}</td>
+              <td>{item.metaTitle}</td>
+              <td>{item.metaDesc}</td>
+              <td>{item.metaKeyword}</td>
               <td>
                 <div>
                   <FontAwesomeIcon
@@ -136,6 +155,19 @@ export default function ProjectTypes() {
                 Type is required
               </Form.Control.Feedback>
             </Form.Group>
+            <Form.Group className="mb-3" controlId="formCityName">
+              <Form.Label>Meta Title</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter Type"
+                value={metaTitle || ""}
+                onChange={(e) => setMetaTitle(e.target.value)}
+                required
+              />
+              <Form.Control.Feedback type="invalid">
+                Type is required
+              </Form.Control.Feedback>
+            </Form.Group>
             <Form.Group
               as={Col}
               md="12"
@@ -149,6 +181,36 @@ export default function ProjectTypes() {
                 name="builderDesc"
                 value={projectTypeDesc || ""}
                 onChange={(e) => setProjectTypeDesc(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group
+              as={Col}
+              md="12"
+              className="mb-3"
+              controlId="exampleForm.ControlTextarea1"
+            >
+              <Form.Label>Meta Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="metaDesc"
+                value={metaDesc || ""}
+                onChange={(e) => setMetaDesc(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group
+              as={Col}
+              md="12"
+              className="mb-3"
+              controlId="exampleForm.ControlTextarea1"
+            >
+              <Form.Label>Meta Keyword</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="metaKeyword"
+                value={metaKeyword || ""}
+                onChange={(e) => setMetaKeyword(e.target.value)}
               />
             </Form.Group>
             <Button variant="primary" type="submit">
