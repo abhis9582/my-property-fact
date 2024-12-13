@@ -113,7 +113,7 @@ export default function Property({ slug }) {
             <div className="logo mt-3">
               <Link href="/">
                 <img
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.projectURL}/${projectDetail.projectLogo}`}
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.projectLogo}`}
                   alt="logo"
                 />
               </Link>
@@ -282,7 +282,7 @@ export default function Property({ slug }) {
                 <div key={item.id}>
                   <img
                     style={{ height: "400px" }}
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.projectName}/${item.image}`}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.image}`}
                     alt="floor plan"
                   />
                 </div>
@@ -343,7 +343,7 @@ export default function Property({ slug }) {
             <div className="col-md-6 p-3">
               <Link href="#formModal" data-bs-toggle="modal">
                 <img
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.projectURL}/${projectDetail.locationMap}`}
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.locationMap}`}
                   className="h-100 object-cover"
                   alt="Location Map"
                 />
