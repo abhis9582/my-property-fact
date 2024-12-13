@@ -343,7 +343,7 @@ export default function Property({ slug }) {
             <div className="col-md-6 p-3">
               <Link href="#formModal" data-bs-toggle="modal">
                 <img
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.projectName}/${projectDetail.locationMap}`}
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.projectURL}/${projectDetail.locationMap}`}
                   className="h-100 object-cover"
                   alt="Location Map"
                 />
