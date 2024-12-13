@@ -86,7 +86,7 @@ export default function LocationBenefit() {
                 <td>{item.projectName}</td>
                 <td>
                   <img
-                    src={`/icon/${item.image}`}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}icon/${item.image}`}
                     alt="image"
                     width={"50"}
                   />

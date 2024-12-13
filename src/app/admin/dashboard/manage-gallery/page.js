@@ -87,7 +87,7 @@ export default function ManageGallery() {
               <td>{count++}</td>
               <td>{item.pname}</td>
               <td>
-                <img src={`/properties/${item.pname}/${item.image}`} alt="image" style={{width: "100px"}}/>
+                <img src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.pname}/${item.image}`} alt="image" style={{width: "100px"}}/>
               </td>
               <td></td>
             </tr>

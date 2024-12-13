@@ -119,7 +119,7 @@ export default function Aminities() {
               <td>{item.id}</td>
               <td>{item.title}</td>
               <td>
-                <img src={`/amenity/${item.amenityImageUrl}`} width={"50"} alt={item.altTag}/>
+                <img src={`${process.env.NEXT_PUBLIC_IMAGE_URL}amenity/${item.amenityImageUrl}`} width={"50"} alt={item.altTag}/>
               </td>
               <td>
                 <div>

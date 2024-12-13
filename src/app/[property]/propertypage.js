@@ -113,7 +113,7 @@ export default function Property({ slug }) {
             <div className="logo mt-3">
               <Link href="/">
                 <img
-                  src={`properties/${projectDetail.projectName}/${projectDetail.projectLogo}`}
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.projectURL}/${projectDetail.projectLogo}`}
                   alt="logo"
                 />
               </Link>
@@ -220,7 +220,7 @@ export default function Property({ slug }) {
               {amenities.map((item) => (
                 <div key={item.id} className="card mx-3 p-5 mt-3">
                   <img
-                    src={"/amenity/" + item.amenityImageUrl}
+                    src={process.env.NEXT_PUBLIC_IMAGE_URL+"amenity/" + item.amenityImageUrl}
                     alt={item.altTag}
                     style={{ width: "100px" }}
                   />
@@ -282,7 +282,7 @@ export default function Property({ slug }) {
                 <div key={item.id}>
                   <img
                     style={{ height: "400px" }}
-                    src={`/properties/${projectDetail.projectName}/${item.image}`}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.projectName}/${item.image}`}
                     alt="floor plan"
                   />
                 </div>
@@ -305,7 +305,7 @@ export default function Property({ slug }) {
                     <div className="d-flex location-benifits mx-1 mt-2">
                       <img
                         style={{ width: "40px" }}
-                        src={`icon/${item.iconImage}`}
+                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}icon/${item.iconImage}`}
                         alt={item.iconImage}
                       />
                       <p className="h6 text-center">{item.benefitName}</p>
@@ -343,7 +343,7 @@ export default function Property({ slug }) {
             <div className="col-md-6 p-3">
               <Link href="#formModal" data-bs-toggle="modal">
                 <img
-                  src={`properties/${projectDetail.projectName}/${projectDetail.locationMap}`}
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.projectName}/${projectDetail.locationMap}`}
                   className="h-100 object-cover"
                   alt="Location Map"
                 />

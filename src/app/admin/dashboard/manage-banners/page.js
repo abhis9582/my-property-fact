@@ -128,7 +128,7 @@ export default function ManageBanners() {
                 <td>{item.id}</td>
                 <td>
                   <img
-                    src={`/properties/${item.projectName}/${item.desktopBanner}`}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.projectURL}/${item.desktopBanner}`}
                     alt="image"
                     width={"200"}
                   />
@@ -162,7 +162,7 @@ export default function ManageBanners() {
                 <td>{item.id}</td>
                 <td>
                   <img
-                    src={`/properties/${item.projectName}/${item.desktopBanner}`}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.projectURL}/${item.desktopBanner}`}
                     alt="image"
                     width={"200"}
                   />

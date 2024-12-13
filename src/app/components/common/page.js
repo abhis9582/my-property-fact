@@ -20,7 +20,7 @@ export default function PropertyContainer(props) {
           {props.data.projectName}
         </p>
         <img
-          src={`/properties/${props.data.projectName}/${props.data.image}`}
+          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${props.data.projectURL}/${props.data.image}`}
           alt="project image"
         />
         <div className="row pb-1">
