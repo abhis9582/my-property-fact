@@ -47,7 +47,7 @@ export default function Property({ slug }) {
     speed: 500,
     focusOnSelect: true,
   };
-  const imageSrc = `properties/${projectDetail.projectName}/${projectDetail.projectThumbnail}`;
+  const imageSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.projectName}/${projectDetail.projectThumbnail}`;
   const fetchGallery = async () => {
     const data = await axios.get(
       process.env.NEXT_PUBLIC_API_URL + `project-gallery/get/${slug}`
