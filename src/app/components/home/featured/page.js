@@ -87,7 +87,7 @@ export default function Featured() {
                 /> */}
                 <img
                   // style={{ width: "100%" }}
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${property.projectURL}/${property.image}`}
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${property.slugURL}/${property.image}`}
                   alt="project image"
                 />
                 <div className="row pb-1">
