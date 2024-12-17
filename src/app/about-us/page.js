@@ -47,7 +47,7 @@ export default function AboutUs() {
                 actor takes center stage, and a sculptor chisels a statue, a
                 sublime story unfolds with time and admiration. Similarly, in
                 the realm of Mr. Ritesh Malik, we embarked on a journey in 2012
-                to curate India's most exceptional real estate investments. We
+                to curate India&apos;s most exceptional real estate investments. We
                 understand the aspirations of the new-age royals, thus, we
                 assist them with handpicked bouquets of premium properties to
                 accomplish a regal lifestyle. For us, contented clients are the
@@ -134,7 +134,7 @@ export default function AboutUs() {
         </div>
       </div>
       <div className="container-fluid mt-5 bg-light">
-        <p className="text-center h2 pt-4">From Director's Desk</p>
+        <p className="text-center h2 pt-4">From Directo &apos;s Desk</p>
         <div className="container">
           <div className="row">
             <div className="col-4 p-4">
@@ -153,7 +153,7 @@ export default function AboutUs() {
               light for the entire organisation which has a mammoth presence
               across India. Our go-getter approach paves the way to win against
               all the odds to overcome opportunities and set a benchmark of
-              success in the market. Mr. Ritesh Malik's empathetic leadership
+              success in the market. Mr. Ritesh Malik &apos;s empathetic leadership
               inspires achievers and serves as a guiding light for our team. We
               are thankful to our stakeholders, employees, and clients for
               believing in us and being a part of our growth story. Over the
