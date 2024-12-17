@@ -1,0 +1,101 @@
+.breadcrumb {
+    background: #eaeaea;
+    background: linear-gradient(to bottom right, #eff0f3, #fff);
+    box-shadow: 3px 3px 3px #e8e6e6, -3px -3px 3px #fff;
+    font-size: 12px;
+    margin-bottom: 0;
+    padding: .75rem 1rem;
+}
+
+.text-texture {
+    /* background-clip:unset; */
+    -webkit-background-clip: text;
+    background-image: url("https://www.starestate.com/static/media/text-texture.b5454834a5601bdec1da.jpg");
+    background-size: contain;
+}
+
+.overview-stats .inner {
+    padding: 2rem;
+}
+
+.h-100 {
+    height: 100% !important;
+}
+
+.position-relative {
+    position: relative !important;
+}
+
+.overflow-hidden {
+    overflow: hidden !important;
+}
+
+.gap-row {
+    row-gap: 30px;
+}
+
+.overview-logo .h6 {
+    border-bottom: 1px solid #00000026;
+    display: block;
+    letter-spacing: 2px;
+    margin-bottom: 0;
+    padding-bottom: 1.5rem;
+}
+
+.text-uppercase {
+    text-transform: uppercase !important;
+}
+
+.fw-bolder {
+    font-weight: bolder !important;
+}
+
+.statBox .stats-in {
+    align-items: baseline;
+    display: flex;
+    gap: 10px;
+}
+
+.statBox .h2 {
+    font-weight: 800;
+    margin-bottom: 0;
+}
+
+.overview-stats .stats-bg {
+    animation: breathe 5s linear infinite alternate;
+    inset: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+.object-cover {
+    object-fit: cover;
+}
+
+@keyframes breathe {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(1.5);
+    }
+}
+
+.swiper {
+    width: 100%;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.swiper-slide img {
+    display: block;
+    width: 100%;
+}
+
+.swiper-slide {
+    background-position: center;
+    background-size: cover;
+    width: 400px !important;
+    height: 400px !important;
+}
