@@ -12,7 +12,7 @@ import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 
 // import required modules
-import { EffectCoverflow, Pagination } from "swiper/modules";
+import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
 
 export default function AboutUs() {
   return (
@@ -183,7 +183,11 @@ export default function AboutUs() {
           }}
           pagination={true}
           loop={true} // Add this line to enable infinite looping
-          modules={[EffectCoverflow, Pagination]}
+          autoplay={{
+            delay: 2500,  // Time between transitions (in milliseconds)
+            disableOnInteraction: false,  // Autoplay continues even if the user interacts with the swiper
+          }}
+          modules={[EffectCoverflow, Pagination, Autoplay]}
         >
           <SwiperSlide>
             <img src="https://swiperjs.com/demos/images/nature-1.jpg" />
