@@ -5,18 +5,27 @@ import "./builderpage.css";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import PropertyContainer from "@/app/components/common/page";
 export default function BuilderPage({ builderName }) {
   const [builderData, setBuilderData] = useState([]);
-
-  const fetchBuilderData = async () =>{
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}builders/get/${builderName}`);
-    if(response){
+  const [propertyList, setPropertyList] = useState([]);
+  const fetchBuilderData = async () => {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}builders/get/${builderName}`
+    );
+    if (response) {
       setBuilderData(response.data);
+      const projects = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}projects/builder/${response.data.id}`
+      );
+      if(projects){
+        setPropertyList(projects.data);
+      }
     }
-  }
-  useEffect(()=>{
+  };
+  useEffect(() => {
     fetchBuilderData();
-  }, [])
+  }, []);
   return (
     <>
       <Header />
@@ -28,7 +37,7 @@ export default function BuilderPage({ builderName }) {
         <div className="bannerContainer">
           <div className="container-lg">
             <div className="search-filter text-center">
-                <p className="h4">{builderData.builderName}</p>
+              <p className="h4 text-dark">{builderData.builderName}</p>
             </div>
           </div>
         </div>
@@ -43,7 +52,9 @@ export default function BuilderPage({ builderName }) {
               <li className="breadcrumb-item">
                 <Link href="/projects">Projects</Link>
               </li>
-              <li className="breadcrumb-item active">{builderData.builderName}</li>
+              <li className="breadcrumb-item active">
+                {builderData.builderName}
+              </li>
             </ol>
           </div>
         </div>
@@ -59,6 +70,13 @@ export default function BuilderPage({ builderName }) {
           <Link href="#" className="btn btn-dark">
             Read More
           </Link>
+        </div>
+        <div className="container-fluid d-flex justify-content-start my-5">
+          {propertyList.map((item) => (
+            <div key={item.id} style={{ width: "25%" }} className="mx-3">
+              <PropertyContainer data={item} />
+            </div>
+          ))}
         </div>
       </div>
       <Footer />
