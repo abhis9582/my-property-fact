@@ -134,7 +134,7 @@ export default function AboutUs() {
         </div>
       </div>
       <div className="container-fluid mt-5 bg-light">
-        <p className="text-center h2 pt-4">From Directo &apos;s Desk</p>
+        <p className="text-center h2 pt-4">From Director &apos;s Desk</p>
         <div className="container">
           <div className="row">
             <div className="col-4 p-4">
