@@ -21,6 +21,8 @@ export default function Property({ slug }) {
   const [floorPlanList, setFloorPlanList] = useState([]);
   const [galleryList, setGalleryList] = useState([]);
   const [benefitList, setBenefitList] = useState([]);
+  const [aboutData, setAboutData] = useState([]);
+  const [walkthrough, setWalkthrough] = useState([]);
   const [faqs, setFaqs] = useState([]);
   var [count, setCount] = useState(1);
   const toggleAnswer = (index) => {
@@ -54,11 +56,23 @@ export default function Property({ slug }) {
     );
     setGalleryList(data.data);
   };
+  const fetchWalkthrough = async () => {
+    const data = await axios.get(
+      process.env.NEXT_PUBLIC_API_URL + `project-walkthrough/get/${slug}`
+    );
+    setWalkthrough(data.data);
+  };
   const fetchFaqs = async () => {
     const data = await axios.get(
       process.env.NEXT_PUBLIC_API_URL + `project-faqs/get/${slug}`
     );
     setFaqs(data.data);
+  };
+  const fetchProjectAbout = async () => {
+    const data = await axios.get(
+      process.env.NEXT_PUBLIC_API_URL + `project-about/get/${slug}`
+    );
+    setAboutData(data.data);
   };
   useEffect(() => {
     const fetchProjectDetail = async () => {
@@ -104,6 +118,8 @@ export default function Property({ slug }) {
     fetchGallery();
     fetchFaqs();
     fetchBenifits();
+    fetchProjectAbout();
+    fetchWalkthrough();
   }, []);
   return (
     <>
@@ -188,13 +204,13 @@ export default function Property({ slug }) {
         <div>
           <h1 className="text-center mt-3">About The Project</h1>
           <div className="p-3">
-            <p className="text-center">{projectDetail.aboutDesc}</p>
+            <p className="text-center" dangerouslySetInnerHTML={{ __html: aboutData.shortDesc }}></p>
           </div>
         </div>
         <div className="d-flex justify-content-center">
-          <button className="mx-3 bg-dark text-light">READ MORE</button>
-          <button className="mx-3 bg-dark text-light">DOWNLOAD BROCHURE</button>
-          <button className="mx-3 bg-dark text-light">
+          <button className="btn btn-success">READ MORE</button>
+          <button className="btn btn-success mx-3">DOWNLOAD BROCHURE</button>
+          <button className="btn btn-success">
             SCHEDULE A SITE VISIT
           </button>
         </div>
@@ -204,10 +220,10 @@ export default function Property({ slug }) {
               <p className="h1 text-light mt-5">Walkthrough</p>
             </div>
             <div className="text-center p-5">
-              <p>{projectDetail.walkthroughDesc}</p>
+              <p dangerouslySetInnerHTML={{ __html: walkthrough.walkthroughDesc }}></p>
             </div>
             <div className="text-center">
-              <button className="bg-light">View</button>
+              <button className="btn btn-success mb-5">View</button>
             </div>
           </div>
         </div>

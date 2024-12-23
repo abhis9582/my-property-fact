@@ -44,6 +44,12 @@ export default function SideNav(){
                         <li>
                             <Link href="/admin/dashboard/manage-faqs">Manage FAQs</Link>
                         </li>
+                        <li>
+                            <Link href="/admin/dashboard/manage-project-about">Manage Project&apos;s About</Link>
+                        </li>
+                        <li>
+                            <Link href="/admin/dashboard/manage-project-walkthrough">Manage Project&apos;s Walkthrough</Link>
+                        </li>
                     </ul>
                 </li>
                 <li>
