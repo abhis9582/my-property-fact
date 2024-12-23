@@ -7,10 +7,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocation, faLocationCrosshairs, faLocationDot, faMap, faMapLocation, faMapMarked, faMapMarker } from "@fortawesome/free-solid-svg-icons";
+import { faMapMarker } from "@fortawesome/free-solid-svg-icons";
 
 export default function Featured() {
-  const route = useRouter();
   const [featuredProperties, setFeaturedProperties] = useState([]);
   const goToPropertyDetail = (url) => {
     window.open("/"+url, "_blank");
@@ -19,7 +18,7 @@ export default function Featured() {
     const fetchData = async () => {
       try {
         const allFeaturedProperties = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}properties/get-brief-detail`
+          `${process.env.NEXT_PUBLIC_API_URL}projects/get-all`
         );
         setFeaturedProperties(allFeaturedProperties.data);
       } catch (error) {
@@ -87,7 +86,7 @@ export default function Featured() {
                 /> */}
                 <img
                   // style={{ width: "100%" }}
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${property.slugURL}/${property.image}`}
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${property.slugURL}/${property.projectThumbnail}`}
                   alt="project image"
                 />
                 <div className="row pb-1">
@@ -95,11 +94,11 @@ export default function Featured() {
                     <h5>{property.projectName}</h5>
                   </div>
                   <div className="col-4 text-end">
-                    <p>{property.price}</p>
+                    <p>{property.projectPrice}</p>
                   </div>
                 </div>
                 <div>
-                  <p><FontAwesomeIcon icon={faMapMarker} width={8} color="green"/> {property.location}</p>
+                  <p><FontAwesomeIcon icon={faMapMarker} width={8} color="green"/> {property.projectAddress}</p>
                 </div>
               </div>
             </aside>

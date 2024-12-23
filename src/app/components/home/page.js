@@ -23,12 +23,12 @@ export default function HomePage() {
       setTypeList(projectTypesResponse.data);
     }
   };
-  useEffect(()=>{
+  useEffect(() => {
     fetchProjectTypes();
-  }, [])
+  }, []);
   return (
     <>
-    <Header />
+      <Header />
       <div id="banner" className="banner">
         <picture>
           <Image
@@ -41,27 +41,13 @@ export default function HomePage() {
         <div className="bannerContainer">
           <h1 className="h1">Find the best property</h1>
           <div className="btn-container d-flex justify-content-center my-3 my-md-4">
-            <div className="readmore mt-0">
-              <a href="#" className="button light">
-                Luxury
-              </a>
-            </div>
-            <div className="readmore mt-0">
-              <a href="#" className="button light">
-                Commercial
-              </a>
-            </div>
-            <div className="readmore mt-0">
-              <a href="#" className="button light">
-                Residential
-              </a>
-            </div>
-
-            <div className="readmore mt-0">
-              <a href="#" className="button light">
-                New Launches
-              </a>
-            </div>
+            {typeList.map((item) => (
+              <div key={item.id} className="readmore mt-0">
+                <a href="#" className="button light">
+                  {item.projectTypeName}
+                </a>
+              </div>
+            ))}
           </div>
           <div className="statsWrapper">
             <div className="row gap-row">
@@ -184,7 +170,7 @@ export default function HomePage() {
         </span>
       </button>
       <Insight />
-      <div className=" mt-4 row" style={{width: "100% !important"}}>
+      <div className=" mt-4 row" style={{ width: "100% !important" }}>
         <p className="h2 text-center mt-4">Featured Projects</p>
         <Featured />
       </div>

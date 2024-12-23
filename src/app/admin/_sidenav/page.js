@@ -47,7 +47,7 @@ export default function SideNav(){
                     </ul>
                 </li>
                 <li>
-                    <Link href="/admin/dashboard/projects">Projects</Link>
+                    <Link href="/admin/dashboard/add-project">Projects</Link>
                 </li>
                 <li className={activeDropdown === 'dropdown2' ? "active" : ""}>
                     <Link href="#pageSubmenu" onClick={() => toggleDropdown('dropdown2')}  data-toggle="collapse" aria-expanded="false" className="dropdown-toggle">Pages</Link>

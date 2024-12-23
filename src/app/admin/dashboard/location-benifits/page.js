@@ -43,7 +43,7 @@ export default function LocationBenefit() {
   };
   const fetchProjects = async () => {
     const projectResponse = await axios.get(
-      process.env.NEXT_PUBLIC_API_URL + "properties/get-all"
+      process.env.NEXT_PUBLIC_API_URL + "projects/get-all"
     );
     if (projectResponse) {
       setProjectList(projectResponse.data);

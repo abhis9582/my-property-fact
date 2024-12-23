@@ -9,7 +9,7 @@ import Footer from "../components/footer/page";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBed, faChartArea, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faBed, faChartArea, faMarker, faPlus } from "@fortawesome/free-solid-svg-icons";
 import Featured from "../components/home/featured/page";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -64,7 +64,7 @@ export default function Property({ slug }) {
     const fetchProjectDetail = async () => {
       try {
         const data = await axios.get(
-          process.env.NEXT_PUBLIC_API_URL + `properties/${slug}`
+          process.env.NEXT_PUBLIC_API_URL + `projects/get/${slug}`
         );
         setProjectDetail(data.data);
       } catch (error) {}
@@ -110,7 +110,7 @@ export default function Property({ slug }) {
       <header className="header bg-light">
         <div className="main-header">
           <div className="container-lg d-flex justify-content-between position-relative align-items-center">
-            <div className="logo mt-3">
+            <div className="project-logo mt-3">
               <Link href="/">
                 <img
                   src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.projectLogo}`}
@@ -179,7 +179,10 @@ export default function Property({ slug }) {
             </Form>
           </div>
           <div className="short-info">
-            <p>{projectDetail.projectName}</p>
+            <p className="m-0 p-0">{projectDetail.projectName}</p>
+            <small><FontAwesomeIcon icon={faMarker} width={10}/> {projectDetail.projectAddress}</small>
+            <span>{projectDetail.projectPrice}* | {projectDetail.projectConfiguration}</span>
+            <div className="btn btn-success">Get Details</div>
           </div>
         </div>
         <div>

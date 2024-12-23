@@ -20,7 +20,7 @@ export default function ManageGallery() {
   };
   const fetchProjects = async () => {
     const projectResponse = await axios.get(
-      process.env.NEXT_PUBLIC_API_URL + "properties/get-all"
+      process.env.NEXT_PUBLIC_API_URL + "projects/get-all"
     );
     if (projectResponse) {
       setProjectList(projectResponse.data);
@@ -87,7 +87,7 @@ export default function ManageGallery() {
               <td>{count++}</td>
               <td>{item.pname}</td>
               <td>
-                <img src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.pname}/${item.image}`} alt="image" style={{width: "100px"}}/>
+                <img src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.image}`} alt="image" style={{width: "100px"}}/>
               </td>
               <td></td>
             </tr>
