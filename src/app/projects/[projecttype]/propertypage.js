@@ -1,19 +1,28 @@
 "use client";
+import PropertyContainer from "@/app/components/common/page";
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-export default function PropertyPage({type}) {
+export default function PropertyPage({ type }) {
   const [typeData, setTypeData] = useState([]);
-  const fetchTypeData = async () =>{
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}project-types/get/${type}`);
-    if(response){
+  const [projectList, setProjectList] = useState([]);
+  const fetchTypeData = async () => {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}project-types/get/${type}`
+    );
+    if (response) {
       setTypeData(response.data);
     }
+  };
+  const fetchProjects = async () =>{
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}project-types/${type}`)
+    setProjectList(response.data);
   }
-  useEffect(()=>{
-      fetchTypeData();
-  }, [])
+  useEffect(() => {
+    fetchTypeData();
+    fetchProjects();
+  }, []);
   return (
     <>
       <div className="containr-fluid mt-5">
@@ -41,7 +50,14 @@ export default function PropertyPage({type}) {
           </div>
         </div>
         <div className="container-fluid mt-3">
-            <p className="h2 text-center">{typeData.projectTypeName}</p>
+          <p className="h2 text-center">{typeData.projectTypeName}</p>
+        </div>
+        <div className="container-fluid d-flex justify-content-start my-5">
+          {projectList.map((item) => (
+            <div key={item.id} style={{ width: "25%" }} className="mx-3">
+              <PropertyContainer data={item} />
+            </div>
+          ))}
         </div>
       </div>
     </>
