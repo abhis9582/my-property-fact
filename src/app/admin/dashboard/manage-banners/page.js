@@ -1,4 +1,6 @@
 "use client";
+import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Col, Form, FormControl, Modal, Table } from "react-bootstrap";
@@ -18,16 +20,24 @@ export default function ManageBanners() {
   const [bannerType, setBannerType] = useState("");
   const [bannerList, setBannerList] = useState([]);
   const [mobileBannerList, setMobileBannerList] = useState([]);
+  const [bannerId, setBannerId] = useState(0);
+  const [previewMobileBanner, setPreviewMobileBanner] = useState("");
+  const [previewDesktopBanner, setPreviewDesktopBanner] = useState("");
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!desktopBanner) {
-      alert("Please select a file first.");
-      return;
-    }
+    // if (!desktopBanner) {
+    //   alert("Please select a file first.");
+    //   return;
+    // }
     const formData = new FormData();
+    if(desktopBanner != null)
     formData.append("desktopBanner", desktopBanner);
-    formData.append("mobileBanner", desktopBanner);
+    if(mobileBanner != null)
+    formData.append("mobileBanner", mobileBanner);
     formData.append("projectId", projectId);
+    formData.append("altTag", altTag);
+    formData.append("id", bannerId);
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}project-banner/add-banner`,
@@ -51,8 +61,12 @@ export default function ManageBanners() {
   };
   const openAddMobileBanner = () => {
     setShowModal(true);
-    setTitle("Add Mobile Banner");
+    setTitle("Add Banner");
     setInputTitle("Select Mobile Banner");
+    setAltTag("");
+    setProjectId(0);
+    setdesktopBanner("");
+    setMobileBanner("");
     setButtonName("Add");
   };
   const openAddHomepageBanner = () => {
@@ -60,6 +74,19 @@ export default function ManageBanners() {
     setTitle("Add Homepage Banner");
     setInputTitle("Select Hopage Banner");
     setButtonName("Add");
+  };
+  const openEditModel = (item) => {
+    const desktopBannerImage = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.desktopBanner}`;
+    const mobileBannerImage = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.mobileBanner}`;
+    setShowModal(true);
+    setTitle("Edit Banner");
+    setInputTitle("Select Mobile Banner");
+    setAltTag(item.altTag);
+    setProjectId(item.projectId);
+    setPreviewDesktopBanner(desktopBannerImage);
+    setPreviewMobileBanner(mobileBannerImage);
+    setBannerId(item.id);
+    setButtonName("Update");
   };
 
   const fetchProjects = async () => {
@@ -78,18 +105,9 @@ export default function ManageBanners() {
       setBannerList(projectResponse.data);
     }
   };
-  const fetchMobileBanners = async () => {
-    const projectResponse = await axios.get(
-      process.env.NEXT_PUBLIC_API_URL + "project-banner/get-mobile-banners"
-    );
-    if (projectResponse) {
-      setMobileBannerList(projectResponse.data);
-    }
-  };
   useEffect(() => {
     fetchProjects();
     fetchBannerImages();
-    fetchMobileBanners();
   }, []);
 
   // Handle file change
@@ -97,16 +115,16 @@ export default function ManageBanners() {
     const selectedFile = e.target.files[0];
     setMobileBanner(selectedFile);
   };
-  const handleDesktopBannerChange = (e) =>{
+  const handleDesktopBannerChange = (e) => {
     const selectedFile = e.target.files[0];
     setdesktopBanner(selectedFile);
-  }
+  };
   return (
     <div>
       <p className="h1 mt-3">Manage All Banners</p>
       <div className="conatiner border rounded-3 p-3 mt-4">
         <div className="d-flex justify-content-between">
-          <p>Manage Project Mobile Banners</p>
+          <p>Manage Project Banners</p>
           <Button className="mb-2" onClick={openAddMobileBanner}>
             + Add Project Banner
           </Button>
@@ -114,29 +132,47 @@ export default function ManageBanners() {
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>S No</th>
-              <th>Mobile Banner Image</th>
-              <th>Desktop Banner</th>
-              <th>Project Name</th>
-              <th>Alt tag</th>
-              <th>Action</th>
+              <th className="text-center">S No</th>
+              <th className="text-center">Mobile Banner</th>
+              <th className="text-center">Desktop Banner</th>
+              <th className="text-center">Project Name</th>
+              <th className="text-center">Alt tag</th>
+              <th className="text-center">Action</th>
             </tr>
           </thead>
           <tbody>
-            {mobileBannerList.map((item) => (
+            {bannerList.map((item) => (
               <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>
                   <img
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.projectThumbnail}`}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.mobileBanner}`}
                     alt="image"
                     width={"200"}
                   />
                 </td>
-                <td></td>
+                <td>
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.desktopBanner}`}
+                    alt="image"
+                    width={"200"}
+                  />
+                </td>
                 <td>{item.projectName}</td>
-                <td></td>
-                <td></td>
+                <td>{item.altTag}</td>
+                <td>
+                  <div className="d-flex justify-content-center">
+                    <FontAwesomeIcon
+                      className="cursor-pointer"
+                      icon={faPencil}
+                      onClick={() => openEditModel(item)}
+                    />
+                    <FontAwesomeIcon
+                      className="cursor-pointer mx-2 text-danger"
+                      icon={faTrash}
+                    />
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -174,19 +210,43 @@ export default function ManageBanners() {
         </Modal.Header>
         <Modal.Body>
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
+            {/* Image Preview for Mobile Banner */}
+            {previewMobileBanner && (
+              <div className="image-preview mb-3">
+                <img
+                  src={previewMobileBanner}
+                  alt="Mobile Banner Preview"
+                  style={{ maxWidth: "20%", height: "auto", justifySelf: "center", display: "flex" }}
+                />
+              </div>
+            )}
             <Form.Group controlId="formFile1" className="mb-3">
               <Form.Label>{inputTitle}</Form.Label>
               <Form.Control type="file" onChange={(e) => handleFileChange(e)} />
             </Form.Group>
+            {/* Image Preview for Desktop Banner */}
+            {previewDesktopBanner && (
+              <div className="image-preview mb-3">
+                <img
+                  src={previewDesktopBanner}
+                  alt="Desktop Banner Preview"
+                  style={{ maxWidth: "20%", height: "auto", justifySelf: "center", display: "flex" }}
+                />
+              </div>
+            )}
             <Form.Group controlId="formFile2" className="mb-3">
               <Form.Label>Select Desktop banner</Form.Label>
-              <Form.Control type="file" onChange={(e) => handleDesktopBannerChange(e)} />
+              <Form.Control
+                type="file"
+                onChange={(e) => handleDesktopBannerChange(e)}
+              />
             </Form.Group>
             <Form.Group md="4" controlId="validationCustom01">
               <Form.Label>Select Project</Form.Label>
               <Form.Select
                 aria-label="Default select example"
                 onChange={(e) => setProjectId(e.target.value)}
+                value={projectId}
               >
                 <option>Select Project</option>
                 {projectList.map((item) => (
@@ -202,7 +262,12 @@ export default function ManageBanners() {
             </Form.Group>
             <Form.Group md="4" controlId="validationCustom01">
               <Form.Label>Alt Tag</Form.Label>
-              <FormControl placeholder="Alt Tag" type="text" value={altTag} onChange={(e)=>setAltTag(e.target.value)}/>
+              <FormControl
+                placeholder="Alt Tag"
+                type="text"
+                value={altTag || ""}
+                onChange={(e) => setAltTag(e.target.value)}
+              />
             </Form.Group>
             <Button className="mt-3" variant="primary" type="submit">
               {buttonName}

@@ -33,3 +33,6 @@
     overflow: auto;
     border: 1px solid #ccc;
 }
+.cursor-pointer{
+    cursor: pointer !important;
+}

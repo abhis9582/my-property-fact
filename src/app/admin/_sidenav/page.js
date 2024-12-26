@@ -27,7 +27,7 @@ export default function SideNav(){
                             <Link href="/admin/dashboard/builder">Manage Builders</Link>
                         </li>
                         <li>
-                            <Link href="/admin/dashboard/aminities">Manage Amenities</Link>
+                            <Link href="/admin/dashboard/project-amenity">Manage Project&apos;s Amenities</Link>
                         </li>
                         <li>
                             <Link href="/admin/dashboard/project-types">Manage Project Types</Link>

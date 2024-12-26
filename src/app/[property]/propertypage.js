@@ -23,6 +23,7 @@ export default function Property({ slug }) {
   const [benefitList, setBenefitList] = useState([]);
   const [aboutData, setAboutData] = useState([]);
   const [walkthrough, setWalkthrough] = useState([]);
+  const [bannerData, setBannerData] = useState([]);
   const [faqs, setFaqs] = useState([]);
   var [count, setCount] = useState(1);
   const toggleAnswer = (index) => {
@@ -49,7 +50,7 @@ export default function Property({ slug }) {
     speed: 500,
     focusOnSelect: true,
   };
-  const imageSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.projectThumbnail}`;
+  
   const fetchGallery = async () => {
     const data = await axios.get(
       process.env.NEXT_PUBLIC_API_URL + `project-gallery/get/${slug}`
@@ -74,6 +75,12 @@ export default function Property({ slug }) {
     );
     setAboutData(data.data);
   };
+  const fetchBanners = async () => {
+    const data = await axios.get(
+      process.env.NEXT_PUBLIC_API_URL + `project-banner/get/${slug}`
+    );
+    setBannerData(data.data);
+  };
   useEffect(() => {
     const fetchProjectDetail = async () => {
       try {
@@ -95,7 +102,7 @@ export default function Property({ slug }) {
     const fetchData = async () => {
       try {
         const allFeaturedProperties = await axios.get(
-          process.env.NEXT_PUBLIC_API_URL + "amenity/get-all"
+          `${process.env.NEXT_PUBLIC_API_URL}project-amenity/get/${slug}`
         );
         setAmenities(allFeaturedProperties.data);
       } catch (error) {
@@ -120,7 +127,10 @@ export default function Property({ slug }) {
     fetchBenifits();
     fetchProjectAbout();
     fetchWalkthrough();
+    fetchBanners();
   }, []);
+  const imageSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${bannerData.slugURL}/${bannerData.desktopBanner}`;
+  // const imageSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.projectThumbnail}`;
   return (
     <>
       <header className="header bg-light">
