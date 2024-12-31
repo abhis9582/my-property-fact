@@ -361,7 +361,7 @@ export default function Property({ slug }) {
                   </div>
                   <div className="d-flex">
                     <p className="text-success">Country: </p>
-                    <p>{projectDetail.country}</p>
+                    <p>India</p>
                   </div>
                 </div>
                 <div className="d-flex">

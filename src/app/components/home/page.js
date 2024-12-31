@@ -41,9 +41,9 @@ export default function HomePage() {
         <div className="bannerContainer">
           <h1 className="h1">Find the best property</h1>
           <div className="btn-container d-flex justify-content-center my-3 my-md-4">
-            {typeList.map((item) => (
-              <div key={item.id} className="readmore mt-0">
-                <a href="#" className="button light">
+            {typeList.map((item, index) => (
+              <div key={`row-${index}`} className="readmore mt-0">
+                <a href={`projects/${item.slugUrl}`} className="button light">
                   {item.projectTypeName}
                 </a>
               </div>

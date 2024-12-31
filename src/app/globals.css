@@ -1,4 +1,4 @@
-.list-inline-item a{
+.list-inline-item a {
     height: 30px !important;
     width: 30px;
     color: white;
@@ -8,21 +8,24 @@
     --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
     box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-  }
+}
 
-  /* Webkit Browsers (Chrome, Safari, Edge) */
-  ::-webkit-scrollbar {
+/* Webkit Browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
     width: 2px;
     height: 12px;
 }
+
 ::-webkit-scrollbar-track {
     background: #e0e0e0;
     border-radius: 10px;
 }
+
 ::-webkit-scrollbar-thumb {
     background: #3b4def;
     border-radius: 0px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
@@ -33,6 +36,27 @@
     overflow: auto;
     border: 1px solid #ccc;
 }
-.cursor-pointer{
+
+.cursor-pointer {
     cursor: pointer !important;
+}
+
+.table-scroll {
+    display: block;
+    max-height: 700px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100% !important;
+}
+.sno{
+    width: 50px;
+}
+.project-name-col{
+    width: 200px;
+}
+.action-col{
+    width: 100px;
+}
+.short-dec-col{
+    width: 450px;
 }

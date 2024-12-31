@@ -1,9 +1,11 @@
 "use client";
+import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Form, Modal, Table } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 export default function ManageFloorPlans() {
   const [show, setShow] = useState(false);
   const [title, setTitle] = useState("");
@@ -14,11 +16,17 @@ export default function ManageFloorPlans() {
   const [planType, setPlanType] = useState("");
   const [area, setArea] = useState("");
   const [floorPlanList, setFloorPlanList] = useState([]);
-  var [count, setCount] = useState(1);
+  const [floorId, setFloorId] = useState(0);
+  const [confirmBox, setConfirmBox] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => {
     setButtonName("Add Floor Plan");
+    setTitle("Add New Floor Plan");
     setShow(true);
+    setProjectId(0);
+    setPlanType("");
+    setArea("");
+    setFloorId(0);
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,9 +35,13 @@ export default function ManageFloorPlans() {
       planType: planType,
       areaSqft: area,
     };
+    if (floorId > 0) {
+      data.id = floorId;
+    }
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}floor-plans/add-update`, data
+        `${process.env.NEXT_PUBLIC_API_URL}floor-plans/add-update`,
+        data
       );
       if (response.data.isSuccess == 1) {
         toast.success(response.data.message);
@@ -57,10 +69,34 @@ export default function ManageFloorPlans() {
       setFloorPlanList(floorPlans.data);
     }
   };
+  const openEditModel = (item) => {
+    setTitle("Update Floor Plan");
+    setButtonName("Update");
+    setShow(true);
+    setProjectId(item.projectId);
+    setArea(item.areaSq);
+    setPlanType(item.type);
+    setFloorId(item.floorId);
+  };
+  const openConfirmationBox = (id) =>{
+    setConfirmBox(true);
+    setFloorId(id);
+  }
+  const deleteFloorPlan = async () =>{
+    if(floorId > 0){
+      const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}floor-plans/delete/${floorId}`);
+      if(response){
+        toast.success("Deleted successfully...");
+        setFloorId(0);
+        setConfirmBox(false);
+        fetchAllFloorPlans();
+      }
+    }
+  }
   useEffect(() => {
     fetchProjects();
     fetchAllFloorPlans();
-  },[]);
+  }, []);
   return (
     <div>
       <div className="mt-3 d-flex justify-content-between">
@@ -81,22 +117,34 @@ export default function ManageFloorPlans() {
           </tr>
         </thead>
         <tbody>
-          {
-            floorPlanList.map((item)=>(
-              <tr key={count}>
-                <td>{count++}</td>
-                <td>{item.pname}</td>
-                <td>{item.type}</td>
-                <td>{item.areaSq}</td>
-                <td>{item.areaMt}</td>
-              </tr>              
-            ))
-          }
+          {floorPlanList.map((item, index) => (
+            <tr key={`row-${index}`}>
+              <td>{index + 1}</td>
+              <td>{item.pname}</td>
+              <td>{item.type}</td>
+              <td>{item.areaSq}</td>
+              <td>{item.areaMt}</td>
+              <td>
+                <div>
+                  <FontAwesomeIcon
+                    className="mx-2 text-warning cursor-pointer"
+                    icon={faPencil}
+                    onClick={() => openEditModel(item)}
+                  />
+                  <FontAwesomeIcon
+                    className="mx-2 text-danger cursor-pointer"
+                    icon={faTrash}
+                    onClick={()=>openConfirmationBox(item.floorId)}
+                  />
+                </div>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </Table>
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Add New Plan</Modal.Title>
+          <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -105,6 +153,7 @@ export default function ManageFloorPlans() {
               <Form.Select
                 aria-label="Default select example"
                 onChange={(e) => setProjectId(e.target.value)}
+                value={projectId}
               >
                 <option>Select Project</option>
                 {projectList.map((item) => (
@@ -143,6 +192,20 @@ export default function ManageFloorPlans() {
             </Button>
           </Form>
         </Modal.Body>
+      </Modal>
+      <Modal show={confirmBox} onHide={() => setConfirmBox(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Are you sure you want to delete ?</Modal.Title>
+        </Modal.Header>
+        {/* <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body> */}
+        <Modal.Footer className="d-flex justify-content-center">
+          <Button variant="secondary" onClick={() => setConfirmBox(false)}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={deleteFloorPlan}>
+            Delete
+          </Button>
+        </Modal.Footer>
       </Modal>
       <ToastContainer />
     </div>

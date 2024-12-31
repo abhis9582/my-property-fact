@@ -18,6 +18,7 @@ export default function ProjectTypes() {
   const [metaTitle, setMetaTitle] = useState("");
   const [metaKeyword, setMetaKeyword] = useState("");
   const [metaDesc, setMetaDesc] = useState("");
+  const [confirmBox, setConfirmBox] = useState(false);
   // Function to handle form submission (you can replace it with your own logic)
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -64,6 +65,20 @@ export default function ProjectTypes() {
       setTypeList(types.data);
     }
   };
+  const deleteProjectType = async () =>{
+    const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}project-types/delete/${id}`);
+    if(response.data.isSuccess === 1){
+        setConfirmBox(false);
+        fetchProjectTypes();
+        toast.success(response.data.message);
+    }else{
+      toast.error(response.data.message);
+    }
+  }
+  const openConfirmationBox = (id) =>{
+    setConfirmBox(true);
+    setId(id);
+  }
   useEffect(() => {
     fetchProjectTypes();
   }, []);
@@ -122,6 +137,7 @@ export default function ProjectTypes() {
                     className="mx-3 text-danger"
                     style={{ cursor: "pointer" }}
                     icon={faTrash}
+                    onClick={()=>openConfirmationBox(item.id)}
                   />
                   <FontAwesomeIcon
                     className="text-warning"
@@ -218,6 +234,20 @@ export default function ProjectTypes() {
             </Button>
           </Form>
         </Modal.Body>
+      </Modal>
+      <Modal show={confirmBox} onHide={() => setConfirmBox(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Are you sure you want to delete ?</Modal.Title>
+        </Modal.Header>
+        {/* <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body> */}
+        <Modal.Footer className="d-flex justify-content-center">
+          <Button variant="secondary" onClick={() => setConfirmBox(false)}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={deleteProjectType}>
+            Delete
+          </Button>
+        </Modal.Footer>
       </Modal>
       <ToastContainer />
     </div>

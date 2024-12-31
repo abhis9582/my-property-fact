@@ -18,6 +18,8 @@ export default function City() {
   const [metaTitle, setMetaTitle] = useState("");
   const [metaKeyword, setMetaKeyWord] = useState("");
   const [metaDescription, setMetaDescription] = useState("");
+  const [confirmBox, setConfirmBox] = useState(false);
+  const [cityId, setCityId] = useState(0);
   // Function to handle form submission (you can replace it with your own logic)
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -89,6 +91,18 @@ export default function City() {
     setButtonName("Add City");
     setShowModal(true);
   };
+  const deleteCity = async () => {
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_API_URL}city/delete/${cityId}`
+    );
+      setCityId(0);
+      setConfirmBox(false);
+      fetchCities();
+  };
+  const openConfirmationDialog = (id) => {
+    setConfirmBox(true);
+    setCityId(id);
+  };
   return (
     <div>
       <div className="d-flex justify-content-between mt-3">
@@ -110,9 +124,9 @@ export default function City() {
           </tr>
         </thead>
         <tbody>
-          {cityList.map((item) => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
+          {cityList.map((item, index) => (
+            <tr key={`row-${index}`}>
+              <td>{index+1}</td>
               <td>{item.name}</td>
               <td>{item.state}</td>
               <td>{item.metaTitle}</td>
@@ -124,6 +138,7 @@ export default function City() {
                     className="mx-3 text-danger"
                     style={{ cursor: "pointer" }}
                     icon={faTrash}
+                    onClick={()=>openConfirmationDialog(item.id)}
                   />
                   <FontAwesomeIcon
                     className="text-warning"
@@ -182,7 +197,7 @@ export default function City() {
                 rows={3}
                 name="metaTitle"
                 value={metaTitle || ""}
-                onChange={(e)=>setMetaTitle(e.target.value)}
+                onChange={(e) => setMetaTitle(e.target.value)}
               />
             </Form.Group>
             <Form.Group
@@ -212,7 +227,7 @@ export default function City() {
                 rows={3}
                 name="metaKeyword"
                 value={metaDescription || ""}
-                onChange={(e)=>setMetaDescription(e.target.value)}
+                onChange={(e) => setMetaDescription(e.target.value)}
               />
             </Form.Group>
             <Button variant="primary" type="submit">
@@ -220,6 +235,20 @@ export default function City() {
             </Button>
           </Form>
         </Modal.Body>
+      </Modal>
+      <Modal show={confirmBox} onHide={() => setConfirmBox(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Are you sure you want to delete ?</Modal.Title>
+        </Modal.Header>
+        {/* <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body> */}
+        <Modal.Footer className="d-flex justify-content-center">
+          <Button variant="secondary" onClick={() => setConfirmBox(false)}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={deleteCity}>
+            Delete
+          </Button>
+        </Modal.Footer>
       </Modal>
       <ToastContainer />
     </div>

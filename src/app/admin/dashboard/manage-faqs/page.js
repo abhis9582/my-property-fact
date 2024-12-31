@@ -1,9 +1,11 @@
 "use client";
+import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Form, Modal, Table, ToastContainer } from "react-bootstrap";
 import { toast } from "react-toastify";
-
+import "react-toastify/dist/ReactToastify.css";
 export default function ManageFaqs() {
   const [show, setShow] = useState(false);
   const [title, setTitle] = useState("");
@@ -16,6 +18,7 @@ export default function ManageFaqs() {
   const [answer, setAnswer] = useState("");
   const handleClose = () => setShow(false);
   const [faqList, setFaqList] = useState([]);
+  const [faqId, setFaqId] = useState(0);
   const handleShow = () => {
     setButtonName("Add Floor Plan");
     setShow(true);
@@ -38,9 +41,12 @@ export default function ManageFaqs() {
         faqAnswer: answer,
         projectId: projectId
     }
+    if(faqId > 0){
+      data.id = faqId;
+    }
     try{
         const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}project-faqs/add-update`, data);
-        if(response.data.isSuccess == 1){
+        if(response.data.isSuccess === 1){
             toast.success(response.data.message);
             fetchFaqs();
             setShow(false);
@@ -55,6 +61,19 @@ export default function ManageFaqs() {
     setShow(true)
     setTitle("Add New FAQ");
     setButtonName("Add");
+    setAnswer("")
+    setQuestion("");
+    setProjectId(0);
+    setFaqId(0);
+  }
+  const openEditModel = (item) =>{
+    setShow(true)
+    setTitle("Update FAQ");
+    setButtonName("Update");
+    setAnswer(item.answer)
+    setQuestion(item.question);
+    setProjectId(item.projectId);
+    setFaqId(item.id);
   }
   const fetchFaqs = async () =>{
     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}project-faqs/get-all`);
@@ -83,13 +102,22 @@ export default function ManageFaqs() {
           </tr>
         </thead>
         <tbody>
-          {faqList.map((item) => (
-            <tr key={count}>
-              <td>{count++}</td>
+          {faqList.map((item, index) => (
+            <tr key={`row-${index}`}>
+              <td>{index + 1}</td>
               <td>{item.projectName}</td>
               <td>{item.question}</td>
               <td>{item.answer}</td>
-              <td></td>
+              <td>
+                <div className="d-flex mt-3">
+                  <FontAwesomeIcon 
+                  className="mx-2 text-warning cursor-pointer" 
+                  icon={faPencil}
+                  onClick={()=>openEditModel(item)}
+                  />
+                  <FontAwesomeIcon className="mx-2 text-danger cursor-pointer" icon={faTrash}/>
+                </div>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -105,6 +133,7 @@ export default function ManageFaqs() {
               <Form.Select
                 aria-label="Default select example"
                 onChange={(e) => setProjectId(e.target.value)}
+                value={projectId}
               >
                 <option>Select Project</option>
                 {projectList.map((item) => (

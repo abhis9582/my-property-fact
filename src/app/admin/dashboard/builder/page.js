@@ -18,6 +18,7 @@ export default function Builder() {
   const [metaTitle, setMetaTitle] = useState("");
   const [metaKeyword, setMetaKeyword] = useState("");
   const [metaDesc, setMetaDesc] = useState("");
+  const [confirmBox, setConfirmBox] = useState(false);
   // Function to handle form submission (you can replace it with your own logic)
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -92,18 +93,27 @@ export default function Builder() {
     setButtonName("Add Builder");
     setShowModal(true);
   };
-  const deleteBuilder = async (item) => {
-    // try{
-    //     const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}builders/delete/${item.id}`)
-    //     if(response.data.isSuccess === 1){
-    //         toast.success(response.data.message);
-    //         fetchBuilders();
-    //     }else{
-    //         toast.error(response.data.message);
-    //     }
-    // }catch(error){
-    //     toast.error(error+"Error occured !");
-    // }
+  const openConfirmationBox = (id) => {
+    setConfirmBox(true);
+    setId(id);
+  };
+  const deleteBuilder = async () => {
+    try {
+      if (id > 0) {
+        const response = await axios.delete(
+          `${process.env.NEXT_PUBLIC_API_URL}builders/delete/${id}`
+        );
+        if (response.data.isSuccess === 1) {
+          toast.success(response.data.message);
+          setConfirmBox(false);
+          fetchBuilders();
+        } else {
+          toast.error(response.data.message);
+        }
+      }
+    } catch (error) {
+      toast.error(error + "Error occured !");
+    }
   };
   return (
     <div>
@@ -125,9 +135,9 @@ export default function Builder() {
           </tr>
         </thead>
         <tbody>
-          {builderList.map((item) => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
+          {builderList.map((item, index) => (
+            <tr key={`row-${index}`}>
+              <td>{index + 1}</td>
               <td>{item.builderName}</td>
               <td>{item.metaTitle}</td>
               <td>{item.metaDesc}</td>
@@ -138,7 +148,7 @@ export default function Builder() {
                     className="mx-3 text-danger"
                     style={{ cursor: "pointer" }}
                     icon={faTrash}
-                    onClick={() => deleteBuilder(item)}
+                    onClick={() => openConfirmationBox(item.id)}
                   />
                   <FontAwesomeIcon
                     className="text-warning"
@@ -196,8 +206,8 @@ export default function Builder() {
                 as="textarea"
                 rows={3}
                 name="builderDesc"
-                value={builderDesc|| ""}
-                onChange={(e)=>setBuilderDesc(e.target.value)}
+                value={builderDesc || ""}
+                onChange={(e) => setBuilderDesc(e.target.value)}
               />
             </Form.Group>
             <Form.Group
@@ -211,8 +221,8 @@ export default function Builder() {
                 as="textarea"
                 rows={3}
                 name="metaKeyword"
-                value={metaKeyword|| ""}
-                onChange={(e)=>setMetaKeyword(e.target.value)}
+                value={metaKeyword || ""}
+                onChange={(e) => setMetaKeyword(e.target.value)}
               />
             </Form.Group>
             <Form.Group
@@ -226,8 +236,8 @@ export default function Builder() {
                 as="textarea"
                 rows={3}
                 name="metaDesc"
-                value={metaDesc|| ""}
-                onChange={(e)=>setMetaDesc(e.target.value)}
+                value={metaDesc || ""}
+                onChange={(e) => setMetaDesc(e.target.value)}
               />
             </Form.Group>
             <Button variant="primary" type="submit">
@@ -235,6 +245,20 @@ export default function Builder() {
             </Button>
           </Form>
         </Modal.Body>
+      </Modal>
+      <Modal show={confirmBox} onHide={() => setConfirmBox(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Are you sure you want to delete ?</Modal.Title>
+        </Modal.Header>
+        {/* <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body> */}
+        <Modal.Footer className="d-flex justify-content-center">
+          <Button variant="secondary" onClick={() => setConfirmBox(false)}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={deleteBuilder}>
+            Delete
+          </Button>
+        </Modal.Footer>
       </Modal>
       <ToastContainer />
     </div>

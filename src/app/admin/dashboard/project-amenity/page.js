@@ -5,6 +5,8 @@ import { Button, Col, Form, Modal, Table } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Multiselect from "multiselect-react-dropdown";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 export default function ProjectsAmenity() {
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState("");
@@ -13,6 +15,8 @@ export default function ProjectsAmenity() {
   const [projectId, setProjectId] = useState("");
   const [buttonName, setButtonName] = useState("");
   const [amenityList, setAmenityList] = useState([]);
+  const [projectAmenityList, setProjectAmenityList] = useState([]);
+  const [confirmBox, setConfirmBox] = useState(false);
   // State to store selected values
   const [selectedValue, setSelectedValue] = useState([]);
   console.log(selectedValue);
@@ -29,6 +33,8 @@ export default function ProjectsAmenity() {
     setShowModal(true);
     setTitle("Add New Amenity");
     setButtonName("Add");
+    setSelectedValue([]);
+    setProjectId(0);
   };
   const fetchProjects = async () => {
     const projectResponse = await axios.get(
@@ -57,13 +63,49 @@ export default function ProjectsAmenity() {
     if (response.data.isSuccess === 1) {
       toast.success(response.data.message);
       setShowModal(false);
+      fetchPrjectsAmenity();
     } else {
       toast.error(response.data.message);
     }
   };
+  const deleteProjectAmenity = async () => {
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_API_URL}project-amenity/delete/${projectId}`
+    );
+    if (response.data.isSuccess === 1) {
+      toast.success(response.data.message);
+      fetchPrjectsAmenity();
+      setConfirmBox(false);
+    }else{
+      toast.error(response.data.message);
+    }
+  };
+  const openConfirmationBox = (id) =>{
+    setConfirmBox(true);
+    setProjectId(id);
+  }
+  const fetchPrjectsAmenity = async () => {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}project-amenity/all`
+    );
+    if (response) {
+      setProjectAmenityList(response.data);
+    }
+  };
+  const openEditPopUp = async (item) => {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}project-amenity/${item.projectId}`
+    );
+    setShowModal(true);
+    setTitle("Update Project Amenity");
+    setButtonName("Update");
+    setSelectedValue(response.data);
+    setProjectId(item.projectId);
+  };
   useEffect(() => {
     fetchProjects();
     fetchAmenities();
+    fetchPrjectsAmenity();
   }, []);
   return (
     <>
@@ -78,25 +120,23 @@ export default function ProjectsAmenity() {
           <tr>
             <th>S no</th>
             <th>Project Name</th>
-            <th>Amenitys</th>
+            <th>Amenities</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {/* {cityList.map((item) => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>{item.name}</td>
-              <td>{item.state}</td>
-              <td>{item.metaTitle}</td>
-              <td>{item.metaKeyWords}</td>
-              <td>{item.metaDescription}</td>
+          {projectAmenityList.map((item, index) => (
+            <tr key={`row-${index}`}>
+              <td>{index + 1}</td>
+              <td>{item.projectName}</td>
+              <td>{item.amenities}</td>
               <td>
                 <div>
                   <FontAwesomeIcon
                     className="mx-3 text-danger"
                     style={{ cursor: "pointer" }}
                     icon={faTrash}
+                    onClick={()=>openConfirmationBox(item.projectId)}
                   />
                   <FontAwesomeIcon
                     className="text-warning"
@@ -107,7 +147,7 @@ export default function ProjectsAmenity() {
                 </div>
               </td>
             </tr>
-          ))} */}
+          ))}
         </tbody>
       </Table>
       {/* Modal for adding a new city */}
@@ -137,6 +177,7 @@ export default function ProjectsAmenity() {
               </Form.Select>
             </Form.Group>
             <Form.Group className="mt-3">
+              <Form.Label>Select Amenities</Form.Label>
               <Multiselect
                 options={amenityList} // Options to display in the dropdown
                 selectedValues={selectedValue} // Preselected value to persist in dropdown
@@ -150,6 +191,20 @@ export default function ProjectsAmenity() {
             </Button>
           </Form>
         </Modal.Body>
+      </Modal>
+      <Modal show={confirmBox} onHide={() => setConfirmBox(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Are you sure you want to delete ?</Modal.Title>
+        </Modal.Header>
+        {/* <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body> */}
+        <Modal.Footer className="d-flex justify-content-center">
+          <Button variant="secondary" onClick={() => setConfirmBox(false)}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={deleteProjectAmenity}>
+            Delete
+          </Button>
+        </Modal.Footer>
       </Modal>
       <ToastContainer />
     </>
