@@ -9,7 +9,12 @@ import Footer from "../components/footer/page";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBed, faChartArea, faMarker, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBed,
+  faChartArea,
+  faMarker,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import Featured from "../components/home/featured/page";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -206,23 +211,30 @@ export default function Property({ slug }) {
           </div>
           <div className="short-info">
             <p className="m-0 p-0">{projectDetail.projectName}</p>
-            <small><FontAwesomeIcon icon={faMarker} width={10}/> {projectDetail.projectAddress}</small>
-            <span>{projectDetail.projectPrice}* | {projectDetail.projectConfiguration}</span>
+            <small>
+              <FontAwesomeIcon icon={faMarker} width={10} />{" "}
+              {projectDetail.projectAddress}
+            </small>
+            <span>
+              {projectDetail.projectPrice}* |{" "}
+              {projectDetail.projectConfiguration}
+            </span>
             <div className="btn btn-success">Get Details</div>
           </div>
         </div>
         <div>
           <h1 className="text-center mt-3">About The Project</h1>
           <div className="p-3">
-            <p className="text-center" dangerouslySetInnerHTML={{ __html: aboutData.shortDesc }}></p>
+            <p
+              className="text-center"
+              dangerouslySetInnerHTML={{ __html: aboutData.shortDesc }}
+            ></p>
           </div>
         </div>
         <div className="d-flex justify-content-center">
           <button className="btn btn-success">READ MORE</button>
           <button className="btn btn-success mx-3">DOWNLOAD BROCHURE</button>
-          <button className="btn btn-success">
-            SCHEDULE A SITE VISIT
-          </button>
+          <button className="btn btn-success">SCHEDULE A SITE VISIT</button>
         </div>
         <div className="d-flex justify-content-center mt-5">
           <div className="walkthrough-container">
@@ -230,7 +242,11 @@ export default function Property({ slug }) {
               <p className="h1 text-light mt-5">Walkthrough</p>
             </div>
             <div className="text-center p-5">
-              <p dangerouslySetInnerHTML={{ __html: walkthrough.walkthroughDesc }}></p>
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: walkthrough.walkthroughDesc,
+                }}
+              ></p>
             </div>
             <div className="text-center">
               <button className="btn btn-success mb-5">View</button>
@@ -240,16 +256,21 @@ export default function Property({ slug }) {
         <div className="container-fluid bg-dark p-5 mt-5" id="amenities">
           <p className="h1 text-center text-light">Amenities</p>
           <div>
-            <p className="text-center text-light">
-              {projectDetail.amenityDesc}
-            </p>
+            <p
+              className="text-center text-light"
+              dangerouslySetInnerHTML={{ __html: projectDetail.amenityDesc }}
+            ></p>
           </div>
           <div className="row">
             <div className="d-flex flex-wrap justify-content-center">
               {amenities.map((item) => (
                 <div key={item.id} className="card mx-3 p-5 mt-3">
                   <img
-                    src={process.env.NEXT_PUBLIC_IMAGE_URL+"amenity/" + item.amenityImageUrl}
+                    src={
+                      process.env.NEXT_PUBLIC_IMAGE_URL +
+                      "amenity/" +
+                      item.amenityImageUrl
+                    }
                     alt={item.altTag}
                     style={{ width: "100px" }}
                   />
@@ -265,7 +286,10 @@ export default function Property({ slug }) {
         <div className="container-fluid" id="floorplan">
           <div className="p-5">
             <p className="h1 text-center">Floor Plans</p>
-            <p className="text-center">{projectDetail.floorPlanDesc}</p>
+            <p
+              className="text-center"
+              dangerouslySetInnerHTML={{ __html: projectDetail.floorPlanDesc }}
+            ></p>
           </div>
           <div className="d-flex justify-content-center p-2">
             {floorPlanList.map((item) => (
@@ -324,7 +348,9 @@ export default function Property({ slug }) {
             <p className="h1 text-center">Location</p>
           </div>
           <div className="text-center p-5">
-            <p>{projectDetail.locationDesc}</p>
+            <p
+              dangerouslySetInnerHTML={{ __html: projectDetail.locationDesc }}
+            ></p>
           </div>
           <div className="row p-2">
             <div className="col-md-6">

@@ -11,7 +11,7 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import axios from "axios";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 export default function Aminities() {
@@ -20,6 +20,9 @@ export default function Aminities() {
   const [title, setTitle] = useState("");
   const [buttonName, setButtonName] = useState("");
   const [validated, setValidated] = useState(false);
+  const [previousImage, setPreviousImage] = useState("");
+  const [confirmBox, setConfirmBox] = useState(false);
+  const [amenityId, setAmenityId] = useState(0);
   const fetchAmenities = async () => {
     const amenityList = await axios.get(
       process.env.NEXT_PUBLIC_API_URL + "amenity/get-all"
@@ -46,6 +49,9 @@ export default function Aminities() {
     formDataToSend.append("title", formData.title);
     formDataToSend.append("altTag", formData.altTag);
     formDataToSend.append("amenityImage", formData.amenityImage);
+    if (formData.id > 0) {
+      formDataToSend.append("id", formData.id);
+    }
     try {
       const response = await axios.post(
         process.env.NEXT_PUBLIC_API_URL + "amenity/post",
@@ -86,7 +92,28 @@ export default function Aminities() {
       [name]: value,
     }));
   };
+  const openConfirmationBox = (id) =>{
+    setConfirmBox(true);
+    setAmenityId(id);
+  }
+  const deleteAmenity = async () => {
+    const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}amenity/delete/${amenityId}`);
+    if(response.data.isSuccess === 1){
+      toast.success(response.data.message);
+      setConfirmBox(false);
+      fetchAmenities();
+    }else{
+      toast.error(response.data.message);
+      setConfirmBox(false);
+    }
+  }
   const openAddModel = () => {
+    setFormData({
+      title: "",
+      altTag: "",
+      amenityImage: null,
+    });
+    setPreviousImage(null);
     setTitle("Add New Amenity");
     setButtonName("Add Amenity");
     setShowModal(true);
@@ -94,7 +121,14 @@ export default function Aminities() {
   const openEditModel = (item) => {
     setTitle("Edit Amenity");
     setButtonName("Update Amenity");
+    setFormData({
+      ...item,
+      amenityImage: null,
+    });
     setShowModal(true);
+    setPreviousImage(
+      `${process.env.NEXT_PUBLIC_IMAGE_URL}amenity/${item.amenityImageUrl}`
+    );
   };
   return (
     <div className="container-fluid">
@@ -119,7 +153,11 @@ export default function Aminities() {
               <td>{item.id}</td>
               <td>{item.title}</td>
               <td>
-                <img src={`${process.env.NEXT_PUBLIC_IMAGE_URL}amenity/${item.amenityImageUrl}`} width={"50"} alt={item.altTag}/>
+                <img
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}amenity/${item.amenityImageUrl}`}
+                  width={"50"}
+                  alt={item.altTag}
+                />
               </td>
               <td>
                 <div>
@@ -127,7 +165,7 @@ export default function Aminities() {
                     className="mx-3 text-danger"
                     style={{ cursor: "pointer" }}
                     icon={faTrash}
-                    // onClick={() => deleteBuilder(item)}
+                    onClick={() => openConfirmationBox(item.id)}
                   />
                   <FontAwesomeIcon
                     className="text-warning"
@@ -181,6 +219,20 @@ export default function Aminities() {
                 />
                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
               </Form.Group>
+              {previousImage && (
+                <div>
+                  <img
+                    src={previousImage}
+                    alt="previous image"
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      objectFit: "cover",
+                    }}
+                  />
+                  <br />
+                </div>
+              )}
               <Form.Group
                 as={Col}
                 className="mb-3"
@@ -192,7 +244,6 @@ export default function Aminities() {
                     type="file"
                     placeholder="Username"
                     aria-describedby="inputGroupPrepend"
-                    required
                     name="amenityImage"
                     onChange={handleFileChange}
                   />
@@ -202,11 +253,23 @@ export default function Aminities() {
                 </InputGroup>
               </Form.Group>
             </Row>
-            <Button type="submit">
-              {buttonName}
-            </Button>
+            <Button type="submit">{buttonName}</Button>
           </Form>
         </Modal.Body>
+      </Modal>
+      <Modal show={confirmBox} onHide={() => setConfirmBox(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Are you sure you want to delete ?</Modal.Title>
+        </Modal.Header>
+        {/* <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body> */}
+        <Modal.Footer className="d-flex justify-content-center">
+          <Button variant="secondary" onClick={() => setConfirmBox(false)}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={deleteAmenity}>
+            Delete
+          </Button>
+        </Modal.Footer>
       </Modal>
       <ToastContainer />
     </div>

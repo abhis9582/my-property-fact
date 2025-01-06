@@ -1,4 +1,6 @@
 "use client";
+import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Form, Modal, Table } from "react-bootstrap";
@@ -16,6 +18,9 @@ export default function LocationBenefit() {
   const [distance, setDistance] = useState("");
   const [icon, setIcon] = useState("");
   const [benefitList, setBenefitsList] = useState([]);
+  const [confirmBox, setConfirmBox] = useState(false);
+  const [id, setId] = useState(0);
+  const [previewImage, setPreviewImage] = useState(null);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -24,12 +29,19 @@ export default function LocationBenefit() {
       formData.append("benefitName", bName);
       formData.append("distance", distance);
       formData.append("projectId", projectId);
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}location-benefit/add-new`, formData,{
-        headers:{
+      if (id > 0) {
+        formData.append("id", id);
+      }
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}location-benefit/add-new`,
+        formData,
+        {
+          headers: {
             "Content-Type": "multipart/form-data",
+          },
         }
-      });
-      if(response.data.isSuccess == 1){
+      );
+      if (response.data.isSuccess == 1) {
         setShowModal(false);
         toast.success(response.data.message);
         fetchAllBenefits();
@@ -51,13 +63,50 @@ export default function LocationBenefit() {
   };
   const openAddModel = () => {
     setShowModal(true);
+    setDistance("");
+    setBname("");
+    setIcon(null);
+    setPreviewImage(
+      null
+    );
+    setProjectId(0);
     setTitle("Add New Location Benefit");
     setButtonName("Add");
   };
-  const fetchAllBenefits = async ()=>{
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}location-benefit/get-all`);
+  const openEditModel = (item) => {
+    setShowModal(true);
+    setDistance(item.distance);
+    setBname(item.benefitName);
+    setIcon(null);
+    setProjectId(item.projectId);
+    setId(item.id);
+    setPreviewImage(
+      `${process.env.NEXT_PUBLIC_IMAGE_URL}icon/${item.image}`
+    );
+    setTitle("Edit Location Benefit");
+    setButtonName("Updte");
+  };
+  const deleteLocationBenefit = async () => {
+    const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}location-benefit/delete/${id}`);
+    if(response.data.isSuccess === 1){
+      setConfirmBox(false);
+      fetchAllBenefits();
+      toast.success(response.data.message);
+    }else{
+      setConfirmBox(false);
+      toast.error(response.data.message);
+    }
+  };
+  const openConfirmationBox = (id) => {
+    setConfirmBox(true);
+    setId(id);
+  };
+  const fetchAllBenefits = async () => {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}location-benefit/get-all`
+    );
     setBenefitsList(response.data);
-  }
+  };
   useEffect(() => {
     fetchProjects();
     fetchAllBenefits();
@@ -74,28 +123,42 @@ export default function LocationBenefit() {
             <th>S No</th>
             <th>Project Name</th>
             <th>Icon</th>
-            <th>Name</th>
+            <th>Benefit name</th>
             <th>Distance</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
           {benefitList.map((item) => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.projectName}</td>
-                <td>
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}icon/${item.image}`}
-                    alt="image"
-                    width={"50"}
+            <tr key={item.id}>
+              <td>{item.id}</td>
+              <td>{item.projectName}</td>
+              <td>
+                <img
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}icon/${item.image}`}
+                  alt="image"
+                  width={"50"}
+                />
+              </td>
+              <td>{item.benefitName}</td>
+              <td>{item.distance}</td>
+              <td>
+                <div>
+                  <FontAwesomeIcon
+                    className="mx-2 text-warning cursor-pointer"
+                    icon={faPencil}
+                    onClick={() => openEditModel(item)}
                   />
-                </td>
-                <td>{item.benefitName}</td>
-                <td>{item.distance}</td>
-                <td>@mdo</td>
-              </tr>
-            ))}
+
+                  <FontAwesomeIcon
+                    className="mx-2 text-danger cursor-pointer"
+                    icon={faTrash}
+                    onClick={() => openConfirmationBox(item.id)}
+                  />
+                </div>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </Table>
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
@@ -104,6 +167,13 @@ export default function LocationBenefit() {
         </Modal.Header>
         <Modal.Body>
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
+            {previewImage && (
+              <img
+                src={previewImage}
+                alt="image"
+                width={"50"}
+              />
+            )}
             <Form.Group controlId="formFile" className="mb-3">
               <Form.Label>Select icon</Form.Label>
               <Form.Control type="file" onChange={handleFileChange} />
@@ -113,6 +183,7 @@ export default function LocationBenefit() {
               <Form.Select
                 aria-label="Default select example"
                 onChange={(e) => setProjectId(e.target.value)}
+                value={projectId}
               >
                 <option>Select Project</option>
                 {projectList.map((item) => (
@@ -157,6 +228,20 @@ export default function LocationBenefit() {
             </Button>
           </Form>
         </Modal.Body>
+      </Modal>
+      <Modal show={confirmBox} onHide={() => setConfirmBox(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Are you sure you want to delete ?</Modal.Title>
+        </Modal.Header>
+        {/* <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body> */}
+        <Modal.Footer className="d-flex justify-content-center">
+          <Button variant="secondary" onClick={() => setConfirmBox(false)}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={deleteLocationBenefit}>
+            Delete
+          </Button>
+        </Modal.Footer>
       </Modal>
       <ToastContainer />
     </>
