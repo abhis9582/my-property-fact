@@ -1,0 +1,47 @@
+.contact-us {
+    width: 100%;
+    position: relative;
+    margin-top: 5%;
+}
+
+.contactus-head {
+    padding: 6%;
+}
+
+.contact-nav {
+    display: flex;
+    gap: .5rem;
+    margin-left: 2rem;
+    align-items: center;
+}
+
+.contact-nav a {
+    text-decoration: none;
+}
+.contact-nav p{
+    margin: 0px;
+}
+.info-container{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 80%;
+    margin: 0px auto;
+}
+.info-container-child{
+    border: 1px solid gray;
+    padding: 2rem;
+    align-items: center;
+    text-align: center;
+    width: 360px;
+}
+.info-container-child p{
+    font-size: 2rem;
+    font-weight: bold;
+}
+.info-container-child span{
+    font-size: 1.5rem;
+    display: flex;
+    text-align: center;
+    align-self: center;
+}

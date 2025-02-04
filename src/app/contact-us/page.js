@@ -1,14 +1,15 @@
 import Link from "next/link";
 import Footer from "../components/footer/page";
 import Header from "../components/header/page";
+import './contact.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocation } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faLocation } from "@fortawesome/free-solid-svg-icons";
 
 export default function ContactUs() {
   return (
     <>
       <Header />
-      <div className="container-fluid m-0 p-0 mt-5">
+      {/* <div className="container-fluid m-0 p-0 mt-5">
         <img
           src="https://www.starestate.com/assets/images/contact-us.jpg"
           alt="contact us banner"
@@ -38,6 +39,34 @@ export default function ContactUs() {
             </div>
             <div className="col-md-6 p-3"></div>
           </div>
+        </div>
+      </div> */}
+      <div className="container-fluid contact-us">
+        <div className="contactus-head">
+          <h1>Contact us</h1>
+          <div className="contact-nav">
+            <FontAwesomeIcon icon={faHome} width={25} color="#68ac78"/>
+            <Link href="/">Home</Link>
+            <span>&gt;</span>
+            <p>Contact us</p>
+          </div>
+        </div>
+        <div className="info-container">
+            <div className="info-container-child">
+              <p>Email Address</p>
+              <span>info@webmail.com</span>
+              <span>jobs@webexample.com</span>
+            </div>
+            <div className="info-container-child">
+              <p>Phone Number</p>
+              <span>+0123-456789</span>
+              <span>+987-6543210</span>
+            </div>
+            <div className="info-container-child">
+              <p>Office Address</p>
+              <span>18/A, New Born Town Hall</span>
+              <span>New York, US</span>
+            </div>
         </div>
       </div>
       <Footer />

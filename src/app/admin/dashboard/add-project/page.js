@@ -23,8 +23,10 @@ export default function AddProject() {
   const [locationDesc, setLocationDesc] = useState("");
   const [confirmBox, setConfirmBox] = useState(false);
   const [buttonName, setButtonName] = useState("");
+  const [projectId, setProjectId] = useState(0);
   // Defining the initial state
   const initialFormData = {
+    id: 0,
     metaTitle: "",
     metaKeyword: "",
     metaDescription: "",
@@ -55,9 +57,9 @@ export default function AddProject() {
   };
   const [formData, setFormData] = useState(initialFormData);
   const [projectDetailList, setProjectDetailList] = useState([]);
-  const [locationPreview, setLocationPreview] = useState("");
-  const [projectThumbnail, setProjectThumbnail] = useState("");
-  const [projectLogoPreview, setProjectLogoPreview] = useState("");
+  const [locationPreview, setLocationPreview] = useState(null);
+  const [projectThumbnailPreview, setProjectThumbnailPreview] = useState(null);
+  const [projectLogoPreview, setProjectLogoPreview] = useState(null);
   const fetchBuilders = async () => {
     const builders = await axios.get(
       process.env.NEXT_PUBLIC_API_URL + "builders/get-all"
@@ -88,8 +90,12 @@ export default function AddProject() {
     setAmenityDesc("");
     setFloorPlanDesc("");
     setLocationDesc("");
+    setProjectLogoPreview(null);
+    setProjectThumbnailPreview(null);
+    setLocationPreview(null);
+    setValidated(false);
   };
-  const openEditModel = (item) => {
+  const openEditModel = (item) => {    
     setTitle("Edit Project");
     setShowModal(true);
     setButtonName("Update Project");
@@ -99,7 +105,7 @@ export default function AddProject() {
     setLocationPreview(
       `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.locationMap}`
     );
-    setProjectThumbnail(
+    setProjectThumbnailPreview(
       `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.projectThumbnail}`
     );
     setProjectLogoPreview(
@@ -114,11 +120,23 @@ export default function AddProject() {
       projectThumbnail: null
     });
   };
-  const deleteProject = () => {
-    console.log();
+  const deleteProject = async() => {
+    if(projectId > 0){
+      try{
+        const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}projects/delete/${projectId}`);
+        if(response.data.isSuccess === 1){
+          setConfirmBox(false);
+          toast.success(response.data.message);
+          fetchProjectsWithDetail();
+        }
+      }catch(error){
+        toast.error(error);
+      }
+    }
   };
-  const openConfirmationBox = () => {
+  const openConfirmationBox = (id) => {
     setConfirmBox(true);
+    setProjectId(id);
   };
   const fetchProjectsWithDetail = async () => {
     const response = await axios.get(
@@ -158,9 +176,7 @@ export default function AddProject() {
       event.stopPropagation();
       setValidated(true);
       return;
-    }
-    console.log(formData);
-    
+    }    
     if (form.checkValidity() === true) {
       const data = new FormData();
       for (let key in formData) {
@@ -179,6 +195,8 @@ export default function AddProject() {
         if (response.data.isSuccess === 1) {
           toast.success(response.data.message);
           setFormData(initialFormData);
+          setShowModal(false);
+          fetchProjectsWithDetail();
         }
       } catch (error) {
         toast.error("Error saving Project");
@@ -225,7 +243,7 @@ export default function AddProject() {
                     <FontAwesomeIcon
                       className="mx-2 text-danger cursor-pointer"
                       icon={faTrash}
-                      onClick={openConfirmationBox}
+                      onClick={()=>openConfirmationBox(item.id)}
                     />
                   </div>
                 </td>
@@ -448,14 +466,13 @@ export default function AddProject() {
             <Row className="mb-3">
               <Form.Group as={Col} md="6" controlId="validationCustom13">
                 <Form.Label>Location Map</Form.Label>
-                {formData.locationMap && (
+                {locationPreview && (
                   <div>
                     <img
                       src={locationPreview}
                       alt="Current Project locationmap"
                       style={{
                         width: "100px",
-                        height: "100px",
                         objectFit: "cover",
                       }}
                     />
@@ -500,14 +517,13 @@ export default function AddProject() {
               </Form.Group>
               <Form.Group as={Col} md="6" controlId="validationCustom16">
                 <Form.Label>Project Logo</Form.Label>
-                {formData.locationMap && (
+                {projectLogoPreview && (
                   <div>
                     <img
                       src={projectLogoPreview}
                       alt="Current Project Logo"
                       style={{
                         width: "100px",
-                        height: "100px",
                         objectFit: "cover",
                       }}
                     />
@@ -529,14 +545,13 @@ export default function AddProject() {
             <Row className="mb-3">
               <Form.Group as={Col} md="6" controlId="validationCustom17">
                 <Form.Label>Project Thumbnail</Form.Label>
-                {formData.locationMap && (
+                {projectThumbnailPreview && (
                   <div>
                     <img
-                      src={projectThumbnail}
+                      src={projectThumbnailPreview}
                       alt="Current Project Thumbnail"
                       style={{
                         width: "100px",
-                        height: "100px",
                         objectFit: "cover",
                       }}
                     />
@@ -546,7 +561,6 @@ export default function AddProject() {
                 <Form.Control
                   // required
                   type="file"
-                  placeholder="Project Thumnnail"
                   name="projectThumbnail"
                   onChange={handleFileChange}
                 />

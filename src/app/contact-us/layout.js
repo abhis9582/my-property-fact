@@ -6,7 +6,7 @@ import ContactUs from "./page";
 //     return {title, description};
 // }
 export const metadata = {
-    title: "Contact us",
+    title: "Contact us | My property fact",
     description: "Contact us",
     robots: "noindex, nofollow",
   };
