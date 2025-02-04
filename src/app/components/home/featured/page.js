@@ -3,16 +3,17 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./featured.css";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarker } from "@fortawesome/free-solid-svg-icons";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Featured() {
   const [featuredProperties, setFeaturedProperties] = useState([]);
   const goToPropertyDetail = (url) => {
-    window.open("/"+url, "_blank");
+    window.open("/" + url, "_blank");
   };
   useEffect(() => {
     const fetchData = async () => {
@@ -28,12 +29,12 @@ export default function Featured() {
     fetchData();
   }, []);
   const settings = {
-    dots: false,
+    dots: true,
     infinite: true,
     speed: 500,
     autoplay: true,
     autoplaySpeed: 5000,
-    arrows: false,
+    arrows: true,
     slidesToShow: 3,
     slidesToScroll: 1,
     responsive: [
@@ -69,71 +70,43 @@ export default function Featured() {
   };
   return (
     <>
-      <Slider {...settings}>
-        {featuredProperties.map((property) => {
-          return (
-            <aside key={property.id} className="p-4 container">
-              <div
-                className="p-8 rounded-lg bg-darkGray bg-opacity-10 shadow-md flex flex-col items-center justify-content-center container main-container"
-                onClick={()=>goToPropertyDetail(property.slugURL)}
-              >
-                {/* <Image
-                  src={`/${tm.img}`}
-                  alt={tm.name}
-                  width={400}
-                  height={400}
-                  className="rounded-full mb-4 "
-                /> */}
-                <img
-                  // style={{ width: "100%" }}
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${property.slugURL}/${property.projectThumbnail}`}
-                  alt="project image"
-                />
-                <div className="row pb-1">
-                  <div className="col-8 text-start">
-                    <h5>{property.projectName}</h5>
+      <div className="container mt-4">
+        <p className="h1 text-center">Featured Projects</p>
+        <Slider {...settings}>
+          {featuredProperties.map((property) => {
+            return (
+              <aside key={property.id} className="p-4 container">
+                <div
+                  className="p-8 rounded-lg bg-darkGray bg-opacity-10 shadow-md flex flex-col items-center justify-content-center container main-container"
+                  onClick={() => goToPropertyDetail(property.slugURL)}
+                >
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${property.slugURL}/${property.projectThumbnail}`}
+                    alt="project image"
+                  />
+                  <div className="mt-2 d-flex justify-content-between align-items-center">
+                    <p className="h5 fw-bold">{property.projectName}</p>
+                    <p className="h5 fw-bold text-success">{property.projectPrice}*</p>
                   </div>
-                  <div className="col-4 text-end">
-                    <p>{property.projectPrice}</p>
-                  </div>
-                </div>
-                <div>
-                  <p><FontAwesomeIcon icon={faMapMarker} width={8} color="green"/> {property.projectAddress}</p>
-                </div>
-              </div>
-            </aside>
-          );
-        })}
-        {/* {db.testimonial.map((tm, i) => {
-          return (
-            <aside key={i} className="p-4 container">
-              <div
-                className="p-8 rounded-lg bg-darkGray bg-opacity-10 shadow-md flex flex-col items-center justify-content-center container main-container"
-                onClick={goToPropertyDetail}
-              >
-                <p className="text-base text-darkGray text-center mt-6 mb-8">
-                  {tm.message}
-                </p>
-                <Image
-                  src={`/${tm.img}`}
-                  alt={tm.name}
-                  width={400}
-                  height={400}
-                  className="rounded-full mb-4 "
-                />
-                <div className="row pb-1">
-                  <div className="col-8 text-start">
-                    <h5>{tm.name}</h5>
-                  </div>
-                  <div className="col-4 text-end">
-                    <p>{tm.location}</p>
+                  <div className="pb-2 fw-bold">
+                    <FontAwesomeIcon
+                      icon={faMapMarker}
+                      width={8}
+                      color="green"
+                    />{" "}
+                    {property.projectAddress}
                   </div>
                 </div>
-              </div>
-            </aside>
-          );
-        })} */}
-      </Slider>
+              </aside>
+            );
+          })}
+        </Slider>
+        <div className="text-center">
+          <Link className="btn btn-success" href="/projects">
+            View all
+          </Link>
+        </div>
+      </div>
     </>
   );
 }

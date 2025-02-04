@@ -170,10 +170,7 @@ export default function HomePage() {
         </span>
       </button>
       <Insight />
-      <div className=" mt-4 row" style={{ width: "100% !important" }}>
-        <p className="h2 text-center mt-4">Featured Projects</p>
-        <Featured />
-      </div>
+      <Featured />
       <DreamProject />
       <NewsViews />
       <SocialFeed />

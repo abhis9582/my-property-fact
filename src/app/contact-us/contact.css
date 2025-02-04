@@ -1,11 +1,15 @@
 .contact-us {
     width: 100%;
     position: relative;
-    margin-top: 5%;
+    margin-top: 4%;
+    padding: 0px;
 }
 
 .contactus-head {
+    margin: 0px;
     padding: 6%;
+    background: #68ac78;
+    background-size: cover;
 }
 
 .contact-nav {
@@ -17,31 +21,174 @@
 
 .contact-nav a {
     text-decoration: none;
+    color: #fff;
 }
-.contact-nav p{
+
+.contact-nav a:hover {
+    color: #000;
+    text-decoration: underline;
+}
+
+.contact-nav p {
     margin: 0px;
 }
-.info-container{
+
+.info-container {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
     width: 80%;
-    margin: 0px auto;
+    margin: 3% auto;
 }
-.info-container-child{
-    border: 1px solid gray;
+
+.info-container-child {
+    border: 1px solid #68ac78;
     padding: 2rem;
     align-items: center;
     text-align: center;
     width: 360px;
+    border-radius: 1rem;
 }
-.info-container-child p{
+
+.info-container-child p:first-child {
     font-size: 2rem;
     font-weight: bold;
+    color: #68ac78;
 }
-.info-container-child span{
-    font-size: 1.5rem;
+
+.info-container-child p:not(:first-child) {
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: gray;
+    line-height: 1.2rem;
+}
+
+.contact-form-section {
     display: flex;
-    text-align: center;
-    align-self: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.input-item {
+    position: relative;
+}
+
+.contact-form-section form {
+    width: 50%;
+    padding: 40px 50px 50px;
+    position: relative;
+    z-index: 1;
+    border: 1px solid;
+    border-radius: 1rem;
+}
+
+.input-item svg {
+    position: absolute;
+    top: 35%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    right: 20px;
+    color: #68ac78;
+}
+
+.contact-form-section textarea {
+    resize: vertical;
+    padding: 15px 20px;
+    min-height: 150px;
+}
+
+.contact-form-section input[type="text"],
+.contact-form-section input[type="email"],
+.contact-form-section input[type="number"],
+.contact-form-section input[type="submit"],
+.contact-form-section textarea {
+    background-color: var(--white);
+    border: 2px solid #68ac78;
+    height: 65px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    padding-left: 20px;
+    font-size: 16px;
+    color: var(--ltn__paragraph-color);
+    width: 100%;
+    margin-bottom: 30px;
+    border-radius: 0;
+    padding-right: 40px;
+}
+
+.contact-form-section button {
+    padding: 1rem 2rem;
+    background-color: #68ac78;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+.looking-for-home{
+    position: relative;
+    bottom: 0px;
+    padding: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+.looking-for-home-child{
+    position: absolute;
+    background-color: #68ac78;
+    justify-content: space-between;
+    width: 80%;
+    padding: 2rem;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.looking-for-home-child-text p:first-child{
+    color: #fff;
+    font-size: 2rem;
+    font-weight: bolder;
+    padding: 0px;
+    margin: 0px;
+}
+.looking-for-home-child-text p:last-child{
+    color: #fff;
+    font-size: 1rem;
+}
+.looking-for-home-child a{
+    text-decoration: none;
+    font-size: 1.5rem;
+    color: #68ac78;
+    background-color: #fff;
+    padding: 1rem 5rem;
+    font-weight: bold;
+    transition: color 0.5s linear, background-color 0.5s linear;
+}
+.looking-for-home-child a:hover {
+    color: #fff;
+    background-color: #000; 
+}
+
+@media (max-width:426px) {
+    .contact-us{
+        margin-top: 68px;
+    }
+    .info-container-child {
+        margin-top: 1rem;
+    }
+    .contact-form-section form {
+        width: 100%;
+        padding: 40px 50px 50px;
+        position: relative;
+        z-index: 1;
+        border: 1px solid;
+        border-radius: 1rem;
+    }
+    .looking-for-home-child a{
+        padding: 1rem;
+    }
+    .looking-for-home {
+        height: 290px;
+    }
 }
