@@ -1,0 +1,20 @@
+.insight-property-rate-filter{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+.insight-property-rate-filter-child{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+.insight-property-rate-filter-child p{
+    background-color: rgb(255, 192, 109);
+    padding: 10px;
+}
+.insight-property-rate-filter-child-active{
+    background-color: #9fda9b !important;
+}

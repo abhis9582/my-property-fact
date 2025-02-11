@@ -71,7 +71,7 @@ export default function Featured() {
   return (
     <>
       <div className="container mt-4">
-        <p className="h1 text-center">Featured Projects</p>
+        <p className="fs-1 fw-bold text-center">Featured Projects</p>
         <Slider {...settings}>
           {featuredProperties.map((property) => {
             return (

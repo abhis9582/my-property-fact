@@ -2,7 +2,7 @@ export default function DreamProject() {
   return (
     <>
       <div className="container my-4">
-        <p className="h3 text-center">
+        <p className="h3 text-center fw-bold">
           Find your dream property in the city you are searching in
         </p>
         <div className="d-flex  justify-content-center flex-wrap">

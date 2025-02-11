@@ -1,0 +1,1345 @@
+{
+    "props": {
+        "pageProps": {
+            "clientId": "U3F1YXJlWWFyZHNEb3RDb21WMQ==",
+            "clientName": "Square Yards",
+            "countryName": "India",
+            "defaultAggregationDataIndex": 2,
+            "defaultAggregationType": "1-year",
+            "defaultTransactionDataIndex": 0,
+            "defaultTransactionType": "all",
+            "defaultValueType": "Govt Registered Value",
+            "formattedData": [
+                {
+                    "category": "all",
+                    "categoryDisplayName": "All",
+                    "headers": [
+                        {
+                            "headerDisplayName": "City Name",
+                            "header": "city",
+                            "priority": 1,
+                            "subHeader": "noOfProjects"
+                        },
+                        {
+                            "headerDisplayName": "Transactions",
+                            "header": "noOfTransactions",
+                            "priority": 2
+                        },
+                        {
+                            "headerDisplayName": "Current Price",
+                            "header": "currentRate",
+                            "priority": 3
+                        },
+                        {
+                            "headerDisplayName": "Change",
+                            "header": "changeValue",
+                            "priority": 4
+                        }
+                    ],
+                    "aggregationFromList": [
+                        {
+                            "aggregationFrom": "3-months",
+                            "aggregationFromDisplayName": "3M",
+                            "legendHeader": null,
+                            "mapLegends": [],
+                            "details": [
+                                {
+                                    "changePercentage": "-0.25%",
+                                    "changeValue": "-₹ 64",
+                                    "currentRate": "₹ 25,974",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-mumbai",
+                                    "noOfProjects": "11,553 Projects",
+                                    "noOfTransactions": "32,910",
+                                    "priority": 1,
+                                    "city": "Mumbai",
+                                    "saleRentValue": "₹ 45,944 Cr."
+                                },
+                                {
+                                    "changePercentage": "+0.52%",
+                                    "changeValue": "+₹ 33",
+                                    "currentRate": "₹ 6,436",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-bangalore",
+                                    "noOfProjects": "2,449 Projects",
+                                    "noOfTransactions": "25,370",
+                                    "priority": 2,
+                                    "city": "Bangalore",
+                                    "saleRentValue": "₹ 17,117 Cr."
+                                },
+                                {
+                                    "changePercentage": "+1.72%",
+                                    "changeValue": "+₹ 116",
+                                    "currentRate": "₹ 6,877",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-hyderabad",
+                                    "noOfProjects": "5,636 Projects",
+                                    "noOfTransactions": "15,961",
+                                    "priority": 3,
+                                    "city": "Hyderabad",
+                                    "saleRentValue": "₹ 9,626 Cr."
+                                },
+                                {
+                                    "changePercentage": "-2.27%",
+                                    "changeValue": "-₹ 356",
+                                    "currentRate": "₹ 15,305",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-navi-mumbai",
+                                    "noOfProjects": "3,724 Projects",
+                                    "noOfTransactions": "11,121",
+                                    "priority": 4,
+                                    "city": "Navi Mumbai",
+                                    "saleRentValue": "₹ 6,803 Cr."
+                                },
+                                {
+                                    "changePercentage": "+2.16%",
+                                    "changeValue": "+₹ 223",
+                                    "currentRate": "₹ 10,549",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-pune",
+                                    "noOfProjects": "4,653 Projects",
+                                    "noOfTransactions": "23,390",
+                                    "priority": 6,
+                                    "city": "Pune",
+                                    "saleRentValue": "₹ 16,778 Cr."
+                                },
+                                {
+                                    "changePercentage": "+7.60%",
+                                    "changeValue": "+₹ 977",
+                                    "currentRate": "₹ 13,840",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-thane",
+                                    "noOfProjects": "4,847 Projects",
+                                    "noOfTransactions": "18,508",
+                                    "priority": 7,
+                                    "city": "Thane",
+                                    "saleRentValue": "₹ 9,751 Cr."
+                                },
+                                {
+                                    "changePercentage": "-1.22%",
+                                    "changeValue": "-₹ 81",
+                                    "currentRate": "₹ 6,587",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-noida",
+                                    "noOfProjects": "278 Projects",
+                                    "noOfTransactions": "3,397",
+                                    "priority": 8,
+                                    "city": "Noida",
+                                    "saleRentValue": "₹ 4,077 Cr."
+                                },
+                                {
+                                    "changePercentage": "-1.11%",
+                                    "changeValue": "-₹ 53",
+                                    "currentRate": "₹ 4,791",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-greater-noida",
+                                    "noOfProjects": "249 Projects",
+                                    "noOfTransactions": "5,359",
+                                    "priority": 9,
+                                    "city": "Greater Noida",
+                                    "saleRentValue": "₹ 3,439 Cr."
+                                },
+                                {
+                                    "changePercentage": "-14.36%",
+                                    "changeValue": "-₹ 723",
+                                    "currentRate": "₹ 4,315",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-ghaziabad",
+                                    "noOfProjects": "863 Projects",
+                                    "noOfTransactions": "10,718",
+                                    "priority": 10,
+                                    "city": "Ghaziabad",
+                                    "saleRentValue": "₹ 2,333 Cr."
+                                }
+                            ]
+                        },
+                        {
+                            "aggregationFrom": "6-months",
+                            "aggregationFromDisplayName": "6M",
+                            "legendHeader": null,
+                            "mapLegends": [],
+                            "details": [
+                                {
+                                    "changePercentage": "-3.49%",
+                                    "changeValue": "-₹ 939",
+                                    "currentRate": "₹ 25,974",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-mumbai",
+                                    "noOfProjects": "18,041 Projects",
+                                    "noOfTransactions": "66,866",
+                                    "priority": 1,
+                                    "city": "Mumbai",
+                                    "saleRentValue": "₹ 91,204 Cr."
+                                },
+                                {
+                                    "changePercentage": "+4.97%",
+                                    "changeValue": "+₹ 304",
+                                    "currentRate": "₹ 6,436",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-bangalore",
+                                    "noOfProjects": "5,122 Projects",
+                                    "noOfTransactions": "53,882",
+                                    "priority": 2,
+                                    "city": "Bangalore",
+                                    "saleRentValue": "₹ 36,749 Cr."
+                                },
+                                {
+                                    "changePercentage": "-1.66%",
+                                    "changeValue": "-₹ 116",
+                                    "currentRate": "₹ 6,877",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-hyderabad",
+                                    "noOfProjects": "10,060 Projects",
+                                    "noOfTransactions": "35,926",
+                                    "priority": 3,
+                                    "city": "Hyderabad",
+                                    "saleRentValue": "₹ 21,523 Cr."
+                                },
+                                {
+                                    "changePercentage": "-3.27%",
+                                    "changeValue": "-₹ 516",
+                                    "currentRate": "₹ 15,305",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-navi-mumbai",
+                                    "noOfProjects": "5,764 Projects",
+                                    "noOfTransactions": "23,411",
+                                    "priority": 4,
+                                    "city": "Navi Mumbai",
+                                    "saleRentValue": "₹ 14,260 Cr."
+                                },
+                                {
+                                    "changePercentage": "+4.55%",
+                                    "changeValue": "+₹ 458",
+                                    "currentRate": "₹ 10,549",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-pune",
+                                    "noOfProjects": "7,235 Projects",
+                                    "noOfTransactions": "49,997",
+                                    "priority": 6,
+                                    "city": "Pune",
+                                    "saleRentValue": "₹ 36,206 Cr."
+                                },
+                                {
+                                    "changePercentage": "-2.51%",
+                                    "changeValue": "-₹ 356",
+                                    "currentRate": "₹ 13,840",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-thane",
+                                    "noOfProjects": "7,398 Projects",
+                                    "noOfTransactions": "38,140",
+                                    "priority": 7,
+                                    "city": "Thane",
+                                    "saleRentValue": "₹ 19,206 Cr."
+                                },
+                                {
+                                    "changePercentage": "+0.67%",
+                                    "changeValue": "+₹ 44",
+                                    "currentRate": "₹ 6,587",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-noida",
+                                    "noOfProjects": "383 Projects",
+                                    "noOfTransactions": "7,062",
+                                    "priority": 8,
+                                    "city": "Noida",
+                                    "saleRentValue": "₹ 7,765 Cr."
+                                },
+                                {
+                                    "changePercentage": "+2.26%",
+                                    "changeValue": "+₹ 105",
+                                    "currentRate": "₹ 4,791",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-greater-noida",
+                                    "noOfProjects": "346 Projects",
+                                    "noOfTransactions": "10,913",
+                                    "priority": 9,
+                                    "city": "Greater Noida",
+                                    "saleRentValue": "₹ 6,983 Cr."
+                                },
+                                {
+                                    "changePercentage": "-10.50%",
+                                    "changeValue": "-₹ 506",
+                                    "currentRate": "₹ 4,315",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-ghaziabad",
+                                    "noOfProjects": "1,445 Projects",
+                                    "noOfTransactions": "26,306",
+                                    "priority": 10,
+                                    "city": "Ghaziabad",
+                                    "saleRentValue": "₹ 6,133 Cr."
+                                }
+                            ]
+                        },
+                        {
+                            "aggregationFrom": "1-year",
+                            "aggregationFromDisplayName": "1Yr",
+                            "legendHeader": null,
+                            "mapLegends": [],
+                            "details": [
+                                {
+                                    "changePercentage": "-0.38%",
+                                    "changeValue": "-₹ 100",
+                                    "currentRate": "₹ 25,974",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-mumbai",
+                                    "noOfProjects": "27,222 Projects",
+                                    "noOfTransactions": "138,425",
+                                    "priority": 1,
+                                    "city": "Mumbai",
+                                    "saleRentValue": "₹ 184,102 Cr."
+                                },
+                                {
+                                    "changePercentage": "-4.10%",
+                                    "changeValue": "-₹ 275",
+                                    "currentRate": "₹ 6,436",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-bangalore",
+                                    "noOfProjects": "9,939 Projects",
+                                    "noOfTransactions": "99,184",
+                                    "priority": 2,
+                                    "city": "Bangalore",
+                                    "saleRentValue": "₹ 67,849 Cr."
+                                },
+                                {
+                                    "changePercentage": "-1.97%",
+                                    "changeValue": "-₹ 138",
+                                    "currentRate": "₹ 6,877",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-hyderabad",
+                                    "noOfProjects": "17,275 Projects",
+                                    "noOfTransactions": "75,472",
+                                    "priority": 3,
+                                    "city": "Hyderabad",
+                                    "saleRentValue": "₹ 45,166 Cr."
+                                },
+                                {
+                                    "changePercentage": "+9.72%",
+                                    "changeValue": "+₹ 1,355",
+                                    "currentRate": "₹ 15,305",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-navi-mumbai",
+                                    "noOfProjects": "9,455 Projects",
+                                    "noOfTransactions": "52,682",
+                                    "priority": 4,
+                                    "city": "Navi Mumbai",
+                                    "saleRentValue": "₹ 30,306 Cr."
+                                },
+                                {
+                                    "changePercentage": "0.00%",
+                                    "changeValue": "+₹ 603",
+                                    "currentRate": "₹ 11,385",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-gurgaon",
+                                    "noOfProjects": "529 Projects",
+                                    "noOfTransactions": "5,511",
+                                    "priority": 5,
+                                    "city": "Gurgaon",
+                                    "saleRentValue": "₹ 6,395 Cr."
+                                },
+                                {
+                                    "changePercentage": "+7.49%",
+                                    "changeValue": "+₹ 735",
+                                    "currentRate": "₹ 10,549",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-pune",
+                                    "noOfProjects": "11,368 Projects",
+                                    "noOfTransactions": "112,717",
+                                    "priority": 6,
+                                    "city": "Pune",
+                                    "saleRentValue": "₹ 78,141 Cr."
+                                },
+                                {
+                                    "changePercentage": "+6.51%",
+                                    "changeValue": "+₹ 845",
+                                    "currentRate": "₹ 13,840",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-thane",
+                                    "noOfProjects": "11,512 Projects",
+                                    "noOfTransactions": "82,840",
+                                    "priority": 7,
+                                    "city": "Thane",
+                                    "saleRentValue": "₹ 40,987 Cr."
+                                },
+                                {
+                                    "changePercentage": "+20.04%",
+                                    "changeValue": "+₹ 1,099",
+                                    "currentRate": "₹ 6,587",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-noida",
+                                    "noOfProjects": "464 Projects",
+                                    "noOfTransactions": "10,562",
+                                    "priority": 8,
+                                    "city": "Noida",
+                                    "saleRentValue": "₹ 11,059 Cr."
+                                },
+                                {
+                                    "changePercentage": "+26.45%",
+                                    "changeValue": "+₹ 1,002",
+                                    "currentRate": "₹ 4,791",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-greater-noida",
+                                    "noOfProjects": "482 Projects",
+                                    "noOfTransactions": "22,133",
+                                    "priority": 9,
+                                    "city": "Greater Noida",
+                                    "saleRentValue": "₹ 13,142 Cr."
+                                },
+                                {
+                                    "changePercentage": "-14.79%",
+                                    "changeValue": "-₹ 748",
+                                    "currentRate": "₹ 4,315",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-ghaziabad",
+                                    "noOfProjects": "2,071 Projects",
+                                    "noOfTransactions": "52,324",
+                                    "priority": 10,
+                                    "city": "Ghaziabad",
+                                    "saleRentValue": "₹ 13,077 Cr."
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "category": "new-sale",
+                    "categoryDisplayName": "New Sale",
+                    "headers": [
+                        {
+                            "headerDisplayName": "City Name",
+                            "header": "city",
+                            "priority": 1,
+                            "subHeader": "noOfProjects"
+                        },
+                        {
+                            "headerDisplayName": "Transactions",
+                            "header": "noOfTransactions",
+                            "priority": 2
+                        },
+                        {
+                            "headerDisplayName": "Current Price",
+                            "header": "currentRate",
+                            "priority": 3
+                        },
+                        {
+                            "headerDisplayName": "Change",
+                            "header": "changeValue",
+                            "priority": 4
+                        }
+                    ],
+                    "aggregationFromList": [
+                        {
+                            "aggregationFrom": "3-months",
+                            "aggregationFromDisplayName": "3M",
+                            "legendHeader": null,
+                            "mapLegends": [],
+                            "details": [
+                                {
+                                    "changePercentage": "-1.12%",
+                                    "changeValue": "-₹ 297",
+                                    "currentRate": "₹ 26,243",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-mumbai",
+                                    "noOfProjects": "3,506 Projects",
+                                    "noOfTransactions": "17,058",
+                                    "priority": 1,
+                                    "city": "Mumbai",
+                                    "saleRentValue": "₹ 28,326 Cr."
+                                },
+                                {
+                                    "changePercentage": "-5.60%",
+                                    "changeValue": "-₹ 348",
+                                    "currentRate": "₹ 5,865",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-bangalore",
+                                    "noOfProjects": "737 Projects",
+                                    "noOfTransactions": "6,254",
+                                    "priority": 2,
+                                    "city": "Bangalore",
+                                    "saleRentValue": "₹ 5,453 Cr."
+                                },
+                                {
+                                    "changePercentage": "+0.70%",
+                                    "changeValue": "+₹ 47",
+                                    "currentRate": "₹ 6,830",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-hyderabad",
+                                    "noOfProjects": "1,640 Projects",
+                                    "noOfTransactions": "7,580",
+                                    "priority": 3,
+                                    "city": "Hyderabad",
+                                    "saleRentValue": "₹ 5,481 Cr."
+                                },
+                                {
+                                    "changePercentage": "-2.72%",
+                                    "changeValue": "-₹ 403",
+                                    "currentRate": "₹ 14,447",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-navi-mumbai",
+                                    "noOfProjects": "1,152 Projects",
+                                    "noOfTransactions": "5,653",
+                                    "priority": 4,
+                                    "city": "Navi Mumbai",
+                                    "saleRentValue": "₹ 3,378 Cr."
+                                },
+                                {
+                                    "changePercentage": "+2.90%",
+                                    "changeValue": "+₹ 298",
+                                    "currentRate": "₹ 10,578",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-pune",
+                                    "noOfProjects": "2,857 Projects",
+                                    "noOfTransactions": "18,921",
+                                    "priority": 6,
+                                    "city": "Pune",
+                                    "saleRentValue": "₹ 13,953 Cr."
+                                },
+                                {
+                                    "changePercentage": "+6.88%",
+                                    "changeValue": "+₹ 814",
+                                    "currentRate": "₹ 12,642",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-thane",
+                                    "noOfProjects": "2,147 Projects",
+                                    "noOfTransactions": "11,953",
+                                    "priority": 7,
+                                    "city": "Thane",
+                                    "saleRentValue": "₹ 6,607 Cr."
+                                },
+                                {
+                                    "changePercentage": "-3.10%",
+                                    "changeValue": "-₹ 177",
+                                    "currentRate": "₹ 5,531",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-noida",
+                                    "noOfProjects": "91 Projects",
+                                    "noOfTransactions": "1,553",
+                                    "priority": 8,
+                                    "city": "Noida",
+                                    "saleRentValue": "₹ 1,991 Cr."
+                                },
+                                {
+                                    "changePercentage": "-3.19%",
+                                    "changeValue": "-₹ 148",
+                                    "currentRate": "₹ 4,500",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-greater-noida",
+                                    "noOfProjects": "130 Projects",
+                                    "noOfTransactions": "3,346",
+                                    "priority": 9,
+                                    "city": "Greater Noida",
+                                    "saleRentValue": "₹ 2,068 Cr."
+                                },
+                                {
+                                    "changePercentage": "-9.80%",
+                                    "changeValue": "-₹ 514",
+                                    "currentRate": "₹ 4,735",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-ghaziabad",
+                                    "noOfProjects": "134 Projects",
+                                    "noOfTransactions": "897",
+                                    "priority": 10,
+                                    "city": "Ghaziabad",
+                                    "saleRentValue": "₹ 440 Cr."
+                                }
+                            ]
+                        },
+                        {
+                            "aggregationFrom": "6-months",
+                            "aggregationFromDisplayName": "6M",
+                            "legendHeader": null,
+                            "mapLegends": [],
+                            "details": [
+                                {
+                                    "changePercentage": "-6.12%",
+                                    "changeValue": "-₹ 1,709",
+                                    "currentRate": "₹ 26,243",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-mumbai",
+                                    "noOfProjects": "5,065 Projects",
+                                    "noOfTransactions": "34,934",
+                                    "priority": 1,
+                                    "city": "Mumbai",
+                                    "saleRentValue": "₹ 55,964 Cr."
+                                },
+                                {
+                                    "changePercentage": "-11.12%",
+                                    "changeValue": "-₹ 733",
+                                    "currentRate": "₹ 5,865",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-bangalore",
+                                    "noOfProjects": "1,426 Projects",
+                                    "noOfTransactions": "13,999",
+                                    "priority": 2,
+                                    "city": "Bangalore",
+                                    "saleRentValue": "₹ 11,354 Cr."
+                                },
+                                {
+                                    "changePercentage": "-7.70%",
+                                    "changeValue": "-₹ 570",
+                                    "currentRate": "₹ 6,830",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-hyderabad",
+                                    "noOfProjects": "2,694 Projects",
+                                    "noOfTransactions": "17,220",
+                                    "priority": 3,
+                                    "city": "Hyderabad",
+                                    "saleRentValue": "₹ 12,489 Cr."
+                                },
+                                {
+                                    "changePercentage": "-2.87%",
+                                    "changeValue": "-₹ 427",
+                                    "currentRate": "₹ 14,447",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-navi-mumbai",
+                                    "noOfProjects": "1,737 Projects",
+                                    "noOfTransactions": "12,204",
+                                    "priority": 4,
+                                    "city": "Navi Mumbai",
+                                    "saleRentValue": "₹ 7,149 Cr."
+                                },
+                                {
+                                    "changePercentage": "+4.36%",
+                                    "changeValue": "+₹ 442",
+                                    "currentRate": "₹ 10,578",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-pune",
+                                    "noOfProjects": "4,178 Projects",
+                                    "noOfTransactions": "40,059",
+                                    "priority": 6,
+                                    "city": "Pune",
+                                    "saleRentValue": "₹ 30,072 Cr."
+                                },
+                                {
+                                    "changePercentage": "+2.45%",
+                                    "changeValue": "+₹ 302",
+                                    "currentRate": "₹ 12,642",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-thane",
+                                    "noOfProjects": "3,126 Projects",
+                                    "noOfTransactions": "24,694",
+                                    "priority": 7,
+                                    "city": "Thane",
+                                    "saleRentValue": "₹ 12,958 Cr."
+                                },
+                                {
+                                    "changePercentage": "-6.03%",
+                                    "changeValue": "-₹ 354",
+                                    "currentRate": "₹ 5,531",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-noida",
+                                    "noOfProjects": "125 Projects",
+                                    "noOfTransactions": "3,039",
+                                    "priority": 8,
+                                    "city": "Noida",
+                                    "saleRentValue": "₹ 3,356 Cr."
+                                },
+                                {
+                                    "changePercentage": "-3.10%",
+                                    "changeValue": "-₹ 144",
+                                    "currentRate": "₹ 4,500",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-greater-noida",
+                                    "noOfProjects": "161 Projects",
+                                    "noOfTransactions": "6,727",
+                                    "priority": 9,
+                                    "city": "Greater Noida",
+                                    "saleRentValue": "₹ 4,101 Cr."
+                                },
+                                {
+                                    "changePercentage": "-11.29%",
+                                    "changeValue": "-₹ 602",
+                                    "currentRate": "₹ 4,735",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-ghaziabad",
+                                    "noOfProjects": "266 Projects",
+                                    "noOfTransactions": "2,982",
+                                    "priority": 10,
+                                    "city": "Ghaziabad",
+                                    "saleRentValue": "₹ 1,339 Cr."
+                                }
+                            ]
+                        },
+                        {
+                            "aggregationFrom": "1-year",
+                            "aggregationFromDisplayName": "1Yr",
+                            "legendHeader": null,
+                            "mapLegends": [],
+                            "details": [
+                                {
+                                    "changePercentage": "-2.77%",
+                                    "changeValue": "-₹ 748",
+                                    "currentRate": "₹ 26,243",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-mumbai",
+                                    "noOfProjects": "7,293 Projects",
+                                    "noOfTransactions": "70,651",
+                                    "priority": 1,
+                                    "city": "Mumbai",
+                                    "saleRentValue": "₹ 112,616 Cr."
+                                },
+                                {
+                                    "changePercentage": "-2.28%",
+                                    "changeValue": "-₹ 136",
+                                    "currentRate": "₹ 5,865",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-bangalore",
+                                    "noOfProjects": "2,658 Projects",
+                                    "noOfTransactions": "31,290",
+                                    "priority": 2,
+                                    "city": "Bangalore",
+                                    "saleRentValue": "₹ 25,309 Cr."
+                                },
+                                {
+                                    "changePercentage": "-9.27%",
+                                    "changeValue": "-₹ 697",
+                                    "currentRate": "₹ 6,830",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-hyderabad",
+                                    "noOfProjects": "4,333 Projects",
+                                    "noOfTransactions": "36,989",
+                                    "priority": 3,
+                                    "city": "Hyderabad",
+                                    "saleRentValue": "₹ 26,813 Cr."
+                                },
+                                {
+                                    "changePercentage": "+2.24%",
+                                    "changeValue": "+₹ 316",
+                                    "currentRate": "₹ 14,447",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-navi-mumbai",
+                                    "noOfProjects": "2,885 Projects",
+                                    "noOfTransactions": "25,930",
+                                    "priority": 4,
+                                    "city": "Navi Mumbai",
+                                    "saleRentValue": "₹ 14,663 Cr."
+                                },
+                                {
+                                    "changePercentage": "0.00%",
+                                    "changeValue": "+₹ 1,078",
+                                    "currentRate": "₹ 11,499",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-gurgaon",
+                                    "noOfProjects": "329 Projects",
+                                    "noOfTransactions": "3,843",
+                                    "priority": 5,
+                                    "city": "Gurgaon",
+                                    "saleRentValue": "₹ 4,733 Cr."
+                                },
+                                {
+                                    "changePercentage": "+7.17%",
+                                    "changeValue": "+₹ 707",
+                                    "currentRate": "₹ 10,578",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-pune",
+                                    "noOfProjects": "6,229 Projects",
+                                    "noOfTransactions": "91,468",
+                                    "priority": 6,
+                                    "city": "Pune",
+                                    "saleRentValue": "₹ 64,793 Cr."
+                                },
+                                {
+                                    "changePercentage": "+3.24%",
+                                    "changeValue": "+₹ 396",
+                                    "currentRate": "₹ 12,642",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-thane",
+                                    "noOfProjects": "4,626 Projects",
+                                    "noOfTransactions": "53,143",
+                                    "priority": 7,
+                                    "city": "Thane",
+                                    "saleRentValue": "₹ 27,584 Cr."
+                                },
+                                {
+                                    "changePercentage": "+14.91%",
+                                    "changeValue": "+₹ 717",
+                                    "currentRate": "₹ 5,531",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-noida",
+                                    "noOfProjects": "170 Projects",
+                                    "noOfTransactions": "4,214",
+                                    "priority": 8,
+                                    "city": "Noida",
+                                    "saleRentValue": "₹ 4,446 Cr."
+                                },
+                                {
+                                    "changePercentage": "+21.07%",
+                                    "changeValue": "+₹ 783",
+                                    "currentRate": "₹ 4,500",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-greater-noida",
+                                    "noOfProjects": "213 Projects",
+                                    "noOfTransactions": "13,237",
+                                    "priority": 9,
+                                    "city": "Greater Noida",
+                                    "saleRentValue": "₹ 7,720 Cr."
+                                },
+                                {
+                                    "changePercentage": "-24.93%",
+                                    "changeValue": "-₹ 1,572",
+                                    "currentRate": "₹ 4,735",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-ghaziabad",
+                                    "noOfProjects": "471 Projects",
+                                    "noOfTransactions": "7,386",
+                                    "priority": 10,
+                                    "city": "Ghaziabad",
+                                    "saleRentValue": "₹ 3,089 Cr."
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "category": "resale",
+                    "categoryDisplayName": "Resale",
+                    "headers": [
+                        {
+                            "headerDisplayName": "City Name",
+                            "header": "city",
+                            "priority": 1,
+                            "subHeader": "noOfProjects"
+                        },
+                        {
+                            "headerDisplayName": "Transactions",
+                            "header": "noOfTransactions",
+                            "priority": 2
+                        },
+                        {
+                            "headerDisplayName": "Current Price",
+                            "header": "currentRate",
+                            "priority": 3
+                        },
+                        {
+                            "headerDisplayName": "Change",
+                            "header": "changeValue",
+                            "priority": 4
+                        }
+                    ],
+                    "aggregationFromList": [
+                        {
+                            "aggregationFrom": "3-months",
+                            "aggregationFromDisplayName": "3M",
+                            "legendHeader": null,
+                            "mapLegends": [],
+                            "details": [
+                                {
+                                    "changePercentage": "+0.22%",
+                                    "changeValue": "+₹ 52",
+                                    "currentRate": "₹ 24,096",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-mumbai",
+                                    "noOfProjects": "8,893 Projects",
+                                    "noOfTransactions": "15,828",
+                                    "priority": 1,
+                                    "city": "Mumbai",
+                                    "saleRentValue": "₹ 17,483 Cr."
+                                },
+                                {
+                                    "changePercentage": "+13.96%",
+                                    "changeValue": "+₹ 744",
+                                    "currentRate": "₹ 6,077",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-bangalore",
+                                    "noOfProjects": "2,040 Projects",
+                                    "noOfTransactions": "19,116",
+                                    "priority": 2,
+                                    "city": "Bangalore",
+                                    "saleRentValue": "₹ 11,664 Cr."
+                                },
+                                {
+                                    "changePercentage": "+2.79%",
+                                    "changeValue": "+₹ 188",
+                                    "currentRate": "₹ 6,943",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-hyderabad",
+                                    "noOfProjects": "4,479 Projects",
+                                    "noOfTransactions": "8,381",
+                                    "priority": 3,
+                                    "city": "Hyderabad",
+                                    "saleRentValue": "₹ 4,146 Cr."
+                                },
+                                {
+                                    "changePercentage": "+2.58%",
+                                    "changeValue": "+₹ 455",
+                                    "currentRate": "₹ 18,122",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-navi-mumbai",
+                                    "noOfProjects": "2,770 Projects",
+                                    "noOfTransactions": "5,462",
+                                    "priority": 4,
+                                    "city": "Navi Mumbai",
+                                    "saleRentValue": "₹ 3,423 Cr."
+                                },
+                                {
+                                    "changePercentage": "+4.46%",
+                                    "changeValue": "+₹ 474",
+                                    "currentRate": "₹ 11,115",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-pune",
+                                    "noOfProjects": "2,258 Projects",
+                                    "noOfTransactions": "4,463",
+                                    "priority": 6,
+                                    "city": "Pune",
+                                    "saleRentValue": "₹ 2,823 Cr."
+                                },
+                                {
+                                    "changePercentage": "-2.33%",
+                                    "changeValue": "-₹ 380",
+                                    "currentRate": "₹ 15,984",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-thane",
+                                    "noOfProjects": "3,223 Projects",
+                                    "noOfTransactions": "6,549",
+                                    "priority": 7,
+                                    "city": "Thane",
+                                    "saleRentValue": "₹ 3,142 Cr."
+                                },
+                                {
+                                    "changePercentage": "+3.20%",
+                                    "changeValue": "+₹ 280",
+                                    "currentRate": "₹ 9,052",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-noida",
+                                    "noOfProjects": "253 Projects",
+                                    "noOfTransactions": "1,844",
+                                    "priority": 8,
+                                    "city": "Noida",
+                                    "saleRentValue": "₹ 2,087 Cr."
+                                },
+                                {
+                                    "changePercentage": "+2.46%",
+                                    "changeValue": "+₹ 142",
+                                    "currentRate": "₹ 5,947",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-greater-noida",
+                                    "noOfProjects": "221 Projects",
+                                    "noOfTransactions": "2,013",
+                                    "priority": 9,
+                                    "city": "Greater Noida",
+                                    "saleRentValue": "₹ 1,371 Cr."
+                                },
+                                {
+                                    "changePercentage": "-14.21%",
+                                    "changeValue": "-₹ 676",
+                                    "currentRate": "₹ 4,081",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-ghaziabad",
+                                    "noOfProjects": "796 Projects",
+                                    "noOfTransactions": "9,821",
+                                    "priority": 10,
+                                    "city": "Ghaziabad",
+                                    "saleRentValue": "₹ 1,894 Cr."
+                                }
+                            ]
+                        },
+                        {
+                            "aggregationFrom": "6-months",
+                            "aggregationFromDisplayName": "6M",
+                            "legendHeader": null,
+                            "mapLegends": [],
+                            "details": [
+                                {
+                                    "changePercentage": "+3.63%",
+                                    "changeValue": "+₹ 845",
+                                    "currentRate": "₹ 24,096",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-mumbai",
+                                    "noOfProjects": "14,753 Projects",
+                                    "noOfTransactions": "31,905",
+                                    "priority": 1,
+                                    "city": "Mumbai",
+                                    "saleRentValue": "₹ 35,099 Cr."
+                                },
+                                {
+                                    "changePercentage": "+10.46%",
+                                    "changeValue": "+₹ 575",
+                                    "currentRate": "₹ 6,077",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-bangalore",
+                                    "noOfProjects": "4,411 Projects",
+                                    "noOfTransactions": "39,883",
+                                    "priority": 2,
+                                    "city": "Bangalore",
+                                    "saleRentValue": "₹ 25,395 Cr."
+                                },
+                                {
+                                    "changePercentage": "+3.76%",
+                                    "changeValue": "+₹ 251",
+                                    "currentRate": "₹ 6,943",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-hyderabad",
+                                    "noOfProjects": "8,350 Projects",
+                                    "noOfTransactions": "18,706",
+                                    "priority": 3,
+                                    "city": "Hyderabad",
+                                    "saleRentValue": "₹ 9,034 Cr."
+                                },
+                                {
+                                    "changePercentage": "-2.98%",
+                                    "changeValue": "-₹ 556",
+                                    "currentRate": "₹ 18,122",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-navi-mumbai",
+                                    "noOfProjects": "4,483 Projects",
+                                    "noOfTransactions": "11,200",
+                                    "priority": 4,
+                                    "city": "Navi Mumbai",
+                                    "saleRentValue": "₹ 7,109 Cr."
+                                },
+                                {
+                                    "changePercentage": "+21.65%",
+                                    "changeValue": "+₹ 1,977",
+                                    "currentRate": "₹ 11,115",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-pune",
+                                    "noOfProjects": "4,071 Projects",
+                                    "noOfTransactions": "9,930",
+                                    "priority": 6,
+                                    "city": "Pune",
+                                    "saleRentValue": "₹ 6,131 Cr."
+                                },
+                                {
+                                    "changePercentage": "-15.11%",
+                                    "changeValue": "-₹ 2,844",
+                                    "currentRate": "₹ 15,984",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-thane",
+                                    "noOfProjects": "5,326 Projects",
+                                    "noOfTransactions": "13,437",
+                                    "priority": 7,
+                                    "city": "Thane",
+                                    "saleRentValue": "₹ 6,243 Cr."
+                                },
+                                {
+                                    "changePercentage": "+15.54%",
+                                    "changeValue": "+₹ 1,217",
+                                    "currentRate": "₹ 9,052",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-noida",
+                                    "noOfProjects": "355 Projects",
+                                    "noOfTransactions": "4,023",
+                                    "priority": 8,
+                                    "city": "Noida",
+                                    "saleRentValue": "₹ 4,409 Cr."
+                                },
+                                {
+                                    "changePercentage": "+11.57%",
+                                    "changeValue": "+₹ 616",
+                                    "currentRate": "₹ 5,947",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-greater-noida",
+                                    "noOfProjects": "314 Projects",
+                                    "noOfTransactions": "4,186",
+                                    "priority": 9,
+                                    "city": "Greater Noida",
+                                    "saleRentValue": "₹ 2,882 Cr."
+                                },
+                                {
+                                    "changePercentage": "-12.04%",
+                                    "changeValue": "-₹ 558",
+                                    "currentRate": "₹ 4,081",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-ghaziabad",
+                                    "noOfProjects": "1,379 Projects",
+                                    "noOfTransactions": "23,324",
+                                    "priority": 10,
+                                    "city": "Ghaziabad",
+                                    "saleRentValue": "₹ 4,795 Cr."
+                                }
+                            ]
+                        },
+                        {
+                            "aggregationFrom": "1-year",
+                            "aggregationFromDisplayName": "1Yr",
+                            "legendHeader": null,
+                            "mapLegends": [],
+                            "details": [
+                                {
+                                    "changePercentage": "+8.66%",
+                                    "changeValue": "+₹ 1,920",
+                                    "currentRate": "₹ 24,096",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-mumbai",
+                                    "noOfProjects": "23,497 Projects",
+                                    "noOfTransactions": "67,744",
+                                    "priority": 1,
+                                    "city": "Mumbai",
+                                    "saleRentValue": "₹ 71,342 Cr."
+                                },
+                                {
+                                    "changePercentage": "-6.33%",
+                                    "changeValue": "-₹ 410",
+                                    "currentRate": "₹ 6,077",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-bangalore",
+                                    "noOfProjects": "8,882 Projects",
+                                    "noOfTransactions": "67,894",
+                                    "priority": 2,
+                                    "city": "Bangalore",
+                                    "saleRentValue": "₹ 42,541 Cr."
+                                },
+                                {
+                                    "changePercentage": "+6.33%",
+                                    "changeValue": "+₹ 413",
+                                    "currentRate": "₹ 6,943",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-hyderabad",
+                                    "noOfProjects": "14,920 Projects",
+                                    "noOfTransactions": "38,483",
+                                    "priority": 3,
+                                    "city": "Hyderabad",
+                                    "saleRentValue": "₹ 18,353 Cr."
+                                },
+                                {
+                                    "changePercentage": "+1.09%",
+                                    "changeValue": "+₹ 195",
+                                    "currentRate": "₹ 18,122",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-navi-mumbai",
+                                    "noOfProjects": "7,724 Projects",
+                                    "noOfTransactions": "26,744",
+                                    "priority": 4,
+                                    "city": "Navi Mumbai",
+                                    "saleRentValue": "₹ 15,642 Cr."
+                                },
+                                {
+                                    "changePercentage": "0.00%",
+                                    "changeValue": "+₹ 1,167",
+                                    "currentRate": "₹ 11,447",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-gurgaon",
+                                    "noOfProjects": "385 Projects",
+                                    "noOfTransactions": "1,668",
+                                    "priority": 5,
+                                    "city": "Gurgaon",
+                                    "saleRentValue": "₹ 1,663 Cr."
+                                },
+                                {
+                                    "changePercentage": "+28.27%",
+                                    "changeValue": "+₹ 2,450",
+                                    "currentRate": "₹ 11,115",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-pune",
+                                    "noOfProjects": "7,223 Projects",
+                                    "noOfTransactions": "21,239",
+                                    "priority": 6,
+                                    "city": "Pune",
+                                    "saleRentValue": "₹ 13,342 Cr."
+                                },
+                                {
+                                    "changePercentage": "-5.61%",
+                                    "changeValue": "-₹ 949",
+                                    "currentRate": "₹ 15,984",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-thane",
+                                    "noOfProjects": "9,024 Projects",
+                                    "noOfTransactions": "29,687",
+                                    "priority": 7,
+                                    "city": "Thane",
+                                    "saleRentValue": "₹ 13,398 Cr."
+                                },
+                                {
+                                    "changePercentage": "+22.04%",
+                                    "changeValue": "+₹ 1,634",
+                                    "currentRate": "₹ 9,052",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-noida",
+                                    "noOfProjects": "424 Projects",
+                                    "noOfTransactions": "6,348",
+                                    "priority": 8,
+                                    "city": "Noida",
+                                    "saleRentValue": "₹ 6,613 Cr."
+                                },
+                                {
+                                    "changePercentage": "+46.71%",
+                                    "changeValue": "+₹ 1,893",
+                                    "currentRate": "₹ 5,947",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-greater-noida",
+                                    "noOfProjects": "450 Projects",
+                                    "noOfTransactions": "8,896",
+                                    "priority": 9,
+                                    "city": "Greater Noida",
+                                    "saleRentValue": "₹ 5,422 Cr."
+                                },
+                                {
+                                    "changePercentage": "-15.41%",
+                                    "changeValue": "-₹ 743",
+                                    "currentRate": "₹ 4,081",
+                                    "location": "null",
+                                    "locality": "null",
+                                    "locationUrl": "https://www.squareyards.com/property-rates-in-ghaziabad",
+                                    "noOfProjects": "2,008 Projects",
+                                    "noOfTransactions": "44,938",
+                                    "priority": 10,
+                                    "city": "Ghaziabad",
+                                    "saleRentValue": "₹ 9,988 Cr."
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "latestQuarter": "Sep 30,2024",
+            "tabDisplayName": "Govt Registered Value",
+            "tabName": "government-registered-value",
+            "widgetDisplayName": "City Average Price in India",
+            "widgetName": "city-average-price",
+            "widgetStyle": {
+                "widgetFooter": {
+                    "showSource": true,
+                    "showEmbedButton": true,
+                    "showBranding": true
+                },
+                "widgetContent": {
+                    "cardLayout": {},
+                    "donutChart": {},
+                    "dataTable": {
+                        "isScrollable": true,
+                        "showTableBorder": true,
+                        "showTableCellLines": true,
+                        "theme": "stepped"
+                    },
+                    "treeMap": {},
+                    "multiTypeGraph": {}
+                },
+                "widgetHeader": {
+                    "showWidgetTitle": true,
+                    "transactionTypeButtonGroup": {
+                        "border": "1px solid #efe8ff",
+                        "middleLines": "1px solid #5f449b",
+                        "backgroundColor": "#efe8ff",
+                        "selectedBackgroundColor": "#5f449b",
+                        "textColor": "#5f449b",
+                        "hoverBorder": "1px solid #5f449b",
+                        "hoverTextColor": "",
+                        "borderRadius": "0.45rem",
+                        "selectedTextColor": "#ffffff",
+                        "isHoverable": true,
+                        "selectedTextFontWeight": "normal",
+                        "hoverBackgroundColor": "#efe8ff",
+                        "fontSize": "0.88rem",
+                        "showRippleEffect": true,
+                        "borderBottom": "",
+                        "height": "1.95rem"
+                    },
+                    "aggregationFromButtonGroup": {
+                        "border": "1px solid #fbf7e0",
+                        "middleLines": "1px solid #e5c31f",
+                        "backgroundColor": "#fbf7e0",
+                        "selectedBackgroundColor": "#e5c31f",
+                        "textColor": "#9d8612",
+                        "hoverBorder": "1px solid #e5c31f",
+                        "hoverTextColor": "",
+                        "borderRadius": "0.45rem",
+                        "selectedTextColor": "#333",
+                        "isHoverable": true,
+                        "selectedTextFontWeight": "normal",
+                        "hoverBackgroundColor": "#fbf7e0",
+                        "fontSize": "0.88rem",
+                        "showRippleEffect": true,
+                        "borderBottom": "",
+                        "height": "1.95rem"
+                    }
+                }
+            }
+        },
+        "__N_SSP": true
+    },
+    "page": "/widgets/v3/[widgetNameInCountryName]",
+    "query": {
+        "clientId": "U3F1YXJlWWFyZHNEb3RDb21WMQ==",
+        "widgetNameInCountryName": "city-average-price-in-india"
+    },
+    "buildId": "M2W2wAkJwqqrwK6yYpgp-",
+    "isFallback": false,
+    "gssp": true,
+    "locale": "en",
+    "locales": [
+        "en"
+    ],
+    "defaultLocale": "en",
+    "scriptLoader": []
+}

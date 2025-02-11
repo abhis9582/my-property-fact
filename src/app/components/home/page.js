@@ -13,6 +13,7 @@ import Header from "../header/page";
 import Footer from "../footer/page";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import InsightNew from "./insight/page";
 export default function HomePage() {
   const [typeList, setTypeList] = useState([]);
   const fetchProjectTypes = async () => {
@@ -169,7 +170,8 @@ export default function HomePage() {
           <span>Enquiry</span>
         </span>
       </button>
-      <Insight />
+      <InsightNew/>
+      {/* <Insight /> */}
       <Featured />
       <DreamProject />
       <NewsViews />
