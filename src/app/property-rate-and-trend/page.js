@@ -6,21 +6,22 @@ import "./property_rate.css";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import CityData from "./tables/citydata";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import TopGainersLocations from "./tables/topgainerlocations";
+import MostActiveLocalitiesByTransaction from "./tables/mostactivelocalitiesbytrans";
 export default function PropertyRateAndTrend() {
-  const city = [
-    "Mumbai",
-    "Bangalore",
-    "Hyderabad",
-    "Navi Mumbai",
-    "Gurgaon",
-    "Pune",
-    "Thane",
-    "Noida",
-    "Greater Noida",
-    "Ghaziabad",
-    "Lucknow",
-    "Faridabad",
-  ];
+  const [cityList, setCityList] = useState([]);
+  // fetch all cities
+  const fetchAllCities = async () =>{
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}city/all`);
+    if(response){
+      setCityList(response.data);
+    }
+  }
+   useEffect(()=>{
+    fetchAllCities();
+  }, []);
   const data = [
     {
       id: 1,
@@ -31,17 +32,17 @@ export default function PropertyRateAndTrend() {
     },
     {
       id: 2,
-      img: "https://www.squareyards.com/assets/images/transaction-benefit-images/transfer-money-buy-smartphone-hands.svg",
-      heading: "For Home Buyers",
+      img: "https://www.squareyards.com/assets/images/transaction-benefit-images/hand-building.svg",
+      heading: "For Renters",
       paragraph:
-        "Pick a building or locality of your interest and see last 10 actual transactions before you negotiate with a broker or a builder.",
+        "Get accurate value of recent lease deeds of the building or society that you are planning to rent. Our users can save 5-10% by referring to actual transactions.",
     },
     {
       id: 3,
-      img: "https://www.squareyards.com/assets/images/transaction-benefit-images/transfer-money-buy-smartphone-hands.svg",
-      heading: "For Home Buyers",
+      img: "https://www.squareyards.com/assets/images/transaction-benefit-images/fci-calculator.svg",
+      heading: "For Owners",
       paragraph:
-        "Pick a building or locality of your interest and see last 10 actual transactions before you negotiate with a broker or a builder.",
+        "See you building's or project's sale and lease transaction history to get realistic valuation of your property.",
     },
   ];
   return (
@@ -53,9 +54,9 @@ export default function PropertyRateAndTrend() {
           <div className="search-container-child">
             <div className="search-city-container">
               <select>
-                <option>Delhi</option>
-                <option>Goa</option>
-                <option>Noida</option>
+                {cityList.map((item, index)=>(
+                  <option key={`${item.id}-${index}`}>{item.name}</option>
+                ))}
               </select>
             </div>
             <input type="text" placeholder="Type any city for search" />
@@ -65,8 +66,8 @@ export default function PropertyRateAndTrend() {
         <div className="mt-5">
           <p className="h2 text-center">Property Rates in Cities</p>
           <div className="property-rate-cityname">
-            {city.map((name, index) => (
-              <Link href="#" key={index + 1}>{name}</Link>
+            {cityList.map((item, index) => (
+              <Link href="#" key={index + 1}>{item.name}</Link>
             ))}
           </div>
         </div>
@@ -77,13 +78,13 @@ export default function PropertyRateAndTrend() {
           </div>
           <div className="property-rate-city-price">
             <p className="fs-5 fw-bold">Top Gainer Localities in India</p>
-            <CityData />
+            <TopGainersLocations />
           </div>
         </div>
         <div className="property-rate-table-container">
           <div className="property-rate-city-price">
             <p className="fs-5 fw-bold">Most Active Localities by Transaction in India</p>
-            <CityData />
+            <MostActiveLocalitiesByTransaction />
           </div>
           <div className="property-rate-city-price">
             <p className="fs-5 fw-bold">Most Active Localities by Value in India</p>

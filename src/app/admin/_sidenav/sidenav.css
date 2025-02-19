@@ -57,6 +57,7 @@ a:focus {
     color: #fff;
     transition: all 0.3s;
     height: 100vh;
+    overflow-y: auto;
 }
 
 #sidebar.active {

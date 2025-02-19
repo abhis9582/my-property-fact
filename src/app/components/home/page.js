@@ -33,8 +33,8 @@ export default function HomePage() {
       <div id="banner" className="banner">
         <picture>
           <Image
-            src="/banner-new-4k.jpg"
-            alt="Star Estate"
+            src="/banner_picture.jpg"
+            alt="My propery fact"
             layout="fill"
             objectFit="cover"
           />
