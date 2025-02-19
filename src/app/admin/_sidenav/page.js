@@ -56,16 +56,16 @@ export default function SideNav(){
                     <Link href="/admin/dashboard/add-project">Projects</Link>
                 </li>
                 <li className={activeDropdown === 'dropdown2' ? "active" : ""}>
-                    <Link href="#pageSubmenu" onClick={() => toggleDropdown('dropdown2')}  data-toggle="collapse" aria-expanded="false" className="dropdown-toggle">Pages</Link>
+                    <Link href="#pageSubmenu" onClick={() => toggleDropdown('dropdown2')}  data-toggle="collapse" aria-expanded="false" className="dropdown-toggle">Insight Management</Link>
                     <ul className={`collapse list-unstyled ${activeDropdown === 'dropdown2' ? 'show' : ''}`}>
                         <li>
-                            <Link href="#">Page 1</Link>
+                            <Link href="/admin/dashboard/city-price-data">City Price Data</Link>
                         </li>
                         <li>
-                            <Link href="#">Page 2</Link>
+                            <Link href="/admin/dashboard/manage-insight-headers">Manage Headers</Link>
                         </li>
                         <li>
-                            <Link href="#">Page 3</Link>
+                            <Link href="/admin/dashboard/insight-category">Manage Insight Category</Link>
                         </li>
                     </ul>
                 </li>

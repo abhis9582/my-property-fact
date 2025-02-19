@@ -9,7 +9,7 @@ import Paper from "@mui/material/Paper";
 import "./citydata.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-export default function CityData() {
+export default function TopGainersLocations() {
   const [defaultAggregationFrom, setDefaultAggregationFrom] = useState("1Yr");
   const [defaultCategory, setDefaultCategory] = useState("All");
   const [cityPriceList, setCityPriceList] = useState([]);
@@ -22,7 +22,7 @@ export default function CityData() {
   // fetching all data for city price list
   const fetchCityPriceData = async () => {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}city-price-detail/get-city-price`
+      `${process.env.NEXT_PUBLIC_API_URL}city-price-detail/get-top-gainers`
     );
     if (response) {
       fetchAllCategories(response.data);
@@ -136,13 +136,13 @@ export default function CityData() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {cityPriceList.map((row) => (
+            {cityPriceList.map((row, index) => (
               <TableRow
-                key={row.city}
+                key={`${row.city}-${index}`}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {row.city}<br/>
+                  {row.location}<br/>
                   {row.noOfProjects}
                 </TableCell>
                 <TableCell>{row.noOfTransactions}</TableCell>

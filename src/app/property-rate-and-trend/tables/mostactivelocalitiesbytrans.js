@@ -9,7 +9,7 @@ import Paper from "@mui/material/Paper";
 import "./citydata.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-export default function CityData() {
+export default function MostActiveLocalitiesByTransaction() {
   const [defaultAggregationFrom, setDefaultAggregationFrom] = useState("1Yr");
   const [defaultCategory, setDefaultCategory] = useState("All");
   const [cityPriceList, setCityPriceList] = useState([]);
@@ -22,7 +22,7 @@ export default function CityData() {
   // fetching all data for city price list
   const fetchCityPriceData = async () => {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}city-price-detail/get-city-price`
+      `${process.env.NEXT_PUBLIC_API_URL}city-price-detail/get-top-gainers`
     );
     if (response) {
       fetchAllCategories(response.data);
@@ -40,44 +40,59 @@ export default function CityData() {
   };
 
   // fetch aggregation from list
-  const fetchAggregationFromList = async (data) =>{
-    const aggregationList = data.map((item)=> item.aggregationFromList);    
-    const list = aggregationList[0].map((item)=> item.aggregationFromDisplayName);
+  const fetchAggregationFromList = async (data) => {
+    const aggregationList = data.map((item) => item.aggregationFromList);
+    const list = aggregationList[0].map(
+      (item) => item.aggregationFromDisplayName
+    );
     setAggregationFromList(list);
-    
   };
 
-  // fetch all table headers 
-  const fetchTableHeaders = async (data) =>{
-    const headers = data.map((item)=>item.headers);
-    const headersList = headers[0].map((item)=> item.headerDisplayName);
-    setTableHeaders(headersList);    
-  }
+  // fetch all table headers
+  const fetchTableHeaders = async (data) => {
+    const headers = data.map((item) => item.headers);
+    const headersList = headers[0].map((item) => item.headerDisplayName);
+    console.log(headersList);
+    
+    setTableHeaders(headersList);
+  };
 
   // fetch all city price list
-  const fetchCityPriceList = async (data) =>{    
-    const allCategoryData = await data.filter((item)=> item.categoryDisplayName === defaultCategory);    
-    const allCityPriceForOneYr = allCategoryData[0].aggregationFromList.filter((item)=> item.aggregationFromDisplayName === defaultAggregationFrom);     
+  const fetchCityPriceList = async (data) => {
+    const allCategoryData = await data.filter(
+      (item) => item.categoryDisplayName === defaultCategory
+    );
+    const allCityPriceForOneYr = allCategoryData[0].aggregationFromList.filter(
+      (item) => item.aggregationFromDisplayName === defaultAggregationFrom
+    );
     setCityPriceList(allCityPriceForOneYr[0].details);
-  }
+  };
   // handling changing data of the table
-  const changeTableData = async (value, index) => { 
+  const changeTableData = async (value, index) => {
     setDefaultAggregationFrom(value);
-    const allCategoryData = response.filter((item)=> item.categoryDisplayName === defaultCategory); 
-    const allCityPriceForOneYr = allCategoryData[0].aggregationFromList.filter((item)=> item.aggregationFromDisplayName === value);     
+    const allCategoryData = response.filter(
+      (item) => item.categoryDisplayName === defaultCategory
+    );
+    const allCityPriceForOneYr = allCategoryData[0].aggregationFromList.filter(
+      (item) => item.aggregationFromDisplayName === value
+    );
     setCityPriceList(allCityPriceForOneYr[0].details);
     setActiveIndex(index);
-  }
+  };
   // handling changing data of the table according to category
-  const getCategoryWiseData = async(value, index) =>{
-    setDefaultCategory(value);    
-    const allCategoryData = response.filter((item)=> item.categoryDisplayName === value);     
-    const allCityPriceForOneYr = allCategoryData[0].aggregationFromList.filter((item)=> item.aggregationFromDisplayName === defaultAggregationFrom);  
+  const getCategoryWiseData = async (value, index) => {
+    setDefaultCategory(value);
+    const allCategoryData = response.filter(
+      (item) => item.categoryDisplayName === value
+    );
+    const allCityPriceForOneYr = allCategoryData[0].aggregationFromList.filter(
+      (item) => item.aggregationFromDisplayName === defaultAggregationFrom
+    );
     console.log(allCategoryData, defaultAggregationFrom);
-       
+
     setCityPriceList(allCityPriceForOneYr[0].details);
     setActiveCat(index);
-  }
+  };
   useEffect(() => {
     fetchCityPriceData();
   }, []);
@@ -109,9 +124,7 @@ export default function CityData() {
                   ? "insight-property-rate-filter-child-active"
                   : ""
               } cursor-pointer`}
-              onClick={() =>
-                changeTableData(item, index)
-              }
+              onClick={() => changeTableData(item, index)}
             >
               {item}
             </p>
@@ -126,23 +139,21 @@ export default function CityData() {
           <TableHead>
             <TableRow>
               {tableHeaders.map((item, index) => (
-                <TableCell
-                  key={`${item}-${index}`}
-                  className="fw-bold"
-                >
+                <TableCell key={`${item}-${index}`} className="fw-bold">
                   {item}
                 </TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {cityPriceList.map((row) => (
+            {cityPriceList.map((row, index) => (
               <TableRow
-                key={row.city}
+                key={`${row.city}-${index}`}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {row.city}<br/>
+                  {row.location}
+                  <br />
                   {row.noOfProjects}
                 </TableCell>
                 <TableCell>{row.noOfTransactions}</TableCell>

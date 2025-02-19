@@ -87,3 +87,7 @@ td {
     border: 1px solid #ccc;
     /* Optional: Adds borders for better visualization */
 }
+.btn-primary{
+    background-color: #68ac78 !important;
+    border: none !important;
+}
