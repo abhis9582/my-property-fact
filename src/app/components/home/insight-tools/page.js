@@ -1,5 +1,4 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "./insight.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { faArrowCircleRight } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
