@@ -52,9 +52,7 @@ export default function MostActiveLocalitiesByTransaction() {
   const fetchTableHeaders = async (data) => {
     const headers = data.map((item) => item.headers);
     const headersList = headers[0].map((item) => item.headerDisplayName);
-    console.log(headersList);
-    
-    setTableHeaders(headersList);
+    setTableHeaders(headersList.slice(0, -1));
   };
 
   // fetch all city price list
@@ -88,8 +86,6 @@ export default function MostActiveLocalitiesByTransaction() {
     const allCityPriceForOneYr = allCategoryData[0].aggregationFromList.filter(
       (item) => item.aggregationFromDisplayName === defaultAggregationFrom
     );
-    console.log(allCategoryData, defaultAggregationFrom);
-
     setCityPriceList(allCityPriceForOneYr[0].details);
     setActiveCat(index);
   };
@@ -158,7 +154,6 @@ export default function MostActiveLocalitiesByTransaction() {
                 </TableCell>
                 <TableCell>{row.noOfTransactions}</TableCell>
                 <TableCell>{row.currentRate}</TableCell>
-                <TableCell>{row.changeValue}</TableCell>
               </TableRow>
             ))}
           </TableBody>
