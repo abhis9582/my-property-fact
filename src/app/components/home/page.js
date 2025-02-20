@@ -4,7 +4,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { faEnvelope, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import "./home.css";
-import Insight from "./insight-tools/page";
 import DreamProject from "./dream-project/page";
 import Featured from "./featured/page";
 import NewsViews from "./new-views/page";
@@ -16,6 +15,7 @@ import axios from "axios";
 import InsightNew from "./insight/page";
 export default function HomePage() {
   const [typeList, setTypeList] = useState([]);
+  const [imageSrc, setImageSrc] = useState("/banner-desktop.webp");
   const fetchProjectTypes = async () => {
     const projectTypesResponse = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`
@@ -27,18 +27,37 @@ export default function HomePage() {
   useEffect(() => {
     fetchProjectTypes();
   }, []);
+
+  useEffect(() => {
+    const updateImage = () => {
+      if (window.innerWidth <= 768) {
+        setImageSrc("/banner-mobile.webp");
+      } else if (window.innerWidth <= 1200) {
+        setImageSrc("/banner-tablet.webp");
+      } else {
+        setImageSrc("/banner-desktop.webp");
+      }
+    };
+    updateImage(); // Set initial image
+    window.addEventListener("resize", updateImage);
+    return () => window.removeEventListener("resize", updateImage);
+  }, []);
+
   return (
     <>
       <Header />
       <div id="banner" className="banner">
-        <picture>
-          <Image
-            src="/banner_picture.jpg"
-            alt="My propery fact"
-            layout="fill"
-            objectFit="cover"
-          />
-        </picture>
+        <Image
+          src={imageSrc}
+          alt="My propery fact"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1920px"
+          srcSet="
+              /banner-mobile.webp 600w,
+              /banner-tablet.webp 1200w,
+              /banner-desktop.webp 1920w"
+          objectFit="fill"
+          layout="fill"
+        />
         <div className="bannerContainer">
           <h1 className="h1">Find the best property</h1>
           <div className="btn-container d-flex justify-content-center my-3 my-md-4">
@@ -170,7 +189,7 @@ export default function HomePage() {
           <span>Enquiry</span>
         </span>
       </button>
-      <InsightNew/>
+      <InsightNew />
       {/* <Insight /> */}
       <Featured />
       <DreamProject />

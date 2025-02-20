@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarker } from "@fortawesome/free-solid-svg-icons";
-import Image from "next/image";
 import Link from "next/link";
 
 export default function Featured() {
@@ -77,18 +76,18 @@ export default function Featured() {
             return (
               <aside key={property.id} className="p-4 container">
                 <div
-                  className="p-8 rounded-lg bg-darkGray bg-opacity-10 shadow-md flex flex-col items-center justify-content-center container main-container"
+                  className="rounded-lg bg-darkGray bg-opacity-10 shadow-md flex flex-col items-center justify-content-center container cursor-pointer featured-projects-container"
                   onClick={() => goToPropertyDetail(property.slugURL)}
                 >
                   <img
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${property.slugURL}/${property.projectThumbnail}`}
                     alt="project image"
                   />
-                  <div className="mt-2 d-flex justify-content-between align-items-center">
+                  <div className="mt-2 d-flex justify-content-between align-items-center p-2">
                     <p className="h5 fw-bold">{property.projectName}</p>
                     <p className="h5 fw-bold text-success">{property.projectPrice}*</p>
                   </div>
-                  <div className="pb-2 fw-bold">
+                  <div className="pb-2 fw-bold mx-2">
                     <FontAwesomeIcon
                       icon={faMapMarker}
                       width={8}
