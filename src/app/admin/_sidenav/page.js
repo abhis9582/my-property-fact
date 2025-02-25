@@ -67,6 +67,9 @@ export default function SideNav(){
                         <li>
                             <Link href="/admin/dashboard/insight-category">Manage Insight Category</Link>
                         </li>
+                        <li>
+                            <Link href="/admin/dashboard/top-developers">Manage Top developers</Link>
+                        </li>
                     </ul>
                 </li>
                 <li>

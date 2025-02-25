@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import PropertyContainer from "@/app/components/common/page";
+import Image from "next/image";
 export default function BuilderPage({ builderName }) {
   const [builderData, setBuilderData] = useState([]);
   const [propertyList, setPropertyList] = useState([]);
@@ -30,14 +31,17 @@ export default function BuilderPage({ builderName }) {
     <>
       <Header />
       <div className="container-fluid p-0 mt-5">
-        <img
-          src="https://www.starestate.com/assets/images/banner-all-projects.jpg"
-          alt="city banner"
+        <Image 
+        src="/static/builder-banner.jpg"
+        width={1899}
+        height={500}
+        layout="responsive"
+        alt="builder-banner"
         />
         <div className="bannerContainer">
           <div className="container-lg">
             <div className="search-filter text-center">
-              <p className="h4 text-dark">{builderData.builderName}</p>
+              <p className="h4 text-light">{builderData.builderName}</p>
             </div>
           </div>
         </div>

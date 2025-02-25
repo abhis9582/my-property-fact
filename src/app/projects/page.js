@@ -2,6 +2,7 @@ import Link from "next/link";
 import Footer from "../components/footer/page";
 import Header from "../components/header/page";
 import PropertyPage from "./[projecttype]/propertypage";
+import Image from "next/image";
 
 export default function Projects() {
   return (
@@ -9,10 +10,13 @@ export default function Projects() {
       <Header />
       <div className="containr-fluid mt-5">
         <div className="container-fluid p-0 mt-5">
-          <img
-            src="https://www.starestate.com/assets/images/banner-all-projects.jpg"
-            alt="city banner"
-          />
+                    <Image 
+                      src="/static/project-banner.jpg"
+                      width={1899}
+                      height={500}
+                      layout="responsive"
+                      alt="project-banner"
+                    />
         </div>
         <div className="w-100 mt-3">
           <div className="container-lg">

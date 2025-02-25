@@ -9,7 +9,7 @@ import Paper from "@mui/material/Paper";
 import "./citydata.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-export default function MostActiveLocalitiesByTransaction() {
+export default function TopDevelopersByValue() {
   const [defaultAggregationFrom, setDefaultAggregationFrom] = useState("1Yr");
   const [defaultCategory, setDefaultCategory] = useState("All");
   const [cityPriceList, setCityPriceList] = useState([]);
@@ -22,7 +22,7 @@ export default function MostActiveLocalitiesByTransaction() {
   // fetching all data for city price list
   const fetchCityPriceData = async () => {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}top-locations-by-transaction/top-location-by-transaction`
+      `${process.env.NEXT_PUBLIC_API_URL}top-developers-by-value/get`
     );
     if (response) {
       fetchAllCategories(response.data);
@@ -52,7 +52,8 @@ export default function MostActiveLocalitiesByTransaction() {
   const fetchTableHeaders = async (data) => {
     const headers = data.map((item) => item.headers);
     const headersList = headers[0].map((item) => item.headerDisplayName);
-    setTableHeaders(headersList.slice(0, -1));
+    const filteredColumns = headersList.filter(col => col !== 'Transactions');
+    setTableHeaders(filteredColumns);
   };
 
   // fetch all city price list
@@ -63,7 +64,7 @@ export default function MostActiveLocalitiesByTransaction() {
     const allCityPriceForOneYr = allCategoryData[0].aggregationFromList.filter(
       (item) => item.aggregationFromDisplayName === defaultAggregationFrom
     );
-    setCityPriceList(allCityPriceForOneYr[0].locationDetails);
+    setCityPriceList(allCityPriceForOneYr[0].developerDetails);
   };
   // handling changing data of the table
   const changeTableData = async (value, index) => {
@@ -74,7 +75,7 @@ export default function MostActiveLocalitiesByTransaction() {
     const allCityPriceForOneYr = allCategoryData[0].aggregationFromList.filter(
       (item) => item.aggregationFromDisplayName === value
     );
-    setCityPriceList(allCityPriceForOneYr[0].locationDetails);
+    setCityPriceList(allCityPriceForOneYr[0].developerDetails);
     setActiveIndex(index);
   };
   // handling changing data of the table according to category
@@ -86,7 +87,7 @@ export default function MostActiveLocalitiesByTransaction() {
     const allCityPriceForOneYr = allCategoryData[0].aggregationFromList.filter(
       (item) => item.aggregationFromDisplayName === defaultAggregationFrom
     );
-    setCityPriceList(allCityPriceForOneYr[0].locationDetails);
+    setCityPriceList(allCityPriceForOneYr[0].developerDetails);
     setActiveCat(index);
   };
   useEffect(() => {
@@ -148,12 +149,9 @@ export default function MostActiveLocalitiesByTransaction() {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {row.location}
-                  <br />
-                  {row.city}
+                  {row.developerName}
                 </TableCell>
-                <TableCell>{row.transactions}</TableCell>
-                <TableCell>{row.currentPrice}</TableCell>
+                <TableCell>{row.saleRentValue}</TableCell>
               </TableRow>
             ))}
           </TableBody>

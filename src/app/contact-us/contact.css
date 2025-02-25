@@ -8,8 +8,10 @@
 .contactus-head {
     margin: 0px;
     padding: 6%;
-    background: #68ac78;
+    background: url("/static/contact-banner.jpg");
     background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .contact-nav {
@@ -124,7 +126,8 @@
     text-transform: uppercase;
     font-weight: bold;
 }
-.looking-for-home{
+
+.looking-for-home {
     position: relative;
     bottom: 0px;
     padding: 2rem;
@@ -134,7 +137,8 @@
     align-items: center;
     justify-content: center;
 }
-.looking-for-home-child{
+
+.looking-for-home-child {
     position: absolute;
     background-color: #68ac78;
     justify-content: space-between;
@@ -145,18 +149,21 @@
     align-items: center;
     flex-wrap: wrap;
 }
-.looking-for-home-child-text p:first-child{
+
+.looking-for-home-child-text p:first-child {
     color: #fff;
     font-size: 2rem;
     font-weight: bolder;
     padding: 0px;
     margin: 0px;
 }
-.looking-for-home-child-text p:last-child{
+
+.looking-for-home-child-text p:last-child {
     color: #fff;
     font-size: 1rem;
 }
-.looking-for-home-child a{
+
+.looking-for-home-child a {
     text-decoration: none;
     font-size: 1.5rem;
     color: #68ac78;
@@ -165,18 +172,21 @@
     font-weight: bold;
     transition: color 0.5s linear, background-color 0.5s linear;
 }
+
 .looking-for-home-child a:hover {
     color: #fff;
-    background-color: #000; 
+    background-color: #000;
 }
 
 @media (max-width:426px) {
-    .contact-us{
+    .contact-us {
         margin-top: 68px;
     }
+
     .info-container-child {
         margin-top: 1rem;
     }
+
     .contact-form-section form {
         width: 100%;
         padding: 40px 50px 50px;
@@ -185,9 +195,11 @@
         border: 1px solid;
         border-radius: 1rem;
     }
-    .looking-for-home-child a{
+
+    .looking-for-home-child a {
         padding: 1rem;
     }
+
     .looking-for-home {
         height: 290px;
     }

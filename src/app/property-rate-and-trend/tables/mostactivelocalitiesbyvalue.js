@@ -9,7 +9,7 @@ import Paper from "@mui/material/Paper";
 import "./citydata.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-export default function MostActiveLocalitiesByTransaction() {
+export default function MostActiveLocalitiesByValue() {
   const [defaultAggregationFrom, setDefaultAggregationFrom] = useState("1Yr");
   const [defaultCategory, setDefaultCategory] = useState("All");
   const [cityPriceList, setCityPriceList] = useState([]);
@@ -52,7 +52,10 @@ export default function MostActiveLocalitiesByTransaction() {
   const fetchTableHeaders = async (data) => {
     const headers = data.map((item) => item.headers);
     const headersList = headers[0].map((item) => item.headerDisplayName);
-    setTableHeaders(headersList.slice(0, -1));
+    const filteredColumns = headersList.filter(col => col !== 'Current Price');
+    console.log(filteredColumns);
+    
+    setTableHeaders(filteredColumns);
   };
 
   // fetch all city price list
@@ -152,8 +155,8 @@ export default function MostActiveLocalitiesByTransaction() {
                   <br />
                   {row.city}
                 </TableCell>
-                <TableCell>{row.transactions}</TableCell>
                 <TableCell>{row.currentPrice}</TableCell>
+                <TableCell>{row.saleValue}</TableCell>
               </TableRow>
             ))}
           </TableBody>
