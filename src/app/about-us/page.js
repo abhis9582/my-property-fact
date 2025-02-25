@@ -3,6 +3,7 @@ import Link from "next/link";
 import Footer from "../components/footer/page";
 import Header from "../components/header/page";
 import "./aboutus.css";
+import Image from "next/image";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -20,9 +21,12 @@ export default function AboutUs() {
       <Header />
       <div className="container-fluid mt-5 p-0 m-0">
         <div>
-          <img
-            src="https://www.starestate.com/assets/images/about-us.jpg"
-            alt="about-us-banner"
+          <Image 
+          width={1899}
+          height={500}
+          layout="responsive"
+          src="/static/about-us-banner.png"
+          alt="about-us-banner"
           />
         </div>
         <div className="w-100 mt-3">
