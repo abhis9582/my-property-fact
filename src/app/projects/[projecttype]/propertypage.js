@@ -1,6 +1,7 @@
 "use client";
 import PropertyContainer from "@/app/components/common/page";
 import axios from "axios";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -27,9 +28,12 @@ export default function PropertyPage({ type }) {
     <>
       <div className="containr-fluid mt-5">
         <div className="container-fluid p-0 mt-5">
-          <img
-            src="https://www.starestate.com/assets/images/banner-all-projects.jpg"
-            alt="city banner"
+          <Image 
+            src="/static/project-banner.jpg"
+            width={1899}
+            height={500}
+            layout="responsive"
+            alt="project-banner"
           />
         </div>
         <div className="w-100 mt-3">

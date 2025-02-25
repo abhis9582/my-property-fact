@@ -32,26 +32,26 @@ export default function DreamProject() {
           </div>
         </div>
         <div className="container flex-lg-nowrap d-flex flex-wrap gap-3 justify-content-center">
-          <div className="ms-3 my-2">
+          <div className="my-2">
             <img
               src="/dream-cities/noida1.webp"
               alt="img-nri"
             />
           </div>
-          <div className="ms-3 my-2">
+          <div className="my-2">
             <img
               src="/dream-cities/gurugram1.webp"
               alt="img-nri"
             />
           </div>
-          <div className="ms-3 my-2">
+          <div className="my-2">
             <img
               src="/dream-cities/gurugram1.webp"
               alt="img-nri"
               className="w-100"
             />
           </div>
-          <div className="ms-3 my-2">
+          <div className="my-2">
             <img
               src="/dream-cities/other-cities.webp"
               alt="img-nri"

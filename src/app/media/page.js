@@ -7,9 +7,9 @@ export default function Media() {
   return (
     <>
       <Header />
-      <div className="container-fluid mt-5">
+      <div className="container-fluid mt-5 p-0 m-0">
         <img
-          src="https://www.starestate.com/assets/images/blog.jpg"
+          src="/static/blog-banner.jpg"
           alt="blogs banner"
         />
       </div>

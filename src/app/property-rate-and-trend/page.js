@@ -10,6 +10,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import TopGainersLocations from "./tables/topgainerlocations";
 import MostActiveLocalitiesByTransaction from "./tables/mostactivelocalitiesbytrans";
+import MostActiveLocalitiesByValue from "./tables/mostactivelocalitiesbyvalue";
+import TopDevelopersByValue from "./tables/topdevelopersbyvalue";
+import TopDevelopersByTransactions from "./tables/topdevelopersbytransactions";
 export default function PropertyRateAndTrend() {
   const [cityList, setCityList] = useState([]);
   // fetch all cities
@@ -88,17 +91,17 @@ export default function PropertyRateAndTrend() {
           </div>
           <div className="property-rate-city-price">
             <p className="fs-5 fw-bold">Most Active Localities by Value in India</p>
-            <CityData />
+            <MostActiveLocalitiesByValue />
           </div>
         </div>
         <div className="property-rate-table-container">
           <div className="property-rate-city-price">
             <p className="fs-5 fw-bold">Top Developers by Transaction in India</p>
-            <CityData />
+            <TopDevelopersByTransactions />
           </div>
           <div className="property-rate-city-price">
             <p className="fs-5 fw-bold">Top Developers by Value in India</p>
-            <CityData />
+            <TopDevelopersByValue />
           </div>
         </div>
         <div>

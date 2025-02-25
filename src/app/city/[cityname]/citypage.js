@@ -6,6 +6,7 @@ import PropertyContainer from "@/app/components/common/page";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Footer from "@/app/components/footer/page";
+import Image from "next/image";
 export default function CityPage({ city }) {
   const [propertyList, setPropertyList] = useState([]);
   const [cityData, setCityData] = useState([]);
@@ -30,8 +31,15 @@ export default function CityPage({ city }) {
       <div className="p-0">
         <Header />
         <div className="container-fluid p-0 mt-5">
-          <img
-            src="https://www.starestate.com/assets/images/banner-all-projects.jpg"
+          {/* <img
+            src="/static/realestate-bg.jpg"
+            alt="city banner"
+          /> */}
+          <Image 
+            src="/static/realestate-bg.jpg"
+            width={1899}
+            height={500}
+            layout="responsive"
             alt="city banner"
           />
           <div className="bannerContainer">
