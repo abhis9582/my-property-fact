@@ -8,6 +8,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarker } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Featured() {
   const [featuredProperties, setFeaturedProperties] = useState([]);
@@ -71,35 +72,42 @@ export default function Featured() {
     <>
       <div className="container mt-4">
         <p className="fs-1 fw-bold text-center">Featured Projects</p>
-        <Slider {...settings}>
-          {featuredProperties.map((property) => {
-            return (
-              <aside key={property.id} className="p-4 container">
-                <div
-                  className="rounded-lg bg-darkGray bg-opacity-10 shadow-md flex flex-col items-center justify-content-center container cursor-pointer featured-projects-container"
-                  onClick={() => goToPropertyDetail(property.slugURL)}
-                >
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${property.slugURL}/${property.projectThumbnail}`}
-                    alt="project image"
-                  />
-                  <div className="mt-2 d-flex justify-content-between align-items-center p-2">
-                    <p className="h5 fw-bold">{property.projectName}</p>
-                    <p className="h5 fw-bold text-success">{property.projectPrice}*</p>
+        {featuredProperties && featuredProperties.length > 0 && (
+          <Slider {...settings}>
+            {featuredProperties.map((property) => {
+              return (
+                <aside key={property.id} className="p-md-4 container">
+                  <div
+                    className="rounded-lg bg-darkGray bg-opacity-10 shadow-md flex flex-col items-center justify-content-center container cursor-pointer featured-projects-container"
+                    onClick={() => goToPropertyDetail(property.slugURL)}
+                  >
+                    <Image 
+                      src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${property.slugURL}/${property.projectThumbnail}`}
+                      alt="featured image"
+                      width={400}
+                      height={400}
+                      layout="responsive"
+                    />
+                    <div className="mt-2 d-flex justify-content-between align-items-center p-2">
+                      <p className="h5 fw-bold">{property.projectName}</p>
+                      <p className="h5 fw-bold text-success">
+                        {property.projectPrice}*
+                      </p>
+                    </div>
+                    <div className="pb-2 fw-bold mx-2">
+                      <FontAwesomeIcon
+                        icon={faMapMarker}
+                        width={8}
+                        color="green"
+                      />{" "}
+                      {property.projectAddress}
+                    </div>
                   </div>
-                  <div className="pb-2 fw-bold mx-2">
-                    <FontAwesomeIcon
-                      icon={faMapMarker}
-                      width={8}
-                      color="green"
-                    />{" "}
-                    {property.projectAddress}
-                  </div>
-                </div>
-              </aside>
-            );
-          })}
-        </Slider>
+                </aside>
+              );
+            })}
+          </Slider>
+        )}
         <div className="text-center">
           <Link className="btn btn-success" href="/projects">
             View all

@@ -1,6 +1,6 @@
 :root {
     --corp-color: #68ac78;
-    --secondary-color: #cbcf44;
+    --secondary-color: #7eae68;
     --body-color: #3b3b3b;
     --lightgray: #f6f6f6;
     --gray: #2f2f2f;
@@ -118,11 +118,6 @@ p {
 .padding {
     padding-top: 40px;
     padding-bottom: 40px;
-}
-
-.container-fluid {
-    padding-left: 40px;
-    padding-right: 40px;
 }
 
 .object-cover {

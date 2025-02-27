@@ -40,13 +40,6 @@
     text-decoration: none;
   }
   
-  .foot-menu.socialBox a {
-    display: flex;
-    align-items: center;
-    column-gap: 10px;
-    font-size: 20px;
-  }
-  
   .marketersLogo {
     display: flex;
     flex-wrap: wrap;
