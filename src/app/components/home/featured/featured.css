@@ -1,5 +1,5 @@
 .featured-projects-container{
-    padding: 0px;
+    padding: 0px !important;
     border-top-right-radius: 2rem;
     border-top-left-radius: 2rem;
     overflow: hidden;
@@ -32,4 +32,33 @@
 .slick-prev:before{
     color: #000;
     font-size: 2rem;
+}
+.slick-dots{
+    display: none !important;
+}
+@media (max-width: 450px) {
+    .slick-next {
+        left: 65%;
+        top: 23.8rem;
+    }
+    .slick-prev {
+        left: 23%;
+        top: 23.8rem;
+    }
+}
+@media (max-width: 768px) {
+    .featured-projects-container{
+        padding: 0px !important;
+        border-top-right-radius: 1rem;
+        border-top-left-radius: 1rem;
+        overflow: hidden;
+    }
+    .slick-next {
+        left: 65%;
+        top: 28.2rem;
+    }
+    .slick-prev {
+        left: 30%;
+        top: 28.2rem;
+    }
 }

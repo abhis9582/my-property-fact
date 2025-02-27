@@ -1,6 +1,7 @@
 "use client";
 import Header from "@/app/components/header/page";
 import "./citypage.css";
+import "../../components/home/home.css";
 import Link from "next/link";
 import PropertyContainer from "@/app/components/common/page";
 import { useEffect, useState } from "react";

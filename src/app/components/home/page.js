@@ -60,7 +60,7 @@ export default function HomePage() {
         />
         <div className="bannerContainer">
           <h1 className="h1">Find the best property</h1>
-          <div className="btn-container d-flex justify-content-center my-3 my-md-4">
+          <div className="btn-container">
             {typeList.map((item, index) => (
               <div key={`row-${index}`} className="readmore mt-0">
                 <a href={`projects/${item.slugUrl}`} className="button light">

@@ -1,3 +1,4 @@
+"use client";
 import {
   faFacebook,
   faInstagram,
@@ -5,9 +6,125 @@ import {
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import './footer.css';
+import "./footer.css";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Link from "next/link";
 
 export default function Footer() {
+  //Defining states
+  const [cityList, setCityList] = useState([]);
+  const [projectTypes, setProjectTypes] = useState([]);
+  //Function for fetching all cities list
+  const fetchAllCity = async () => {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}city/all`
+    );
+    if (response) {
+      setCityList(response.data); // setting all city list
+    }
+  };
+  // Defining footer media array
+  const mediaArr = [
+    {
+      id: 1,
+      name: "News",
+      slugUrl: "/",
+    },
+    {
+      id: 2,
+      name: "Blogs",
+      slugUrl: "/media",
+    },
+    {
+      id: 3,
+      name: "Events",
+      slugUrl: "/",
+    },
+    {
+      id: 4,
+      name: "Advertisements",
+      slugUrl: "/",
+    },
+    {
+      id: 5,
+      name: "Newsletter",
+      slugUrl: "/",
+    },
+  ];
+
+  //Defining company array
+  const companyArr = [
+    {
+      id: 1,
+      name: "About MPF",
+      slugUrl: "/about-us",
+    },
+    {
+      id: 2,
+      name: "Mission & Vision",
+      slugUrl: "/",
+    },
+    {
+      id: 3,
+      name: "Who we are",
+      slugUrl: "/",
+    },
+    {
+      id: 4,
+      name: "Client's speak",
+      slugUrl: "/",
+    },
+    {
+      id: 5,
+      name: "FAQs",
+      slugUrl: "/",
+    },
+  ];
+  //Defining Explore array
+  const exploreArr = [
+    {
+      id: 1,
+      name: "Careers",
+      slugUrl: "/",
+    },
+    {
+      id: 2,
+      name: "Contact us",
+      slugUrl: "/contact-us",
+    },
+    {
+      id: 3,
+      name: "Buyer guide",
+      slugUrl: "/",
+    },
+    {
+      id: 4,
+      name: "Term & conditions",
+      slugUrl: "/",
+    },
+    {
+      id: 5,
+      name: "Sitemap",
+      slugUrl: "/",
+    },
+  ];
+  //Fetching all project type
+  const fetchProjectTypes = async () => {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`
+    );
+    if (response) {
+      setProjectTypes(response.data);
+    }
+  };
+
+  //defining function for call on every render
+  useEffect(() => {
+    fetchAllCity();
+    fetchProjectTypes();
+  }, []);
+
   return (
     <>
       <footer className="footer-area overflow-hidden float-left w-100">
@@ -19,57 +136,11 @@ export default function Footer() {
                   <div className="insideBox">
                     <h6>Cities</h6>
                     <ul className="list-inline footer-cities d-flex flex-wrap">
-                      <li>
-                        <a href="city/agra.html">Agra</a>
-                      </li>
-                      <li>
-                        <a href="city/ahmedabad.html">Ahmedabad</a>
-                      </li>
-                      <li>
-                        <a href="city/ayodhya.html">Ayodhya</a>
-                      </li>
-                      <li>
-                        <a href="city/bangalore.html">Bangalore</a>
-                      </li>
-                      <li>
-                        <a href="city/chennai.html">Chennai</a>
-                      </li>
-                      <li>
-                        <a href="city/delhi.html">Delhi</a>
-                      </li>
-                      <li>
-                        <a href="city/faridabad.html">Faridabad</a>
-                      </li>
-                      <li>
-                        <a href="city/ghaziabad.html">Ghaziabad</a>
-                      </li>
-                      <li>
-                        <a href="city/greater-noida.html">Greater Noida</a>
-                      </li>
-                      <li>
-                        <a href="city/gurugram.html">Gurugram</a>
-                      </li>
-                      <li>
-                        <a href="city/hyderabad.html">Hyderabad</a>
-                      </li>
-                      <li>
-                        <a href="city/lucknow.html">Lucknow</a>
-                      </li>
-                      <li>
-                        <a href="city/mathura.html">Mathura</a>
-                      </li>
-                      <li>
-                        <a href="city/mohali.html">Mohali</a>
-                      </li>
-                      <li>
-                        <a href="city/mumbai.html">Mumbai</a>
-                      </li>
-                      <li>
-                        <a href="city/noida.html">Noida</a>
-                      </li>
-                      <li>
-                        <a href="city/pune.html">Pune</a>
-                      </li>
+                      {cityList.map((item, index) => (
+                        <li key={`${item.name}-${index}`}>
+                          <Link href={item.slugUrl}>{item.name}</Link>
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 </div>
@@ -82,337 +153,43 @@ export default function Footer() {
             <div className="row">
               <div className="col-md-3">
                 <ul className="row list-inline">
-                  <li className="col-md-12">
-                    <a href="city/apartments-in-agra.html">
-                      Apartments in Agra
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/apartments-in-ahmedabad.html">
-                      Apartments in Ahmedabad
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/apartments-in-ayodhya.html">
-                      Apartments in Ayodhya
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/apartments-in-bangalore.html">
-                      Apartments in Bangalore
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/apartments-in-chennai.html">
-                      Apartments in Chennai
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/apartments-in-delhi.html">
-                      Apartments in Delhi
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/apartments-in-faridabad.html">
-                      Apartments in Faridabad
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/apartments-in-ghaziabad.html">
-                      Apartments in Ghaziabad
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/apartments-in-greater-noida.html">
-                      Apartments in Greater Noida
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/apartments-in-gurugram.html">
-                      Apartments in Gurugram
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/apartments-in-hyderabad.html">
-                      Apartments in Hyderabad
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/apartments-in-lucknow.html">
-                      Apartments in Lucknow
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/apartments-in-mathura.html">
-                      Apartments in Mathura
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/apartments-in-mohali.html">
-                      Apartments in Mohali
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/apartments-in-mumbai.html">
-                      Apartments in Mumbai
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/apartments-in-noida.html">
-                      Apartments in Noida
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/apartments-in-pune.html">
-                      Apartments in Pune
-                    </a>
-                  </li>
+                  {cityList.map((item, index) => (
+                    <li key={`${item.name}-${index}`}>
+                      <Link href={item.slugUrl}>Apartments in {item.name}</Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
               <div className="col-md-3">
                 <ul className="row list-inline">
-                  <li className="col-md-12">
-                    <a href="city/new-projects-in-agra.html">
-                      New Projects in Agra
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/new-projects-in-ahmedabad.html">
-                      New Projects in Ahmedabad
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/new-projects-in-ayodhya.html">
-                      New Projects in Ayodhya
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/new-projects-in-bangalore.html">
-                      New Projects in Bangalore
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/new-projects-in-chennai.html">
-                      New Projects in Chennai
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/new-projects-in-delhi.html">
-                      New Projects in Delhi
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/new-projects-in-faridabad.html">
-                      New Projects in Faridabad
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/new-projects-in-ghaziabad.html">
-                      New Projects in Ghaziabad
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/new-projects-in-greater-noida.html">
-                      New Projects in Greater Noida
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/new-projects-in-gurugram.html">
-                      New Projects in Gurugram
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/new-projects-in-hyderabad.html">
-                      New Projects in Hyderabad
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/new-projects-in-lucknow.html">
-                      New Projects in Lucknow
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/new-projects-in-mathura.html">
-                      New Projects in Mathura
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/new-projects-in-mohali.html">
-                      New Projects in Mohali
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/new-projects-in-mumbai.html">
-                      New Projects in Mumbai
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/new-projects-in-noida.html">
-                      New Projects in Noida
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/new-projects-in-pune.html">
-                      New Projects in Pune
-                    </a>
-                  </li>
+                  {cityList.map((item, index) => (
+                    <li key={`${item.name}-${index}`}>
+                      <Link href={item.slugUrl}>
+                        New Projects in {item.name}
+                      </Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
               <div className="col-md-3">
                 <ul className="row list-inline">
-                  <li className="col-md-12">
-                    <a href="city/flats-in-agra.html">Flats in Agra</a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/flats-in-ahmedabad.html">
-                      Flats in Ahmedabad
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/flats-in-ayodhya.html">Flats in Ayodhya</a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/flats-in-bangalore.html">
-                      Flats in Bangalore
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/flats-in-chennai.html">Flats in Chennai</a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/flats-in-delhi.html">Flats in Delhi</a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/flats-in-faridabad.html">
-                      Flats in Faridabad
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/flats-in-ghaziabad.html">
-                      Flats in Ghaziabad
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/flats-in-greater-noida.html">
-                      Flats in Greater Noida
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/flats-in-gurugram.html">Flats in Gurugram</a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/flats-in-hyderabad.html">
-                      Flats in Hyderabad
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/flats-in-lucknow.html">Flats in Lucknow</a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/flats-in-mathura.html">Flats in Mathura</a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/flats-in-mohali.html">Flats in Mohali</a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/flats-in-mumbai.html">Flats in Mumbai</a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/flats-in-noida.html">Flats in Noida</a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/flats-in-pune.html">Flats in Pune</a>
-                  </li>
+                  {cityList.map((item, index) => (
+                    <li key={`${item.name}-${index}`}>
+                      <Link href={item.slugUrl}>Flats in {item.name}</Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
 
               <div className="col-md-3">
                 <ul className="row list-inline">
-                  <li className="col-md-12">
-                    <a href="city/commercial-property-in-agra.html">
-                      Commercial Property in Agra
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/commercial-property-in-ahmedabad.html">
-                      Commercial Property in Ahmedabad
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/commercial-property-in-ayodhya.html">
-                      Commercial Property in Ayodhya
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/commercial-property-in-bangalore.html">
-                      Commercial Property in Bangalore
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/commercial-property-in-chennai.html">
-                      Commercial Property in Chennai
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/commercial-property-in-delhi.html">
-                      Commercial Property in Delhi
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/commercial-property-in-faridabad.html">
-                      Commercial Property in Faridabad
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/commercial-property-in-ghaziabad.html">
-                      Commercial Property in Ghaziabad
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/commercial-property-in-greater-noida.html">
-                      Commercial Property in Greater Noida
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/commercial-property-in-gurugram.html">
-                      Commercial Property in Gurugram
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/commercial-property-in-hyderabad.html">
-                      Commercial Property in Hyderabad
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/commercial-property-in-lucknow.html">
-                      Commercial Property in Lucknow
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/commercial-property-in-mathura.html">
-                      Commercial Property in Mathura
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/commercial-property-in-mohali.html">
-                      Commercial Property in Mohali
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/commercial-property-in-mumbai.html">
-                      Commercial Property in Mumbai
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/commercial-property-in-noida.html">
-                      Commercial Property in Noida
-                    </a>
-                  </li>
-                  <li className="col-md-12">
-                    <a href="city/commercial-property-in-pune.html">
-                      Commercial Property in Pune
-                    </a>
-                  </li>
+                  {cityList.map((item, index) => (
+                    <li key={`${item.name}-${index}`}>
+                      <Link href={item.slugUrl}>
+                        Commercial Property in {item.name}
+                      </Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
@@ -424,18 +201,13 @@ export default function Footer() {
                   <div className="insideBox">
                     <h6>Projects</h6>
                     <ul className="list-inline">
-                      <li>
-                        <a href="category/luxury.html">Luxury</a>
-                      </li>
-                      <li>
-                        <a href="category/commercial.html">Commercial</a>
-                      </li>
-                      <li>
-                        <a href="category/residential.html">Residential</a>
-                      </li>
-                      <li>
-                        <a href="category/new-launch.html">New Launchs</a>
-                      </li>
+                      {projectTypes.map((item, index) => (
+                        <li key={`${item.name}-${index}`}>
+                          <Link href={item.slugUrl}>
+                            {item.projectTypeName}
+                          </Link>
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 </div>
@@ -443,21 +215,11 @@ export default function Footer() {
                   <div className="insideBox">
                     <h6>Company</h6>
                     <ul className="list-inline">
-                      <li>
-                        <a href="about-us.html">About My Property Fact</a>
-                      </li>
-                      <li>
-                        <a href="about-us.html#mission">Mission & Vision</a>
-                      </li>
-                      <li>
-                        <a href="about-us.html#who-we-are">Who We Are</a>
-                      </li>
-                      <li>
-                        <a href="clients-speak.html">Clients Speak</a>
-                      </li>
-                      <li>
-                        <a href="faqs.html">FAQs</a>
-                      </li>
+                      {companyArr.map((item, index) => (
+                        <li key={`${item.id}-${index}`}>
+                          <Link href={item.slugUrl}>{item.name}</Link>
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 </div>
@@ -465,26 +227,11 @@ export default function Footer() {
                   <div className="insideBox">
                     <h6>Media</h6>
                     <ul className="list-inline">
-                      <li>
-                        <a href="news.html">News</a>
-                      </li>
-                      <li>
-                        <a href="blogs.html">Blogs</a>
-                      </li>
-                      <li>
-                        <a href="events.html">Events</a>
-                      </li>
-                      <li>
-                        <a href="advertisements.html">Advertisements</a>
-                      </li>
-                      <li>
-                        <a
-                          href="assets/pdfs/Newsletter_Star_Estate_2024.pdf"
-                          target="_blank"
-                        >
-                          Newsletter
-                        </a>
-                      </li>
+                      {mediaArr.map((item, index) => (
+                        <li key={`${item.id}-${index}`}>
+                          <Link href={item.slugUrl}>{item.name}</Link>
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 </div>
@@ -492,23 +239,11 @@ export default function Footer() {
                   <div className="insideBox">
                     <h6>Explore</h6>
                     <ul className="list-inline">
-                      <li>
-                        <a href="careers.html">Careers</a>
-                      </li>
-                      <li>
-                        <a href="contact-us.html">Contact Us</a>
-                      </li>
-                      <li>
-                        <a href="buyer-guide.html">Buyer Guide</a>
-                      </li>
-                      <li>
-                        <a href="terms-and-conditions.html">
-                          Terms & Conditions
-                        </a>
-                      </li>
-                      <li>
-                        <a href="sitemap.html">Sitemap</a>
-                      </li>
+                      {exploreArr.map((item, index) => (
+                        <li key={`${item.id}-${index}`}>
+                          <Link href={item.slugUrl}>{item.name}</Link>
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 </div>
@@ -517,62 +252,24 @@ export default function Footer() {
                     <h6>Get Social</h6>
                     <ul className="list-inline socialMediaLink socialSolid">
                       <li className="list-inline-item">
-                        <a
-                          href="#"
-                          target="_blank"
-                          data-toggle="tooltip"
-                          data-placement="bottom"
-                          title="Facebook"
-                        >
+                        <Link href="#" target="_blank" title="facebook">
                           <FontAwesomeIcon icon={faFacebook} />
-                        </a>
+                        </Link>
                       </li>
                       <li className="list-inline-item">
-                        <a
-                          href="#"
-                          target="_blank"
-                          data-toggle="tooltip"
-                          data-placement="bottom"
-                          title="Instagram"
-                        >
+                        <Link href="#" target="_blank" title="instagram">
                           <FontAwesomeIcon icon={faInstagram} />
-                        </a>
+                        </Link>
                       </li>
                       <li className="list-inline-item">
-                        <a
-                          href="#"
-                          target="_blank"
-                          data-toggle="tooltip"
-                          data-placement="bottom"
-                          title="LinkedIn"
-                        >
+                        <Link href="#" target="_blank" title="linkedin">
                           <FontAwesomeIcon icon={faLinkedin} />
-                        </a>
+                        </Link>
                       </li>
-                      {/* <li className="list-inline-item"><a href="https://twitter.com/starestate2"
-                                                target="_blank" data-toggle="tooltip" data-placement="bottom"
-                                                title="Twitter" className="twitter-newlogo">
-                                                <svg version="1.1" id="svg5" xmlns:svg="http://www.w3.org/2000/svg"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                                    viewBox="0 0 1668.56 1221.19"
-                                                    style="enable-background:new 0 0 1668.56 1221.19;" xml:space="preserve">
-                                                    <g id="layer1" transform="translate(52.390088,-25.058597)">
-                                                        <path id="path1009" d="M283.94,167.31l386.39,516.64L281.5,1104h87.51l340.42-367.76L984.48,1104h297.8L874.15,558.3l361.92-390.99
-		h-87.51l-313.51,338.7l-253.31-338.7H283.94z M412.63,231.77h136.81l604.13,807.76h-136.81L412.63,231.77z" />
-                                                    </g>
-                                                </svg>
-                                            </a></li> */}
                       <li className="list-inline-item">
-                        <a
-                          href="https://www.youtube.com/channel/UCwfDf7Ut8jrkjiBeRnbZUPw"
-                          target="_blank"
-                          data-toggle="tooltip"
-                          data-placement="bottom"
-                          title="YouTube"
-                        >
+                        <Link href="#" target="_blank" title="youtube">
                           <FontAwesomeIcon icon={faYoutube} />
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </div>
@@ -580,24 +277,8 @@ export default function Footer() {
               </div>
             </div>
           </div>
-          {/* <div className="padding marketersLogo">
-                        <div className="img-fluid"><a href="https://www.glassdoor.co.in/Overview/Working-at-Star-Infraplanner-EI_IE2001229.11,28.htm" target="_blank"><img src="https://www.starestate.in/assets/images/digital-marketers/logo-glassdoor.png" alt="Glassdoor"/></a></div>
-                        <div className="img-fluid"><a href="https://goo.gl/maps/efUUi3LUhJHfTaVY8?coh=178573&entry=tt" target="_blank"><img src="https://www.starestate.in/assets/images/digital-marketers/logo-google.png" alt="Google"></a></div>
-                        <div className="img-fluid"><a href="https://www.ambitionbox.com/reviews/star-estate-reviews" target="_blank"><img src="https://www.starestate.in/assets/images/digital-marketers/logo-ambitionbox.png" alt="AmbitionBox"></a></div>
-                        <div className="img-fluid"><img src="https://www.starestate.in/assets/images/digital-marketers/logo-goodfirms.png" alt="Good Firms"/></div>
-                        <div className="img-fluid"><a href="https://clutch.co/profile/star-estate" target="_blank"><img src="https://www.starestate.in/assets/images/digital-marketers/logo-clutch.png" alt="Clutch"/></a></div>
-                    </div> */}
         </div>
-        {/* <!--<div className="enquiryBtn1">
-                    <a className="monCall" id="mobPhone" href="tel:7088470884"><i className="fa fa-phone"></i></a>
-                    <a className="whatsCall" href="https://api.whatsapp.com/send/?phone=917088470884&text&type=phone_number&app_absent=0" target="_blank"><i className="fab fa-whatsapp"></i></a>
-                    <a id="mobEnquiry" href="#formModal" data-toggle="modal" data-ivrno="7088470884"><i className="fa fa-envelope"></i></a>
-                </div>--> */}
       </footer>
-      <div className="button-top">
-        <i className="fa fa-chevron-up"></i>
-      </div>
-
       <div className="modal fade" id="formModal">
         <button
           type="button"
