@@ -2,14 +2,24 @@
 import Link from "next/link";
 import "./sidenav.css";
 import { useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 export default function SideNav(){
     const [activeDropdown, setActiveDropdown] = useState(null);
+    const router = useRouter();
     const toggleDropdown = (id) => {
         setActiveDropdown(activeDropdown === id ? null : id);
     };
     const toggleSidebar = () => {
         setIsActive(!isActive);
     };
+
+    const handleLogout = async () =>{
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}auth/logout`);
+        if(response.status === 200){
+            router.push("admin/dashboard");
+        }
+    }
     return(
         // Sidebar
         <nav id="sidebar">
@@ -77,6 +87,10 @@ export default function SideNav(){
                 </li>
                 <li>
                     <Link href="/admin/dashboard/location-benifits">Location benifits</Link>
+                </li>
+                <li>
+                    {/* <Link href="#" onClick={()=>handleLogout()}>Log out</Link> */}
+                    <Link href="#">Log out</Link>
                 </li>
             </ul>
         </nav>

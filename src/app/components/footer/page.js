@@ -155,7 +155,7 @@ export default function Footer() {
                 <ul className="row list-inline">
                   {cityList.map((item, index) => (
                     <li key={`${item.name}-${index}`}>
-                      <Link href={item.slugUrl}>Apartments in {item.name}</Link>
+                      <Link href={`/city/${item.slugUrl}`}>Apartments in {item.name}</Link>
                     </li>
                   ))}
                 </ul>
@@ -164,7 +164,7 @@ export default function Footer() {
                 <ul className="row list-inline">
                   {cityList.map((item, index) => (
                     <li key={`${item.name}-${index}`}>
-                      <Link href={item.slugUrl}>
+                      <Link href={`/city/${item.slugUrl}`}>
                         New Projects in {item.name}
                       </Link>
                     </li>
@@ -175,7 +175,7 @@ export default function Footer() {
                 <ul className="row list-inline">
                   {cityList.map((item, index) => (
                     <li key={`${item.name}-${index}`}>
-                      <Link href={item.slugUrl}>Flats in {item.name}</Link>
+                      <Link href={`/city/${item.slugUrl}`}>Flats in {item.name}</Link>
                     </li>
                   ))}
                 </ul>
@@ -185,7 +185,7 @@ export default function Footer() {
                 <ul className="row list-inline">
                   {cityList.map((item, index) => (
                     <li key={`${item.name}-${index}`}>
-                      <Link href={item.slugUrl}>
+                      <Link href={`/city/${item.slugUrl}`}>
                         Commercial Property in {item.name}
                       </Link>
                     </li>
