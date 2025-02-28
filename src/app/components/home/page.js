@@ -14,18 +14,54 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import InsightNew from "./insight/page";
 export default function HomePage() {
-  const [typeList, setTypeList] = useState([]);
+  const [projectTypeList, setProjectTypeList] = useState([]);
   const [imageSrc, setImageSrc] = useState("/banner-desktop.webp");
+  const [cityList, setCityList] = useState([]);
+  //defining project range
+  const projectRange = ["Up to 1Cr*", "1-3 Cr*", "3-5 Cr*", "Above 5 Cr*"];
+  //Our facts
+  const ourFacts = [
+    {
+      id: 1,
+      numbers: "12+",
+      text: "Years of experience",
+    },
+    {
+      id: 2,
+      numbers: "2000+",
+      text: "Units booked",
+    },
+    {
+      id: 3,
+      numbers: "200+",
+      text: "Happy faces",
+    },
+    {
+      id: 4,
+      numbers: "20Mln+",
+      text: "Area sold(sq.ft)",
+    },
+  ];
   const fetchProjectTypes = async () => {
     const projectTypesResponse = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`
     );
     if (projectTypesResponse) {
-      setTypeList(projectTypesResponse.data);
+      setProjectTypeList(projectTypesResponse.data);
+    }
+  };
+  //Fetching all city
+  const fetchAllCities = async () => {
+    const projectTypesResponse = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}city/all`
+    );
+    if (projectTypesResponse) {
+      setCityList(projectTypesResponse.data);
     }
   };
   useEffect(() => {
     fetchProjectTypes();
+    fetchAllCities();
   }, []);
 
   useEffect(() => {
@@ -61,7 +97,7 @@ export default function HomePage() {
         <div className="bannerContainer">
           <h1 className="h1">Find the best property</h1>
           <div className="btn-container">
-            {typeList.map((item, index) => (
+            {projectTypeList.map((item, index) => (
               <div key={`row-${index}`} className="readmore mt-0">
                 <a href={`projects/${item.slugUrl}`} className="button light">
                   {item.projectTypeName}
@@ -71,42 +107,17 @@ export default function HomePage() {
           </div>
           <div className="statsWrapper">
             <div className="row gap-row">
-              <div className="col-md-3 col-sm-6 statBox">
-                <section>
-                  <h6 className="h3">
-                    <span className="counter">12</span>
-                    <small>+</small>
-                  </h6>
-                  <p>Years of Experience</p>
-                </section>
-              </div>
-              <div className="col-md-3 col-sm-6 statBox">
-                <section>
-                  <h6 className="h3">
-                    <span className="counter">20000</span>
-                    <small>+</small>
-                  </h6>
-                  <p>Units Booked</p>
-                </section>
-              </div>
-              <div className="col-md-3 col-sm-6 statBox">
-                <section>
-                  <h6 className="h3">
-                    <span className="counter">50000</span>
-                    <small>+</small>
-                  </h6>
-                  <p>Happy Faces</p>
-                </section>
-              </div>
-              <div className="col-md-3 col-sm-6 statBox">
-                <section>
-                  <h6 className="h3">
-                    <span className="counter">50</span>
-                    <small>Mln+</small>
-                  </h6>
-                  <p>Area Sold (Sq.ft)</p>
-                </section>
-              </div>
+              {ourFacts.map((item, index) => (
+                <div key={`${item.text}-${index}`} className="col-md-3 col-sm-6 statBox">
+                  <section>
+                    <h6 className="h3">
+                      <span className="counter">{item.numbers}</span>
+                      {/* <small>+</small> */}
+                    </h6>
+                    <p>{item.text}</p>
+                  </section>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -125,8 +136,11 @@ export default function HomePage() {
                     title="category"
                   >
                     <option value="">Property Type</option>
-                    <option value="2">Commercial</option>
-                    <option value="1">Residential</option>
+                    {projectTypeList.map((item, index) => (
+                      <option key={`${item.projectTypeName}-${index}`}>
+                        {item.projectTypeName}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className="col">
@@ -136,24 +150,12 @@ export default function HomePage() {
                     className="form-control"
                     title="location"
                   >
-                    <option value="">Project Location</option>
-                    <option value="agra">Agra</option>
-                    <option value="ahmedabad">Ahmedabad</option>
-                    <option value="ayodhya">Ayodhya</option>
-                    <option value="bangalore">Bangalore</option>
-                    <option value="chennai">Chennai</option>
-                    <option value="delhi">Delhi</option>
-                    <option value="faridabad">Faridabad</option>
-                    <option value="ghaziabad">Ghaziabad</option>
-                    <option value="greater noida">Greater Noida</option>
-                    <option value="gurugram">Gurugram</option>
-                    <option value="hyderabad">Hyderabad</option>
-                    <option value="lucknow">Lucknow</option>
-                    <option value="mathura">Mathura</option>
-                    <option value="mohali">Mohali</option>
-                    <option value="mumbai">Mumbai</option>
-                    <option value="noida">Noida</option>
-                    <option value="pune">Pune</option>
+                    <option>Select Location</option>
+                    {cityList.map((item, index) => (
+                      <option key={`${item.name}-${index}`} value={item.id}>
+                        {item.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className="col">
@@ -163,10 +165,10 @@ export default function HomePage() {
                     className="form-control"
                     title="projectname "
                   >
-                    <option value="">Project Options</option>
-                    {typeList.map((option) => (
-                      <option key={option.id} value={option.id}>
-                        {option.projectTypeName}
+                    <option value="">Price Range</option>
+                    {projectRange.map((option, index) => (
+                      <option key={`${option.id}-${index}`} value={option}>
+                        {option}
                       </option>
                     ))}
                   </select>
