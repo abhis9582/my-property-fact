@@ -1,19 +1,19 @@
-.featured-projects-container{
+.featured-projects-container {
     padding: 0px !important;
     border-top-right-radius: 2rem;
     border-top-left-radius: 2rem;
     overflow: hidden;
 }
 
-.featured-projects-container img{
+.featured-projects-container img {
     transition: transform 0.5s ease-in-out;
 }
 
-.featured-projects-container:hover img{
+.featured-projects-container:hover img {
     transform: scale(1.03);
 }
 
-.slick-arrow{
+/* .slick-arrow{
     color: #000 !important;
     position: absolute;
 }
@@ -35,8 +35,8 @@
 }
 .slick-dots{
     display: none !important;
-}
-@media (max-width: 450px) {
+} */
+/* @media (max-width: 450px) {
     .slick-next {
         left: 65%;
         top: 23.8rem;
@@ -60,5 +60,60 @@
     .slick-prev {
         left: 30%;
         top: 28.2rem;
+    }
+} */
+
+/* Wrapper for arrows to position them at the bottom */
+.slick-slider {
+    position: relative;
+}
+
+/* Positioning the previous button */
+.slick-prev {
+    left: 40%;
+    bottom: -75px;
+    /* Adjust as needed */
+    top: auto;
+    transform: translateX(-50%);
+}
+
+/* Positioning the next button */
+.slick-next {
+    right: 40%;
+    bottom: -75px;
+    /* Adjust as needed */
+    top: auto;
+    transform: translateX(50%);
+}
+
+/* Styling the arrows */
+.slick-prev:before,
+.slick-next:before {
+    font-size: 30px;
+    /* Adjust the size */
+    color: black;
+    /* Change color */
+    opacity: 0.8;
+}
+
+/* On hover effect */
+.slick-prev:hover:before,
+.slick-next:hover:before {
+    color: #68ac78;
+    /* Change color on hover */
+    opacity: 1;
+}
+
+.slick-dots {
+    bottom: -25px;
+}
+
+@media (max-width: 768px) {
+    .slick-prev {
+        left: 28%;
+    }
+
+    .slick-next {
+        right: 32%;
     }
 }

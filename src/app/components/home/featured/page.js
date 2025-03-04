@@ -108,7 +108,7 @@ export default function Featured() {
             })}
           </Slider>
         )}
-        <div className="text-center">
+        <div className="text-center mt-5">
           <Link className="btn btn-success" href="/projects">
             View all
           </Link>

@@ -11,16 +11,16 @@
 .slick-slide img {
     transition: transform 0.3s ease;
 }
-.property-type-detail{
+
+.property-type-detail {
     padding: 0px 10px;
 }
-.card{
-    background-color: fbfbfc;
-}
-.property-type-detail p{
+
+.property-type-detail p {
     margin: 0;
 }
-.location-benifits{
+
+.location-benifits {
     background-color: #f1f1f1;
     padding: 5px;
     justify-content: space-between;
@@ -28,36 +28,42 @@
     align-items: center;
     /* flex-wrap: wrap; */
 }
-.questions{
+
+.questions {
     padding: 10px 20px;
     display: flex;
     align-items: center;
     border-radius: 5px;
     position: relative;
-    background: linear-gradient(to bottom right,#eff0f3,#fff) !important;
-    box-shadow: 3px 3px 3px #e8e6e6,-3px -3px 3px #fff !important;
+    background: linear-gradient(to bottom right, #eff0f3, #fff) !important;
+    box-shadow: 3px 3px 3px #e8e6e6, -3px -3px 3px #fff !important;
 }
-.questions p{
+
+.questions p {
     font-weight: bold;
     color: rgb(75, 147, 75);
     margin: 0;
     margin-right: 10px;
 }
-.plus-icon{
+
+.plus-icon {
     position: absolute;
     right: 20px;
     font-size: 30px;
     cursor: pointer;
 }
-.distance-value{
+
+.distance-value {
     background-color: #68ac78;
     padding: 2px 10px;
     border-radius: 10px;
 }
-.banner-container{
+
+.banner-container {
     position: relative !important;
 }
-.banner-form{
+
+.banner-form {
     background: url(https://www.starestate.com/static/media/card-bg.086315ac0f0f0c127765.jpg) 50% / cover no-repeat;
     max-width: 330px;
     padding: 20px;
@@ -66,11 +72,12 @@
     top: 10%;
     z-index: 9;
 }
-.short-info{
+
+.short-info {
     bottom: 3rem;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    /* gap: 5px; */
     left: 5%;
     position: absolute;
     z-index: 9;
@@ -81,12 +88,59 @@
     backdrop-filter: blur(5px);
     padding: 1.5rem;
     max-width: 350px;
-    font-size: 30px;
+    /* font-size: 30px; */
 }
-.short-info span{
+
+.short-info span {
     font-size: 16px !important;
 }
-.project-logo{
+
+.project-logo {
     width: 150px;
     margin-bottom: 20px;
+}
+
+.gallery-container {
+    position: relative;
+}
+
+.gallery-container .slick-next {
+    top: 50% !important;
+    right: 15px;
+}
+
+.gallery-container .slick-prev {
+    top: 50% !important;
+    left: 5px;
+    z-index: 99;
+}
+
+.amenity-card {
+    width: 200px;
+    height: 250px;
+    background-color: #fff;
+    border-radius: 0.5rem;
+    gap: 1rem;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.amenity-card img {
+    width: 100px !important;
+}
+
+.mb-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+@media (max-width: 768px) {
+    .walkthrough-container {
+        width: 100%;
+    }
 }

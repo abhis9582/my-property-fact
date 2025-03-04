@@ -13,11 +13,11 @@ import {
   faBed,
   faChartArea,
   faMarker,
-  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import Featured from "../components/home/featured/page";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Image from "next/image";
 
 export default function Property({ slug }) {
   const [amenities, setAmenities] = useState([]);
@@ -51,11 +51,25 @@ export default function Property({ slug }) {
     centerMode: true,
     infinite: true,
     centerPadding: "0px",
-    slidesToShow: 3,
+    slidesToShow: 3, // Default for large screens
     speed: 500,
     focusOnSelect: true,
+    responsive: [
+      {
+        breakpoint: 1024, // Tablets
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 768, // Mobile devices
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
   };
-  
+
   const fetchGallery = async () => {
     const data = await axios.get(
       process.env.NEXT_PUBLIC_API_URL + `project-gallery/get/${slug}`
@@ -134,6 +148,48 @@ export default function Property({ slug }) {
     fetchWalkthrough();
     fetchBanners();
   }, []);
+
+  const openMenu = () => {
+    const menuButtons = document.getElementsByClassName("menuBtn");
+    const menu = document.getElementById("mbdiv");
+
+    // Check if the menu is already open
+    const isMenuOpen = menu.classList.contains("active");
+
+    if (isMenuOpen) {
+      // Close the menu
+      for (let i = 0; i < menuButtons.length; i++) {
+        menuButtons[i].classList.remove("closeMenuBtn");
+      }
+      menu.style.display = "none";
+      menu.classList.remove("active");
+
+      // Toggle className for .header
+      const header = document.querySelector(".header");
+      if (header) {
+        header.classList.remove("notfixed");
+      }
+
+      // Toggle className for body to remove overflow-hidden
+      document.body.classList.remove("overflow-hidden");
+    } else {
+      // Open the menu
+      for (let i = 0; i < menuButtons.length; i++) {
+        menuButtons[i].classList.add("closeMenuBtn");
+      }
+      menu.style.display = "block";
+      menu.classList.add("active");
+
+      // Toggle className for .header
+      const header = document.querySelector(".header");
+      if (header) {
+        header.classList.add("notfixed");
+      }
+
+      // Toggle className for body to add overflow-hidden
+      document.body.classList.add("overflow-hidden");
+    }
+  };
   const imageSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${bannerData.slugURL}/${bannerData.desktopBanner}`;
   // const imageSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.projectThumbnail}`;
   return (
@@ -143,13 +199,16 @@ export default function Property({ slug }) {
           <div className="container-lg d-flex justify-content-between position-relative align-items-center">
             <div className="project-logo mt-3">
               <Link href="/">
-                <img
+                <Image
+                  width={200}
+                  height={80}
                   src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.projectLogo}`}
                   alt="logo"
+                  layout="responsive"
                 />
               </Link>
             </div>
-            <nav className="navi d-none d-md-flex">
+            <nav className="navi d-none d-lg-flex">
               <div className="menu">
                 <ul className="list-inline">
                   <li>
@@ -170,14 +229,40 @@ export default function Property({ slug }) {
                 </ul>
               </div>
             </nav>
-            <div className="menuBtn d-flex d-lg-none ">
+            <div className="mbMenuContainer" id="mbdiv">
+              <ul className="mb-list">
+                <li>
+                  <Link href="#overview">Overview</Link>
+                </li>
+                <li>
+                  <Link href="#amenities">Amenities</Link>
+                </li>
+                <li>
+                  <Link href="#floorplan">Plans &amp; Price</Link>
+                </li>
+                <li>
+                  <Link href="#gallery">Gallery</Link>
+                </li>
+                <li>
+                  <Link href="#location">Location</Link>
+                </li>
+              </ul>
+            </div>
+            <div className="menuBtn d-flex d-lg-none " onClick={openMenu}>
               <span id="menuLine1"></span>
               <span id="menuLine2"></span>
               <span id="menuLine3"></span>
             </div>
-            <div className="logo">
+            <div className="logo d-none d-lg-block">
               <Link className="mt-2 text-dark" href="/">
-                <img src="/logo.png" alt="logo" style={{ width: "60px" }} />
+                <Image
+                  className="w-50"
+                  src="/logo.png"
+                  alt="mpf-logo"
+                  width={60}
+                  height={60}
+                  layout="responsive"
+                />
               </Link>
             </div>
           </div>
@@ -186,11 +271,30 @@ export default function Property({ slug }) {
       <div className="container-fluid mt-5 p-0">
         <div className="slick-slider-container banner-container">
           <Slider {...settings}>
-            <div>
-              <img className="slider-image" src={imageSrc} alt="Slide 1" />
-            </div>
+            <Image
+              src={imageSrc}
+              alt="banner-image"
+              width={1899}
+              height={650}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 50vw"
+            />
+            {/* <picture>
+              <source
+                srcSet={imageSrc}
+                media="(max-width: 640px)"
+              />
+              <source
+                srcSet={imageSrc}
+                media="(max-width: 1024px)"
+              />
+              <img
+                src={imageSrc}
+                alt="banner-image"
+                className="w-100 h-auto"
+              />
+            </picture> */}
           </Slider>
-          <div className="banner-form">
+          <div className="banner-form d-none d-lg-block">
             <Form>
               <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Control type="text" placeholder="Name*" />
@@ -210,19 +314,20 @@ export default function Property({ slug }) {
             </Form>
           </div>
           <div className="short-info">
-            <p className="m-0 p-0">{projectDetail.projectName}</p>
-            <small>
-              <FontAwesomeIcon icon={faMarker} width={10} />{" "}
+            <p className="fs-1 fw-bold m-0">{projectDetail.projectName}</p>
+            <p className="fs-3 m-0">
+              <FontAwesomeIcon icon={faMarker} width={15} />{" "}
               {projectDetail.projectAddress}
-            </small>
-            <span>
+            </p>
+            <p className="fs-6">
               {projectDetail.projectPrice}* |{" "}
               {projectDetail.projectConfiguration}
-            </span>
-            <div className="btn btn-success">Get Details</div>
+            </p>
+            <div className="btn btn-success mt-2">Get Details</div>
           </div>
         </div>
-        <div>
+        {/* About the project */}
+        <div className="container">
           <h1 className="text-center mt-3">About The Project</h1>
           <div className="p-3">
             <p
@@ -230,18 +335,21 @@ export default function Property({ slug }) {
               dangerouslySetInnerHTML={{ __html: aboutData.shortDesc }}
             ></p>
           </div>
+
+          {/* About buttons section */}
+          <div className="d-flex flex-column flex-md-row justify-content-center gap-2 gap-md-5">
+            <button className="btn btn-success">READ MORE</button>
+            <button className="btn btn-success">DOWNLOAD BROCHURE</button>
+            <button className="btn btn-success">SCHEDULE A SITE VISIT</button>
+          </div>
         </div>
-        <div className="d-flex justify-content-center">
-          <button className="btn btn-success">READ MORE</button>
-          <button className="btn btn-success mx-3">DOWNLOAD BROCHURE</button>
-          <button className="btn btn-success">SCHEDULE A SITE VISIT</button>
-        </div>
+        {/* walkthrough section */}
         <div className="d-flex justify-content-center mt-5">
           <div className="walkthrough-container">
             <div className="text-center">
               <p className="h1 text-light mt-5">Walkthrough</p>
             </div>
-            <div className="text-center p-5">
+            <div className="text-center p-3 p-lg-5">
               <p
                 dangerouslySetInnerHTML={{
                   __html: walkthrough.walkthroughDesc,
@@ -253,48 +361,59 @@ export default function Property({ slug }) {
             </div>
           </div>
         </div>
-        <div className="container-fluid bg-dark p-5 mt-5" id="amenities">
-          <p className="h1 text-center text-light">Amenities</p>
-          <div>
+
+        {/* Amenities section */}
+        <div
+          className="container-fluid bg-dark p-3 p-md-4 p-lg-5 mt-5"
+          id="amenities"
+        >
+          <div className="container">
+            <p className="h1 text-center text-light">Amenities</p>
             <p
               className="text-center text-light"
               dangerouslySetInnerHTML={{ __html: projectDetail.amenityDesc }}
             ></p>
-          </div>
-          <div className="row">
-            <div className="d-flex flex-wrap justify-content-center">
-              {amenities.map((item) => (
-                <div key={item.id} className="card mx-3 p-5 mt-3">
-                  <img
-                    src={
-                      process.env.NEXT_PUBLIC_IMAGE_URL +
-                      "amenity/" +
-                      item.amenityImageUrl
-                    }
-                    alt={item.altTag}
-                    style={{ width: "100px" }}
-                  />
-                  <p>{item.title}</p>
-                </div>
-              ))}
-            </div>
-            <div className="mt-5 text-center">
-              <button className="btn btn-primary">VIEW ALL</button>
+            <div className="container">
+              <div className="d-flex flex-wrap justify-content-center gap-2 gap-md-3">
+                {amenities.map((item) => (
+                  <div key={item.id} className="amenity-card">
+                    <div>
+                      <Image
+                        src={
+                          process.env.NEXT_PUBLIC_IMAGE_URL +
+                          "amenity/" +
+                          item.amenityImageUrl
+                        }
+                        height={50}
+                        width={50}
+                        layout="responsive"
+                        alt={item.altTag}
+                      />
+                      <p className="mt-2">{item.title}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-5 text-center">
+                <button className="btn btn-primary">VIEW ALL</button>
+              </div>
             </div>
           </div>
         </div>
-        <div className="container-fluid" id="floorplan">
-          <div className="p-5">
+
+        {/* Floor plans section */}
+        <div className="container mt-3" id="floorplan">
+          <div className="p-2 p-md-4 p-lg-5">
             <p className="h1 text-center">Floor Plans</p>
             <p
               className="text-center"
               dangerouslySetInnerHTML={{ __html: projectDetail.floorPlanDesc }}
             ></p>
           </div>
-          <div className="d-flex justify-content-center p-2">
+          <div className="d-flex justify-content-center p-2 d-flex flex-column flex-md-row gap-md-3 flex-wrap flex-lg-nowrap">
             {floorPlanList.map((item) => (
-              <div key={count++} className="card mx-2" style={{ width: "30%" }}>
-                <div className=" p-3 rounded-sm">
+              <div key={count++} className="card mt-3">
+                <div className="p-3 rounded-sm">
                   <img
                     style={{ width: "100%" }}
                     src="https://www.starestate.com/assets/images/generic-floorplan.jpg"
@@ -327,9 +446,14 @@ export default function Property({ slug }) {
             ))}
           </div>
         </div>
-        <div className="container-fluid bg-dark p-5 mt-5" id="gallery">
+
+        {/* Gallery section */}
+        <div
+          className="container-fluid bg-dark p-2 p-md-4 p-lg-5 mt-5"
+          id="gallery"
+        >
           <p className="text-center h1 text-light">Gallery</p>
-          <div>
+          <div className="gallery-container">
             <Slider {...settings1}>
               {galleryList.map((item) => (
                 <div key={item.id}>
@@ -343,25 +467,29 @@ export default function Property({ slug }) {
             </Slider>
           </div>
         </div>
-        <div className="container-fluid mt-5">
+        {/* Location section */}
+        <div className="container-fluid mt-5" id="location">
           <div>
             <p className="h1 text-center">Location</p>
           </div>
-          <div className="text-center p-5">
+          <div className="text-center p-2 p-md-4 p-lg-5">
             <p
               dangerouslySetInnerHTML={{ __html: projectDetail.locationDesc }}
             ></p>
           </div>
-          <div className="row p-2">
+          <div className="row">
             <div className="col-md-6">
-              <div className="row d-flex flex-wrap justify-content-between">
+              <div className="row d-flex justify-content-between">
                 {benefitList.map((item) => (
-                  <div key={item.id} className="col-6">
-                    <div className="d-flex location-benifits mx-1 mt-2">
-                      <img
-                        style={{ width: "40px" }}
+                  <div key={item.id} className="col-md-6">
+                    <div className="d-flex location-benifits mx-1 mt-2 px-2">
+                      <Image
                         src={`${process.env.NEXT_PUBLIC_IMAGE_URL}icon/${item.iconImage}`}
                         alt={item.iconImage}
+                        width={40}
+                        height={40}
+                        layout="responsive"
+                        className="w-25"
                       />
                       <p className="h6 text-center">{item.benefitName}</p>
                       <div className="distance-value">{item.distance}</div>
@@ -397,24 +525,25 @@ export default function Property({ slug }) {
             </div>
             <div className="col-md-6 p-3">
               <Link href="#formModal" data-bs-toggle="modal">
-                <img
+                <Image
                   src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.locationMap}`}
-                  className="h-100 object-cover"
-                  alt="Location Map"
+                  alt="location-image"
+                  width={400}
+                  height={400}
+                  layout="responsive"
                 />
               </Link>
             </div>
           </div>
         </div>
       </div>
-      <div
-        className="container-fluid mt-3 p-5"
-        style={{ background: "#f2f2f2" }}
-      >
+
+      {/* Contact us section */}
+      <div className="container-fluid mt-3 p-2 p-md-3 p-lg-5">
         <div>
           <p className="h1 text-center">Get in Touch</p>
           <div className="d-flex justify-content-center">
-            <div className="w-50 text-center">
+            <div className="w-100 w-md-50 w-lg-50 text-center">
               <p>
                 If you would like to know more details or something specific,
                 feel free to contact us. Our site representative will give you a
@@ -426,7 +555,7 @@ export default function Property({ slug }) {
             <div className="touchFormWrapper">
               <form>
                 <div className="row ">
-                  <div className="col-md-4 form-group">
+                  <div className="col-md-4 form-group mt-3">
                     <input
                       type="text"
                       className="form-control"
@@ -436,7 +565,7 @@ export default function Property({ slug }) {
                       defaultValue=""
                     />
                   </div>
-                  <div className="col-md-4 form-group">
+                  <div className="col-md-4 form-group mt-3">
                     <div className="phone-container react-tel-input ">
                       <input
                         className="form-control"
@@ -459,7 +588,7 @@ export default function Property({ slug }) {
                       </div>
                     </div>
                   </div>
-                  <div className="col-md-4 form-group">
+                  <div className="col-md-4 form-group mt-3">
                     <input
                       type="email"
                       className="form-control"
@@ -469,7 +598,7 @@ export default function Property({ slug }) {
                       defaultValue=""
                     />
                   </div>
-                  <div className="col-12 form-group">
+                  <div className="col-12 form-group mt-3">
                     <div className="form-check mx-auto d-table ">
                       <input
                         type="checkbox"
@@ -502,14 +631,14 @@ export default function Property({ slug }) {
       >
         <p className="h1 text-center pt-5">FAQs</p>
         <div className="container mt-3">
-          {faqs.map((item) => (
-            <div key={item.id}>
+          {faqs.map((item, index) => (
+            <div key={`${item.id}-${index}`}>
               <div
                 className="container questions mt-3 d-flex"
                 id="question1"
                 onClick={() => toggleAnswer(item.id)}
               >
-                <p>Q 1: </p> {item.faqQuestion}
+                <p>Q {index + 1}: </p> {item.faqQuestion}
                 <span className="plus-icon">+</span>
               </div>
               <div
@@ -525,17 +654,21 @@ export default function Property({ slug }) {
           ))}
         </div>
       </div>
-      <div className="container-fluid">
+      <div className="container-fluid mb-4">
         <Featured />
       </div>
       <div
-        className="container-fluid d-flex justify-content-center"
+        className="container-fluid"
         style={{ background: "#68ac78" }}
       >
-        <div>
-          <img src="/logo.png" alt="logo" style={{ width: "200px" }} />
+        <div className="d-flex justify-content-center">
+          <Image
+            width={100}
+            height={100}
+            src="/logo.png"
+            alt="mpf-logo"
+          />
         </div>
-        <div></div>
       </div>
       <Footer />
     </>
