@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import "../admin/dashboard/dashboard.css";
 import Image from "next/image";
+import Cookies from "js-cookie";
 export default function AdminPage() {
   const router = useRouter();
   const [validated, setValidated] = useState(false);
@@ -20,19 +21,30 @@ export default function AdminPage() {
 
     if (!form.checkValidity()) {
       e.stopPropagation();
-      setValidated(true); // Ensure it's a boolean
+      setValidated(true);
       return;
     }
     setValidated(true);
+
     try {
       const response = await axios.post(
         process.env.NEXT_PUBLIC_API_URL + "auth/login",
         formData,
-        { withCredentials: true }
+        { withCredentials: true } // Ensure cookies are included in the request
       );
+
       if (response.status === 200) {
-        router.push("admin/dashboard");
-        
+        const token = response.data.token; // Get token from response
+        // Store the token in a cookie
+        Cookies.set("token", token, {
+          expires: 7, // Token expires in 7 days
+          secure: process.env.NODE_ENV === "production", // Secure in production
+          sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", // Prevent CSRF issues
+          path: "/", // Available across the site
+        });
+
+        // Redirect to admin dashboard
+        router.push("/admin/dashboard");
       }
     } catch (error) {
       console.log(error);
@@ -96,10 +108,10 @@ export default function AdminPage() {
               </button>
             </div>
             <div className="text-center mt-2">
-              <Link href="#">Forget Password?</Link>
+              <Link className="text-dark text-decoration-none" href="#">Forget Password?</Link>
             </div>
             <div className="text-center mt-2">
-              <Link href="#">Register?</Link>
+              <Link className="text-dark text-decoration-none" href="#">Register?</Link>
             </div>
           </form>
         </div>
