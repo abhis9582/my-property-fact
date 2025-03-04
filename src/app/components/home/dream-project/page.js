@@ -1,3 +1,6 @@
+import Image from "next/image";
+import Link from "next/link";
+
 export default function DreamProject() {
   return (
     <>
@@ -7,55 +10,86 @@ export default function DreamProject() {
         </p>
         <div className="container flex-lg-nowrap d-flex flex-wrap gap-3 justify-content-center">
           <div className="my-2">
-            <img
-              src="/dream-cities/mumbai1.webp"
-              alt="img-nri"
-            />
+            <Link href="/city/mumbai">
+              <Image
+                src="/dream-cities/mumbai.png"
+                alt="city-mumbai"
+                width={300}
+                height={180}
+              />
+            </Link>
           </div>
           <div className="my-2">
-            <img
-              src="/dream-cities/pune1.webp"
-              alt="img-nri"
-            />
+            <Link href="/city/bangalore">
+              <Image
+                src="/dream-cities/bangalore.png"
+                alt="city-bangalore"
+                width={350}
+                height={180}
+              />
+            </Link>
           </div>
           <div className="my-2">
-            <img
-              src="/dream-cities/bangalore1.webp"
-              alt="img-nri"
-            />
+            <Link href="/city/pune">
+              <Image
+                src="/dream-cities/pune.png"
+                alt="city-mumbai"
+                width={300}
+                height={180}
+              />
+            </Link>
           </div>
           <div className="my-2">
-            <img
-              src="/dream-cities/delhi1.webp"
-              alt="img-nri"
-            />
+            <Link href="/city/delhi">
+              <Image
+                src="/dream-cities/delhi.png"
+                alt="city-delhi"
+                width={300}
+                height={180}
+              />
+            </Link>
           </div>
         </div>
         <div className="container flex-lg-nowrap d-flex flex-wrap gap-3 justify-content-center">
           <div className="my-2">
-            <img
-              src="/dream-cities/noida1.webp"
-              alt="img-nri"
-            />
+            <Link href="/city/noida">
+              <Image
+                src="/dream-cities/noida.png"
+                alt="city-noida"
+                width={300}
+                height={180}
+              />
+            </Link>
           </div>
           <div className="my-2">
-            <img
-              src="/dream-cities/gurugram1.webp"
-              alt="img-nri"
-            />
+            <Link href="/city/gurugram">
+              <Image
+                src="/dream-cities/gurugram.png"
+                alt="city-gurugram"
+                width={300}
+                height={180}
+              />
+            </Link>
           </div>
           <div className="my-2">
-            <img
-              src="/dream-cities/gurugram1.webp"
-              alt="img-nri"
-              className="w-100"
-            />
+            <Link href="/city/greater-noida">
+              <Image
+                src="/dream-cities/greater_noida.png"
+                alt="city-greater_noida"
+                width={300}
+                height={180}
+              />
+            </Link>
           </div>
           <div className="my-2">
-            <img
-              src="/dream-cities/other-cities.webp"
-              alt="img-nri"
-            />
+            <Link href="#">
+              <Image
+                src="/dream-cities/other_city.png"
+                alt="city-other_city"
+                width={300}
+                height={180}
+              />
+            </Link>
           </div>
         </div>
       </div>
