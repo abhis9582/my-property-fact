@@ -526,7 +526,6 @@ export default function Property({ slug }) {
         </div>
       </div>
       <div className="container-fluid">
-        <p className="h1 text-center pt-3">Featured projects</p>
         <Featured />
       </div>
       <div
