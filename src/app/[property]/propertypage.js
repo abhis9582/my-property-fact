@@ -2,10 +2,8 @@
 import Link from "next/link";
 import Slider from "react-slick";
 import "./property.css";
-import "@/app/components/header/header.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Footer from "../components/footer/page";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,10 +12,12 @@ import {
   faChartArea,
   faMarker,
 } from "@fortawesome/free-solid-svg-icons";
-import Featured from "../components/home/featured/page";
+import Featured from "../(home)/components/home/featured/page";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Image from "next/image";
+import Footer from "../(home)/components/footer/page";
+import { Spinner } from "react-bootstrap";
 
 export default function Property({ slug }) {
   const [amenities, setAmenities] = useState([]);
@@ -30,7 +30,8 @@ export default function Property({ slug }) {
   const [walkthrough, setWalkthrough] = useState([]);
   const [bannerData, setBannerData] = useState([]);
   const [faqs, setFaqs] = useState([]);
-  var [count, setCount] = useState(1);
+  //Defining loading state
+  const [loading, setLoading] = useState(true);
   const toggleAnswer = (index) => {
     const updatedVisibility = [...isAnswerVisible];
     updatedVisibility[index] = !updatedVisibility[index];
@@ -70,85 +71,56 @@ export default function Property({ slug }) {
     ],
   };
 
-  const fetchGallery = async () => {
-    const data = await axios.get(
-      process.env.NEXT_PUBLIC_API_URL + `project-gallery/get/${slug}`
-    );
-    setGalleryList(data.data);
-  };
-  const fetchWalkthrough = async () => {
-    const data = await axios.get(
-      process.env.NEXT_PUBLIC_API_URL + `project-walkthrough/get/${slug}`
-    );
-    setWalkthrough(data.data);
-  };
-  const fetchFaqs = async () => {
-    const data = await axios.get(
-      process.env.NEXT_PUBLIC_API_URL + `project-faqs/get/${slug}`
-    );
-    setFaqs(data.data);
-  };
-  const fetchProjectAbout = async () => {
-    const data = await axios.get(
-      process.env.NEXT_PUBLIC_API_URL + `project-about/get/${slug}`
-    );
-    setAboutData(data.data);
-  };
-  const fetchBanners = async () => {
-    const data = await axios.get(
-      process.env.NEXT_PUBLIC_API_URL + `project-banner/get/${slug}`
-    );
-    setBannerData(data.data);
-  };
   useEffect(() => {
-    const fetchProjectDetail = async () => {
+    const fetchAllData = async () => {
       try {
-        const data = await axios.get(
-          process.env.NEXT_PUBLIC_API_URL + `projects/get/${slug}`
-        );
-        setProjectDetail(data.data);
-      } catch (error) {}
-    };
-    const fetchFloorPlans = async () => {
-      try {
-        const response = await axios.get(
-          process.env.NEXT_PUBLIC_API_URL + `floor-plans/get/${slug}`
-        );
-        console.log(response);
-        setFloorPlanList(response.data);
-      } catch (error) {}
-    };
-    const fetchData = async () => {
-      try {
-        const allFeaturedProperties = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}project-amenity/get/${slug}`
-        );
-        setAmenities(allFeaturedProperties.data);
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      }
-    };
-    const fetchBenifits = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}location-benefit/get/${slug}`
-        );
-        setBenefitList(response.data);
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      }
-    };
-    fetchData();
-    fetchProjectDetail();
-    fetchFloorPlans();
-    fetchGallery();
-    fetchFaqs();
-    fetchBenifits();
-    fetchProjectAbout();
-    fetchWalkthrough();
-    fetchBanners();
-  }, []);
+        const apiBase = process.env.NEXT_PUBLIC_API_URL;
 
+        // Creating an array of API promises
+        const apiCalls = [
+          axios.get(`${apiBase}projects/get/${slug}`),
+          axios.get(`${apiBase}floor-plans/get/${slug}`),
+          axios.get(`${apiBase}project-amenity/get/${slug}`),
+          axios.get(`${apiBase}location-benefit/get/${slug}`),
+          axios.get(`${apiBase}project-gallery/get/${slug}`),
+          axios.get(`${apiBase}project-walkthrough/get/${slug}`),
+          axios.get(`${apiBase}project-faqs/get/${slug}`),
+          axios.get(`${apiBase}project-about/get/${slug}`),
+          axios.get(`${apiBase}project-banner/get/${slug}`),
+        ];
+
+        // Await all API responses
+        const [
+          projectRes,
+          floorPlansRes,
+          amenitiesRes,
+          benefitsRes,
+          galleryRes,
+          walkthroughRes,
+          faqsRes,
+          aboutRes,
+          bannerRes,
+        ] = await Promise.all(apiCalls);
+
+        // Set state after fetching all data
+        setProjectDetail(projectRes.data);
+        setFloorPlanList(floorPlansRes.data);
+        setAmenities(amenitiesRes.data);
+        setBenefitList(benefitsRes.data);
+        setGalleryList(galleryRes.data);
+        setWalkthrough(walkthroughRes.data);
+        setFaqs(faqsRes.data);
+        setAboutData(aboutRes.data);
+        setBannerData(bannerRes.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAllData();
+  }, []);
   const openMenu = () => {
     const menuButtons = document.getElementsByClassName("menuBtn");
     const menu = document.getElementById("mbdiv");
@@ -190,61 +162,125 @@ export default function Property({ slug }) {
       document.body.classList.add("overflow-hidden");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="project-loader">
+        <Spinner animation="grow" variant="primary" />
+        <Spinner animation="grow" variant="secondary" />
+        <Spinner animation="grow" variant="success" />
+        <Spinner animation="grow" variant="danger" />
+        <Spinner animation="grow" variant="warning" />
+        <Spinner animation="grow" variant="info" />
+        <Spinner animation="grow" variant="light" />
+        <Spinner animation="grow" variant="dark" />
+      </div>
+    );
+  }
   const imageSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${bannerData.slugURL}/${bannerData.desktopBanner}`;
   // const imageSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.projectThumbnail}`;
   return (
     <>
-      <header className="header bg-light">
+      <header className="ps-3 pe-3 bg-root-color">
         <div className="main-header">
-          <div className="container-lg d-flex justify-content-between position-relative align-items-center">
-            <div className="project-logo mt-3">
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex justify-content-center align-items-center">
               <Link href="/">
                 <Image
-                  width={200}
-                  height={80}
+                  width={180}
+                  height={50}
                   src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.projectLogo}`}
                   alt="logo"
-                  layout="responsive"
                 />
               </Link>
             </div>
             <nav className="navi d-none d-lg-flex">
               <div className="menu">
-                <ul className="list-inline">
+                <ul className="list-inline d-flex text-decoration-none gap-5 m-0 align-items-center">
                   <li>
-                    <Link href="#overview">Overview</Link>
+                    <Link
+                      className="text-decoration-none text-light fs-5 fw-bold"
+                      href="#overview"
+                    >
+                      Overview
+                    </Link>
                   </li>
                   <li>
-                    <Link href="#amenities">Amenities</Link>
+                    <Link
+                      className="text-decoration-none text-light fs-5 fw-bold"
+                      href="#amenities"
+                    >
+                      Amenities
+                    </Link>
                   </li>
                   <li>
-                    <Link href="#floorplan">Plans &amp; Price</Link>
+                    <Link
+                      className="text-decoration-none text-light fs-5 fw-bold"
+                      href="#floorplan"
+                    >
+                      Plans &amp; Price
+                    </Link>
                   </li>
                   <li>
-                    <Link href="#gallery">Gallery</Link>
+                    <Link
+                      className="text-decoration-none text-light fs-5 fw-bold"
+                      href="#gallery"
+                    >
+                      Gallery
+                    </Link>
                   </li>
                   <li>
-                    <Link href="#location">Location</Link>
+                    <Link
+                      className="text-decoration-none text-light fs-5 fw-bold"
+                      href="#location"
+                    >
+                      Location
+                    </Link>
                   </li>
                 </ul>
               </div>
             </nav>
             <div className="mbMenuContainer" id="mbdiv">
-              <ul className="mb-list">
+              <ul className="mb-list d-block d-md-none d-flex gap-4">
                 <li>
-                  <Link href="#overview">Overview</Link>
+                  <Link
+                    href="#overview"
+                    className="text-decoration-none text-light fs-5 fw-bold"
+                  >
+                    Overview
+                  </Link>
                 </li>
                 <li>
-                  <Link href="#amenities">Amenities</Link>
+                  <Link
+                    href="#amenities"
+                    className="text-decoration-none text-light fs-5 fw-bold"
+                  >
+                    Amenities
+                  </Link>
                 </li>
                 <li>
-                  <Link href="#floorplan">Plans &amp; Price</Link>
+                  <Link
+                    href="#floorplan"
+                    className="text-decoration-none text-light fs-5 fw-bold"
+                  >
+                    Plans &amp; Price
+                  </Link>
                 </li>
                 <li>
-                  <Link href="#gallery">Gallery</Link>
+                  <Link
+                    href="#gallery"
+                    className="text-decoration-none text-light fs-5 fw-bold"
+                  >
+                    Gallery
+                  </Link>
                 </li>
                 <li>
-                  <Link href="#location">Location</Link>
+                  <Link
+                    href="#location"
+                    className="text-decoration-none text-light fs-5 fw-bold"
+                  >
+                    Location
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -254,45 +290,24 @@ export default function Property({ slug }) {
               <span id="menuLine3"></span>
             </div>
             <div className="logo d-none d-lg-block">
-              <Link className="mt-2 text-dark" href="/">
-                <Image
-                  className="w-50"
-                  src="/logo.png"
-                  alt="mpf-logo"
-                  width={60}
-                  height={60}
-                  layout="responsive"
-                />
+              <Link href="/">
+                <Image src="/logo.png" alt="mpf-logo" width={80} height={80} />
               </Link>
             </div>
           </div>
         </div>
       </header>
-      <div className="container-fluid mt-5 p-0">
+      <div className="container-fluid p-0">
         <div className="slick-slider-container banner-container">
           <Slider {...settings}>
-            <Image
-              src={imageSrc}
-              alt="banner-image"
-              width={1899}
-              height={650}
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 50vw"
-            />
-            {/* <picture>
+            <picture>
               <source
-                srcSet={imageSrc}
+                srcSet={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${bannerData.slugURL}/${bannerData.mobileBanner}`}
                 media="(max-width: 640px)"
               />
-              <source
-                srcSet={imageSrc}
-                media="(max-width: 1024px)"
-              />
-              <img
-                src={imageSrc}
-                alt="banner-image"
-                className="w-100 h-auto"
-              />
-            </picture> */}
+              <source srcSet={imageSrc} media="(max-width: 1024px)" />
+              <img src={imageSrc} alt="banner-image" className="w-100 h-auto" />
+            </picture>
           </Slider>
           <div className="banner-form d-none d-lg-block">
             <Form>
@@ -313,7 +328,7 @@ export default function Property({ slug }) {
               </Button>
             </Form>
           </div>
-          <div className="short-info">
+          <div className="short-info d-none d-md-block">
             <p className="fs-1 fw-bold m-0">{projectDetail.projectName}</p>
             <p className="fs-3 m-0">
               <FontAwesomeIcon icon={faMarker} width={15} />{" "}
@@ -411,8 +426,8 @@ export default function Property({ slug }) {
             ></p>
           </div>
           <div className="d-flex justify-content-center p-2 d-flex flex-column flex-md-row gap-md-3 flex-wrap flex-lg-nowrap">
-            {floorPlanList.map((item) => (
-              <div key={count++} className="card mt-3">
+            {floorPlanList.map((item, index) => (
+              <div key={`${item.planType}-${index}`} className="card mt-3">
                 <div className="p-3 rounded-sm">
                   <img
                     style={{ width: "100%" }}
@@ -657,17 +672,9 @@ export default function Property({ slug }) {
       <div className="container-fluid mb-4">
         <Featured />
       </div>
-      <div
-        className="container-fluid"
-        style={{ background: "#68ac78" }}
-      >
+      <div className="container-fluid" style={{ background: "#68ac78" }}>
         <div className="d-flex justify-content-center">
-          <Image
-            width={100}
-            height={100}
-            src="/logo.png"
-            alt="mpf-logo"
-          />
+          <Image width={100} height={100} src="/logo.png" alt="mpf-logo" />
         </div>
       </div>
       <Footer />
