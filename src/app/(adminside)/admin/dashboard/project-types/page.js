@@ -1,6 +1,8 @@
 "use client";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Paper } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Col, Form, Modal, Table } from "react-bootstrap";
@@ -62,23 +64,30 @@ export default function ProjectTypes() {
       process.env.NEXT_PUBLIC_API_URL + "project-types/get-all"
     );
     if (types) {
-      setTypeList(types.data);
+      const res = types.data;
+      const list = res.map((item, index) => ({
+        ...item,
+        id: index + 1,
+      }));
+      setTypeList(list);
     }
   };
-  const deleteProjectType = async () =>{
-    const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}project-types/delete/${id}`);
-    if(response.data.isSuccess === 1){
-        setConfirmBox(false);
-        fetchProjectTypes();
-        toast.success(response.data.message);
-    }else{
+  const deleteProjectType = async () => {
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_API_URL}project-types/delete/${id}`
+    );
+    if (response.data.isSuccess === 1) {
+      setConfirmBox(false);
+      fetchProjectTypes();
+      toast.success(response.data.message);
+    } else {
       toast.error(response.data.message);
     }
-  }
-  const openConfirmationBox = (id) =>{
+  };
+  const openConfirmationBox = (id) => {
     setConfirmBox(true);
     setId(id);
-  }
+  };
   useEffect(() => {
     fetchProjectTypes();
   }, []);
@@ -104,6 +113,38 @@ export default function ProjectTypes() {
     setButtonName("Add Type");
     setShowModal(true);
   };
+
+  //Defining table columns
+  const columns = [
+    { field: "id", headerName: "S.no", width: 100 },
+    { field: "projectTypeName", headerName: "Project Type Name", width: 250 },
+    { field: "metaTitle", headerName: "Meta Title", width: 246 },
+    { field: "metaDesc", headerName: "Meta Description", width: 200 },
+    { field: "metaKeyword", headerName: "Meta Keyword", width: 200 },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 200,
+      renderCell: (params) => (
+        <div>
+          <FontAwesomeIcon
+            className="mx-3 text-danger"
+            style={{ cursor: "pointer" }}
+            icon={faTrash}
+            onClick={() => openConfirmationBox(params.row.id)}
+          />
+          <FontAwesomeIcon
+            className="text-warning"
+            style={{ cursor: "pointer" }}
+            icon={faPencil}
+            onClick={() => openEditPopUp(params.row)}
+          />
+        </div>
+      ),
+    },
+  ];
+
+  const paginationModel = { page: 0, pageSize: 10 };
   return (
     <div>
       <div className="d-flex justify-content-between mt-3">
@@ -112,45 +153,25 @@ export default function ProjectTypes() {
           + Add new Project Type
         </Button>
       </div>
-      <Table className="mt-5" striped bordered hover variant="light">
-        <thead>
-          <tr>
-            <th>S no</th>
-            <th>Type</th>
-            <th>Meta Title</th>
-            <th>Meta Description</th>
-            <th>Meta Keyword</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {typeList.map((item) => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>{item.projectTypeName}</td>
-              <td>{item.metaTitle}</td>
-              <td>{item.metaDesc}</td>
-              <td>{item.metaKeyword}</td>
-              <td>
-                <div>
-                  <FontAwesomeIcon
-                    className="mx-3 text-danger"
-                    style={{ cursor: "pointer" }}
-                    icon={faTrash}
-                    onClick={()=>openConfirmationBox(item.id)}
-                  />
-                  <FontAwesomeIcon
-                    className="text-warning"
-                    style={{ cursor: "pointer" }}
-                    icon={faPencil}
-                    onClick={() => openEditPopUp(item)}
-                  />
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      <div className="table-container mt-5">
+        <Paper sx={{ height: 550, width: "100%" }}>
+          <DataGrid
+            rows={typeList}
+            columns={columns}
+            initialState={{ pagination: { paginationModel } }}
+            pageSizeOptions={[10, 15, 20, 50]}
+            checkboxSelection
+            sx={{
+              border: 0,
+              "& .MuiDataGrid-columnHeader": {
+                fontWeight: "bold", // Make headings bold
+                fontSize: "16px", // Optional: Adjust size
+                backgroundColor: "#68ac78", // Optional: Light background
+              },
+            }}
+          />
+        </Paper>
+      </div>
       {/* Modal for adding a new city */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>

@@ -1,6 +1,8 @@
 "use client";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { DataGrid } from "@mui/x-data-grid";
+import Paper from "@mui/material/Paper";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Col, Form, Modal, Table } from "react-bootstrap";
@@ -63,7 +65,12 @@ export default function City() {
       process.env.NEXT_PUBLIC_API_URL + "city/all"
     );
     if (cities) {
-      setCityList(cities.data);
+      const res = cities.data;
+      const modifiedCityList = res.map((city, index) => ({
+        ...city,
+        index: index + 1, // Assign serial number starting from 1
+      }));
+      setCityList(modifiedCityList);
     }
   };
   useEffect(() => {
@@ -95,14 +102,57 @@ export default function City() {
     const response = await axios.delete(
       `${process.env.NEXT_PUBLIC_API_URL}city/delete/${cityId}`
     );
-      setCityId(0);
-      setConfirmBox(false);
-      fetchCities();
+    setCityId(0);
+    setConfirmBox(false);
+    fetchCities();
   };
   const openConfirmationDialog = (id) => {
     setConfirmBox(true);
     setCityId(id);
   };
+  //Defining table columns
+  const columns = [
+    { field: "index", headerName: "S.no", width: 70 },
+    { field: "name", headerName: "City Name", width: 180 },
+    { field: "state", headerName: "State", width: 150 },
+    {
+      field: "metaTitle",
+      headerName: "Meta Title",
+      width: 150,
+    },
+    {
+      field: "metaKeyWords",
+      headerName: "Meta Keyword",
+      width: 239,
+    },
+    {
+      field: "metaDescription",
+      headerName: "Meta Description",
+      width: 260,
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 100,
+      renderCell: (params) => (
+        <div>
+          <FontAwesomeIcon
+            className="mx-3 text-danger"
+            style={{ cursor: "pointer" }}
+            icon={faTrash}
+            onClick={() => openConfirmationDialog(params.row.id)}
+          />
+          <FontAwesomeIcon
+            className="text-warning"
+            style={{ cursor: "pointer" }}
+            icon={faPencil}
+            onClick={() => openEditPopUp(params.row)}
+          />
+        </div>
+      ),
+    },
+  ];
+  const paginationModel = { page: 0, pageSize: 10 };
   return (
     <div>
       <div className="d-flex justify-content-between mt-3">
@@ -111,47 +161,25 @@ export default function City() {
           + Add new city
         </Button>
       </div>
-      <Table className="mt-5" striped bordered hover variant="light">
-        <thead>
-          <tr>
-            <th>S no</th>
-            <th>City Name</th>
-            <th>State</th>
-            <th>Meta Title</th>
-            <th>Meta Keyword</th>
-            <th>Meta Description</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {cityList.map((item, index) => (
-            <tr key={`row-${index}`}>
-              <td>{index+1}</td>
-              <td>{item.name}</td>
-              <td>{item.state}</td>
-              <td>{item.metaTitle}</td>
-              <td>{item.metaKeyWords}</td>
-              <td>{item.metaDescription}</td>
-              <td>
-                <div>
-                  <FontAwesomeIcon
-                    className="mx-3 text-danger"
-                    style={{ cursor: "pointer" }}
-                    icon={faTrash}
-                    onClick={()=>openConfirmationDialog(item.id)}
-                  />
-                  <FontAwesomeIcon
-                    className="text-warning"
-                    style={{ cursor: "pointer" }}
-                    icon={faPencil}
-                    onClick={() => openEditPopUp(item)}
-                  />
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      <div className="table-container mt-5">
+        <Paper sx={{ height: 550, width: "100%" }}>
+          <DataGrid
+            rows={cityList}
+            columns={columns}
+            initialState={{ pagination: { paginationModel } }}
+            pageSizeOptions={[10, 15, 20, 50]}
+            checkboxSelection
+            sx={{
+              border: 0,
+              "& .MuiDataGrid-columnHeader": {
+                fontWeight: "bold", // Make headings bold
+                fontSize: "16px", // Optional: Adjust size
+                backgroundColor: "#68ac78", // Optional: Light background
+              },
+            }}
+          />
+        </Paper>
+      </div>
       {/* Modal for adding a new city */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>

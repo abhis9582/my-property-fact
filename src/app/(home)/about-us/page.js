@@ -1,10 +1,7 @@
 "use client";
 import Link from "next/link";
-import Footer from "../components/footer/page";
-import Header from "../components/header/page";
 import "./aboutus.css";
 import Image from "next/image";
-// Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
@@ -14,32 +11,15 @@ import "swiper/css/pagination";
 
 // import required modules
 import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
+import CommonHeaderBanner from "../components/common/commonheaderbanner";
+import CommonBreadCrum from "../components/common/breadcrum";
 
 export default function AboutUs() {
   return (
     <>
       <div className="container-fluid mt-5 p-0 m-0">
-        <div>
-          <Image 
-          width={1899}
-          height={500}
-          layout="responsive"
-          src="/static/about-us-banner.png"
-          alt="about-us-banner"
-          />
-        </div>
-        <div className="w-100 mt-3">
-          <div className="container-lg">
-            <div className="breadcrumbContainer" aria-label="breadcrumb">
-              <ol className="breadcrumb p-3">
-                <li className="breadcrumb-item">
-                  <Link href="/">Home</Link>
-                </li>
-                <li className="breadcrumb-item">About Us</li>
-              </ol>
-            </div>
-          </div>
-        </div>
+        <CommonHeaderBanner image={"about-us-banner.png"} headerText={""} />
+        <CommonBreadCrum pageName={"About Us"} />
       </div>
       <div className="container-fluid">
         <div className="container">
@@ -50,8 +30,8 @@ export default function AboutUs() {
                 actor takes center stage, and a sculptor chisels a statue, a
                 sublime story unfolds with time and admiration. Similarly, in
                 the realm of Mr. Ritesh Malik, we embarked on a journey in 2012
-                to curate India&apos;s most exceptional real estate investments. We
-                understand the aspirations of the new-age royals, thus, we
+                to curate India&apos;s most exceptional real estate investments.
+                We understand the aspirations of the new-age royals, thus, we
                 assist them with handpicked bouquets of premium properties to
                 accomplish a regal lifestyle. For us, contented clients are the
                 biggest testaments as we sense accomplishment in unlocking the
@@ -156,13 +136,13 @@ export default function AboutUs() {
               light for the entire organisation which has a mammoth presence
               across India. Our go-getter approach paves the way to win against
               all the odds to overcome opportunities and set a benchmark of
-              success in the market. Mr. Ritesh Malik &apos;s empathetic leadership
-              inspires achievers and serves as a guiding light for our team. We
-              are thankful to our stakeholders, employees, and clients for
-              believing in us and being a part of our growth story. Over the
-              decade-long journey, we won many accolades that propel us to be
-              more determined and disciplined to delivering real estate services
-              while adhering to our uncompromising values.
+              success in the market. Mr. Ritesh Malik &apos;s empathetic
+              leadership inspires achievers and serves as a guiding light for
+              our team. We are thankful to our stakeholders, employees, and
+              clients for believing in us and being a part of our growth story.
+              Over the decade-long journey, we won many accolades that propel us
+              to be more determined and disciplined to delivering real estate
+              services while adhering to our uncompromising values.
               <p className="h5 mt-4">
                 Mr. Ritesh Malik <br /> Managing Director, My Property Fact
               </p>
@@ -187,8 +167,8 @@ export default function AboutUs() {
           pagination={true}
           loop={true} // Add this line to enable infinite looping
           autoplay={{
-            delay: 2500,  // Time between transitions (in milliseconds)
-            disableOnInteraction: false,  // Autoplay continues even if the user interacts with the swiper
+            delay: 2500, // Time between transitions (in milliseconds)
+            disableOnInteraction: false, // Autoplay continues even if the user interacts with the swiper
           }}
           modules={[EffectCoverflow, Pagination, Autoplay]}
         >

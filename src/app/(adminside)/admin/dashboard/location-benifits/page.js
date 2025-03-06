@@ -1,7 +1,10 @@
 "use client";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Paper } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button, Form, Modal, Table } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
@@ -66,9 +69,7 @@ export default function LocationBenefit() {
     setDistance("");
     setBname("");
     setIcon(null);
-    setPreviewImage(
-      null
-    );
+    setPreviewImage(null);
     setProjectId(0);
     setTitle("Add New Location Benefit");
     setButtonName("Add");
@@ -80,19 +81,19 @@ export default function LocationBenefit() {
     setIcon(null);
     setProjectId(item.projectId);
     setId(item.id);
-    setPreviewImage(
-      `${process.env.NEXT_PUBLIC_IMAGE_URL}icon/${item.image}`
-    );
+    setPreviewImage(`${process.env.NEXT_PUBLIC_IMAGE_URL}icon/${item.image}`);
     setTitle("Edit Location Benefit");
     setButtonName("Updte");
   };
   const deleteLocationBenefit = async () => {
-    const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}location-benefit/delete/${id}`);
-    if(response.data.isSuccess === 1){
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_API_URL}location-benefit/delete/${id}`
+    );
+    if (response.data.isSuccess === 1) {
       setConfirmBox(false);
       fetchAllBenefits();
       toast.success(response.data.message);
-    }else{
+    } else {
       setConfirmBox(false);
       toast.error(response.data.message);
     }
@@ -105,62 +106,94 @@ export default function LocationBenefit() {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}location-benefit/get-all`
     );
-    setBenefitsList(response.data);
+    const res = response.data;
+    const list = res.map((item, index) => ({
+      ...item,
+      id: index + 1,
+    }));
+    setBenefitsList(list);
   };
   useEffect(() => {
     fetchProjects();
     fetchAllBenefits();
   }, []);
+
+  //Defining table columns
+  const columns = [
+    { field: "id", headerName: "S.no", width: 100 },
+    { field: "projectName", headerName: "Project Name", width: 180 },
+    {
+      field: "image",
+      headerName: "Benefit Image",
+      width: 250,
+      renderCell: (params) => (
+        <Image
+          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}icon/${params.row.image}`}
+          alt="Project"
+          width={50}
+          height={50}
+        />
+      ),
+    },
+    {
+      field: "benefitName",
+      headerName: "Benefit Name",
+      width: 239,
+    },
+    {
+      field: "distance",
+      headerName: "Distance",
+      width: 150,
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 270,
+      renderCell: (params) => (
+        <div>
+          <FontAwesomeIcon
+            className="mx-3 text-danger"
+            style={{ cursor: "pointer" }}
+            icon={faTrash}
+            onClick={() => openConfirmationBox(params.row.id)}
+          />
+          <FontAwesomeIcon
+            className="text-warning"
+            style={{ cursor: "pointer" }}
+            icon={faPencil}
+            onClick={() => openEditModel(params.row)}
+          />
+        </div>
+      ),
+    },
+  ];
+
+  const paginationModel = { page: 0, pageSize: 10 };
   return (
     <>
       <div className="d-flex justify-content-between mt-3">
         <p className="h1">Manage Location Benefits</p>
-        <Button onClick={openAddModel}>+ Add New</Button>
+        <Button className="btn btn-success" onClick={openAddModel}>+ Add New</Button>
       </div>
-      <Table className="mt-5" striped bordered hover>
-        <thead>
-          <tr>
-            <th>S No</th>
-            <th>Project Name</th>
-            <th>Icon</th>
-            <th>Benefit name</th>
-            <th>Distance</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {benefitList.map((item) => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>{item.projectName}</td>
-              <td>
-                <img
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}icon/${item.image}`}
-                  alt="image"
-                  width={"50"}
-                />
-              </td>
-              <td>{item.benefitName}</td>
-              <td>{item.distance}</td>
-              <td>
-                <div>
-                  <FontAwesomeIcon
-                    className="mx-2 text-warning cursor-pointer"
-                    icon={faPencil}
-                    onClick={() => openEditModel(item)}
-                  />
-
-                  <FontAwesomeIcon
-                    className="mx-2 text-danger cursor-pointer"
-                    icon={faTrash}
-                    onClick={() => openConfirmationBox(item.id)}
-                  />
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      <div className="table-container mt-5">
+        <Paper sx={{ height: 550, width: "100%" }}>
+          <DataGrid
+            rows={benefitList}
+            columns={columns}
+            initialState={{ pagination: { paginationModel } }}
+            pageSizeOptions={[10, 15, 20, 50]}
+            checkboxSelection
+            sx={{
+              border: 0,
+              "& .MuiDataGrid-columnHeader": {
+                fontWeight: "bold", // Make headings bold
+                fontSize: "16px", // Optional: Adjust size
+                backgroundColor: "#68ac78", // Optional: Light background
+              },
+            }}
+          />
+        </Paper>
+      </div>
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>{title}</Modal.Title>
@@ -168,11 +201,7 @@ export default function LocationBenefit() {
         <Modal.Body>
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
             {previewImage && (
-              <img
-                src={previewImage}
-                alt="image"
-                width={"50"}
-              />
+              <img src={previewImage} alt="image" width={"50"} />
             )}
             <Form.Group controlId="formFile" className="mb-3">
               <Form.Label>Select icon</Form.Label>
@@ -223,7 +252,7 @@ export default function LocationBenefit() {
                 State is required
               </Form.Control.Feedback>
             </Form.Group>
-            <Button className="mt-3" variant="primary" type="submit">
+            <Button className="btn btn-success" type="submit">
               {buttonName}
             </Button>
           </Form>

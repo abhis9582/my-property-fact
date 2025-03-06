@@ -2,6 +2,8 @@
 
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Paper } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
@@ -95,7 +97,7 @@ export default function AddProject() {
     setLocationPreview(null);
     setValidated(false);
   };
-  const openEditModel = (item) => {    
+  const openEditModel = (item) => {
     setTitle("Edit Project");
     setShowModal(true);
     setButtonName("Update Project");
@@ -117,19 +119,21 @@ export default function AddProject() {
       ...item, // Overwrite with item data
       locationMap: null,
       projectLogo: null,
-      projectThumbnail: null
+      projectThumbnail: null,
     });
   };
-  const deleteProject = async() => {
-    if(projectId > 0){
-      try{
-        const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}projects/delete/${projectId}`);
-        if(response.data.isSuccess === 1){
+  const deleteProject = async () => {
+    if (projectId > 0) {
+      try {
+        const response = await axios.delete(
+          `${process.env.NEXT_PUBLIC_API_URL}projects/delete/${projectId}`
+        );
+        if (response.data.isSuccess === 1) {
           setConfirmBox(false);
           toast.success(response.data.message);
           fetchProjectsWithDetail();
         }
-      }catch(error){
+      } catch (error) {
         toast.error(error);
       }
     }
@@ -142,9 +146,12 @@ export default function AddProject() {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}projects/get-all`
     );
-    if (response) {
-      setProjectDetailList(response.data);
-    }
+    const res = response.data;
+    const list = res.map((item, index) => ({
+      ...item,
+      index: index + 1,
+    }));
+    setProjectDetailList(list);
   };
   useEffect(() => {
     fetchBuilders();
@@ -176,7 +183,7 @@ export default function AddProject() {
       event.stopPropagation();
       setValidated(true);
       return;
-    }    
+    }
     if (form.checkValidity() === true) {
       const data = new FormData();
       for (let key in formData) {
@@ -203,54 +210,76 @@ export default function AddProject() {
       }
     }
   };
+  //Defining table columns
+  const columns = [
+    { field: "index", headerName: "S.no", width: 100 },
+    { field: "projectName", headerName: "Project Name", width: 180 },
+    { field: "projectBy", headerName: "Project By", width: 150 },
+    {
+      field: "projectLocality",
+      headerName: "Project Locality",
+      width: 239,
+    },
+    {
+      field: "projectConfiguration",
+      headerName: "Project Configuration",
+      width: 260,
+    },
+    {
+      field: "propertyType",
+      headerName: "Property Type",
+      width: 150,
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 150,
+      renderCell: (params) => (
+        <div>
+          <FontAwesomeIcon
+            className="mx-3 text-danger"
+            style={{ cursor: "pointer" }}
+            icon={faTrash}
+            onClick={() => openConfirmationBox(params.row.id)}
+          />
+          <FontAwesomeIcon
+            className="text-warning"
+            style={{ cursor: "pointer" }}
+            icon={faPencil}
+            onClick={() => openEditModel(params.row)}
+          />
+        </div>
+      ),
+    },
+  ];
+
+  const paginationModel = { page: 0, pageSize: 10 };
   return (
     <>
       <div className="d-flex justify-content-between mt-3">
         <p className="h1 ">Manage Projects</p>
-        <Button className="mx-3" onClick={() => openAddModel()}>
+        <Button className="mx-3 btn btn-success" onClick={() => openAddModel()}>
           + Add new Project
         </Button>
       </div>
-      <div>
-        <Table className="table-container">
-          <thead>
-            <tr>
-              <th>S no</th>
-              <th>Project Name</th>
-              <th>Builder Name</th>
-              <th>Project Location</th>
-              <th>Project Configuration</th>
-              <th>Project Type</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {projectDetailList.map((item, index) => (
-              <tr key={`row-${index}`}>
-                <td>{index + 1}</td>
-                <td>{item.projectName}</td>
-                <td>{item.projectBy}</td>
-                <td>{item.projectLocality}</td>
-                <td>{item.projectConfiguration}</td>
-                <td>{item.propertyType}</td>
-                <td>
-                  <div>
-                    <FontAwesomeIcon
-                      className="mx-2 text-warning cursor-pointer"
-                      icon={faPencil}
-                      onClick={() => openEditModel(item)}
-                    />
-                    <FontAwesomeIcon
-                      className="mx-2 text-danger cursor-pointer"
-                      icon={faTrash}
-                      onClick={()=>openConfirmationBox(item.id)}
-                    />
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+      <div className="table-container mt-5">
+        <Paper sx={{ height: 550, width: "100%" }}>
+          <DataGrid
+            rows={projectDetailList}
+            columns={columns}
+            initialState={{ pagination: { paginationModel } }}
+            pageSizeOptions={[10, 15, 20, 50]}
+            checkboxSelection
+            sx={{
+              border: 0,
+              "& .MuiDataGrid-columnHeader": {
+                fontWeight: "bold", // Make headings bold
+                fontSize: "16px", // Optional: Adjust size
+                backgroundColor: "#68ac78", // Optional: Light background
+              },
+            }}
+          />
+        </Paper>
       </div>
       {/* Modal for adding a new project */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>

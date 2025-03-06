@@ -2,6 +2,8 @@
 
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Paper } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Col, Form, Modal, Row, Table } from "react-bootstrap";
@@ -97,7 +99,7 @@ export default function CityPriceData() {
       noOfTransactions: item.noOfTransactions.replace(/,/g, "").trim(),
     });
     setShowModal(true);
-    setButtonName("Update")
+    setButtonName("Update");
     setTitle("Update city price");
   };
 
@@ -118,8 +120,8 @@ export default function CityPriceData() {
       event.stopPropagation();
     } else {
       try {
-        if(updateId > 0){
-            formData.id = updateId;
+        if (updateId > 0) {
+          formData.id = updateId;
         }
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}city-price-detail/post`,
@@ -142,9 +144,13 @@ export default function CityPriceData() {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}city-price-detail/get`
     );
-    if (response) {
-      setCityPriceList(response.data);
-    }
+    const res = response.data;
+    const list = res.map((item, index)=>({
+      ...item,
+      index: index + 1
+    }));
+      setCityPriceList(list);
+    
   };
   // Reset form
   const resetForm = () => {
@@ -160,13 +166,78 @@ export default function CityPriceData() {
     });
     setValidated(false);
   };
+  //Handle delete
+  const openConfirmationBox = (id) => {};
   useEffect(() => {
     fetchAllCities();
     fetchAllAggigationFrom();
     fetchAllCategories();
     fetchCityPriceList();
   }, []);
+  //Defining table columns
+  const columns = [
+    { field: "index", headerName: "S.no", width: 100 },
+    { field: "cityName", headerName: "City Name", width: 180 },
+    { field: "changePercentage", headerName: "Change Percentage", width: 150 },
+    {
+      field: "changeValue",
+      headerName: "Change Value",
+      width: 239,
+    },
+    {
+      field: "currentRate",
+      headerName: "Current Rate",
+      width: 150,
+    },
+    {
+      field: "locationUrl",
+      headerName: "Location Url",
+      width: 250,
+    },
+    {
+      field: "noOfProjects",
+      headerName: "No Of Projects",
+      width: 150,
+    },
+    {
+      field: "noOfTransactions",
+      headerName: "No Of Transactions",
+      width: 150,
+    },
+    {
+      field: "aggregationFrom",
+      headerName: "Aggregation From",
+      width: 150,
+    },
+    {
+      field: "category",
+      headerName: "Category",
+      width: 150,
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 150,
+      renderCell: (params) => (
+        <div>
+          <FontAwesomeIcon
+            className="mx-3 text-danger"
+            style={{ cursor: "pointer" }}
+            icon={faTrash}
+            onClick={() => openConfirmationBox(params.row.id)}
+          />
+          <FontAwesomeIcon
+            className="text-warning"
+            style={{ cursor: "pointer" }}
+            icon={faPencil}
+            onClick={() => openEditPopUp(params.row)}
+          />
+        </div>
+      ),
+    },
+  ];
 
+  const paginationModel = { page: 0, pageSize: 10 };
   return (
     <div>
       <div className="d-flex justify-content-between mt-3">
@@ -175,69 +246,25 @@ export default function CityPriceData() {
           + Add new data
         </Button>
       </div>
-      <Table className="mt-5" striped bordered hover variant="light">
-        <thead>
-          <tr>
-            <th>S no</th>
-            <th>City Name</th>
-            <th>Change Percentage</th>
-            <th>Change Value</th>
-            <th>Current Rate</th>
-            <th>Location Url</th>
-            <th>No Of Projects</th>
-            <th>No Of Transactions</th>
-            <th>Aggregation From</th>
-            <th>Category</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {cityPriceList.map((item, index) => (
-            <tr key={`row-${index}`}>
-              <td>{index + 1}</td>
-              <td>{item.cityName}</td>
-              <td
-                style={{
-                  color: item.changePercentage.startsWith("+")
-                    ? "green"
-                    : "red",
-                }}
-              >
-                {item.changePercentage}
-              </td>
-              <td
-                style={{
-                  color: item.changeValue.startsWith("+") ? "green" : "red",
-                }}
-              >
-                {item.changeValue}
-              </td>
-              <td>{item.currentRate}</td>
-              <td>{item.locationUrl}</td>
-              <td>{item.noOfProjects}</td>
-              <td>{item.noOfTransactions}</td>
-              <td>{item.aggregationFrom}</td>
-              <td>{item.category}</td>
-              <td>
-                <div>
-                  <FontAwesomeIcon
-                    className="mx-3 text-danger"
-                    style={{ cursor: "pointer" }}
-                    icon={faTrash}
-                    onClick={() => openConfirmationDialog(item.id)}
-                  />
-                  <FontAwesomeIcon
-                    className="text-warning"
-                    style={{ cursor: "pointer" }}
-                    icon={faPencil}
-                    onClick={() => openEditPopUp(item)}
-                  />
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      <div className="table-container mt-5">
+        <Paper sx={{ height: 550, width: "100%" }}>
+          <DataGrid
+            rows={cityPriceList}
+            columns={columns}
+            initialState={{ pagination: { paginationModel } }}
+            pageSizeOptions={[10, 15, 20, 50]}
+            checkboxSelection
+            sx={{
+              border: 0,
+              "& .MuiDataGrid-columnHeader": {
+                fontWeight: "bold", // Make headings bold
+                fontSize: "16px", // Optional: Adjust size
+                backgroundColor: "#68ac78", // Optional: Light background
+              },
+            }}
+          />
+        </Paper>
+      </div>
       {/* Modal for adding a new city */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
