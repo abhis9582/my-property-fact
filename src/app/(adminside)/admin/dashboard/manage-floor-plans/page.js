@@ -1,6 +1,8 @@
 "use client";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Paper } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Form, Modal, Table } from "react-bootstrap";
@@ -66,7 +68,12 @@ export default function ManageFloorPlans() {
       process.env.NEXT_PUBLIC_API_URL + "floor-plans/get-all"
     );
     if (floorPlans) {
-      setFloorPlanList(floorPlans.data);
+      const res = floorPlans.data;
+      const list = res.map((item, index) => ({
+        ...item,
+        id: index + 1,
+      }));
+      setFloorPlanList(list);
     }
   };
   const openEditModel = (item) => {
@@ -78,25 +85,67 @@ export default function ManageFloorPlans() {
     setPlanType(item.type);
     setFloorId(item.floorId);
   };
-  const openConfirmationBox = (id) =>{
+  const openConfirmationBox = (id) => {
     setConfirmBox(true);
     setFloorId(id);
-  }
-  const deleteFloorPlan = async () =>{
-    if(floorId > 0){
-      const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}floor-plans/delete/${floorId}`);
-      if(response){
+  };
+  const deleteFloorPlan = async () => {
+    if (floorId > 0) {
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}floor-plans/delete/${floorId}`
+      );
+      if (response) {
         toast.success("Deleted successfully...");
         setFloorId(0);
         setConfirmBox(false);
         fetchAllFloorPlans();
       }
     }
-  }
+  };
   useEffect(() => {
     fetchProjects();
     fetchAllFloorPlans();
   }, []);
+
+  //Defining table columns
+  const columns = [
+    { field: "id", headerName: "S.no", width: 70 },
+    { field: "pname", headerName: "Project Name", width: 300 },
+    { field: "type", headerName: "Type", width: 150 },
+    {
+      field: "areaSq",
+      headerName: "Area(sqft)",
+      width: 200,
+    },
+    {
+      field: "areaMt",
+      headerName: "Area(mt)",
+      width: 200,
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 275,
+      renderCell: (params) => (
+        <div>
+          <FontAwesomeIcon
+            className="mx-3 text-danger"
+            style={{ cursor: "pointer" }}
+            icon={faTrash}
+            onClick={() => openConfirmationBox(params.row.id)}
+          />
+          <FontAwesomeIcon
+            className="text-warning"
+            style={{ cursor: "pointer" }}
+            icon={faPencil}
+            onClick={() => openEditModel(params.row)}
+          />
+        </div>
+      ),
+    },
+  ];
+  const paginationModel = { page: 0, pageSize: 10 };
+
   return (
     <div>
       <div className="mt-3 d-flex justify-content-between">
@@ -105,43 +154,25 @@ export default function ManageFloorPlans() {
           + Add Floor Plan
         </Button>
       </div>
-      <Table className="mt-5" striped bordered hover>
-        <thead>
-          <tr>
-            <th>S No</th>
-            <th>Project Name</th>
-            <th>Plan Type</th>
-            <th>Area(sqft)</th>
-            <th>Area(sqmt)</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {floorPlanList.map((item, index) => (
-            <tr key={`row-${index}`}>
-              <td>{index + 1}</td>
-              <td>{item.pname}</td>
-              <td>{item.type}</td>
-              <td>{item.areaSq}</td>
-              <td>{item.areaMt}</td>
-              <td>
-                <div>
-                  <FontAwesomeIcon
-                    className="mx-2 text-warning cursor-pointer"
-                    icon={faPencil}
-                    onClick={() => openEditModel(item)}
-                  />
-                  <FontAwesomeIcon
-                    className="mx-2 text-danger cursor-pointer"
-                    icon={faTrash}
-                    onClick={()=>openConfirmationBox(item.floorId)}
-                  />
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      <div className="table-container mt-5">
+        <Paper sx={{ height: 550, width: "100%" }}>
+          <DataGrid
+            rows={floorPlanList}
+            columns={columns}
+            initialState={{ pagination: { paginationModel } }}
+            pageSizeOptions={[10, 15, 20, 50]}
+            checkboxSelection
+            sx={{
+              border: 0,
+              "& .MuiDataGrid-columnHeader": {
+                fontWeight: "bold", // Make headings bold
+                fontSize: "16px", // Optional: Adjust size
+                backgroundColor: "#68ac78", // Optional: Light background
+              },
+            }}
+          />
+        </Paper>
+      </div>
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>{title}</Modal.Title>

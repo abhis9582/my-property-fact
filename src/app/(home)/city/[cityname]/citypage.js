@@ -1,13 +1,12 @@
 "use client";
-import Header from "@/app/(home)/components/header/page";
 import "./citypage.css";
 import "../../components/home/home.css";
 import Link from "next/link";
 import PropertyContainer from "@/app/(home)/components/common/page";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Footer from "@/app/(home)/components/footer/page";
-import Image from "next/image";
+import CommonHeaderBanner from "../../components/common/commonheaderbanner";
+import CommonBreadCrum from "../../components/common/breadcrum";
 export default function CityPage({ city }) {
   const [propertyList, setPropertyList] = useState([]);
   const [cityData, setCityData] = useState([]);
@@ -22,7 +21,7 @@ export default function CityPage({ city }) {
       `${process.env.NEXT_PUBLIC_API_URL}city/${city}`
     );
     setPropertyList(response.data);
-  };  
+  };
   useEffect(() => {
     fetchCityData();
     fetchProperties();
@@ -31,18 +30,11 @@ export default function CityPage({ city }) {
     <>
       <div className="p-0">
         <div className="container-fluid p-0 mt-5">
-          {/* <img
-            src="/static/realestate-bg.jpg"
-            alt="city banner"
-          /> */}
-          <Image 
-            src="/static/realestate-bg.jpg"
-            width={1899}
-            height={500}
-            layout="responsive"
-            alt="city banner"
+          <CommonHeaderBanner
+            image={"realestate-bg.jpg"}
+            headerText={cityData.name}
           />
-          <div className="bannerContainer">
+          {/* <div className="bannerContainer">
             <div className="container-lg">
               <div className="search-filter">
                 <div className="filter-form">
@@ -113,25 +105,11 @@ export default function CityPage({ city }) {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
-        <div className="w-100 mt-3">
-          <div className="container-lg">
-            <div className="breadcrumbContainer" aria-label="breadcrumb">
-              <ol className="breadcrumb p-3">
-                <li className="breadcrumb-item">
-                  <Link href="/">Home</Link>
-                </li>
-                <li className="breadcrumb-item">
-                  <Link href="/projects">Projects</Link>
-                </li>
-                <li className="breadcrumb-item active">{cityData.name}</li>
-              </ol>
-            </div>
-          </div>
-        </div>
+        <CommonBreadCrum firstPage={"projects"} pageName={cityData.name}/>
         <div className="container-fluid mt-4">
-          <p className="h1 text-center">Property in {cityData.name}</p>
+          {/* <p className="h1 text-center">Property in {cityData.name}</p> */}
           <div className="d-flex justify-content-center">
             <div className="w-80">
               <p className="text-center">{cityData.cityDisc}</p>
@@ -145,7 +123,7 @@ export default function CityPage({ city }) {
         </div>
         <div className="container-fluid d-flex justify-content-start my-5">
           {propertyList.map((item) => (
-            <div key={item.id} style={{width: "25%"}} className="mx-3">
+            <div key={item.id} style={{ width: "25%" }} className="mx-3">
               <PropertyContainer data={item} />
             </div>
           ))}

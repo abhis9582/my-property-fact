@@ -14,6 +14,9 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { Paper } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import Image from "next/image";
 export default function Aminities() {
   const [showModal, setShowModal] = useState(false);
   const [amenityList, setAmenityList] = useState([]);
@@ -24,10 +27,15 @@ export default function Aminities() {
   const [confirmBox, setConfirmBox] = useState(false);
   const [amenityId, setAmenityId] = useState(0);
   const fetchAmenities = async () => {
-    const amenityList = await axios.get(
+    const response = await axios.get(
       process.env.NEXT_PUBLIC_API_URL + "amenity/get-all"
     );
-    setAmenityList(amenityList.data);
+    const res = response.data;
+    const list = res.map((item, index) => ({
+      ...item,
+      index: index + 1,
+    }));
+    setAmenityList(list);
   };
   useEffect(() => {
     fetchAmenities();
@@ -92,21 +100,23 @@ export default function Aminities() {
       [name]: value,
     }));
   };
-  const openConfirmationBox = (id) =>{
+  const openConfirmationBox = (id) => {
     setConfirmBox(true);
     setAmenityId(id);
-  }
+  };
   const deleteAmenity = async () => {
-    const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}amenity/delete/${amenityId}`);
-    if(response.data.isSuccess === 1){
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_API_URL}amenity/delete/${amenityId}`
+    );
+    if (response.data.isSuccess === 1) {
       toast.success(response.data.message);
       setConfirmBox(false);
       fetchAmenities();
-    }else{
+    } else {
       toast.error(response.data.message);
       setConfirmBox(false);
     }
-  }
+  };
   const openAddModel = () => {
     setFormData({
       title: "",
@@ -130,15 +140,56 @@ export default function Aminities() {
       `${process.env.NEXT_PUBLIC_IMAGE_URL}amenity/${item.amenityImageUrl}`
     );
   };
+  //Defining table columns
+  const columns = [
+    { field: "index", headerName: "S.no", width: 100 },
+    { field: "title", headerName: "Title", width: 180 },
+    {
+      field: "image",
+      headerName: "Amenity Image",
+      width: 600,
+      renderCell: (params) => (
+        <Image
+          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}amenity/${params.row.amenityImageUrl}`}
+          alt={params.row.title || ""}
+          width={50}
+          height={50}
+        />
+      ),
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 270,
+      renderCell: (params) => (
+        <div>
+          <FontAwesomeIcon
+            className="mx-3 text-danger"
+            style={{ cursor: "pointer" }}
+            icon={faTrash}
+            onClick={() => openConfirmationBox(params.row.id)}
+          />
+          <FontAwesomeIcon
+            className="text-warning"
+            style={{ cursor: "pointer" }}
+            icon={faPencil}
+            onClick={() => openEditModel(params.row)}
+          />
+        </div>
+      ),
+    },
+  ];
+
+  const paginationModel = { page: 0, pageSize: 10 };
   return (
     <div className="container-fluid">
       <div className="d-flex justify-content-between mt-3">
-        <p className="h1 ">Manage Aminities</p>
-        <Button className="mx-3" onClick={openAddModel}>
+        <p className="h1">Manage Aminities</p>
+        <Button className="btn btn-success mx-3" onClick={openAddModel}>
           + Add new amenity
         </Button>
       </div>
-      <Table className="mt-5" striped bordered hover variant="light">
+      {/* <Table className="mt-5" striped bordered hover variant="light">
         <thead>
           <tr>
             <th>S no</th>
@@ -178,7 +229,26 @@ export default function Aminities() {
             </tr>
           ))}
         </tbody>
-      </Table>
+      </Table> */}
+      <div className="table-container mt-5">
+        <Paper sx={{ height: 550, width: "100%" }}>
+          <DataGrid
+            rows={amenityList}
+            columns={columns}
+            initialState={{ pagination: { paginationModel } }}
+            pageSizeOptions={[10, 15, 20, 50]}
+            checkboxSelection
+            sx={{
+              border: 0,
+              "& .MuiDataGrid-columnHeader": {
+                fontWeight: "bold", // Make headings bold
+                fontSize: "16px", // Optional: Adjust size
+                backgroundColor: "#68ac78", // Optional: Light background
+              },
+            }}
+          />
+        </Paper>
+      </div>
       {/* Modal for adding a new city */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>

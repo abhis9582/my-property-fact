@@ -1,41 +1,54 @@
+"use client";
 import Link from "next/link";
 import Footer from "../components/footer/page";
 import Header from "../components/header/page";
-import PropertyPage from "./[projecttype]/propertypage";
 import Image from "next/image";
+import PropertyContainer from "../components/common/page";
+import "./project.css";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import CommonBreadCrum from "../components/common/breadcrum";
 
 export default function Projects() {
+  const [allProjectsList, setAllProjectsList] = useState([]);
+  const [pageName, setPageName] = useState("Projects");
+  useEffect(() => {
+    async function fetchData() {
+      const projectResponse = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}projects/get-all`
+      );
+      try {
+        if (projectResponse.data) {
+          setAllProjectsList(projectResponse.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, []);
   return (
     <>
-      <Header />
       <div className="containr-fluid mt-5">
-        <div className="container-fluid p-0 mt-5">
-                    <Image 
-                      src="/static/project-banner.jpg"
-                      width={1899}
-                      height={500}
-                      layout="responsive"
-                      alt="project-banner"
-                    />
+        <div className="projects-heading-image container-fluid p-0 mt-5">
+          <Image
+            src="/static/project-banner.jpg"
+            width={1899}
+            height={500}
+            layout="responsive"
+            alt="project-banner"
+          />
+          <p className="projects-heading fs-1">{pageName}</p>
         </div>
-        <div className="w-100 mt-3">
-          <div className="container-lg">
-            <div className="breadcrumbContainer" aria-label="breadcrumb">
-              <ol className="breadcrumb p-3">
-                <li className="breadcrumb-item">
-                  <Link href="/">Home</Link>
-                </li>
-                <li className="breadcrumb-item active">Projects</li>
-              </ol>
+        <CommonBreadCrum pageName={pageName} />
+        <div className="container-fluid my-3 d-block d-md-flex gap-3 flex-lg-wrap">
+          {allProjectsList.map((item, index) => (
+            <div key={`${index}-`} className="d-flex">
+              <PropertyContainer data={item} />
             </div>
-          </div>
-        </div>
-        <div className="container-fluid mt-3">
-          <p className="text-center h1">Projects</p>
-          {/* <PropertyContainer /> */}
+          ))}
         </div>
       </div>
-      <Footer />
     </>
   );
 }

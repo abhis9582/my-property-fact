@@ -11,6 +11,8 @@ import {
   faUser,
   faVoicemail,
 } from "@fortawesome/free-solid-svg-icons";
+import CommonHeaderBanner from "../components/common/commonheaderbanner";
+import CommonBreadCrum from "../components/common/breadcrum";
 
 export default function ContactUs() {
   return (
@@ -47,16 +49,9 @@ export default function ContactUs() {
           </div>
         </div>
       </div> */}
+      <CommonHeaderBanner image={"contact-banner.jpg"} headerText={""} />
+      <CommonBreadCrum pageName={"Contact-us"} />
       <div className="contact-us">
-        <div className="contactus-head">
-          <h1>Contact us</h1>
-          <div className="contact-nav">
-            <FontAwesomeIcon icon={faHome} width={25} />
-            <Link href="/">Home</Link>
-            <span>&gt;</span>
-            <p>Contact us</p>
-          </div>
-        </div>
         <div className="info-container">
           <div className="info-container-child">
             <p>Email Address</p>

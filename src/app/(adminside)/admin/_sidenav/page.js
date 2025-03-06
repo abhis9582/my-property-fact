@@ -19,10 +19,10 @@ export default function SideNav() {
   const handleLogout = async () => {
     try {
       Cookies.set("token", "", {
-          secure: process.env.NODE_ENV === "production", // Secure in production
-          sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", // Prevent CSRF issues
-          path: "/", // Available across the site
-          expires: new Date(0), // Token expires in 7 days
+        secure: process.env.NODE_ENV === "production", // Secure in production
+        sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", // Prevent CSRF issues
+        path: "/", // Available across the site
+        expires: new Date(0), // Token expires in 7 days
       });
       toast.success("Logout successfull...");
     } catch (error) {
@@ -36,6 +36,9 @@ export default function SideNav() {
         <img src="/logo.png" alt="logo" width={"100"} />
       </div>
       <ul className="list-unstyled components">
+        <li>
+          <Link href="/admin/dashboard">Dashboard</Link>
+        </li>
         <li className={activeDropdown === "dropdown1" ? "active" : ""}>
           <Link
             href="#"

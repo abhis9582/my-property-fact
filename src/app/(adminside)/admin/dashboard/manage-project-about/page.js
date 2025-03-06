@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Paper } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 // Dynamically import JoditEditor with SSR disabled
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
@@ -18,7 +20,6 @@ export default function ManageProjectAbout() {
   const [projectId, setProjectId] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState("");
-  const [validated, setValidated] = useState(false);
   const [aboutList, setAboutList] = useState([]);
   const [aboutId, setAboutId] = useState(0);
   const [confirmBox, setConfirmBox] = useState(false);
@@ -82,11 +83,12 @@ export default function ManageProjectAbout() {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}project-about/get`
     );
-    if (response) {
-      setAboutList(response.data);
-    } else {
-      setAboutList([]);
-    }
+    const res = response.data;
+    const list = res.map((item, index) => ({
+      ...item,
+      id: index + 1,
+    }));
+    setAboutList(list);
   };
   const openConfirmationBox = (id) => {
     setAboutId(id);
@@ -110,53 +112,65 @@ export default function ManageProjectAbout() {
     fetchProjects();
     fetchProjectsAbout();
   }, []);
+
+  //Defining table columns
+  const columns = [
+    { field: "id", headerName: "S.no", width: 100 },
+    { field: "projectName", headerName: "Project Name", width: 250 },
+    { field: "shortDesc", headerName: "Short Description", width: 600 },
+    { field: "longDesc", headerName: "Long Description", width: 600 },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 200,
+      renderCell: (params) => (
+        <div className="gap-3">
+          <FontAwesomeIcon
+            className="text-danger mx-2"
+            style={{ cursor: "pointer" }}
+            icon={faTrash}
+            onClick={() => openConfirmationBox(params.row.id)}
+          />
+          <FontAwesomeIcon
+            className="text-warning pointer mx-2"
+            style={{ cursor: "pointer" }}
+            icon={faPencil}
+            onClick={() => openEditModel(params.row)}
+          />
+        </div>
+      ),
+    },
+  ];
+
+  const paginationModel = { page: 0, pageSize: 10 };
+
   return (
     <div className="container-fluid">
       <div className="d-flex justify-content-between mt-3">
         <p className="h1 ">Manage Project About</p>
-        <Button className="mx-3 m-0" onClick={openAddModel}>
-          +Add
+        <Button className="btn btn-success" onClick={openAddModel}>
+          + Add
         </Button>
       </div>
-      <Table className="mt-5" striped bordered hover responsive>
-        <thead style={{ display: "table", width: "100%" }}>
-          <tr className="text-center">
-            <th className="sno">S no</th>
-            <th className="project-name-col">Project Name</th>
-            <th className="short-dec-col">Short description</th>
-            <th className="short-dec-col">Long Description</th>
-            <th className="action-col">Action</th>
-          </tr>
-        </thead>
-        <tbody className="table-scroll">
-          {aboutList.map((item, index) => (
-            <tr key={`row-${index}`} className="text-center">
-              <td className="sno">{index + 1}</td>
-              <td className="project-name-col">{item.projectName}</td>
-              <td className="short-dec-col">
-                {removeHtmlTagsAndTruncate(item.shortDesc, 200)}
-              </td>
-              <td className="short-dec-col">
-                {removeHtmlTagsAndTruncate(item.longDesc, 200)}
-              </td>
-              <td className="action-col">
-                <div className="d-flex justify-content-center">
-                  <FontAwesomeIcon
-                    className="cursor-pointer text-warning mx-2"
-                    icon={faPencil}
-                    onClick={() => openEditModel(item)}
-                  />
-                  <FontAwesomeIcon
-                    className="cursor-pointer text-danger mx-2"
-                    icon={faTrash}
-                    onClick={() => openConfirmationBox(item.id)}
-                  />
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      <div className="table-container mt-5">
+        <Paper sx={{ height: 550, width: "100%" }}>
+          <DataGrid
+            rows={aboutList}
+            columns={columns}
+            initialState={{ pagination: { paginationModel } }}
+            pageSizeOptions={[10, 15, 20, 50]}
+            checkboxSelection
+            sx={{
+              border: 0,
+              "& .MuiDataGrid-columnHeader": {
+                fontWeight: "bold", // Make headings bold
+                fontSize: "16px", // Optional: Adjust size
+                backgroundColor: "#68ac78", // Optional: Light background
+              },
+            }}
+          />
+        </Paper>
+      </div>
       {/* Modal for adding a new city */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>

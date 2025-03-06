@@ -1,7 +1,7 @@
 import Image from "next/image";
-import Footer from "../components/footer/page";
-import Header from "../components/header/page";
 import { Button } from "react-bootstrap";
+import CommonBreadCrum from "../components/common/breadcrum";
+import CommonHeaderBanner from "../components/common/commonheaderbanner";
 
 export default function Career() {
   const jobsArr = [
@@ -48,14 +48,8 @@ export default function Career() {
   ];
   return (
     <>
-      <Image
-        className="mt-5"
-        height={200}
-        width={1409}
-        src="/static/career-banner.jpg"
-        layout="responsive"
-        alt="career-banner"
-      />
+      <CommonHeaderBanner image={"career-banner.jpg"} headerText={"Career"}/>
+      <CommonBreadCrum pageName={"Career"} />
       <section className="d-flex justify-content-between mt-4 mx-lg-4">
         <p className="h1 w-50 mx-5">Your next career move starts here.</p>
         <div className="text-center">

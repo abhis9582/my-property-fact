@@ -1,6 +1,8 @@
 "use client";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Paper } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Col, Form, Modal, Table } from "react-bootstrap";
@@ -65,7 +67,12 @@ export default function Builder() {
       process.env.NEXT_PUBLIC_API_URL + "builders/get-all"
     );
     if (builders) {
-      setBuilderList(builders.data.builders);
+      const res = builders.data.builders;
+      const builderResult = res.map((res, index) => ({
+        ...res,
+        index: index + 1,
+      }));
+      setBuilderList(builderResult);
     }
   };
   useEffect(() => {
@@ -115,6 +122,46 @@ export default function Builder() {
       toast.error(error + "Error occured !");
     }
   };
+
+  //Defining table columns
+  const columns = [
+    { field: "index", headerName: "S.no", width: 100 },
+    { field: "builderName", headerName: "Builder Name", width: 180 },
+    { field: "metaTitle", headerName: "Meta title", width: 150 },
+    {
+      field: "metaKeyword",
+      headerName: "Meta Keyword",
+      width: 239,
+    },
+    {
+      field: "metaDesc",
+      headerName: "Meta Description",
+      width: 260,
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 270,
+      renderCell: (params) => (
+        <div>
+          <FontAwesomeIcon
+            className="mx-3 text-danger"
+            style={{ cursor: "pointer" }}
+            icon={faTrash}
+            onClick={() => openConfirmationBox(params.row.id)}
+          />
+          <FontAwesomeIcon
+            className="text-warning"
+            style={{ cursor: "pointer" }}
+            icon={faPencil}
+            onClick={() => openEditPopUp(params.row)}
+          />
+        </div>
+      ),
+    },
+  ];
+
+  const paginationModel = { page: 0, pageSize: 10 };
   return (
     <div>
       <div className="d-flex justify-content-between mt-3">
@@ -123,45 +170,25 @@ export default function Builder() {
           + Add new builder
         </Button>
       </div>
-      <Table className="mt-5" striped bordered hover variant="light">
-        <thead>
-          <tr>
-            <th>S no</th>
-            <th>Builder Name</th>
-            <th>Meta Title</th>
-            <th>Meta Description</th>
-            <th>Meta Keyword</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {builderList.map((item, index) => (
-            <tr key={`row-${index}`}>
-              <td>{index + 1}</td>
-              <td>{item.builderName}</td>
-              <td>{item.metaTitle}</td>
-              <td>{item.metaDesc}</td>
-              <td>{item.metaKeyword}</td>
-              <td>
-                <div>
-                  <FontAwesomeIcon
-                    className="mx-3 text-danger"
-                    style={{ cursor: "pointer" }}
-                    icon={faTrash}
-                    onClick={() => openConfirmationBox(item.id)}
-                  />
-                  <FontAwesomeIcon
-                    className="text-warning"
-                    style={{ cursor: "pointer" }}
-                    icon={faPencil}
-                    onClick={() => openEditPopUp(item)}
-                  />
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      <div className="table-container mt-5">
+        <Paper sx={{ height: 550, width: "100%" }}>
+          <DataGrid
+            rows={builderList}
+            columns={columns}
+            initialState={{ pagination: { paginationModel } }}
+            pageSizeOptions={[10, 15, 20, 50]}
+            checkboxSelection
+            sx={{
+              border: 0,
+              "& .MuiDataGrid-columnHeader": {
+                fontWeight: "bold", // Make headings bold
+                fontSize: "16px", // Optional: Adjust size
+                backgroundColor: "#68ac78", // Optional: Light background
+              },
+            }}
+          />
+        </Paper>
+      </div>
       {/* Modal for adding a new city */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>

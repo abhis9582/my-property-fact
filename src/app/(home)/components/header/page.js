@@ -94,10 +94,8 @@ const Header = () => {
                 src="/logo.png"
                 alt="My Property facts"
                 height={70}
-                width={100}
+                width={80}
               />
-              {/* <p className="logo-text">MY PROPERTY</p>
-              <span className="logo-text2">FACT</span> */}
             </Link>
           </div>
           <nav className="navi d-none d-xl-flex">
@@ -196,11 +194,19 @@ const Header = () => {
                   <li>
                     <Link href="/">Home</Link>
                   </li>
-                  <li className={`mb-hasChild ${activeDropdown === 'city' ? 'active' : ''}`}>
-                    <Link href="#" onClick={()=>openMenuMobile('city')}>
+                  <li
+                    className={`mb-hasChild ${
+                      activeDropdown === "city" ? "active" : ""
+                    }`}
+                  >
+                    <Link href="#" onClick={() => openMenuMobile("city")}>
                       City<sup>+</sup>
                     </Link>
-                    <div className={`dropdown ${activeDropdown === 'city' ? 'activeHeader' : ''}`}>
+                    <div
+                      className={`dropdown ${
+                        activeDropdown === "city" ? "activeHeader" : ""
+                      }`}
+                    >
                       <ul className="list-inline">
                         {cityList.map((city) => (
                           <li key={city.id}>
@@ -212,11 +218,19 @@ const Header = () => {
                       </ul>
                     </div>
                   </li>
-                  <li className={`mb-hasChild ${activeDropdown === 'builder' ? 'active' : ''}`}>
-                    <Link href="#" onClick={()=>openMenuMobile('builder')}>
+                  <li
+                    className={`mb-hasChild ${
+                      activeDropdown === "builder" ? "active" : ""
+                    }`}
+                  >
+                    <Link href="#" onClick={() => openMenuMobile("builder")}>
                       Builder<sup>+</sup>
                     </Link>
-                    <div className={`dropdown ${activeDropdown === 'builder' ? 'activeHeader' : ''}`}>
+                    <div
+                      className={`dropdown ${
+                        activeDropdown === "builder" ? "activeHeader" : ""
+                      }`}
+                    >
                       <ul className="list-inline">
                         {builderList.map((builder) => (
                           <li key={builder.id}>
@@ -228,11 +242,19 @@ const Header = () => {
                       </ul>
                     </div>
                   </li>
-                  <li className={`mb-hasChild ${activeDropdown === 'projects' ? 'active' : ''}`}>
-                    <Link href="#" onClick={()=>openMenuMobile('projects')}>
+                  <li
+                    className={`mb-hasChild ${
+                      activeDropdown === "projects" ? "active" : ""
+                    }`}
+                  >
+                    <Link href="#" onClick={() => openMenuMobile("projects")}>
                       Projects<sup>+</sup>
                     </Link>
-                    <div className={`dropdown ${activeDropdown === 'projects' ? 'activeHeader' : ''}`}>
+                    <div
+                      className={`dropdown ${
+                        activeDropdown === "projects" ? "activeHeader" : ""
+                      }`}
+                    >
                       <ul className="list-inline">
                         {projectTypes.map((project) => (
                           <li key={project.id}>

@@ -7,7 +7,7 @@ export default function Property() {
         <h1>Projects List</h1>
           <Link
             href="/admin/dashboard/projects/add-new-property"
-            className="btn btn-primary text-center pt-3"
+            className="btn btn-success text-center pt-3"
           >
             + Add New Project
           </Link>
