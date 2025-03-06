@@ -1,6 +1,8 @@
 "use client";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Paper } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Col, Form, Modal, Row, Table } from "react-bootstrap";
@@ -19,16 +21,19 @@ export default function TopDevelopers() {
     noOfTransactions: "",
     saleRentValue: "",
     aggregationFrom: 0,
-    categoryId: 0
+    categoryId: 0,
   });
   // Fetch all developers data
   const fetchDevelopersData = async () => {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}top-developers-by-value/get-all`
     );
-    if (response) {
-      setTopDevelopersList(response.data);
-    }
+    const res = response.data;    
+    const list = res.map((item, index) => ({
+      ...item,
+      index: index + 1,
+    }));
+    setTopDevelopersList(list);
   };
   const fetchAllCategories = async () => {
     const response = await axios.get(
@@ -88,6 +93,44 @@ export default function TopDevelopers() {
     fetchAllCategories();
     fetchAllAggigationFrom();
   }, []);
+  //Defining table columns
+  const columns = [
+    { field: "index", headerName: "S.no", width: 100 },
+    {
+      field: "developerName",
+      headerName: "Developer Name",
+      width: 350,
+    },
+    { field: "noOfTransactions", headerName: "No Of Transactions", width: 200 },
+    {
+      field: "saleRentValue",
+      headerName: "Sale Rent Value",
+      width: 350,
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 200,
+      renderCell: (params) => (
+        <div>
+          <FontAwesomeIcon
+            className="mx-3 text-danger"
+            style={{ cursor: "pointer" }}
+            icon={faTrash}
+            onClick={() => openConfirmationBox(params.row.id)}
+          />
+          <FontAwesomeIcon
+            className="text-warning"
+            style={{ cursor: "pointer" }}
+            icon={faPencil}
+            onClick={() => openAddModel(params.row)}
+          />
+        </div>
+      ),
+    },
+  ];
+
+  const paginationModel = { page: 0, pageSize: 10 };
   return (
     <>
       <div className="d-flex justify-content-between mt-3">
@@ -96,33 +139,25 @@ export default function TopDevelopers() {
           + Add new data
         </Button>
       </div>
-      <Table className="mt-5">
-        <thead className="text-center">
-          <tr>
-            <th>Sno</th>
-            <th>Developer Name</th>
-            <th>Transactions</th>
-            <th>Sale Value</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody className="text-center">
-          {topDevelopersList.map((item, index) => (
-            <tr key={`${index}`}>
-              <td>{index + 1}</td>
-              <td>{item.developerName}</td>
-              <td>{item.noOfTransactions}</td>
-              <td>{item.saleRentValue}</td>
-              <td>
-                <div className="d-flex justify-content-around">
-                  <FontAwesomeIcon className="text-warning cursor-pointer" icon={faPencil} />
-                  <FontAwesomeIcon className="text-danger cursor-pointer" icon={faTrash} />
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      <div className="table-container mt-5">
+        <Paper sx={{ height: 550, width: "100%" }}>
+          <DataGrid
+            rows={topDevelopersList}
+            columns={columns}
+            initialState={{ pagination: { paginationModel } }}
+            pageSizeOptions={[10, 15, 20, 50]}
+            checkboxSelection
+            sx={{
+              border: 0,
+              "& .MuiDataGrid-columnHeader": {
+                fontWeight: "bold", // Make headings bold
+                fontSize: "16px", // Optional: Adjust size
+                backgroundColor: "#68ac78", // Optional: Light background
+              },
+            }}
+          />
+        </Paper>
+      </div>
       <Modal show={showModel} onHide={() => setShowModel(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>{title}</Modal.Title>
