@@ -8,8 +8,6 @@ import DreamProject from "./dream-project/page";
 import Featured from "./featured/page";
 import NewsViews from "./new-views/page";
 import SocialFeed from "./social-feed/page";
-import Header from "../header/page";
-import Footer from "../footer/page";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import InsightNew from "./insight/page";
@@ -111,7 +109,6 @@ export default function HomePage() {
                   <section>
                     <h6 className="h3">
                       <span className="counter">{item.numbers}</span>
-                      {/* <small>+</small> */}
                     </h6>
                     <p>{item.text}</p>
                   </section>
