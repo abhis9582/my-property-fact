@@ -28,6 +28,17 @@ export default function Featured() {
     };
     fetchData();
   }, []);
+  //Generating price in lakh & cr
+  const generatePrice = (price)=>{
+    var res = "";    
+    if(price > 1){
+      res = price+" Cr";
+    }else{
+      const m = price*100;
+      res = m + " Lakh";
+    }
+    return res;
+  }
   const settings = {
     dots: true,
     infinite: true,
@@ -91,7 +102,7 @@ export default function Featured() {
                     <div className="mt-2 d-flex justify-content-between align-items-center p-2">
                       <p className="h5 fw-bold">{property.projectName}</p>
                       <p className="h5 fw-bold text-success">
-                        {property.projectPrice}*
+                        {generatePrice(property.projectPrice)}*
                       </p>
                     </div>
                     <div className="pb-2 fw-bold mx-2">

@@ -27,7 +27,7 @@ export default function PropertyContainer(props) {
         />
         <div className="mt-2 d-flex justify-content-between align-items-center p-2">
           <p className="h5 fw-bold">{props.data.projectName}</p>
-          <p className="h5 fw-bold text-success">{props.data.projectPrice}*</p>
+          <p className="h5 fw-bold text-success">{props.data.projectPrice} Cr*</p>
         </div>
         <div className="pb-2 fw-bold mx-2">
           <FontAwesomeIcon icon={faMapMarker} width={8} color="green" />{" "}

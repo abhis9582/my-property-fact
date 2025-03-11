@@ -64,7 +64,7 @@ export default function InsightNew() {
                   </div>
                   <div className={`${i.button_color} insight-explore-button`}>
                     <button className="fw-bold">Explore Now</button>
-                    <FontAwesomeIcon icon={faArrowRight} />
+                    <FontAwesomeIcon icon={faArrowRight} width={15}/>
                   </div>
                 </Link>
               </div>

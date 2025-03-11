@@ -1,5 +1,14 @@
-module.exports = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   images: {
-    domains: ["localhost"], // Add your API domain here
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "8005"
+      },
+    ],
   },
 };
+
+module.exports = nextConfig;

@@ -182,7 +182,7 @@ export default function ManageGallery() {
               <Form.Label>Select Gallery Image</Form.Label>
               <Form.Control type="file" onChange={(e) => handleFileChange(e)} />
             </Form.Group>
-            <Button className="mt-3" variant="primary" type="submit">
+            <Button className="mt-3 btn btn-success" type="submit">
               {buttonName}
             </Button>
           </Form>

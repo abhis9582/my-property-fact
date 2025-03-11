@@ -2,6 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function DreamProject() {
+  const dataArr = [
+    {
+      id: 1,
+      image: "/dream-cities/mumbai.png",
+      altTage: "city-mumbai"
+    },
+  ];
   return (
     <>
       <div className="container my-4">
@@ -24,7 +31,7 @@ export default function DreamProject() {
               <Image
                 src="/dream-cities/bangalore.png"
                 alt="city-bangalore"
-                width={350}
+                width={300}
                 height={180}
               />
             </Link>
