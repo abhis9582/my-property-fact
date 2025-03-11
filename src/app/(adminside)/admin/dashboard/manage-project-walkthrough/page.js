@@ -36,6 +36,8 @@ export default function ManageProjectWalkthrough() {
     );
     if (response.data.isSuccess === 1) {
       toast.success(response.data.message);
+      setShowModal(false);
+      fetchProjects();
     }
   };
   const fetchProjects = async () => {
@@ -48,6 +50,7 @@ export default function ManageProjectWalkthrough() {
     const list = data.map((item, index) => ({
       ...item,
       id: index + 1,
+      projectName: item.slugURL.replace(/-/g, " "),
     }));
     setProjectList(projectsRes.data);
     setWalkThroughList(list);
@@ -81,13 +84,13 @@ export default function ManageProjectWalkthrough() {
         <div className="gap-3">
           <FontAwesomeIcon
             className="text-danger mx-2"
-            style={{cursor: "pointer"}}
+            style={{ cursor: "pointer" }}
             icon={faTrash}
             onClick={() => openConfirmationBox(params.row.id)}
           />
           <FontAwesomeIcon
             className="text-warning pointer mx-2"
-            style={{cursor: "pointer"}}
+            style={{ cursor: "pointer" }}
             icon={faPencil}
             onClick={() => openEditPopUp(params.row)}
           />
@@ -124,6 +127,9 @@ export default function ManageProjectWalkthrough() {
                 fontWeight: "bold", // Make headings bold
                 fontSize: "16px", // Optional: Adjust size
                 backgroundColor: "#68ac78", // Optional: Light background
+              },
+              "& .MuiDataGrid-cell": {
+                textTransform: "capitalize"
               },
             }}
           />

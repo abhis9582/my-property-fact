@@ -284,15 +284,6 @@ label {
 }
 
 .form-control {
-  /* font-size: 14px;
-  padding: 0 5 12px;
-  height: auto;
-  background: none;
-  border: none !important;
-  border-bottom: 1px solid rgba(0 0 0 / 20%) !important;
-  border-radius: 0 !important;
-  margin: 5px 0;
-  width: 95% !important; */
   border: none !important;
   border-bottom: 1px solid !important;
   border-radius: 0px !important;
@@ -499,13 +490,6 @@ textarea.form-control {
   text-indent: 9999999px;
 }
 
-.swiper-button-prev:after {
-  /* background-image: url(../images/arrow-left.png); */
-}
-
-.swiper-button-next:after {
-  /* background-image: url(../images/arrow-right.png); */
-}
 
 .project-slider .swiper-button-next,
 .project-slider .swiper-rtl .swiper-button-prev {
@@ -607,17 +591,6 @@ textarea.form-control {
   border-width: 1px 0;
 }
 
-/* .star-tag{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    text-transform: uppercase;
-    background-color: #fbfbfb;
-    color: #686868;
-    clip-path: polygon(50% 0%, 70% 33%, 98% 35%, 75% 62%, 85% 100%, 50% 75%, 15% 100%, 25% 62%, 2% 35%, 30% 33%);
-  } */
-
 .star-tag {
   color: var(--gray);
   display: flex;
@@ -652,11 +625,6 @@ textarea.form-control {
   text-transform: uppercase;
 }
 
-.whyUsContainer {
-  /* margin-top: 3.5rem; */
-  /* padding-top: 3.5rem; */
-  /* border-top: 1px solid rgba(0 0 0 / 10%); */
-}
 
 .whyUsContainer h4 {
   max-width: 80%;
@@ -685,48 +653,6 @@ textarea.form-control {
 .whyUsBox section:hover .imgBox svg {
   fill: var(--corp-color);
 }
-
-/* .whyUsBox section .imgBox svg path, .whyUsBox section .imgBox svg circle {
-    fill: none;
-    stroke: #fff;
-    stroke-width: 2;
-    stroke-miterlimit: 20;
-    stroke-dasharray: 1400;
-    stroke-dashoffset: 0;
-  }
-  
-  .whyUsBox:first-child section .imgBox svg path {
-    stroke-width: 1;
-  }
-  
-  .whyUsBox section:hover .imgBox svg path, .whyUsBox section:hover .imgBox svg circle {
-    -webkit-animation: path 5s infinite;
-    animation: path 5s infinite;
-  }
-  
-  @-webkit-keyframes path {
-    0% {
-      stroke-dashoffset: 1400;
-    }
-  
-    100% {
-      stroke-dashoffset: 0;
-      fill: #fff;
-      stroke: none;
-    }
-  }
-  
-  @keyframes path {
-    0% {
-      stroke-dashoffset: 1400;
-    }
-  
-    100% {
-      stroke-dashoffset: 0;
-      fill: #fff;
-      stroke: none;
-    }
-  } */
 
 .whyUsBox .whyUsText h5 {
   font-family: var(--font-bold);
@@ -1142,7 +1068,6 @@ textarea.form-control {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* background: url(../images/icons/link.png) center / 24px no-repeat var(--corp-color); */
   z-index: 2;
 }
 
@@ -2669,7 +2594,6 @@ aside.topRatedProjectShowcase {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #fff;
     height: 58px;
 }
   .gap-row {
@@ -3529,3 +3453,23 @@ aside.topRatedProjectShowcase {
   }
 }
 
+/*Style for fixed form starts*/
+.fixed-form-container {
+  position: fixed;
+  top: 50%;
+  right: -100%;
+  transform: translateY(-50%);
+  background: white;
+  padding: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  transition: right 0.5s ease-in-out; /* Smooth slide-in effect */
+  width: 300px;
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+
+.fixed-form-container.show {
+  right: 0; /* Slide in when the class is added */
+}
+/*Style for fixed form ends*/

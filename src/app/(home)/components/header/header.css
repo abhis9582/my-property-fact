@@ -173,12 +173,7 @@ p {
 }
 
 .enquiry-sticky-btn:hover {
-    background-color: #607f01;
-}
-
-.enquiry-sticky-btn.active {
-    background-color: #607f01;
-    right: 300px;
+    background-color: #178c2c;
 }
 
 .enquiry-sticky-btn>span {

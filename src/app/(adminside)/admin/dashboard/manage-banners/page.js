@@ -51,6 +51,7 @@ export default function ManageBanners() {
       if (response.status === 200) {
         toast.success("File uploaded successfully.");
         setShowModal(false);
+        fetchBannerImages();
       } else {
         toast.error("File upload failed.");
       }
@@ -193,7 +194,7 @@ export default function ManageBanners() {
       <div className="conatiner">
         <div className="mt-3 d-flex justify-content-between">
           <p className="h1">Manage Project Banners</p>
-          <Button className="mb-2" onClick={openAddMobileBanner}>
+          <Button className="mb-2 btn btn-success" onClick={openAddMobileBanner}>
             + Add Project Banner
           </Button>
         </div>
@@ -318,7 +319,7 @@ export default function ManageBanners() {
                 onChange={(e) => setAltTag(e.target.value)}
               />
             </Form.Group>
-            <Button className="mt-3" variant="primary" type="submit">
+            <Button className="mt-3 btn btn-success" variant="primary" type="submit">
               {buttonName}
             </Button>
           </Form>

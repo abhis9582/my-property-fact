@@ -129,37 +129,6 @@ export default function ManageFaqs() {
           + Add FAQ
         </Button>
       </div>
-      {/* <Table className="mt-5" striped bordered hover>
-        <thead>
-          <tr>
-            <th>S No</th>
-            <th>Project Name</th>
-            <th>Question</th>
-            <th>Answer</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {faqList.map((item, index) => (
-            <tr key={`row-${index}`}>
-              <td>{index + 1}</td>
-              <td>{item.projectName}</td>
-              <td>{item.question}</td>
-              <td>{item.answer}</td>
-              <td>
-                <div className="d-flex mt-3">
-                  <FontAwesomeIcon 
-                  className="mx-2 text-warning cursor-pointer" 
-                  icon={faPencil}
-                  onClick={()=>openEditModel(item)}
-                  />
-                  <FontAwesomeIcon className="mx-2 text-danger cursor-pointer" icon={faTrash}/>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table> */}
       <div className="table-container mt-5">
         <Paper sx={{ height: 550, width: "100%" }}>
           <DataGrid
@@ -224,7 +193,7 @@ export default function ManageFaqs() {
                 onChange={(e) => setAnswer(e.target.value)}
               />
             </Form.Group>
-            <Button className="mt-3" variant="primary" type="submit">
+            <Button className="mt-3 btn btn-success" variant="primary" type="submit">
               {buttonName}
             </Button>
           </Form>

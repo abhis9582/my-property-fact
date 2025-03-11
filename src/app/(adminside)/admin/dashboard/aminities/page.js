@@ -189,47 +189,6 @@ export default function Aminities() {
           + Add new amenity
         </Button>
       </div>
-      {/* <Table className="mt-5" striped bordered hover variant="light">
-        <thead>
-          <tr>
-            <th>S no</th>
-            <th>Amenity Name</th>
-            <th>Icon</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {amenityList.map((item) => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>{item.title}</td>
-              <td>
-                <img
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}amenity/${item.amenityImageUrl}`}
-                  width={"50"}
-                  alt={item.altTag}
-                />
-              </td>
-              <td>
-                <div>
-                  <FontAwesomeIcon
-                    className="mx-3 text-danger"
-                    style={{ cursor: "pointer" }}
-                    icon={faTrash}
-                    onClick={() => openConfirmationBox(item.id)}
-                  />
-                  <FontAwesomeIcon
-                    className="text-warning"
-                    style={{ cursor: "pointer" }}
-                    icon={faPencil}
-                    onClick={() => openEditModel(item)}
-                  />
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table> */}
       <div className="table-container mt-5">
         <Paper sx={{ height: 550, width: "100%" }}>
           <DataGrid

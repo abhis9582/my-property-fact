@@ -2,13 +2,11 @@
 import Link from "next/link";
 import "./sidenav.css";
 import { useState } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 export default function SideNav() {
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const router = useRouter();
   const toggleDropdown = (id) => {
     setActiveDropdown(activeDropdown === id ? null : id);
   };
@@ -39,6 +37,38 @@ export default function SideNav() {
         <li>
           <Link href="/admin/dashboard">Dashboard</Link>
         </li>
+        <li className={activeDropdown === "dropdown3" ? "active" : ""}>
+          <Link
+            href="#"
+            onClick={() => toggleDropdown("dropdown3")}
+            data-toggle="collapse"
+            aria-expanded="false"
+            className="dropdown-toggle"
+          >
+            Manage Options
+          </Link>
+          <ul
+            className={`collapse list-unstyled ${activeDropdown === "dropdown3" ? "show" : ""
+              }`}
+          >
+            <li>
+              <Link href="/admin/dashboard/city">Manage Cities</Link>
+            </li>
+            <li>
+              <Link href="/admin/dashboard/project-types">
+                Manage Project Types
+              </Link>
+            </li>
+            <li>
+              <Link href="/admin/dashboard/builder">Manage Builders</Link>
+            </li>
+            <li>
+              <Link href="/admin/dashboard/budget-options">
+                Manage budget options
+              </Link>
+            </li>
+          </ul>
+        </li>
         <li className={activeDropdown === "dropdown1" ? "active" : ""}>
           <Link
             href="#"
@@ -50,24 +80,12 @@ export default function SideNav() {
             Management
           </Link>
           <ul
-            className={`collapse list-unstyled ${
-              activeDropdown === "dropdown1" ? "show" : ""
-            }`}
+            className={`collapse list-unstyled ${activeDropdown === "dropdown1" ? "show" : ""
+              }`}
           >
-            <li>
-              <Link href="/admin/dashboard/city">Manage Cities</Link>
-            </li>
-            <li>
-              <Link href="/admin/dashboard/builder">Manage Builders</Link>
-            </li>
             <li>
               <Link href="/admin/dashboard/project-amenity">
                 Manage Project&apos;s Amenities
-              </Link>
-            </li>
-            <li>
-              <Link href="/admin/dashboard/project-types">
-                Manage Project Types
               </Link>
             </li>
             <li>
@@ -94,6 +112,11 @@ export default function SideNav() {
                 Manage Project&apos;s Walkthrough
               </Link>
             </li>
+            <li>
+              <Link href="/admin/dashboard/location-benifits">
+                Location benifits
+              </Link>
+            </li>
           </ul>
         </li>
         <li>
@@ -110,9 +133,8 @@ export default function SideNav() {
             Insight Management
           </Link>
           <ul
-            className={`collapse list-unstyled ${
-              activeDropdown === "dropdown2" ? "show" : ""
-            }`}
+            className={`collapse list-unstyled ${activeDropdown === "dropdown2" ? "show" : ""
+              }`}
           >
             <li>
               <Link href="/admin/dashboard/city-price-data">
@@ -140,8 +162,8 @@ export default function SideNav() {
           <Link href="/admin/dashboard/aminities">Aminities</Link>
         </li>
         <li>
-          <Link href="/admin/dashboard/location-benifits">
-            Location benifits
+          <Link href="/admin/dashboard/enquiries">
+            Manage Enquiries
           </Link>
         </li>
         <li>

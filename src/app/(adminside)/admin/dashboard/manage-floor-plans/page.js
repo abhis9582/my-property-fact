@@ -218,7 +218,7 @@ export default function ManageFloorPlans() {
                 required
               />
             </Form.Group>
-            <Button className="mt-3" variant="primary" type="submit">
+            <Button className="mt-3 btn btn-success" type="submit">
               {buttonName}
             </Button>
           </Form>

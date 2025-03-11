@@ -213,25 +213,10 @@ export default function ManageProjectAbout() {
                 onChange={(newcontent) => setLongDesc(newcontent)}
               />
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <Button className="btn btn-success" type="submit">
               Submit
             </Button>
           </Form>
-          {/* <Form noValidate validated={validated} onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="formCityName">
-              <Form.Label>City Name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter city name"
-                value={cityName}
-                onChange={(e) => setCityName(e.target.value)}
-                required
-              />
-              <Form.Control.Feedback type="invalid">
-                City is required
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Form> */}
         </Modal.Body>
       </Modal>
       <Modal show={confirmBox} onHide={() => setConfirmBox(false)} centered>
