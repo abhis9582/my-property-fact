@@ -45,6 +45,8 @@ export default function MostActiveLocalitiesByTransaction() {
     const list = aggregationList[0].map(
       (item) => item.aggregationFromDisplayName
     );
+    console.log(aggregationList);
+    
     setAggregationFromList(list);
   };
 
