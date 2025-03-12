@@ -23,7 +23,6 @@ export default function PropertyContainer(props) {
           alt="featured image"
           width={400}
           height={400}
-          layout="responsive"
         />
         <div className="mt-2 d-flex justify-content-between align-items-center p-2">
           <p className="h5 fw-bold">{props.data.projectName}</p>

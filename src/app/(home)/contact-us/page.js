@@ -1,11 +1,8 @@
+"use client";
 import Link from "next/link";
-import Footer from "../components/footer/page";
-import Header from "../components/header/page";
 import "./contact.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faHome,
-  faLocation,
   faPencil,
   faPhone,
   faUser,
@@ -13,50 +10,83 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import CommonBreadCrum from "../components/common/breadcrum";
-
+import { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import { Spinner } from "react-bootstrap";
 export default function ContactUs() {
+  const [validated, setValidated] = useState(false);
+  const [buttonName, setButtonName] = useState("Get a free service");
+  const [showLoading, setShowLoading] = useState(false);
+  //Defining form fields
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: ""
+  });
+
+  //Handling form submit
+  const handleSubmit = async (e) => {
+    const form = e.currentTarget;
+    setShowLoading(true);
+    setButtonName("");
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+      setValidated(true);
+      toast.error("Please fill all fields!");
+      setShowLoading(false);
+      setButtonName("Get a free service");
+      return;
+    }
+    if (form.checkValidity() === true) {
+      e.preventDefault();
+      try {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}enquiry/post`, formData);
+        if (response.data.isSuccess === 1) {
+          toast.success(response.data.message);
+          setFormData({
+            name: "",
+            email: "",
+            phone: "",
+            message: ""
+          });
+          setButtonName("Get a free service");
+          setShowLoading(false);
+        } else {
+          toast.error(response.data.message);
+        }
+      } catch (error) {
+        toast.error(error);
+        console.log(error);
+      } finally {
+        setShowLoading(false);
+        setButtonName("Get a free service");
+      }
+    }
+  }
+
+  //Handle setting all form fields
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((item) => ({
+      ...item,
+      [name]: value
+    }));
+  }
+
   return (
     <>
-      {/* <div className="container-fluid m-0 p-0 mt-5">
-        <img
-          src="https://www.starestate.com/assets/images/contact-us.jpg"
-          alt="contact us banner"
-        />
-        <div className="w-100 mt-3">
-          <div className="container-lg bg-light">
-            <div className="breadcrumbContainer" aria-label="breadcrumb">
-              <ol className="breadcrumb p-3">
-                <li className="breadcrumb-item">
-                  <Link href="/">Home</Link>
-                </li>
-                <li className="breadcrumb-item">About Us</li>
-              </ol>
-            </div>
-          </div>
-        </div>
-        <div className="container">
-          <p className="h2 text-center mt-4">Contact us</p>
-          <div className="row">
-            <div className="col-md-6 p-3 bg-light">
-              <div className="d-flex">
-                <div className="">
-                  <FontAwesomeIcon icon={faLocation} color="black" width={20} />
-                </div>
-                <p className="mt-3">Noida (Head Office)</p>
-              </div>
-            </div>
-            <div className="col-md-6 p-3"></div>
-          </div>
-        </div>
-      </div> */}
       <CommonHeaderBanner image={"contact-banner.jpg"} headerText={""} />
       <CommonBreadCrum pageName={"Contact-us"} />
       <div className="contact-us">
         <div className="info-container">
           <div className="info-container-child">
             <p>Email Address</p>
-            <p>info@webmail.com</p>
-            <p>jobs@webexample.com</p>
+            <p>info@mypropertyfact.com</p>
+            <p>jobs@mypropertyfact.com</p>
           </div>
           <div className="info-container-child">
             <p>Phone Number</p>
@@ -65,15 +95,22 @@ export default function ContactUs() {
           </div>
           <div className="info-container-child">
             <p>Office Address</p>
-            <p>18/A, New Born Town Hall</p>
-            <p>New York, US</p>
+            <p>Tower 1, Corperate park</p>
+            <p>Noida-142, India</p>
           </div>
         </div>
         <div className="contact-form-section">
-          <form>
+          <form noValidate validated={validated + ""} onSubmit={handleSubmit}>
             <p className="fw-bold h5 mb-3">Get a quote</p>
             <div className="input-item">
-              <input placeholder="Enter your name" name="name" type="text" />
+              <input
+                placeholder="Enter your name"
+                name="name"
+                type="text"
+                required
+                value={formData.name}
+                onChange={(e) => handleChange(e)}
+              />
               <FontAwesomeIcon icon={faUser} width={20} />
             </div>
             <div className="input-item">
@@ -81,14 +118,20 @@ export default function ContactUs() {
                 placeholder="Enter your email address"
                 name="email"
                 type="email"
+                value={formData.email}
+                onChange={(e) => handleChange(e)}
+                required
               />
               <FontAwesomeIcon icon={faVoicemail} width={20} />
             </div>
             <div className="input-item">
               <input
                 placeholder="Enter your phone number"
-                name="number"
+                name="phone"
                 type="number"
+                value={formData.phone}
+                onChange={(e) => handleChange(e)}
+                required
               />
               <FontAwesomeIcon icon={faPhone} width={20} />
             </div>
@@ -97,10 +140,13 @@ export default function ContactUs() {
                 placeholder="Enter your message"
                 name="message"
                 className="custom-textarea"
+                value={formData.message}
+                onChange={(e) => handleChange(e)}
+                required
               />
               <FontAwesomeIcon icon={faPencil} width={20} />
             </div>
-            <button>Get a free service</button>
+            <button type="submit" disabled={showLoading}>{buttonName}<LoadingSpinner show={showLoading} /></button>
           </form>
         </div>
         <div>
@@ -121,7 +167,16 @@ export default function ContactUs() {
             <Link href="/projects">View Projects</Link>
           </div>
         </div>
+        <ToastContainer />
       </div>
     </>
   );
+}
+
+export function LoadingSpinner({ show }) {
+  return show ? (
+    <Spinner animation="border" role="status">
+      <span className="visually-hidden">Loading...</span>
+    </Spinner>
+  ) : ""
 }

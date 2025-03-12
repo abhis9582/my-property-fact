@@ -35,7 +35,7 @@ export default function TopDevelopersByTransactions() {
 
   // fetching all categories
   const fetchAllCategories = async (data) => {
-    const categories = data.map((item) => item.categoryDisplayName);
+    const categories = data.map((item) => item.categoryDisplayName);    
     setCategoryList(categories);
   };
 

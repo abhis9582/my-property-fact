@@ -18,6 +18,7 @@ import Form from "react-bootstrap/Form";
 import Image from "next/image";
 import Footer from "../(home)/components/footer/page";
 import { Spinner } from "react-bootstrap";
+import NotFound from "../not-found";
 
 export default function Property({ slug }) {
   const [amenities, setAmenities] = useState([]);
@@ -190,6 +191,9 @@ export default function Property({ slug }) {
   }
   const imageSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${bannerData.slugURL}/${bannerData.desktopBanner}`;
   // const imageSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.projectThumbnail}`;
+  if(!projectDetail){
+    return <NotFound/>
+  }
   return (
     <>
       <header className="ps-3 pe-3 bg-root-color">
@@ -624,7 +628,7 @@ export default function Property({ slug }) {
                 noValidate
                 validated={validated}
                 className="w-50"
-                onSubmit={handleSubmit}
+                onSubmit={(e)=>handleSubmit(e)}
               >
                 <Form.Group className="mb-3" controlId="full_name">
                   <Form.Control
