@@ -1,7 +1,6 @@
 import {
   faInstagram,
   faYoutube,
-  faYoutubeSquare,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./social-feed.css";
@@ -14,10 +13,10 @@ export default function SocialFeed() {
             <h3>Social Media Feed</h3>
             <div className="toggleHead mt-3">
               <button className="toggleBtn active" style={{ color: "#c92bb7" }}>
-                <FontAwesomeIcon icon={faInstagram} /> Instagram
+                <FontAwesomeIcon icon={faInstagram} width={15}/> Instagram
               </button>
               <button className="toggleBtn" style={{ color: "red" }}>
-                <FontAwesomeIcon icon={faYoutube} /> YouTube
+                <FontAwesomeIcon icon={faYoutube} width={15}/> YouTube
               </button>
             </div>
           </div>
