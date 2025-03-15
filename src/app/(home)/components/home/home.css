@@ -2594,7 +2594,6 @@ aside.topRatedProjectShowcase {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 58px;
 }
   .gap-row {
     row-gap: 15px;
@@ -2605,10 +2604,6 @@ aside.topRatedProjectShowcase {
   .gap-row div[class^='col'] {
     padding-left: 7.5px;
     padding-right: 7.5px;
-  }
-
-  .header .logo {
-    width: 150px;
   }
 
   .header.fixed .logo {
@@ -3054,10 +3049,6 @@ aside.topRatedProjectShowcase {
 }
 
 @media (max-width: 425px) {
-  .header .logo {
-    width: 150px;
-  }
-
   .hm-project-icons ul li {
     flex: 0 0 calc(100% / 2);
     max-width: calc(100% / 2);

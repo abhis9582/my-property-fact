@@ -93,7 +93,7 @@ export default function Featured() {
                     onClick={() => goToPropertyDetail(property.slugURL)}
                   >
                     <Image 
-                      src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${property.slugURL}/${property.projectThumbnail}`}
+                      src={`/properties/${property.slugURL}/${property.projectThumbnail}`}
                       alt="featured image"
                       width={400}
                       height={400}

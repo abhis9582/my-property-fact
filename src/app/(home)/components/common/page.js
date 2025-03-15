@@ -19,7 +19,7 @@ export default function PropertyContainer(props) {
         onClick={() => goToPropertyDetail(props.data.slugURL)}
       >
         <Image
-          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${props.data.slugURL}/${props.data.projectThumbnail}`}
+          src={`/properties/${props.data.slugURL}/${props.data.projectThumbnail}`}
           alt="featured image"
           width={400}
           height={400}

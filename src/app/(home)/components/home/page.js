@@ -14,6 +14,7 @@ import InsightNew from "./insight/page";
 import FixedForm from "../fixedform";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Link from "next/link";
 export default function HomePage() {
   const [projectTypeList, setProjectTypeList] = useState([]);
   const [imageSrc, setImageSrc] = useState("/banner-desktop.jpg");
@@ -130,9 +131,9 @@ export default function HomePage() {
           <div className="btn-container">
             {projectTypeList.map((item, index) => (
               <div key={`row-${index}`} className="readmore mt-0">
-                <a href={`projects/${item.slugUrl}`} className="button light">
+                <Link href={`projects/${item.slugUrl}`} className="button light">
                   {item.projectTypeName}
-                </a>
+                </Link>
               </div>
             ))}
           </div>
