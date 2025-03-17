@@ -1,6 +1,5 @@
 import axios from "axios";
 import Property from "./propertypage";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 async function fetchSeoData(slug) {
   const data = await axios.get(process.env.NEXT_PUBLIC_API_URL + `projects/get/${slug}`);
