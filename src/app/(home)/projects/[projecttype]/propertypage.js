@@ -1,8 +1,6 @@
 "use client";
 import PropertyContainer from "@/app/(home)/components/common/page";
 import axios from "axios";
-import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import CommonBreadCrum from "../../components/common/breadcrum";
 import CommonHeaderBanner from "../../components/common/commonheaderbanner";
@@ -30,22 +28,20 @@ export default function PropertyPage({ type }) {
   }, []);
   return (
     <>
-      <div className="containr-fluid mt-5">
-        <CommonHeaderBanner
-          image={"project-banner.jpg"}
-          headerText={typeData.projectTypeName}
-        />
-        <CommonBreadCrum
-          firstPage={"projects"}
-          pageName={typeData.projectTypeName}
-        />
-        <div className="container-fluid d-block d-md-flex my-5 gap-3">
-          {projectList.map((item) => (
-            <div key={item.id}>
-              <PropertyContainer data={item} />
-            </div>
-          ))}
-        </div>
+      <CommonHeaderBanner
+        image={"project-banner.jpg"}
+        headerText={typeData.projectTypeName}
+      />
+      <CommonBreadCrum
+        firstPage={"projects"}
+        pageName={typeData.projectTypeName}
+      />
+      <div className="container-fluid d-block d-md-flex my-5 gap-3">
+        {projectList.map((item) => (
+          <div key={item.id}>
+            <PropertyContainer data={item} />
+          </div>
+        ))}
       </div>
     </>
   );

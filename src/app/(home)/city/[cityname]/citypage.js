@@ -29,85 +29,13 @@ export default function CityPage({ city }) {
   return (
     <>
       <div className="p-0">
-        <div className="container-fluid p-0 mt-5">
+        <div className="container-fluid p-0">
           <CommonHeaderBanner
             image={"realestate-bg.jpg"}
             headerText={cityData.name}
           />
-          {/* <div className="bannerContainer">
-            <div className="container-lg">
-              <div className="search-filter">
-                <div className="filter-form">
-                  <form id="categoryfilter" encType="multipart/form-data">
-                    <div className="row gx-2 gap-form-row">
-                      <div className="col-md-10">
-                        <div className="inner">
-                          <div className="row g-0">
-                            <div className="col mb-0 form-group">
-                              <select
-                                name="cityLocation"
-                                id="cityLocation"
-                                className="form-control bg-white my-0"
-                              >
-                                <option value="">Project Location</option>
-                                <option value="mumbai">Mumbai</option>
-                                <option value="pune">Pune</option>
-                                <option value="bangalore">Bangalore </option>
-                                <option value="delhi">Delhi</option>
-                                <option value="noida">Noida</option>
-                                <option value="gurugram">Gurugram</option>
-                                <option value="greater-noida">
-                                  Greater Noida
-                                </option>
-                                <option value="agra">Agra</option>
-                                <option value="ahmedabad">Ahmedabad</option>
-                                <option value="mathura">Mathura</option>
-                                <option value="ghaziabad">Ghaziabad</option>
-                                <option value="faridabad">Faridabad</option>
-                                <option value="chennai">Chennai</option>
-                                <option value="ayodhya">Ayodhya</option>
-                                <option value="hyderabad">Hyderabad</option>
-                                <option value="lucknow">Lucknow</option>
-                              </select>
-                            </div>
-                            <div className="col mb-0 form-group">
-                              <select
-                                name="projectPrice"
-                                id="projectPrice"
-                                className="form-control bg-white my-0"
-                              >
-                                <option value="">Budget</option>
-                                <option value="10000000">UpTo 1 Cr.</option>
-                                <option value="10000000-30000000">
-                                  1 - 3 Cr.
-                                </option>
-                                <option value="30000000-50000000">
-                                  3 - 5 Cr.
-                                </option>
-                                <option value="50000000">Above 5 Cr.</option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-md-2 readmore w-auto mt-0">
-                        <input
-                          type="hidden"
-                          name="projectfltr"
-                          value="active"
-                        />
-                        <button className="button w-100 h-100" type="submit">
-                          Search
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div> */}
         </div>
-        <CommonBreadCrum firstPage={"projects"} pageName={cityData.name}/>
+        <CommonBreadCrum firstPage={"projects"} pageName={cityData.name} />
         <div className="container-fluid mt-4">
           {/* <p className="h1 text-center">Property in {cityData.name}</p> */}
           <div className="d-flex justify-content-center">

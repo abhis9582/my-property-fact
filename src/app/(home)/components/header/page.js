@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import "./header.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 const Header = () => {
@@ -9,6 +8,9 @@ const Header = () => {
   const [builderList, setBuilderList] = useState([]);
   const [projectTypes, setProjectTypes] = useState([]);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  //Defining scroll variable
+  const [isScrolled, setIsScrolled] = useState(false);
+
   const fetchData = async () => {
     const cityResponse = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}city/all`
@@ -36,7 +38,21 @@ const Header = () => {
   const openMenuMobile = (dropdown) => {
     setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
   };
+  //Hadling header fixed
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
 
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   useEffect(() => {
     fetchData();
     fetchBuilders();
@@ -86,30 +102,117 @@ const Header = () => {
 
   return (
     <>
-      <header className="header">
-        <div className="main-header">
-          <div className="logo">
-            <Link href="/">
-              <img
-                src="/logo.png"
-                alt="My Property facts"
-                height={70}
-                width={80}
-              />
-            </Link>
+      <div className={`d-flex justify-content-between align-items-center px-2 px-lg-4 mpf-bg header ${isScrolled ? "fixed-header" : ""}`}>
+        <div className="mpf-logo">
+          <Link href="/">
+            <img
+              src="/logo.png"
+              alt="My Property facts"
+              height={70}
+              width={80}
+            />
+          </Link>
+        </div>
+        <nav className="d-none d-lg-flex">
+          <div className="menu position-relative">
+            <ul className="d-flex gap-5 m-0 fw-bold align-items-center">
+              <li className="hasChild">
+                <Link href="#" className="text-light text-uppercase">
+                  City<sup>+</sup>
+                </Link>
+                <div className="dropdown dropdown-lg z-3">
+                  <ul className="list-inline">
+                    {cityList.map((city) => (
+                      <li key={city.id}>
+                        <Link href={`/city/${city.slugUrl}`} className="text-light">
+                          {city.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </li>
+              <li className="hasChild">
+                <Link href="#" className="text-light text-uppercase">
+                  Builder<sup>+</sup>
+                </Link>
+                <div className="dropdown dropdown-lg z-3">
+                  <ul className="list-inline">
+                    {builderList.map((builder) => (
+                      <li key={builder.id}>
+                        <Link href={`/builder/${builder.slugUrl}`} className="text-light">
+                          {builder.builderName}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </li>
+              <li className="hasChild">
+                <Link href="/projects" className="text-light text-uppercase">
+                  Projects<sup>+</sup>
+                </Link>
+                <div className="dropdown projects-dropdown z-3">
+                  <ul className="list-inline">
+                    {projectTypes.map((project) => (
+                      <li key={project.id}>
+                        <Link href={`/projects/${project.slugUrl}`} className="text-light">
+                          {project.projectTypeName}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </li>
+              <li className="hasChild">
+                <Link href="/about-us" className="text-light text-uppercase">About Us</Link>
+              </li>
+              <li className="hasChild">
+                <Link href="/media" className="text-light text-uppercase">
+                  Media
+                </Link>
+              </li>
+              <li className="hasChild">
+                <Link href="/clients-speak" className="text-light text-uppercase">Clients Speak</Link>
+              </li>
+              <li className="hasChild">
+                <Link href="/careers" className="text-light text-uppercase">Careers</Link>
+              </li>
+              <li className="hasChild">
+                <Link href="/contact-us" className="text-light text-uppercase">Contact us</Link>
+              </li>
+            </ul>
           </div>
-          <nav className="navi d-none d-xl-flex">
-            <div className="menu position-relative">
-              <ul className="list-inline">
-                <li className="hasChild">
-                  <Link href="#">
+        </nav>
+        <div className="menuBtn d-flex d-lg-none " onClick={openMenu}>
+          <span id="menuLine1"></span>
+          <span id="menuLine2"></span>
+          <span id="menuLine3"></span>
+        </div>
+      </div>
+      <div className="mbMenuContainer" id="mbdiv">
+        <div className="mbMenu">
+          <div className="h-100 scroller">
+            <div className="bigMenuList">
+              <ul className="list-inline active">
+                <li>
+                  <Link href="/" onClick={openMenu}>Home</Link>
+                </li>
+                <li
+                  className={`mb-hasChild ${activeDropdown === "city" ? "active" : ""
+                    }`}
+                >
+                  <Link href="#" onClick={() => openMenuMobile("city")}>
                     City<sup>+</sup>
                   </Link>
-                  <div className="dropdown dropdown-lg">
+                  <div
+                    className={`dropdown ${activeDropdown === "city" ? "activeHeader" : ""
+                      }`}
+                  >
                     <ul className="list-inline">
                       {cityList.map((city) => (
                         <li key={city.id}>
-                          <Link href={`/city/${city.slugUrl}`}>
+                          <Link href={`/city/${city.slugUrl}`} onClick={openMenu}>
                             {city.name}
                           </Link>
                         </li>
@@ -117,15 +220,21 @@ const Header = () => {
                     </ul>
                   </div>
                 </li>
-                <li className="hasChild">
-                  <Link href="#">
+                <li
+                  className={`mb-hasChild ${activeDropdown === "builder" ? "active" : ""
+                    }`}
+                >
+                  <Link href="#" onClick={() => openMenuMobile("builder")}>
                     Builder<sup>+</sup>
                   </Link>
-                  <div className="dropdown dropdown-lg">
+                  <div
+                    className={`dropdown ${activeDropdown === "builder" ? "activeHeader" : ""
+                      }`}
+                  >
                     <ul className="list-inline">
                       {builderList.map((builder) => (
                         <li key={builder.id}>
-                          <Link href={`/builder/${builder.slugUrl}`}>
+                          <Link href={`/builder/${builder.slugUrl}`} onClick={openMenu}>
                             {builder.builderName}
                           </Link>
                         </li>
@@ -133,15 +242,21 @@ const Header = () => {
                     </ul>
                   </div>
                 </li>
-                <li className="hasChild">
-                  <Link href="/projects">
+                <li
+                  className={`mb-hasChild ${activeDropdown === "projects" ? "active" : ""
+                    }`}
+                >
+                  <Link href="#" onClick={() => openMenuMobile("projects")}>
                     Projects<sup>+</sup>
                   </Link>
-                  <div className="dropdown">
+                  <div
+                    className={`dropdown ${activeDropdown === "projects" ? "activeHeader" : ""
+                      }`}
+                  >
                     <ul className="list-inline">
                       {projectTypes.map((project) => (
                         <li key={project.id}>
-                          <Link href={`/projects/${project.slugUrl}`}>
+                          <Link href={`/projects/${project.slugUrl}`} onClick={openMenu}>
                             {project.projectTypeName}
                           </Link>
                         </li>
@@ -149,205 +264,66 @@ const Header = () => {
                     </ul>
                   </div>
                 </li>
-                <li className="hasChild">
-                  <Link href="/about-us">About Us</Link>
-                </li>
-                <li className="hasChild">
-                  <Link href="/media">
-                    Media
-                    {/* <sup>+</sup> */}
-                  </Link>
-                  {/* <div className="dropdown">
-                    <ul className="list-inline">
-                      {CityList.resources.map((media) => (
-                        <li key={media.name}>
-                          <Link href={media.url}>{media.name}</Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div> */}
-                </li>
-                <li>
-                  <Link href="/clients-speak">Clients Speak</Link>
-                </li>
-                <li>
-                  <Link href="/careers">Careers</Link>
-                </li>
-                <li>
-                  <Link href="/contact-us">Contact us</Link>
-                </li>
-                {/* <li><Link href="/contact-us">Login/Register</Link></li> */}
               </ul>
             </div>
-          </nav>
-          <div className="menuBtn" onClick={openMenu}>
-            <span id="menuLine1"></span>
-            <span id="menuLine2"></span>
-            <span id="menuLine3"></span>
-          </div>
-        </div>
-        <div className="mbMenuContainer" id="mbdiv">
-          <div className="mbMenu">
-            <div className="h-100 scroller">
-              <div className="bigMenuList">
-                <ul className="list-inline active">
-                  <li>
-                    <Link href="/">Home</Link>
-                  </li>
-                  <li
-                    className={`mb-hasChild ${
-                      activeDropdown === "city" ? "active" : ""
-                    }`}
+            <div className="smallMenuList">
+              <ul className="list-inline">
+                <li>
+                  <Link href="/media" onClick={openMenu}>Media</Link>
+                </li>
+                <li>
+                  <Link href="/about-us" onClick={openMenu}>About Us</Link>
+                </li>
+                <li>
+                  <Link href="/clients-speak" onClick={openMenu}>Clients Speak</Link>
+                </li>
+                <li>
+                  <Link href="/careers" onClick={openMenu}>Careers</Link>
+                </li>
+                <li>
+                  <Link href="/contact-us" onClick={openMenu}>Contact us</Link>
+                </li>
+              </ul>
+            </div>
+            <div className="socialMediaLink">
+              <ul className="list-inline">
+                <li>
+                  <Link
+                    href="https://www.facebook.com/starestate.in"
+                    target="_blank"
                   >
-                    <Link href="#" onClick={() => openMenuMobile("city")}>
-                      City<sup>+</sup>
-                    </Link>
-                    <div
-                      className={`dropdown ${
-                        activeDropdown === "city" ? "activeHeader" : ""
-                      }`}
-                    >
-                      <ul className="list-inline">
-                        {cityList.map((city) => (
-                          <li key={city.id}>
-                            <Link href={`/city/${city.slugUrl}`}>
-                              {city.name}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </li>
-                  <li
-                    className={`mb-hasChild ${
-                      activeDropdown === "builder" ? "active" : ""
-                    }`}
+                    <i className="fab fa-facebook-f"></i>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="https://www.instagram.com/starestate_official/"
+                    target="_blank"
                   >
-                    <Link href="#" onClick={() => openMenuMobile("builder")}>
-                      Builder<sup>+</sup>
-                    </Link>
-                    <div
-                      className={`dropdown ${
-                        activeDropdown === "builder" ? "activeHeader" : ""
-                      }`}
-                    >
-                      <ul className="list-inline">
-                        {builderList.map((builder) => (
-                          <li key={builder.id}>
-                            <Link href={`/builder/${builder.slugUrl}`}>
-                              {builder.builderName}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </li>
-                  <li
-                    className={`mb-hasChild ${
-                      activeDropdown === "projects" ? "active" : ""
-                    }`}
+                    <i className="fab fa-instagram"></i>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="https://www.linkedin.com/company/star-estate"
+                    target="_blank"
                   >
-                    <Link href="#" onClick={() => openMenuMobile("projects")}>
-                      Projects<sup>+</sup>
-                    </Link>
-                    <div
-                      className={`dropdown ${
-                        activeDropdown === "projects" ? "activeHeader" : ""
-                      }`}
-                    >
-                      <ul className="list-inline">
-                        {projectTypes.map((project) => (
-                          <li key={project.id}>
-                            <Link href={`/projects/${project.slugUrl}`}>
-                              {project.projectTypeName}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </li>
-                  {/* <li className="mb-hasChild">
-                    <Link href="javascript:;">
-                      Media<sup>+</sup>
-                    </Link>
-                    <div className="dropdown">
-                      <ul className="list-inline">
-                        <li>
-                          <Link href="news.html">News</Link>
-                        </li>
-                        <li>
-                          <Link href="blogs.html">Blogs</Link>
-                        </li>
-                        <li>
-                          <Link href="events.html">Events</Link>
-                        </li>
-                        <li>
-                          <Link href="advertisements.html">Advertisements</Link>
-                        </li>
-                      </ul>
-                    </div>
-                  </li> */}
-                </ul>
-              </div>
-              <div className="smallMenuList">
-                <ul className="list-inline">
-                  <li>
-                    <Link href="/media">Media</Link>
-                  </li>
-                  <li>
-                    <Link href="/about-us">About Us</Link>
-                  </li>
-                  <li>
-                    <Link href="/clients-speak">Clients Speak</Link>
-                  </li>
-                  <li>
-                    <Link href="/careers">Careers</Link>
-                  </li>
-                  <li>
-                    <Link href="/contact-us">Contact us</Link>
-                  </li>
-                </ul>
-              </div>
-              <div className="socialMediaLink">
-                <ul className="list-inline">
-                  <li>
-                    <Link
-                      href="https://www.facebook.com/starestate.in"
-                      target="_blank"
-                    >
-                      <i className="fab fa-facebook-f"></i>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="https://www.instagram.com/starestate_official/"
-                      target="_blank"
-                    >
-                      <i className="fab fa-instagram"></i>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="https://www.linkedin.com/company/star-estate"
-                      target="_blank"
-                    >
-                      <i className="fab fa-linkedin-in"></i>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="https://www.youtube.com/channel/UCwfDf7Ut8jrkjiBeRnbZUPw"
-                      target="_blank"
-                    >
-                      <i className="fab fa-youtube"></i>
-                    </Link>
-                  </li>
-                </ul>
-              </div>
+                    <i className="fab fa-linkedin-in"></i>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="https://www.youtube.com/channel/UCwfDf7Ut8jrkjiBeRnbZUPw"
+                    target="_blank"
+                  >
+                    <i className="fab fa-youtube"></i>
+                  </Link>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
-      </header>
+      </div>
     </>
   );
 };

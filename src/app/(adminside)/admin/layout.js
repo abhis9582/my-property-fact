@@ -1,5 +1,3 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-
 export const metadata = {
   title: "MPF | Admin",
   description: "my-property-fact",

@@ -1,7 +1,48 @@
-:root{
+:root {
+    --corp-color: #68ac78;
+    --secondary-color: #7eae68;
+    --body-color: #3b3b3b;
+    --lightgray: #f6f6f6;
+    --gray: #2f2f2f;
+    --vibrant-green: #1dcde2;
+    --lightgreen: #edefe8;
+    --font-light: "Benton300", sans-serif;
+    --font-semibold: "Benton500", sans-serif;
+    --font-bold: "BentonBold", sans-serif;
+    --font-black: "Benton900", sans-serif;
+    --corp-gradient: linear-gradient(45deg,
+            var(--corp-color),
+            var(--secondary-color),
+            var(--corp-color)) right;
+    --freight-regular: "FreightBigBook", serif;
+    --facebook: #4267B2;
+    --twitter: #00acee;
+    --linkedin: #0e76a8;
+    --youtube: #FF0000;
+    --whatsapp: #25D366;
+    --instagram: #c92bb7;
     --theme-color: #68ac78;
 }
-.list-inline-item a {
+
+/*Defining body css globally*/
+body {
+    color: var(--body-color);
+    font-family: "BentonRegular", sans-serif;
+    overflow-x: hidden;
+    font-size: 16px;
+}
+
+.mpf-bg{
+    background-color: var(--corp-color);
+}
+
+a {
+    text-decoration: none;
+}
+ul{
+    list-style: none;
+}
+/* .list-inline-item a {
     height: 30px !important;
     width: 30px;
     color: white;
@@ -12,7 +53,7 @@
     --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
     box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-}
+} */
 
 /* Webkit Browsers (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
@@ -34,64 +75,11 @@
     background: #555;
 }
 
-/* Apply to a div */
-.custom-scroll {
-    height: 300px;
-    overflow: auto;
-    border: 1px solid #ccc;
-}
-
 .cursor-pointer {
     cursor: pointer !important;
 }
 
-.table-scroll {
-    display: block;
-    max-height: 700px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    width: 100% !important;
-}
-
-.sno {
-    width: 50px;
-}
-
-.project-name-col {
-    width: 200px;
-}
-
-.action-col {
-    width: 100px;
-}
-
-.short-dec-col {
-    width: 450px;
-}
-
-.table-container {
-    overflow-x: auto;
-    /* Enables horizontal scrolling */
-    -webkit-overflow-scrolling: touch;
-    /* Smooth scrolling on touch devices */
-    width: 100%;
-    /* Set the width of the container to fit your layout */
-}
-
-table {
-    width: 100%;
-    /* Ensures the table stretches to the full container width */
-    border-collapse: collapse;
-    /* Optional, to make the table cleaner */
-}
-
-th,
-td {
-    padding: 10px;
-    border: 1px solid #ccc;
-    /* Optional: Adds borders for better visualization */
-}
-.btn-primary{
+.btn-primary {
     background-color: #68ac78 !important;
     border: none !important;
 }

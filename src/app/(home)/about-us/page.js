@@ -17,7 +17,7 @@ import CommonBreadCrum from "../components/common/breadcrum";
 export default function AboutUs() {
   return (
     <>
-      <div className="container-fluid mt-5 p-0 m-0">
+      <div className="container-fluid p-0 m-0">
         <CommonHeaderBanner image={"about-us-banner.png"} headerText={""} />
         <CommonBreadCrum pageName={"About Us"} />
       </div>

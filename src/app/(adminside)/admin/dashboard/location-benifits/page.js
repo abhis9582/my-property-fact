@@ -81,7 +81,7 @@ export default function LocationBenefit() {
     setIcon(null);
     setProjectId(item.projectId);
     setId(item.id);
-    setPreviewImage(`${process.env.NEXT_PUBLIC_IMAGE_URL}icon/${item.image}`);
+    setPreviewImage(`/icon/${item.image}`);
     setTitle("Edit Location Benefit");
     setButtonName("Updte");
   };
@@ -128,7 +128,7 @@ export default function LocationBenefit() {
       width: 250,
       renderCell: (params) => (
         <Image
-          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}icon/${params.row.image}`}
+          src={`/icon/${params.row.image}`}
           alt="Project"
           width={50}
           height={50}

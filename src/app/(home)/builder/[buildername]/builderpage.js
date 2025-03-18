@@ -37,7 +37,7 @@ export default function BuilderPage({ builderName }) {
         firstPage={"projects"}
         pageName={builderData.builderName}
       />
-      <div className="container my-4">
+      <div className="container">
         <div className="d-flex justify-content-center">
           <div className="w-80">
             <p className="text-center">{builderData.builderDesc}</p>

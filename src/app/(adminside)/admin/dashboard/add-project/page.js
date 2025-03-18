@@ -105,13 +105,13 @@ export default function AddProject() {
     setFloorPlanDesc(item.floorPlanDesc);
     setLocationDesc(item.locationDesc);
     setLocationPreview(
-      `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.locationMap}`
+      `/properties/${item.slugURL}/${item.locationMap}`
     );
     setProjectThumbnailPreview(
-      `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.projectThumbnail}`
+      `/properties/${item.slugURL}/${item.projectThumbnail}`
     );
     setProjectLogoPreview(
-      `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.projectLogo}`
+      `/properties/${item.slugURL}/${item.projectLogo}`
     );
     // Dynamically update the form data with the values from the item
     setFormData({

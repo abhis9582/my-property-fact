@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function CommonHeaderBanner({ image, headerText }) {
   return (
-    <div className="container-fluid p-0 mt-5 postion-relative">
+    <div className="container-fluid p-0">
       <Image
         src={`/static/${image}`}
         width={1899}
