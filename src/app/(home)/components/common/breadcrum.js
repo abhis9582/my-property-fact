@@ -2,8 +2,8 @@ import Link from "next/link";
 
 export default function CommonBreadCrum({ firstPage, pageName }) {
   return (
-    <div className="container bg-light my-2 rounded border p-2">
-      <ul className="d-flex text-decoration-none list-unstyled gap-1 fw-bold ps-3">
+    <div className="container bg-light my-4 rounded border p-3">
+      <ul className="d-flex text-decoration-none align-items-center list-unstyled gap-1 fw-bold ps-3 m-0">
         <li>
           <Link className="text-decoration-none text-dark" href="/">
             Home

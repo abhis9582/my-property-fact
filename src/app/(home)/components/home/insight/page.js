@@ -50,26 +50,24 @@ export default function InsightNew() {
   ];
   return (
     <>
-      <div className="container-fluid">
-        <p className="h1 text-center fw-bold">Insights</p>
-        <div className="container my-5">
-          <div className="d-flex justify-content-center gap-30 my-3 flex-wrap">
-            {data.map((i) => (
-              <div key={i.id} className={`${i.color} insight-container`}>
-                <Link href={i.href}>
-                  <div className="insight-container-child">
-                    <p>{i.heading}</p>
-                    <p>{i.sub_heading}</p>
-                    <img src={i.src} alt={i.alt} />
-                  </div>
-                  <div className={`${i.button_color} insight-explore-button`}>
-                    <button className="fw-bold">Explore Now</button>
-                    <FontAwesomeIcon icon={faArrowRight} width={15}/>
-                  </div>
-                </Link>
-              </div>
-            ))}
-          </div>
+      <p className="h1 text-center fw-bold">Insights</p>
+      <div className="container my-5">
+        <div className="d-flex justify-content-center gap-4 my-3 flex-wrap flex-column flex-md-row">
+          {data.map((i) => (
+            <div key={i.id} className={`${i.color} insight-container mx-auto`}>
+              <Link href={i.href}>
+                <div className="insight-container-child">
+                  <p>{i.heading}</p>
+                  <p>{i.sub_heading}</p>
+                  <img src={i.src} alt={i.alt} />
+                </div>
+                <div className={`${i.button_color} insight-explore-button`}>
+                  <button className="fw-bold">Explore Now</button>
+                  <FontAwesomeIcon icon={faArrowRight} width={15} />
+                </div>
+              </Link>
+            </div>
+          ))}
         </div>
       </div>
     </>

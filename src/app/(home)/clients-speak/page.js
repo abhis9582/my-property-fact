@@ -9,7 +9,6 @@ export default function ClientsSpeak() {
         height={400}
         width={1899}
         layout="responsive"
-        className="mt-5"
       />
       <CommonBreadCrum pageName={"Client's speak"} />
     </>

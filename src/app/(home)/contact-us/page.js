@@ -81,8 +81,8 @@ export default function ContactUs() {
     <>
       <CommonHeaderBanner image={"contact-banner.jpg"} headerText={""} />
       <CommonBreadCrum pageName={"Contact-us"} />
-      <div className="contact-us">
-        <div className="info-container">
+      <div className="">
+        <div className="container d-flex justify-content-center gap-4">
           <div className="info-container-child">
             <p>Email Address</p>
             <p>info@mypropertyfact.com</p>

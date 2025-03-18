@@ -1,6 +1,5 @@
 "use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { faEnvelope, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import "./home.css";
@@ -97,7 +96,7 @@ export default function HomePage() {
       setEnquiryButtonName(newState ? "Close" : "Enquiry");
       if (!newState) {
         setResetTrigger(true); // Toggle to trigger useEffect in FixedForm
-      }else{
+      } else {
         setResetTrigger(false);
       }
       return newState;
@@ -112,61 +111,61 @@ export default function HomePage() {
   return (
     <>
       <div className={`${showForm ? "show" : ""} fixed-form-container`}>
-        <FixedForm resetTrigger={resetTrigger} onSuccess={handleSuccess}/>
+        <FixedForm resetTrigger={resetTrigger} onSuccess={handleSuccess} />
       </div>
-      <div id="banner" className="banner">
+      <div className="position-relative">
         <Image
           src={imageSrc}
           alt="My propery fact"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1920px"
-          srcSet="
-              /banner-mobile.jpg 600w,
-              /banner-tablet.jpg 1200w,
-              /banner-desktop.jpg 1920w"
-          fill
-          style={{ objectFit: "fill" }}
+          // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1920px"
+          // srcSet="
+          //     /banner-mobile.jpg 600w,
+          //     /banner-tablet.jpg 1200w,
+          //     /banner-desktop.jpg 1920w"
+          // fill
+          // style={{ objectFit: "fill" }}
+          width={1899}
+          height={550}
+          className="banner-image"
+        // layout="responsive"
         />
-        <div className="bannerContainer">
-          <h1 className="h1">Find the best property</h1>
-          <div className="btn-container">
+        <div className="overlay"></div>
+        <div className="bannercontainer">
+          <h1 className="text-center text-light fw-bold">Find the best property</h1>
+          <div className="d-flex flex-wrap align-item-center justify-content-center gap-4 my-4">
             {projectTypeList.map((item, index) => (
-              <div key={`row-${index}`} className="readmore mt-0">
-                <Link href={`projects/${item.slugUrl}`} className="button light">
+              <div key={`row-${index}`}>
+                <Link href={`projects/${item.slugUrl}`} className="border rounded-5 py-2 px-3 bg-light text-dark">
                   {item.projectTypeName}
                 </Link>
               </div>
             ))}
           </div>
-          <div className="statsWrapper">
-            <div className="row gap-row">
-              {ourFacts.map((item, index) => (
-                <div
-                  key={`${item.text}-${index}`}
-                  className="col-md-3 col-sm-6 statBox"
-                >
-                  <section>
-                    <h6 className="h3">
-                      <span className="counter">{item.numbers}</span>
-                    </h6>
-                    <p>{item.text}</p>
-                  </section>
-                </div>
-              ))}
-            </div>
+          <div className="data-container">
+            {ourFacts.map((item, index) => (
+              <div
+                key={`${item.text}-${index}`}
+                className="data-container-child"
+              >
+                <section>
+                  <p className="h3">
+                    <span>{item.numbers}</span>
+                  </p>
+                  <p>{item.text}</p>
+                </section>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
-
-      <div className="w-100 search-filter">
-        <div className="container">
-          <div className="filter-form">
+        <div className="position-absolute bottom-25 start-50 translate-middle w-100">
+          <div className="container bg-light border rounded-4">
             <form method="Get" action="projects" encType="multipart/form-data">
-              <div className="form-row align-items-center">
+              <div className="d-flex flex-wrap flex-md-row flex-column p-4 gap-3">
                 <div className="col">
                   <select
                     name="category"
                     id="category"
-                    className="form-control"
+                    className="form-select"
                     title="category"
                     onChange={(e) => setPropertyType(e.target.value)}
                   >
@@ -185,7 +184,7 @@ export default function HomePage() {
                   <select
                     name="location"
                     id="location"
-                    className="form-control"
+                    className="form-select"
                     title="location"
                     onChange={(e) => setPropertyLocation(e.target.value)}
                   >
@@ -201,7 +200,7 @@ export default function HomePage() {
                   <select
                     name="projectname"
                     id="projectname"
-                    className="form-control"
+                    className="form-select"
                     title="projectname "
                     onChange={(e) => setBudget(e.target.value)}
                   >
@@ -214,9 +213,9 @@ export default function HomePage() {
                   </select>
                 </div>
 
-                <div className="readmore mt-0 pr-2">
+                <div className="d-flex align-items-center">
                   {/* <input type="hidden" name="projectfltr" value="active" /> */}
-                  <button className="button" onClick={handleSearch}>
+                  <button className="mpf-bg py-1 px-4 text-light m-0 border rounded-3" onClick={handleSearch}>
                     <FontAwesomeIcon icon={faSearch} width={20} />
                   </button>
                 </div>
@@ -231,13 +230,15 @@ export default function HomePage() {
           <span>{enquiryButtonName}</span>
         </span>
       </button>
-      <InsightNew />
+      <div className="mt-5 home-insight-container">
+        <InsightNew />
+      </div>
       {/* <Insight /> */}
       <Featured />
       <DreamProject />
       <NewsViews />
       <SocialFeed />
-      <ToastContainer/>
+      <ToastContainer />
     </>
   );
 }
