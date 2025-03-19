@@ -114,28 +114,30 @@ export default function HomePage() {
         <FixedForm resetTrigger={resetTrigger} onSuccess={handleSuccess} />
       </div>
       <div className="position-relative">
-        <Image
-          src={imageSrc}
-          alt="My propery fact"
-          // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1920px"
-          // srcSet="
-          //     /banner-mobile.jpg 600w,
-          //     /banner-tablet.jpg 1200w,
-          //     /banner-desktop.jpg 1920w"
-          // fill
-          // style={{ objectFit: "fill" }}
-          width={1899}
-          height={550}
-          className="banner-image"
-        // layout="responsive"
-        />
-        <div className="overlay"></div>
+        <div className="position-relative overflow-hidden">
+          <Image
+            src={imageSrc}
+            alt="My propery fact"
+            // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1920px"
+            // srcSet="
+            //     /banner-mobile.jpg 600w,
+            //     /banner-tablet.jpg 1200w,
+            //     /banner-desktop.jpg 1920w"
+            // fill
+            // style={{ objectFit: "fill" }}
+            width={1899}
+            height={550}
+            className="banner-image"
+          // layout="responsive"
+          />
+          <div className="overlay"></div>
+        </div>
         <div className="bannercontainer">
           <h1 className="text-center text-light fw-bold">Find the best property</h1>
           <div className="d-flex flex-wrap align-item-center justify-content-center gap-4 my-4">
             {projectTypeList.map((item, index) => (
               <div key={`row-${index}`}>
-                <Link href={`projects/${item.slugUrl}`} className="border rounded-5 py-2 px-3 bg-light text-dark">
+                <Link href={`projects/${item.slugUrl}`} className="border rounded-5 py-2 px-3 bg-light text-dark home-property-types">
                   {item.projectTypeName}
                 </Link>
               </div>
