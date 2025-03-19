@@ -40,3 +40,7 @@
       flex-wrap: nowrap;  /* Disable wrapping on medium screens and larger */
     }
   }
+
+  .social-post img{
+    width: 100%;
+  }
