@@ -41,10 +41,6 @@
     height: 380px;
     object-fit: cover;
 }
-img {
-    display: block;
-    width: 100%;
-}
 .news-card .inner .arrow {
     bottom: -40px;
     color: #fff;
