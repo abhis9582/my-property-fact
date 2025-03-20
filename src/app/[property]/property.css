@@ -37,8 +37,20 @@
     transition: all 0.6s cubic-bezier(0.785, 0.135, 0.15, 0.86);
 }
 
+.fixed-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+}
+
 .menuBtn.closeMenuBtn {
     flex-direction: column;
+    position: fixed;
+    top: 54px;
+    z-index: 5555;
+    right: 30px;
 }
 
 .menuBtn.closeMenuBtn span {
@@ -175,8 +187,12 @@
     border-radius: 10px;
 }
 
-.banner-container {
+.banner-container{
     position: relative !important;
+}
+.banner-container img{
+    position: relative !important;
+    height: 600px;
 }
 
 .banner-form {
@@ -236,10 +252,19 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0px;
 }
 
 @media (max-width: 768px) {
     .walkthrough-container {
         width: 100%;
+    }
+    .banner-container img{
+        position: relative !important;
+        height: 400px;
     }
 }

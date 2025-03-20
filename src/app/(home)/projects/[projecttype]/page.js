@@ -1,6 +1,4 @@
-import Header from "@/app/(home)/components/header/page";
 import PropertyPage from "./propertypage";
-import Footer from "@/app/(home)/components/footer/page";
 import axios from "axios";
 
 async function fetchSeoData(slug) {

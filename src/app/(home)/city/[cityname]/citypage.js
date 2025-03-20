@@ -49,9 +49,9 @@ export default function CityPage({ city }) {
             </Link>
           </div>
         </div>
-        <div className="container-fluid d-flex justify-content-start my-5">
+        <div className="container-fluid gap-4 d-flex justify-content-start my-5 flex-wrap">
           {propertyList.map((item) => (
-            <div key={item.id} style={{ width: "25%" }} className="mx-3">
+            <div key={item.id}>
               <PropertyContainer data={item} />
             </div>
           ))}

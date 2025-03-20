@@ -1,4 +1,3 @@
-import Link from "next/link";
 import "./media.css";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import CommonBreadCrum from "../components/common/breadcrum";
@@ -7,13 +6,14 @@ export default function Media() {
   return (
     <>
       <CommonHeaderBanner image={"blog-banner.jpg"} headerText={""} />
-      <CommonBreadCrum pageName={"Blogs"}/>
+      <CommonBreadCrum pageName={"Blogs"} />
       <div className="container-fluid mt-3">
         <p className="text-center h2 mt-3">Blogs</p>
-        <div className="d-flex justify-content-center flex-wrap">
+        <div className="d-flex justify-content-center gap-4 flex-wrap">
           {blogsList.map((blog) => (
-            <div key={blog} className="card m-2">
+            <div key={blog} className="card">
               <img
+                className="w-100"
                 src="https://ecis.in/apis/star-estate-API/star_estate/blogs/2024-11-27_10-37-27_setdesignerworkindoors.webp"
                 alt="blog"
               />
