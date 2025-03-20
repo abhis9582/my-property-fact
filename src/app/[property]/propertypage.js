@@ -31,6 +31,7 @@ export default function Property({ slug }) {
   const [walkthrough, setWalkthrough] = useState([]);
   const [bannerData, setBannerData] = useState([]);
   const [faqs, setFaqs] = useState([]);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -132,48 +133,91 @@ export default function Property({ slug }) {
     };
 
     fetchAllData();
+    //Handle header on scrolling page
+    const handleScroll = () => {
+      if (window.scrollY > 200) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
-  const openMenu = () => {
-    const menuButtons = document.getElementsByClassName("menuBtn");
+
+  // const openMenu = (e, targetId) => {
+  //   const menuButtons = document.querySelectorAll(".menuBtn");
+  //   const menu = document.getElementById("mbdiv");
+  //   const header = document.querySelector(".header");
+
+  //   if (!menu) return;
+
+  //   // Toggle menu state
+  //   const isMenuOpen = menu.classList.toggle("active");
+
+  //   // Toggle menu button classes
+  //   menuButtons.forEach((btn) =>
+  //     btn.classList.toggle("closeMenuBtn", isMenuOpen)
+  //   );
+
+  //   // Toggle display
+  //   menu.style.display = isMenuOpen ? "block" : "none";
+
+  //   // Toggle header class
+  //   header?.classList.toggle("notfixed", isMenuOpen);
+  //   // Toggle body scroll lock
+  //   document.body.classList.toggle("overflow-hidden", isMenuOpen);
+  // };
+  const openMenu = (e, targetId) => {
+    e.preventDefault(); // Prevent default anchor behavior
+    const menuButtons = document.querySelectorAll(".menuBtn");
     const menu = document.getElementById("mbdiv");
-
-    // Check if the menu is already open
-    const isMenuOpen = menu.classList.contains("active");
-
-    if (isMenuOpen) {
-      // Close the menu
-      for (let i = 0; i < menuButtons.length; i++) {
-        menuButtons[i].classList.remove("closeMenuBtn");
+    const header = document.querySelector(".header");
+  
+    if (!menu) return;
+  
+    // Toggle menu state
+    const isMenuOpen = menu.classList.toggle("active");
+  
+    // Toggle menu button classes
+    menuButtons.forEach((btn) =>
+      btn.classList.toggle("closeMenuBtn", isMenuOpen)
+    );
+  
+    // Toggle display
+    menu.style.display = isMenuOpen ? "block" : "none";
+  
+    // Toggle header class
+    header?.classList.toggle("notfixed", isMenuOpen);
+  
+    // Toggle body scroll lock
+    document.body.classList.toggle("overflow-hidden", isMenuOpen);
+  
+    // Handle scrolling when clicking a menu link
+    debugger
+    if (targetId) {
+      debugger
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        const headerHeight = header ? header.offsetHeight : 0;
+        const targetPosition =
+          targetElement.getBoundingClientRect().top + window.scrollY - headerHeight-50;
+  
+        window.scrollTo({
+          top: targetPosition,
+          behavior: "smooth",
+        });
+  
+        // Close menu after clicking
+        menu.classList.remove("active");
+        document.body.classList.remove("overflow-hidden");
       }
-      menu.style.display = "none";
-      menu.classList.remove("active");
-
-      // Toggle className for .header
-      const header = document.querySelector(".header");
-      if (header) {
-        header.classList.remove("notfixed");
-      }
-
-      // Toggle className for body to remove overflow-hidden
-      document.body.classList.remove("overflow-hidden");
-    } else {
-      // Open the menu
-      for (let i = 0; i < menuButtons.length; i++) {
-        menuButtons[i].classList.add("closeMenuBtn");
-      }
-      menu.style.display = "block";
-      menu.classList.add("active");
-
-      // Toggle className for .header
-      const header = document.querySelector(".header");
-      if (header) {
-        header.classList.add("notfixed");
-      }
-
-      // Toggle className for body to add overflow-hidden
-      document.body.classList.add("overflow-hidden");
     }
   };
+  
+
 
   if (loading) {
     return (
@@ -191,12 +235,12 @@ export default function Property({ slug }) {
   }
   const imageSrc = `/properties/${bannerData.slugURL}/${bannerData.desktopBanner}`;
   // const imageSrc = `/properties/${projectDetail.slugURL}/${projectDetail.projectThumbnail}`;
-  if(!projectDetail){
-    return <NotFound/>
+  if (!projectDetail) {
+    return <NotFound />
   }
   return (
     <>
-      <header className="ps-3 pe-3 bg-root-color">
+      <header className={`ps-3 pe-3 bg-root-color header ${isScrolled ? "fixed-header" : ""}`}>
         <div className="main-header">
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex justify-content-center align-items-center">
@@ -212,6 +256,14 @@ export default function Property({ slug }) {
             <nav className="navi d-none d-lg-flex">
               <div className="menu">
                 <ul className="list-inline d-flex text-decoration-none gap-5 m-0 align-items-center">
+                  <li>
+                    <Link
+                      className="text-decoration-none text-light fs-5 fw-bold"
+                      href="#"
+                    >
+                      Home
+                    </Link>
+                  </li>
                   <li>
                     <Link
                       className="text-decoration-none text-light fs-5 fw-bold"
@@ -259,8 +311,18 @@ export default function Property({ slug }) {
               <ul className="mb-list d-block d-md-none d-flex gap-4">
                 <li>
                   <Link
+                    href="#"
+                    className="text-decoration-none text-light fs-5 fw-bold"
+                    onClick={(e)=>openMenu(e, 'home')}
+                  >
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="#overview"
                     className="text-decoration-none text-light fs-5 fw-bold"
+                    onClick={(e)=>openMenu(e, 'overview')}
                   >
                     Overview
                   </Link>
@@ -269,6 +331,7 @@ export default function Property({ slug }) {
                   <Link
                     href="#amenities"
                     className="text-decoration-none text-light fs-5 fw-bold"
+                    onClick={(e)=>openMenu(e, 'amenities')}
                   >
                     Amenities
                   </Link>
@@ -277,6 +340,7 @@ export default function Property({ slug }) {
                   <Link
                     href="#floorplan"
                     className="text-decoration-none text-light fs-5 fw-bold"
+                    onClick={(e)=>openMenu(e, 'floorplan')}
                   >
                     Plans &amp; Price
                   </Link>
@@ -285,6 +349,7 @@ export default function Property({ slug }) {
                   <Link
                     href="#gallery"
                     className="text-decoration-none text-light fs-5 fw-bold"
+                    onClick={(e)=>openMenu(e, 'gallery')}
                   >
                     Gallery
                   </Link>
@@ -293,6 +358,7 @@ export default function Property({ slug }) {
                   <Link
                     href="#location"
                     className="text-decoration-none text-light fs-5 fw-bold"
+                    onClick={(e)=>openMenu(e, 'location')}
                   >
                     Location
                   </Link>
@@ -312,7 +378,7 @@ export default function Property({ slug }) {
           </div>
         </div>
       </header>
-      <div className="container-fluid p-0">
+      <div id="home" className="container-fluid p-0">
         <div className="slick-slider-container banner-container">
           <Slider {...settings}>
             <picture>
@@ -453,8 +519,7 @@ export default function Property({ slug }) {
                     <div className="d-flex bg-light gap-4 p-2 border rounded-2  align-items-center">
                       <Image
                         src={
-                          process.env.NEXT_PUBLIC_IMAGE_URL +
-                          "amenity/" +
+                          "/amenity/" +
                           item.amenityImageUrl
                         }
                         height={30}
@@ -628,7 +693,7 @@ export default function Property({ slug }) {
                 noValidate
                 validated={validated}
                 className="w-50"
-                onSubmit={(e)=>handleSubmit(e)}
+                onSubmit={(e) => handleSubmit(e)}
               >
                 <Form.Group className="mb-3" controlId="full_name">
                   <Form.Control

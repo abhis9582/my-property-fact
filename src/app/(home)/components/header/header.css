@@ -11,6 +11,14 @@
     width: 100%;
     z-index: 1000;
 }
+
+.notfixed{
+    background-color: #fff !important;
+}
+.notfixed .mpf-logo img{
+    display: none;
+}
+
 .menu ul li.hasChild a {
     font-size: 14px;
 }
@@ -125,6 +133,7 @@
 
 .menuBtn.closeMenuBtn {
     flex-direction: column;
+    top: 20px;
 }
 
 .menuBtn.closeMenuBtn span {

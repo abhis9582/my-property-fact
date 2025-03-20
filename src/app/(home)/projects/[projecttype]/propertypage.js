@@ -36,7 +36,7 @@ export default function PropertyPage({ type }) {
         firstPage={"projects"}
         pageName={typeData.projectTypeName}
       />
-      <div className="container-fluid d-block d-md-flex my-5 gap-3">
+      <div className="container-fluid d-block d-md-flex gap-3">
         {projectList.map((item) => (
           <div key={item.id}>
             <PropertyContainer data={item} />

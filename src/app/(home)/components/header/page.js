@@ -41,7 +41,7 @@ const Header = () => {
   //Hadling header fixed
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
+      if (window.scrollY > 100) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
@@ -168,8 +168,8 @@ const Header = () => {
                 <Link href="/about-us" className="text-light text-uppercase">About Us</Link>
               </li>
               <li className="hasChild">
-                <Link href="/media" className="text-light text-uppercase">
-                  Media
+                <Link href="/blogs" className="text-light text-uppercase">
+                  Blogs
                 </Link>
               </li>
               <li className="hasChild">
@@ -269,7 +269,7 @@ const Header = () => {
             <div className="smallMenuList">
               <ul className="list-inline">
                 <li>
-                  <Link href="/media" onClick={openMenu}>Media</Link>
+                  <Link href="/blogs" onClick={openMenu}>Blogs</Link>
                 </li>
                 <li>
                   <Link href="/about-us" onClick={openMenu}>About Us</Link>

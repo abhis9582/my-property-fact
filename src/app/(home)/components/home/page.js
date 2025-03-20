@@ -115,21 +115,35 @@ export default function HomePage() {
       </div>
       <div className="position-relative">
         <div className="position-relative overflow-hidden">
-          <Image
-            src={imageSrc}
+          {/* <Image
+            // src={imageSrc}
             alt="My propery fact"
-            // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1920px"
-            // srcSet="
-            //     /banner-mobile.jpg 600w,
-            //     /banner-tablet.jpg 1200w,
-            //     /banner-desktop.jpg 1920w"
-            // fill
-            // style={{ objectFit: "fill" }}
-            width={1899}
-            height={550}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1920px"
+            srcSet="
+                /banner-mobile.jpg 600w,
+                /banner-tablet.jpg 1200w,
+                /banner-desktop.jpg 1920w"
+            fill
+            style={{ objectFit: "fill" }}
+            // width={1899}
+            // height={550}
             className="banner-image"
           // layout="responsive"
-          />
+          /> */}
+          <picture>
+            {/* Mobile Image */}
+            <source srcSet="/banner-mobile.jpg" media="(max-width: 768px)" />
+            {/* Tablet Image */}
+            <source srcSet="/banner-tablet.jpg" media="(max-width: 1200px)" />
+            {/* Default (Desktop) Image */}
+            <Image
+              src="/banner-desktop.jpg" // Fallback image
+              alt="My property fact"
+              fill
+              style={{ objectFit: "cover" }} // "cover" looks better than "fill"
+              className="banner-image position-relative"
+            />
+          </picture>
           <div className="overlay"></div>
         </div>
         <div className="bannercontainer">
@@ -216,7 +230,6 @@ export default function HomePage() {
                 </div>
 
                 <div className="d-flex align-items-center">
-                  {/* <input type="hidden" name="projectfltr" value="active" /> */}
                   <button className="mpf-bg py-1 px-4 text-light m-0 border rounded-3" onClick={handleSearch}>
                     <FontAwesomeIcon icon={faSearch} width={20} />
                   </button>

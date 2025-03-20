@@ -74,8 +74,8 @@ function ProjectsContent() {
   }
 
   return (
-    <div className="containr-fluid mt-5">
-      <div className="projects-heading-image container-fluid p-0 mt-5">
+    <div className="containr-fluid">
+      <div className="projects-heading-image container-fluid p-0">
         <Image
           src="/static/project-banner.jpg"
           width={1899}
