@@ -13,8 +13,9 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "api.mypropertyfact.com",
-        port: "8080"
+        hostname: "apis.mypropertyfact.com",
+        port: "8080",
+        pathname: "/**"
       },
     ],
   },

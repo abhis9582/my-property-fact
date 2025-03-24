@@ -95,7 +95,7 @@ export default function ManageGallery() {
       width: 600,
       renderCell: (params) => (
         <Image
-          src={`/properties/${params.row.slugURL}/${params.row.image}`}
+          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${params.row.slugURL}/${params.row.image}`}
           alt={`${params.row.pname}`}
           width={100}
           height={50}
