@@ -137,7 +137,7 @@ export default function Aminities() {
     });
     setShowModal(true);
     setPreviousImage(
-      `${process.env.NEXT_PUBLIC_IMAGE_URL}/amenity/${item.amenityImageUrl}`
+      `${process.env.NEXT_PUBLIC_IMAGE_URL}amenity/${item.amenityImageUrl}`
     );
   };
   //Defining table columns
@@ -150,7 +150,7 @@ export default function Aminities() {
       width: 600,
       renderCell: (params) => (
         <Image
-          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/amenity/${params.row.amenityImageUrl}`}
+          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}amenity/${params.row.amenityImageUrl}`}
           alt={params.row.title || ""}
           width={50}
           height={50}
