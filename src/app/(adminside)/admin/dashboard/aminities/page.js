@@ -154,6 +154,7 @@ export default function Aminities() {
           alt={params.row.title || ""}
           width={50}
           height={50}
+          unoptimized
         />
       ),
     },
