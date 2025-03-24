@@ -150,7 +150,7 @@ export default function Aminities() {
       width: 600,
       renderCell: (params) => (
         <Image
-          src={`/amenity/${params.row.amenityImageUrl}`}
+          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/amenity/${params.row.amenityImageUrl}`}
           alt={params.row.title || ""}
           width={50}
           height={50}
