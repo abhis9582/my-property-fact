@@ -137,7 +137,7 @@ export default function Aminities() {
     });
     setShowModal(true);
     setPreviousImage(
-      `/amenity/${item.amenityImageUrl}`
+      `${process.env.NEXT_PUBLIC_IMAGE_URL}/amenity/${item.amenityImageUrl}`
     );
   };
   //Defining table columns
