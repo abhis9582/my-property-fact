@@ -99,6 +99,7 @@ export default function ManageGallery() {
           alt={`${params.row.pname}`}
           width={100}
           height={50}
+          unoptimized
         />
       ),
     },
