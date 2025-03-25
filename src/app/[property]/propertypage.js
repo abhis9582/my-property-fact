@@ -250,6 +250,7 @@ export default function Property({ slug }) {
                   height={50}
                   src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.projectLogo}`}
                   alt="logo"
+                  unoptimized
                 />
               </Link>
             </div>
