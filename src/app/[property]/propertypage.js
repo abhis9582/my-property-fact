@@ -233,7 +233,7 @@ export default function Property({ slug }) {
       </div>
     );
   }
-  const imageSrc = `/properties/${bannerData.slugURL}/${bannerData.desktopBanner}`;
+  const imageSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${bannerData.slugURL}/${bannerData.desktopBanner}`;
   // const imageSrc = `/properties/${projectDetail.slugURL}/${projectDetail.projectThumbnail}`;
   if (!projectDetail) {
     return <NotFound />
@@ -248,7 +248,7 @@ export default function Property({ slug }) {
                 <Image
                   width={180}
                   height={50}
-                  src={`/properties/${projectDetail.slugURL}/${projectDetail.projectLogo}`}
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.projectLogo}`}
                   alt="logo"
                 />
               </Link>
@@ -383,7 +383,7 @@ export default function Property({ slug }) {
           <Slider {...settings}>
             <picture>
               <source
-                srcSet={`/properties/${bannerData.slugURL}/${bannerData.mobileBanner}`}
+                srcSet={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${bannerData.slugURL}/${bannerData.mobileBanner}`}
                 media="(max-width: 640px)"
               />
               <source srcSet={imageSrc} media="(max-width: 1024px)" />
@@ -595,7 +595,7 @@ export default function Property({ slug }) {
               {galleryList.map((item) => (
                 <div key={item.id}>
                   <img
-                    src={`/properties/${projectDetail.slugURL}/${item.image}`}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.image}`}
                     alt="floor plan"
                   />
                 </div>
@@ -662,7 +662,7 @@ export default function Property({ slug }) {
             <div className="col-md-6 p-3">
               <Link href="#formModal" data-bs-toggle="modal">
                 <Image
-                  src={`/properties/${projectDetail.slugURL}/${projectDetail.locationMap}`}
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.locationMap}`}
                   alt="location-image"
                   width={400}
                   height={400}

@@ -7,6 +7,7 @@ import axios from "axios";
 import CommonBreadCrum from "../components/common/breadcrum";
 import { useSearchParams } from "next/navigation";
 import { Spinner } from "react-bootstrap";
+import CommonHeaderBanner from "../components/common/commonheaderbanner";
 
 function ProjectsContent() {
   const [allProjectsList, setAllProjectsList] = useState([]);
@@ -75,7 +76,7 @@ function ProjectsContent() {
 
   return (
     <div className="containr-fluid">
-      <div className="projects-heading-image container-fluid p-0">
+      {/* <div className="projects-heading-image container-fluid p-0">
         <Image
           src="/static/project-banner.jpg"
           width={1899}
@@ -84,7 +85,8 @@ function ProjectsContent() {
           alt="project-banner"
         />
         <p className="projects-heading fs-1">{pageName}</p>
-      </div>
+      </div> */}
+      <CommonHeaderBanner headerText={pageName} image={"/static/project-banner.jpg"}/>
       <CommonBreadCrum pageName={pageName} />
       <div className="container-fluid my-3 justify-content-center d-block d-md-flex gap-3 flex-lg-wrap">
         {allProjectsList.map((item, index) => (

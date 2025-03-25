@@ -130,7 +130,7 @@ export default function HomePage() {
             className="banner-image"
           // layout="responsive"
           /> */}
-          <picture>
+          <picture className="position-relative">
             {/* Mobile Image */}
             <source srcSet="/banner-mobile.jpg" media="(max-width: 768px)" />
             {/* Tablet Image */}
@@ -139,9 +139,10 @@ export default function HomePage() {
             <Image
               src="/banner-desktop.jpg" // Fallback image
               alt="My property fact"
-              fill
               style={{ objectFit: "cover" }} // "cover" looks better than "fill"
               className="banner-image position-relative"
+              fill
+              priority 
             />
           </picture>
           <div className="overlay"></div>

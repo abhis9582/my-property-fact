@@ -53,8 +53,6 @@ export default function MostActiveLocalitiesByValue() {
     const headers = data.map((item) => item.headers);
     const headersList = headers[0].map((item) => item.headerDisplayName);
     const filteredColumns = headersList.filter(col => col !== 'Current Price');
-    console.log(filteredColumns);
-    
     setTableHeaders(filteredColumns);
   };
 

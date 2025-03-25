@@ -21,6 +21,7 @@
 
 .menu ul li.hasChild a {
     font-size: 14px;
+    transition: all 300ms ease-in-out;
 }
 
 .menu ul li.hasChild a sup {
@@ -31,12 +32,17 @@
     transition: all 300ms ease-in-out;
 }
 
+.menu ul li.hasChild .dropdown ul li a:hover{
+    color: #000 !important;
+}
+
 .menu ul li.hasChild:hover>a sup {
     transform: rotate(45deg);
     color: #000;
 }
 
-.hasChild a:hover {
+.hasChild:hover > a,
+.hasChild .dropdown.dropdown-lg:hover ~ a {
     color: #000 !important;
 }
 
@@ -45,7 +51,6 @@
     padding: 10px 0px;
     border-bottom: 1px solid rgba(0, 0, 0, .1);
     font-size: 14px;
-
 }
 
 .menu ul li.hasChild .dropdown {

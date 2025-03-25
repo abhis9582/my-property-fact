@@ -44,9 +44,7 @@ export default function MostActiveLocalitiesByTransaction() {
     const aggregationList = data.map((item) => item.aggregationFromList);
     const list = aggregationList[0].map(
       (item) => item.aggregationFromDisplayName
-    );
-    console.log(aggregationList);
-    
+    );    
     setAggregationFromList(list);
   };
 
@@ -59,6 +57,7 @@ export default function MostActiveLocalitiesByTransaction() {
 
   // fetch all city price list
   const fetchCityPriceList = async (data) => {
+    debugger
     const allCategoryData = await data.filter(
       (item) => item.categoryDisplayName === defaultCategory
     );
@@ -81,6 +80,7 @@ export default function MostActiveLocalitiesByTransaction() {
   };
   // handling changing data of the table according to category
   const getCategoryWiseData = async (value, index) => {
+    debugger
     setDefaultCategory(value);    
     const allCategoryData = response.filter(
       (item) => item.categoryDisplayName === value
