@@ -77,8 +77,8 @@ export default function ManageBanners() {
     setButtonName("Add");
   };
   const openEditModel = (item) => {
-    const desktopBannerImage = `/properties/${item.slugURL}/${item.desktopBanner}`;
-    const mobileBannerImage = `/properties/${item.slugURL}/${item.mobileBanner}`;
+    const desktopBannerImage = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.desktopBanner}`;
+    const mobileBannerImage = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.mobileBanner}`;
     setShowModal(true);
     setTitle("Edit Banner");
     setInputTitle("Select Mobile Banner");
@@ -135,7 +135,7 @@ export default function ManageBanners() {
       width: 250,
       renderCell: (params) => (
         <img
-          src={`/properties/${params.row.slugURL}/${params.row.mobileBanner}`}
+          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${params.row.slugURL}/${params.row.mobileBanner}`}
           alt="Project"
           style={{
             width: 50,
@@ -152,7 +152,7 @@ export default function ManageBanners() {
       width: 250,
       renderCell: (params) => (
         <img
-          src={`/properties/${params.row.slugURL}/${params.row.desktopBanner}`}
+          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${params.row.slugURL}/${params.row.desktopBanner}`}
           alt="Project"
           style={{
             width: 150,

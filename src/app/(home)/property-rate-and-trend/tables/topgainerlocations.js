@@ -72,9 +72,7 @@ export default function TopGainersLocations() {
   const getCategoryWiseData = async(value, index) =>{
     setDefaultCategory(value);    
     const allCategoryData = response.filter((item)=> item.categoryDisplayName === value);     
-    const allCityPriceForOneYr = allCategoryData[0].aggregationFromList.filter((item)=> item.aggregationFromDisplayName === defaultAggregationFrom);  
-    console.log(allCategoryData, defaultAggregationFrom);
-       
+    const allCityPriceForOneYr = allCategoryData[0].aggregationFromList.filter((item)=> item.aggregationFromDisplayName === defaultAggregationFrom);       
     setCityPriceList(allCityPriceForOneYr[0].details);
     setActiveCat(index);
   }

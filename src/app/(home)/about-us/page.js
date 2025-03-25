@@ -1,7 +1,5 @@
 "use client";
-import Link from "next/link";
 import "./aboutus.css";
-import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
@@ -13,6 +11,7 @@ import "swiper/css/pagination";
 import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import CommonBreadCrum from "../components/common/breadcrum";
+import Image from "next/image";
 
 export default function AboutUs() {
   return (
@@ -124,8 +123,15 @@ export default function AboutUs() {
               <img
                 src="https://ritzmediaworld.in/wp-content/uploads/2024/12/2-8.png"
                 alt="director image"
-                width={100}
+                className="w-100"
               />
+              {/* <Image
+                src="https://ritzmediaworld.in/wp-content/uploads/2024/12/2-8.png"
+                alt="directors_image"
+                width={400}
+                height={400}
+                layout="intrensic"
+              /> */}
             </div>
             <div className="col-8 mt-5">
               Mr. Ritesh Malik is a visionary leader with the fortitude to make

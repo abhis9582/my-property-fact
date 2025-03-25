@@ -1,7 +1,5 @@
 "use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Footer from "../components/footer/page";
-import Header from "../components/header/page";
 import "./property_rate.css";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import CityData from "./tables/citydata";
@@ -16,13 +14,13 @@ import TopDevelopersByTransactions from "./tables/topdevelopersbytransactions";
 export default function PropertyRateAndTrend() {
   const [cityList, setCityList] = useState([]);
   // fetch all cities
-  const fetchAllCities = async () =>{
+  const fetchAllCities = async () => {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}city/all`);
-    if(response){
+    if (response) {
       setCityList(response.data);
     }
   }
-   useEffect(()=>{
+  useEffect(() => {
     fetchAllCities();
   }, []);
   const data = [
@@ -50,13 +48,14 @@ export default function PropertyRateAndTrend() {
   ];
   return (
     <>
-      <div className="property-rate-container">
+      <div className="mt-5">
         <p className="h1 text-center">Property Rates In India</p>
-        <div className="search-container">
+        <div className="search-container position-relative">
           <div className="search-container-child">
             <div className="search-city-container">
               <select>
-                {cityList.map((item, index)=>(
+                <option>Select city</option>
+                {cityList.map((item, index) => (
                   <option key={`${item.id}-${index}`}>{item.name}</option>
                 ))}
               </select>
@@ -106,21 +105,21 @@ export default function PropertyRateAndTrend() {
         <div>
           <p className="h1 text-center">In Numbers</p>
           <div className="property-rate-numbers">
-            <div>
+            <div className="property-rate-numbers-child">
               <div className="d-flex justify-content-start align-items-center ">
                 <p className="property-rate-digit">8.6</p>
                 <span className="property-rate-mn fw-bold">mn+</span>
               </div>
               <p className="fs-4 mt-4 fw-normal">Transaction Records</p>
             </div>
-            <div>
+            <div className="property-rate-numbers-child">
               <div className="d-flex justify-content-start align-items-center ">
                 <p className="property-rate-digit">140</p>
                 <span className="property-rate-mn fw-bold">k+</span>
               </div>
               <p className="fs-4 mt-4 fw-normal">Projects Covered</p>
             </div>
-            <div>
+            <div className="property-rate-numbers-child">
               <div className="d-flex justify-content-start align-items-center ">
                 <p className="property-rate-digit">11</p>
                 <span className="property-rate-mn fw-bold">+</span>
@@ -137,9 +136,9 @@ export default function PropertyRateAndTrend() {
             </p>
           </div>
         </div>
-        <div className="d-flex justify-content-center align-items-center my-3 gap-3">
+        <div className="d-flex justify-content-center align-items-center my-3 gap-3 flex-wrap">
           {data.map((item) => (
-            <div key={item.id} className="p-3 w-25 border rounded-5">
+            <div key={item.id} className="p-3 border rounded-5 value-check-container">
               <div className="d-flex justify-content-center my-3">
                 <img className="w-25" src={item.img} alt={item.img} />
               </div>

@@ -1,41 +1,36 @@
-.property-rate-container{
-    margin-top: 5rem;
-}
-.search-container svg{
+.search-container-child svg {
     position: absolute;
     right: 1rem;
-    z-index: 56;
-    top: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
     color: gray;
 }
-.search-container-child{
+
+.search-container-child {
     width: 50%;
     display: flex;
     border: 2px solid;
     margin: 2rem auto;
     border-radius: 1rem;
     overflow: hidden;
-    justify-content: space-between;
     position: relative;
 }
-.search-container select{
+
+.search-city-container select {
     width: 150px;
-    height: 100%;
-    overflow: hidden;
-    border: none;
-    padding: 0px 2rem;
-    font-size: 1.2rem;
+    border-right: 1px solid rgb(200, 200, 200) !important;
 }
-.search-container input{
+
+.search-container-child select,
+.search-container-child input[type="text"] {
+    border: none;
+    outline: none;
+    box-shadow: none;
     padding: 1rem;
-    width: 100%;
-    border: none;
-    border-left: 1px solid rgb(186, 186, 186);
+    line-height: 0%;
 }
-.search-container input:focus-visible {
-    border: none;
-}
-.property-rate-cityname{
+
+.property-rate-cityname {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -45,7 +40,8 @@
     margin: 0px auto;
     margin-top: 2rem;
 }
-.property-rate-cityname a{
+
+.property-rate-cityname a {
     padding: 0.2rem 1.5rem;
     border-radius: 1rem;
     border: 1px solid;
@@ -53,28 +49,71 @@
     text-decoration: none;
     color: #000;
 }
-.property-rate-table-container{
+
+.property-rate-table-container {
     width: 80%;
     display: flex;
     margin: 2rem auto;
     gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
 }
-.property-rate-city-price{
-    width: 50%;
-}
-.property-rate-numbers{
+
+.property-rate-numbers {
     display: flex;
     justify-content: space-around;
     width: 70%;
     margin: 4rem auto;
+    flex-wrap: wrap;
 }
-.property-rate-numbers p{
+
+.property-rate-numbers-child{
+    width: 250px;
+    margin: 1rem;
+}
+
+.value-check-container{
+    width: 300px;
+}
+
+.property-rate-numbers p {
     line-height: 0px;
 }
-.property-rate-digit{
+
+.property-rate-digit {
     font-size: 6rem;
     font-weight: bold;
 }
-.property-rate-mn{
+
+.property-rate-mn {
     font-size: 2em;
+}
+
+@media (max-width: 769px) {
+    .search-container-child {
+        width: 100%;
+        display: flex;
+        border: 2px solid;
+        margin: 2rem auto;
+        border-radius: 1rem;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .search-city-container select {
+        width: 120px;
+    }
+
+    .search-container-child select,
+    .search-container-child input[type="text"] {
+        padding: 0.5rem;
+    }
+    
+    .property-rate-city-price {
+        width: 100%;
+    }
+
+    .property-rate-table-container {
+        width: 100%;
+    }
 }
