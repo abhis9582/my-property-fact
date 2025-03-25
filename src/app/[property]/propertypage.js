@@ -667,7 +667,8 @@ export default function Property({ slug }) {
                   alt="location-image"
                   width={400}
                   height={400}
-                  layout="responsive"
+                  layout="intrinsic"
+                  unoptimized
                 />
               </Link>
             </div>
