@@ -97,6 +97,7 @@ export default function Featured() {
                       alt="featured image"
                       width={400}
                       height={400}
+                      unoptimized
                     />
                     <div className="mt-2 d-flex justify-content-between align-items-center p-2">
                       <p className="h5 fw-bold">{property.projectName}</p>
