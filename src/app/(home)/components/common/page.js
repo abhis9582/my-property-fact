@@ -34,8 +34,7 @@ export default function PropertyContainer(props) {
           src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${props.data.slugURL}/${props.data.projectThumbnail}`}
           alt="featured image"
           width={400} // This acts as the aspect ratio, not fixed pixels
-          height={300} // Adjust for desired aspect ratio
-          layout="intrinsic"
+          height={400} // Adjust for desired aspect ratio
           unoptimized
         />
         <div className="mt-2 d-flex justify-content-between align-items-center p-2">
