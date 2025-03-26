@@ -49,7 +49,7 @@ export default function CityPage({ city }) {
             </Link>
           </div>
         </div>
-        <div className="container-fluid gap-4 d-flex justify-content-start my-5 flex-wrap">
+        <div className="container gap-4 d-flex justify-content-start my-5 flex-wrap">
           {propertyList.map((item) => (
             <div key={item.id}>
               <PropertyContainer data={item} />

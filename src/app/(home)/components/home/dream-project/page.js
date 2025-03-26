@@ -15,7 +15,7 @@ export default function DreamProject() {
         <p className="h3 text-center fw-bold">
           Find your dream property in the city you are searching in
         </p>
-        <div className="container flex-lg-nowrap d-flex flex-wrap gap-3 justify-content-center">
+        <div className="container d-flex flex-wrap gap-3 justify-content-center">
           <div className="my-2">
             <Link href="/city/mumbai">
               <Image
@@ -57,7 +57,7 @@ export default function DreamProject() {
             </Link>
           </div>
         </div>
-        <div className="container flex-lg-nowrap d-flex flex-wrap gap-3 justify-content-center">
+        <div className="container d-flex flex-wrap gap-3 justify-content-center">
           <div className="my-2">
             <Link href="/city/noida">
               <Image
