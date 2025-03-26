@@ -12,6 +12,18 @@ export default function PropertyContainer(props) {
   if (!props.data) {
     return <div>Loading...</div>; // or any fallback content
   }
+
+  //Generating price in lakh & cr
+  const generatePrice = (price) => {
+    var res = "";
+    if (price > 1) {
+      res = price + " Cr";
+    } else {
+      const m = price * 100;
+      res = m + " Lakh";
+    }
+    return res;
+  }
   return (
     <>
       <div
@@ -28,7 +40,7 @@ export default function PropertyContainer(props) {
         />
         <div className="mt-2 d-flex justify-content-between align-items-center p-2">
           <p className="h5 fw-bold">{props.data.projectName}</p>
-          <p className="h5 fw-bold text-success">{props.data.projectPrice} Cr*</p>
+          <p className="h5 fw-bold text-success">{generatePrice(props.data.projectPrice)}*</p>
         </div>
         <div className="pb-2 fw-bold mx-2">
           <FontAwesomeIcon icon={faMapMarker} width={8} color="green" />{" "}

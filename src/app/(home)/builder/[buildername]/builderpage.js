@@ -49,7 +49,7 @@ export default function BuilderPage({ builderName }) {
           </Link>
         </div>
       </div>
-      <div className="container-fluid d-block d-md-flex my-3 gap-3">
+      <div className="container-fluid flex-wrap my-3 gap-3">
         {propertyList.map((item) => (
           <div key={item.id}>
             <PropertyContainer data={item} />

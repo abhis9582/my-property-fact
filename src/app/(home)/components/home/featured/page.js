@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarker } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import Image from "next/image";
+import PropertyContainer from "../../common/page";
 
 export default function Featured() {
   const [featuredProperties, setFeaturedProperties] = useState([]);
@@ -28,17 +29,7 @@ export default function Featured() {
     };
     fetchData();
   }, []);
-  //Generating price in lakh & cr
-  const generatePrice = (price)=>{
-    var res = "";    
-    if(price > 1){
-      res = price+" Cr";
-    }else{
-      const m = price*100;
-      res = m + " Lakh";
-    }
-    return res;
-  }
+
   const settings = {
     dots: true,
     infinite: true,
@@ -71,7 +62,7 @@ export default function Featured() {
         },
       },
       {
-        breakpoint: 640,
+        breakpoint: 768,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
@@ -85,7 +76,7 @@ export default function Featured() {
         <p className="fs-1 fw-bold text-center">Featured Projects</p>
         {featuredProperties && featuredProperties.length > 0 && (
           <Slider {...settings}>
-            {featuredProperties.map((property) => {
+            {/* {featuredProperties.map((property) => {
               return (
                 <aside key={property.id} className="p-md-4 container">
                   <div
@@ -116,7 +107,12 @@ export default function Featured() {
                   </div>
                 </aside>
               );
-            })}
+            })} */}
+            {featuredProperties.map((item) => (
+              <div key={item.id}>
+                <PropertyContainer data={item} />
+              </div>
+            ))}
           </Slider>
         )}
         <div className="text-center mt-5">

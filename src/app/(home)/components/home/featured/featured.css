@@ -4,6 +4,7 @@
     border-top-left-radius: 2rem;
     overflow: hidden;
     border: 1px solid #eaeaea;
+    width: 400px;
 }
 
 .featured-projects-container img {
@@ -116,5 +117,14 @@
 
     .slick-next {
         right: 32%;
+    }
+    .projects-heading{
+        display: none;
+    }
+}
+
+@media (max-width: 426px) {
+    .featured-projects-container {
+        max-width: 300px;
     }
 }
