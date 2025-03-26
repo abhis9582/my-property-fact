@@ -24,6 +24,7 @@ export default function PropertyContainer(props) {
           width={400} // This acts as the aspect ratio, not fixed pixels
           height={300} // Adjust for desired aspect ratio
           layout="intrinsic"
+          unoptimized
         />
         <div className="mt-2 d-flex justify-content-between align-items-center p-2">
           <p className="h5 fw-bold">{props.data.projectName}</p>
