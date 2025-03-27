@@ -83,3 +83,19 @@ ul{
     background-color: #68ac78 !important;
     border: none !important;
 }
+
+.projects-heading {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    color: #fff;
+    font-size: 2rem;
+}
+
+@media (max-width: 768px) {
+    .projects-heading{
+        display: none;
+    }
+}

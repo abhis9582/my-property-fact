@@ -196,9 +196,7 @@ export default function Property({ slug }) {
     document.body.classList.toggle("overflow-hidden", isMenuOpen);
   
     // Handle scrolling when clicking a menu link
-    debugger
     if (targetId) {
-      debugger
       const targetElement = document.getElementById(targetId);
       if (targetElement) {
         const headerHeight = header ? header.offsetHeight : 0;
