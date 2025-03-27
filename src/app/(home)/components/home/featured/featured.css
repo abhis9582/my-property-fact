@@ -118,9 +118,6 @@
     .slick-next {
         right: 32%;
     }
-    .projects-heading{
-        display: none;
-    }
 }
 
 @media (max-width: 426px) {
