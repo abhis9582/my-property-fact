@@ -1,11 +1,13 @@
 "use client";
 
+import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Button, Col, Form, Modal, Row, Table } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
@@ -26,6 +28,7 @@ export default function AddProject() {
   const [confirmBox, setConfirmBox] = useState(false);
   const [buttonName, setButtonName] = useState("");
   const [projectId, setProjectId] = useState(0);
+  const [showLoading, setShowLoading] = useState(false);
   // Defining the initial state
   const initialFormData = {
     id: 0,
@@ -84,6 +87,7 @@ export default function AddProject() {
       setProjectList(projectResponse.data);
     }
   };
+  //Handle opening model
   const openAddModel = () => {
     setTitle("Add New Project");
     setShowModal(true);
@@ -97,6 +101,7 @@ export default function AddProject() {
     setLocationPreview(null);
     setValidated(false);
   };
+  //Handling opening of edit model
   const openEditModel = (item) => {
     setTitle("Edit Project");
     setShowModal(true);
@@ -122,6 +127,8 @@ export default function AddProject() {
       projectThumbnail: null,
     });
   };
+
+  //Handling deletion of project
   const deleteProject = async () => {
     if (projectId > 0) {
       try {
@@ -138,10 +145,14 @@ export default function AddProject() {
       }
     }
   };
+
+  //Opening delete confirmation box
   const openConfirmationBox = (id) => {
     setConfirmBox(true);
     setProjectId(id);
   };
+
+  //fetching all project list details
   const fetchProjectsWithDetail = async () => {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}projects/get-all`
@@ -160,6 +171,7 @@ export default function AddProject() {
     fetchProjectsWithDetail();
   }, []);
 
+  //Handling form data changes
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -167,7 +179,7 @@ export default function AddProject() {
       [name]: type === "checkbox" ? checked : value,
     });
   };
-
+  //Handling file changing
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     setFormData({
@@ -175,7 +187,7 @@ export default function AddProject() {
       [name]: files[0],
     });
   };
-
+  // Handling submitting project
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -190,6 +202,7 @@ export default function AddProject() {
         data.append(key, formData[key]);
       }
       try {
+        setShowLoading(true);
         const response = await axios.post(
           process.env.NEXT_PUBLIC_API_URL + "projects/add-new",
           data,
@@ -207,6 +220,8 @@ export default function AddProject() {
         }
       } catch (error) {
         toast.error("Error saving Project");
+      } finally {
+        setShowLoading(false);
       }
     }
   };
@@ -497,13 +512,11 @@ export default function AddProject() {
                 <Form.Label>Location Map</Form.Label>
                 {locationPreview && (
                   <div>
-                    <img
+                    <Image
                       src={locationPreview}
                       alt="Current Project locationmap"
-                      style={{
-                        width: "100px",
-                        objectFit: "cover",
-                      }}
+                      width={200}
+                      height={100}
                     />
                     <br />
                   </div>
@@ -548,13 +561,11 @@ export default function AddProject() {
                 <Form.Label>Project Logo</Form.Label>
                 {projectLogoPreview && (
                   <div>
-                    <img
+                    <Image
                       src={projectLogoPreview}
                       alt="Current Project Logo"
-                      style={{
-                        width: "100px",
-                        objectFit: "cover",
-                      }}
+                      width={200}
+                      height={100}
                     />
                     <br />
                   </div>
@@ -576,13 +587,11 @@ export default function AddProject() {
                 <Form.Label>Project Thumbnail</Form.Label>
                 {projectThumbnailPreview && (
                   <div>
-                    <img
+                    <Image
                       src={projectThumbnailPreview}
                       alt="Current Project Thumbnail"
-                      style={{
-                        width: "100px",
-                        objectFit: "cover",
-                      }}
+                      width={100}
+                      height={100}
                     />
                     <br />
                   </div>
@@ -686,8 +695,8 @@ export default function AddProject() {
                 />
               </Form.Group>
             </Row>
-            <Button className="mt-3" type="submit">
-              {buttonName}
+            <Button className="mt-3 btn btn-success" type="submit" disabled={showLoading}>
+              {buttonName} <LoadingSpinner show={showLoading} />
             </Button>
           </Form>
         </Modal.Body>

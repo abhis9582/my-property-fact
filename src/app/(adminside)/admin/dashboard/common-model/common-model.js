@@ -5,7 +5,7 @@ import { Button, Modal } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function CommonModel({ confirmBox, setConfirmBox, api, fetchAllHeadersList }) {
+export default function CommonModal({ confirmBox, setConfirmBox, api, fetchAllHeadersList }) {
   const deleteData = async () => {
     try {
       const response = await axios.delete(api);

@@ -6,9 +6,10 @@ import { useEffect, useState } from "react";
 import { Button, Form, Modal, Table } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import CommonModel from "../common-model/common-model";
+import CommonModal from "../common-model/common-model";
 import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 
 export default function InsightCategory() {
   // Defining states
@@ -20,6 +21,7 @@ export default function InsightCategory() {
   const [headerId, setHeaderId] = useState(0);
   const [confirmBox, setConfirmBox] = useState(false);
   const [api, setApi] = useState(null);
+  const [showLoading, setShowLoading] = useState(false);
   const [formData, setFormData] = useState({
     id: 0,
     categoryDisplayName: "",
@@ -81,6 +83,7 @@ export default function InsightCategory() {
       event.stopPropagation();
     } else {
       try {
+        setShowLoading(true);
         if (headerId > 0) {
           formData.id = headerId;
         }
@@ -95,6 +98,8 @@ export default function InsightCategory() {
         }
       } catch (error) {
         toast.error(error);
+      }finally{
+        setShowLoading(false);
       }
     }
     setValidated(true);
@@ -214,15 +219,15 @@ export default function InsightCategory() {
                 Priority is required
               </Form.Control.Feedback>
             </Form.Group> */}
-            <Button variant="primary" type="submit">
-              {buttonName}
+            <Button className="btn btn-success" type="submit" disabled={showLoading}>
+              {buttonName} <LoadingSpinner show={showLoading}/>
             </Button>
           </Form>
         </Modal.Body>
       </Modal>
       <ToastContainer />
-      {/* Pass the necessary props to CommonModel */}
-      <CommonModel
+      {/* Pass the necessary props to CommonModal */}
+      <CommonModal
         confirmBox={confirmBox}
         setConfirmBox={setConfirmBox}
         api={api}

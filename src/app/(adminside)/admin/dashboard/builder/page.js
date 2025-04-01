@@ -1,11 +1,12 @@
 "use client";
+import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Col, Form, Modal, Table } from "react-bootstrap";
+import { Button, Col, Form, Modal } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 export default function Builder() {
@@ -21,6 +22,7 @@ export default function Builder() {
   const [metaKeyword, setMetaKeyword] = useState("");
   const [metaDesc, setMetaDesc] = useState("");
   const [confirmBox, setConfirmBox] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
   // Function to handle form submission (you can replace it with your own logic)
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,6 +45,8 @@ export default function Builder() {
     }
     if (form.checkValidity() === true) {
       try {
+        setShowLoading(true);
+        setButtonName("");
         // Make API request
         const response = await axios.post(
           process.env.NEXT_PUBLIC_API_URL + "builders/add-update",
@@ -59,6 +63,9 @@ export default function Builder() {
         }
       } catch (error) {
         console.error("Error submitting form:", error);
+      }finally{
+        setShowLoading(false);
+        id > 0 ? setButtonName("Update builder") : setButtonName("Add Builder");
       }
     }
   };
@@ -90,13 +97,14 @@ export default function Builder() {
     setShowModal(true);
   };
   const openAddModel = () => {
+    setValidated(false);
     setBuilder("");
     setBuilderDesc("");
     setMetaDesc("");
     setMetaTitle("");
     setMetaKeyword("");
     setId(0);
-    setTitle("Add New Builder");
+    setTitle("Add Builder");
     setButtonName("Add Builder");
     setShowModal(true);
   };
@@ -166,8 +174,8 @@ export default function Builder() {
     <div>
       <div className="d-flex justify-content-between mt-3">
         <p className="h1 ">Manage Builders</p>
-        <Button className="mx-3" onClick={() => openAddModel()}>
-          + Add new builder
+        <Button className="mx-3 btn btn-success" onClick={() => openAddModel()}>
+          + Add Builder
         </Button>
       </div>
       <div className="table-container mt-5">
@@ -196,7 +204,7 @@ export default function Builder() {
         </Modal.Header>
         <Modal.Body>
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="formCityName">
+            <Form.Group className="mb-3" controlId="builderName">
               <Form.Label>Builder Name</Form.Label>
               <Form.Control
                 type="text"
@@ -206,10 +214,10 @@ export default function Builder() {
                 required
               />
               <Form.Control.Feedback type="invalid">
-                Builder name is required
+                Builder name is required !
               </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formCityName">
+            <Form.Group className="mb-3" controlId="builderMetaTitle">
               <Form.Label>Meta Title</Form.Label>
               <Form.Control
                 type="text"
@@ -219,29 +227,30 @@ export default function Builder() {
                 required
               />
               <Form.Control.Feedback type="invalid">
-                Builder name is required
+                Meta title is required !
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group
-              as={Col}
-              md="12"
               className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
+              controlId="builderDescription"
             >
               <Form.Label>Builder Description</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
                 name="builderDesc"
+                placeholder="Enter builder description"
                 value={builderDesc || ""}
                 onChange={(e) => setBuilderDesc(e.target.value)}
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Builder description is required !
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group
-              as={Col}
-              md="12"
               className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
+              controlId="builderMetaKeyword"
             >
               <Form.Label>Meta Keyword</Form.Label>
               <Form.Control
@@ -249,26 +258,34 @@ export default function Builder() {
                 rows={3}
                 name="metaKeyword"
                 value={metaKeyword || ""}
+                placeholder="Enter meta keyword"
                 onChange={(e) => setMetaKeyword(e.target.value)}
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Meta keyword is required !
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group
-              as={Col}
-              md="12"
               className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
+              controlId="metaDescription"
             >
               <Form.Label>Meta Description</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
                 name="metaDesc"
+                placeholder="Enter meta description"
                 value={metaDesc || ""}
                 onChange={(e) => setMetaDesc(e.target.value)}
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Meta description is required !
+              </Form.Control.Feedback>
             </Form.Group>
-            <Button variant="primary" type="submit">
-              {buttonName}
+            <Button className="btn btn-success" type="submit" disabled={showLoading}>
+              {buttonName} <LoadingSpinner show={showLoading} />
             </Button>
           </Form>
         </Modal.Body>

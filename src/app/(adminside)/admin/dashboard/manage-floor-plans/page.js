@@ -1,4 +1,5 @@
 "use client";
+import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Paper } from "@mui/material";
@@ -20,10 +21,12 @@ export default function ManageFloorPlans() {
   const [floorPlanList, setFloorPlanList] = useState([]);
   const [floorId, setFloorId] = useState(0);
   const [confirmBox, setConfirmBox] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => {
+    setValidated(false);
     setButtonName("Add Floor Plan");
-    setTitle("Add New Floor Plan");
+    setTitle("Add Floor Plan");
     setShow(true);
     setProjectId(0);
     setPlanType("");
@@ -32,27 +35,40 @@ export default function ManageFloorPlans() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let data = {
-      projectId: projectId,
-      planType: planType,
-      areaSqft: area,
-    };
-    if (floorId > 0) {
-      data.id = floorId;
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+      setValidated(true);
+      return;
     }
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}floor-plans/add-update`,
-        data
-      );
-      if (response.data.isSuccess == 1) {
-        toast.success(response.data.message);
-        fetchAllFloorPlans();
-        setShow(false);
+    if (form.checkValidity() === true) {
+      let data = {
+        projectId: projectId,
+        planType: planType,
+        areaSqft: area,
+      };
+      if (floorId > 0) {
+        data.id = floorId;
       }
-    } catch (error) {
-      console.log("Error Occured", error);
-      toast.error("Error Occured");
+      try {
+        setShowLoading(true);
+        setButtonName("");
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}floor-plans/add-update`,
+          data
+        );
+        if (response.data.isSuccess == 1) {
+          toast.success(response.data.message);
+          fetchAllFloorPlans();
+          setShow(false);
+        }
+      } catch (error) {
+        console.log("Error Occured", error);
+        toast.error("Error Occured");
+      } finally {
+        setShowLoading(false);
+        setButtonName("Add Floor Plan");
+      }
     }
   };
   const fetchProjects = async () => {
@@ -71,7 +87,9 @@ export default function ManageFloorPlans() {
       const res = floorPlans.data;
       const list = res.map((item, index) => ({
         ...item,
-        id: index + 1,
+        index: index + 1,
+        id: item.floorId,
+        areaMt: item.areaMt.toFixed(2)
       }));
       setFloorPlanList(list);
     }
@@ -109,7 +127,7 @@ export default function ManageFloorPlans() {
 
   //Defining table columns
   const columns = [
-    { field: "id", headerName: "S.no", width: 70 },
+    { field: "index", headerName: "S.no", width: 70 },
     { field: "pname", headerName: "Project Name", width: 300 },
     { field: "type", headerName: "Type", width: 150 },
     {
@@ -179,14 +197,15 @@ export default function ManageFloorPlans() {
         </Modal.Header>
         <Modal.Body>
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
-            <Form.Group md="4" controlId="validationCustom01">
+            <Form.Group controlId="selectProject">
               <Form.Label>Select Project</Form.Label>
               <Form.Select
                 aria-label="Default select example"
                 onChange={(e) => setProjectId(e.target.value)}
                 value={projectId}
+                required
               >
-                <option>Select Project</option>
+                <option value="">Select Project</option>
                 {projectList.map((item) => (
                   <option
                     className="text-uppercase"
@@ -197,9 +216,12 @@ export default function ManageFloorPlans() {
                   </option>
                 ))}
               </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                Project is required !
+              </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group md="4" controlId="validationCustom01">
-              <Form.Label>Plan Type</Form.Label>
+            <Form.Group md="4" controlId="floorPlan">
+              <Form.Label>Floor Plan</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter Plan name"
@@ -207,19 +229,25 @@ export default function ManageFloorPlans() {
                 onChange={(e) => setPlanType(e.target.value)}
                 required
               />
+              <Form.Control.Feedback type="invalid">
+                Floor Plan is required !
+              </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group md="4" controlId="validationCustom01">
+            <Form.Group md="4" controlId="enterArea">
               <Form.Label>Enter Area</Form.Label>
               <Form.Control
-                type="text"
-                placeholder="Enter Area"
+                type="number"
+                placeholder="Enter Area(sqft)"
                 value={area}
                 onChange={(e) => setArea(e.target.value)}
                 required
               />
+              <Form.Control.Feedback type="invalid">
+                Area is required !
+              </Form.Control.Feedback>
             </Form.Group>
-            <Button className="mt-3 btn btn-success" type="submit">
-              {buttonName}
+            <Button className="mt-3 btn btn-success" type="submit" disabled={showLoading}>
+              {buttonName} <LoadingSpinner show={showLoading}/>
             </Button>
           </Form>
         </Modal.Body>

@@ -9,6 +9,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 // Dynamically import JoditEditor with SSR disabled
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
@@ -23,6 +24,8 @@ export default function ManageProjectAbout() {
   const [aboutList, setAboutList] = useState([]);
   const [aboutId, setAboutId] = useState(0);
   const [confirmBox, setConfirmBox] = useState(false);
+  const [validated, setValidated] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
   // Helper function to remove HTML tags and truncate the text
   const removeHtmlTagsAndTruncate = (text, limit = 200) => {
     // Remove HTML tags using a regex
@@ -40,19 +43,34 @@ export default function ManageProjectAbout() {
       longDesc: longDesc,
       projectId: projectId,
     };
-    if (aboutId > 0) {
-      data.id = aboutId;
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+      setValidated(true);
+      return;
     }
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}project-about/add-update`,
-      data
-    );
-    if (response.data.isSuccess === 1) {
-      toast.success(response.data.message);
-      setShowModal(false);
-      fetchProjectsAbout();
-    } else {
-      toast.error(response.data.message);
+    if (form.checkValidity() === true) {
+      setShowLoading(true);
+      try{
+        if (aboutId > 0) {
+          data.id = aboutId;
+        }
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}project-about/add-update`,
+          data
+        );
+        if (response.data.isSuccess === 1) {
+          toast.success(response.data.message);
+          setShowModal(false);
+          fetchProjectsAbout();
+        } else {
+          toast.error(response.data.message);
+        }
+      }catch(error){
+        toast.error(error);
+      }finally{
+        setShowLoading(false);
+      }
     }
   };
   const fetchProjects = async () => {
@@ -70,6 +88,7 @@ export default function ManageProjectAbout() {
     setShortDesc("");
     setLongDesc("");
     setAboutId(0);
+    setValidated(false);
   };
   const openEditModel = (item) => {
     setShowModal(true);
@@ -86,7 +105,7 @@ export default function ManageProjectAbout() {
     const res = response.data;
     const list = res.map((item, index) => ({
       ...item,
-      id: index + 1,
+      index: index + 1,
     }));
     setAboutList(list);
   };
@@ -115,7 +134,7 @@ export default function ManageProjectAbout() {
 
   //Defining table columns
   const columns = [
-    { field: "id", headerName: "S.no", width: 100 },
+    { field: "index", headerName: "S.no", width: 100 },
     { field: "projectName", headerName: "Project Name", width: 250 },
     { field: "shortDesc", headerName: "Short Description", width: 600 },
     { field: "longDesc", headerName: "Long Description", width: 600 },
@@ -177,15 +196,16 @@ export default function ManageProjectAbout() {
           <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form noValidate onSubmit={handleSubmit}>
+          <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Form.Group md="4" controlId="validationCustom01">
               <Form.Label>Select Project</Form.Label>
               <Form.Select
                 aria-label="Default select example"
                 onChange={(e) => setProjectId(e.target.value)}
                 value={projectId}
+                required
               >
-                <option>Select Project</option>
+                <option value="">Select Project</option>
                 {projectList.map((item) => (
                   <option
                     className="text-uppercase"
@@ -196,6 +216,9 @@ export default function ManageProjectAbout() {
                   </option>
                 ))}
               </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                Project is required !
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-3" controlId="formCityName">
               <Form.Label>Write short description</Form.Label>
@@ -213,8 +236,8 @@ export default function ManageProjectAbout() {
                 onChange={(newcontent) => setLongDesc(newcontent)}
               />
             </Form.Group>
-            <Button className="btn btn-success" type="submit">
-              Submit
+            <Button className="btn btn-success" type="submit" disabled={showLoading}>
+              Submit <LoadingSpinner show={showLoading} />
             </Button>
           </Form>
         </Modal.Body>

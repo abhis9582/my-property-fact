@@ -5,9 +5,10 @@ import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Col, Form, Modal, Table } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 export default function City() {
   const [showModal, setShowModal] = useState(false);
   const [cityName, setCityName] = useState("");
@@ -22,6 +23,7 @@ export default function City() {
   const [metaDescription, setMetaDescription] = useState("");
   const [confirmBox, setConfirmBox] = useState(false);
   const [cityId, setCityId] = useState(0);
+  const [showLoading, setShowLoading] = useState(false);
   // Function to handle form submission (you can replace it with your own logic)
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,6 +46,8 @@ export default function City() {
     }
     if (form.checkValidity() === true) {
       try {
+        setButtonName("");
+        setShowLoading(true);
         // Make API request
         const response = await axios.post(
           process.env.NEXT_PUBLIC_API_URL + "city/add-new",
@@ -57,6 +61,9 @@ export default function City() {
         }
       } catch (error) {
         console.error("Error submitting form:", error);
+      }finally{
+        setButtonName("Add City");
+        setShowLoading(false);
       }
     }
   };
@@ -88,6 +95,7 @@ export default function City() {
     setShowModal(true);
   };
   const openAddModel = () => {
+    setValidated(false);
     setCityName("");
     setState("");
     setMetaTitle("");
@@ -133,7 +141,7 @@ export default function City() {
     {
       field: "action",
       headerName: "Action",
-      width: 100,
+      width: 200,
       renderCell: (params) => (
         <div>
           <FontAwesomeIcon
@@ -157,7 +165,7 @@ export default function City() {
     <div>
       <div className="d-flex justify-content-between mt-3">
         <p className="h1 ">Manage Cities</p>
-        <Button className="mx-3" onClick={() => openAddModel()}>
+        <Button className="mx-3 btn btn-success" onClick={() => openAddModel()}>
           + Add new city
         </Button>
       </div>
@@ -187,7 +195,7 @@ export default function City() {
         </Modal.Header>
         <Modal.Body>
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="formCityName">
+            <Form.Group className="mb-3" controlId="cityName">
               <Form.Label>City Name</Form.Label>
               <Form.Control
                 type="text"
@@ -197,10 +205,10 @@ export default function City() {
                 required
               />
               <Form.Control.Feedback type="invalid">
-                City is required
+                City is required !
               </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formCityName">
+            <Form.Group className="mb-3" controlId="satateName">
               <Form.Label>State Name</Form.Label>
               <Form.Control
                 type="text"
@@ -210,56 +218,56 @@ export default function City() {
                 required
               />
               <Form.Control.Feedback type="invalid">
-                State is required
+                State is required !
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group
-              as={Col}
-              md="12"
               className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
+              controlId="metaTitle"
             >
               <Form.Label>Meta Title</Form.Label>
               <Form.Control
-                as="textarea"
-                rows={3}
+                type="text"
                 name="metaTitle"
                 value={metaTitle || ""}
                 onChange={(e) => setMetaTitle(e.target.value)}
+                placeholder="Meta Title"
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Meta title is required !
+              </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group
-              as={Col}
-              md="12"
-              className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
-            >
+            <Form.Group className="mb-3" controlId="metaKeyword">
               <Form.Label>Meta Keyword</Form.Label>
               <Form.Control
-                as="textarea"
-                rows={3}
+                type="text"
+                placeholder="Meta Keyword"
                 name="metaKeyword"
                 value={metaKeyword || ""}
                 onChange={(e) => setMetaKeyWord(e.target.value)}
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Meta keyword is required !
+              </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group
-              as={Col}
-              md="12"
-              className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
-            >
+            <Form.Group className="mb-3" controlId="metaDescription">
               <Form.Label>Meta Description</Form.Label>
               <Form.Control
-                as="textarea"
-                rows={3}
+                type="text"
+                placeholder="Meta Description"
                 name="metaKeyword"
                 value={metaDescription || ""}
                 onChange={(e) => setMetaDescription(e.target.value)}
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Meta description is required !
+              </Form.Control.Feedback>
             </Form.Group>
-            <Button variant="primary" type="submit">
-              {buttonName}
+            <Button className="btn btn-success" type="submit" disabled={showLoading}>
+              {buttonName}<LoadingSpinner show={showLoading} />
             </Button>
           </Form>
         </Modal.Body>

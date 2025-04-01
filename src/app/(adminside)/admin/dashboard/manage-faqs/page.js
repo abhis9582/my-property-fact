@@ -1,13 +1,15 @@
 "use client";
+import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Form, Modal, Table, ToastContainer } from "react-bootstrap";
-import { toast } from "react-toastify";
+import { Button, Form, Modal } from "react-bootstrap";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CommonModal from "../common-model/common-model";
 export default function ManageFaqs() {
   const [show, setShow] = useState(false);
   const [title, setTitle] = useState("");
@@ -20,6 +22,8 @@ export default function ManageFaqs() {
   const handleClose = () => setShow(false);
   const [faqList, setFaqList] = useState([]);
   const [faqId, setFaqId] = useState(0);
+  const [showLoading, setShowLoading] = useState(false);
+  const [showConfirmationBox, setShowConfirmationBox] = useState(false);
   const fetchProjects = async () => {
     const projectResponse = await axios.get(
       process.env.NEXT_PUBLIC_API_URL + "projects/get-all"
@@ -30,38 +34,54 @@ export default function ManageFaqs() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = {
-      faqQuestion: question,
-      faqAnswer: answer,
-      projectId: projectId,
-    };
-    if (faqId > 0) {
-      data.id = faqId;
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+      setValidated(true);
+      return;
     }
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}project-faqs/add-update`,
-        data
-      );
-      if (response.data.isSuccess === 1) {
-        toast.success(response.data.message);
-        fetchFaqs();
-        setShow(false);
+    if (form.checkValidity() === true) {
+      const data = {
+        faqQuestion: question,
+        faqAnswer: answer,
+        projectId: projectId,
+      };
+      if (faqId > 0) {
+        data.id = faqId;
       }
-    } catch (error) {
-      toast.error("Error Occured");
-      console.log(error);
+      try {
+        setShowLoading(true);
+        setButtonName("");
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}project-faqs/add-update`,
+          data
+        );
+        if (response.data.isSuccess === 1) {
+          toast.success(response.data.message);
+          fetchFaqs();
+          setShow(false);
+        }
+      } catch (error) {
+        toast.error("Error Occured");
+        console.log(error);
+      } finally {
+        setShowLoading(false);
+        setButtonName("Add FAQ");
+      }
     }
   };
+  //Handle Add FAQ
   const openAddModel = () => {
+    setValidated(false);
     setShow(true);
-    setTitle("Add New FAQ");
-    setButtonName("Add");
+    setTitle("Add FAQ");
+    setButtonName("Add FAQ");
     setAnswer("");
     setQuestion("");
     setProjectId(0);
     setFaqId(0);
   };
+  //Handle edit FAQ
   const openEditModel = (item) => {
     setShow(true);
     setTitle("Update FAQ");
@@ -79,13 +99,16 @@ export default function ManageFaqs() {
     const res = response.data;
     const list = res.map((item, index) => ({
       ...item,
-      id: index + 1,
+      index: index + 1,
     }));
     setFaqList(list);
   };
 
   //Handle delete faq
-  const openConfirmationBox = (id) => {};
+  const openConfirmationBox = (id) => {
+    setFaqId(id);
+    setShowConfirmationBox(true);
+  };
 
   useEffect(() => {
     fetchProjects();
@@ -93,7 +116,7 @@ export default function ManageFaqs() {
   }, []);
   //Defining table columns
   const columns = [
-    { field: "id", headerName: "S.no", width: 100 },
+    { field: "index", headerName: "S.no", width: 100 },
     { field: "projectName", headerName: "Project Name", width: 250 },
     { field: "question", headerName: "Question", width: 600 },
     { field: "answer", headerName: "Answer", width: 600 },
@@ -154,14 +177,15 @@ export default function ManageFaqs() {
         </Modal.Header>
         <Modal.Body>
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
-            <Form.Group md="4" controlId="validationCustom01">
+            <Form.Group controlId="selectProject">
               <Form.Label>Select Project</Form.Label>
               <Form.Select
                 aria-label="Default select example"
                 onChange={(e) => setProjectId(e.target.value)}
                 value={projectId}
+                required
               >
-                <option>Select Project</option>
+                <option value="">Select Project</option>
                 {projectList.map((item) => (
                   <option
                     className="text-uppercase"
@@ -172,34 +196,52 @@ export default function ManageFaqs() {
                   </option>
                 ))}
               </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                Project is required !
+              </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group md="4" controlId="validationCustom01">
-              <Form.Label>Enter Question</Form.Label>
+            <Form.Group controlId="question">
+              <Form.Label>Question</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
                 name="metaDescription"
+                placeholder="Enter Question"
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Question is required !
+              </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group md="4" controlId="validationCustom01">
-              <Form.Label>Enter Answer</Form.Label>
+            <Form.Group md="4" controlId="answer">
+              <Form.Label>Answer</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
                 name="metaDescription"
                 value={answer}
+                placeholder="Enter Answer"
                 onChange={(e) => setAnswer(e.target.value)}
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Answer is required !
+              </Form.Control.Feedback>
             </Form.Group>
-            <Button className="mt-3 btn btn-success" variant="primary" type="submit">
-              {buttonName}
+            <Button className="mt-3 btn btn-success" type="submit" disabled={showLoading}>
+              {buttonName} <LoadingSpinner show={showLoading} />
             </Button>
           </Form>
         </Modal.Body>
       </Modal>
       <ToastContainer />
+      <CommonModal
+        confirmBox={showConfirmationBox}
+        setConfirmBox={setShowConfirmationBox}
+        api={`${process.env.NEXT_PUBLIC_API_URL}project-faqs/delete/${faqId}`}
+        fetchAllHeadersList={fetchFaqs} />
     </>
   );
 }

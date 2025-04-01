@@ -1,13 +1,16 @@
 "use client";
+import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button, Col, Form, FormControl, Modal, Table } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CommonModal from "../common-model/common-model";
 export default function ManageBanners() {
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState("");
@@ -19,48 +22,57 @@ export default function ManageBanners() {
   const [mobileBanner, setMobileBanner] = useState(null);
   const [projectList, setProjectList] = useState([]);
   const [inputTitle, setInputTitle] = useState("");
-  const [bannerType, setBannerType] = useState("");
   const [bannerList, setBannerList] = useState([]);
-  const [mobileBannerList, setMobileBannerList] = useState([]);
   const [bannerId, setBannerId] = useState(0);
   const [previewMobileBanner, setPreviewMobileBanner] = useState("");
   const [previewDesktopBanner, setPreviewDesktopBanner] = useState("");
-
+  const [showLoading, setShowLoading] = useState(false);
+  const [confirmBox, setConfirmBox] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // if (!desktopBanner) {
-    //   alert("Please select a file first.");
-    //   return;
-    // }
     const formData = new FormData();
-    if (desktopBanner != null) formData.append("desktopBanner", desktopBanner);
-    if (mobileBanner != null) formData.append("mobileBanner", mobileBanner);
-    formData.append("projectId", projectId);
-    formData.append("altTag", altTag);
-    formData.append("id", bannerId);
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}project-banner/add-banner`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+      setValidated(true);
+      return;
+    }
+    if (form.checkValidity() === true) {
+      setShowLoading(true);
+      setButtonName("");
+      if (desktopBanner != null) formData.append("desktopBanner", desktopBanner);
+      if (mobileBanner != null) formData.append("mobileBanner", mobileBanner);
+      formData.append("projectId", projectId);
+      formData.append("altTag", altTag);
+      formData.append("id", bannerId);
+      try {
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}project-banner/add-banner`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        if (response.data.isSuccess === 1) {
+          toast.success(response.data.message);
+          setShowModal(false);
+          fetchBannerImages();
+        } else {
+          toast.error(response.data.message);
         }
-      );
-      if (response.status === 200) {
-        toast.success("File uploaded successfully.");
-        setShowModal(false);
-        fetchBannerImages();
-      } else {
-        toast.error("File upload failed.");
+      } catch (error) {
+        console.error("Error uploading file:", error);
+        toast.error("Error uploading file.");
+      }finally{
+        setShowLoading(false);
+        setButtonName("Add");
       }
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      toast.error("Error uploading file.");
     }
   };
   const openAddMobileBanner = () => {
+    setValidated(false);
     setShowModal(true);
     setTitle("Add Banner");
     setInputTitle("Select Mobile Banner");
@@ -69,6 +81,8 @@ export default function ManageBanners() {
     setdesktopBanner("");
     setMobileBanner("");
     setButtonName("Add");
+    setPreviewDesktopBanner(null);
+    setPreviewMobileBanner(null);
   };
   const openAddHomepageBanner = () => {
     setShowModal(true);
@@ -106,7 +120,7 @@ export default function ManageBanners() {
       const res = projectResponse.data;
       const list = res.map((item, index) => ({
         ...item,
-        id: index + 1,
+        index: index + 1,
       }));
       setBannerList(list);
     }
@@ -126,23 +140,27 @@ export default function ManageBanners() {
     setdesktopBanner(selectedFile);
   };
 
+  //Handling deletion of banner
+  const openConfirmationBox = (id) =>{
+    setConfirmBox(true);
+    setBannerId(id);
+  }
   //Defining table columns
   const columns = [
-    { field: "id", headerName: "S.no", width: 100 },
+    { field: "index", headerName: "S.no", width: 100 },
     {
       field: "mobileBanner",
       headerName: "Mobile Banner",
       width: 250,
       renderCell: (params) => (
-        <img
+        <Image
           src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${params.row.slugURL}/${params.row.mobileBanner}`}
           alt="Project"
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: "5px",
-            objectFit: "cover",
-          }}
+          width={50}
+          height={50}
+          style={{ borderRadius: '5px' }}
+          objectFit="cover"
+          unoptimized
         />
       ),
     },
@@ -151,15 +169,13 @@ export default function ManageBanners() {
       headerName: "Mobile Banner",
       width: 250,
       renderCell: (params) => (
-        <img
+        <Image
           src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${params.row.slugURL}/${params.row.desktopBanner}`}
           alt="Project"
-          style={{
-            width: 150,
-            height: 50,
-            borderRadius: "5px",
-            objectFit: "cover",
-          }}
+          width={150}
+          height={50}
+          unoptimized
+          style={{ borderRadius: '5px' }}
         />
       ),
     },
@@ -175,7 +191,7 @@ export default function ManageBanners() {
             className="mx-3 text-danger"
             style={{ cursor: "pointer" }}
             icon={faTrash}
-            // onClick={() => openConfirmationBox(params.row.id)}
+          onClick={() => openConfirmationBox(params.row.id)}
           />
           <FontAwesomeIcon
             className="text-warning"
@@ -253,52 +269,51 @@ export default function ManageBanners() {
             {/* Image Preview for Mobile Banner */}
             {previewMobileBanner && (
               <div className="image-preview mb-3">
-                <img
+                <Image
                   src={previewMobileBanner}
                   alt="Mobile Banner Preview"
-                  style={{
-                    maxWidth: "20%",
-                    height: "auto",
-                    justifySelf: "center",
-                    display: "flex",
-                  }}
+                  width={100}
+                  height={100}
                 />
               </div>
             )}
-            <Form.Group controlId="formFile1" className="mb-3">
+            <Form.Group controlId="projectMobileBanner" className="mb-3">
               <Form.Label>{inputTitle}</Form.Label>
               <Form.Control type="file" onChange={(e) => handleFileChange(e)} />
+              <Form.Control.Feedback type="invalid">
+                Project mobile banner is required !
+              </Form.Control.Feedback>
             </Form.Group>
             {/* Image Preview for Desktop Banner */}
             {previewDesktopBanner && (
               <div className="image-preview mb-3">
-                <img
+                <Image
                   src={previewDesktopBanner}
                   alt="Desktop Banner Preview"
-                  style={{
-                    maxWidth: "20%",
-                    height: "auto",
-                    justifySelf: "center",
-                    display: "flex",
-                  }}
+                  width={200}
+                  height={100}
                 />
               </div>
             )}
-            <Form.Group controlId="formFile2" className="mb-3">
+            <Form.Group controlId="projectDesktopBanner" className="mb-3">
               <Form.Label>Select Desktop banner</Form.Label>
               <Form.Control
                 type="file"
                 onChange={(e) => handleDesktopBannerChange(e)}
               />
+              <Form.Control.Feedback type="invalid">
+                Project desktop banner is required !
+              </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group md="4" controlId="validationCustom01">
+            <Form.Group md="4" controlId="selectProjectForBanner">
               <Form.Label>Select Project</Form.Label>
               <Form.Select
                 aria-label="Default select example"
                 onChange={(e) => setProjectId(e.target.value)}
                 value={projectId}
+                required
               >
-                <option>Select Project</option>
+                <option value="">Select Project</option>
                 {projectList.map((item) => (
                   <option
                     className="text-uppercase"
@@ -309,23 +324,31 @@ export default function ManageBanners() {
                   </option>
                 ))}
               </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                Project is required !
+              </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group md="4" controlId="validationCustom01">
+            <Form.Group md="4" controlId="projectBannerAltTag">
               <Form.Label>Alt Tag</Form.Label>
               <FormControl
                 placeholder="Alt Tag"
                 type="text"
                 value={altTag || ""}
                 onChange={(e) => setAltTag(e.target.value)}
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Alt tag is required !
+              </Form.Control.Feedback>
             </Form.Group>
-            <Button className="mt-3 btn btn-success" variant="primary" type="submit">
-              {buttonName}
+            <Button className="mt-3 btn btn-success" type="submit" disabled={showLoading}>
+              {buttonName} <LoadingSpinner show={showLoading} />
             </Button>
           </Form>
         </Modal.Body>
       </Modal>
       <ToastContainer />
+      <CommonModal confirmBox={confirmBox} setConfirmBox={setConfirmBox} api={`${process.env.NEXT_PUBLIC_API_URL}project-banner/delete/${bannerId}`} fetchAllHeadersList={fetchBannerImages}/>
     </div>
   );
 }

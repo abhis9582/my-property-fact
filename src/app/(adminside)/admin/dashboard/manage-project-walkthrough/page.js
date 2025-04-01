@@ -8,6 +8,8 @@ import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { LoadingSpinner } from "@/app/(home)/contact-us/page";
+import CommonModal from "../common-model/common-model";
 
 // Dynamically import JoditEditor with SSR disabled
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
@@ -22,24 +24,48 @@ export default function ManageProjectWalkthrough() {
   const [title, setTitle] = useState("");
   const [buttonName, setButtonName] = useState("");
   const [confirmBox, setConfirmBox] = useState(false);
-
+  const [validated, setValidated] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
+  const [walkthroughId, setWalkthroughId] = useState(0);
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       walkthroughDesc: walkthroughDesc,
       projectId: projectId,
+      id: 0
     };
-    const response = await axios.post(
-      `${apiUrl}project-walkthrough/add-update`,
-      data
-    );
-    if (response.data.isSuccess === 1) {
-      toast.success(response.data.message);
-      setShowModal(false);
-      fetchProjects();
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+      setValidated(true);
+      return;
+    }
+    if (form.checkValidity() === true) {
+      if(walkthroughId > 0){
+        data.id = walkthroughId;
+      }
+      try {
+        setShowLoading(true);
+        setButtonName("");
+        const response = await axios.post(
+          `${apiUrl}project-walkthrough/add-update`,
+          data
+        );
+        if (response.data.isSuccess === 1) {
+          toast.success(response.data.message);
+          setShowModal(false);
+          fetchProjects();
+        }
+      } catch (error) {
+        toast.error(error);
+      } finally {
+        setShowLoading(false);
+        setButtonName("Add");
+      }
     }
   };
+
   const fetchProjects = async () => {
     const apis = [
       axios.get(`${apiUrl}projects/get-all`),
@@ -49,7 +75,7 @@ export default function ManageProjectWalkthrough() {
     const data = walkthroughRes.data;
     const list = data.map((item, index) => ({
       ...item,
-      id: index + 1,
+      index: index + 1,
       projectName: item.slugURL.replace(/-/g, " "),
     }));
     setProjectList(projectsRes.data);
@@ -57,23 +83,31 @@ export default function ManageProjectWalkthrough() {
   };
   //Handle open model
   const openAddModal = () => {
+    setValidated(false);
     setShowModal(true);
     setTitle("Add Walkthrough");
     setButtonName("Add");
+    setWalkthroughDesc(null);
+    setProjectId(0);
   };
+
+  //Handle deleting walkthrough
   const openConfirmationBox = (id) => {
     setConfirmBox(true);
+    setWalkthroughId(id);
   };
-  const openEditPopUp = (item) => {
+
+  const openEditPopUp = (item) => {    
     setShowModal(true);
     setTitle("Update Walkthrough");
     setButtonName("Update");
     setWalkthroughDesc(item.walkthroughDesc);
-    setProjectId(item.projectid);
+    setProjectId(item.projectId);
+    setWalkthroughId(item.id);
   };
   //Defining table columns
   const columns = [
-    { field: "id", headerName: "S.no", width: 100 },
+    { field: "index", headerName: "S.no", width: 100 },
     { field: "projectName", headerName: "Project Name", width: 250 },
     { field: "walkthroughDesc", headerName: "Amenities", width: 600 },
     {
@@ -141,14 +175,16 @@ export default function ManageProjectWalkthrough() {
           <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form noValidate onSubmit={handleSubmit}>
-            <Form.Group md="4" controlId="validationCustom01">
+          <Form noValidate validated={validated} onSubmit={handleSubmit}>
+            <Form.Group controlId="selectProject">
               <Form.Label>Select Project</Form.Label>
               <Form.Select
-                aria-label="Default select example"
+                aria-label="projects"
+                value={projectId}
                 onChange={(e) => setProjectId(e.target.value)}
+                required
               >
-                <option>Select Project</option>
+                <option value="">Select Project</option>
                 {projectList.map((item) => (
                   <option
                     className="text-uppercase"
@@ -159,6 +195,9 @@ export default function ManageProjectWalkthrough() {
                   </option>
                 ))}
               </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                Project is required !
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-3 mt-4" controlId="formCityName">
               <Form.Label>Walkthrough description</Form.Label>
@@ -168,24 +207,13 @@ export default function ManageProjectWalkthrough() {
                 onChange={(newcontent) => setWalkthroughDesc(newcontent)}
               />
             </Form.Group>
-            <Button className="btn btn-success" type="submit">
-              {buttonName}
+            <Button className="btn btn-success" type="submit" disabled={showLoading}>
+              {buttonName} <LoadingSpinner show={showLoading} />
             </Button>
           </Form>
         </Modal.Body>
       </Modal>
-      <Modal show={confirmBox} onHide={() => setConfirmBox(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Are you sure you want to delete ?</Modal.Title>
-        </Modal.Header>
-        {/* <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body> */}
-        <Modal.Footer className="d-flex justify-content-center">
-          <Button variant="secondary" onClick={() => setConfirmBox(false)}>
-            Close
-          </Button>
-          <Button variant="danger">Delete</Button>
-        </Modal.Footer>
-      </Modal>
+      <CommonModal confirmBox={confirmBox} setConfirmBox={setConfirmBox} api={`${process.env.NEXT_PUBLIC_API_URL}project-walkthrough/delete/${walkthroughId}`} fetchAllHeadersList={fetchProjects}/>
       <ToastContainer />
     </div>
   );

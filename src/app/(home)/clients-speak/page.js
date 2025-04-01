@@ -1,16 +1,11 @@
 import CommonBreadCrum from "../components/common/breadcrum";
-import Image from "next/image";
+import CommonHeaderBanner from "../components/common/commonheaderbanner";
 export default function ClientsSpeak() {
   return (
     <>
-      <Image
-        src="/static/clients-speak.webp"
-        alt="clients-speak"
-        height={400}
-        width={1899}
-        layout="responsive"
-      />
+      <CommonHeaderBanner image={"clients-speak.jpg"} headerText={"Client's Speak"}/>
       <CommonBreadCrum pageName={"Client's speak"} />
+      <p className="h3 fw-bold text-center my-5">Coming soon...</p>
     </>
   );
 }

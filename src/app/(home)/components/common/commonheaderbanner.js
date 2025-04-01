@@ -1,16 +1,17 @@
 import Image from "next/image";
+import './common.css';
 
 export default function CommonHeaderBanner({ image, headerText }) {
   return (
     <div className="container-fluid p-0 position-relative">
-      <Image
-        src={`/static/${image}`}
-        width={1899}
-        height={500}
-        layout="responsive"
-        alt={headerText || ""}
-      />
-      <p className="projects-heading">{headerText}</p>
+      <div className="top-banner-each-pages">
+        <Image
+          src={`/static/${image}`}
+          fill
+          alt={headerText || ""}
+        />
+      </div>
+      {/* <p className="projects-heading">{headerText}</p> */}
     </div>
   );
 }

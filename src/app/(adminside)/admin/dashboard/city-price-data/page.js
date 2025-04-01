@@ -1,5 +1,6 @@
 "use client";
 
+import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Paper } from "@mui/material";
@@ -20,6 +21,7 @@ export default function CityPriceData() {
   const [aggregationFrom, setAggregationFrom] = useState([]);
   const [cityPriceList, setCityPriceList] = useState([]);
   const [updateId, setUpdateId] = useState(0);
+  const [showLoading, setShowLoading] = useState(false);
   const [formData, setFormData] = useState({
     id: 0,
     city: "",
@@ -32,6 +34,7 @@ export default function CityPriceData() {
     aggregationFromId: "",
   });
 
+  //Fetching all cities
   const fetchAllCities = async () => {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}city/all`
@@ -40,6 +43,8 @@ export default function CityPriceData() {
       setCityList(response.data);
     }
   };
+
+  //Fetching all categories
   const fetchAllCategories = async () => {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}category/get`
@@ -48,6 +53,8 @@ export default function CityPriceData() {
       setCategory(response.data);
     }
   };
+
+  //Fetching all aggressionfrom 
   const fetchAllAggigationFrom = async () => {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}aggregationFrom/get`
@@ -56,6 +63,7 @@ export default function CityPriceData() {
       setAggregationFrom(response.data);
     }
   };
+
   // Handle open add new form
   const openAddModel = () => {
     setShowModal(true);
@@ -134,6 +142,8 @@ export default function CityPriceData() {
         }
       } catch (error) {
         toast.error(error);
+      }finally{
+        setShowLoading(false);
       }
     }
     setValidated(true);
@@ -150,7 +160,6 @@ export default function CityPriceData() {
       index: index + 1
     }));
       setCityPriceList(list);
-    
   };
   // Reset form
   const resetForm = () => {
@@ -242,7 +251,7 @@ export default function CityPriceData() {
     <div>
       <div className="d-flex justify-content-between mt-3">
         <p className="h1 ">Manage Cities Price Data</p>
-        <Button className="mx-3" onClick={() => openAddModel()}>
+        <Button className="mx-3 btn btn-success" onClick={() => openAddModel()}>
           + Add new data
         </Button>
       </div>
@@ -283,7 +292,7 @@ export default function CityPriceData() {
                     onChange={handleChange}
                     required
                   >
-                    <option></option>
+                    <option value="">Select City</option>
                     {cityList.map((item) => (
                       <option
                         className="text-uppercase"
@@ -414,7 +423,7 @@ export default function CityPriceData() {
                     onChange={handleChange}
                     required
                   >
-                    <option></option>
+                    <option value="">Select category</option>
                     {category.map((item) => (
                       <option
                         className="text-uppercase"
@@ -444,7 +453,7 @@ export default function CityPriceData() {
                     onChange={handleChange}
                     required
                   >
-                    <option></option>
+                    <option value="">Select aggregation from</option>
                     {aggregationFrom.map((item) => (
                       <option
                         className="text-uppercase"
@@ -462,8 +471,8 @@ export default function CityPriceData() {
               </Col>
             </Row>
 
-            <Button variant="primary" type="submit">
-              {buttonName}
+            <Button className="btn btn-success" type="submit" disabled={showLoading}>
+              {buttonName} <LoadingSpinner show={showLoading} />
             </Button>
           </Form>
         </Modal.Body>

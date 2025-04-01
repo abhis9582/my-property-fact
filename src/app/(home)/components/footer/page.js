@@ -127,18 +127,18 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="footer-area overflow-hidden float-left w-100">
-        <div className="py-3 foot-links" style={{ backgroundColor: "#101010" }}>
+      <footer className="bg-dark">
+        <div className="pt-5 pb-3 container-fluid" style={{ backgroundColor: "#101010" }}>
           <div className="container-fluid">
             <div className="inner">
               <div className="row gap-row">
                 <div className="col-md-12 col-sm-12 foot-menu">
                   <div className="insideBox">
                     <h6>Cities</h6>
-                    <ul className="list-inline footer-cities d-flex flex-wrap">
+                    <ul className=" footer-cities d-flex flex-wrap">
                       {cityList.map((item, index) => (
                         <li key={`${item.name}-${index}`}>
-                          <Link href={item.slugUrl}>{item.name}</Link>
+                          <Link className="footer-text" href={`/city/${item.slugUrl}`}>{item.name}</Link>
                         </li>
                       ))}
                     </ul>
@@ -148,23 +148,23 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="container-fluid">
+        <div className="container-fluid py-3">
           <div className="padding border-bottom footer-keywords">
             <div className="row">
               <div className="col-md-3">
-                <ul className="row list-inline">
+                <ul className="row ">
                   {cityList.map((item, index) => (
                     <li key={`${item.name}-${index}`}>
-                      <Link href={`/city/${item.slugUrl}`}>Apartments in {item.name}</Link>
+                      <Link className="footer-text" href={`/city/${item.slugUrl}`}>Apartments in {item.name}</Link>
                     </li>
                   ))}
                 </ul>
               </div>
               <div className="col-md-3">
-                <ul className="row list-inline">
+                <ul className="row ">
                   {cityList.map((item, index) => (
                     <li key={`${item.name}-${index}`}>
-                      <Link href={`/city/${item.slugUrl}`}>
+                      <Link className="footer-text" href={`/city/${item.slugUrl}`}>
                         New Projects in {item.name}
                       </Link>
                     </li>
@@ -172,20 +172,20 @@ export default function Footer() {
                 </ul>
               </div>
               <div className="col-md-3">
-                <ul className="row list-inline">
+                <ul className="row ">
                   {cityList.map((item, index) => (
                     <li key={`${item.name}-${index}`}>
-                      <Link href={`/city/${item.slugUrl}`}>Flats in {item.name}</Link>
+                      <Link className="footer-text" href={`/city/${item.slugUrl}`}>Flats in {item.name}</Link>
                     </li>
                   ))}
                 </ul>
               </div>
 
               <div className="col-md-3">
-                <ul className="row list-inline">
+                <ul className="row ">
                   {cityList.map((item, index) => (
                     <li key={`${item.name}-${index}`}>
-                      <Link href={`/city/${item.slugUrl}`}>
+                      <Link className="footer-text" href={`/city/${item.slugUrl}`}>
                         Commercial Property in {item.name}
                       </Link>
                     </li>
@@ -194,16 +194,16 @@ export default function Footer() {
               </div>
             </div>
           </div>
-          <div className="padding foot-links">
-            <div className="inner">
+          <div className="container-fluid ps-4">
+            <div className="py-3">
               <div className="row gap-row">
                 <div className="col foot-menu">
                   <div className="insideBox">
                     <h6>Projects</h6>
-                    <ul className="list-inline">
+                    <ul className="p-0">
                       {projectTypes.map((item, index) => (
                         <li key={`${item.name}-${index}`}>
-                          <Link href={item.slugUrl}>
+                          <Link className="footer-text" href={item.slugUrl}>
                             {item.projectTypeName}
                           </Link>
                         </li>
@@ -214,10 +214,10 @@ export default function Footer() {
                 <div className="col foot-menu">
                   <div className="insideBox">
                     <h6>Company</h6>
-                    <ul className="list-inline">
+                    <ul className="p-0">
                       {companyArr.map((item, index) => (
                         <li key={`${item.id}-${index}`}>
-                          <Link href={item.slugUrl}>{item.name}</Link>
+                          <Link className="footer-text" href={item.slugUrl}>{item.name}</Link>
                         </li>
                       ))}
                     </ul>
@@ -226,10 +226,10 @@ export default function Footer() {
                 <div className="col foot-menu">
                   <div className="insideBox">
                     <h6>Media</h6>
-                    <ul className="list-inline">
+                    <ul className="p-0">
                       {mediaArr.map((item, index) => (
                         <li key={`${item.id}-${index}`}>
-                          <Link href={item.slugUrl}>{item.name}</Link>
+                          <Link className="footer-text" href={item.slugUrl}>{item.name}</Link>
                         </li>
                       ))}
                     </ul>
@@ -238,36 +238,36 @@ export default function Footer() {
                 <div className="col foot-menu">
                   <div className="insideBox">
                     <h6>Explore</h6>
-                    <ul className="list-inline">
+                    <ul className="p-0">
                       {exploreArr.map((item, index) => (
                         <li key={`${item.id}-${index}`}>
-                          <Link href={item.slugUrl}>{item.name}</Link>
+                          <Link className="footer-text" href={item.slugUrl}>{item.name}</Link>
                         </li>
                       ))}
                     </ul>
                   </div>
                 </div>
-                <div className="col foot-menu socialBox">
-                  <div className="insideBox">
+                <div className="col foot-menu">
+                  <div>
                     <h6>Get Social</h6>
-                    <ul className="list-inline socialMediaLink socialSolid">
-                      <li className="list-inline-item">
-                        <Link href="#" target="_blank" title="facebook">
-                          <FontAwesomeIcon icon={faFacebook} />
+                    <ul className="d-flex gap-3 p-0">
+                      <li className="">
+                        <Link className="footer-text" href="#" target="_blank" title="facebook">
+                          <FontAwesomeIcon icon={faFacebook}/>
                         </Link>
                       </li>
-                      <li className="list-inline-item">
-                        <Link href="#" target="_blank" title="instagram">
+                      <li className="">
+                        <Link className="footer-text" href="#" target="_blank" title="instagram">
                           <FontAwesomeIcon icon={faInstagram} />
                         </Link>
                       </li>
-                      <li className="list-inline-item">
-                        <Link href="#" target="_blank" title="linkedin">
+                      <li className="">
+                        <Link className="footer-text" href="#" target="_blank" title="linkedin">
                           <FontAwesomeIcon icon={faLinkedin} />
                         </Link>
                       </li>
-                      <li className="list-inline-item">
-                        <Link href="#" target="_blank" title="youtube">
+                      <li className="">
+                        <Link className="footer-text" href="#" target="_blank" title="youtube">
                           <FontAwesomeIcon icon={faYoutube} />
                         </Link>
                       </li>

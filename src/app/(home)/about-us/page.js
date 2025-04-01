@@ -1,212 +1,145 @@
 "use client";
 import "./aboutus.css";
-import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
-
+import "swiper/css/navigation";
+import { Swiper, SwiperSlide } from 'swiper/react';
 // import required modules
-import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import CommonBreadCrum from "../components/common/breadcrum";
-import Image from "next/image";
+import { Pagination, Navigation } from 'swiper/modules';
 
 export default function AboutUs() {
+  //Defining what we offer array
+  const whatWeOffer = [
+    {
+      id: 1,
+      heading: "Diverse Property Listings",
+      text: "We curate listings from all corners of the real estate spectrum. Residential apartments, commercial showrooms, industrial plots, farmhouses, and everything in between."
+    },
+    {
+      id: 2,
+      heading: "Powerful Search & Shortlisting",
+      text: "We curate listings from all corners of the real estate spectrum. Residential apartments, commercial showrooms, industrial plots, farmhouses, and everything in between."
+    },
+    {
+      id: 3,
+      heading: "Side-by-Side Comparisons",
+      text: "We curate listings from all corners of the real estate spectrum. Residential apartments, commercial showrooms, industrial plots, farmhouses, and everything in between."
+    },
+    {
+      id: 4,
+      heading: "Direct Connection to Builders & Brokers",
+      text: "We curate listings from all corners of the real estate spectrum. Residential apartments, commercial showrooms, industrial plots, farmhouses, and everything in between."
+    },
+    {
+      id: 5,
+      heading: "Insights for Every Stakeholder",
+      text: "We curate listings from all corners of the real estate spectrum. Residential apartments, commercial showrooms, industrial plots, farmhouses, and everything in between."
+    },
+  ];
+
+  //Our commitment object
+  const ourCommitment = {
+    heading: "Our Commitment",
+    text: "We’re committed to transparency, innovation, and reliability. By harnessing the power of technology and a dedicated support team, we aim to make the entire real estate journey—from initial search to final closing—as smooth and rewarding as possible."
+  };
+
+  //Defining why my property fact array
+  const whyMyPropertyFact = [
+    {
+      id: 1,
+      heading: "Holistic Platform",
+      text: "Find everything from residential rentals to large-scale commercial investments in one place."
+    },
+    {
+      id: 2,
+      heading: "Streamlined Searches",
+      text: "Use our intuitive Search and View features to quickly locate the best matches for your requirements."
+    },
+    {
+      id: 3,
+      heading: "No Guesswork",
+      text: "Our side-by-side comparison feature and detailed project listings remove confusion from the decision-making process."
+    },
+    {
+      id: 4,
+      heading: "Trusted Connections",
+      text: "We link you directly to builders, brokers, and fellow investors—fostering real conversations and genuine opportunities."
+    },
+    {
+      id: 5,
+      heading: "Continuous Growth",
+      text: "My Property Fact constantly expands its listings and features so users always have the latest offerings at their fingertips."
+    },
+  ];
   return (
     <>
-      <div className="container-fluid p-0 m-0">
-        <CommonHeaderBanner image={"about-us-banner.png"} headerText={""} />
-        <CommonBreadCrum pageName={"About Us"} />
-      </div>
-      <div className="container-fluid">
-        <div className="container">
-          <div className="row mt-3">
-            <div className="col-md-8">
-              <p className="mt-5">
-                When an artist creates a masterpiece, a writer pens a novel, an
-                actor takes center stage, and a sculptor chisels a statue, a
-                sublime story unfolds with time and admiration. Similarly, in
-                the realm of Mr. Ritesh Malik, we embarked on a journey in 2012
-                to curate India&apos;s most exceptional real estate investments.
-                We understand the aspirations of the new-age royals, thus, we
-                assist them with handpicked bouquets of premium properties to
-                accomplish a regal lifestyle. For us, contented clients are the
-                biggest testaments as we sense accomplishment in unlocking the
-                right real estate asset via the client-centric work approach.
-                Our in-house group of experts streamlines promising practices to
-                ascend performance in the competitive market to maintain the
-                benchmark work standard. With real estate giants and investors
-                counting on us, we are elated to be a catalyst of refined real
-                estate investment experience provider across India. With
-                passionate real estate professionals from top B-schools as the
-                backbone, we are becoming more ambitious and are zestful to push
-                boundaries leaving no stone unturned to establish a benchmark in
-                the Indian property market.
-              </p>
-            </div>
-            <div className="col-md-4">
-              <div className="overview-stats">
-                <div className="inner position-relative overflow-hidden h-100">
-                  <div className="row gap-row">
-                    <div className="col-xl-12 overview-logo">
-                      <span className="h6 fw-bolder text-uppercase">
-                        Every result tells a unique story.
-                      </span>
-                    </div>
-                    <div className="col-xl-12 col-lg-3 col-sm-6 col-6 statBox">
-                      <div className="stats-in">
-                        <span className="h2 text-texture">
-                          <span className="counter">12</span>
-                          <small>+</small>
-                        </span>
-                        <p>Years of Experience</p>
-                      </div>
-                    </div>
-                    <div className="col-xl-12 col-lg-3 col-sm-6 col-6 statBox">
-                      <div className="stats-in">
-                        <span className="h2 text-texture">
-                          <span className="counter">40000</span>
-                          <small>+</small>
-                        </span>
-                        <p>Units Booked</p>
-                      </div>
-                    </div>
-                    <div className="col-xl-12 col-lg-3 col-sm-6 col-6 statBox">
-                      <div className="stats-in">
-                        <span className="h2 text-texture">
-                          <span className="counter">100000</span>
-                          <small>+</small>
-                        </span>
-                        <p>Happy Faces</p>
-                      </div>
-                    </div>
-                    <div className="col-xl-12 col-lg-3 col-sm-6 col-6 statBox">
-                      <div className="stats-in">
-                        <span className="h2 text-texture">
-                          <span className="counter">100</span>
-                          <small>mln+</small>
-                        </span>
-                        <p>Area Sold (Sq.ft)</p>
-                      </div>
-                    </div>
-                  </div>
-                  <img
-                    src="https://www.starestate.com/assets/images/card-bg.jpg"
-                    className="h-100 object-cover stats-bg"
-                    alt="bg image"
-                  />
-                </div>
-              </div>
-            </div>
+      <CommonHeaderBanner image={"about-us.jpg"} headerText={"About Us"}/>
+      <CommonBreadCrum pageName={"About Us"} />
+      <div className="container">
+        <div className="row gap-5 justify-content-center">
+          <div className="col-md-5 about-us-container">
+            <p className="h3 text-center fw-bold my-5">About Us</p>
+            <p>
+              Welcome to My Property Fact, your go-to platform for discovering the perfect real estate opportunities. Whether you’re an investor hunting for the next big project, a business owner scouting commercial space, or a family looking for a new home to call your own. We bring together all types of properties, from high-end apartments and cozy farmhouses to strategic commercial plots and premium office spaces for both buying and renting.
+            </p>
+          </div>
+          <div className="col-md-5 about-us-container">
+            <p className="h3 text-center fw-bold my-5">Our Story & Vision</p>
+            <p>
+              At My Property Fact, we believe in simplifying real estate decisions for everyone. Navigating the property market can be overwhelming, so we created a comprehensive portal that puts all the critical information right at your fingertips. Our mission is to empower you with transparent, data-driven insights and user-friendly tools so you can explore, compare, and choose the best real estate option for your unique needs.
+            </p>
           </div>
         </div>
-      </div>
-      <hr className="mt-4" />
-      <div className="container-fluid">
-        <div className="container p-3">
-          <p className="text-center h2">Vision</p>
-          <p className="mt-3 text-center">
-            For us, the sky is not the limit. Our next milestone is global
-            expansion, which we are working to achieve in the coming years. From
-            our Indian roots to global property market expansion across
-            continents, we confidently envision a seamless growth journey.
+        <div>
+          <p className="h3 fw-bold text-center mt-5">What We Offer</p>
+          <Swiper
+            autoplay={{ delay: 3000 }}
+            spaceBetween={30}
+            navigation={true}
+            pagination={{
+              clickable: true,
+            }}
+            breakpoints={{
+              320: { slidesPerView: 1, spaceBetween: 10 }, // Mobile (small screens)
+              640: { slidesPerView: 2, spaceBetween: 20 }, // Tablets
+              1024: { slidesPerView: 3, spaceBetween: 30 }, // Laptops and larger screens
+            }}
+            modules={[Pagination, Navigation]}
+            className="mySwiper"
+          >
+            {whatWeOffer.map((item, index) => (
+              <SwiperSlide className="border border-2 p-5 rounded-3 my-5" key={`${item.id}-${index}`}>
+                <p className="h3 fw-bold text-center my-4">{item.heading}</p>
+                <p>{item.text}</p>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+        <div>
+          <p className="fs-2 fw-bold text-center">Why My Property Fact?</p>
+          <div className="d-flex flex-wrap justify-content-center gap-4">
+            {whyMyPropertyFact.map((item, index) => (
+              <div key={`${item.id}-${index}`} className="why-mpf-card border border-2 rounded-3">
+                <p className="h3 my-3 fw-bold">{item.heading}</p>
+                <p>{item.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className="h3 fw-bold my-3">{ourCommitment.heading}</p>
+          <p>{ourCommitment.text}</p>
+          <hr />
+          <p>
+            Join us at www.mypropertyfact.com and discover a new way to explore real estate. Whether you are buying, renting, or investing, My Property Fact is here to help you make your next move with confidence.
           </p>
         </div>
-      </div>
-      <div className="container-fluid mt-5 bg-light">
-        <p className="text-center h2 pt-4">From Director &apos;s Desk</p>
-        <div className="container">
-          <div className="row">
-            <div className="col-4 p-4">
-              <img
-                src="https://ritzmediaworld.in/wp-content/uploads/2024/12/2-8.png"
-                alt="director image"
-                className="w-100"
-              />
-              {/* <Image
-                src="https://ritzmediaworld.in/wp-content/uploads/2024/12/2-8.png"
-                alt="directors_image"
-                width={400}
-                height={400}
-                layout="intrensic"
-              /> */}
-            </div>
-            <div className="col-8 mt-5">
-              Mr. Ritesh Malik is a visionary leader with the fortitude to make
-              the real estate experience fantastic for every investor. His
-              intuitive understanding of evolving demands in the property market
-              attributable to diverse reasons is the secret to fulfilling
-              promises. He is the pillar of strength, inspiration, and a guiding
-              light for the entire organisation which has a mammoth presence
-              across India. Our go-getter approach paves the way to win against
-              all the odds to overcome opportunities and set a benchmark of
-              success in the market. Mr. Ritesh Malik &apos;s empathetic
-              leadership inspires achievers and serves as a guiding light for
-              our team. We are thankful to our stakeholders, employees, and
-              clients for believing in us and being a part of our growth story.
-              Over the decade-long journey, we won many accolades that propel us
-              to be more determined and disciplined to delivering real estate
-              services while adhering to our uncompromising values.
-              <p className="h5 mt-4">
-                Mr. Ritesh Malik <br /> Managing Director, My Property Fact
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="container-fluid bg-dark p-5">
-        <p className="h2 text-center text-light mb-3">Awards</p>
-        <Swiper
-          effect={"coverflow"}
-          grabCursor={true}
-          centeredSlides={true}
-          slidesPerView={"auto"}
-          coverflowEffect={{
-            rotate: 50,
-            stretch: 0,
-            depth: 100,
-            modifier: 1,
-            slideShadows: true,
-          }}
-          pagination={true}
-          loop={true} // Add this line to enable infinite looping
-          autoplay={{
-            delay: 2500, // Time between transitions (in milliseconds)
-            disableOnInteraction: false, // Autoplay continues even if the user interacts with the swiper
-          }}
-          modules={[EffectCoverflow, Pagination, Autoplay]}
-        >
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-1.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
-          </SwiperSlide>
-        </Swiper>
-      </div>
+      </div >
     </>
   );
 }

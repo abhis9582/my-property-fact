@@ -3,6 +3,7 @@ import Link from "next/link";
 import "./header.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Image from "next/image";
 const Header = () => {
   const [cityList, setCityList] = useState([]);
   const [builderList, setBuilderList] = useState([]);
@@ -105,7 +106,7 @@ const Header = () => {
       <div className={`d-flex justify-content-between align-items-center px-2 px-lg-4 mpf-bg header ${isScrolled ? "fixed-header" : ""}`}>
         <div className="mpf-logo">
           <Link href="/">
-            <img
+            <Image
               src="/logo.png"
               alt="My Property facts"
               height={70}

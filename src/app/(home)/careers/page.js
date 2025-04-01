@@ -10,7 +10,7 @@ export default function Career() {
       postName: "Sale's Manager",
       noOfVacencies: 3,
       imageUrl:
-        "https://live.sociolib.com/workly/wp-content/uploads/sites/2/2025/02/icon6.png",
+        "icon6.webp",
       location: "Noida",
     },
     {
@@ -18,7 +18,7 @@ export default function Career() {
       postName: "Video Editor",
       noOfVacencies: 2,
       imageUrl:
-        "https://live.sociolib.com/workly/wp-content/uploads/sites/2/2025/02/icon4.png",
+        "icon6.webp",
       location: "Noida",
     },
     {
@@ -26,7 +26,7 @@ export default function Career() {
       postName: "Content Writer",
       noOfVacencies: 3,
       imageUrl:
-        "https://live.sociolib.com/workly/wp-content/uploads/sites/2/2025/02/icon4.png",
+        "icon6.webp",
       location: "Noida",
     },
     {
@@ -34,7 +34,7 @@ export default function Career() {
       postName: "React developer",
       noOfVacencies: 3,
       imageUrl:
-        "https://live.sociolib.com/workly/wp-content/uploads/sites/2/2025/02/icon4.png",
+        "icon6.webp",
       location: "Noida",
     },
     {
@@ -42,13 +42,13 @@ export default function Career() {
       postName: "Web developer",
       noOfVacencies: 3,
       imageUrl:
-        "https://live.sociolib.com/workly/wp-content/uploads/sites/2/2025/02/icon4.png",
+        "icon6.webp",
       location: "Noida",
     },
   ];
   return (
     <>
-      <CommonHeaderBanner image={"career-banner.jpg"} headerText={"Career"}/>
+      <CommonHeaderBanner image={"career.jpg"} headerText={"Career"} />
       <CommonBreadCrum pageName={"Career"} />
       <section className="d-flex justify-content-between mt-4 mx-lg-4">
         <p className="h1 w-50 mx-5">Your next career move starts here.</p>
@@ -63,12 +63,12 @@ export default function Career() {
             className="p-4 border border-2 rounded rounded-3"
           >
             <div className="d-flex justify-content-center gap-3">
-              <img className="w-25" src={item.imageUrl} alt="image" />
+              <Image src={`/static/${item.imageUrl}`} alt="image" width={70} height={70} />
               <p className="h1 mt-3">{item.postName}</p>
             </div>
             <div className="d-flex justify-content-around mt-4">
-                <p className="fs-4">location: {item.location}</p>
-                <p className="fs-4">vacancies: {item.noOfVacencies}</p>
+              <p className="fs-4">location: {item.location}</p>
+              <p className="fs-4">vacancies: {item.noOfVacencies}</p>
             </div>
           </div>
         ))}

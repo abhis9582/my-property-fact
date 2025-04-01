@@ -135,7 +135,7 @@ export default function TopDevelopers() {
     <>
       <div className="d-flex justify-content-between mt-3">
         <p className="h1 ">Manage Developers Data</p>
-        <Button className="mx-3" onClick={() => openAddModel()}>
+        <Button className="mx-3 btn btn-success" onClick={() => openAddModel()}>
           + Add new data
         </Button>
       </div>
@@ -221,7 +221,7 @@ export default function TopDevelopers() {
                     onChange={onChange}
                     required
                   >
-                    <option></option>
+                    <option value="">Select category</option>
                     {category.map((item) => (
                       <option
                         className="text-uppercase"
@@ -251,7 +251,7 @@ export default function TopDevelopers() {
                     onChange={onChange}
                     required
                   >
-                    <option></option>
+                    <option value="">Select aggregationFrom</option>
                     {aggregationFrom.map((item) => (
                       <option
                         className="text-uppercase"
@@ -268,7 +268,7 @@ export default function TopDevelopers() {
                 </Form.Group>
               </Col>
             </Row>
-            <Button className="m-2" variant="primary" type="submit">
+            <Button className="m-2 btn btn-success" type="submit">
               {buttonName}
             </Button>
           </Form>
