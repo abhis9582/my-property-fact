@@ -1,3 +1,28 @@
-.main-container{
-    cursor: pointer;
+.top-banner-each-pages{
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+    position: relative;
 }
+.top-banner-each-pages::before{
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2;
+}
+/* All media queries for header banner starts*/
+@media (max-width: 768px) {
+    .top-banner-each-pages{
+        height: 200px;
+    }
+}
+
+@media (max-width: 426px) {
+    .top-banner-each-pages{
+        height: 100px;
+    }
+}
+
+/* All media queries for header banner ends*/

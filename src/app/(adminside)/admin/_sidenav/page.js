@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+import Image from "next/image";
 export default function SideNav() {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const toggleDropdown = (id) => {
@@ -31,7 +32,12 @@ export default function SideNav() {
     // Sidebar
     <nav id="sidebar">
       <div className="sidebar-header">
-        <img src="/logo.png" alt="logo" width={"100"} />
+        <Image
+          src={"/logo.png"}
+          alt="mpf-logo"
+          width={100}
+          height={100}
+        />
       </div>
       <ul className="list-unstyled components">
         <li>
@@ -159,7 +165,7 @@ export default function SideNav() {
           </ul>
         </li>
         <li>
-          <Link href="/admin/dashboard/aminities">Aminities</Link>
+          <Link href="/admin/dashboard/aminities">Amenities</Link>
         </li>
         <li>
           <Link href="/admin/dashboard/enquiries">

@@ -2,11 +2,12 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./insight.css";
 import Link from "next/link";
+import Image from "next/image";
 export default function InsightNew() {
   const data = [
     {
       id: 1,
-      src: "https://www.squareyards.com/assets/images/insight-tool-img/price-trends-img.png",
+      src: "/static/insight.png",
       alt: "price-trends-img",
       heading: "Property rates & trends",
       sub_heading:
@@ -17,7 +18,7 @@ export default function InsightNew() {
     },
     {
       id: 2,
-      src: "https://www.squareyards.com/assets/images/insight-tool-img/property-rates-heatmap-img.png",
+      src: "/static/insight.png",
       alt: "property-rates-heatmap-img",
       heading: "Property Rates Heatmap",
       sub_heading:
@@ -28,7 +29,7 @@ export default function InsightNew() {
     },
     {
       id: 3,
-      src: "https://www.squareyards.com/assets/images/insight-tool-img/valuation-report-img.png",
+      src: "/static/insight.png",
       alt: "price-trends-img",
       heading: "Valuation Report",
       sub_heading:
@@ -39,7 +40,7 @@ export default function InsightNew() {
     },
     {
       id: 4,
-      src: "https://www.squareyards.com/assets/images/insight-tool-img/reviews-ratings-img.png",
+      src: "/static/insight.png",
       alt: "price-trends-img",
       heading: "Property overviews & Ratings",
       sub_heading: "Don't just take our word for it; See what other residents",
@@ -54,16 +55,16 @@ export default function InsightNew() {
       <div className="container my-5">
         <div className="d-flex justify-content-center gap-4 my-3 flex-wrap flex-column flex-md-row">
           {data.map((i) => (
-            <div key={i.id} className={`${i.color} insight-container mx-auto`}>
+            <div key={i.id} className={`bg-light insight-container mx-auto`}>
               <Link href={i.href}>
                 <div className="insight-container-child">
                   <p>{i.heading}</p>
                   <p>{i.sub_heading}</p>
-                  <img src={i.src} alt={i.alt} />
+                  <Image src={i.src} alt={i.alt} width={200} height={150}/>
                 </div>
-                <div className={`${i.button_color} insight-explore-button`}>
-                  <button className="fw-bold">Explore Now</button>
-                  <FontAwesomeIcon icon={faArrowRight} width={15} />
+                <div className={` insight-explore-button`}>
+                  <button className="fw-bold text-light">Explore Now</button>
+                  <FontAwesomeIcon color="white" icon={faArrowRight} width={15} />
                 </div>
               </Link>
             </div>

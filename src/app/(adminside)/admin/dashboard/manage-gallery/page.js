@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 import { Button, Form, Modal, Table } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CommonModal from "../common-model/common-model";
+import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 export default function ManageGallery() {
   const [projectList, setProjectList] = useState([]);
   const [title, setTitle] = useState("");
@@ -19,10 +21,15 @@ export default function ManageGallery() {
   const [galleryList, setGalleryList] = useState([]);
   const [show, setShow] = useState(false);
   const [confirmBox, setConfirmBox] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
+  const [galleryId, setGalleryId] = useState(0);
   const handleShow = () => {
     setShow(true);
     setButtonName("Add");
+    setTitle("Add Gallery Image");
+    setValidated(false);
   };
+  //Fetching all projects list
   const fetchProjects = async () => {
     const projectResponse = await axios.get(
       process.env.NEXT_PUBLIC_API_URL + "projects/get-all"
@@ -31,34 +38,52 @@ export default function ManageGallery() {
       setProjectList(projectResponse.data);
     }
   };
+  //Handling file chnaging
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setGalleryImage(selectedFile);
   };
+
+  //Handling submitting gallery images
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("projectId", projectId);
     formData.append("image", galleryImage);
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}project-gallery/add-new`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+      setValidated(true);
+      return;
+    } 
+    if (form.checkValidity() === true){
+      try {
+        setShowLoading(true);
+        setButtonName("");
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}project-gallery/add-new`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        if (response.status == 200) {
+          toast.success(response.data.message);
+          fetchGalleryImage();
+          setShow(false);
         }
-      );
-      if (response.status == 200) {
-        toast.success(response.data.message);
-        fetchGalleryImage();
-        setShow(false);
+      } catch (error) {
+        console.log("Error Occured", error);
+      } finally {
+        setShowLoading(false);
+        setButtonName("Add");
       }
-    } catch (error) {
-      console.log("Error Occured", error);
     }
   };
+
+  //Fetching all gallery images
   const fetchGalleryImage = async () => {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}project-gallery/get-all`
@@ -66,7 +91,7 @@ export default function ManageGallery() {
     const res = response.data;
     const list = res.map((item, index) => ({
       ...item,
-      id: index + 1,
+      index: index + 1,
     }));
     setGalleryList(list);
   };
@@ -77,6 +102,7 @@ export default function ManageGallery() {
 
   //Handle delete
   const openConfirmationBox = (id) => {
+    setGalleryId(id);
     setConfirmBox(true);
   };
 
@@ -84,10 +110,11 @@ export default function ManageGallery() {
   const openEditModel = (item) => {
     setShow(true);
     setButtonName("Update");
+    setTitle("Update Gallery Image");
   };
   //Defining table columns
   const columns = [
-    { field: "id", headerName: "S.no", width: 100 },
+    { field: "index", headerName: "S.no", width: 100 },
     { field: "pname", headerName: "Project Name", width: 180 },
     {
       field: "image",
@@ -115,12 +142,12 @@ export default function ManageGallery() {
             icon={faTrash}
             onClick={() => openConfirmationBox(params.row.id)}
           />
-          <FontAwesomeIcon
+          {/* <FontAwesomeIcon
             className="text-warning"
             style={{ cursor: "pointer" }}
             icon={faPencil}
             onClick={() => openEditModel(params.row)}
-          />
+          /> */}
         </div>
       ),
     },
@@ -157,17 +184,18 @@ export default function ManageGallery() {
       </div>
       <Modal show={show} onHide={() => setShow(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Add Gallery Image</Modal.Title>
+          <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
-            <Form.Group md="4" controlId="validationCustom01">
+            <Form.Group md="4" controlId="selectProject">
               <Form.Label>Select Project</Form.Label>
               <Form.Select
                 aria-label="Default select example"
                 onChange={(e) => setProjectId(e.target.value)}
+                required
               >
-                <option>Select Project</option>
+                <option value="">Select Project</option>
                 {projectList.map((item) => (
                   <option
                     className="text-uppercase"
@@ -178,22 +206,27 @@ export default function ManageGallery() {
                   </option>
                 ))}
               </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                Project is required !
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group controlId="formFile" className="mb-3 mt-3">
               <Form.Label>Select Gallery Image</Form.Label>
-              <Form.Control type="file" onChange={(e) => handleFileChange(e)} />
+              <Form.Control type="file" onChange={(e) => handleFileChange(e)} required />
+              <Form.Control.Feedback type="invalid">
+                Gallery image is required !
+              </Form.Control.Feedback>
             </Form.Group>
-            <Button className="mt-3 btn btn-success" type="submit">
-              {buttonName}
+            <Button className="mt-3 btn btn-success" type="submit" disabled={showLoading}>
+              {buttonName} <LoadingSpinner show={showLoading} />
             </Button>
           </Form>
         </Modal.Body>
       </Modal>
-      <Modal show={confirmBox} onHide={() => setConfirmBox(false)} centered>
+      {/* <Modal show={confirmBox} onHide={() => setConfirmBox(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Are you sure you want to delete ?</Modal.Title>
         </Modal.Header>
-        {/* <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body> */}
         <Modal.Footer className="d-flex justify-content-center">
           <Button variant="secondary" onClick={() => setConfirmBox(false)}>
             Close
@@ -202,7 +235,8 @@ export default function ManageGallery() {
             Delete
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
+      <CommonModal confirmBox={confirmBox} setConfirmBox={setConfirmBox} api={`${process.env.NEXT_PUBLIC_API_URL}project-gallery/delete/${galleryId}`} fetchAllHeadersList={fetchGalleryImage} />
       <ToastContainer />
     </div>
   );

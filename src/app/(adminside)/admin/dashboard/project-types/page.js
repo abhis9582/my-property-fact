@@ -1,4 +1,5 @@
 "use client";
+import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Paper } from "@mui/material";
@@ -21,6 +22,7 @@ export default function ProjectTypes() {
   const [metaKeyword, setMetaKeyword] = useState("");
   const [metaDesc, setMetaDesc] = useState("");
   const [confirmBox, setConfirmBox] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
   // Function to handle form submission (you can replace it with your own logic)
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,6 +45,8 @@ export default function ProjectTypes() {
     }
     if (form.checkValidity() === true) {
       try {
+        setShowLoading(true);
+        setButtonName("");
         // Make API request
         const response = await axios.post(
           process.env.NEXT_PUBLIC_API_URL + "project-types/add-update",
@@ -56,6 +60,9 @@ export default function ProjectTypes() {
         }
       } catch (error) {
         console.error("Error submitting form:", error);
+      }finally{
+        setShowLoading(false);
+        id > 0 ? setButtonName("Update Type") : setButtonName("Add Type");
       }
     }
   };
@@ -67,7 +74,7 @@ export default function ProjectTypes() {
       const res = types.data;
       const list = res.map((item, index) => ({
         ...item,
-        id: index + 1,
+        index: index + 1,
       }));
       setTypeList(list);
     }
@@ -109,14 +116,15 @@ export default function ProjectTypes() {
     setMetaTitle("");
     setMetaKeyword("");
     setProjectTypeDesc("");
-    setTitle("Add New Project Type");
+    setTitle("Add Project Type");
     setButtonName("Add Type");
+    setValidated(false);
     setShowModal(true);
   };
 
   //Defining table columns
   const columns = [
-    { field: "id", headerName: "S.no", width: 100 },
+    { field: "index", headerName: "S.no", width: 100 },
     { field: "projectTypeName", headerName: "Project Type Name", width: 250 },
     { field: "metaTitle", headerName: "Meta Title", width: 246 },
     { field: "metaDesc", headerName: "Meta Description", width: 200 },
@@ -149,8 +157,8 @@ export default function ProjectTypes() {
     <div>
       <div className="d-flex justify-content-between mt-3">
         <p className="h1 ">Manage Project Types</p>
-        <Button className="mx-3" onClick={() => openAddModel()}>
-          + Add new Project Type
+        <Button className="mx-3 btn btn-success" onClick={() => openAddModel()}>
+          + Add Project Type
         </Button>
       </div>
       <div className="table-container mt-5">
@@ -179,67 +187,68 @@ export default function ProjectTypes() {
         </Modal.Header>
         <Modal.Body>
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="formCityName">
+            <Form.Group className="mb-3" controlId="projectType">
               <Form.Label>Project Type</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter Type"
+                placeholder="Project type"
                 value={projectType}
                 onChange={(e) => setProjectType(e.target.value)}
                 required
               />
               <Form.Control.Feedback type="invalid">
-                Type is required
+                Project type is required !
               </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formCityName">
+            <Form.Group className="mb-3" controlId="projectTypeMetaTitle">
               <Form.Label>Meta Title</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter Type"
+                placeholder="Meta title"
                 value={metaTitle || ""}
                 onChange={(e) => setMetaTitle(e.target.value)}
                 required
               />
               <Form.Control.Feedback type="invalid">
-                Type is required
+                Meta title is required !
               </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group
-              as={Col}
-              md="12"
-              className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
-            >
+            <Form.Group className="mb-3" controlId="ProjectTypeDescription">
               <Form.Label>Project Type Description</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
+                placeholder="Project type description"
                 name="builderDesc"
                 value={projectTypeDesc || ""}
                 onChange={(e) => setProjectTypeDesc(e.target.value)}
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Project type description is required !
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group
-              as={Col}
-              md="12"
               className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
+              controlId="projectTypeMetaDescription"
             >
               <Form.Label>Meta Description</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
                 name="metaDesc"
+                placeholder="Meta description"
                 value={metaDesc || ""}
                 onChange={(e) => setMetaDesc(e.target.value)}
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Project type meta description is required !
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group
-              as={Col}
-              md="12"
               className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
+              controlId="proejctTypeMetaKeyword"
             >
               <Form.Label>Meta Keyword</Form.Label>
               <Form.Control
@@ -247,11 +256,16 @@ export default function ProjectTypes() {
                 rows={3}
                 name="metaKeyword"
                 value={metaKeyword || ""}
+                placeholder="Meta Keyword"
                 onChange={(e) => setMetaKeyword(e.target.value)}
+                required
               />
+              <Form.Control.Feedback type="invalid">
+                Meta Keyword is required !
+              </Form.Control.Feedback>
             </Form.Group>
-            <Button variant="primary" type="submit">
-              {buttonName}
+            <Button className="btn btn-success" type="submit" disabled={showLoading}>
+              {buttonName} <LoadingSpinner show={showLoading}/>
             </Button>
           </Form>
         </Modal.Body>

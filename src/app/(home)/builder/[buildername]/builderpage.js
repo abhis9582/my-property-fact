@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import PropertyContainer from "@/app/(home)/components/common/page";
-import Image from "next/image";
 import CommonBreadCrum from "../../components/common/breadcrum";
 import CommonHeaderBanner from "../../components/common/commonheaderbanner";
 export default function BuilderPage({ builderName }) {
@@ -49,7 +48,7 @@ export default function BuilderPage({ builderName }) {
           </Link>
         </div>
       </div>
-      <div className="container-fluid flex-wrap my-3 gap-3">
+      <div className="container d-flex flex-wrap my-3 gap-3">
         {propertyList.map((item) => (
           <div key={item.id}>
             <PropertyContainer data={item} />

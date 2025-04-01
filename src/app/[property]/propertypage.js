@@ -175,46 +175,46 @@ export default function Property({ slug }) {
     const menuButtons = document.querySelectorAll(".menuBtn");
     const menu = document.getElementById("mbdiv");
     const header = document.querySelector(".header");
-  
+
     if (!menu) return;
-  
+
     // Toggle menu state
     const isMenuOpen = menu.classList.toggle("active");
-  
+
     // Toggle menu button classes
     menuButtons.forEach((btn) =>
       btn.classList.toggle("closeMenuBtn", isMenuOpen)
     );
-  
+
     // Toggle display
     menu.style.display = isMenuOpen ? "block" : "none";
-  
+
     // Toggle header class
     header?.classList.toggle("notfixed", isMenuOpen);
-  
+
     // Toggle body scroll lock
     document.body.classList.toggle("overflow-hidden", isMenuOpen);
-  
+
     // Handle scrolling when clicking a menu link
     if (targetId) {
       const targetElement = document.getElementById(targetId);
       if (targetElement) {
         const headerHeight = header ? header.offsetHeight : 0;
         const targetPosition =
-          targetElement.getBoundingClientRect().top + window.scrollY - headerHeight-50;
-  
+          targetElement.getBoundingClientRect().top + window.scrollY - headerHeight - 50;
+
         window.scrollTo({
           top: targetPosition,
           behavior: "smooth",
         });
-  
+
         // Close menu after clicking
         menu.classList.remove("active");
         document.body.classList.remove("overflow-hidden");
       }
     }
   };
-  
+
 
 
   if (loading) {
@@ -312,7 +312,7 @@ export default function Property({ slug }) {
                   <Link
                     href="#"
                     className="text-decoration-none text-light fs-5 fw-bold"
-                    onClick={(e)=>openMenu(e, 'home')}
+                    onClick={(e) => openMenu(e, 'home')}
                   >
                     Home
                   </Link>
@@ -321,7 +321,7 @@ export default function Property({ slug }) {
                   <Link
                     href="#overview"
                     className="text-decoration-none text-light fs-5 fw-bold"
-                    onClick={(e)=>openMenu(e, 'overview')}
+                    onClick={(e) => openMenu(e, 'overview')}
                   >
                     Overview
                   </Link>
@@ -330,7 +330,7 @@ export default function Property({ slug }) {
                   <Link
                     href="#amenities"
                     className="text-decoration-none text-light fs-5 fw-bold"
-                    onClick={(e)=>openMenu(e, 'amenities')}
+                    onClick={(e) => openMenu(e, 'amenities')}
                   >
                     Amenities
                   </Link>
@@ -339,7 +339,7 @@ export default function Property({ slug }) {
                   <Link
                     href="#floorplan"
                     className="text-decoration-none text-light fs-5 fw-bold"
-                    onClick={(e)=>openMenu(e, 'floorplan')}
+                    onClick={(e) => openMenu(e, 'floorplan')}
                   >
                     Plans &amp; Price
                   </Link>
@@ -348,7 +348,7 @@ export default function Property({ slug }) {
                   <Link
                     href="#gallery"
                     className="text-decoration-none text-light fs-5 fw-bold"
-                    onClick={(e)=>openMenu(e, 'gallery')}
+                    onClick={(e) => openMenu(e, 'gallery')}
                   >
                     Gallery
                   </Link>
@@ -357,7 +357,7 @@ export default function Property({ slug }) {
                   <Link
                     href="#location"
                     className="text-decoration-none text-light fs-5 fw-bold"
-                    onClick={(e)=>openMenu(e, 'location')}
+                    onClick={(e) => openMenu(e, 'location')}
                   >
                     Location
                   </Link>
@@ -380,13 +380,18 @@ export default function Property({ slug }) {
       <div id="home" className="container-fluid p-0">
         <div className="slick-slider-container banner-container">
           <Slider {...settings}>
-            <picture>
+            <picture className="project-detail-banner">
               <source
                 srcSet={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${bannerData.slugURL}/${bannerData.mobileBanner}`}
                 media="(max-width: 640px)"
               />
               <source srcSet={imageSrc} media="(max-width: 1024px)" />
-              <img src={imageSrc} alt="banner-image" className="w-100" />
+              <Image 
+                src={imageSrc}
+                alt="banner-image"
+                fill
+                unoptimized
+              />
             </picture>
           </Slider>
           <div className="banner-form d-none d-lg-block">
@@ -550,9 +555,10 @@ export default function Property({ slug }) {
             {floorPlanList.map((item, index) => (
               <div key={`${item.planType}-${index}`} className="card mt-3">
                 <div className="p-3 rounded-sm">
-                  <img
-                    style={{ width: "100%" }}
-                    src="https://www.starestate.com/assets/images/generic-floorplan.jpg"
+                  <Image
+                    width={300}
+                    height={200}
+                    src="/static/generic-floorplan.jpg"
                     alt="floor plan"
                   />
                 </div>
@@ -592,10 +598,12 @@ export default function Property({ slug }) {
           <div className="gallery-container">
             <Slider {...settings1}>
               {galleryList.map((item) => (
-                <div key={item.id}>
-                  <img
+                <div key={item.id} className="project-deail-gallery-container">
+                  <Image
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.image}`}
                     alt="floor plan"
+                    fill
+                    unoptimized
                   />
                 </div>
               ))}
@@ -623,8 +631,6 @@ export default function Property({ slug }) {
                         alt={item.iconImage}
                         width={40}
                         height={40}
-                        layout="responsive"
-                        className="w-25"
                       />
                       <p className="h6 text-center">{item.benefitName}</p>
                       <div className="distance-value">{item.distance}</div>
@@ -658,17 +664,17 @@ export default function Property({ slug }) {
                 </div>
               </div>
             </div>
-            <div className="col-md-6 p-3">
-              <Link href="#formModal" data-bs-toggle="modal">
+            <div className="col-md-6 p-3 position-relative">
+              {/* <Link href="#formModal" data-bs-toggle="modal"> */}
+              <div className="project-detail-location-image-container">
                 <Image
                   src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.locationMap}`}
                   alt="location-image"
-                  width={400}
-                  height={400}
-                  layout="intrinsic"
+                  fill
                   unoptimized
                 />
-              </Link>
+              </div>
+              {/* </Link> */}
             </div>
           </div>
         </div>

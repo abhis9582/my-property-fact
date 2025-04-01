@@ -185,7 +185,7 @@ export default function Aminities() {
   return (
     <div className="container-fluid">
       <div className="d-flex justify-content-between mt-3">
-        <p className="h1">Manage Aminities</p>
+        <p className="h1">Manage Amenities</p>
         <Button className="btn btn-success mx-3" onClick={openAddModel}>
           + Add new amenity
         </Button>
@@ -251,14 +251,11 @@ export default function Aminities() {
               </Form.Group>
               {previousImage && (
                 <div>
-                  <img
+                  <Image
                     src={previousImage}
                     alt="previous image"
-                    style={{
-                      width: "100px",
-                      height: "100px",
-                      objectFit: "cover",
-                    }}
+                    width={100}
+                    height={100}
                   />
                   <br />
                 </div>
@@ -283,7 +280,7 @@ export default function Aminities() {
                 </InputGroup>
               </Form.Group>
             </Row>
-            <Button type="submit">{buttonName}</Button>
+            <Button className="btn btn-success" type="submit">{buttonName}</Button>
           </Form>
         </Modal.Body>
       </Modal>

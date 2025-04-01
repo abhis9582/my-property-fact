@@ -1,16 +1,19 @@
 "use client";
+import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
+import { toast } from "react-toastify";
 export default function AddNewProperty() {
   const [validated, setValidated] = useState(false);
   const [builderList, setBuilderList] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [amenityList, setAmenityList] = useState([]);
   const [projectTypeList, setProjectTypeList] = useState([]);
+  const [showLoading, setShowLoading] = useState(false);
   const [formData, setFormData] = useState({
     projectName: "",
     projectLocality: "",
@@ -51,7 +54,7 @@ export default function AddNewProperty() {
       setAmenityList(builders.data);
     }
   };
-  const fetchProjectTypes = async ()=>{
+  const fetchProjectTypes = async () => {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`);
     setProjectTypeList(response.data);
   }
@@ -77,7 +80,7 @@ export default function AddNewProperty() {
       [name]: files[0],
     });
   };
-
+  //Handle submiting project
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -86,9 +89,8 @@ export default function AddNewProperty() {
       setValidated(true);
       return;
     }
-    console.log(formData);
-    
     if (form.checkValidity() === true) {
+      setShowLoading(true);
       const data = new FormData();
       for (let key in formData) {
         data.append(key, formData[key]);
@@ -103,13 +105,20 @@ export default function AddNewProperty() {
             },
           }
         );
-        alert(response.data.message);
+        if (response.data.isSuccess === 1) {
+          toast.success(response.data.message);
+        } else {
+          toast.error(response.data.message);
+        }
       } catch (error) {
-        console.log(error);
-        alert("Error saving Project");
+        toast.error(error);
+      } finally {
+        setShowLoading(false);
       }
     }
   };
+
+  //Handle selecting items
   const handleItemSelect = (item) => {
     setSelectedItems((prevSelected) => {
       if (prevSelected.includes(item.id)) {
@@ -120,8 +129,8 @@ export default function AddNewProperty() {
         return [...prevSelected, item.id];
       }
     });
-    console.log(selectedItems);
   };
+
   return (
     <div className="container-fluid">
       <h1 className="text-center">Add New Project</h1>
@@ -167,7 +176,7 @@ export default function AddNewProperty() {
               required
               name="projectLogo"
               onChange={handleFileChange}
-              // isInvalid={!!errors.file}
+            // isInvalid={!!errors.file}
             />
             <Form.Control.Feedback type="invalid">
               Project logo is required!
@@ -187,7 +196,7 @@ export default function AddNewProperty() {
               required
               name="projectThumbnail"
               onChange={handleFileChange}
-              // isInvalid={!!errors.file}
+            // isInvalid={!!errors.file}
             />
             <Form.Control.Feedback type="invalid">
               Project Banner is required!
@@ -219,7 +228,7 @@ export default function AddNewProperty() {
               required
               name="locationMap"
               onChange={handleFileChange}
-              // isInvalid={!!errors.file}
+            // isInvalid={!!errors.file}
             />
             <Form.Control.Feedback type="invalid">
               Project map is required!
@@ -362,9 +371,8 @@ export default function AddNewProperty() {
               {amenityList.map((item) => (
                 <div
                   key={item.id}
-                  className={`selectable-item ${
-                    selectedItems.includes(item) ? "selected" : ""
-                  } rounded-2 border mx-3 mt-2 p-2`}
+                  className={`selectable-item ${selectedItems.includes(item) ? "selected" : ""
+                    } rounded-2 border mx-3 mt-2 p-2`}
                   style={{
                     cursor: "pointer",
                     backgroundColor: selectedItems.includes(item.id)
@@ -480,7 +488,7 @@ export default function AddNewProperty() {
             onChange={handleChange}
           />
         </Form.Group>
-        <Button type="submit">Submit form</Button>
+        <Button className="btn btn-success" type="submit">Submit form <LoadingSpinner show={showLoading} /></Button>
       </Form>
     </div>
   );

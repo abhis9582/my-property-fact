@@ -79,7 +79,7 @@ export default function ContactUs() {
 
   return (
     <>
-      <CommonHeaderBanner image={"contact-banner.jpg"} headerText={""} />
+      <CommonHeaderBanner image={"contact-banner.jpg"} headerText={"Contect Us"} />
       <CommonBreadCrum pageName={"Contact-us"} />
       <div className="">
         <div className="container d-flex justify-content-center gap-4 flex-wrap">

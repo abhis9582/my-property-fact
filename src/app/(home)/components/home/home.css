@@ -18,6 +18,10 @@
     transition: all 300ms ease-in-out;
 }
 
+.insight-container{
+    border: 1px solid #178c2c !important;
+}
+
 .enquiry-sticky-btn:hover {
     background-color: #178c2c;
 }
