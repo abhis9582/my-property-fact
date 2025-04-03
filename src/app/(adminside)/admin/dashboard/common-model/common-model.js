@@ -24,7 +24,7 @@ export default function CommonModal({ confirmBox, setConfirmBox, api, fetchAllHe
 
   return (
     <>
-      <Modal show={confirmBox} onHide={() => setConfirmBox(false)} centered>
+      <Modal show={confirmBox} onHide={() => setConfirmBox(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Are you sure you want to delete?</Modal.Title>
         </Modal.Header>

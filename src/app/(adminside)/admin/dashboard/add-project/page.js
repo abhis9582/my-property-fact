@@ -297,7 +297,7 @@ export default function AddProject() {
         </Paper>
       </div>
       {/* Modal for adding a new project */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+      <Modal size="xl" show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>{title}</Modal.Title>
         </Modal.Header>

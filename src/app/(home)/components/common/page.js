@@ -15,15 +15,24 @@ export default function PropertyContainer(props) {
 
   //Generating price in lakh & cr
   const generatePrice = (price) => {
-    var res = "";
-    if (price > 1) {
-      res = price + " Cr";
-    } else {
-      const m = price * 100;
-      res = m + " Lakh";
+    // Check if price contains any alphabetic character
+    if (/[a-zA-Z]/.test(price)) {
+      return price; // Return the original string if it contains letters
     }
-    return res;
-  }
+
+    // Convert price to a number
+    const numericPrice = parseFloat(price);
+
+    // Check if conversion is successful
+    if (isNaN(numericPrice)) {
+      return price; // Return original string if it's not a valid number
+    }
+
+    // Format price
+    return numericPrice > 1
+      ? numericPrice + " Cr"
+      : (numericPrice * 100) + " Lakh";
+  };
   return (
     <>
       <div

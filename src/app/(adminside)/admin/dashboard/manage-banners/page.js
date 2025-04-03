@@ -102,6 +102,8 @@ export default function ManageBanners() {
     setPreviewMobileBanner(mobileBannerImage);
     setBannerId(item.id);
     setButtonName("Update");
+    setdesktopBanner(null);
+    setMobileBanner(null);
   };
 
   const fetchProjects = async () => {

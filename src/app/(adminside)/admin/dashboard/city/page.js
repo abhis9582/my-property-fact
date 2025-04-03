@@ -24,6 +24,7 @@ export default function City() {
   const [confirmBox, setConfirmBox] = useState(false);
   const [cityId, setCityId] = useState(0);
   const [showLoading, setShowLoading] = useState(false);
+  const [cityDesc, setCityDesc] = useState(null);
   // Function to handle form submission (you can replace it with your own logic)
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,6 +40,7 @@ export default function City() {
       metaTitle: metaTitle,
       metaKeyWords: metaKeyword,
       metaDescription: metaDescription,
+      cityDisc: cityDesc,
       id: 0,
     };
     if (id > 0) {
@@ -93,6 +95,7 @@ export default function City() {
     setMetaDescription(data.metaDescription);
     setMetaKeyWord(data.metaKeyWords);
     setShowModal(true);
+    setCityDesc(data.cityDisc);
   };
   const openAddModel = () => {
     setValidated(false);
@@ -105,6 +108,7 @@ export default function City() {
     setTitle("Add New City");
     setButtonName("Add City");
     setShowModal(true);
+    setCityDesc(null);
   };
   const deleteCity = async () => {
     const response = await axios.delete(
@@ -260,6 +264,20 @@ export default function City() {
                 name="metaKeyword"
                 value={metaDescription || ""}
                 onChange={(e) => setMetaDescription(e.target.value)}
+                required
+              />
+              <Form.Control.Feedback type="invalid">
+                Meta description is required !
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="cityDescription">
+              <Form.Label>City Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                placeholder="City Description"
+                name="cityDisc"
+                value={cityDesc || ""}
+                onChange={(e) => setCityDesc(e.target.value)}
                 required
               />
               <Form.Control.Feedback type="invalid">

@@ -579,7 +579,7 @@ export default function Property({ slug }) {
                     Area
                   </p>
                   <p>{item.areaSqft} sqft*</p>
-                  <p>{item.areaSqmt} sqmt*</p>
+                  <p>{parseFloat(item.areaSqmt).toFixed(2)} sqmt*</p>
                 </div>
                 <div className="pb-4 ps-2 mt-4">
                   <button className="btn btn-success">PRICE ON REQUEST</button>
