@@ -1,9 +1,15 @@
+"use client";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./insight.css";
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
+import "react-toastify/dist/ReactToastify.css";
+import CommonPopUpform from "../../common/popupform";
+import { ToastContainer } from "react-toastify";
 export default function InsightNew() {
+  const [isOpen, setIsOpen] = useState(false);
   const data = [
     {
       id: 1,
@@ -49,18 +55,24 @@ export default function InsightNew() {
       href: "#",
     },
   ];
+  //opeaning pop
+  const openPopup = (data) => {
+    if (data.href.length < 3) {
+      setIsOpen(true);
+    }
+  }
   return (
     <>
       <p className="h1 text-center fw-bold">Insights</p>
       <div className="container my-5">
         <div className="d-flex justify-content-center gap-4 my-3 flex-wrap flex-column flex-md-row">
           {data.map((i) => (
-            <div key={i.id} className={`bg-light insight-container mx-auto`}>
+            <div key={i.id} className={`bg-light insight-container mx-auto`} onClick={() => openPopup(i)}>
               <Link href={i.href}>
                 <div className="insight-container-child">
                   <p>{i.heading}</p>
                   <p>{i.sub_heading}</p>
-                  <Image src={i.src} alt={i.alt} width={200} height={150}/>
+                  <Image src={i.src} alt={i.alt} width={200} height={150} />
                 </div>
                 <div className={` insight-explore-button`}>
                   <button className="fw-bold text-light">Explore Now</button>
@@ -71,6 +83,8 @@ export default function InsightNew() {
           ))}
         </div>
       </div>
+      <CommonPopUpform show={isOpen} handleClose={setIsOpen} />
+      <ToastContainer/>
     </>
   );
 }

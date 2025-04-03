@@ -66,6 +66,9 @@ ul{
 .cursor-pointer {
     cursor: pointer !important;
 }
+.theme-bg{
+    background-color: var(--corp-color);
+}
 
 .btn-primary {
     background-color: #68ac78 !important;

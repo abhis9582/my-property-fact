@@ -5,17 +5,12 @@ import "slick-carousel/slick/slick-theme.css";
 import "./featured.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMapMarker } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
-import Image from "next/image";
 import PropertyContainer from "../../common/page";
 
 export default function Featured() {
   const [featuredProperties, setFeaturedProperties] = useState([]);
-  const goToPropertyDetail = (url) => {
-    window.open("/" + url, "_blank");
-  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {

@@ -5,18 +5,19 @@ import {
   Button,
   Form,
   Modal,
-  Table,
   Row,
   Col,
   InputGroup,
 } from "react-bootstrap";
 import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Image from "next/image";
+import { LoadingSpinner } from "@/app/(home)/contact-us/page";
+import CommonModal from "../common-model/common-model";
 export default function Aminities() {
   const [showModal, setShowModal] = useState(false);
   const [amenityList, setAmenityList] = useState([]);
@@ -26,6 +27,9 @@ export default function Aminities() {
   const [previousImage, setPreviousImage] = useState("");
   const [confirmBox, setConfirmBox] = useState(false);
   const [amenityId, setAmenityId] = useState(0);
+  const [showLoading, setShowLoading] = useState(false);
+
+  //Fetching all amenities list
   const fetchAmenities = async () => {
     const response = await axios.get(
       process.env.NEXT_PUBLIC_API_URL + "amenity/get-all"
@@ -45,42 +49,50 @@ export default function Aminities() {
     altTag: "",
     amenityImage: null,
   });
+
+  //Saving the amenity data
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
+      setValidated(true);
+      return;
     }
-    setValidated(true);
-    const formDataToSend = new FormData();
-    formDataToSend.append("title", formData.title);
-    formDataToSend.append("altTag", formData.altTag);
-    formDataToSend.append("amenityImage", formData.amenityImage);
-    if (formData.id > 0) {
-      formDataToSend.append("id", formData.id);
-    }
-    try {
-      const response = await axios.post(
-        process.env.NEXT_PUBLIC_API_URL + "amenity/post",
-        formDataToSend,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      if (response.data.isSuccess == 1) {
-        setFormData({
-          title: "",
-          altTag: "",
-          amenityImage: null,
-        });
-        setShowModal(false);
-        fetchAmenities();
+    if (form.checkValidity() === true) {
+      const formDataToSend = new FormData();
+      formDataToSend.append("title", formData.title);
+      formDataToSend.append("altTag", formData.altTag);
+      formDataToSend.append("amenityImage", formData.amenityImage);
+      if (formData.id > 0) {
+        formDataToSend.append("id", formData.id);
       }
-    } catch (error) {
-      console.error("Error submitting data", error);
+      try {
+        setShowLoading(true);
+        const response = await axios.post(
+          process.env.NEXT_PUBLIC_API_URL + "amenity/post",
+          formDataToSend,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        if (response.data.isSuccess == 1) {
+          setFormData({
+            title: "",
+            altTag: "",
+            amenityImage: null,
+          });
+          setShowModal(false);
+          fetchAmenities();
+        }
+      } catch (error) {
+        console.error("Error submitting data", error);
+      } finally {
+        setShowLoading(false);
+      }
     }
   };
   // Handle image file selection
@@ -100,23 +112,14 @@ export default function Aminities() {
       [name]: value,
     }));
   };
+
+  //Handle confirmation dilog
   const openConfirmationBox = (id) => {
     setConfirmBox(true);
     setAmenityId(id);
   };
-  const deleteAmenity = async () => {
-    const response = await axios.delete(
-      `${process.env.NEXT_PUBLIC_API_URL}amenity/delete/${amenityId}`
-    );
-    if (response.data.isSuccess === 1) {
-      toast.success(response.data.message);
-      setConfirmBox(false);
-      fetchAmenities();
-    } else {
-      toast.error(response.data.message);
-      setConfirmBox(false);
-    }
-  };
+
+  //Handling opening of add popup
   const openAddModel = () => {
     setFormData({
       title: "",
@@ -127,7 +130,10 @@ export default function Aminities() {
     setTitle("Add New Amenity");
     setButtonName("Add Amenity");
     setShowModal(true);
+    setValidated(false);
   };
+
+  //Handling opening of edit model
   const openEditModel = (item) => {
     setTitle("Edit Amenity");
     setButtonName("Update Amenity");
@@ -140,6 +146,7 @@ export default function Aminities() {
       `${process.env.NEXT_PUBLIC_IMAGE_URL}amenity/${item.amenityImageUrl}`
     );
   };
+
   //Defining table columns
   const columns = [
     { field: "index", headerName: "S.no", width: 100 },
@@ -180,8 +187,9 @@ export default function Aminities() {
       ),
     },
   ];
-
+  //Defining pagination for table
   const paginationModel = { page: 0, pageSize: 10 };
+
   return (
     <div className="container-fluid">
       <div className="d-flex justify-content-between mt-3">
@@ -280,24 +288,11 @@ export default function Aminities() {
                 </InputGroup>
               </Form.Group>
             </Row>
-            <Button className="btn btn-success" type="submit">{buttonName}</Button>
+            <Button className="btn btn-success" type="submit" disabled={showLoading}>{buttonName} <LoadingSpinner show={showLoading} /></Button>
           </Form>
         </Modal.Body>
       </Modal>
-      <Modal show={confirmBox} onHide={() => setConfirmBox(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Are you sure you want to delete ?</Modal.Title>
-        </Modal.Header>
-        {/* <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body> */}
-        <Modal.Footer className="d-flex justify-content-center">
-          <Button variant="secondary" onClick={() => setConfirmBox(false)}>
-            Close
-          </Button>
-          <Button variant="danger" onClick={deleteAmenity}>
-            Delete
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <CommonModal confirmBox={confirmBox} setConfirmBox={setConfirmBox} api={`${process.env.NEXT_PUBLIC_API_URL}amenity/delete/${amenityId}`} fetchAllHeadersList={fetchAmenities} />
       <ToastContainer />
     </div>
   );
