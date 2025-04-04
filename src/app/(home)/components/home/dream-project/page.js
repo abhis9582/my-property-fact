@@ -12,14 +12,11 @@ export default function DreamProject() {
   return (
     <>
       <div className="container my-4">
-        <p className="h3 text-center fw-bold">
-          Find your dream property in the city you are searching in
-        </p>
         <div className="container d-flex flex-wrap gap-3 justify-content-center">
           <div className="my-2">
-            <Link href="/city/mumbai">
+            <Link href="/city/agra">
               <Image
-                src="/dream-cities/mumbai.png"
+                src="/dream-cities/agra.jpg"
                 alt="city-mumbai"
                 width={300}
                 height={180}
@@ -29,7 +26,7 @@ export default function DreamProject() {
           <div className="my-2">
             <Link href="/city/bangalore">
               <Image
-                src="/dream-cities/bangalore.png"
+                src="/dream-cities/bangalore.jpg"
                 alt="city-bangalore"
                 width={300}
                 height={180}
@@ -39,7 +36,7 @@ export default function DreamProject() {
           <div className="my-2">
             <Link href="/city/pune">
               <Image
-                src="/dream-cities/pune.png"
+                src="/dream-cities/kochi.jpg"
                 alt="city-mumbai"
                 width={300}
                 height={180}
@@ -49,7 +46,7 @@ export default function DreamProject() {
           <div className="my-2">
             <Link href="/city/delhi">
               <Image
-                src="/dream-cities/delhi.png"
+                src="/dream-cities/delhi_ncr.jpg"
                 alt="city-delhi"
                 width={300}
                 height={180}
@@ -59,9 +56,9 @@ export default function DreamProject() {
         </div>
         <div className="container d-flex flex-wrap gap-3 justify-content-center">
           <div className="my-2">
-            <Link href="/city/noida">
+            <Link href="#">
               <Image
-                src="/dream-cities/noida.png"
+                src="/dream-cities/hyderabad.jpg"
                 alt="city-noida"
                 width={300}
                 height={180}
@@ -71,7 +68,7 @@ export default function DreamProject() {
           <div className="my-2">
             <Link href="/city/gurugram">
               <Image
-                src="/dream-cities/gurugram.png"
+                src="/dream-cities/jaipur.jpg"
                 alt="city-gurugram"
                 width={300}
                 height={180}
@@ -79,9 +76,9 @@ export default function DreamProject() {
             </Link>
           </div>
           <div className="my-2">
-            <Link href="/city/greater-noida">
+            <Link href="/city/mumbai">
               <Image
-                src="/dream-cities/greater_noida.png"
+                src="/dream-cities/mumbai.jpg"
                 alt="city-greater_noida"
                 width={300}
                 height={180}
@@ -91,7 +88,7 @@ export default function DreamProject() {
           <div className="my-2">
             <Link href="#">
               <Image
-                src="/dream-cities/other_city.png"
+                src="/dream-cities/chennai.jpg"
                 alt="city-other_city"
                 width={300}
                 height={180}

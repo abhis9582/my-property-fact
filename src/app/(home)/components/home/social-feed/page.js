@@ -10,7 +10,6 @@ export default function SocialFeed() {
       <div className="container-fluid my-4">
         <div className="container">
           <div className="heading mx-auto text-center">
-            <h3>Social Media Feed</h3>
             <div className="toggleHead mt-3">
               <button className="toggleBtn active" style={{ color: "#c92bb7" }}>
                 <FontAwesomeIcon icon={faInstagram} width={15} /> Instagram

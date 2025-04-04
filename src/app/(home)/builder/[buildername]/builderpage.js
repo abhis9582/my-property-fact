@@ -48,12 +48,14 @@ export default function BuilderPage({ builderName }) {
           </Link>
         </div>
       </div>
-      <div className="container d-flex flex-wrap my-3 gap-3">
-        {propertyList.map((item) => (
-          <div key={item.id}>
-            <PropertyContainer data={item} />
-          </div>
-        ))}
+      <div className="container my-3">
+        <div className="row g-3">
+          {propertyList.map((item) => (
+            <div key={item.id} className="col-12 col-sm-6 col-md-4">
+              <PropertyContainer data={item} />
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );

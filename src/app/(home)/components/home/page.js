@@ -142,7 +142,7 @@ export default function HomePage() {
               style={{ objectFit: "cover" }} // "cover" looks better than "fill"
               className="banner-image position-relative"
               fill
-              priority 
+              priority
             />
           </picture>
           <div className="overlay"></div>
@@ -250,9 +250,15 @@ export default function HomePage() {
         <InsightNew />
       </div>
       {/* <Insight /> */}
+      <p className="fs-1 fw-bold text-center">Featured Projects</p>
       <Featured />
+      <p className="fs-1 fw-bold text-center mt-5">
+        Find your dream property in the city you are searching in
+      </p>
       <DreamProject />
+      <p className="fs-1 fw-bold text-center">News & Views</p>
       <NewsViews />
+      <p className="fs-1 fw-bold text-center">Social Media Feed</p>
       <SocialFeed />
       <ToastContainer />
     </>

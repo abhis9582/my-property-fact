@@ -173,6 +173,11 @@ export default function SideNav() {
           </Link>
         </li>
         <li>
+          <Link href="/admin/dashboard/manage-blogs">
+            Manage Blogs
+          </Link>
+        </li>
+        <li>
           <Link href="#" onClick={() => handleLogout()}>
             Log out
           </Link>
