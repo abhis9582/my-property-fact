@@ -1,4 +1,5 @@
 "use client";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useState } from "react";
@@ -47,18 +48,18 @@ export default function ManageBlogs() {
             width: 250,
             renderCell: (params) => (
                 <div>
-                    <FontAwesomeIcon
+                    {/* <FontAwesomeIcon
                         className="mx-3 text-danger"
                         style={{ cursor: "pointer" }}
                         icon={faTrash}
                         onClick={() => openConfirmationBox(params.row.id)}
-                    />
-                    <FontAwesomeIcon
+                    /> */}
+                    {/* <FontAwesomeIcon
                         className="text-warning"
                         style={{ cursor: "pointer" }}
                         icon={faPencil}
                         onClick={() => openEditModel(params.row)}
-                    />
+                    /> */}
                 </div>
             ),
         },
