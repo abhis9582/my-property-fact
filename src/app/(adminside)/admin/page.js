@@ -6,6 +6,7 @@ import { useState } from "react";
 import "./dashboard/dashboard.css";
 import Image from "next/image";
 import Cookies from "js-cookie";
+import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 export default function AdminPage() {
   const router = useRouter();
   const [validated, setValidated] = useState(false);
@@ -13,7 +14,8 @@ export default function AdminPage() {
     email: "",
     password: "",
   });
-
+  const [showLoading, setShowLoading] = useState(false);
+  const [buttonName, setButtonName] = useState("Go to dashboard");
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,9 +26,9 @@ export default function AdminPage() {
       setValidated(true);
       return;
     }
-    setValidated(true);
-
     try {
+      setShowLoading(true);
+      setButtonName("");
       const response = await axios.post(
         process.env.NEXT_PUBLIC_API_URL + "auth/login",
         formData,
@@ -48,9 +50,13 @@ export default function AdminPage() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setShowLoading(false);
+      setButtonName("Go to dashboard");
     }
   };
 
+  //Setting form data
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -58,6 +64,7 @@ export default function AdminPage() {
       [name]: value, // Dynamically set the value based on the input's name attribute
     });
   };
+
   return (
     <>
       <div className="container d-flex justify-content-center align-items-center min-vh-100">
@@ -103,8 +110,8 @@ export default function AdminPage() {
               <div className="invalid-feedback">Enter a valid password!</div>
             </div>
             <div className="text-center">
-              <button type="submit" className="btn btn-primary">
-                Go to dashboard
+              <button type="submit" className="btn btn-success" disabled={showLoading}>
+                {buttonName} <LoadingSpinner show={showLoading} />
               </button>
             </div>
             <div className="text-center mt-2">

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { ToastContainer } from "react-toastify";
 
@@ -22,6 +22,15 @@ export default function CommonPopUpform({ show, handleClose }) {
             [name]: value,
         }));
     };
+
+    // Reset form when modal closes
+    useEffect(() => {
+        if (!show) {
+            setFormData(intitalData);
+            setValidated(false);
+        }
+    }, [show]);
+
 
 
     //handle form submit
@@ -121,7 +130,7 @@ export default function CommonPopUpform({ show, handleClose }) {
                             Please provide a valid message.
                         </Form.Control.Feedback>
                     </Form.Group>
-                    <Button type="submit" className="fw-bold">Submit</Button>
+                    <Button type="submit" className="fw-bold btn btn-success">Submit</Button>
                 </Form>
             </Modal>
             <ToastContainer />

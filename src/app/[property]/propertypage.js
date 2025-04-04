@@ -19,6 +19,9 @@ import Image from "next/image";
 import Footer from "../(home)/components/footer/page";
 import { Spinner } from "react-bootstrap";
 import NotFound from "../not-found";
+import CommonPopUpform from "../(home)/components/common/popupform";
+import { LoadingSpinner } from "../(home)/contact-us/page";
+import { toast } from "react-toastify";
 
 export default function Property({ slug }) {
   const [amenities, setAmenities] = useState([]);
@@ -32,20 +35,27 @@ export default function Property({ slug }) {
   const [bannerData, setBannerData] = useState([]);
   const [faqs, setFaqs] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showPopUp, setShowPopUp] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: ""
+    phone: "",
+    message: ""
   });
   const [validated, setValidated] = useState(false);
+  const [validated1, setValidated1] = useState(false);
   //Defining loading state
   const [loading, setLoading] = useState(true);
+
+  //Handling answer div
   const toggleAnswer = (index) => {
     const updatedVisibility = [...isAnswerVisible];
     updatedVisibility[index] = !updatedVisibility[index];
     setIsAnswerVisible(updatedVisibility);
   };
 
+  //Setting for banner slider
   const settings = {
     dots: false,
     infinite: false,
@@ -55,16 +65,56 @@ export default function Property({ slug }) {
     autoplay: false,
     autoplaySpeed: 2000,
   };
+
+  //Setting for gallery slider
   const settings1 = {
     dots: true,
-    fade: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 1,
+    slidesToShow: 3, // Default for large screens
     slidesToScroll: 1,
-    waitForAnimate: false
+    responsive: [
+      {
+        breakpoint: 1024, // Tablets
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 768, // Mobile (Medium screens)
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+      {
+        breakpoint: 480, // Small mobile screens
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
   };
 
+  //Generating price in lakh & cr
+  const generatePrice = (price) => {
+    // Check if price contains any alphabetic character
+    if (/[a-zA-Z]/.test(price)) {
+      return price; // Return the original string if it contains letters
+    }
+
+    // Convert price to a number
+    const numericPrice = parseFloat(price);
+
+    // Check if conversion is successful
+    if (isNaN(numericPrice)) {
+      return price; // Return original string if it's not a valid number
+    }
+
+    // Format price
+    return numericPrice > 1
+      ? numericPrice + " Cr"
+      : (numericPrice * 100) + " Lakh";
+  };
   //Handle form input data
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -75,16 +125,81 @@ export default function Property({ slug }) {
   }
 
   //Handle submit form
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, form_position) => {
     e.preventDefault();
-    const form = e.currentTarget;
-    if (form.checkValidity() === false) {
-      e.stopPropagation();
-      setValidated(true);
-      return;
+    if (form_position === "bottom_form") {
+      const form = e.currentTarget;
+      if (form.checkValidity() === false) {
+        e.stopPropagation();
+        setValidated1(true);
+        return;
+      }
+      if (form.checkValidity() === true) {
+        try {
+          setShowLoading(true);
+          // Make API request
+          const response = await axios.post(
+            process.env.NEXT_PUBLIC_API_URL + "enquiry/post",
+            formData
+          );
+          // Check if response is successful
+          if (response.data.isSuccess === 1) {
+            setFormData({
+              name: "",
+              email: "",
+              phone: "",
+              message: ""
+            });
+            toast.success(response.data.message);
+            setValidated(false);
+          } else {
+            toast.error(response.data.message);
+          }
+        } catch (error) {
+          console.error("Error submitting form:", error);
+        } finally {
+          setShowLoading(false);
+        }
+      }
+    } else {
+      const form = e.currentTarget;
+      if (form.checkValidity() === false) {
+        e.stopPropagation();
+        setValidated(true);
+        return;
+      }
+      if (form.checkValidity() === true) {
+        try {
+          setShowLoading(true);
+          // Make API request
+          const response = await axios.post(
+            process.env.NEXT_PUBLIC_API_URL + "enquiry/post",
+            formData
+          );
+          // Check if response is successful
+          if (response.data.isSuccess === 1) {
+            setFormData({
+              email: "",
+              name: "",
+              phone: "",
+              message: ""
+            });
+            setValidated(false);
+            toast.success(response.data.message);
+          } else {
+            toast.error(response.data.message);
+          }
+        } catch (error) {
+          console.error("Error submitting form:", error);
+        } finally {
+          setShowLoading(false);
+        }
+      }
     }
   }
+
   useEffect(() => {
+    // calling all apis for getting data for page
     const fetchAllData = async () => {
       try {
         const apiBase = process.env.NEXT_PUBLIC_API_URL;
@@ -147,29 +262,7 @@ export default function Property({ slug }) {
     };
   }, []);
 
-  // const openMenu = (e, targetId) => {
-  //   const menuButtons = document.querySelectorAll(".menuBtn");
-  //   const menu = document.getElementById("mbdiv");
-  //   const header = document.querySelector(".header");
-
-  //   if (!menu) return;
-
-  //   // Toggle menu state
-  //   const isMenuOpen = menu.classList.toggle("active");
-
-  //   // Toggle menu button classes
-  //   menuButtons.forEach((btn) =>
-  //     btn.classList.toggle("closeMenuBtn", isMenuOpen)
-  //   );
-
-  //   // Toggle display
-  //   menu.style.display = isMenuOpen ? "block" : "none";
-
-  //   // Toggle header class
-  //   header?.classList.toggle("notfixed", isMenuOpen);
-  //   // Toggle body scroll lock
-  //   document.body.classList.toggle("overflow-hidden", isMenuOpen);
-  // };
+  //Handle opening and closing of menu bar
   const openMenu = (e, targetId) => {
     e.preventDefault(); // Prevent default anchor behavior
     const menuButtons = document.querySelectorAll(".menuBtn");
@@ -216,7 +309,7 @@ export default function Property({ slug }) {
   };
 
 
-
+  //If loading state show loading 
   if (loading) {
     return (
       <div className="project-loader">
@@ -231,13 +324,19 @@ export default function Property({ slug }) {
       </div>
     );
   }
+
+  //Generating banner src
   const imageSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${bannerData.slugURL}/${bannerData.desktopBanner}`;
   // const imageSrc = `/properties/${projectDetail.slugURL}/${projectDetail.projectThumbnail}`;
+
+  //Checking If project detail is not available then show not found page
   if (!projectDetail) {
     return <NotFound />
   }
+
   return (
     <>
+      {/* Header for property detail page */}
       <header className={`ps-3 pe-3 bg-root-color header ${isScrolled ? "fixed-header" : ""}`}>
         <div className="main-header">
           <div className="d-flex justify-content-between align-items-center">
@@ -306,6 +405,7 @@ export default function Property({ slug }) {
                 </ul>
               </div>
             </nav>
+            {/* Defining header for small devices */}
             <div className="mbMenuContainer" id="mbdiv">
               <ul className="mb-list d-block d-md-none d-flex gap-4">
                 <li>
@@ -364,11 +464,13 @@ export default function Property({ slug }) {
                 </li>
               </ul>
             </div>
+            {/* Defining hamburger button */}
             <div className="menuBtn d-flex d-lg-none " onClick={openMenu}>
               <span id="menuLine1"></span>
               <span id="menuLine2"></span>
               <span id="menuLine3"></span>
             </div>
+            {/* Logo container */}
             <div className="logo d-none d-lg-block">
               <Link href="/">
                 <Image src="/logo.png" alt="mpf-logo" width={60} height={60} />
@@ -377,7 +479,9 @@ export default function Property({ slug }) {
           </div>
         </div>
       </header>
+
       <div id="home" className="container-fluid p-0">
+        {/* Banner container for property detail page  */}
         <div className="slick-slider-container banner-container">
           <Slider {...settings}>
             <picture className="project-detail-banner">
@@ -386,25 +490,28 @@ export default function Property({ slug }) {
                 media="(max-width: 640px)"
               />
               <source srcSet={imageSrc} media="(max-width: 1024px)" />
-              <Image 
+              <Image
                 src={imageSrc}
                 alt="banner-image"
-                fill
+                className="w-100 object-cover"
+                width={400}
+                height={250}
                 unoptimized
               />
             </picture>
           </Slider>
+          {/* Defining form on banner container  */}
           <div className="banner-form d-none d-lg-block">
             <Form
               noValidate
               validated={validated}
-              onSubmit={handleSubmit}
+              onSubmit={(e) => handleSubmit(e, "top_form")}
             >
               <Form.Group className="mb-3" controlId="full_name">
                 <Form.Control
                   type="text"
                   placeholder="Full name"
-                  value={formData.name}
+                  value={formData.name || ""}
                   onChange={(e) => handleChange(e)}
                   name="name"
                   required
@@ -417,7 +524,7 @@ export default function Property({ slug }) {
                 <Form.Control
                   type="email"
                   placeholder="Email id"
-                  value={formData.email}
+                  value={formData.email || ""}
                   onChange={(e) => handleChange(e)}
                   name="email"
                   required
@@ -430,7 +537,7 @@ export default function Property({ slug }) {
                 <Form.Control
                   type="number"
                   placeholder="Phone Number"
-                  value={formData.phone}
+                  value={formData.phone || ""}
                   onChange={(e) => handleChange(e)}
                   name="phone"
                   required
@@ -444,7 +551,7 @@ export default function Property({ slug }) {
                   as="textarea"
                   rows={3}
                   placeholder="Message"
-                  value={formData.message}
+                  value={formData.message || ""}
                   onChange={(e) => handleChange(e)}
                   name="message"
                   required
@@ -453,9 +560,10 @@ export default function Property({ slug }) {
                   Please provide a valid message.
                 </Form.Control.Feedback>
               </Form.Group>
-              <Button className="btn btn-success" type="submit">Submit</Button>
+              <Button className="btn btn-success" type="submit" disabled={showLoading}>Submit <LoadingSpinner show={showLoading} /></Button>
             </Form>
           </div>
+          {/* Short info section */}
           <div className="short-info d-none d-md-block">
             <p className="fs-1 fw-bold m-0">{projectDetail.projectName}</p>
             <p className="fs-3 m-0">
@@ -463,10 +571,10 @@ export default function Property({ slug }) {
               {projectDetail.projectAddress}
             </p>
             <p className="fs-6">
-              {projectDetail.projectPrice}* |{" "}
+              {generatePrice(projectDetail.projectPrice)}* |{" "}
               {projectDetail.projectConfiguration}
             </p>
-            <div className="btn btn-success mt-2">Get Details</div>
+            <div className="btn btn-success mt-2" onClick={() => setShowPopUp(true)}>Get Details</div>
           </div>
         </div>
         {/* About the project */}
@@ -481,9 +589,9 @@ export default function Property({ slug }) {
 
           {/* About buttons section */}
           <div className="d-flex flex-column flex-md-row justify-content-center gap-2 gap-md-5">
-            <button className="btn btn-success">READ MORE</button>
-            <button className="btn btn-success">DOWNLOAD BROCHURE</button>
-            <button className="btn btn-success">SCHEDULE A SITE VISIT</button>
+            <button className="btn btn-success" onClick={() => setShowPopUp(true)}>READ MORE</button>
+            <button className="btn btn-success" onClick={() => setShowPopUp(true)}>DOWNLOAD BROCHURE</button>
+            <button className="btn btn-success" onClick={() => setShowPopUp(true)}>SCHEDULE A SITE VISIT</button>
           </div>
         </div>
         {/* walkthrough section */}
@@ -500,7 +608,7 @@ export default function Property({ slug }) {
               ></p>
             </div>
             <div className="text-center">
-              <button className="btn btn-success mb-5">View</button>
+              <button className="btn btn-success mb-5" onClick={() => setShowPopUp(true)}>View</button>
             </div>
           </div>
         </div>
@@ -536,7 +644,7 @@ export default function Property({ slug }) {
                 ))}
               </div>
               <div className="mt-5 text-center">
-                <button className="btn btn-success">VIEW ALL</button>
+                <button className="btn btn-success" onClick={() => setShowPopUp(true)}>VIEW ALL</button>
               </div>
             </div>
           </div>
@@ -582,7 +690,7 @@ export default function Property({ slug }) {
                   <p>{parseFloat(item.areaSqmt).toFixed(2)} sqmt*</p>
                 </div>
                 <div className="pb-4 ps-2 mt-4">
-                  <button className="btn btn-success">PRICE ON REQUEST</button>
+                  <button className="btn btn-success" onClick={() => setShowPopUp(true)}>PRICE ON REQUEST</button>
                 </div>
               </div>
             ))}
@@ -591,23 +699,28 @@ export default function Property({ slug }) {
 
         {/* Gallery section */}
         <div
-          className="container-fluid bg-dark p-2 p-md-4 p-lg-5 mt-5"
+          className="container-fluid bg-dark p-2 p-md-4 p-lg-5 mt-5 gallery-container"
           id="gallery"
         >
           <p className="text-center h1 text-light fw-bold">Gallery</p>
-          <div className="gallery-container">
-            <Slider {...settings1}>
-              {galleryList.map((item) => (
-                <div key={item.id} className="project-deail-gallery-container">
-                  <Image
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.image}`}
-                    alt="floor plan"
-                    fill
-                    unoptimized
-                  />
-                </div>
-              ))}
-            </Slider>
+          <div className="container-fluid">
+            <div className="row justify-content-center">
+              <div className="col-12">
+                <Slider {...settings1} className="gallery-slider">
+                  {galleryList.map((item) => (
+                    <div key={item.id} className="project-detail-gallery-container">
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.image}`}
+                        alt="floor plan"
+                        fill
+                        unoptimized
+                        className="gallery-image"
+                      />
+                    </div>
+                  ))}
+                </Slider>
+              </div>
+            </div>
           </div>
         </div>
         {/* Location section */}
@@ -660,7 +773,7 @@ export default function Property({ slug }) {
                   </div>
                 </div>
                 <div className="d-flex">
-                  <button className="btn btn-success">View On Map</button>
+                  <button className="btn btn-success" onClick={() => setShowPopUp(true)}>View On Map</button>
                 </div>
               </div>
             </div>
@@ -697,15 +810,15 @@ export default function Property({ slug }) {
             <div className="container d-flex justify-content-center">
               <Form
                 noValidate
-                validated={validated}
-                className="w-50"
-                onSubmit={(e) => handleSubmit(e)}
+                validated={validated1}
+                className="w-50 border rounded-3 p-3"
+                onSubmit={(e) => handleSubmit(e, "bottom_form")}
               >
                 <Form.Group className="mb-3" controlId="full_name">
                   <Form.Control
                     type="text"
                     placeholder="Full name"
-                    value={formData.name}
+                    value={formData.name || ""}
                     onChange={(e) => handleChange(e)}
                     name="name"
                     required
@@ -718,7 +831,7 @@ export default function Property({ slug }) {
                   <Form.Control
                     type="email"
                     placeholder="Email id"
-                    value={formData.email}
+                    value={formData.email || ""}
                     onChange={(e) => handleChange(e)}
                     name="email"
                     required
@@ -731,7 +844,7 @@ export default function Property({ slug }) {
                   <Form.Control
                     type="number"
                     placeholder="Phone Number"
-                    value={formData.phone}
+                    value={formData.phone || ""}
                     onChange={(e) => handleChange(e)}
                     name="phone"
                     required
@@ -740,12 +853,12 @@ export default function Property({ slug }) {
                     Please provide a valid phone number.
                   </Form.Control.Feedback>
                 </Form.Group>
-                {/* <Form.Group className="mb-3" controlId="message">
+                <Form.Group className="mb-3" controlId="message">
                   <Form.Control
                     as="textarea"
                     rows={3}
                     placeholder="Message"
-                    value={formData.message}
+                    value={formData.message || ""}
                     onChange={(e) => handleChange(e)}
                     name="message"
                     required
@@ -753,8 +866,8 @@ export default function Property({ slug }) {
                   <Form.Control.Feedback type="invalid">
                     Please provide a valid message.
                   </Form.Control.Feedback>
-                </Form.Group> */}
-                <Button className="btn btn-success" type="submit">Submit</Button>
+                </Form.Group>
+                <Button className="btn btn-success" type="submit" disabled={showLoading}>Submit <LoadingSpinner show={showLoading} /></Button>
               </Form>
             </div>
           </div>
@@ -797,6 +910,7 @@ export default function Property({ slug }) {
         </div>
       </div>
       <Footer />
+      <CommonPopUpform show={showPopUp} handleClose={setShowPopUp} />
     </>
   );
 }

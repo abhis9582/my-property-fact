@@ -23,7 +23,7 @@ function ProjectsContent() {
 
   useEffect(() => {
     var api = "projects/get-all";
-    var data = {};    
+    var data = {};
 
     if (
       searchValues.category !== null &&
@@ -76,14 +76,16 @@ function ProjectsContent() {
 
   return (
     <div className="containr-fluid">
-      <CommonHeaderBanner  image={"project-banner.jpg"} headerText={pageName}/>
+      <CommonHeaderBanner image={"project-banner.jpg"} headerText={pageName} />
       <CommonBreadCrum pageName={pageName} />
-      <div className="container-fluid my-3 justify-content-center d-block d-md-flex gap-3 flex-lg-wrap">
-        {allProjectsList.map((item, index) => (
-          <div key={`${index}-`} className="d-flex">
-            <PropertyContainer data={item} />
-          </div>
-        ))}
+      <div className="container my-3">
+        <div className="row g-3">
+          {allProjectsList.map((item) => (
+            <div key={item.id} className="col-12 col-sm-6 col-md-4">
+              <PropertyContainer data={item} />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

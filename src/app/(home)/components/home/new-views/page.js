@@ -7,7 +7,6 @@ export default function NewsViews() {
     <>
       <div className="container-fluid pt-3 pb-3 mb-3 bg-lightgreen">
         <div className="container">
-          <h1 className="text-center h2">News & Views</h1>
           <div className="row d-flex justify-contnet-center flex-wrap m-0">
             <div className="row g-3 gap-form-row">
               <div className="col-lg-3 col-sm-6 news-card">

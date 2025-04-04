@@ -67,8 +67,16 @@ export default function InsightNew() {
       <div className="container my-5">
         <div className="d-flex justify-content-center gap-4 my-3 flex-wrap flex-column flex-md-row">
           {data.map((i) => (
-            <div key={i.id} className={`bg-light insight-container mx-auto`} onClick={() => openPopup(i)}>
-              <Link href={i.href}>
+            <div key={i.id} className={`bg-light insight-container mx-auto`}>
+              <Link
+                href={i.href}
+                onClick={(e) => {
+                  if (i.href === '#') {
+                    e.preventDefault(); // stop scroll-to-top
+                    openPopup(i);       // open popup
+                  }
+                }}
+              >
                 <div className="insight-container-child">
                   <p>{i.heading}</p>
                   <p>{i.sub_heading}</p>
@@ -84,7 +92,7 @@ export default function InsightNew() {
         </div>
       </div>
       <CommonPopUpform show={isOpen} handleClose={setIsOpen} />
-      <ToastContainer/>
+      <ToastContainer />
     </>
   );
 }

@@ -68,48 +68,16 @@ export default function Featured() {
   return (
     <>
       <div className="container mt-4">
-        <p className="fs-1 fw-bold text-center">Featured Projects</p>
-        {featuredProperties && featuredProperties.length > 0 && (
+        {featuredProperties?.length > 0 && (
           <Slider {...settings}>
-            {/* {featuredProperties.map((property) => {
-              return (
-                <aside key={property.id} className="p-md-4 container">
-                  <div
-                    className="rounded-lg bg-darkGray bg-opacity-10 shadow-md flex flex-col items-center justify-content-center container cursor-pointer featured-projects-container"
-                    onClick={() => goToPropertyDetail(property.slugURL)}
-                  >
-                    <Image 
-                      src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${property.slugURL}/${property.projectThumbnail}`}
-                      alt="featured image"
-                      width={400}
-                      height={400}
-                      unoptimized
-                    />
-                    <div className="mt-2 d-flex justify-content-between align-items-center p-2">
-                      <p className="h5 fw-bold">{property.projectName}</p>
-                      <p className="h5 fw-bold text-success">
-                        {generatePrice(property.projectPrice)}*
-                      </p>
-                    </div>
-                    <div className="pb-2 fw-bold mx-2">
-                      <FontAwesomeIcon
-                        icon={faMapMarker}
-                        width={8}
-                        color="green"
-                      />{" "}
-                      {property.projectAddress}
-                    </div>
-                  </div>
-                </aside>
-              );
-            })} */}
             {featuredProperties.map((item) => (
-              <div key={item.id}>
+              <div key={item.id} className="px-2">
                 <PropertyContainer data={item} />
               </div>
             ))}
           </Slider>
         )}
+
         <div className="text-center mt-5">
           <Link className="btn btn-success" href="/projects">
             View all
