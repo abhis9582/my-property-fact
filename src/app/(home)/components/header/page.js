@@ -4,11 +4,18 @@ import "./header.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
+import { usePathname } from 'next/navigation';
 const Header = () => {
   const [cityList, setCityList] = useState([]);
   const [builderList, setBuilderList] = useState([]);
   const [projectTypes, setProjectTypes] = useState([]);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const pathname = usePathname();
+
+  // Check if the pathname starts with /city/
+  const isCityRoute = pathname.startsWith('/city');
+  const isBuilderRoute = pathname.startsWith('/builder');
+  const isProjectTypeRoute = pathname.startsWith('/projects');
   //Defining scroll variable
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -118,14 +125,14 @@ const Header = () => {
           <div className="menu position-relative">
             <ul className="d-flex gap-5 m-0 fw-bold align-items-center">
               <li className="hasChild">
-                <Link href="#" className="text-light text-uppercase">
+                <Link href="#" className={`text-light text-uppercase ${isCityRoute ? "header-link-active" : ""}`}>
                   City<sup>+</sup>
                 </Link>
                 <div className="dropdown dropdown-lg z-3">
                   <ul className="list-inline">
                     {cityList.map((city) => (
                       <li key={city.id}>
-                        <Link href={`/city/${city.slugUrl}`} className="text-light">
+                        <Link href={`/city/${city.slugUrl}`} className={`text-light ${pathname === "/city/" + city.slugUrl ? "header-link-active" : ""}`}>
                           {city.name}
                         </Link>
                       </li>
@@ -134,14 +141,14 @@ const Header = () => {
                 </div>
               </li>
               <li className="hasChild">
-                <Link href="#" className="text-light text-uppercase">
+                <Link href="#" className={`text-light text-uppercase ${isBuilderRoute ? "header-link-active" : ""}`}>
                   Builder<sup>+</sup>
                 </Link>
                 <div className="dropdown dropdown-lg z-3">
                   <ul className="list-inline">
                     {builderList.map((builder) => (
                       <li key={builder.id}>
-                        <Link href={`/builder/${builder.slugUrl}`} className="text-light">
+                        <Link href={`/builder/${builder.slugUrl}`} className={`text-light ${pathname === "/builder/" + builder.slugUrl ? "header-link-active" : ""}`}>
                           {builder.builderName}
                         </Link>
                       </li>
@@ -150,14 +157,14 @@ const Header = () => {
                 </div>
               </li>
               <li className="hasChild">
-                <Link href="/projects" className="text-light text-uppercase">
+                <Link href="/projects" className={`text-light text-uppercase ${isProjectTypeRoute ? "header-link-active" : ""}`}>
                   Projects<sup>+</sup>
                 </Link>
                 <div className="dropdown projects-dropdown z-3">
                   <ul className="list-inline">
                     {projectTypes.map((project) => (
                       <li key={project.id}>
-                        <Link href={`/projects/${project.slugUrl}`} className="text-light">
+                        <Link href={`/projects/${project.slugUrl}`} className={`text-light ${pathname === "/projects/" + project.slugUrl ? "header-link-active" : ""}`}>
                           {project.projectTypeName}
                         </Link>
                       </li>
@@ -166,21 +173,21 @@ const Header = () => {
                 </div>
               </li>
               <li className="hasChild">
-                <Link href="/about-us" className="text-light text-uppercase">About Us</Link>
+                <Link href="/about-us" className={`text-light text-uppercase ${pathname === "/about-us" ? "header-link-active" : ""}`}>About Us</Link>
               </li>
               <li className="hasChild">
-                <Link href="/blogs" className="text-light text-uppercase">
-                  Blogs
+                <Link href="/blog" className={`text-light text-uppercase ${pathname === "/blog" ? "header-link-active" : ""}`}>
+                  Blog
                 </Link>
               </li>
               <li className="hasChild">
-                <Link href="/clients-speak" className="text-light text-uppercase">Clients Speak</Link>
+                <Link href="/clients-speak" className={`text-light text-uppercase ${pathname === "/clients-speak" ? "header-link-active" : ""}`}>Clients Speak</Link>
               </li>
               <li className="hasChild">
-                <Link href="/careers" className="text-light text-uppercase">Careers</Link>
+                <Link href="/careers" className={`text-light text-uppercase ${pathname === "/careers" ? "header-link-active" : ""}`}>Careers</Link>
               </li>
               <li className="hasChild">
-                <Link href="/contact-us" className="text-light text-uppercase">Contact us</Link>
+                <Link href="/contact-us" className={`text-light text-uppercase ${pathname === "/contact-us" ? "header-link-active" : ""}`}>Contact us</Link>
               </li>
             </ul>
           </div>
@@ -270,7 +277,7 @@ const Header = () => {
             <div className="smallMenuList">
               <ul className="list-inline">
                 <li>
-                  <Link href="/blogs" onClick={openMenu}>Blogs</Link>
+                  <Link href="/blogs" onClick={openMenu}>Blog</Link>
                 </li>
                 <li>
                   <Link href="/about-us" onClick={openMenu}>About Us</Link>

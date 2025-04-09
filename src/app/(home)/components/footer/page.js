@@ -252,22 +252,22 @@ export default function Footer() {
                     <h6>Get Social</h6>
                     <ul className="d-flex gap-3 p-0">
                       <li className="">
-                        <Link className="footer-text" href="#" target="_blank" title="facebook">
+                        <Link className="footer-text" href="https://www.facebook.com/mypropertyfact1/" target="_blank" title="facebook">
                           <FontAwesomeIcon icon={faFacebook}/>
                         </Link>
                       </li>
                       <li className="">
-                        <Link className="footer-text" href="#" target="_blank" title="instagram">
+                        <Link className="footer-text" href="https://www.instagram.com/my.property.fact/" target="_blank" title="instagram">
                           <FontAwesomeIcon icon={faInstagram} />
                         </Link>
                       </li>
                       <li className="">
-                        <Link className="footer-text" href="#" target="_blank" title="linkedin">
+                        <Link className="footer-text" href="https://www.linkedin.com/company/my-property-fact/" target="_blank" title="linkedin">
                           <FontAwesomeIcon icon={faLinkedin} />
                         </Link>
                       </li>
                       <li className="">
-                        <Link className="footer-text" href="#" target="_blank" title="youtube">
+                        <Link className="footer-text" href="https://www.youtube.com/@my.propertyfact/" target="_blank" title="youtube">
                           <FontAwesomeIcon icon={faYoutube} />
                         </Link>
                       </li>

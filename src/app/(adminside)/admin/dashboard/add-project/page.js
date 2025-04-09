@@ -517,6 +517,7 @@ export default function AddProject() {
                       alt="Current Project locationmap"
                       width={200}
                       height={100}
+                      unoptimized
                     />
                     <br />
                   </div>
@@ -566,6 +567,7 @@ export default function AddProject() {
                       alt="Current Project Logo"
                       width={200}
                       height={100}
+                      unoptimized
                     />
                     <br />
                   </div>
@@ -592,6 +594,7 @@ export default function AddProject() {
                       alt="Current Project Thumbnail"
                       width={100}
                       height={100}
+                      unoptimized
                     />
                     <br />
                   </div>
