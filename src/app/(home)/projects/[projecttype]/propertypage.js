@@ -38,11 +38,11 @@ export default function PropertyPage({ type }) {
       />
       <div className="container my-3">
         <div className="row g-3">
-          {projectList.map((item) => (
+          {projectList.length > 0 ? projectList.map((item) => (
             <div key={item.id} className="col-12 col-sm-6 col-md-4">
               <PropertyContainer data={item} />
             </div>
-          ))}
+          )) : (<p className="text-center fs-4 fw-bold">No projects found</p>)}
         </div>
       </div>
     </>

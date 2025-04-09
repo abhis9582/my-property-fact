@@ -11,7 +11,7 @@ export default function CommonHeaderBanner({ image, headerText }) {
           alt={headerText || ""}
         />
       </div>
-      {/* <p className="projects-heading">{headerText}</p> */}
+      <p className="projects-heading">{headerText}</p>
     </div>
   );
 }

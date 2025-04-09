@@ -38,10 +38,8 @@ export default function CityPage({ city }) {
         <CommonBreadCrum firstPage={"projects"} pageName={cityData.name} />
         <div className="container-fluid mt-4">
           {/* <p className="h1 text-center">Property in {cityData.name}</p> */}
-          <div className="d-flex justify-content-center">
-            <div className="w-80">
-              <p className="text-center">{cityData.cityDisc}</p>
-            </div>
+          <div className="container d-flex justify-content-center">
+            <p className="text-center">{cityData.cityDisc}</p>
           </div>
           <div className="text-center">
             <Link href="#" className="btn btn-dark">
@@ -51,11 +49,11 @@ export default function CityPage({ city }) {
         </div>
         <div className="container my-3">
           <div className="row g-3">
-            {propertyList.map((item) => (
+            {propertyList.length > 0 ? propertyList.map((item) => (
               <div key={item.id} className="col-12 col-sm-6 col-md-4">
                 <PropertyContainer data={item} />
               </div>
-            ))}
+            )): (<p className="text-center fs-4 fw-bold">No projects found</p>)}
           </div>
         </div>
       </div>

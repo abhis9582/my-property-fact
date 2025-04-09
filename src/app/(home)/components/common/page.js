@@ -34,7 +34,7 @@ export default function PropertyContainer(props) {
   };
   return (
     <>
-      <Link href={props.data.slugURL} legacyBehavior>
+      <Link href={`/${props.data.slugURL}`} legacyBehavior>
         <a
           className="rounded-4 shadow-sm d-flex flex-column justify-content-between bg-light h-100 text-decoration-none text-dark project-container overflow-hidden"
           target="_blank"
@@ -52,8 +52,8 @@ export default function PropertyContainer(props) {
           </div>
 
           <div className="mt-2 px-3 d-flex justify-content-between align-items-center mt-3">
-            <p className="h4 fw-bold mb-0">{props.data.projectName}</p>
-            <p className="h4 fw-bold text-success mb-0">{generatePrice(props.data.projectPrice)}*</p>
+            <p className="h5 fw-bold mb-0">{props.data.projectName}</p>
+            <p className="h5 fw-bold text-success mb-0">{generatePrice(props.data.projectPrice)}*</p>
           </div>
 
           <div className="px-3 pb-3 text-truncate small fw-medium mt-2 d-flex align-items-center">

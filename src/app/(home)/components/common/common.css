@@ -13,13 +13,26 @@
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 2;
 }
-.project-image-container img{
+
+.project-image-container img {
     transition: transform 0.5s ease;
 }
 
-.project-container:hover .project-image-container img{
+.project-container:hover .project-image-container img {
     transform: scale(1.05);
 }
+
+/* westory css starts*/
+.webstory-container {
+    max-width: 500px;
+    height: 600px;
+    object-fit: cover;
+    border: 1px solid #fff;
+    overflow: hidden;
+}
+
+/* westory css ends*/
+
 
 /* All media queries for header banner starts*/
 @media (max-width: 768px) {
