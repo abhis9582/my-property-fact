@@ -2,99 +2,75 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function DreamProject() {
-  const dataArr = [
+
+  //Cities json data
+  const cities = [
     {
-      id: 1,
-      image: "/dream-cities/mumbai.png",
-      altTage: "city-mumbai"
+      name: "Agra",
+      link: "/city/agra",
+      image: "/dream-cities/agra.jpg",
+      alt: "city-agra"
     },
+    {
+      name: "Bangalore",
+      link: "/city/bangalore",
+      image: "/dream-cities/bangalore.jpg",
+      alt: "city-bangalore"
+    },
+    {
+      name: "Kochi",
+      link: "/city/kochi",
+      image: "/dream-cities/kochi.jpg",
+      alt: "city-kochi"
+    },
+    {
+      name: "Delhi",
+      link: "/city/delhi",
+      image: "/dream-cities/delhi_ncr.jpg",
+      alt: "city-delhi"
+    },
+    {
+      name: "Hyderabad",
+      link: "/city/hyderabad",
+      image: "/dream-cities/hyderabad.jpg",
+      alt: "city-hyderabad"
+    },
+    {
+      name: "Jaipur",
+      link: "/city/jaipur",
+      image: "/dream-cities/jaipur.jpg",
+      alt: "city-jaipur"
+    },
+    {
+      name: "Mumbai",
+      link: "/city/mumbai",
+      image: "/dream-cities/mumbai.jpg",
+      alt: "city-mumbai"
+    },
+    {
+      name: "Chennai",
+      link: "/city/chennai",
+      image: "/dream-cities/chennai.jpg",
+      alt: "city-chennai"
+    }
   ];
   return (
     <>
       <div className="container my-4">
-        <div className="container d-flex flex-wrap gap-3 justify-content-center">
-          <div className="my-2">
-            <Link href="/city/agra">
-              <Image
-                src="/dream-cities/agra.jpg"
-                alt="city-mumbai"
-                width={300}
-                height={180}
-              />
-            </Link>
-          </div>
-          <div className="my-2">
-            <Link href="/city/bangalore">
-              <Image
-                src="/dream-cities/bangalore.jpg"
-                alt="city-bangalore"
-                width={300}
-                height={180}
-              />
-            </Link>
-          </div>
-          <div className="my-2">
-            <Link href="/city/pune">
-              <Image
-                src="/dream-cities/kochi.jpg"
-                alt="city-mumbai"
-                width={300}
-                height={180}
-              />
-            </Link>
-          </div>
-          <div className="my-2">
-            <Link href="/city/delhi">
-              <Image
-                src="/dream-cities/delhi_ncr.jpg"
-                alt="city-delhi"
-                width={300}
-                height={180}
-              />
-            </Link>
-          </div>
-        </div>
-        <div className="container d-flex flex-wrap gap-3 justify-content-center">
-          <div className="my-2">
-            <Link href="#">
-              <Image
-                src="/dream-cities/hyderabad.jpg"
-                alt="city-noida"
-                width={300}
-                height={180}
-              />
-            </Link>
-          </div>
-          <div className="my-2">
-            <Link href="/city/gurugram">
-              <Image
-                src="/dream-cities/jaipur.jpg"
-                alt="city-gurugram"
-                width={300}
-                height={180}
-              />
-            </Link>
-          </div>
-          <div className="my-2">
-            <Link href="/city/mumbai">
-              <Image
-                src="/dream-cities/mumbai.jpg"
-                alt="city-greater_noida"
-                width={300}
-                height={180}
-              />
-            </Link>
-          </div>
-          <div className="my-2">
-            <Link href="#">
-              <Image
-                src="/dream-cities/chennai.jpg"
-                alt="city-other_city"
-                width={300}
-                height={180}
-              />
-            </Link>
-          </div>
+        <div className="row justify-content-center">
+          {cities.map((city, index) => (
+            <div key={index} className="col-12 col-sm-6 col-md-4 col-lg-3 my-3 d-flex justify-content-center">
+              <Link href={city.link}>
+                <Image
+                  src={city.image}
+                  alt={city.alt}
+                  width={300}
+                  height={180}
+                  className="img-fluid rounded shadow-sm"
+                />
+              </Link>
+            </div>
+          ))}
         </div>
       </div>
     </>
