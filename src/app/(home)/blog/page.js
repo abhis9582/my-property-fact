@@ -6,7 +6,7 @@ export default function Media() {
   const blogsList = [1, 2, 3, 4, 5, 6, 7, 8];
   return (
     <>
-      <CommonHeaderBanner image={"blog-banner.jpg"}/>
+      <CommonHeaderBanner image={"blog-banner.jpg"} headerText={"Blog"}/>
       <CommonBreadCrum pageName={"Blog"} />
       <div className="container-fluid mt-3">
         {/* <p className="text-center h2 mt-3">Blog</p> */}

@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { Button, Form, Modal, Row, Col } from "react-bootstrap";
-import { ToastContainer } from "react-toastify";
 
 export default function BudgetOptions() {
   const [validated, setValidated] = useState(false);
@@ -95,7 +94,6 @@ export default function BudgetOptions() {
           <Button variant="danger">Delete</Button>
         </Modal.Footer>
       </Modal>
-      <ToastContainer />
     </div>
   );
 }

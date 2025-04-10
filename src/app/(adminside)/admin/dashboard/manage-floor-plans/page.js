@@ -6,9 +6,8 @@ import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Form, Modal, Table } from "react-bootstrap";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Button, Form, Modal } from "react-bootstrap";
+import { toast } from "react-toastify";
 export default function ManageFloorPlans() {
   const [show, setShow] = useState(false);
   const [title, setTitle] = useState("");
@@ -266,7 +265,6 @@ export default function ManageFloorPlans() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <ToastContainer />
     </div>
   );
 }

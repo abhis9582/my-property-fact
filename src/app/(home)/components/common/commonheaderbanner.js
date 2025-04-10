@@ -6,7 +6,8 @@ export default function CommonHeaderBanner({ image, headerText }) {
     <div className="container-fluid p-0 position-relative">
       <div className="top-banner-each-pages">
         <Image
-          src={`/static/${image}`}
+          src={`/static/realestate-bg.jpg`}
+          // src={`/static/${image}`}
           fill
           alt={headerText || ""}
         />

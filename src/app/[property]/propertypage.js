@@ -21,7 +21,7 @@ import { Spinner } from "react-bootstrap";
 import NotFound from "../not-found";
 import CommonPopUpform from "../(home)/components/common/popupform";
 import { LoadingSpinner } from "../(home)/contact-us/page";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function Property({ slug }) {
   const [amenities, setAmenities] = useState([]);
@@ -911,6 +911,7 @@ export default function Property({ slug }) {
       </div>
       <Footer />
       <CommonPopUpform show={showPopUp} handleClose={setShowPopUp} />
+      <ToastContainer />
     </>
   );
 }

@@ -7,6 +7,7 @@ import "./dashboard/dashboard.css";
 import Image from "next/image";
 import Cookies from "js-cookie";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
+import { toast } from "react-toastify";
 export default function AdminPage() {
   const router = useRouter();
   const [validated, setValidated] = useState(false);
@@ -49,6 +50,7 @@ export default function AdminPage() {
         router.push("/admin/dashboard");
       }
     } catch (error) {
+      toast.error("Invalid username or password!");
       console.log(error);
     } finally {
       setShowLoading(false);

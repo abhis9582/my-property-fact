@@ -118,7 +118,6 @@ export default function FixedForm({ resetTrigger, onSuccess }) {
               value={formData.message}
               onChange={(e) => handleChange(e)}
               name="message"
-              required
             />
             <Form.Control.Feedback type="invalid">
               Please provide a valid message.

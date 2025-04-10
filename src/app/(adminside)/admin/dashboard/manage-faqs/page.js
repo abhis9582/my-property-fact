@@ -7,8 +7,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import CommonModal from "../common-model/common-model";
 export default function ManageFaqs() {
   const [show, setShow] = useState(false);
@@ -236,7 +235,6 @@ export default function ManageFaqs() {
           </Form>
         </Modal.Body>
       </Modal>
-      <ToastContainer />
       <CommonModal
         confirmBox={showConfirmationBox}
         setConfirmBox={setShowConfirmationBox}

@@ -1,15 +1,14 @@
 "use client";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
-import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Button, Form, Modal, Table } from "react-bootstrap";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Button, Form, Modal } from "react-bootstrap";
+import { toast } from "react-toastify";
 import CommonModal from "../common-model/common-model";
 export default function LocationBenefit() {
   const [showModal, setShowModal] = useState(false);
@@ -266,7 +265,6 @@ export default function LocationBenefit() {
         </Modal.Body>
       </Modal>
       <CommonModal confirmBox={confirmBox} setConfirmBox={setConfirmBox} api={`${process.env.NEXT_PUBLIC_API_URL}location-benefit/delete/${id}`} fetchAllHeadersList={fetchAllBenefits} />
-      <ToastContainer />
     </>
   );
 }

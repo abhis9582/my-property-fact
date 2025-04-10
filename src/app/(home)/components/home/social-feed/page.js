@@ -10,14 +10,14 @@ export default function SocialFeed() {
       <div className="container-fluid my-4">
         <div className="container">
           <div className="heading mx-auto text-center">
-            <div className="toggleHead mt-3">
+            {/* <div className="toggleHead mt-3">
               <button className="toggleBtn active" style={{ color: "#c92bb7" }}>
                 <FontAwesomeIcon icon={faInstagram} width={15} /> Instagram
               </button>
               <button className="toggleBtn" style={{ color: "red" }}>
                 <FontAwesomeIcon icon={faYoutube} width={15} /> YouTube
               </button>
-            </div>
+            </div> */}
           </div>
           <div className="row d-flex justify-content-center flex-wrap">
             <div className="social-post col-lg-3 col-sm-1">

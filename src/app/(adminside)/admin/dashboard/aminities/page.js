@@ -1,5 +1,4 @@
 "use client";
-import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from "react";
 import {
   Button,
@@ -10,7 +9,6 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import axios from "axios";
-import { ToastContainer } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Paper } from "@mui/material";
@@ -293,7 +291,6 @@ export default function Aminities() {
         </Modal.Body>
       </Modal>
       <CommonModal confirmBox={confirmBox} setConfirmBox={setConfirmBox} api={`${process.env.NEXT_PUBLIC_API_URL}amenity/delete/${amenityId}`} fetchAllHeadersList={fetchAmenities} />
-      <ToastContainer />
     </div>
   );
 }

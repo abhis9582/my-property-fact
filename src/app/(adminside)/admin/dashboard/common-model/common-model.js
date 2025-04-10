@@ -2,8 +2,7 @@
 
 import axios from "axios";
 import { Button, Modal } from "react-bootstrap";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 export default function CommonModal({ confirmBox, setConfirmBox, api, fetchAllHeadersList }) {
   const deleteData = async () => {
@@ -37,7 +36,6 @@ export default function CommonModal({ confirmBox, setConfirmBox, api, fetchAllHe
           </Button>
         </Modal.Footer>
       </Modal>
-      {/* <ToastContainer /> */}
     </>
   );
 }

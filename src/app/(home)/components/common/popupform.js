@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { ToastContainer } from "react-toastify";
 
 export default function CommonPopUpform({ show, handleClose }) {
     const [validated, setValidated] = useState(false);
@@ -53,7 +52,6 @@ export default function CommonPopUpform({ show, handleClose }) {
                 if (response.data.isSuccess === 1) {
                     // onSuccess();
                     handleClose(false);
-                    // formRef.current.reset(); // Reset form fields
                     setValidated(false); // Reset validation state
                     setFormData(intitalData);
                 } else {
@@ -124,7 +122,6 @@ export default function CommonPopUpform({ show, handleClose }) {
                             value={formData.message}
                             onChange={(e) => handleChange(e)}
                             name="message"
-                            required
                         />
                         <Form.Control.Feedback type="invalid">
                             Please provide a valid message.
@@ -133,7 +130,6 @@ export default function CommonPopUpform({ show, handleClose }) {
                     <Button type="submit" className="fw-bold btn btn-success">Submit</Button>
                 </Form>
             </Modal>
-            <ToastContainer />
         </>
     )
 }

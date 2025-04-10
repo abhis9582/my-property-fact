@@ -7,9 +7,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Button, Col, Form, FormControl, Modal, Table } from "react-bootstrap";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Button, Form, FormControl, Modal, Table } from "react-bootstrap";
+import { toast } from "react-toastify";
 import CommonModal from "../common-model/common-model";
 export default function ManageBanners() {
   const [showModal, setShowModal] = useState(false);
@@ -349,7 +348,6 @@ export default function ManageBanners() {
           </Form>
         </Modal.Body>
       </Modal>
-      <ToastContainer />
       <CommonModal confirmBox={confirmBox} setConfirmBox={setConfirmBox} api={`${process.env.NEXT_PUBLIC_API_URL}project-banner/delete/${bannerId}`} fetchAllHeadersList={fetchBannerImages}/>
     </div>
   );

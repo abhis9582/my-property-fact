@@ -5,9 +5,7 @@ import "./insight.css";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import "react-toastify/dist/ReactToastify.css";
 import CommonPopUpform from "../../common/popupform";
-import { ToastContainer } from "react-toastify";
 export default function InsightNew() {
   const [isOpen, setIsOpen] = useState(false);
   const data = [
@@ -92,7 +90,6 @@ export default function InsightNew() {
         </div>
       </div>
       <CommonPopUpform show={isOpen} handleClose={setIsOpen} />
-      <ToastContainer />
     </>
   );
 }

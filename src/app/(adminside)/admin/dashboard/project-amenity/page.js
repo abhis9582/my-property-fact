@@ -1,9 +1,8 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Col, Form, Modal, Table } from "react-bootstrap";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Button, Form, Modal, Table } from "react-bootstrap";
+import { toast } from "react-toastify";
 import Multiselect from "multiselect-react-dropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -261,7 +260,6 @@ export default function ProjectsAmenity() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <ToastContainer />
     </>
   );
 }

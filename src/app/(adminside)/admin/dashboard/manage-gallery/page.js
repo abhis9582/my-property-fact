@@ -1,14 +1,13 @@
 "use client";
-import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Button, Form, Modal, Table } from "react-bootstrap";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Button, Form, Modal } from "react-bootstrap";
+import { toast } from "react-toastify";
 import CommonModal from "../common-model/common-model";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 export default function ManageGallery() {
@@ -237,7 +236,6 @@ export default function ManageGallery() {
         </Modal.Footer>
       </Modal> */}
       <CommonModal confirmBox={confirmBox} setConfirmBox={setConfirmBox} api={`${process.env.NEXT_PUBLIC_API_URL}project-gallery/delete/${galleryId}`} fetchAllHeadersList={fetchGalleryImage} />
-      <ToastContainer />
     </div>
   );
 }

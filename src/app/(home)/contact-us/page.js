@@ -11,8 +11,7 @@ import {
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import CommonBreadCrum from "../components/common/breadcrum";
 import { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import axios from "axios";
 import { Spinner } from "react-bootstrap";
 export default function ContactUs() {
@@ -79,7 +78,7 @@ export default function ContactUs() {
 
   return (
     <>
-      <CommonHeaderBanner image={"contact-banner.jpg"}/>
+      <CommonHeaderBanner image={"contact-banner.jpg"} headerText={"Contact Us"}/>
       <CommonBreadCrum pageName={"Contact-us"} />
       <div className="">
         <div className="container d-flex justify-content-center gap-4 flex-wrap">
@@ -167,7 +166,6 @@ export default function ContactUs() {
             <Link href="/projects">View Projects</Link>
           </div>
         </div>
-        <ToastContainer />
       </div>
     </>
   );

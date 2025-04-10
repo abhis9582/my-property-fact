@@ -36,7 +36,7 @@ export default function PropertyContainer(props) {
     <>
       <Link href={`/${props.data.slugURL}`} legacyBehavior>
         <a
-          className="rounded-4 shadow-sm d-flex flex-column justify-content-between bg-light h-100 text-decoration-none text-dark project-container overflow-hidden"
+          className="rounded-4 shadow-sm d-flex flex-column justify-content-between bg-light h-100 text-decoration-none text-dark project-container overflow-hidden position-relative"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -46,7 +46,7 @@ export default function PropertyContainer(props) {
               alt="featured image"
               className="img-fluid w-100 rounded-top-4 object-fit-cover"
               width={400}
-              height={250}
+              height={400}
               unoptimized
             />
           </div>
@@ -60,6 +60,7 @@ export default function PropertyContainer(props) {
             <FontAwesomeIcon icon={faMapMarker} className="me-2 text-success" />
             <p className="p-0 m-0 fw-bold">{props.data.projectAddress}</p>
           </div>
+          {/* <p className="fs-5 fw-bold position-absolute z-10 top-0 bg-success px-4">hello {props.data.propertyType}</p> */}
         </a>
       </Link>
     </>
