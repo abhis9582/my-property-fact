@@ -17,7 +17,6 @@ const geistMono = localFont({
 export const metadata = {
   title: "My Property Fact",
   description: "my-property-fact",
-  robots: "noindex, nofollow",
 };
 
 export default function RootLayout({ children, params }) {

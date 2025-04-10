@@ -8,7 +8,6 @@ import ContactUs from "./page";
 export const metadata = {
     title: "Contact us | My property fact",
     description: "Contact us",
-    robots: "noindex, nofollow",
   };
 
 export default function ContactUsLayout(){
