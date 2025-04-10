@@ -6,9 +6,8 @@ import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Col, Form, Modal, Table } from "react-bootstrap";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Button, Form, Modal } from "react-bootstrap";
+import { toast } from "react-toastify";
 export default function ProjectTypes() {
   const [showModal, setShowModal] = useState(false);
   const [projectType, setProjectType] = useState("");
@@ -284,7 +283,6 @@ export default function ProjectTypes() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <ToastContainer />
     </div>
   );
 }

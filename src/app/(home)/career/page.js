@@ -48,7 +48,7 @@ export default function Career() {
   ];
   return (
     <>
-      <CommonHeaderBanner image={"career.jpg"}/>
+      <CommonHeaderBanner image={"career.jpg"} headerText={"Career"}/>
       <CommonBreadCrum pageName={"Career"} />
       <section className="d-flex justify-content-between mt-4 mx-lg-4">
         <p className="h1 w-50 mx-5">Your next career move starts here.</p>

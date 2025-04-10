@@ -1,12 +1,11 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { Button, Form, Modal, Table } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
@@ -256,7 +255,6 @@ export default function ManageProjectAbout() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <ToastContainer />
     </div>
   );
 }

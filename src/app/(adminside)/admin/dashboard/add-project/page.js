@@ -1,5 +1,4 @@
 "use client";
-
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,8 +9,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Button, Col, Form, Modal, Row, Table } from "react-bootstrap";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 // Dynamically import JoditEditor with SSR disabled
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 export default function AddProject() {
@@ -718,7 +716,6 @@ export default function AddProject() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <ToastContainer />
     </>
   );
 }

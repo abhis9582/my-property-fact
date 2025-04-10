@@ -26,31 +26,31 @@ export default function Footer() {
   };
   // Defining footer media array
   const mediaArr = [
-    {
-      id: 1,
-      name: "News",
-      slugUrl: "/",
-    },
+    // {
+    //   id: 1,
+    //   name: "News",
+    //   slugUrl: "/",
+    // },
     {
       id: 2,
-      name: "Blogs",
-      slugUrl: "/media",
+      name: "Blog",
+      slugUrl: "/blog",
     },
-    {
-      id: 3,
-      name: "Events",
-      slugUrl: "/",
-    },
-    {
-      id: 4,
-      name: "Advertisements",
-      slugUrl: "/",
-    },
-    {
-      id: 5,
-      name: "Newsletter",
-      slugUrl: "/",
-    },
+    // {
+    //   id: 3,
+    //   name: "Events",
+    //   slugUrl: "/",
+    // },
+    // {
+    //   id: 4,
+    //   name: "Advertisements",
+    //   slugUrl: "/",
+    // },
+    // {
+    //   id: 5,
+    //   name: "Newsletter",
+    //   slugUrl: "/",
+    // },
   ];
 
   //Defining company array
@@ -61,24 +61,19 @@ export default function Footer() {
       slugUrl: "/about-us",
     },
     {
-      id: 2,
-      name: "Mission & Vision",
-      slugUrl: "/",
-    },
-    {
       id: 3,
-      name: "Who we are",
-      slugUrl: "/",
+      name: "Contact Us",
+      slugUrl: "/contact-us",
     },
     {
       id: 4,
       name: "Client's speak",
-      slugUrl: "/",
+      slugUrl: "/clients-speak",
     },
     {
       id: 5,
-      name: "FAQs",
-      slugUrl: "/",
+      name: "Career",
+      slugUrl: "/career",
     },
   ];
   //Defining Explore array
@@ -203,7 +198,7 @@ export default function Footer() {
                     <ul className="p-0">
                       {projectTypes.map((item, index) => (
                         <li key={`${item.name}-${index}`}>
-                          <Link className="footer-text" href={item.slugUrl}>
+                          <Link className="footer-text" href={`/projects/${item.slugUrl}`}>
                             {item.projectTypeName}
                           </Link>
                         </li>
@@ -235,7 +230,7 @@ export default function Footer() {
                     </ul>
                   </div>
                 </div>
-                <div className="col foot-menu">
+                {/* <div className="col foot-menu">
                   <div className="insideBox">
                     <h6>Explore</h6>
                     <ul className="p-0">
@@ -246,14 +241,14 @@ export default function Footer() {
                       ))}
                     </ul>
                   </div>
-                </div>
+                </div> */}
                 <div className="col foot-menu">
                   <div>
                     <h6>Get Social</h6>
                     <ul className="d-flex gap-3 p-0">
                       <li className="">
                         <Link className="footer-text" href="https://www.facebook.com/mypropertyfact1/" target="_blank" title="facebook">
-                          <FontAwesomeIcon icon={faFacebook}/>
+                          <FontAwesomeIcon icon={faFacebook} />
                         </Link>
                       </li>
                       <li className="">
@@ -278,6 +273,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
+        <p className="container pb-3 footer-text text-center">The content and data are for informative purposes only and may be prone to inaccuracy and inconsistency. We do not take any responsibility for data mismatches and strongly advise the viewers to conduct their detailed research before making any investment or purchase-related decisions.</p>
       </footer>
       <div className="modal fade" id="formModal">
         <button

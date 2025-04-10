@@ -11,8 +11,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import InsightNew from "./insight/page";
 import FixedForm from "../fixedform";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import Link from "next/link";
 export default function HomePage() {
   const [projectTypeList, setProjectTypeList] = useState([]);
@@ -30,23 +29,23 @@ export default function HomePage() {
   const ourFacts = [
     {
       id: 1,
-      numbers: "12+",
-      text: "Years of experience",
+      numbers: "500+",
+      text: "Cities",
     },
     {
       id: 2,
-      numbers: "2000+",
-      text: "Units booked",
+      numbers: "80+",
+      text: "Builders",
     },
     {
       id: 3,
-      numbers: "200+",
-      text: "Happy faces",
+      numbers: "500+",
+      text: "Projects",
     },
     {
       id: 4,
-      numbers: "20Mln+",
-      text: "Area sold(sq.ft)",
+      numbers: "10,000+",
+      text: "Units",
     },
   ];
   const fetchProjectTypes = async () => {
@@ -168,7 +167,7 @@ export default function HomePage() {
                   <p className="h3">
                     <span>{item.numbers}</span>
                   </p>
-                  <p>{item.text}</p>
+                  <p className="text-center">{item.text}</p>
                 </section>
               </div>
             ))}
@@ -256,11 +255,10 @@ export default function HomePage() {
         Find your dream property in the city you are searching in
       </p>
       <DreamProject />
-      <p className="fs-1 fw-bold text-center">News & Views</p>
+      <p className="fs-1 fw-bold text-center">Realty Updates</p>
       <NewsViews />
-      <p className="fs-1 fw-bold text-center">Social Media Feed</p>
+      <p className="fs-1 fw-bold text-center">Investor Education </p>
       <SocialFeed />
-      <ToastContainer />
     </>
   );
 }

@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { Button, Form, Modal } from "react-bootstrap";
 import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -214,7 +214,6 @@ export default function ManageProjectWalkthrough() {
         </Modal.Body>
       </Modal>
       <CommonModal confirmBox={confirmBox} setConfirmBox={setConfirmBox} api={`${process.env.NEXT_PUBLIC_API_URL}project-walkthrough/delete/${walkthroughId}`} fetchAllHeadersList={fetchProjects}/>
-      <ToastContainer />
     </div>
   );
 }

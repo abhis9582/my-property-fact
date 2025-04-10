@@ -3,9 +3,8 @@ import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Form, Modal, Table } from "react-bootstrap";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Button, Form, Modal } from "react-bootstrap";
+import { toast } from "react-toastify";
 import CommonModal from "../common-model/common-model";
 import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -231,7 +230,6 @@ export default function CityHeaders() {
           </Form>
         </Modal.Body>
       </Modal>
-      <ToastContainer />
       {/* Pass the necessary props to CommonModal */}
       <CommonModal
         confirmBox={confirmBox}

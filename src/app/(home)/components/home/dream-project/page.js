@@ -26,7 +26,7 @@ export default function DreamProject() {
     {
       name: "Delhi",
       link: "/city/delhi",
-      image: "/dream-cities/delhi_ncr.jpg",
+      image: "/dream-cities/delhi.jpg",
       alt: "city-delhi"
     },
     {

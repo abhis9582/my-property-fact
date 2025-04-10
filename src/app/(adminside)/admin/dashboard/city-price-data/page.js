@@ -8,8 +8,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Col, Form, Modal, Row, Table } from "react-bootstrap";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 export default function CityPriceData() {
   const [cityList, setCityList] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -489,7 +488,6 @@ export default function CityPriceData() {
           <Button variant="danger">Delete</Button>
         </Modal.Footer>
       </Modal>
-      <ToastContainer />
     </div>
   );
 }

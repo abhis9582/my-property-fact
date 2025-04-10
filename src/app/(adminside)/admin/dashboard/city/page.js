@@ -6,8 +6,7 @@ import Paper from "@mui/material/Paper";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 export default function City() {
   const [showModal, setShowModal] = useState(false);
@@ -304,7 +303,6 @@ export default function City() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <ToastContainer />
     </div>
   );
 }

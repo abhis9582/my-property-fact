@@ -7,8 +7,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { exportTOExcel } from "../common-model/exporttoexcel";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 export default function Enquiries() {
     const [enquiryList, setEnquiryList] = useState([]);
 
@@ -112,7 +111,6 @@ export default function Enquiries() {
                     />
                 </Paper>
             </div>
-            <ToastContainer/>
         </div>
     );
 }

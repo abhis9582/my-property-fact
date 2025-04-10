@@ -7,8 +7,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Col, Form, Modal } from "react-bootstrap";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 export default function Builder() {
   const [showModal, setShowModal] = useState(false);
   const [builder, setBuilder] = useState("");
@@ -304,7 +303,6 @@ export default function Builder() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <ToastContainer />
     </div>
   );
 }

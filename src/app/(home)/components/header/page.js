@@ -184,7 +184,7 @@ const Header = () => {
                 <Link href="/clients-speak" className={`text-light text-uppercase ${pathname === "/clients-speak" ? "header-link-active" : ""}`}>Clients Speak</Link>
               </li>
               <li className="hasChild">
-                <Link href="/careers" className={`text-light text-uppercase ${pathname === "/careers" ? "header-link-active" : ""}`}>Careers</Link>
+                <Link href="/career" className={`text-light text-uppercase ${pathname === "/career" ? "header-link-active" : ""}`}>Career</Link>
               </li>
               <li className="hasChild">
                 <Link href="/contact-us" className={`text-light text-uppercase ${pathname === "/contact-us" ? "header-link-active" : ""}`}>Contact us</Link>
@@ -277,7 +277,7 @@ const Header = () => {
             <div className="smallMenuList">
               <ul className="list-inline">
                 <li>
-                  <Link href="/blogs" onClick={openMenu}>Blog</Link>
+                  <Link href="/blog" onClick={openMenu}>Blog</Link>
                 </li>
                 <li>
                   <Link href="/about-us" onClick={openMenu}>About Us</Link>
@@ -286,7 +286,7 @@ const Header = () => {
                   <Link href="/clients-speak" onClick={openMenu}>Clients Speak</Link>
                 </li>
                 <li>
-                  <Link href="/careers" onClick={openMenu}>Careers</Link>
+                  <Link href="/career" onClick={openMenu}>Career</Link>
                 </li>
                 <li>
                   <Link href="/contact-us" onClick={openMenu}>Contact us</Link>
