@@ -29,7 +29,7 @@ export default function HomePage() {
   const ourFacts = [
     {
       id: 1,
-      numbers: "500+",
+      numbers: "50+",
       text: "Cities",
     },
     {
