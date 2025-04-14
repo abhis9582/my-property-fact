@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
 
                 {/* ✅ Google Analytics */}
                 <Script
-                    src={`https://www.googletagmanager.com/gtag/js?id=G-4F8FTBNL24`}
+                    src={`https://www.googletagmanager.com/gtag/js?id=G-QCFJENDW3M`}
                     strategy="afterInteractive"
                 />
                 <Script
@@ -40,7 +40,7 @@ export default function RootLayout({ children }) {
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', 'G-4F8FTBNL24');
+              gtag('config', 'G-QCFJENDW3M');
             `,
                     }}
                 />
