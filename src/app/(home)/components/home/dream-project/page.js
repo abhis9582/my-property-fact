@@ -18,10 +18,10 @@ export default function DreamProject() {
       alt: "city-bangalore"
     },
     {
-      name: "Kochi",
-      link: "/city/kochi",
-      image: "/dream-cities/kochi.jpg",
-      alt: "city-kochi"
+      name: "Noida",
+      link: "/city/noida",
+      image: "/dream-cities/noida.jpg",
+      alt: "city-noida"
     },
     {
       name: "Delhi",
@@ -30,10 +30,10 @@ export default function DreamProject() {
       alt: "city-delhi"
     },
     {
-      name: "Hyderabad",
-      link: "/city/hyderabad",
-      image: "/dream-cities/hyderabad.jpg",
-      alt: "city-hyderabad"
+      name: "Ghaziabad",
+      link: "/city/ghaziabad",
+      image: "/dream-cities/ghaziabad.jpg",
+      alt: "city-ghaziabad"
     },
     {
       name: "Jaipur",
@@ -48,10 +48,10 @@ export default function DreamProject() {
       alt: "city-mumbai"
     },
     {
-      name: "Chennai",
-      link: "/city/chennai",
-      image: "/dream-cities/chennai.jpg",
-      alt: "city-chennai"
+      name: "Gurugram",
+      link: "/city/gurugram",
+      image: "/dream-cities/gurugram.jpg",
+      alt: "city-gurugram"
     }
   ];
   return (
