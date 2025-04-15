@@ -65,11 +65,11 @@ export default function Footer() {
       name: "Contact Us",
       slugUrl: "/contact-us",
     },
-    {
-      id: 4,
-      name: "Client's speak",
-      slugUrl: "/clients-speak",
-    },
+    // {
+    //   id: 4,
+    //   name: "Client's speak",
+    //   slugUrl: "/clients-speak",
+    // },
     {
       id: 5,
       name: "Career",

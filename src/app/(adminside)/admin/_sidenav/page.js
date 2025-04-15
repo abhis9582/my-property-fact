@@ -172,10 +172,31 @@ export default function SideNav() {
             Manage Enquiries
           </Link>
         </li>
-        <li>
-          <Link href="/admin/dashboard/manage-blogs">
-            Manage Blogs
+        <li className={activeDropdown === "dropdown3" ? "active" : ""}>
+          <Link
+            href="#"
+            onClick={() => toggleDropdown("dropdown3")}
+            data-toggle="collapse"
+            aria-expanded="false"
+            className="dropdown-toggle"
+          >
+            Blog management
           </Link>
+          <ul
+            className={`collapse list-unstyled ${activeDropdown === "dropdown3" ? "show" : ""
+              }`}
+          >
+            <li>
+              <Link href="/admin/dashboard/manage-blogs">
+                Manage Blogs
+              </Link>
+            </li>
+            <li>
+              <Link href="/admin/dashboard/manage-categories">
+                Manage Blog Categories
+              </Link>
+            </li>
+          </ul>
         </li>
         <li>
           <Link href="#" onClick={() => handleLogout()}>

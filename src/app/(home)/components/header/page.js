@@ -180,9 +180,9 @@ const Header = () => {
                   Blog
                 </Link>
               </li>
-              <li className="hasChild">
+              {/* <li className="hasChild">
                 <Link href="/clients-speak" className={`text-light text-uppercase ${pathname === "/clients-speak" ? "header-link-active" : ""}`}>Clients Speak</Link>
-              </li>
+              </li> */}
               <li className="hasChild">
                 <Link href="/career" className={`text-light text-uppercase ${pathname === "/career" ? "header-link-active" : ""}`}>Career</Link>
               </li>

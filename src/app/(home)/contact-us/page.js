@@ -84,17 +84,17 @@ export default function ContactUs() {
         <div className="container d-flex justify-content-center gap-4 flex-wrap">
           <div className="info-container-child">
             <p>Email Address</p>
-            <p>info@mypropertyfact.com</p>
-            <p>jobs@mypropertyfact.com</p>
+            <p>social@mypropertyfact.com</p>
+            {/* <p>jobs@mypropertyfact.com</p> */}
           </div>
           <div className="info-container-child">
             <p>Phone Number</p>
-            <p>+0123-456789</p>
-            <p>+987-6543210</p>
+            <p>8920024793</p>
+            {/* <p>+987-6543210</p> */}
           </div>
           <div className="info-container-child">
             <p>Office Address</p>
-            <p>Tower 1, Corperate park</p>
+            <p>6th Floor Tower 1, Corperate Park</p>
             <p>Noida-142, India</p>
           </div>
         </div>
