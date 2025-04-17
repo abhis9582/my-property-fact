@@ -31,6 +31,7 @@ export default function BlogDetail({ slug }) {
                             className="img-fluid rounded shadow-sm mb-4"
                             width={1200}
                             height={648}
+                            unoptimized
                         />
 
                         <h1 className="fw-bold mb-3">{blogDetail.blogTitle}</h1>
