@@ -5,9 +5,12 @@ import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
-
 import dynamic from 'next/dynamic';
 import { toast } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
+import CommonModal from "../common-model/common-model";
+import Image from "next/image";
 // 🔥 This prevents SSR errors
 const Editor = dynamic(() => import('../common-model/joe-editor'), {
     ssr: false,
@@ -15,32 +18,28 @@ const Editor = dynamic(() => import('../common-model/joe-editor'), {
 });
 
 export default function ManageBlogs() {
-    const editor = useRef(null);
-    const config = {
-        readonly: false,
-        placeholder: 'Start typing...',
-    };
-
     const [blogList, setBlogList] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    const [title, setTitle] = useState("Add New Blog");
+    const [title, setTitle] = useState(null);
     const [buttonName, setButtonName] = useState("Submit");
     const [showLoading, setShowLoading] = useState(false);
     const [validated, setValidated] = useState(false);
     const [blogDescription, setBlogDescription] = useState("");
     const [blogCategoryList, setBlogCategoryList] = useState([]);
     const [blogId, setBlogId] = useState(0);
-    const [value, setValue] = useState('');
+    const [confirmBox, setConfirmBox] = useState(false);
+    const [previousBlogImage, setPreviousBlogImage] = useState(null);
     //Definign input fields for blog form
 
     const inputFields = {
         blogTitle: "",
-        metaKeyword: "",
-        blogDescription: "",
-        blogCategory: "",
-        blogImage: "",
+        blogKeywords: "",
+        blogMetaDescription: "",
         blogDescription: "",
         slugUrl: "",
+        blogImage: null,
+        status: 1,
+        blogCategory: "",
         id: 0,
     };
 
@@ -57,16 +56,18 @@ export default function ManageBlogs() {
         }
         if (form.checkValidity() === true) {
             setShowLoading(true);
+            setButtonName("");
             if (blogId > 0) {
                 formData.id = blogId;
             }
             const data = new FormData();
             data.append("blogTitle", formData.blogTitle);
-            data.append("metaKeyword", formData.metaKeyword);
+            data.append("blogKeywords", formData.blogKeywords);
+            data.append("blogMetaDescription", formData.blogMetaDescription);
             data.append("blogDescription", blogDescription);
-            data.append("blogCategory", formData.blogCategory);
-            data.append("image", formData.blogImage);
             data.append("slugUrl", formData.slugUrl);
+            data.append("image", formData.blogImage);
+            data.append("blogCategory", formData.blogCategory);
             data.append("id", formData.id);
 
             try {
@@ -75,30 +76,50 @@ export default function ManageBlogs() {
                         "Content-Type": "multipart/form-data",
                     },
                 });
-                
-                if (response.data.status) {
+
+                if (response.data.isSuccess === 1) {
                     toast.success(response.data.message);
-                    // setShowModal(false);
-                    // fetchBlogs();
+                    setShowModal(false);
+                    setFormData(inputFields);
+                    setBlogDescription("");
+                    fetchBlogList();
                 } else {
                     toast.error(response.data.message);
                 }
-            } catch (error) {            
+            } catch (error) {
+                console.log(error);
+                toast.error(error.response.data.blogMetaDescription);
                 toast.error(error.response.data.error);
             } finally {
                 setShowLoading(false);
+                setButtonName("Add Blog");
             }
         }
     }
 
     //Handle deletion of blog
     const openConfirmationBox = (id) => {
-
+        setConfirmBox(true);
+        setBlogId(id);
     }
 
     //Handling edition of Blog
     const openEditModel = (item) => {
-
+        setTitle("Edit Blog");
+        setButtonName("Update");
+        setShowModal(true);
+        setValidated(false);
+        setBlogId(item.id);
+        setBlogDescription(item.blogDescription);
+        setPreviousBlogImage(item.blogImage);
+        setFormData({
+            blogTitle: item.blogTitle,
+            blogKeywords: item.blogKeywords,
+            blogMetaDescription: item.blogMetaDescription,
+            slugUrl: item.slugUrl,
+            blogCategory: item.categoryId,
+            id: item.id,
+        });
     }
 
     //Handle setting input fields values
@@ -120,8 +141,14 @@ export default function ManageBlogs() {
 
     //Handle opening of add blog form
     const openAddModel = () => {
+        setTitle("Add Blog");
         setShowModal(true);
         setValidated(false);
+        setButtonName("Add Blog");
+        setFormData(inputFields);
+        setBlogDescription("");
+        setPreviousBlogImage(null);
+        setBlogId(0);
     }
 
     //Fetching all blogs categories
@@ -129,37 +156,52 @@ export default function ManageBlogs() {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}blog-category/get-all`);
         setBlogCategoryList(response.data);
     }
+    //Fetching all blogs
+    const fetchBlogList = async () => {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}blog/get-all`);
+        const res = response.data.map((item, index) => ({
+            ...item,
+            index: index + 1
+        }));
+        setBlogList(res);
+    }
     useEffect(() => {
         fetchBlogCategory();
+        fetchBlogList();
     }, []);
 
     //Defining table columns
     const columns = [
-        { field: "index", headerName: "S.no", width: 100 },
+        { field: "index", headerName: "S.no", width: 50 },
         {
-            field: "categoryDisplayName",
-            headerName: "Category Display Name",
-            width: 450,
+            field: "blogKeywords",
+            headerName: "Keywords",
+            width: 200,
         },
-        { field: "category", headerName: "Category", width: 400 },
+        { field: "blogTitle", headerName: "Title", width: 200 },
+        { field: "blogMetaDescription", headerName: "Meta Description", width: 200 },
+        { field: "blogDescription", headerName: "Description", width: 200 },
+        { field: "slugUrl", headerName: "Url", width: 200 },
+        { field: "blogImage", headerName: "Image", width: 200 },
+        { field: "blogCategory", headerName: "Category", width: 200 },
         {
             field: "action",
             headerName: "Action",
-            width: 250,
+            width: 200,
             renderCell: (params) => (
                 <div>
-                    {/* <FontAwesomeIcon
-                        className="mx-3 text-danger"
+                    <FontAwesomeIcon
+                        className="mx-3 text-danger cursor-pointer"
                         style={{ cursor: "pointer" }}
                         icon={faTrash}
                         onClick={() => openConfirmationBox(params.row.id)}
-                    /> */}
-                    {/* <FontAwesomeIcon
+                    />
+                    <FontAwesomeIcon
                         className="text-warning"
                         style={{ cursor: "pointer" }}
                         icon={faPencil}
                         onClick={() => openEditModel(params.row)}
-                    /> */}
+                    />
                 </div>
             ),
         },
@@ -207,19 +249,19 @@ export default function ManageBlogs() {
                                     type="text"
                                     placeholder="Meta title"
                                     name="blogTitle"
-                                    value={formData.metaTitle}
+                                    value={formData.blogTitle || ""}
                                     onChange={handleChange}
                                     required
                                 />
                                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                             </Form.Group>
-                            <Form.Group as={Col} md="6" controlId="metaKeyword">
-                                <Form.Label>Meta Keyword</Form.Label>
+                            <Form.Group as={Col} md="6" controlId="blogKeywords">
+                                <Form.Label>Blog Keywords</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    placeholder="Meta keyword"
-                                    name="metaKeyword"
-                                    value={formData.metaKeyword}
+                                    placeholder="Blog keywords"
+                                    name="blogKeywords"
+                                    value={formData.blogKeywords || ""}
                                     onChange={handleChange}
                                     required
                                 />
@@ -228,13 +270,13 @@ export default function ManageBlogs() {
                         </Row>
                         <Row className="mb-3">
                             <Form.Group controlId="blogDescription">
-                                <Form.Label>Meta Description</Form.Label>
+                                <Form.Label>Blog Meta Description</Form.Label>
                                 <Form.Control
                                     as="textarea"
                                     rows={3}
-                                    placeholder="Meta description"
-                                    name="blogDescription"
-                                    value={formData.metaDescription}
+                                    placeholder="Blog meta description"
+                                    name="blogMetaDescription"
+                                    value={formData.blogMetaDescription || ""}
                                     onChange={handleChange}
                                     required
                                 />
@@ -246,7 +288,7 @@ export default function ManageBlogs() {
                                 <Form.Label>Blog category</Form.Label>
                                 <Form.Select
                                     name="blogCategory"
-                                    value={formData.blogCategory}
+                                    value={formData.blogCategory || ""}
                                     onChange={handleChange}
                                     required
                                 >
@@ -261,6 +303,15 @@ export default function ManageBlogs() {
                             </Form.Group>
                             <Form.Group as={Col} md="6" controlId="blogImage">
                                 <Form.Label>Blog Image</Form.Label>
+                                {previousBlogImage && (
+                                    <Image
+                                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}blog/${previousBlogImage}`}
+                                        alt={"blog_image"}
+                                        className="img-fluid rounded shadow-sm mb-4"
+                                        width={300}
+                                        height={100}
+                                    />
+                                )}
                                 <Form.Control
                                     type="file"
                                     placeholder="Choose file"
@@ -278,7 +329,7 @@ export default function ManageBlogs() {
                                     type="text"
                                     placeholder="Slug url"
                                     name="slugUrl"
-                                    value={formData.slugUrl}
+                                    value={formData.slugUrl || ""}
                                     onChange={handleChange}
                                     required
                                 />
@@ -296,12 +347,29 @@ export default function ManageBlogs() {
                             <Editor value={blogDescription} onChange={setBlogDescription} />
                             {/* </Form.Group> */}
                         </Row>
+                        {/* <Row className="mb-3">
+                            <Form.Check // prettier-ignore
+                                type="checkbox"
+                                id= "status"
+                                label= "Status"
+                                name="status"
+                                value={formData.status}
+                                onChange={handleChange}
+                                checked={formData.status === 1}
+                            />
+                        </Row> */}
                         <Button className="btn btn-success" type="submit" disabled={showLoading}>
-                            Submit <LoadingSpinner show={showLoading} />
+                            {buttonName} <LoadingSpinner show={showLoading} />
                         </Button>
                     </Form>
                 </Modal.Body>
             </Modal>
+            <CommonModal
+                confirmBox={confirmBox}
+                setConfirmBox={setConfirmBox}
+                api={`${process.env.NEXT_PUBLIC_API_URL}blog/delete/${blogId}`}
+                fetchAllHeadersList={fetchBlogList}
+            />
         </>
     )
 }

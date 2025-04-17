@@ -1,33 +1,62 @@
+"use client";
 import "./media.css";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import CommonBreadCrum from "../components/common/breadcrum";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Link from "next/link";
 export default function Media() {
-  const blogsList = [1, 2, 3, 4, 5, 6, 7, 8];
+  // defining state for list of blogs
+  const [blogsList, setBlogsList] = useState([]);
+
+  //fetching all blogs list
+  const getBlogsList = async () => {
+    // fetching blogs list from api
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}blog/get-all`);
+    setBlogsList(response.data);
+  }
+  useEffect(() => {
+    getBlogsList();
+
+  }, []);
   return (
     <>
-      <CommonHeaderBanner image={"blog-banner.jpg"} headerText={"Blog"}/>
+      <CommonHeaderBanner image={"blog-banner.jpg"} headerText={"Blog"} />
       <CommonBreadCrum pageName={"Blog"} />
       <div className="container-fluid mt-3">
         {/* <p className="text-center h2 mt-3">Blog</p> */}
-        <div className="d-flex justify-content-center gap-4 flex-wrap">
-          {blogsList.map((blog) => (
-            <div key={blog} className="card">
+        <div className="container d-flex justify-content-center gap-4 flex-wrap">
+          {blogsList.map((blog, index) => (
+            <Link href={`/blog/${blog.slugUrl}`}
+              key={`${blog.blogTitle}-${index}`}
+              className="card shadow-sm border-0 rounded-4 overflow-hidden"
+              style={{ width: '22rem', transition: 'transform 0.3s' }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+            >
               <Image
                 width={400}
-                height={300}
-                src="/banner-tablet.jpg"
-                alt="blog"
+                height={250}
+                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}blog/${blog.blogImage}`}
+                alt={blog.blogTitle}
+                className="card-img-top"
+                unoptimized={true}
               />
-              <div className="p-2 mb-3">
-                <p className="h5 text-bold">
-                  Checkout the Best Residential Projects in Lucknow
+              <div className="card-body">
+                <h5 className="card-title fw-bold">{blog.blogTitle}</h5>
+                <p className="card-text text-muted small">
+                  {blog.shortDescription || 'Click below to continue reading...'}
                 </p>
-                <small>Continue Reading...</small>
+                <button className="btn btn-primary btn-sm mt-2">
+                  Continue Reading
+                </button>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
+
       </div>
     </>
   );
