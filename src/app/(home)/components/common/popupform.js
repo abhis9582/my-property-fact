@@ -1,6 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
+import { toast } from "react-toastify";
+import { LoadingSpinner } from "../../contact-us/page";
+import { set } from "jodit/esm/core/helpers";
 
 export default function CommonPopUpform({ show, handleClose }) {
     const [validated, setValidated] = useState(false);
@@ -12,7 +15,8 @@ export default function CommonPopUpform({ show, handleClose }) {
         message: "",
     };
     const [formData, setFormData] = useState(intitalData);
-
+    const [showLoading, setShowLoading] = useState(false);
+    const [buttonName, setButtonName] = useState("Submit Enquiry");
     //Handlechanging input fields
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -43,6 +47,8 @@ export default function CommonPopUpform({ show, handleClose }) {
         } else {
             event.preventDefault();
             try {
+                setShowLoading(true);
+                setButtonName("");
                 // Make API request
                 const response = await axios.post(
                     process.env.NEXT_PUBLIC_API_URL + "enquiry/post",
@@ -54,11 +60,16 @@ export default function CommonPopUpform({ show, handleClose }) {
                     handleClose(false);
                     setValidated(false); // Reset validation state
                     setFormData(intitalData);
+                    toast.success(response.data.message);
                 } else {
-                    alert(response.data.message);
+                    toast.error(response.data.message);
                 }
             } catch (error) {
+                toast.error(error.data.message);
                 console.error("Error submitting form:", error);
+            }finally {
+                setShowLoading(false);
+                setButtonName("Submit Enquiry");
             }
         }
     };
@@ -127,7 +138,7 @@ export default function CommonPopUpform({ show, handleClose }) {
                             Please provide a valid message.
                         </Form.Control.Feedback>
                     </Form.Group>
-                    <Button type="submit" className="fw-bold btn btn-success">Submit</Button>
+                    <Button type="submit" className="fw-bold btn btn-success" disabled={showLoading}>{buttonName} <LoadingSpinner show={showLoading}/></Button>
                 </Form>
             </Modal>
         </>

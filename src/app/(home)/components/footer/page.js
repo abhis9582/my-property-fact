@@ -273,7 +273,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <p className="container pb-3 footer-text text-center">The content and data are for informative purposes only and may be prone to inaccuracy and inconsistency. We do not take any responsibility for data mismatches and strongly advise the viewers to conduct their detailed research before making any investment or purchase-related decisions.</p>
+        <p className="container pb-3 footer-text text-center m-0">The content and data are for informative purposes only and may be prone to inaccuracy and inconsistency. We do not take any responsibility for data mismatches and strongly advise the viewers to conduct their detailed research before making any investment or purchase-related decisions.</p>
       </footer>
       <div className="modal fade" id="formModal">
         <button

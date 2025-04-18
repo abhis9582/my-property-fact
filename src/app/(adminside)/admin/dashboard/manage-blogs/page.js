@@ -174,6 +174,20 @@ export default function ManageBlogs() {
     const columns = [
         { field: "index", headerName: "S.no", width: 50 },
         {
+            field: "blogImage", headerName: "Blog Image", width: 120,
+            renderCell: (params) => (
+                <Image
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}blog/${params.row.blogImage}`}
+                    alt="Project"
+                    width={100}
+                    height={50}
+                    style={{ borderRadius: '5px' }}
+                    objectFit="cover"
+                    unoptimized
+                />
+            ),
+        },
+        {
             field: "blogKeywords",
             headerName: "Keywords",
             width: 200,
@@ -182,7 +196,6 @@ export default function ManageBlogs() {
         { field: "blogMetaDescription", headerName: "Meta Description", width: 200 },
         { field: "blogDescription", headerName: "Description", width: 200 },
         { field: "slugUrl", headerName: "Url", width: 200 },
-        { field: "blogImage", headerName: "Image", width: 200 },
         { field: "blogCategory", headerName: "Category", width: 200 },
         {
             field: "action",
