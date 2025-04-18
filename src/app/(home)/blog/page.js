@@ -21,6 +21,13 @@ export default function Media() {
     getBlogsList();
 
   }, []);
+  if (blogsList.length === 0) {
+    return <>
+      <CommonHeaderBanner image={"blog-banner.jpg"} headerText={"Blog"} />
+      <CommonBreadCrum pageName={"Blog"} />
+      <div className="text-center fs-2 font-bold my-5">No blogs found!</div>
+    </>
+  }
   return (
     <>
       <CommonHeaderBanner image={"blog-banner.jpg"} headerText={"Blog"} />

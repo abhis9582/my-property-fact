@@ -203,37 +203,104 @@
 }
 
 .banner-form {
-    background: url(https://www.starestate.com/static/media/card-bg.086315ac0f0f0c127765.jpg) 50% / cover no-repeat;
-    max-width: 330px;
-    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.312);
+    /* Black background with opacity */
+    width: 300px;
+    padding: 25px;
     position: absolute;
     right: 0;
-    top: 10%;
+    top: 0;
     z-index: 9;
+    border-radius: 12px;
+    /* Rounded corners */
+    backdrop-filter: blur(10px);
+    /* Blur effect */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    /* Soft shadow */
+}
+
+.banner-form .form-control {
+    border-radius: 8px;
+    /* Rounded corners for inputs */
+    border: 1px solid #555;
+    /* Subtle border */
+    background-color: rgba(255, 255, 255, 0.2);
+    /* Slight transparent white background */
+    color: white;
+    /* White text */
+    padding: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.banner-form .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    /* Light placeholder text */
+}
+
+.banner-form .form-control:focus {
+    border-color: #28a745;
+    /* Green border on focus */
+    background-color: rgba(255, 255, 255, 0.3);
+    /* Slightly brighter background on focus */
+    box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+    /* Green glow on focus */
+}
+
+.banner-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.banner-form .btn {
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    /* Full-width button */
+}
+
+.banner-form .btn:hover {
+    background-color: #218838;
+    /* Darker green on hover */
+}
+
+.banner-form .btn:disabled {
+    background-color: #d6d6d6;
+    /* Disabled state */
+}
+
+.banner-form .loading-spinner {
+    margin-left: 10px;
+    /* Space between the button text and spinner */
+}
+
+.banner-form .form-control-feedback {
+    color: #ff5f57;
+    /* Red color for feedback */
 }
 
 .short-info {
-    bottom: 3rem;
-    display: flex;
-    flex-direction: column;
-    /* gap: 5px; */
-    left: 5%;
+    bottom: 3%;
+    left: 1%;
     position: absolute;
     z-index: 9;
-    position: absolute;
     color: white;
-    background-color: #fff3;
-    box-shadow: 0 4px 30px #0000001a;
+    background-color: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(5px);
     padding: 1.5rem;
-    /* max-width: 350px; */
-    background: #0000009c;
-    /* font-size: 30px; */
+    border-radius: 15px;
+    max-width: 350px;
+    min-width: 300px;
+    transition: all 0.3s ease-in-out;
 }
 
-.short-info span {
-    font-size: 16px !important;
+.short-info:hover {
+    transform: scale(1.02);
 }
+
 
 .project-logo {
     width: 150px;
@@ -359,4 +426,34 @@ a {
     .gallery-image {
         max-height: 200px;
     }
+}
+
+.swiper-wrapper {
+    padding: 10px !important;
+    display: flex !important;
+    justify-content: center !important;
+}
+
+.mySwiper .swiper-button-next,
+.mySwiper .swiper-button-prev {
+    color: #28a745;
+}
+
+.property-type-detail {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.03);
 }

@@ -203,7 +203,7 @@ export default function ManageBlogCategory() {
                 </Modal.Body>
             </Modal>
             <CommonModal confirmBox={confirmBox} setConfirmBox={setConfirmBox}
-            api={`${apiUrl}delete/${catId}`} fetchAllHeadersList={fetchCategoryList}/>
+            api={`${apiUrl}blog-category/delete/${catId}`} fetchAllHeadersList={fetchCategoryList}/>
         </div>
     );
 }

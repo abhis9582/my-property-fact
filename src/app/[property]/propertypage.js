@@ -4,12 +4,28 @@ import Slider from "react-slick";
 import "./property.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+
+// Import Swiper React components
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+
+// import './styles.css';
+
+// import required modules
+import { Navigation } from 'swiper/modules';
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBed,
   faChartArea,
+  faLocation,
+  faLocationDot,
   faMarker,
 } from "@fortawesome/free-solid-svg-icons";
 import Featured from "../(home)/components/home/featured/page";
@@ -319,7 +335,7 @@ export default function Property({ slug }) {
         <Spinner animation="grow" variant="danger" />
         <Spinner animation="grow" variant="warning" />
         <Spinner animation="grow" variant="info" />
-        <Spinner animation="grow" variant="light" />
+        {/* <Spinner animation="grow" variant="light" /> */}
         <Spinner animation="grow" variant="dark" />
       </div>
     );
@@ -493,9 +509,9 @@ export default function Property({ slug }) {
               <Image
                 src={imageSrc}
                 alt="banner-image"
-                className="w-100 object-cover"
-                width={400}
-                height={250}
+                className="img-fluid shadow-sm mb-4"
+                width={1800}
+                height={700}
                 unoptimized
               />
             </picture>
@@ -560,21 +576,27 @@ export default function Property({ slug }) {
                   Please provide a valid message.
                 </Form.Control.Feedback>
               </Form.Group>
-              <Button className="btn btn-success" type="submit" disabled={showLoading}>Submit <LoadingSpinner show={showLoading} /></Button>
+              <Button className="btn btn-success" type="submit" disabled={showLoading}>
+                Submit <LoadingSpinner show={showLoading} />
+              </Button>
             </Form>
           </div>
           {/* Short info section */}
-          <div className="short-info d-none d-md-block">
-            <p className="fs-1 fw-bold m-0">{projectDetail.projectName}</p>
-            <p className="fs-3 m-0">
-              <FontAwesomeIcon icon={faMarker} width={15} />{" "}
-              {projectDetail.projectAddress}
-            </p>
-            <p className="fs-6">
-              {generatePrice(projectDetail.projectPrice)}* |{" "}
-              {projectDetail.projectConfiguration}
-            </p>
-            <div className="btn btn-success mt-2" onClick={() => setShowPopUp(true)}>Get Details</div>
+          <div className="short-info d-none d-md-flex justify-content-center ">
+            <div>
+              <p className="project-name fs-2 fw-bold m-0 text-white">{projectDetail.projectName}</p>
+              <p className="project-address fs-5 font-bold text-white m-0">
+                <FontAwesomeIcon icon={faLocationDot} className="text-success me-2" size="sm" />
+                {projectDetail.projectAddress}
+              </p>
+              <p className="fs-6 text-white">
+                {generatePrice(projectDetail.projectPrice)}* |{" "}
+                {projectDetail.projectConfiguration}
+              </p>
+              <div className="btn btn-success mt-3 w-100" onClick={() => setShowPopUp(true)}>
+                Get Details
+              </div>
+            </div>
           </div>
         </div>
         {/* About the project */}
@@ -659,42 +681,58 @@ export default function Property({ slug }) {
               dangerouslySetInnerHTML={{ __html: projectDetail.floorPlanDesc }}
             ></p>
           </div>
-          <div className="d-flex justify-content-center p-2 d-flex flex-column flex-md-row gap-md-3 flex-wrap flex-lg-nowrap">
-            {floorPlanList.map((item, index) => (
-              <div key={`${item.planType}-${index}`} className="card mt-3">
-                <div className="p-3 rounded-sm">
-                  <Image
-                    width={300}
-                    height={200}
-                    src="/static/generic-floorplan.jpg"
-                    alt="floor plan"
-                  />
+          {/* <div className="d-flex justify-content-center p-2 d-flex flex-column flex-md-row gap-md-3 flex-wrap flex-lg-nowrap"> */}
+          <Swiper
+            direction="horizontal"
+            navigation={true}
+            pagination={{ clickable: true }}
+            spaceBetween={20}
+            loop={true}
+            breakpoints={{
+              320: { slidesPerView: 1 },
+              576: { slidesPerView: 1.5 },
+              768: { slidesPerView: 2 },
+              992: { slidesPerView: 3 },
+              1200: { slidesPerView: 4 },
+            }}
+            modules={[Navigation]}
+            className="mySwiper"
+          >
+            {floorPlanList?.map((item, index) => (
+              <SwiperSlide key={`${item.planType}-${index}`}>
+                <div className="card mt-3">
+                  <div className="p-3 rounded-sm">
+                    <Image
+                      width={300}
+                      height={200}
+                      className="img-fluid rounded-3"
+                      src="/static/generic-floorplan.jpg"
+                      alt="floor plan"
+                    />
+                  </div>
+                  <div className="border-bottom property-type-detail">
+                    <p>
+                      <FontAwesomeIcon icon={faBed} width={20} color="green" /> Type
+                    </p>
+                    <p>{item.planType}</p>
+                  </div>
+                  <div className="mt-2 property-type-detail">
+                    <p>
+                      <FontAwesomeIcon icon={faChartArea} width={20} color="green" /> Area
+                    </p>
+                    <p>{item.areaSqft} sqft*</p>
+                    <p>{parseFloat(item.areaSqmt).toFixed(2)} sqmt*</p>
+                  </div>
+                  <div className="pb-4 ps-2 mt-4">
+                    <button className="btn btn-success" onClick={() => setShowPopUp(true)}>
+                      PRICE ON REQUEST
+                    </button>
+                  </div>
                 </div>
-                <div className="border-bottom property-type-detail">
-                  <p>
-                    <FontAwesomeIcon icon={faBed} width={20} color="green" />{" "}
-                    Type
-                  </p>
-                  <p>{item.planType}</p>
-                </div>
-                <div className="mt-2 property-type-detail">
-                  <p>
-                    <FontAwesomeIcon
-                      icon={faChartArea}
-                      width={20}
-                      color="green"
-                    />{" "}
-                    Area
-                  </p>
-                  <p>{item.areaSqft} sqft*</p>
-                  <p>{parseFloat(item.areaSqmt).toFixed(2)} sqmt*</p>
-                </div>
-                <div className="pb-4 ps-2 mt-4">
-                  <button className="btn btn-success" onClick={() => setShowPopUp(true)}>PRICE ON REQUEST</button>
-                </div>
-              </div>
+              </SwiperSlide>
             ))}
-          </div>
+          </Swiper>
+          {/* </div> */}
         </div>
 
         {/* Gallery section */}
