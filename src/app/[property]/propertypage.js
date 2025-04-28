@@ -328,14 +328,7 @@ export default function Property({ slug }) {
   if (loading) {
     return (
       <div className="project-loader">
-        <Spinner animation="grow" variant="primary" />
-        <Spinner animation="grow" variant="secondary" />
-        <Spinner animation="grow" variant="success" />
-        <Spinner animation="grow" variant="danger" />
-        <Spinner animation="grow" variant="warning" />
-        <Spinner animation="grow" variant="info" />
-        {/* <Spinner animation="grow" variant="light" /> */}
-        <Spinner animation="grow" variant="dark" />
+        <LoadingSpinner show={true}/>
       </div>
     );
   }
@@ -581,7 +574,7 @@ export default function Property({ slug }) {
                   Please provide a valid message.
                 </Form.Control.Feedback>
               </Form.Group>
-              <Button className="btn btn-background" type="submit" disabled={showLoading}>
+              <Button className="btn btn-background border-0" type="submit" disabled={showLoading}>
                 Submit <LoadingSpinner show={showLoading} />
               </Button>
             </Form>
@@ -611,7 +604,7 @@ export default function Property({ slug }) {
             <div className="col-lg-4">
               <div className="p-4 p-lg-5 rounded-4 bg-white h-100 d-flex flex-column justify-content-center align-items-center custom-shadow">
                 <div>
-                  <h1 className="fw-bold mb-3 text-dark">{projectDetail.projectName}</h1>
+                  <h1 className="mb-3 text-dark">{projectDetail.projectName}</h1>
 
                   <p className="fs-5 mb-3 text-muted d-flex align-items-center">
                     <FontAwesomeIcon icon={faLocationDot} className="text-success me-2 fs-5" />
@@ -636,7 +629,7 @@ export default function Property({ slug }) {
             {/* Walkthrough Description */}
             <div className="col-lg-8">
               <div className="bg-white p-4 p-md-5 rounded-4 custom-shadow h-100">
-                <h3 className="fw-bold fs-1 text-dark mb-4 text-center text-md-start">Walkthrough</h3>
+                <h2 className="text-dark mb-4 text-center text-md-start">Walkthrough</h2>
 
                 <div
                   className="text-muted fs-6 lh-lg"
@@ -653,7 +646,7 @@ export default function Property({ slug }) {
         {/* Amenities section */}
         <div className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3" id="amenities">
           {/* Title */}
-          <h1 className="text-center mb-3">Amenities</h1>
+          <h2 className="text-center mb-3">Amenities</h2>
 
           {/* Description */}
           <p
@@ -691,7 +684,7 @@ export default function Property({ slug }) {
         {/* Floor plans section */}
         <div className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3" id="floorplan">
           <div className="p-2 p-md-4 p-lg-5">
-            <h1 className="text-center">Floor Plans</h1>
+            <h2 className="text-center">Floor Plans</h2>
             <p
               className="text-center"
               dangerouslySetInnerHTML={{ __html: projectDetail.floorPlanDesc }}
@@ -755,7 +748,7 @@ export default function Property({ slug }) {
         <div
           className="container shadow-lg rounded-4 mt-3 py-5 mb-3" id="gallery"
         >
-          <h1 className="text-center">Gallery</h1>
+          <h2 className="text-center">Gallery</h2>
           <div className="container-fluid">
             <div className="row justify-content-center">
               <div className="col-12">
@@ -779,7 +772,7 @@ export default function Property({ slug }) {
         {/* Location section */}
         <div className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3" id="location">
           <div>
-            <h1 className="text-center">Location</h1>
+            <h2 className="text-center">Location</h2>
           </div>
           <div className="text-center p-2 p-md-4 p-lg-5">
             <p
@@ -859,7 +852,7 @@ export default function Property({ slug }) {
       {/* About the project */}
       <div className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3" id="overview">
         {/* Section Heading */}
-        <h1 className="text-center mb-4">About The Project</h1>
+        <h2 className="text-center mb-4">About The Project</h2>
 
         {/* Description */}
         <div className="mx-auto" style={{ maxWidth: "800px" }}>
@@ -887,7 +880,7 @@ export default function Property({ slug }) {
       {/* Contact us section */}
       <div className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3">
         <div>
-          <h1 className="text-center">Get in Touch</h1>
+          <h2 className="text-center">Get in Touch</h2>
           <div className="d-flex justify-content-center">
             <div className="w-100 w-md-50 w-lg-50 text-center">
               <p>
@@ -966,7 +959,7 @@ export default function Property({ slug }) {
       </div>
       <div
         className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3">
-        <p className="h1 text-center pt-5">FAQs</p>
+        <h2 className="text-center pt-5">FAQs</h2>
         <div className="container mt-3">
           {faqs.map((item, index) => (
             <div key={`${item.id}-${index}`}>
@@ -975,15 +968,15 @@ export default function Property({ slug }) {
                 id="question1"
                 onClick={() => toggleAnswer(item.id)}
               >
-                <p>Q {index + 1}: </p> {item.faqQuestion}
-                <span className="plus-icon">+</span>
+                <h5 className="m-0">Q {index + 1} : </h5> {item.faqQuestion}
+                <span className="plus-icon">{isAnswerVisible[item.id] ? "-": "+"}</span>
               </div>
               <div
                 className={`container questions ${isAnswerVisible[item.id] ? "" : "d-none"
                   } bg-light`}
                 id="answer1"
               >
-                <p>Ans: </p>
+                <h5 className="m-0 text-success">Ans: </h5>
                 {item.faqAnswer}
               </div>
             </div>
@@ -991,7 +984,7 @@ export default function Property({ slug }) {
         </div>
       </div>
       <div className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3">
-        <p className="fs-1 fw-bold text-center">Similar projects</p>
+        <h2 className="text-center">Similar projects</h2>
         <Featured />
       </div>
       {/* <div className="container-fluid" style={{ background: "#68ac78" }}>

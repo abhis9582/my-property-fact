@@ -24,13 +24,19 @@ export default function Media() {
 
   }, []);
 
+  //adding pagination to this blogs list
+  const totalNumberOfBlogs = blogsList.length;
+  const blogsToShowOnSinglePage = 15;
+  const numberOfPages = totalNumberOfBlogs/blogsToShowOnSinglePage;
+
+
   return (
     <>
       <CommonHeaderBanner image={"blog-banner.jpg"} headerText={"Blog"} />
       <CommonBreadCrum pageName={"Blog"} />
       <div className="container-fluid my-3">
         {/* <p className="text-center h2 mt-3">Blog</p> */}
-        <div className="container d-flex justify-content-center gap-4 flex-wrap">
+        <div className="container-fluid d-flex justify-content-center gap-4 flex-wrap">
           {loading ? (
             <div className="d-flex justify-content-center align-items-center" style={{ height: "250px" }}>
               <LoadingSpinner show={loading} />
@@ -40,7 +46,7 @@ export default function Media() {
               <Link href={`/blog/${blog.slugUrl}`}
                 key={`${blog.blogTitle}-${index}`}
                 className="card border-0 rounded-4 overflow-hidden custom-shadow"
-                style={{ width: '22rem', transition: 'transform 0.3s' }}
+                style={{ width: '27rem', transition: 'transform 0.3s' }}
                 onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
                 onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
               >
