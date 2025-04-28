@@ -1,48 +1,56 @@
-:root {
-    --corp-color: #68ac78;
-    --secondary-color: #7eae68;
-    --body-color: #3b3b3b;
-    --lightgray: #f6f6f6;
-    --gray: #2f2f2f;
-    --vibrant-green: #1dcde2;
-    --lightgreen: #edefe8;
-    --font-light: "Benton300", sans-serif;
-    --font-semibold: "Benton500", sans-serif;
-    --font-bold: "BentonBold", sans-serif;
-    --font-black: "Benton900", sans-serif;
-    --corp-gradient: linear-gradient(45deg,
-            var(--corp-color),
-            var(--secondary-color),
-            var(--corp-color)) right;
-    --freight-regular: "FreightBigBook", serif;
-    --facebook: #4267B2;
-    --twitter: #00acee;
-    --linkedin: #0e76a8;
-    --youtube: #FF0000;
-    --whatsapp: #25D366;
-    --instagram: #c92bb7;
-    --theme-color: #68ac78;
-}
-
-/* styles/fonts.css */
+/* adding font library  starts*/
 @font-face {
-    font-family: 'mpf-heading';
-    src: url('/fonts/Heading-Pro-Heavy-trial.ttf') format('truetype');
-    font-weight: normal;
+    font-family: "gotham-bold";
+    src: url("/fonts/Gotham-Bold.ttf") format('truetype');
+    font-weight: bold;
     font-style: normal;
 }
 
-
-/*Defining body css globally*/
-body {
-    color: var(--body-color);
-    font-family: "BentonRegular", sans-serif;
-    overflow-x: hidden;
-    font-size: 16px;
+@font-face {
+    font-family: "heading-pro";
+    src: url("/fonts/Heading-Pro-ExtraBold-trial.ttf") format('truetype');
+    font-weight: bold;
+    font-style: normal;
 }
 
-.mpf-bg {
-    background-color: var(--corp-color);
+@font-face {
+    font-family: "gotham-light";
+    src: url("/fonts/Gotham-Light.ttf") format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* adding font library  ends*/
+
+:root {
+    --bg-color: #68ac78;
+    --menu-color: #ffffff;
+    --bg-with-gradient: radial-gradient(circle at center, #0d5834, #0c2e23);
+    --heaing-font: "gotham-bold", "sans-serif";
+    --headeing-bolded: "heading-pro";
+    --text-font: "gotham-light", "sans-serif";
+    --btn-background: linear-gradient(to right, #d1ad5b, #a07e38);
+    --btn-background-hover: linear-gradient(to right, #b8934d, #8a6b2f);
+    --footer-bg: radial-gradient(circle at center, #0d5834, #0c2e23);
+    --link-bg: linear-gradient(to right, #d1ad5b, #a07e38);
+    --light-gradient: linear-gradient(to right, #a8d5a2, #70b987);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--heaing-font);
+}
+
+p {
+    font-family: var(--text-font);
 }
 
 a {
@@ -53,7 +61,35 @@ ul {
     list-style: none;
 }
 
-/* Webkit Browsers (Chrome, Safari, Edge) */
+.gradient-bg {
+    background: var(--bg-with-gradient);
+}
+
+.light-gradient-bg {
+    background: var(--light-gradient);
+}
+
+.btn-background {
+    background: var(--btn-background);
+}
+
+.btn-background:hover {
+    background: var(--btn-background-hover);
+}
+
+.font-gotham-light {
+    font-family: var(--text-font);
+}
+
+.footer-bg {
+    background: var(--footer-bg);
+}
+
+.link-btn {
+    background: var(--link-bg) !important;
+}
+
+/* Webkit Browsers starts (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
     width: 5px;
     height: 10px;
@@ -65,7 +101,7 @@ ul {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--theme-color);
+    background: var(--bg-with-gradient);
     border-radius: 0px;
 }
 
@@ -73,34 +109,28 @@ ul {
     background: #555;
 }
 
+/* Webkit Browsers ends */
+
+/* cursor pointer class css */
+
 .cursor-pointer {
     cursor: pointer !important;
 }
 
-.theme-bg {
-    background-color: var(--corp-color);
+/* cursor pointer class css */
+
+.hover-scale:hover {
+    transform: scale(1.05);
 }
 
-.btn-primary {
-    background-color: #68ac78 !important;
-    border: none !important;
+.transition {
+    transition: all 0.3s ease;
 }
 
-.projects-heading {
-    position: absolute;
-    font-family: mpf-heading;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    font-weight: bold;
-    color: #226401;
-    font-size: 5rem;
-    z-index: 1;
-    text-transform: uppercase;
+.custom-shadow {
+    box-shadow: 0 4px 10px rgba(209, 173, 91, 0.3), 0 4px 15px rgba(160, 126, 56, 0.3) !important;
 }
 
-@media (max-width: 768px) {
-    .projects-heading {
-        font-size: 2rem;
-    }
+.modal-header .btn-close {
+    filter: invert(1);
 }

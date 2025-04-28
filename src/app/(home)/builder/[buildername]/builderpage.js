@@ -43,7 +43,7 @@ export default function BuilderPage({ builderName }) {
           </div>
         </div>
         <div className="text-center">
-          <Link href="#" className="btn btn-dark">
+          <Link href="#" className="btn btn-background text-white">
             Read More
           </Link>
         </div>

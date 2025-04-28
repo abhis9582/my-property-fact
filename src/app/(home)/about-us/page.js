@@ -82,21 +82,21 @@ export default function AboutUs() {
       <CommonBreadCrum pageName={"About Us"} />
       <div className="container">
         <div className="row gap-5 justify-content-center">
-          <div className="col-md-5 about-us-container">
-            <p className="h3 text-center fw-bold my-5">About Us</p>
+          <div className="col-md-5 about-us-container custom-shadow">
+            <h1 className="text-center my-5">About Us</h1>
             <p>
               Welcome to My Property Fact, your go-to platform for discovering the perfect real estate opportunities. Whether you’re an investor hunting for the next big project, a business owner scouting commercial space, or a family looking for a new home to call your own. We bring together all types of properties, from high-end apartments and cozy farmhouses to strategic commercial plots and premium office spaces for both buying and renting.
             </p>
           </div>
-          <div className="col-md-5 about-us-container">
-            <p className="h3 text-center fw-bold my-5">Our Story & Vision</p>
+          <div className="col-md-5 about-us-container custom-shadow">
+            <h1 className="text-center my-5">Our Story & Vision</h1>
             <p>
               At My Property Fact, we believe in simplifying real estate decisions for everyone. Navigating the property market can be overwhelming, so we created a comprehensive portal that puts all the critical information right at your fingertips. Our mission is to empower you with transparent, data-driven insights and user-friendly tools so you can explore, compare, and choose the best real estate option for your unique needs.
             </p>
           </div>
         </div>
         <div>
-          <p className="h3 fw-bold text-center mt-5">What We Offer</p>
+          <h1 className="text-center mt-5">What We Offer</h1>
           <Swiper
             autoplay={{ delay: 3000 }}
             spaceBetween={30}
@@ -113,26 +113,26 @@ export default function AboutUs() {
             className="mySwiper"
           >
             {whatWeOffer.map((item, index) => (
-              <SwiperSlide className="border border-2 p-5 rounded-3 my-5" key={`${item.id}-${index}`}>
-                <p className="h3 fw-bold text-center my-4">{item.heading}</p>
+              <SwiperSlide className="border border-2 p-5 rounded-3 my-5 custom-shadow" key={`${item.id}-${index}`}>
+                <h2 className="text-center my-4">{item.heading}</h2>
                 <p>{item.text}</p>
               </SwiperSlide>
             ))}
           </Swiper>
         </div>
         <div>
-          <p className="fs-2 fw-bold text-center">Why My Property Fact?</p>
+          <h1 className="text-center">Why My Property Fact?</h1>
           <div className="d-flex flex-wrap justify-content-center gap-4">
             {whyMyPropertyFact.map((item, index) => (
-              <div key={`${item.id}-${index}`} className="why-mpf-card border border-2 rounded-3">
-                <p className="h3 my-3 fw-bold">{item.heading}</p>
+              <div key={`${item.id}-${index}`} className="why-mpf-card border rounded-3 custom-shadow">
+                <h3 className="my-3">{item.heading}</h3>
                 <p>{item.text}</p>
               </div>
             ))}
           </div>
         </div>
         <div>
-          <p className="h3 fw-bold my-3">{ourCommitment.heading}</p>
+          <h1 className="my-3">{ourCommitment.heading}</h1>
           <p>{ourCommitment.text}</p>
           <hr />
           <p>

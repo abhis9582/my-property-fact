@@ -2,57 +2,84 @@ import "./newviews.css";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleRight } from "@fortawesome/free-solid-svg-icons";
+import Image from "next/image";
 export default function NewsViews() {
   return (
     <>
-      <div className="container-fluid pt-3 pb-3 mb-3 bg-lightgreen">
-        <div className="container">
-          <div className="row d-flex justify-contnet-center flex-wrap m-0">
-            <div className="row g-3 gap-form-row">
-              <div className="col-lg-3 col-sm-6 news-card">
-                <Link className="inner" href="/awards">
-                  <h5 className="card-title">Awards</h5>
-                  <div className="img-fluid">
-                    <img src="/news-views/awards.jpg" alt="" />
-                  </div>
-                  <div className="arrow">
-                    <FontAwesomeIcon icon={faArrowCircleRight} />
-                  </div>
-                </Link>
-              </div>
-              <div className="col-lg-3 col-sm-6 news-card">
-                <Link className="inner" href="/news">
-                  <h5 className="card-title">News</h5>
-                  <div className="img-fluid">
-                    <img src="/news-views/news.jpg" alt="" />
-                  </div>
-                  <div className="arrow">
-                    <FontAwesomeIcon icon={faArrowCircleRight} />
-                  </div>
-                </Link>
-              </div>
-              <div className="col-lg-3 col-sm-6 news-card">
-                <Link className="inner" href="/events">
-                  <h5 className="card-title">Events</h5>
-                  <div className="img-fluid">
-                    <img src="/news-views/events.jpg" alt="" />
-                  </div>
-                  <div className="arrow">
-                    <FontAwesomeIcon icon={faArrowCircleRight} />
-                  </div>
-                </Link>
-              </div>
-              <div className="col-lg-3 col-sm-6 news-card">
-                <Link className="inner" href="/blogs">
-                  <h5 className="card-title">Blogs</h5>
-                  <div className="img-fluid">
-                    <img src="/news-views/blogs.jpg" alt="" />
-                  </div>
-                  <div className="arrow">
-                    <FontAwesomeIcon icon={faArrowCircleRight} />
-                  </div>
-                </Link>
-              </div>
+      <div className="container">
+        <div className="row d-flex justify-contnet-center flex-wrap m-0">
+          <div className="row">
+            <div className="col-lg-3 col-sm-6 news-card">
+              <Link className="inner" href="/awards">
+                <p className="card-title">Highway Construction</p>
+                <div className="img-fluid">
+                  <Image
+                    src="/news-views/Highway_const.jpg"
+                    alt="highway_construction"
+                    className="img-fluid rounded shadow-sm"
+                    height={400}
+                    width={350}
+                    objectFit="cover"
+                  />
+                </div>
+                <div className="arrow">
+                  <FontAwesomeIcon icon={faArrowCircleRight} />
+                </div>
+              </Link>
+            </div>
+            <div className="col-lg-3 col-sm-6 news-card">
+              <Link className="inner" href="/news">
+                <p className="card-title">News</p>
+                <div className="img-fluid">
+                  <Image
+                    src="/news-views/Metro_Station.jpg"
+                    alt="Metro_Station"
+                    className="img-fluid rounded shadow-sm"
+                    height={400}
+                    width={350}
+                    objectFit="cover"
+                  />
+                </div>
+                <div className="arrow">
+                  <FontAwesomeIcon icon={faArrowCircleRight} />
+                </div>
+              </Link>
+            </div>
+            <div className="col-lg-3 col-sm-6 news-card">
+              <Link className="inner" href="/events">
+                <p className="card-title">Events</p>
+                <div className="img-fluid">
+                  <Image
+                    src="/news-views/mne.jpg"
+                    alt="mne"
+                    className="img-fluid rounded shadow-sm"
+                    height={400}
+                    width={350}
+                    objectFit="cover"
+                  />
+                </div>
+                <div className="arrow">
+                  <FontAwesomeIcon icon={faArrowCircleRight} />
+                </div>
+              </Link>
+            </div>
+            <div className="col-lg-3 col-sm-6 news-card">
+              <Link className="inner" href="/blogs">
+                <p className="card-title">Blogs</p>
+                <div className="img-fluid">
+                  <Image
+                    src="/news-views/Money_Distributiuon.jpg"
+                    alt="Money_Distributiuon"
+                    className="img-fluid rounded shadow-sm"
+                    height={400}
+                    width={350}
+                    objectFit="cover"
+                  />
+                </div>
+                <div className="arrow">
+                  <FontAwesomeIcon icon={faArrowCircleRight} />
+                </div>
+              </Link>
             </div>
           </div>
         </div>

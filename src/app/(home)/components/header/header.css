@@ -2,6 +2,7 @@
 .header {
     transition: all 0.3s ease-in-out;
     z-index: 9999;
+    background: var(--bg-with-gradient);
 }
 
 .fixed-header {
@@ -15,6 +16,7 @@
 .notfixed{
     background-color: #fff !important;
 }
+
 .notfixed .mpf-logo img{
     display: none;
 }
@@ -25,8 +27,8 @@
 }
 
 .header-link-active{
-    color: #000 !important;
-    border-bottom: 2px solid #000 !important;
+    color: #ffffff !important;
+    border-bottom: 2px solid #ffffff !important;
     padding: 5px !important;
 }
 .menu ul li.hasChild a sup {
@@ -61,13 +63,14 @@
 .menu ul li.hasChild .dropdown {
     width: 250px;
     position: absolute;
-    background-color: var(--corp-color);
+    background: var(--bg-with-gradient);
     box-shadow: 0 10px 30px rgb(0 0 0 / 10%);
     visibility: visible;
     opacity: 0;
     transform: translateY(10px);
     pointer-events: none;
     transition: all 300ms ease-in-out;
+    top: 30px;
 }
 
 .menu ul li.hasChild:hover .dropdown {
@@ -137,7 +140,7 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background-color: var(--body-color);
+    background-color: var(--menu-color);
     transition: all 0.6s cubic-bezier(0.785, 0.135, 0.15, 0.86);
 }
 
@@ -149,7 +152,7 @@
 .menuBtn.closeMenuBtn span {
     width: 100%;
     height: 2px;
-    background-color: var(--corp-color);
+    background: var(--menu-color);
     z-index: 5555;
 }
 
@@ -187,7 +190,7 @@
     padding: 70px 30px;
     margin-right: 0;
     margin-left: auto;
-    background-color: #fff;
+    background: var(--bg-with-gradient);
     overflow: auto;
     opacity: 0;
     transition: all 0.5s linear;
@@ -201,7 +204,7 @@
     display: block;
     padding-top: 10px;
     padding-bottom: 10px;
-    color: var(--gray);
+    color: var(--menu-color);
     transition: all 300ms ease-in-out;
 }
 

@@ -8,7 +8,6 @@
     font-size: 14px;
     font-weight: 700;
     text-transform: uppercase;
-    background-color: var(--corp-color);
     color: #fff;
     border-radius: 10px 0 0 10px;
     width: 40px;
@@ -20,10 +19,6 @@
 
 .insight-container{
     border: 1px solid #178c2c !important;
-}
-
-.enquiry-sticky-btn:hover {
-    background-color: #178c2c;
 }
 
 .enquiry-sticky-btn>span {
@@ -121,6 +116,9 @@
     }
     .home-insight-container{
         margin-top: 150px !important;
+    }
+    .top-space{
+        margin-top: 7rem !important;
     }
 }
 @media (max-width: 375px) {

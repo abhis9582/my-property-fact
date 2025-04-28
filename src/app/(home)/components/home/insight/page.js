@@ -47,7 +47,7 @@ export default function InsightNew() {
       src: "/static/insight.png",
       alt: "price-trends-img",
       heading: "Property overviews & Ratings",
-      sub_heading: "Don't just take our word for it; See what other residents",
+      sub_heading: "Don't just take our word for it; see what other residents have to say about us",
       color: "light-blue",
       button_color: "dark-blue",
       href: "#",
@@ -61,11 +61,10 @@ export default function InsightNew() {
   }
   return (
     <>
-      <p className="h1 text-center fw-bold">Insights</p>
-      <div className="container my-5">
-        <div className="d-flex justify-content-center gap-4 my-3 flex-wrap flex-column flex-md-row">
+      <div className="container">
+        <div className="row">
           {data.map((i) => (
-            <div key={i.id} className={`bg-light insight-container mx-auto`}>
+            <div key={i.id} className={`col-sm-12 col-md-4 col-xl-3`}>
               <Link
                 href={i.href}
                 onClick={(e) => {
@@ -74,15 +73,21 @@ export default function InsightNew() {
                     openPopup(i);       // open popup
                   }
                 }}
+                className="text-dark"
               >
-                <div className="insight-container-child">
-                  <p>{i.heading}</p>
-                  <p>{i.sub_heading}</p>
-                  <Image src={i.src} alt={i.alt} width={200} height={150} />
-                </div>
-                <div className={` insight-explore-button`}>
-                  <button className="fw-bold text-light">Explore Now</button>
-                  <FontAwesomeIcon color="white" icon={faArrowRight} width={15} />
+                <div className="text-dark bg-light rounded-4 overflow-hidden my-2 transition transform hover-scale custom-shadow">
+                  <div className="p-3">
+                    <p>{i.heading}</p>
+                    <p>{i.sub_heading}</p>
+                    <div className="d-flex justify-content-center">
+                      <Image src={i.src} alt={i.alt} width={200} height={200} className="img-fluid mb-2" />
+                    </div>
+                  </div>
+                  <div className={`bg-light p-3 d-flex justify-content-center`}>
+                    <button className="fw-bold text-light btn-background d-flex align-items-center rounded-4 p-2"><p className="text-white mx-5 p-0 m-0">Explore Now </p>
+                      <FontAwesomeIcon color="white" icon={faArrowRight} width={15} />
+                    </button>
+                  </div>
                 </div>
               </Link>
             </div>

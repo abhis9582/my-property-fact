@@ -1,6 +1,8 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import Script from 'next/script';
+import "./globals.css";
+import { ToastContainer } from "react-toastify";
 // app/layout.js
 export const metadata = {
     title: "Not found",
@@ -12,6 +14,7 @@ export default function RootLayout({ children }) {
         <html lang="en">
             <body>
                 <main>{children}</main>
+                <ToastContainer />
                 {/* ✅ Google Tag Manager */}
                 <Script
                     id="gtm-script"

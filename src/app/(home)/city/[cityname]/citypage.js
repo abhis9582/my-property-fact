@@ -42,7 +42,7 @@ export default function CityPage({ city }) {
             <p className="text-center">{cityData.cityDisc}</p>
           </div>
           <div className="text-center">
-            <Link href="#" className="btn btn-dark">
+            <Link href="#" className="btn text-white btn-background">
               Read More
             </Link>
           </div>

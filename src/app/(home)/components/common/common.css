@@ -33,11 +33,30 @@
 
 /* westory css ends*/
 
+/* Common banner heading text style starts */
+.projects-heading {
+    position: absolute;
+    font-family: var(--headeing-bolded);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    color: #226401;
+    font-size: 5rem;
+    z-index: 1;
+    text-transform: uppercase;
+}
+
+/* Common banner heading text style ends */
 
 /* All media queries for header banner starts*/
 @media (max-width: 768px) {
     .top-banner-each-pages {
         height: 200px;
+    }
+
+    .projects-heading {
+        font-size: 2rem;
     }
 }
 

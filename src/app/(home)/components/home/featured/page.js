@@ -7,10 +7,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import PropertyContainer from "../../common/page";
+import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 
 export default function Featured() {
   const [featuredProperties, setFeaturedProperties] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -18,6 +19,7 @@ export default function Featured() {
           `${process.env.NEXT_PUBLIC_API_URL}projects/get-all`
         );
         setFeaturedProperties(allFeaturedProperties.data);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
@@ -26,7 +28,7 @@ export default function Featured() {
   }, []);
 
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     autoplay: true,
@@ -67,19 +69,21 @@ export default function Featured() {
   };
   return (
     <>
-      <div className="container mt-4">
-        {featuredProperties?.length > 0 && (
-          <Slider {...settings}>
-            {featuredProperties.map((item) => (
-              <div key={item.id} className="px-2">
-                <PropertyContainer data={item} />
-              </div>
-            ))}
-          </Slider>
-        )}
+      <div className="container">
+        {loading ? <div className="d-flex justify-content-center align-items-center" style={{height: "250px"}}><LoadingSpinner show={loading}/></div> : featuredProperties &&
+          <>{featuredProperties?.length > 0 && (
+            <Slider {...settings}>
+              {featuredProperties.map((item) => (
+                <div key={item.id} className="px-2">
+                  <PropertyContainer data={item} />
+                </div>
+              ))}
+            </Slider>
+          )}</>
+        }
 
-        <div className="text-center mt-5">
-          <Link className="btn btn-success" href="/projects">
+        <div className="text-center pt-3">
+          <Link className="btn btn-success btn-background" href="/projects">
             View all
           </Link>
         </div>
