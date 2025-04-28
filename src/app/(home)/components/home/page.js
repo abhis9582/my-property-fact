@@ -112,23 +112,8 @@ export default function HomePage() {
       <div className={`${showForm ? "show" : ""} fixed-form-container`}>
         <FixedForm resetTrigger={resetTrigger} onSuccess={handleSuccess} />
       </div>
-      <div className="position-relative">
+      <div className="position-relative mb-5">
         <div className="position-relative overflow-hidden">
-          {/* <Image
-            // src={imageSrc}
-            alt="My propery fact"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1920px"
-            srcSet="
-                /banner-mobile.jpg 600w,
-                /banner-tablet.jpg 1200w,
-                /banner-desktop.jpg 1920w"
-            fill
-            style={{ objectFit: "fill" }}
-            // width={1899}
-            // height={550}
-            className="banner-image"
-          // layout="responsive"
-          /> */}
           <picture className="position-relative">
             {/* Mobile Image */}
             <source srcSet="/banner-mobile.jpg" media="(max-width: 768px)" />
@@ -151,7 +136,7 @@ export default function HomePage() {
           <div className="d-flex flex-wrap align-item-center justify-content-center gap-4 my-4">
             {projectTypeList.map((item, index) => (
               <div key={`row-${index}`}>
-                <Link href={`projects/${item.slugUrl}`} className="border rounded-5 py-2 px-3 bg-light text-dark home-property-types">
+                <Link href={`projects/${item.slugUrl}`} className="link-btn rounded-5 py-2 px-3 text-white home-property-types font-gotham-light fw-bold">
                   {item.projectTypeName}
                 </Link>
               </div>
@@ -164,19 +149,19 @@ export default function HomePage() {
                 className="data-container-child"
               >
                 <section>
-                  <p className="h3">
+                  <h3 className="m-0">
                     <span>{item.numbers}</span>
-                  </p>
-                  <p className="text-center">{item.text}</p>
+                  </h3>
+                  <p className="text-center ">{item.text}</p>
                 </section>
               </div>
             ))}
           </div>
         </div>
         <div className="position-absolute bottom-25 start-50 translate-middle w-100">
-          <div className="container bg-light border rounded-4">
+          <div className="container bg-light border rounded-4 custom-shadow">
             <form method="Get" action="projects" encType="multipart/form-data">
-              <div className="d-flex flex-wrap flex-md-row flex-column p-4 gap-3">
+              <div className="d-flex flex-wrap flex-md-row flex-column p-4 gap-3 font-gotham-light">
                 <div className="col">
                   <select
                     name="category"
@@ -230,7 +215,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="d-flex align-items-center">
-                  <button className="mpf-bg py-1 px-4 text-light m-0 border rounded-3" onClick={handleSearch}>
+                  <button className="py-1 px-4 text-light m-0 border rounded-3 btn-background" onClick={handleSearch}>
                     <FontAwesomeIcon icon={faSearch} width={20} />
                   </button>
                 </div>
@@ -238,27 +223,28 @@ export default function HomePage() {
             </form>
           </div>
         </div>
+        <button className="enquiry-sticky-btn btn-background" onClick={openFixedForm}>
+          <span>
+            <FontAwesomeIcon icon={faEnvelope} width={20} />
+            <span>{enquiryButtonName}</span>
+          </span>
+        </button>
       </div>
-      <button className="enquiry-sticky-btn" onClick={openFixedForm}>
-        <span>
-          <FontAwesomeIcon icon={faEnvelope} width={20} />
-          <span>{enquiryButtonName}</span>
-        </span>
-      </button>
-      <div className="mt-5 home-insight-container">
+      <div className="position-relative mt-5 top-space">
+        <h1 className="text-center fw-bold pt-5">Insights</h1>
         <InsightNew />
+        {/* <Insight /> */}
+        <h1 className="fw-bold text-center pt-5">Featured Projects</h1>
+        <Featured />
+        <h1 className="fw-bold text-center pt-5">
+          Find your dream property in the city you are searching in
+        </h1>
+        <DreamProject />
+        <h1 className="fw-bold text-center pt-5">Realty Updates</h1>
+        <NewsViews />
+        <h1 className="fw-bold text-center pt-5">Investor Education </h1>
+        <SocialFeed />
       </div>
-      {/* <Insight /> */}
-      <p className="fs-1 fw-bold text-center">Featured Projects</p>
-      <Featured />
-      <p className="fs-1 fw-bold text-center mt-5">
-        Find your dream property in the city you are searching in
-      </p>
-      <DreamProject />
-      <p className="fs-1 fw-bold text-center">Realty Updates</p>
-      <NewsViews />
-      <p className="fs-1 fw-bold text-center">Investor Education </p>
-      <SocialFeed />
     </>
   );
 }

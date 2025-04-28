@@ -1,6 +1,5 @@
-:root {
-    --bg-color: #68ac78;
-    --menu-color: #000;
+.navi {
+    font-family: var(--heaing-font);
 }
 
 /* Loader css starts */
@@ -12,7 +11,7 @@
 }
 
 .theme-bg {
-    background-color: var(--bg-color);
+    background: var(--bg-with-gradient) !important;
 }
 
 /* Loader css ends */
@@ -127,7 +126,7 @@
 
 
 .bg-root-color {
-    background-color: var(--bg-color);
+    background: var(--bg-with-gradient);
 }
 
 .slider-image {
@@ -307,27 +306,26 @@
     margin-bottom: 20px;
 }
 
-.gallery-container {
+.gallery-slider {
     position: relative;
 }
 
-.gallery-container .slick-next {
+.gallery-slider .slick-prev,
+.gallery-slider .slick-next {
     top: 50% !important;
-    right: 15px;
-}
-
-.gallery-container .slick-prev {
-    top: 50% !important;
-    left: -10px;
+    transform: translateY(-50%);
     z-index: 99;
 }
 
-.gallery-container .slick-prev:before,
-.gallery-container .slick-next:before {
-    font-size: 50px;
-    color: #fff;
-    opacity: 0.8;
+/* Adjust horizontal position as needed */
+.gallery-slider .slick-prev {
+    left: -10px;
 }
+
+.gallery-slider .slick-next {
+    right: 5px;
+}
+
 
 .mb-list {
     display: flex;
@@ -389,7 +387,7 @@ a {
 .project-detail-gallery-container {
     position: relative;
     width: 100%;
-    height: 300px;
+    height: 400px;
     /* Default height */
     display: flex;
     justify-content: center;
@@ -405,6 +403,14 @@ a {
     border-radius: 8px;
     padding: 5px;
 }
+
+
+.swiper-wrapper {
+    padding: 10px !important;
+    display: flex !important;
+    justify-content: center !important;
+}
+
 
 /* Tablet View */
 @media (max-width: 1024px) {
@@ -426,12 +432,11 @@ a {
     .gallery-image {
         max-height: 200px;
     }
-}
 
-.swiper-wrapper {
-    padding: 10px !important;
-    display: flex !important;
-    justify-content: center !important;
+    .swiper-wrapper {
+        padding: 0px !important;
+        justify-content: left !important;
+    }
 }
 
 .mySwiper .swiper-button-next,
@@ -456,4 +461,17 @@ a {
 
 .card:hover {
     transform: scale(1.03);
+}
+
+.amenity-box {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 1px solid #dee2e6;
+    /* Bootstrap light gray border */
+    border-radius: 1rem;
+    /* rounded-4 */
+}
+
+.amenity-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.05);
 }

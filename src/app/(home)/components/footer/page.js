@@ -122,14 +122,14 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="bg-dark">
-        <div className="pt-5 pb-3 container-fluid" style={{ backgroundColor: "#101010" }}>
+      <footer className="font-gotham-light footer-bg">
+        <div className="pt-5 pb-3 container-fluid">
           <div className="container-fluid">
             <div className="inner">
               <div className="row gap-row">
                 <div className="col-md-12 col-sm-12 foot-menu">
                   <div className="insideBox">
-                    <h6>Cities</h6>
+                    <p className="text-white mx-4">Popular cities</p>
                     <ul className=" footer-cities d-flex flex-wrap">
                       {cityList.map((item, index) => (
                         <li key={`${item.name}-${index}`}>
@@ -148,6 +148,7 @@ export default function Footer() {
             <div className="row">
               <div className="col-md-3">
                 <ul className="row ">
+                  <p className="text-white">Apartments in India</p>
                   {cityList.map((item, index) => (
                     <li key={`${item.name}-${index}`}>
                       <Link className="footer-text" href={`/city/${item.slugUrl}`}>Apartments in {item.name}</Link>
@@ -157,6 +158,7 @@ export default function Footer() {
               </div>
               <div className="col-md-3">
                 <ul className="row ">
+                  <p className="text-white">New Projects in India</p>
                   {cityList.map((item, index) => (
                     <li key={`${item.name}-${index}`}>
                       <Link className="footer-text" href={`/city/${item.slugUrl}`}>
@@ -168,6 +170,7 @@ export default function Footer() {
               </div>
               <div className="col-md-3">
                 <ul className="row ">
+                  <p className="text-white">Flats in India</p>
                   {cityList.map((item, index) => (
                     <li key={`${item.name}-${index}`}>
                       <Link className="footer-text" href={`/city/${item.slugUrl}`}>Flats in {item.name}</Link>
@@ -178,6 +181,7 @@ export default function Footer() {
 
               <div className="col-md-3">
                 <ul className="row ">
+                  <p className="text-white">Commercial Property in India</p>
                   {cityList.map((item, index) => (
                     <li key={`${item.name}-${index}`}>
                       <Link className="footer-text" href={`/city/${item.slugUrl}`}>
@@ -189,12 +193,12 @@ export default function Footer() {
               </div>
             </div>
           </div>
-          <div className="container-fluid ps-4">
+          {/* <div className="container-fluid ps-4">
             <div className="py-3">
-              <div className="row gap-row">
-                <div className="col foot-menu">
+              <div className="row">
+                <div className="col-md-3">
                   <div className="insideBox">
-                    <h6>Projects</h6>
+                    <p className="text-white">Projects</p>
                     <ul className="p-0">
                       {projectTypes.map((item, index) => (
                         <li key={`${item.name}-${index}`}>
@@ -206,7 +210,7 @@ export default function Footer() {
                     </ul>
                   </div>
                 </div>
-                <div className="col foot-menu">
+                <div className="col-md-3 foot-menu">
                   <div className="insideBox">
                     <h6>Company</h6>
                     <ul className="p-0">
@@ -218,7 +222,7 @@ export default function Footer() {
                     </ul>
                   </div>
                 </div>
-                <div className="col foot-menu">
+                <div className="col-md-3 foot-menu">
                   <div className="insideBox">
                     <h6>Media</h6>
                     <ul className="p-0">
@@ -230,39 +234,27 @@ export default function Footer() {
                     </ul>
                   </div>
                 </div>
-                {/* <div className="col foot-menu">
-                  <div className="insideBox">
-                    <h6>Explore</h6>
-                    <ul className="p-0">
-                      {exploreArr.map((item, index) => (
-                        <li key={`${item.id}-${index}`}>
-                          <Link className="footer-text" href={item.slugUrl}>{item.name}</Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div> */}
-                <div className="col foot-menu">
+                <div className="col-md-3 foot-menu">
                   <div>
                     <h6>Get Social</h6>
                     <ul className="d-flex gap-3 p-0">
                       <li className="">
-                        <Link className="footer-text" href="https://www.facebook.com/mypropertyfact1/" target="_blank" title="facebook">
+                        <Link className="fs-3 text-white hover-green" href="https://www.facebook.com/mypropertyfact1/" target="_blank" title="facebook">
                           <FontAwesomeIcon icon={faFacebook} />
                         </Link>
                       </li>
                       <li className="">
-                        <Link className="footer-text" href="https://www.instagram.com/my.property.fact/" target="_blank" title="instagram">
+                        <Link className="fs-3 text-white" href="https://www.instagram.com/my.property.fact/" target="_blank" title="instagram">
                           <FontAwesomeIcon icon={faInstagram} />
                         </Link>
                       </li>
                       <li className="">
-                        <Link className="footer-text" href="https://www.linkedin.com/company/my-property-fact/" target="_blank" title="linkedin">
+                        <Link className="fs-3 text-white" href="https://www.linkedin.com/company/my-property-fact/" target="_blank" title="linkedin">
                           <FontAwesomeIcon icon={faLinkedin} />
                         </Link>
                       </li>
                       <li className="">
-                        <Link className="footer-text" href="https://www.youtube.com/@my.propertyfact/" target="_blank" title="youtube">
+                        <Link className="fs-3 text-white" href="https://www.youtube.com/@my.propertyfact/" target="_blank" title="youtube">
                           <FontAwesomeIcon icon={faYoutube} />
                         </Link>
                       </li>
@@ -271,9 +263,74 @@ export default function Footer() {
                 </div>
               </div>
             </div>
+          </div> */}
+          <div className="container pt-5">
+            <div className="row">
+              <div className="col-md-3">
+                <p className="text-white">Projects</p>
+                <ul className="p-0">
+                  {projectTypes.map((item, index) => (
+                    <li key={`${item.name}-${index}`}>
+                      <Link className="footer-text" href={`/projects/${item.slugUrl}`}>
+                        {item.projectTypeName}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="col-md-3">
+                <p className="text-white">Company</p>
+                <ul className="p-0">
+                  {companyArr.map((item, index) => (
+                    <li key={`${item.id}-${index}`}>
+                      <Link className="footer-text" href={item.slugUrl}>{item.name}</Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="col-md-3">
+                <p className="text-white">Media</p>
+                <ul className="p-0">
+                  {mediaArr.map((item, index) => (
+                    <li key={`${item.id}-${index}`}>
+                      <Link className="footer-text" href={item.slugUrl}>{item.name}</Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="col-md-3">
+                <div>
+                  <p className="text-white">Get Social</p>
+                  <ul className="d-flex gap-3 p-0">
+                    <li className="">
+                      <Link className="fs-4 text-white hover-green" href="https://www.facebook.com/mypropertyfact1/" target="_blank" title="facebook">
+                        <FontAwesomeIcon icon={faFacebook} />
+                      </Link>
+                    </li>
+                    <li className="">
+                      <Link className="fs-4 text-white" href="https://www.instagram.com/my.property.fact/" target="_blank" title="instagram">
+                        <FontAwesomeIcon icon={faInstagram} />
+                      </Link>
+                    </li>
+                    <li className="">
+                      <Link className="fs-4 text-white" href="https://www.linkedin.com/company/my-property-fact/" target="_blank" title="linkedin">
+                        <FontAwesomeIcon icon={faLinkedin} />
+                      </Link>
+                    </li>
+                    <li className="">
+                      <Link className="fs-4 text-white" href="https://www.youtube.com/@my.propertyfact/" target="_blank" title="youtube">
+                        <FontAwesomeIcon icon={faYoutube} />
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <p className="container pb-3 footer-text text-center m-0">The content and data are for informative purposes only and may be prone to inaccuracy and inconsistency. We do not take any responsibility for data mismatches and strongly advise the viewers to conduct their detailed research before making any investment or purchase-related decisions.</p>
+        <div className="container">
+          <p className="pb-3 footer-text text-center m-0">The content and data are for informative purposes only and may be prone to inaccuracy and inconsistency. We do not take any responsibility for data mismatches and strongly advise the viewers to conduct their detailed research before making any investment or purchase-related decisions.</p>
+        </div>
       </footer>
       <div className="modal fade" id="formModal">
         <button

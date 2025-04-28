@@ -23,8 +23,8 @@
 
 /* Positioning the previous button */
 .slick-prev {
-    left: 40%;
-    bottom: -75px;
+    left: 43%;
+    bottom: -42px;
     /* Adjust as needed */
     top: auto;
     transform: translateX(-50%);
@@ -32,8 +32,8 @@
 
 /* Positioning the next button */
 .slick-next {
-    right: 40%;
-    bottom: -75px;
+    right: 43%;
+    bottom: -42px;
     /* Adjust as needed */
     top: auto;
     transform: translateX(50%);

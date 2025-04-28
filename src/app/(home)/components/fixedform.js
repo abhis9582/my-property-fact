@@ -123,7 +123,7 @@ export default function FixedForm({ resetTrigger, onSuccess }) {
               Please provide a valid message.
             </Form.Control.Feedback>
           </Form.Group>
-          <Button type="submit">Submit</Button>
+          <Button className="btn-background border-0" type="submit">Submit</Button>
         </Form>
       </div>
     </>

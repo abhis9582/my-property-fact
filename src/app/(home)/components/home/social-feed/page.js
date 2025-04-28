@@ -7,10 +7,9 @@ import "./social-feed.css";
 export default function SocialFeed() {
   return (
     <>
-      <div className="container-fluid my-4">
-        <div className="container">
-          <div className="heading mx-auto text-center">
-            {/* <div className="toggleHead mt-3">
+      <div className="container pb-4">
+        <div className="heading mx-auto text-center">
+          {/* <div className="toggleHead mt-3">
               <button className="toggleBtn active" style={{ color: "#c92bb7" }}>
                 <FontAwesomeIcon icon={faInstagram} width={15} /> Instagram
               </button>
@@ -18,20 +17,19 @@ export default function SocialFeed() {
                 <FontAwesomeIcon icon={faYoutube} width={15} /> YouTube
               </button>
             </div> */}
+        </div>
+        <div className="row d-flex justify-content-center flex-wrap">
+          <div className="social-post col-lg-3 col-sm-1">
+            <img src="/social-views/post1.jpg" alt="" />
           </div>
-          <div className="row d-flex justify-content-center flex-wrap">
-            <div className="social-post col-lg-3 col-sm-1">
-              <img src="/social-views/post1.jpg" alt="" />
-            </div>
-            <div className="social-post col-lg-3 col-sm-1">
-              <img src="/social-views/post3.jpg" alt="" />
-            </div>
-            <div className="social-post col-lg-3 col-sm-1">
-              <img src="/social-views/post4.jpg" alt="" />
-            </div>
-            <div className="social-post col-lg-3 col-sm-1">
-              <img src="/social-views/post5.jpg" alt="" />
-            </div>
+          <div className="social-post col-lg-3 col-sm-1">
+            <img src="/social-views/post3.jpg" alt="" />
+          </div>
+          <div className="social-post col-lg-3 col-sm-1">
+            <img src="/social-views/post4.jpg" alt="" />
+          </div>
+          <div className="social-post col-lg-3 col-sm-1">
+            <img src="/social-views/post5.jpg" alt="" />
           </div>
         </div>
       </div>

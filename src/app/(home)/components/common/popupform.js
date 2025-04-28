@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { LoadingSpinner } from "../../contact-us/page";
-import { set } from "jodit/esm/core/helpers";
 
 export default function CommonPopUpform({ show, handleClose }) {
     const [validated, setValidated] = useState(false);
@@ -67,7 +66,7 @@ export default function CommonPopUpform({ show, handleClose }) {
             } catch (error) {
                 toast.error(error.data.message);
                 console.error("Error submitting form:", error);
-            }finally {
+            } finally {
                 setShowLoading(false);
                 setButtonName("Submit Enquiry");
             }
@@ -78,7 +77,7 @@ export default function CommonPopUpform({ show, handleClose }) {
         <>
             <Modal show={show} onHide={() => handleClose(false)} centered>
                 <Modal.Header closeButton className="theme-bg">
-                    <Modal.Title className="fw-bold text-light">We will connect you soon.</Modal.Title>
+                    <Modal.Title className="fw-bold text-white">We will connect you soon.</Modal.Title>
                 </Modal.Header>
                 <Form
                     noValidate
@@ -138,7 +137,7 @@ export default function CommonPopUpform({ show, handleClose }) {
                             Please provide a valid message.
                         </Form.Control.Feedback>
                     </Form.Group>
-                    <Button type="submit" className="fw-bold btn btn-success" disabled={showLoading}>{buttonName} <LoadingSpinner show={showLoading}/></Button>
+                    <Button type="submit" className="fw-bold btn btn-background border-0" disabled={showLoading}>{buttonName} <LoadingSpinner show={showLoading} /></Button>
                 </Form>
             </Modal>
         </>

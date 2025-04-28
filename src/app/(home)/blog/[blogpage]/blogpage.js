@@ -5,8 +5,22 @@ import CommonHeaderBanner from "../../components/common/commonheaderbanner";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import "./../media.css";
+import { Button, Form } from "react-bootstrap";
+import { LoadingSpinner } from "../../contact-us/page";
+import { toast } from "react-toastify";
 export default function BlogDetail({ slug }) {
     const [blogDetail, setBlogDetail] = useState({});
+    const [showLoading, setShowLoading] = useState(false);
+    const [buttonName, setButtonName] = useState("Submit Enquiry");
+    const [blogImage, setBlogImage] = useState(null);
+    const initialFormData = {
+        name: "",
+        email: "",
+        phone: "",
+        message: "",
+    };
+    const [formData, setFormData] = useState(initialFormData);
+    const [validated, setValidated] = useState(false);
     //fetch blog detail using slug
     const fetchBlogDetail = async (url) => {
         // fetching blog detail from api using slug
@@ -14,9 +28,62 @@ export default function BlogDetail({ slug }) {
         setBlogDetail(response.data);
     }
 
+    //handle form submit
+    const handleSubmit = async (event) => {
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            setValidated(true);
+            event.stopPropagation();
+            return;
+        } else {
+            event.preventDefault();
+            debugger
+            try {
+                setShowLoading(true);
+                setButtonName("");
+                // Make API request
+                const response = await axios.post(
+                    process.env.NEXT_PUBLIC_API_URL + "enquiry/post",
+                    formData
+                );
+                // Check if response is successful
+                if (response.data.isSuccess === 1) {
+                    setFormData(initialFormData); // Reset form data
+                    setValidated(false); // Reset validation state
+                    toast.success(response.data.message);
+                } else {
+                    toast.error(response.data.message);
+                }
+            } catch (error) {
+                toast.error(error.data.message);
+                console.error("Error submitting form:", error);
+            } finally {
+                setShowLoading(false);
+                setButtonName("Submit Enquiry");
+            }
+        }
+    };
+
+    //handle form input change
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
+
     useEffect(() => {
         fetchBlogDetail(slug);
     }, [slug]);
+
+    useEffect(() => {
+        if (blogDetail && blogDetail.blogImage) {
+            setBlogImage(blogDetail.blogImage);
+        }
+    }, [blogDetail]);
+
     return (
         <div>
             <CommonHeaderBanner image={"builder-banner.jp"} headerText={"Blog-Detail"} />
@@ -24,15 +91,15 @@ export default function BlogDetail({ slug }) {
             <div className="container py-5">
                 <div className="row g-5">
                     {/* Blog Content */}
-                    <div className="col-lg-8">
-                        <Image
-                            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}blog/${blogDetail.blogImage}`}
+                    {blogImage != null ? <div className="col-lg-8">
+                        {blogImage && <Image
+                            src={blogImage}
                             alt={blogDetail.blogTitle || ""}
                             className="img-fluid rounded shadow-sm mb-4"
                             width={1200}
                             height={648}
                             unoptimized
-                        />
+                        />}
 
                         <h1 className="fw-bold mb-3">{blogDetail.blogTitle}</h1>
 
@@ -53,28 +120,75 @@ export default function BlogDetail({ slug }) {
                                     </span>
                                 ))}
                         </div>
-
-                    </div>
+                    </div> : <div className="col-lg-8 d-flex justify-content-center align-items-center">
+                        <LoadingSpinner show={true} />
+                    </div>}
 
                     {/* Contact Form */}
                     <div className="col-lg-4">
                         <div className="card shadow-sm rounded-4 p-4 blog-contact-form">
                             <h4 className="fw-semibold mb-4">Get in Touch</h4>
-                            <form>
-                                <div className="mb-3">
-                                    <label htmlFor="name" className="form-label">Your Name</label>
-                                    <input type="text" className="form-control" id="name" placeholder="John Doe" />
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="email" className="form-label">Email Address</label>
-                                    <input type="email" className="form-control" id="email" placeholder="john@example.com" />
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="message" className="form-label">Message</label>
-                                    <textarea className="form-control" id="message" rows="4" placeholder="Write your message here..."></textarea>
-                                </div>
-                                <button type="submit" className="btn btn-primary w-100">Send Message</button>
-                            </form>
+                            <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                                <Form.Group className="mb-3" controlId="name">
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Enter name"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        Please enter your name.
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="email">
+                                    {/* <Form.Label>Email Address</Form.Label> */}
+                                    <Form.Control
+                                        type="email"
+                                        placeholder="Enter email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        Please enter a valid email address.
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="email">
+                                    {/* <Form.Label>Phone Number</Form.Label> */}
+                                    <Form.Control
+                                        type="tel"
+                                        placeholder="Enter phone"
+                                        name="phone"
+                                        value={formData.phone}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        Please enter a valid phone number.
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+
+                                <Form.Group className="mb-3" controlId="message">
+                                    {/* <Form.Label>Message</Form.Label>/ */}
+                                    <Form.Control
+                                        as="textarea"
+                                        rows={4}
+                                        placeholder="Write your message here..."
+                                        name="message"
+                                        value={formData.message}
+                                        onChange={handleChange}
+                                    />
+                                </Form.Group>
+
+                                <Button variant="primary" type="submit" className="w-100" disabled={showLoading}>
+                                    {buttonName} <LoadingSpinner show={showLoading} />
+                                </Button>
+                            </Form>
                         </div>
                     </div>
                 </div>
