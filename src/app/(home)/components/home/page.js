@@ -231,18 +231,18 @@ export default function HomePage() {
         </button>
       </div>
       <div className="position-relative mt-5 top-space">
-        <h1 className="text-center fw-bold pt-5">Insights</h1>
+        <h2 className="text-center fw-bold pt-5">Insights</h2>
         <InsightNew />
         {/* <Insight /> */}
-        <h1 className="fw-bold text-center pt-5">Featured Projects</h1>
+        <h2 className="fw-bold text-center pt-5">Featured Projects</h2>
         <Featured />
-        <h1 className="fw-bold text-center pt-5">
+        <h2 className="fw-bold text-center pt-5">
           Find your dream property in the city you are searching in
-        </h1>
+        </h2>
         <DreamProject />
-        <h1 className="fw-bold text-center pt-5">Realty Updates</h1>
+        <h2 className="fw-bold text-center pt-5">Realty Updates</h2>
         <NewsViews />
-        <h1 className="fw-bold text-center pt-5">Investor Education </h1>
+        <h2 className="fw-bold text-center pt-5">Investor Education </h2>
         <SocialFeed />
       </div>
     </>

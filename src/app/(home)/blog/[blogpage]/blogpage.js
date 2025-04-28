@@ -93,7 +93,7 @@ export default function BlogDetail({ slug }) {
                     {/* Blog Content */}
                     {blogImage != null ? <div className="col-lg-8">
                         {blogImage && <Image
-                            src={blogImage}
+                            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}blog/${blogImage}`}
                             alt={blogDetail.blogTitle || ""}
                             className="img-fluid rounded shadow-sm mb-4"
                             width={1200}
@@ -185,7 +185,7 @@ export default function BlogDetail({ slug }) {
                                     />
                                 </Form.Group>
 
-                                <Button variant="primary" type="submit" className="w-100" disabled={showLoading}>
+                                <Button type="submit" className="w-100 btn-background text-white border-0" disabled={showLoading}>
                                     {buttonName} <LoadingSpinner show={showLoading} />
                                 </Button>
                             </Form>
