@@ -26,15 +26,15 @@ export default function Media() {
 
   //adding pagination to this blogs list
   const totalNumberOfBlogs = blogsList.length;
-  const blogsToShowOnSinglePage = 15;
-  const numberOfPages = totalNumberOfBlogs/blogsToShowOnSinglePage;
+  const blogsToShowOnSinglePage = 3;
+  const numberOfPages = totalNumberOfBlogs / blogsToShowOnSinglePage;
 
 
   return (
     <>
       <CommonHeaderBanner image={"blog-banner.jpg"} headerText={"Blog"} />
       <CommonBreadCrum pageName={"Blog"} />
-      <div className="container-fluid my-3">
+      <div className="container-fluid mb-3">
         {/* <p className="text-center h2 mt-3">Blog</p> */}
         <div className="container-fluid d-flex justify-content-center gap-4 flex-wrap">
           {loading ? (
@@ -70,7 +70,17 @@ export default function Media() {
               </Link>
             ))}
         </div>
-
+        <div className="d-flex justify-content-center align-items-center">
+          <div>
+            {numberOfPages > 1 ?
+              <div>
+                {Array.from({ length: numberOfPages }, (_, index) => (
+                  <span className="fs-4 fw-bold btn-background mx-2 p-3 m-0 pt-5 rounded" key={index}>{index + 1} </span>
+                ))}
+              </div>
+              : ""}
+          </div>
+        </div>
       </div>
     </>
   );
