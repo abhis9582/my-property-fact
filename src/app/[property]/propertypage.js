@@ -619,7 +619,7 @@ export default function Property({ slug }) {
                   <p className="fs-6 text-muted mb-2">{projectDetail.projectConfiguration}</p>
 
                   <p className="fs-6 text-muted">
-                    <strong className="text-dark">RERA:</strong> {projectDetail.reara || "Not found"}
+                    <strong className="text-dark">RERA:</strong> {projectDetail.reraNo || "Not found"}
                   </p>
                 </div>
                 <button className="btn btn-success border-0 btn-background text-white w-100 p-2"
@@ -968,7 +968,7 @@ export default function Property({ slug }) {
                 id="question1"
                 onClick={() => toggleAnswer(item.id)}
               >
-                <h5 className="m-0">Q {index + 1} : </h5> {item.faqQuestion}
+                <h5 className="m-0">Q {index + 1} : </h5> {" "+item.faqQuestion}
                 <span className="plus-icon">{isAnswerVisible[item.id] ? "-": "+"}</span>
               </div>
               <div
@@ -977,7 +977,7 @@ export default function Property({ slug }) {
                 id="answer1"
               >
                 <h5 className="m-0 text-success">Ans: </h5>
-                {item.faqAnswer}
+                {" " +item.faqAnswer}
               </div>
             </div>
           ))}

@@ -112,7 +112,7 @@ export default function HomePage() {
       <div className={`${showForm ? "show" : ""} fixed-form-container`}>
         <FixedForm resetTrigger={resetTrigger} onSuccess={handleSuccess} />
       </div>
-      <div className="position-relative mb-5">
+      <div className="position-relative mb-5" style={{minHeight: "474px"}}>
         <div className="position-relative overflow-hidden">
           <picture className="position-relative">
             {/* Mobile Image */}
