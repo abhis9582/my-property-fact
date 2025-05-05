@@ -8,6 +8,7 @@ import CommonBreadCrum from "../components/common/breadcrum";
 import { useSearchParams } from "next/navigation";
 import { Spinner } from "react-bootstrap";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
+import { LoadingSpinner } from "../contact-us/page";
 
 function ProjectsContent() {
   const [allProjectsList, setAllProjectsList] = useState([]);
@@ -62,14 +63,7 @@ function ProjectsContent() {
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: "50vh" }}>
-        <Spinner animation="grow" variant="primary" />
-        <Spinner animation="grow" variant="secondary" />
-        <Spinner animation="grow" variant="success" />
-        <Spinner animation="grow" variant="danger" />
-        <Spinner animation="grow" variant="warning" />
-        <Spinner animation="grow" variant="info" />
-        <Spinner animation="grow" variant="light" />
-        <Spinner animation="grow" variant="dark" />
+        <LoadingSpinner show={loading}/>
       </div>
     );
   }

@@ -76,7 +76,7 @@ export default function CommonPopUpform({ show, handleClose }) {
     return (
         <>
             <Modal show={show} onHide={() => handleClose(false)} centered>
-                <Modal.Header closeButton className="theme-bg">
+                <Modal.Header closeButton className="gradient-bg">
                     <Modal.Title className="fw-bold text-white">We will connect you soon.</Modal.Title>
                 </Modal.Header>
                 <Form

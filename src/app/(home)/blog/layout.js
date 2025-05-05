@@ -1,8 +1,6 @@
-import Media from "./page";
-
 export const metadata = {
-    title: "Media",
-    description: "Media",
+    title: "Blog",
+    description: "blog",
 };
 
 export default function MediaLayout({ children }) {

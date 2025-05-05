@@ -2,33 +2,36 @@
 import "./media.css";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import CommonBreadCrum from "../components/common/breadcrum";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Link from "next/link";
 import { LoadingSpinner } from "../contact-us/page";
+import { Pagination, Stack } from "@mui/material";
+import BlogCard from "../components/common/blogcard";
 export default function Media() {
   // defining state for list of blogs
   const [blogsList, setBlogsList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(0);
+  const [size, setSize] = useState(9);
+  const [totalPages, setTotalPages] = useState(0);
   //fetching all blogs list
   const getBlogsList = async () => {
     // fetching blogs list from api
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}blog/get-all`);
-    setBlogsList(response.data);
+      `${process.env.NEXT_PUBLIC_API_URL}blog/get?page=${page}&size=${size}`);
+    setBlogsList(response.data.content);
+    setTotalPages(response.data.totalPages);
     setLoading(false);
   }
   useEffect(() => {
     getBlogsList();
+  }, [page]);
 
-  }, []);
-
-  //adding pagination to this blogs list
-  const totalNumberOfBlogs = blogsList.length;
-  const blogsToShowOnSinglePage = 3;
-  const numberOfPages = totalNumberOfBlogs / blogsToShowOnSinglePage;
-
+  // Handle page change from pagination
+  const handlePageChange = (event, value) => {
+    setPage(value - 1); // update page state, which triggers useEffect
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <>
@@ -43,44 +46,27 @@ export default function Media() {
             </div>)
             :
             blogsList.map((blog, index) => (
-              <Link href={`/blog/${blog.slugUrl}`}
-                key={`${blog.blogTitle}-${index}`}
-                className="card border-0 rounded-4 overflow-hidden custom-shadow"
-                style={{ width: '27rem', transition: 'transform 0.3s' }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-              >
-                <Image
-                  width={400}
-                  height={250}
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}blog/${blog.blogImage}`}
-                  alt={blog.blogTitle}
-                  className="card-img-top"
-                  unoptimized={true}
-                />
-                <div className="card-body">
-                  <h4 className="card-title fw-bold">{blog.blogTitle}</h4>
-                  <p className="card-text text-muted small">
-                    {blog.blogMetaDescription || 'Click below to continue reading...'}
-                  </p>
-                  <button className="btn btn-background text-white btn-sm mt-2">
-                    Continue Reading
-                  </button>
-                </div>
-              </Link>
+              <BlogCard key={index} blog={blog} index={index} />
             ))}
         </div>
-        <div className="d-flex justify-content-center align-items-center">
-          <div>
-            {numberOfPages > 1 ?
-              <div>
-                {Array.from({ length: numberOfPages }, (_, index) => (
-                  <span className="fs-4 fw-bold btn-background mx-2 p-3 m-0 pt-5 rounded" key={index}>{index + 1} </span>
-                ))}
-              </div>
-              : ""}
-          </div>
-        </div>
+      </div>
+      <div className="d-flex justify-content-center align-items-center my-5">
+        {/* <div>
+          {numberOfPages > 1 ?
+            <div>
+              {Array.from({ length: numberOfPages }, (_, index) => (
+                <span className="fs-4 fw-bold btn-background mx-2 p-3 rounded" key={index}>{index + 1} </span>
+              ))}
+            </div>
+            : ""}
+        </div> */}
+        <Stack spacing={2}>
+          <Pagination
+            count={totalPages}
+            color="secondary"
+            onChange={handlePageChange}
+          />
+        </Stack>
       </div>
     </>
   );
