@@ -1,14 +1,12 @@
-import AboutUs from "./page"
-
 export const metadata = {
     title: "About Us",
     description: "About us"
-} 
+}
 
-export default function AboutUsLayout(){
-    return(
+export default function AboutUsLayout({children}) {
+    return (
         <>
-        <AboutUs />
+           {children}
         </>
     )
 }

@@ -1,37 +1,36 @@
-import {
-  faInstagram,
-  faYoutube,
-} from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import "./social-feed.css";
+import BlogCard from "../../common/blogcard";
+import { useEffect, useState } from "react";
+import axios from "axios";
 export default function SocialFeed() {
+  const [blogsList, setBlogsList] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const getBlogsList = async () => {
+    // fetching blogs list from api
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}blog/get?page=${0}&size=${3}`);
+    setBlogsList(response.data.content);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    getBlogsList();
+  }, []);
+
   return (
     <>
       <div className="container pb-4">
-        <div className="heading mx-auto text-center">
-          {/* <div className="toggleHead mt-3">
-              <button className="toggleBtn active" style={{ color: "#c92bb7" }}>
-                <FontAwesomeIcon icon={faInstagram} width={15} /> Instagram
-              </button>
-              <button className="toggleBtn" style={{ color: "red" }}>
-                <FontAwesomeIcon icon={faYoutube} width={15} /> YouTube
-              </button>
-            </div> */}
-        </div>
-        <div className="row d-flex justify-content-center flex-wrap">
-          <div className="social-post col-lg-3 col-sm-1">
-            <img src="/social-views/post1.jpg" alt="" />
+        {loading ? <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "250px" }}>
+          <LoadingSpinner show={loading} />
+        </div> :
+          <div className="d-flex gap-3">
+            {blogsList.map((blog, index) => (
+              <BlogCard key={index} blog={blog} />
+            ))}
           </div>
-          <div className="social-post col-lg-3 col-sm-1">
-            <img src="/social-views/post3.jpg" alt="" />
-          </div>
-          <div className="social-post col-lg-3 col-sm-1">
-            <img src="/social-views/post4.jpg" alt="" />
-          </div>
-          <div className="social-post col-lg-3 col-sm-1">
-            <img src="/social-views/post5.jpg" alt="" />
-          </div>
-        </div>
+        }
       </div>
     </>
   );

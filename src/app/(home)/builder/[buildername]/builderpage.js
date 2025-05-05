@@ -6,9 +6,11 @@ import axios from "axios";
 import PropertyContainer from "@/app/(home)/components/common/page";
 import CommonBreadCrum from "../../components/common/breadcrum";
 import CommonHeaderBanner from "../../components/common/commonheaderbanner";
+import { LoadingSpinner } from "../../contact-us/page";
 export default function BuilderPage({ builderName }) {
   const [builderData, setBuilderData] = useState([]);
   const [propertyList, setPropertyList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const fetchBuilderData = async () => {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}builders/get/${builderName}`
@@ -20,6 +22,7 @@ export default function BuilderPage({ builderName }) {
       );
       if (projects) {
         setPropertyList(projects.data);
+        setLoading(false);
       }
     }
   };
@@ -48,15 +51,21 @@ export default function BuilderPage({ builderName }) {
           </Link>
         </div>
       </div>
-      <div className="container my-3">
-        <div className="row g-3">
-          {propertyList.length > 0 ? propertyList.map((item) => (
-            <div key={item.id} className="col-12 col-sm-6 col-md-4">
-              <PropertyContainer data={item} />
-            </div>
-          )) : (<p className="text-center fs-4 fw-bold">No projects found</p>)}
+      {loading ?
+        <div className="d-flex justify-content-center align-items-center" style={{minHeight: "250px"}}>
+          <LoadingSpinner show={loading} />
         </div>
-      </div>
+        :
+        <div className="container my-3">
+          <div className="row g-3">
+            {propertyList.length > 0 ? propertyList.map((item) => (
+              <div key={item.id} className="col-12 col-sm-6 col-md-4">
+                <PropertyContainer data={item} />
+              </div>
+            )) : (<p className="text-center fs-4 fw-bold">No projects found</p>)}
+          </div>
+        </div>
+      }
     </>
   );
 }

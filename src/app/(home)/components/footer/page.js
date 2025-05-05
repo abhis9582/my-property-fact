@@ -193,77 +193,6 @@ export default function Footer() {
               </div>
             </div>
           </div>
-          {/* <div className="container-fluid ps-4">
-            <div className="py-3">
-              <div className="row">
-                <div className="col-md-3">
-                  <div className="insideBox">
-                    <p className="text-white">Projects</p>
-                    <ul className="p-0">
-                      {projectTypes.map((item, index) => (
-                        <li key={`${item.name}-${index}`}>
-                          <Link className="footer-text" href={`/projects/${item.slugUrl}`}>
-                            {item.projectTypeName}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-                <div className="col-md-3 foot-menu">
-                  <div className="insideBox">
-                    <h6>Company</h6>
-                    <ul className="p-0">
-                      {companyArr.map((item, index) => (
-                        <li key={`${item.id}-${index}`}>
-                          <Link className="footer-text" href={item.slugUrl}>{item.name}</Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-                <div className="col-md-3 foot-menu">
-                  <div className="insideBox">
-                    <h6>Media</h6>
-                    <ul className="p-0">
-                      {mediaArr.map((item, index) => (
-                        <li key={`${item.id}-${index}`}>
-                          <Link className="footer-text" href={item.slugUrl}>{item.name}</Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-                <div className="col-md-3 foot-menu">
-                  <div>
-                    <h6>Get Social</h6>
-                    <ul className="d-flex gap-3 p-0">
-                      <li className="">
-                        <Link className="fs-3 text-white hover-green" href="https://www.facebook.com/mypropertyfact1/" target="_blank" title="facebook">
-                          <FontAwesomeIcon icon={faFacebook} />
-                        </Link>
-                      </li>
-                      <li className="">
-                        <Link className="fs-3 text-white" href="https://www.instagram.com/my.property.fact/" target="_blank" title="instagram">
-                          <FontAwesomeIcon icon={faInstagram} />
-                        </Link>
-                      </li>
-                      <li className="">
-                        <Link className="fs-3 text-white" href="https://www.linkedin.com/company/my-property-fact/" target="_blank" title="linkedin">
-                          <FontAwesomeIcon icon={faLinkedin} />
-                        </Link>
-                      </li>
-                      <li className="">
-                        <Link className="fs-3 text-white" href="https://www.youtube.com/@my.propertyfact/" target="_blank" title="youtube">
-                          <FontAwesomeIcon icon={faYoutube} />
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> */}
           <div className="container pt-5">
             <div className="row">
               <div className="col-md-3">
@@ -283,7 +212,7 @@ export default function Footer() {
                 <ul className="p-0">
                   {companyArr.map((item, index) => (
                     <li key={`${item.id}-${index}`}>
-                      <Link className="footer-text" href={item.slugUrl}>{item.name}</Link>
+                      <Link className="footer-text" href={item.slugUrl} scroll={true}>{item.name}</Link>
                     </li>
                   ))}
                 </ul>

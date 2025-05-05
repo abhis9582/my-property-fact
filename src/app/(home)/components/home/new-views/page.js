@@ -3,14 +3,21 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleRight } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
+import { useState } from "react";
+import CommonPopUpform from "../../common/popupform";
 export default function NewsViews() {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <>
       <div className="container">
         <div className="row d-flex justify-contnet-center flex-wrap m-0">
           <div className="row">
             <div className="col-lg-3 col-sm-6 news-card">
-              <Link className="inner" href="/awards">
+              <Link className="inner" href="#"
+                onClick={(e) => {
+                  e.preventDefault(); // stop scroll-to-top
+                  setIsOpen(true);      // open popup
+                }}>
                 <p className="card-title">Highway Construction</p>
                 <div className="img-fluid">
                   <Image
@@ -28,7 +35,10 @@ export default function NewsViews() {
               </Link>
             </div>
             <div className="col-lg-3 col-sm-6 news-card">
-              <Link className="inner" href="/news">
+              <Link className="inner" href="#" onClick={(e) => {
+                e.preventDefault(); // stop scroll-to-top
+                setIsOpen(true);       // open popup
+              }}>
                 <p className="card-title">News</p>
                 <div className="img-fluid">
                   <Image
@@ -46,7 +56,10 @@ export default function NewsViews() {
               </Link>
             </div>
             <div className="col-lg-3 col-sm-6 news-card">
-              <Link className="inner" href="/events">
+              <Link className="inner" href="#" onClick={(e) => {
+                e.preventDefault(); // stop scroll-to-top
+                setIsOpen(true);       // open popup
+              }}>
                 <p className="card-title">Events</p>
                 <div className="img-fluid">
                   <Image
@@ -64,7 +77,10 @@ export default function NewsViews() {
               </Link>
             </div>
             <div className="col-lg-3 col-sm-6 news-card">
-              <Link className="inner" href="/blogs">
+              <Link className="inner" href="#" onClick={(e) => {
+                e.preventDefault(); // stop scroll-to-top
+                setIsOpen(true);       // open popup
+              }}>
                 <p className="card-title">Blogs</p>
                 <div className="img-fluid">
                   <Image
@@ -84,6 +100,7 @@ export default function NewsViews() {
           </div>
         </div>
       </div>
+      <CommonPopUpform show={isOpen} handleClose={setIsOpen} />
     </>
   );
 }
