@@ -1,3 +1,4 @@
+"use client";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import "./social-feed.css";
 import BlogCard from "../../common/blogcard";
