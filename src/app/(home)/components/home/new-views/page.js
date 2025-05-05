@@ -1,3 +1,4 @@
+"use client";
 import "./newviews.css";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
