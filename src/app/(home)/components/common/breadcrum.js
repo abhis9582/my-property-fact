@@ -13,7 +13,7 @@ export default function CommonBreadCrum({ firstPage, pageName }) {
           <li>
             <Link
               className="text-decoration-none text-dark text-capitalize d-flex"
-              href={`/${firstPage}`}
+              href={`/${firstPage.toLowerCase()}`}
             >
               {'\\ ' + firstPage}
             </Link>

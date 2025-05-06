@@ -36,7 +36,7 @@ export default function Media() {
   return (
     <>
       <CommonHeaderBanner image={"blog-banner.jpg"} headerText={"Blog"} />
-      <CommonBreadCrum pageName={"blog"} />
+      <CommonBreadCrum pageName={"Blog"} />
       <div className="container-fluid mb-3">
         {/* <p className="text-center h2 mt-3">Blog</p> */}
         <div className="container-fluid d-flex justify-content-center gap-4 flex-wrap">

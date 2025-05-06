@@ -29,7 +29,7 @@ export default function SocialFeed() {
           <div className="container">
             <div className="row">
               {blogsList.map((blog, index) => (
-                <div key={index} className="col-md-4 col-lg-4 col-sm-12 my-3">
+                <div key={index} className="col-md-4 col-lg-4 col-sm-12 my-3 d-flex justify-content-between">
                   <BlogCard blog={blog} />
                 </div>
               ))}
