@@ -4,6 +4,9 @@
     isolation: isolate;
     position: relative;
     overflow: hidden;
+    border-radius: 1rem;
+    max-width: 22rem;
+    max-height: 450px;
 }
 .news-card .inner:before {
     background-image: linear-gradient(#00000080, #0000, #000000e6, #00000080);
@@ -35,10 +38,7 @@
     height: auto;
     max-width: 100%;
 }
-.news-card .inner img {
-    height: 380px;
-    object-fit: cover;
-}
+
 .news-card .inner .arrow {
     bottom: -40px;
     color: #fff;

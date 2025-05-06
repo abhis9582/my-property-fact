@@ -70,3 +70,9 @@
 .dark-blue{
     background-color: rgb(90, 90, 255) !important;
 }
+
+@media (max-width: 691px) {
+    .insight-card{
+        max-width: 20rem !important;
+    }
+}

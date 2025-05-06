@@ -6,7 +6,7 @@ export default function BlogCard({ blog }) {
         <>
             <Link href={`/blog/${blog.slugUrl}`}
                 className="card border-0 rounded-4 overflow-hidden custom-shadow"
-                style={{ width: '27rem', transition: 'transform 0.3s' }}
+                style={{ maxWidth: '31rem', transition: 'transform 0.3s' }}
                 onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
                 onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
             >
@@ -19,7 +19,7 @@ export default function BlogCard({ blog }) {
                     unoptimized={true}
                 />
                 <div className="card-body">
-                    <h4 className="card-title fw-bold">{blog.blogTitle}</h4>
+                    <h4 className="card-title fw-bold">{blog.blogTitle.replace(/\u00A0/g, ' ')}</h4>
                     <p className="card-text text-muted small">
                         {blog.blogMetaDescription || 'Click below to continue reading...'}
                     </p>

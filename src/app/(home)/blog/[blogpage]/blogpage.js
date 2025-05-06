@@ -101,7 +101,7 @@ export default function BlogDetail({ slug }) {
                             unoptimized
                         />}
 
-                        <h1 className="fw-bold mb-3">{blogDetail.blogTitle}</h1>
+                        <h1 className="fw-bold mb-3">{blogDetail.blogTitle.replace(/\u00A0/g, ' ')}</h1>
 
                         <div className="text-muted fs-5 lh-lg"
                             dangerouslySetInnerHTML={{

@@ -195,7 +195,7 @@ export default function Footer() {
           </div>
           <div className="container pt-5">
             <div className="row">
-              <div className="col-md-3">
+              <div className="col-6 col-md-3 col-sm-6">
                 <p className="text-white">Projects</p>
                 <ul className="p-0">
                   {projectTypes.map((item, index) => (
@@ -207,7 +207,7 @@ export default function Footer() {
                   ))}
                 </ul>
               </div>
-              <div className="col-md-3">
+              <div className="col-6 col-md-3 col-sm-6">
                 <p className="text-white">Company</p>
                 <ul className="p-0">
                   {companyArr.map((item, index) => (
@@ -217,7 +217,7 @@ export default function Footer() {
                   ))}
                 </ul>
               </div>
-              <div className="col-md-3">
+              <div className="col-6 col-md-3 col-sm-6">
                 <p className="text-white">Media</p>
                 <ul className="p-0">
                   {mediaArr.map((item, index) => (
@@ -227,7 +227,7 @@ export default function Footer() {
                   ))}
                 </ul>
               </div>
-              <div className="col-md-3">
+              <div className="col-6 col-md-3 col-sm-6">
                 <div>
                   <p className="text-white">Get Social</p>
                   <ul className="d-flex gap-3 p-0">
@@ -261,119 +261,6 @@ export default function Footer() {
           <p className="pb-3 footer-text text-center m-0">The content and data are for informative purposes only and may be prone to inaccuracy and inconsistency. We do not take any responsibility for data mismatches and strongly advise the viewers to conduct their detailed research before making any investment or purchase-related decisions.</p>
         </div>
       </footer>
-      <div className="modal fade" id="formModal">
-        <button
-          type="button"
-          className="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content">
-            <div className="modal-header bg-yellow">
-              <h6 className="modal-title">For any query, fill the form.</h6>
-            </div>
-            <div className="modal-body">
-              <div className="formContainer text-white">
-                <div className="form">
-                  <form
-                    className="form-container"
-                    id="contact_form"
-                    method="post"
-                  >
-                    <p className="status mb-0 text-warning"></p>
-                    <div className="form-row">
-                      <div className="col-md-12 form-group">
-                        <label htmlFor="name">
-                          Name<sup className="text-danger">*</sup>
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control form-control-white"
-                          id="name"
-                          name="name"
-                        />
-                      </div>
-                      <div className="col-md-12 form-group">
-                        <label htmlFor="email">
-                          Email<sup className="text-danger">*</sup>
-                        </label>
-                        <input
-                          type="email"
-                          className="form-control form-control-white"
-                          name="email"
-                          id="email"
-                        />
-                      </div>
-                      <div className="col-md-12 form-group">
-                        <label htmlFor="mobile">
-                          Mobile<sup className="text-danger">*</sup>
-                        </label>
-                        <input
-                          type="tel"
-                          className="form-control form-control-white"
-                          name="mobile"
-                          id="mobile"
-                        />
-                      </div>
-                      <div className="col-md-12 formFooter readmore mt-0">
-                        <input
-                          type="hidden"
-                          name="contact_action"
-                          value="active"
-                        />
-                        <input
-                          type="hidden"
-                          id="pagename"
-                          name="pagename"
-                          value=""
-                        />
-                        <input
-                          type="hidden"
-                          name="proj_category"
-                          id="fproj_category"
-                          value=""
-                        />
-                        <input
-                          type="hidden"
-                          name="fproj_addrr"
-                          id="fproj_addrr"
-                          value=""
-                        />
-                        <input
-                          type="hidden"
-                          name="projecturls"
-                          value="www.starestate.in/"
-                        />
-                        <input type="hidden" name="utm_source" value="" />
-                        <input type="hidden" name="utm_medium" value="" />
-                        <input type="hidden" name="utm_campaign" value="" />
-                        <button
-                          type="submit"
-                          className="button hoverOnWhite mx-auto"
-                        >
-                          Submit
-                        </button>
-                      </div>
-                      <div className="col-md-12 modal-call text-center gap-form-row mt-4 d-flex flex-wrap align-items-center justify-content-center">
-                        <h6 className="mb-0">Request a Call Back</h6>
-                        <div className="readmore ml-0 ml-sm-3 mt-0">
-                          <a href="#" className="button gray">
-                            <i className="fa fa-phone"></i>
-                            <span id="ivrmodal">+91 000 0000 000</span>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </>
   );
 }
