@@ -26,10 +26,14 @@ export default function SocialFeed() {
         {loading ? <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "250px" }}>
           <LoadingSpinner show={loading} />
         </div> :
-          <div className="d-flex gap-3">
-            {blogsList.map((blog, index) => (
-              <BlogCard key={index} blog={blog} />
-            ))}
+          <div className="container">
+            <div className="row">
+              {blogsList.map((blog, index) => (
+                <div key={index} className="col-md-4 col-lg-4 col-sm-12 my-3">
+                  <BlogCard blog={blog} />
+                </div>
+              ))}
+            </div>
           </div>
         }
       </div>

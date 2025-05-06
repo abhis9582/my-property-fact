@@ -11,7 +11,7 @@ export default function InsightNew() {
   const data = [
     {
       id: 1,
-      src: "/static/insight.png",
+      src: "/static/Insight_MPF_1.png",
       alt: "price-trends-img",
       heading: "Property rates & trends",
       sub_heading:
@@ -22,7 +22,7 @@ export default function InsightNew() {
     },
     {
       id: 2,
-      src: "/static/insight.png",
+      src: "/static/Insight_MPF_2.png",
       alt: "property-rates-heatmap-img",
       heading: "Property Rates Heatmap",
       sub_heading:
@@ -33,7 +33,7 @@ export default function InsightNew() {
     },
     {
       id: 3,
-      src: "/static/insight.png",
+      src: "/static/Insight_MPF_3.png",
       alt: "price-trends-img",
       heading: "Valuation Report",
       sub_heading:
@@ -44,7 +44,7 @@ export default function InsightNew() {
     },
     {
       id: 4,
-      src: "/static/insight.png",
+      src: "/static/Insight_MPF_4.png",
       alt: "price-trends-img",
       heading: "Property overviews & Ratings",
       sub_heading: "Don't just take our word for it; see what other residents have to say about us",
@@ -73,9 +73,9 @@ export default function InsightNew() {
                     openPopup(i);       // open popup
                   }
                 }}
-                className="text-dark"
+                className="text-dark d-flex justify-content-center"
               >
-                <div className="text-dark bg-light rounded-4 overflow-hidden my-2 transition transform hover-scale custom-shadow">
+                <div className="text-dark bg-light rounded-4 overflow-hidden my-3 transition transform hover-scale custom-shadow insight-card">
                   <div className="p-3">
                     <p>{i.heading}</p>
                     <p>{i.sub_heading}</p>
