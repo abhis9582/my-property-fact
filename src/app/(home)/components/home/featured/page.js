@@ -9,7 +9,8 @@ import Link from "next/link";
 import PropertyContainer from "../../common/page";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 
-export default function Featured() {
+export default function Featured({ type = null, url= "" }) {
+  const [allFeaturedProperties, setAllFeaturedProperties] = useState([]);
   const [featuredProperties, setFeaturedProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -18,7 +19,7 @@ export default function Featured() {
         const allFeaturedProperties = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}projects/get-all`
         );
-        setFeaturedProperties(allFeaturedProperties.data);
+        setAllFeaturedProperties(allFeaturedProperties.data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data: ", error);
@@ -26,6 +27,18 @@ export default function Featured() {
     };
     fetchData();
   }, []);
+
+  // Filter based on type prop
+  useEffect(() => {
+    if (type === "1" || type === "2") {
+      const filtered = allFeaturedProperties.filter(
+        (p) => p.propertyType === type
+      );
+      setFeaturedProperties(filtered);
+    } else {
+      setFeaturedProperties(allFeaturedProperties);
+    }
+  }, [type, allFeaturedProperties]);
 
   const settings = {
     dots: false,
@@ -70,7 +83,7 @@ export default function Featured() {
   return (
     <>
       <div className="container">
-        {loading ? <div className="d-flex justify-content-center align-items-center" style={{height: "250px"}}><LoadingSpinner show={loading}/></div> : featuredProperties &&
+        {loading ? <div className="d-flex justify-content-center align-items-center" style={{ height: "250px" }}><LoadingSpinner show={loading} /></div> : featuredProperties &&
           <>{featuredProperties?.length > 0 && (
             <Slider {...settings}>
               {featuredProperties.map((item) => (
@@ -83,7 +96,7 @@ export default function Featured() {
         }
 
         <div className="text-center pt-3">
-          <Link className="btn btn-success btn-background" href="/projects">
+          <Link className="btn btn-success btn-background" href={`/projects/${url}`}>
             View all
           </Link>
         </div>

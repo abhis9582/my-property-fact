@@ -29,7 +29,7 @@ export default function InsightNew() {
         "market rates, data analytics & registred transactions of top project & localites",
       color: "light-pink",
       button_color: "dark-pink",
-      href: "#",
+      href: "/emi-calculator",
     },
     {
       id: 3,

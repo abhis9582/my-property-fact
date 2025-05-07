@@ -10,12 +10,14 @@ import "./footer.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import CityList from "../common/citylistcard";
 
 export default function Footer() {
   //Defining states
   const [cityList, setCityList] = useState([]);
   const [projectTypes, setProjectTypes] = useState([]);
   //Function for fetching all cities list
+
   const fetchAllCity = async () => {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}city/all`
@@ -24,6 +26,10 @@ export default function Footer() {
       setCityList(response.data); // setting all city list
     }
   };
+
+  const [showAll, setShowAll] = useState(false);
+  const visibleCities = showAll ? cityList : cityList.slice(0, 5);
+
   // Defining footer media array
   const mediaArr = [
     // {
@@ -147,48 +153,28 @@ export default function Footer() {
           <div className="padding border-bottom footer-keywords">
             <div className="row">
               <div className="col-md-3">
-                <ul className="row ">
+                <ul>
                   <p className="text-white">Apartments in India</p>
-                  {cityList.map((item, index) => (
-                    <li key={`${item.name}-${index}`}>
-                      <Link className="footer-text" href={`/city/${item.slugUrl}`}>Apartments in {item.name}</Link>
-                    </li>
-                  ))}
+                  <CityList cityList={cityList} />
                 </ul>
               </div>
               <div className="col-md-3">
-                <ul className="row ">
+                <ul>
                   <p className="text-white">New Projects in India</p>
-                  {cityList.map((item, index) => (
-                    <li key={`${item.name}-${index}`}>
-                      <Link className="footer-text" href={`/city/${item.slugUrl}`}>
-                        New Projects in {item.name}
-                      </Link>
-                    </li>
-                  ))}
+                  <CityList cityList={cityList} />
                 </ul>
               </div>
               <div className="col-md-3">
-                <ul className="row ">
+                <ul>
                   <p className="text-white">Flats in India</p>
-                  {cityList.map((item, index) => (
-                    <li key={`${item.name}-${index}`}>
-                      <Link className="footer-text" href={`/city/${item.slugUrl}`}>Flats in {item.name}</Link>
-                    </li>
-                  ))}
+                  <CityList cityList={cityList} />
                 </ul>
               </div>
 
               <div className="col-md-3">
-                <ul className="row ">
+                <ul>
                   <p className="text-white">Commercial Property in India</p>
-                  {cityList.map((item, index) => (
-                    <li key={`${item.name}-${index}`}>
-                      <Link className="footer-text" href={`/city/${item.slugUrl}`}>
-                        Commercial Property in {item.name}
-                      </Link>
-                    </li>
-                  ))}
+                  <CityList cityList={cityList} />
                 </ul>
               </div>
             </div>
