@@ -112,7 +112,7 @@ export default function HomePage() {
       <div className={`${showForm ? "show" : ""} fixed-form-container`}>
         <FixedForm resetTrigger={resetTrigger} onSuccess={handleSuccess} />
       </div>
-      <div className="position-relative mb-5" style={{minHeight: "474px"}}>
+      <div className="position-relative mb-5" style={{ minHeight: "474px" }}>
         <div className="position-relative overflow-hidden">
           <picture className="position-relative">
             {/* Mobile Image */}
@@ -240,6 +240,10 @@ export default function HomePage() {
           Find your dream property in the city you are searching in
         </h2>
         <DreamProject />
+        <h2 className="fw-bold text-center pt-5">Explore Our Premier Residential Projects</h2>
+        <Featured type={"1"} url={"residential"} />
+        <h2 className="fw-bold text-center pt-5">Explore Top Commercial Spaces for Growth</h2>
+        <Featured type={"2"} url={"commercial"} />
         <h2 className="fw-bold text-center pt-5">Realty Updates</h2>
         <NewsViews />
         <h2 className="fw-bold text-center pt-5">Investor Education </h2>
