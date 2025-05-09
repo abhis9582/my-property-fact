@@ -36,8 +36,8 @@ export default function NewsViews() {
       title: "Money Distribution",
       src: "/news-views/Money_Distributiuon.jpg",
       alt: "Money_Distribution",
-      title2: "NOIDA Metro to decongest soon",
-      desc: "Noida authority has accepted a fresh application from NOIDA Metro Rail Corporation for an additional metro line to connect Sector 142 and Botanical Garden."
+      title2: "YEIDA launches Plotted housing",
+      desc: "YEIDA has recently launched a new plotted housing scheme that will offer plots at a subsidies rate. The allotment will be done through a lottery system."
     },
   ]
   return (
@@ -45,7 +45,7 @@ export default function NewsViews() {
       <div className="container">
         <div className="row">
           {dataArray.map((item, index) => (
-            <div key={`${item.id}-${index}`} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+            <div key={`${item.id}-${index}`} className="col-12 col-sm-6 col-md-4 col-lg-3 mt-3">
               <div className="flip-card">
                 <div className="flip-card-inner">
                   {/* Front */}
@@ -58,13 +58,12 @@ export default function NewsViews() {
                       width={350}
                     />
                     <div className="title-3d">
-                      {item.title}
+                      <p className="text-center m-0 p-2">{item.title2}</p>
                     </div>
                   </div>
 
                   {/* Back */}
                   <div className="flip-card-back">
-                    <h4>{item.title2}</h4>
                     <p>{item.desc}</p>
                   </div>
                 </div>
