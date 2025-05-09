@@ -328,7 +328,7 @@ export default function Property({ slug }) {
   if (loading) {
     return (
       <div className="project-loader">
-        <LoadingSpinner show={true}/>
+        <LoadingSpinner show={true} />
       </div>
     );
   }
@@ -623,7 +623,7 @@ export default function Property({ slug }) {
                   </p>
                 </div>
                 <button className="btn btn-success border-0 btn-background text-white w-100 p-2"
-                onClick={() => setShowPopUp(true)}><h5 className="m-0">Get Detail</h5></button>
+                  onClick={() => setShowPopUp(true)}><h5 className="m-0">Get Detail</h5></button>
               </div>
             </div>
             {/* Walkthrough Description */}
@@ -968,16 +968,19 @@ export default function Property({ slug }) {
                 id="question1"
                 onClick={() => toggleAnswer(item.id)}
               >
-                <h5 className="m-0">Q {index + 1} : </h5> {" "+item.faqQuestion}
-                <span className="plus-icon">{isAnswerVisible[item.id] ? "-": "+"}</span>
+                <h5 className="m-0">Q {index + 1}: </h5>
+                <h5 className="ps-2 m-0">{item.faqQuestion}</h5>
+                <span className="plus-icon">{isAnswerVisible[item.id] ? "-" : "+"}</span>
               </div>
               <div
                 className={`container questions ${isAnswerVisible[item.id] ? "" : "d-none"
                   } bg-light`}
                 id="answer1"
               >
-                <h5 className="m-0 text-success">Ans: </h5>
-                {" " +item.faqAnswer}
+                <div className="m-0 text-success">
+                  <h5>Ans: </h5>
+                </div>
+                <p className="ps-2 text-success">{item.faqAnswer}</p>
               </div>
             </div>
           ))}

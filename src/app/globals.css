@@ -4,6 +4,7 @@
     src: url("/fonts/Gotham-Bold.ttf") format('truetype');
     font-weight: bold;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
@@ -11,6 +12,7 @@
     src: url("/fonts/Heading-Pro-ExtraBold-trial.ttf") format('truetype');
     font-weight: bold;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
@@ -18,6 +20,7 @@
     src: url("/fonts/Gotham-Light.ttf") format('truetype');
     font-weight: bold;
     font-style: normal;
+    font-display: swap;
 }
 
 /* adding font library  ends*/
@@ -25,6 +28,7 @@
 :root {
     --bg-color: #68ac78;
     --menu-color: #ffffff;
+    --text-color: #cfab5a;
     --bg-with-gradient: radial-gradient(circle at center, #0d5834, #0c2e23);
     --heaing-font: "gotham-bold", "sans-serif";
     --headeing-bolded: "heading-pro";
@@ -89,6 +93,10 @@ ul {
     background: var(--link-bg) !important;
 }
 
+.text-golden {
+    color: var(--text-color);
+}
+
 /* Webkit Browsers starts (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
     width: 5px;
@@ -133,4 +141,11 @@ ul {
 
 .modal-header .btn-close {
     filter: invert(1);
+}
+
+.modal-header .btn-close {
+    filter: invert(1); /* Makes it white, or you can customize using background */
+    background-color: #fff; /* Optional: for background color */
+    border-radius: 50%;
+    padding: 0.5rem;
 }

@@ -1,103 +1,79 @@
 "use client";
 import "./newviews.css";
-import Link from "next/link";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowCircleRight } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import { useState } from "react";
 import CommonPopUpform from "../../common/popupform";
 export default function NewsViews() {
   const [isOpen, setIsOpen] = useState(false);
+  //defining arry of datas
+  const dataArray = [
+    {
+      id: 1,
+      title: "Highway Construction",
+      src: "/news-views/Highway_const.jpg",
+      alt: "highway_construction",
+      title2: "NOIDA Airport to get Connectivity Boost ",
+      desc: "Yamuna Expressway is all set to gain additional connectivity with a direct link between Noida Airport and IGI."
+    },
+    {
+      id: 2,
+      title: "Metro Station",
+      src: "/news-views/Metro_Station.jpg",
+      alt: "Metro_Station",
+      title2: "NOIDA Metro to decongest soon",
+      desc: "Noida authority has accepted a fresh application from NOIDA Metro Rail Corporation for an additional metro line to connect Sector 142 and Botanical Garden."
+    },
+    {
+      id: 3,
+      title: "Money",
+      src: "/news-views/mne.jpg",
+      alt: "mne",
+      title2: "Noida Dealers & Developers Rejoice ",
+      desc: "Noida Authority has approved an additional hike of 30% in property circle rates. Bringing great joy to investors and developers."
+    },
+    {
+      id: 4,
+      title: "Money Distribution",
+      src: "/news-views/Money_Distributiuon.jpg",
+      alt: "Money_Distribution",
+      title2: "NOIDA Metro to decongest soon",
+      desc: "Noida authority has accepted a fresh application from NOIDA Metro Rail Corporation for an additional metro line to connect Sector 142 and Botanical Garden."
+    },
+  ]
   return (
     <>
       <div className="container">
         <div className="row">
-          <div className="col-lg-3 col-sm-6 news-card my-3 d-flex justify-content-center">
-            <Link className="inner" href="#"
-              onClick={(e) => {
-                e.preventDefault(); // stop scroll-to-top
-                setIsOpen(true);      // open popup
-              }}>
-              <p className="card-title">Highway Construction</p>
-              <div className="img-fluid">
-                <Image
-                  src="/news-views/Highway_const.jpg"
-                  alt="highway_construction"
-                  className="img-fluid rounded shadow-sm"
-                  height={400}
-                  width={350}
-                  objectFit="cover"
-                />
+          {dataArray.map((item, index) => (
+            <div key={`${item.id}-${index}`} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+              <div className="flip-card">
+                <div className="flip-card-inner">
+                  {/* Front */}
+                  <div className="flip-card-front">
+                    <Image
+                      src={item.src}
+                      alt={item.alt}
+                      className="img-fluid"
+                      height={400}
+                      width={350}
+                    />
+                    <div className="title-3d">
+                      {item.title}
+                    </div>
+                  </div>
+
+                  {/* Back */}
+                  <div className="flip-card-back">
+                    <h4>{item.title2}</h4>
+                    <p>{item.desc}</p>
+                  </div>
+                </div>
               </div>
-              <div className="arrow">
-                <FontAwesomeIcon icon={faArrowCircleRight} />
-              </div>
-            </Link>
-          </div>
-          <div className="col-lg-3 col-sm-6 news-card my-3 d-flex justify-content-center">
-            <Link className="inner" href="#" onClick={(e) => {
-              e.preventDefault(); // stop scroll-to-top
-              setIsOpen(true);       // open popup
-            }}>
-              <p className="card-title">News</p>
-              <div className="img-fluid">
-                <Image
-                  src="/news-views/Metro_Station.jpg"
-                  alt="Metro_Station"
-                  className="img-fluid rounded shadow-sm"
-                  height={400}
-                  width={350}
-                  objectFit="cover"
-                />
-              </div>
-              <div className="arrow">
-                <FontAwesomeIcon icon={faArrowCircleRight} />
-              </div>
-            </Link>
-          </div>
-          <div className="col-lg-3 col-sm-6 news-card my-3 d-flex justify-content-center">
-            <Link className="inner" href="#" onClick={(e) => {
-              e.preventDefault(); // stop scroll-to-top
-              setIsOpen(true);       // open popup
-            }}>
-              <p className="card-title">Events</p>
-              <div className="img-fluid">
-                <Image
-                  src="/news-views/mne.jpg"
-                  alt="mne"
-                  className="img-fluid rounded shadow-sm"
-                  height={400}
-                  width={350}
-                  objectFit="cover"
-                />
-              </div>
-              <div className="arrow">
-                <FontAwesomeIcon icon={faArrowCircleRight} />
-              </div>
-            </Link>
-          </div>
-          <div className="col-lg-3 col-sm-6 news-card my-3 d-flex justify-content-center">
-            <Link className="inner" href="#" onClick={(e) => {
-              e.preventDefault(); // stop scroll-to-top
-              setIsOpen(true);       // open popup
-            }}>
-              <p className="card-title">Blogs</p>
-              <div className="img-fluid">
-                <Image
-                  src="/news-views/Money_Distributiuon.jpg"
-                  alt="Money_Distributiuon"
-                  className="img-fluid"
-                  height={400}
-                  width={350}
-                />
-              </div>
-              <div className="arrow">
-                <FontAwesomeIcon icon={faArrowCircleRight} />
-              </div>
-            </Link>
-          </div>
+            </div>
+
+          ))}
         </div>
-      </div>
+      </div >
       <CommonPopUpform show={isOpen} handleClose={setIsOpen} />
     </>
   );

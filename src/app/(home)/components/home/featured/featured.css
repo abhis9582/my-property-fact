@@ -43,7 +43,7 @@
 .slick-prev:before,
 .slick-next:before {
     font-size: 30px;
-    color: black;
+    color: #000;
     opacity: 0.8;
 }
 

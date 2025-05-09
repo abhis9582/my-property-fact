@@ -1,0 +1,194 @@
+"use client";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEnvelope, faSearch } from "@fortawesome/free-solid-svg-icons";
+import Image from "next/image";
+import "./home.css";
+import { useState } from "react";
+import FixedForm from "../fixedform";
+import { toast } from "react-toastify";
+import Link from "next/link";
+export default function ClientSideHomePage({ projectTypeList, cityList }) {
+    const [propertType, setPropertyType] = useState("");
+    const [propertyLocation, setPropertyLocation] = useState("");
+    const [budget, setBudget] = useState("");
+    const [showForm, setShowForm] = useState(false);
+    const [enquiryButtonName, setEnquiryButtonName] = useState("Enquiry");
+    const [resetTrigger, setResetTrigger] = useState(false);
+
+    //defining project range
+    const projectRange = ["Up to 1Cr*", "1-3 Cr*", "3-5 Cr*", "Above 5 Cr*"];
+
+    //Our facts
+    const ourFacts = [
+        {
+            id: 1,
+            numbers: "50+",
+            text: "Cities",
+        },
+        {
+            id: 2,
+            numbers: "80+",
+            text: "Builders",
+        },
+        {
+            id: 3,
+            numbers: "500+",
+            text: "Projects",
+        },
+        {
+            id: 4,
+            numbers: "10,000+",
+            text: "Units",
+        },
+    ];
+
+    //Handle opening fixed form
+    const openFixedForm = () => {
+        setShowForm((prev) => {
+            const newState = !prev;
+            setEnquiryButtonName(newState ? "Close" : "Enquiry");
+            if (!newState) {
+                setResetTrigger(true); // Toggle to trigger useEffect in FixedForm
+            } else {
+                setResetTrigger(false);
+            }
+            return newState;
+        });
+    };
+
+    //Hiding form after submission
+    const handleSuccess = () => {
+        toast.success("Form submitted successfully...");
+        setShowForm(false); // Hide form after successful submission
+        setEnquiryButtonName("Enquiry");
+    };
+
+    return (
+        <>
+            <div className={`${showForm ? "show" : ""} fixed-form-container`}>
+                <FixedForm resetTrigger={resetTrigger} onSuccess={handleSuccess} />
+            </div>
+            <div className="position-relative mb-5">
+                <div className="position-relative overflow-hidden" style={{ minHeight: "474px !important" }}>
+                    <div className="position-relative overflow-hidden">
+                        <picture className="position-relative">
+                            {/* Mobile Image */}
+                            <source srcSet="/banner-mobile.jpg" media="(max-width: 768px)" />
+                            {/* Tablet Image */}
+                            <source srcSet="/banner-tablet.jpg" media="(max-width: 1200px)" />
+                            {/* Default (Desktop) Image */}
+                            <Image
+                                src="/banner-desktop.jpg" // Fallback image
+                                alt="My property fact"
+                                style={{ objectFit: "cover" }} // "cover" looks better than "fill"
+                                className="banner-image position-relative"
+                                fill
+                                priority
+                            />
+                        </picture>
+                        <div className="overlay"></div>
+                    </div>
+                    <div className="overlay"></div>
+                </div>
+                <div className="bannercontainer">
+                    <h1 className="text-center text-light fw-bold">Find the best property</h1>
+                    <div className="d-flex flex-wrap align-item-center justify-content-center gap-4 my-4">
+                        {projectTypeList.map((item, index) => (
+                            <div key={`row-${index}`}>
+                                <Link href={`projects/${item.slugUrl}`} className="link-btn rounded-5 py-2 px-3 text-white home-property-types font-gotham-light fw-bold">
+                                    {item.projectTypeName}
+                                </Link>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="data-container">
+                        {ourFacts.map((item, index) => (
+                            <div
+                                key={`${item.text}-${index}`}
+                                className="data-container-child"
+                            >
+                                <section>
+                                    <h3 className="m-0">
+                                        <span>{item.numbers}</span>
+                                    </h3>
+                                    <p className="text-center ">{item.text}</p>
+                                </section>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <div className="position-absolute bottom-25 start-50 translate-middle w-100">
+                    <div className="container bg-light border rounded-4 custom-shadow">
+                        <form method="Get" action="projects" encType="multipart/form-data">
+                            <div className="d-flex flex-wrap flex-md-row flex-column p-4 gap-3 font-gotham-light">
+                                <div className="col">
+                                    <select
+                                        name="category"
+                                        id="category"
+                                        className="form-select"
+                                        title="category"
+                                        onChange={(e) => setPropertyType(e.target.value)}
+                                    >
+                                        <option value="">Property Type</option>
+                                        {projectTypeList.map((item, index) => (
+                                            <option
+                                                key={`${item.projectTypeName}-${index}`}
+                                                value={item.id}
+                                            >
+                                                {item.projectTypeName}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="col">
+                                    <select
+                                        name="location"
+                                        id="location"
+                                        className="form-select"
+                                        title="location"
+                                        onChange={(e) => setPropertyLocation(e.target.value)}
+                                    >
+                                        <option>Select Location</option>
+                                        {cityList.map((item, index) => (
+                                            <option key={`${item.name}-${index}`} value={item.name}>
+                                                {item.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="col">
+                                    <select
+                                        name="projectname"
+                                        id="projectname"
+                                        className="form-select"
+                                        title="projectname "
+                                        onChange={(e) => setBudget(e.target.value)}
+                                    >
+                                        <option value="">Price Range</option>
+                                        {projectRange.map((option, index) => (
+                                            <option key={`${option.id}-${index}`} value={option}>
+                                                {option}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className="d-flex align-items-center">
+                                    <button className="py-1 px-4 text-light m-0 border rounded-3 btn-background">
+                                        <FontAwesomeIcon icon={faSearch} width={20} />
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <button className="enquiry-sticky-btn btn-background" onClick={openFixedForm}>
+                    <span>
+                        <FontAwesomeIcon icon={faEnvelope} width={20} />
+                        <span>{enquiryButtonName}</span>
+                    </span>
+                </button>
+            </div>
+        </>
+    );
+}

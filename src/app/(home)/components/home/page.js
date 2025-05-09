@@ -1,254 +1,59 @@
-"use client";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faSearch } from "@fortawesome/free-solid-svg-icons";
-import Image from "next/image";
-import "./home.css";
-import DreamProject from "./dream-project/page";
+import ClientSideHomePage from "./homepage";
 import Featured from "./featured/page";
+import DreamProject from "./dream-project/page";
+import InsightNew from "./insight/page";
 import NewsViews from "./new-views/page";
 import SocialFeed from "./social-feed/page";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import InsightNew from "./insight/page";
-import FixedForm from "../fixedform";
-import { toast } from "react-toastify";
-import Link from "next/link";
-export default function HomePage() {
-  const [projectTypeList, setProjectTypeList] = useState([]);
-  const [imageSrc, setImageSrc] = useState("/banner-desktop.jpg");
-  const [cityList, setCityList] = useState([]);
-  const [propertType, setPropertyType] = useState("");
-  const [propertyLocation, setPropertyLocation] = useState("");
-  const [budget, setBudget] = useState("");
-  const [showForm, setShowForm] = useState(false);
-  const [enquiryButtonName, setEnquiryButtonName] = useState("Enquiry");
-  const [resetTrigger, setResetTrigger] = useState(false);
-  //defining project range
-  const projectRange = ["Up to 1Cr*", "1-3 Cr*", "3-5 Cr*", "Above 5 Cr*"];
-  //Our facts
-  const ourFacts = [
-    {
-      id: 1,
-      numbers: "50+",
-      text: "Cities",
-    },
-    {
-      id: 2,
-      numbers: "80+",
-      text: "Builders",
-    },
-    {
-      id: 3,
-      numbers: "500+",
-      text: "Projects",
-    },
-    {
-      id: 4,
-      numbers: "10,000+",
-      text: "Units",
-    },
-  ];
-  const fetchProjectTypes = async () => {
-    const projectTypesResponse = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`
-    );
-    if (projectTypesResponse) {
-      setProjectTypeList(projectTypesResponse.data);
-    }
-  };
-  //Fetching all city
-  const fetchAllCities = async () => {
-    const projectTypesResponse = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}city/all`
-    );
-    if (projectTypesResponse) {
-      setCityList(projectTypesResponse.data);
-    }
-  };
-  useEffect(() => {
-    fetchProjectTypes();
-    fetchAllCities();
-  }, []);
-  // handle search
-  const handleSearch = () => {
-    console.log(propertType, propertyLocation, budget);
-  };
-  useEffect(() => {
-    const updateImage = () => {
-      if (window.innerWidth <= 768) {
-        setImageSrc("/banner-mobile.jpg");
-      } else if (window.innerWidth <= 1200) {
-        setImageSrc("/banner-tablet.jpg");
-      } else {
-        setImageSrc("/banner-desktop.jpg");
-      }
-    };
-    updateImage(); // Set initial image
-    window.addEventListener("resize", updateImage);
-    return () => window.removeEventListener("resize", updateImage);
-  }, []);
 
-  //Handle opening fixed form
-  const openFixedForm = () => {
-    setShowForm((prev) => {
-      const newState = !prev;
-      setEnquiryButtonName(newState ? "Close" : "Enquiry");
-      if (!newState) {
-        setResetTrigger(true); // Toggle to trigger useEffect in FixedForm
-      } else {
-        setResetTrigger(false);
-      }
-      return newState;
-    });
-  };
-  //Hiding form after submission
-  const handleSuccess = () => {
-    toast.success("Form submitted successfully...");
-    setShowForm(false); // Hide form after successful submission
-    setEnquiryButtonName("Enquiry");
-  };
+export default async function HomePage() {
+
+  //calling apis
+  const [projectTypeListRes, cityListRes] = await Promise.all([
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`, { cache: "force-cache" }),
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}city/all`, { cache: "force-cache" }),
+  ]);
+
+  const projectTypeList = await projectTypeListRes.json();
+  const cityList = await cityListRes.json();
+
   return (
     <>
-      <div className={`${showForm ? "show" : ""} fixed-form-container`}>
-        <FixedForm resetTrigger={resetTrigger} onSuccess={handleSuccess} />
-      </div>
-      <div className="position-relative mb-5" style={{ minHeight: "474px" }}>
-        <div className="position-relative overflow-hidden">
-          <picture className="position-relative">
-            {/* Mobile Image */}
-            <source srcSet="/banner-mobile.jpg" media="(max-width: 768px)" />
-            {/* Tablet Image */}
-            <source srcSet="/banner-tablet.jpg" media="(max-width: 1200px)" />
-            {/* Default (Desktop) Image */}
-            <Image
-              src="/banner-desktop.jpg" // Fallback image
-              alt="My property fact"
-              style={{ objectFit: "cover" }} // "cover" looks better than "fill"
-              className="banner-image position-relative"
-              fill
-              priority
-            />
-          </picture>
-          <div className="overlay"></div>
-        </div>
-        <div className="bannercontainer">
-          <h1 className="text-center text-light fw-bold">Find the best property</h1>
-          <div className="d-flex flex-wrap align-item-center justify-content-center gap-4 my-4">
-            {projectTypeList.map((item, index) => (
-              <div key={`row-${index}`}>
-                <Link href={`projects/${item.slugUrl}`} className="link-btn rounded-5 py-2 px-3 text-white home-property-types font-gotham-light fw-bold">
-                  {item.projectTypeName}
-                </Link>
-              </div>
-            ))}
-          </div>
-          <div className="data-container">
-            {ourFacts.map((item, index) => (
-              <div
-                key={`${item.text}-${index}`}
-                className="data-container-child"
-              >
-                <section>
-                  <h3 className="m-0">
-                    <span>{item.numbers}</span>
-                  </h3>
-                  <p className="text-center ">{item.text}</p>
-                </section>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="position-absolute bottom-25 start-50 translate-middle w-100">
-          <div className="container bg-light border rounded-4 custom-shadow">
-            <form method="Get" action="projects" encType="multipart/form-data">
-              <div className="d-flex flex-wrap flex-md-row flex-column p-4 gap-3 font-gotham-light">
-                <div className="col">
-                  <select
-                    name="category"
-                    id="category"
-                    className="form-select"
-                    title="category"
-                    onChange={(e) => setPropertyType(e.target.value)}
-                  >
-                    <option value="">Property Type</option>
-                    {projectTypeList.map((item, index) => (
-                      <option
-                        key={`${item.projectTypeName}-${index}`}
-                        value={item.id}
-                      >
-                        {item.projectTypeName}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="col">
-                  <select
-                    name="location"
-                    id="location"
-                    className="form-select"
-                    title="location"
-                    onChange={(e) => setPropertyLocation(e.target.value)}
-                  >
-                    <option>Select Location</option>
-                    {cityList.map((item, index) => (
-                      <option key={`${item.name}-${index}`} value={item.name}>
-                        {item.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="col">
-                  <select
-                    name="projectname"
-                    id="projectname"
-                    className="form-select"
-                    title="projectname "
-                    onChange={(e) => setBudget(e.target.value)}
-                  >
-                    <option value="">Price Range</option>
-                    {projectRange.map((option, index) => (
-                      <option key={`${option.id}-${index}`} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+      {/* Pass props to client component if needed */}
+      <ClientSideHomePage projectTypeList={projectTypeList} cityList={cityList} />
 
-                <div className="d-flex align-items-center">
-                  <button className="py-1 px-4 text-light m-0 border rounded-3 btn-background" onClick={handleSearch}>
-                    <FontAwesomeIcon icon={faSearch} width={20} />
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-        <button className="enquiry-sticky-btn btn-background" onClick={openFixedForm}>
-          <span>
-            <FontAwesomeIcon icon={faEnvelope} width={20} />
-            <span>{enquiryButtonName}</span>
-          </span>
-        </button>
-      </div>
+      {/* Static Sections */}
       <div className="position-relative mt-5 top-space">
+
+        {/* insight section  */}
         <h2 className="text-center fw-bold pt-5">Insights</h2>
         <InsightNew />
-        {/* <Insight /> */}
-        <h2 className="fw-bold text-center pt-5">Featured Projects</h2>
+
+        {/* featured projects section  */}
+        <h2 className="fw-bold text-center pt-5 pb-3">Featured Projects</h2>
         <Featured />
+
+        {/* dream cities section  */}
         <h2 className="fw-bold text-center pt-5">
           Find your dream property in the city you are searching in
         </h2>
         <DreamProject />
-        <h2 className="fw-bold text-center pt-5">Explore Our Premier Residential Projects</h2>
+
+        {/* residential projects section  */}
+        <h2 className="fw-bold text-center pt-5 pb-3">Explore Our Premier Residential Projects</h2>
         <Featured type={"1"} url={"residential"} />
-        <h2 className="fw-bold text-center pt-5">Explore Top Commercial Spaces for Growth</h2>
+
+        {/* commertial projects section  */}
+        <h2 className="fw-bold text-center pt-5 pb-3">Explore Top Commercial Spaces for Growth</h2>
         <Featured type={"2"} url={"commercial"} />
+
+        {/* web story section  */}
         <h2 className="fw-bold text-center pt-5">Realty Updates</h2>
         <NewsViews />
+
+        {/* blogs section  */}
         <h2 className="fw-bold text-center pt-5">Investor Education </h2>
         <SocialFeed />
       </div>
     </>
-  );
+  )
 }

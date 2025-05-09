@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import CommonModal from "../common-model/common-model";
 import Image from "next/image";
+import ImageUrlPopup from "../common-model/imageiurl-popup";
 // 🔥 This prevents SSR errors
 const Editor = dynamic(() => import('../common-model/joe-editor'), {
     ssr: false,
@@ -29,6 +30,7 @@ export default function ManageBlogs() {
     const [blogId, setBlogId] = useState(0);
     const [confirmBox, setConfirmBox] = useState(false);
     const [previousBlogImage, setPreviousBlogImage] = useState(null);
+    const [urlPopUp, setUrlPopUp] = useState(false);
     //Definign input fields for blog form
 
     const inputFields = {
@@ -151,6 +153,11 @@ export default function ManageBlogs() {
         setBlogId(0);
     }
 
+    //handling opening of image urls popup
+    const openImageUrlPopup = () => {
+        setUrlPopUp(true);
+    }
+
     //Fetching all blogs categories
     const fetchBlogCategory = async () => {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}blog-category/get-all`);
@@ -182,7 +189,6 @@ export default function ManageBlogs() {
                     width={100}
                     height={50}
                     style={{ borderRadius: '5px' }}
-                    objectFit="cover"
                     unoptimized
                 />
             ),
@@ -323,6 +329,7 @@ export default function ManageBlogs() {
                                         className="img-fluid rounded shadow-sm mb-4"
                                         width={300}
                                         height={100}
+                                        unoptimized
                                     />
                                 )}
                                 <Form.Control
@@ -336,7 +343,7 @@ export default function ManageBlogs() {
                             </Form.Group>
                         </Row>
                         <Row className="mb-3">
-                            <Form.Group controlId="slugUrl">
+                            <Form.Group as={Col} md="6" controlId="slugUrl">
                                 <Form.Label>Slug Url</Form.Label>
                                 <Form.Control
                                     type="text"
@@ -347,6 +354,11 @@ export default function ManageBlogs() {
                                     required
                                 />
                                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group as={Col} md="6" controlId="blogImage">
+                                <Form.Label>Blog Image</Form.Label>
+                                <br />
+                                <Button onClick={openImageUrlPopup}>Open Image urls</Button>
                             </Form.Group>
                         </Row>
                         <Row className="mb-3">
@@ -383,6 +395,7 @@ export default function ManageBlogs() {
                 api={`${process.env.NEXT_PUBLIC_API_URL}blog/delete/${blogId}`}
                 fetchAllHeadersList={fetchBlogList}
             />
+            <ImageUrlPopup confirmBox={urlPopUp} setConfirmBox={setUrlPopUp} />
         </>
     )
 }

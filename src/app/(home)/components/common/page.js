@@ -36,7 +36,7 @@ export default function PropertyContainer(props) {
     <>
       <Link href={`/${props.data.slugURL}`} legacyBehavior>
         <a
-          className="rounded-4 custom-shadow d-flex flex-column justify-content-between bg-light h-100 text-decoration-none text-dark project-container overflow-hidden position-relative"
+          className="rounded-4 custom-shadow d-flex flex-column justify-content-between bg-light text-decoration-none text-dark project-container overflow-hidden position-relative"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -51,16 +51,15 @@ export default function PropertyContainer(props) {
             />
           </div>
 
-          <div className="mt-2 px-2 d-flex justify-content-between align-items-center mt-3">
-            <h5 className="fw-bold mb-0">{props.data.projectName}</h5>
-            <h5 className="fw-bold text-success mb-0">{generatePrice(props.data.projectPrice)}*</h5>
+          <div className="mt-3 ms-3">
+            <h5 className="mb-2">{props.data.projectName}</h5>
+            <h5 className="text-success mb-0">{generatePrice(props.data.projectPrice)}*</h5>
           </div>
 
-          <div className="px-2 pb-3 text-truncate small fw-medium mt-2 d-flex align-items-center">
+          <div className="ms-3 pb-3 text-truncate small fw-medium mt-2 d-flex align-items-center">
             <FontAwesomeIcon icon={faMapMarker} className="me-2 text-success" />
             <p className="p-0 m-0 fw-bold">{props.data.projectAddress}</p>
           </div>
-          {/* <p className="fs-5 fw-bold position-absolute z-10 top-0 bg-success px-4">hello {props.data.propertyType}</p> */}
         </a>
       </Link>
     </>

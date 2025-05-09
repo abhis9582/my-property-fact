@@ -160,7 +160,6 @@ export default function ManageBanners() {
           width={50}
           height={50}
           style={{ borderRadius: '5px' }}
-          objectFit="cover"
           unoptimized
         />
       ),
