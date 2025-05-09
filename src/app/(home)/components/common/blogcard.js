@@ -2,6 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function BlogCard({ blog }) {
+
+    const truncateWords = (text, wordLimit) => {
+        const words = text.trim().split(/\s+/);
+        if (words.length <= wordLimit) return text;
+        return words.slice(0, wordLimit).join(" ") + " ...";
+    };
+
     return (
         <>
             <Link href={`/blog/${blog.slugUrl}`}
@@ -18,13 +25,17 @@ export default function BlogCard({ blog }) {
                     className="card-img-top"
                     unoptimized={true}
                 />
-                <div className="card-body">
+                <div className="card-body d-flex flex-column">
                     <h4 className="card-title fw-bold">{blog.blogTitle.replace(/\u00A0/g, ' ')}</h4>
-                    <p className="card-text text-muted small">
-                        {blog.blogMetaDescription || 'Click below to continue reading...'}
-                    </p>
-                    <button className="btn btn-background text-white btn-sm mt-2">
-                        Continue Reading
+
+                    <div className="flex-grow-1 mb-3">
+                        <p className="card-text text-muted small">
+                            {truncateWords(blog.blogMetaDescription || 'Click below to continue reading...', 50)}
+                        </p>
+                    </div>
+
+                    <button className="btn btn-background text-white btn-sm mt-auto w-50">
+                        Continue Reading...
                     </button>
                 </div>
             </Link>

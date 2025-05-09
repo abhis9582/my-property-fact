@@ -13,9 +13,9 @@ export default function InsightNew() {
       id: 1,
       src: "/static/Insight_MPF_1.png",
       alt: "price-trends-img",
-      heading: "Property rates & trends",
+      heading: "Property Growth Tracker",
       sub_heading:
-        "market rates, data analytics & registred transactions of top project & localites",
+        "Monitor property value, rental yields, neighbourhood upgrades; visual graphs track appreciation, send alerts, suggest reinvestment or exit timing decisions smartly.",
       color: "light-green",
       button_color: "dark-green",
       href: "/property-rate-and-trend",
@@ -24,9 +24,9 @@ export default function InsightNew() {
       id: 2,
       src: "/static/Insight_MPF_2.png",
       alt: "property-rates-heatmap-img",
-      heading: "Property Rates Heatmap",
+      heading: "EMI Calculator",
       sub_heading:
-        "market rates, data analytics & registred transactions of top project & localites",
+        "Compute monthly EMI, total interest, lifetime cost instantly; adjust loan amount, tenure, rate to secure stress‑free financing decisions for buyers.",
       color: "light-pink",
       button_color: "dark-pink",
       href: "/emi-calculator",
@@ -35,9 +35,9 @@ export default function InsightNew() {
       id: 3,
       src: "/static/Insight_MPF_3.png",
       alt: "price-trends-img",
-      heading: "Valuation Report",
+      heading: "Market Analysis",
       sub_heading:
-        "Get an instant & comprehensive Valuation Report of any property - downloadable in PDF",
+        "We deliver price trends, policy updates, infrastructure news, enabling investors, developers, and lenders to recalibrate market strategies regularly.",
       color: "light-yellow",
       button_color: "dark-yellow",
       href: "#",
@@ -46,8 +46,8 @@ export default function InsightNew() {
       id: 4,
       src: "/static/Insight_MPF_4.png",
       alt: "price-trends-img",
-      heading: "Property overviews & Ratings",
-      sub_heading: "Don't just take our word for it; see what other residents have to say about us",
+      heading: "LOCATE Score",
+      sub_heading: "This converts economy, projects, connectivity, amenities, trends, supply data into one 1000‑point LOCATE rating guiding smart investments with clarity.",
       color: "light-blue",
       button_color: "dark-blue",
       href: "#",
@@ -77,14 +77,20 @@ export default function InsightNew() {
               >
                 <div className="text-dark bg-light rounded-4 overflow-hidden my-3 transition transform hover-scale custom-shadow insight-card">
                   <div className="p-3">
-                    <p>{i.heading}</p>
+                    <h5 className="text-golden">{i.heading}</h5>
                     <p>{i.sub_heading}</p>
                     <div className="d-flex justify-content-center">
-                      <Image src={i.src} alt={i.alt} width={200} height={200} className="img-fluid mb-2" />
+                      <Image
+                        src={i.src}
+                        alt={i.alt}
+                        width={250}
+                        height={120}
+                      />
                     </div>
                   </div>
                   <div className={`bg-light p-3 d-flex justify-content-center`}>
-                    <button className="fw-bold text-light btn-background d-flex align-items-center rounded-4 p-2"><p className="text-white mx-5 p-0 m-0">Explore Now </p>
+                    <button className="fw-bold text-light btn-background d-flex align-items-center rounded-4 p-2 border-0">
+                      <p className="text-white mx-5 p-0 m-0">Explore Now </p>
                       <FontAwesomeIcon color="white" icon={faArrowRight} width={15} />
                     </button>
                   </div>

@@ -87,7 +87,7 @@ export default function Featured({ type = null, url= "" }) {
           <>{featuredProperties?.length > 0 && (
             <Slider {...settings}>
               {featuredProperties.map((item) => (
-                <div key={item.id} className="px-2">
+                <div key={item.id} className="px-2 pb-3">
                   <PropertyContainer data={item} />
                 </div>
               ))}
@@ -96,7 +96,7 @@ export default function Featured({ type = null, url= "" }) {
         }
 
         <div className="text-center pt-3">
-          <Link className="btn btn-success btn-background" href={`/projects/${url}`}>
+          <Link className="btn btn-success btn-background border-0" href={`/projects/${url}`}>
             View all
           </Link>
         </div>

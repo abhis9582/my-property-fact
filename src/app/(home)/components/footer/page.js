@@ -154,26 +154,26 @@ export default function Footer() {
             <div className="row">
               <div className="col-md-3">
                 <ul>
-                  <p className="text-white">Apartments in India</p>
+                  <p className="text-golden">Apartments in India</p>
                   <CityList cityList={cityList} />
                 </ul>
               </div>
               <div className="col-md-3">
                 <ul>
-                  <p className="text-white">New Projects in India</p>
+                  <p className="text-golden">New Projects in India</p>
                   <CityList cityList={cityList} />
                 </ul>
               </div>
               <div className="col-md-3">
                 <ul>
-                  <p className="text-white">Flats in India</p>
+                  <p className="text-golden">Flats in India</p>
                   <CityList cityList={cityList} />
                 </ul>
               </div>
 
               <div className="col-md-3">
                 <ul>
-                  <p className="text-white">Commercial Property in India</p>
+                  <p className="text-golden">Commercial Property in India</p>
                   <CityList cityList={cityList} />
                 </ul>
               </div>
@@ -182,7 +182,7 @@ export default function Footer() {
           <div className="container pt-5">
             <div className="row">
               <div className="col-6 col-md-3 col-sm-6">
-                <p className="text-white">Projects</p>
+                <p className="text-golden">Projects</p>
                 <ul className="p-0">
                   {projectTypes.map((item, index) => (
                     <li key={`${item.name}-${index}`}>
@@ -194,7 +194,7 @@ export default function Footer() {
                 </ul>
               </div>
               <div className="col-6 col-md-3 col-sm-6">
-                <p className="text-white">Company</p>
+                <p className="text-golden">Company</p>
                 <ul className="p-0">
                   {companyArr.map((item, index) => (
                     <li key={`${item.id}-${index}`}>
@@ -204,7 +204,7 @@ export default function Footer() {
                 </ul>
               </div>
               <div className="col-6 col-md-3 col-sm-6">
-                <p className="text-white">Media</p>
+                <p className="text-golden">Media</p>
                 <ul className="p-0">
                   {mediaArr.map((item, index) => (
                     <li key={`${item.id}-${index}`}>
@@ -215,26 +215,26 @@ export default function Footer() {
               </div>
               <div className="col-6 col-md-3 col-sm-6">
                 <div>
-                  <p className="text-white">Get Social</p>
+                  <p className="text-golden">Get Social</p>
                   <ul className="d-flex gap-3 p-0">
                     <li className="">
-                      <Link className="fs-4 text-white hover-green" href="https://www.facebook.com/mypropertyfact1/" target="_blank" title="facebook">
+                      <Link className="fs-4 text-golden hover-green" href="https://www.facebook.com/mypropertyfact1/" target="_blank" title="facebook">
                         <FontAwesomeIcon icon={faFacebook} />
                       </Link>
                     </li>
                     <li className="">
-                      <Link className="fs-4 text-white" href="https://www.instagram.com/my.property.fact/" target="_blank" title="instagram">
+                      <Link className="fs-4 text-golden" href="https://www.instagram.com/my.property.fact/" target="_blank" title="instagram">
                         <FontAwesomeIcon icon={faInstagram} />
                       </Link>
                     </li>
                     <li className="">
-                      <Link className="fs-4 text-white" href="https://www.linkedin.com/company/my-property-fact/" target="_blank" title="linkedin">
+                      <Link className="fs-4 text-golden" href="https://www.linkedin.com/company/my-property-fact/" target="_blank" title="linkedin">
                         <FontAwesomeIcon icon={faLinkedin} />
                       </Link>
                     </li>
                     <li className="">
-                      <Link className="fs-4 text-white" href="https://www.youtube.com/@my.propertyfact/" target="_blank" title="youtube">
-                        <FontAwesomeIcon icon={faYoutube} />
+                      <Link className="fs-4 text-golden" href="https://www.youtube.com/@my.propertyfact/" target="_blank" title="youtube">
+                        <FontAwesomeIcon icon={faYoutube}/>
                       </Link>
                     </li>
                   </ul>
