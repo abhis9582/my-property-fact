@@ -1,11 +1,17 @@
 "use client";
+import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 // import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Paper } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import axios from "axios";
 // import { Paper } from "@mui/material";
 // import { DataGrid } from "@mui/x-data-grid";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Button, Form, Modal } from "react-bootstrap";
+import { toast } from "react-toastify";
 // import { Button, Form, Modal } from "react-bootstrap";
 // import CommonModal from "./common-model";
 
@@ -14,46 +20,94 @@ export default function ImageUrlPopup({ confirmBox, setConfirmBox }) {
     const [title, setTitle] = useState(null);
     const [buttonName, setButtonName] = useState("Submit");
     const [showLoading, setShowLoading] = useState(false);
+    const [validated, setValidated] = useState(false);
+    const [blogContentImageList, setBlogContentImageList] = useState([]);
+    const [formData, setFormData] = useState({
+        file: null,
+        altTag: '',
+        imageWidth: '',
+        imageHeight: ''
+    });
 
     //Handle setting input fields values
     const handleChange = (e) => {
-        const { name, value, files, type } = e.target;
-
-        if (type === "file") {
-            setFormData((prevState) => ({
-                ...prevState,
-                [name]: files[0],
-            }));
+        const { name, value, type, files } = e.target;
+        if (type === 'file') {
+            setFormData({
+                ...formData,
+                [name]: files[0] // store the File object
+            });
         } else {
-            setFormData((prevState) => ({
-                ...prevState,
-                [name]: value,
-            }));
+            setFormData({
+                ...formData,
+                [name]: value
+            });
         }
     };
 
     //handling form submit
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const form = e.currentTarget;
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const form = event.currentTarget;
+
         if (form.checkValidity() === false) {
-            e.stopPropagation();
-            setValidated(true);
-            return;
+            event.stopPropagation();
+        } else {
+            try {
+                const formDataToSend = new FormData();
+                formDataToSend.append("file", formData.file);
+                formDataToSend.append("altTag", formData.altTag);
+                formDataToSend.append("imageWidth", formData.imageWidth);
+                formDataToSend.append("imageHeight", formData.imageHeight);
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}blog-image/post`, formDataToSend, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
+                if (response.data.isSuccess === 1) {
+                    setShowModal(false);
+                    toast.success(response.data.message);
+                    fetchList();
+                } else {
+                    toast.error(response.data.message);
+                }
+            } catch (error) {
+                toast.error(error);
+            }
         }
-        if (form.checkValidity() === true) {
-        }
+        setValidated(true);
+    };
+
+    //Handling opening of form model
+    const openAddModel = () => {
+        setShowModal(true);
+        setTitle("Add Image");
+        setButtonName("Submit");
+        setValidated(false);
     }
+    //Fetching content image list 
+    const fetchList = async () => {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}blog-image/get`);
+        const res = response.data.map((item, index) => ({
+            ...item,
+            index: index + 1,
+            new_url: `${process.env.NEXT_PUBLIC_IMAGE_URL}blog/content-image/${item.image}`
+        }));
+        setBlogContentImageList(res);
+    }
+    useEffect(() => {
+        fetchList();
+    }, []);
 
     //Defining table columns
     const columns = [
-        { field: "index", headerName: "S.no", width: 50 },
+        { field: "index", headerName: "S.no", width: 100 },
         {
-            field: "blogImage", headerName: "Blog Image", width: 120,
+            field: "image", headerName: "Image", width: 120,
             renderCell: (params) => (
                 <Image
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}blog/${params.row.blogImage}`}
-                    alt="Project"
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}blog/content-image/${params.row.image}`}
+                    alt={`${params.row.altTag}`}
                     width={100}
                     height={50}
                     style={{ borderRadius: '5px' }}
@@ -62,19 +116,17 @@ export default function ImageUrlPopup({ confirmBox, setConfirmBox }) {
             ),
         },
         {
-            field: "blogKeywords",
-            headerName: "Keywords",
-            width: 200,
+            field: "new_url",
+            headerName: "URL",
+            width: 500,
         },
-        { field: "blogTitle", headerName: "Title", width: 200 },
-        { field: "blogMetaDescription", headerName: "Meta Description", width: 200 },
-        { field: "blogDescription", headerName: "Description", width: 200 },
-        { field: "slugUrl", headerName: "Url", width: 200 },
-        { field: "blogCategory", headerName: "Category", width: 200 },
+        { field: "altTag", headerName: "ALT", width: 150 },
+        { field: "imageWidth", headerName: "Width(Px)", width: 100 },
+        { field: "imageHeight", headerName: "Height (Px)", width: 100 },
         {
             field: "action",
             headerName: "Action",
-            width: 200,
+            width: 100,
             renderCell: (params) => (
                 <div>
                     <FontAwesomeIcon
@@ -96,85 +148,108 @@ export default function ImageUrlPopup({ confirmBox, setConfirmBox }) {
 
     const paginationModel = { page: 0, pageSize: 10 };
     return (
-        <></>
-        // <Modal show={confirmBox} onHide={() => setConfirmBox(false)} centered>
-        //     <Modal.Header closeButton>
-        //         <Modal.Title>Copy image url to add in blog</Modal.Title>
-        //     </Modal.Header>
-        //     <div>
-        //         <div className="d-flex justify-content-between mt-3">
-        //             <p className="h1 ">{pageObject.pageHeading}</p>
-        //             <Button className="mx-3 btn btn-success" onClick={() => openAddModel()}>
-        //                 {pageObject.headingbuttonName}
-        //             </Button>
-        //         </div>
-        //         <div className="table-container mt-5">
-        //             <Paper sx={{ height: 550, width: "100%" }}>
-        //                 <DataGrid
-        //                     rows={allHeadersList}
-        //                     columns={columns}
-        //                     initialState={{ pagination: { paginationModel } }}
-        //                     pageSizeOptions={[10, 15, 20, 50]}
-        //                     checkboxSelection
-        //                     sx={{
-        //                         border: 0,
-        //                         "& .MuiDataGrid-columnHeader": {
-        //                             fontWeight: "bold", // Make headings bold
-        //                             fontSize: "16px", // Optional: Adjust size
-        //                             backgroundColor: "#68ac78", // Optional: Light background
-        //                         },
-        //                     }}
-        //                 />
-        //             </Paper>
-        //         </div>
-        //         {/* Modal for adding a new header */}
-        //         <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        //             <Modal.Header closeButton>
-        //                 <Modal.Title>{title}</Modal.Title>
-        //             </Modal.Header>
-        //             <Modal.Body>
-        //                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
-        //                     <Form.Group className="mb-3" controlId="headerName">
-        //                         <Form.Label>Category Display Name</Form.Label>
-        //                         <Form.Control
-        //                             type="text"
-        //                             placeholder="Enter category display name"
-        //                             name="categoryDisplayName"
-        //                             onChange={(e) => handleChange(e)}
-        //                             value={formData.categoryDisplayName || ""}
-        //                             required
-        //                         />
-        //                         <Form.Control.Feedback type="invalid">
-        //                             Category Display name is required
-        //                         </Form.Control.Feedback>
-        //                     </Form.Group>
-        //                     <Form.Group className="mb-3" controlId="subHeaderName">
-        //                         <Form.Label>Category</Form.Label>
-        //                         <Form.Control
-        //                             type="text"
-        //                             placeholder="Enter category"
-        //                             name="category"
-        //                             onChange={(e) => handleChange(e)}
-        //                             value={formData.category || ""}
-        //                         />
-        //                         <Form.Control.Feedback type="invalid">
-        //                             Category is required
-        //                         </Form.Control.Feedback>
-        //                     </Form.Group>
-        //                     <Button className="btn btn-success" type="submit" disabled={showLoading}>
-        //                         {buttonName} <LoadingSpinner show={showLoading} />
-        //                     </Button>
-        //                 </Form>
-        //             </Modal.Body>
-        //         </Modal>
-        //         {/* Pass the necessary props to CommonModal */}
-        //         <CommonModal
-        //             confirmBox={confirmBox}
-        //             setConfirmBox={setConfirmBox}
-        //             api={api}
-        //             fetchAllHeadersList={fetchAllHeadersList}
-        //         />
-        //     </div>
-        // </Modal>
+        <Modal size="xl" show={confirmBox} onHide={() => setConfirmBox(false)} centered>
+            <Modal.Header closeButton>
+                <Modal.Title>Content Image Container</Modal.Title>
+                <Button className="mx-3 btn btn-success" onClick={() => openAddModel()}>
+                    + Add New
+                </Button>
+            </Modal.Header>
+            <div>
+                <div className="table-container">
+                    <Paper sx={{ height: 550, width: "100%" }}>
+                        <DataGrid
+                            rows={blogContentImageList}
+                            columns={columns}
+                            initialState={{ pagination: { paginationModel } }}
+                            pageSizeOptions={[10, 15, 20, 50]}
+                            checkboxSelection
+                            sx={{
+                                border: 0,
+                                "& .MuiDataGrid-columnHeader": {
+                                    fontWeight: "bold", // Make headings bold
+                                    fontSize: "16px", // Optional: Adjust size
+                                    backgroundColor: "#68ac78", // Optional: Light background
+                                },
+                            }}
+                        />
+                    </Paper>
+                </div>
+                {/* Modal for adding image url */}
+                <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+                    <Modal.Header closeButton>
+                        <Modal.Title>{title}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                            <Form.Group className="mb-3" controlId="blog_content_image">
+                                {/* <Form.Label>Blog content image</Form.Label> */}
+                                <Form.Control
+                                    type="file"
+                                    name="file"
+                                    onChange={(e) => handleChange(e)}
+                                    required
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    Image name is required !
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="blog_content_alt_tag">
+                                {/* <Form.Label>Alt tag</Form.Label> */}
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Enter alt tag"
+                                    name="altTag"
+                                    onChange={(e) => handleChange(e)}
+                                    value={formData.altTag || ""}
+                                    required
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    Alt tag is required !
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="blog_content_image_width">
+                                {/* <Form.Label>Image width</Form.Label> */}
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Enter image width"
+                                    name="imageWidth"
+                                    onChange={(e) => handleChange(e)}
+                                    value={formData.imageWidth || ""}
+                                    required
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    Width is required !
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="blog_content_image_height">
+                                {/* <Form.Label>Image height</Form.Label> */}
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Enter image height"
+                                    name="imageHeight"
+                                    onChange={(e) => handleChange(e)}
+                                    value={formData.imageHeight || ""}
+                                    required
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    Height is required !
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                            <Button className="btn btn-success" type="submit" disabled={showLoading}>
+                                {buttonName} <LoadingSpinner show={showLoading} />
+                            </Button>
+                        </Form>
+                    </Modal.Body>
+                </Modal>
+                {/* Pass the necessary props to CommonModal */}
+                {/* <CommonModal
+                    confirmBox={confirmBox}
+                    setConfirmBox={setConfirmBox}
+                    api={api}
+                    fetchAllHeadersList={fetchAllHeadersList}
+                /> */}
+            </div>
+        </Modal>
     )
 }
