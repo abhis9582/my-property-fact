@@ -69,26 +69,27 @@ export default function ClientSideHomePage({ projectTypeList, cityList }) {
                 <FixedForm resetTrigger={resetTrigger} onSuccess={handleSuccess} />
             </div>
             <div className="position-relative mb-5">
-                <div className="position-relative overflow-hidden" style={{ minHeight: "474px !important" }}>
+                <div className="overflow-hidden" style={{ minHeight: "474px !important" }}>
                     <div className="position-relative overflow-hidden">
                         <picture className="position-relative">
                             {/* Mobile Image */}
-                            <source srcSet="/banner-mobile.jpg" media="(max-width: 768px)" />
+                            <source srcSet="/mpf-tablet-banner.jpg" media="(max-width: 767px)" />
+
                             {/* Tablet Image */}
-                            <source srcSet="/banner-tablet.jpg" media="(max-width: 1200px)" />
+                            <source srcSet="/mpf-tablet-banner.jpg" media="(max-width: 1199px)" />
+
                             {/* Default (Desktop) Image */}
                             <Image
-                                src="/banner-desktop.jpg" // Fallback image
+                                src="/mpf-banner.jpg"
                                 alt="My property fact"
-                                style={{ objectFit: "cover" }} // "cover" looks better than "fill"
-                                className="banner-image position-relative"
                                 fill
                                 priority
+                                style={{ objectFit: "cover" }}
+                                className="banner-image position-relative"
                             />
                         </picture>
-                        <div className="overlay"></div>
                     </div>
-                    <div className="overlay"></div>
+                    {/* <div className="overlay"></div> */}
                 </div>
                 <div className="bannercontainer">
                     <h1 className="text-center text-light fw-bold">Find the best property</h1>
@@ -117,7 +118,7 @@ export default function ClientSideHomePage({ projectTypeList, cityList }) {
                         ))}
                     </div>
                 </div>
-                <div className="position-absolute bottom-25 start-50 translate-middle w-100">
+                <div className="position-absolute bottom-25 start-50 translate-middle w-100 home-search-container">
                     <div className="container bg-light border rounded-4 custom-shadow">
                         <form method="Get" action="projects" encType="multipart/form-data">
                             <div className="d-flex flex-wrap flex-md-row flex-column p-4 gap-3 font-gotham-light">

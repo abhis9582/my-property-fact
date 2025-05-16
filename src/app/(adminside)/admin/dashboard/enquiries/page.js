@@ -17,7 +17,15 @@ export default function Enquiries() {
             const list = response.data;
             const res = list.map((item, index) => ({
                 ...item,
-                index: index + 1
+                index: index + 1,
+                date: new Date(item.createdAt).toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'short', 
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                })
             }));
             setEnquiryList(res);
         };
@@ -53,7 +61,12 @@ export default function Enquiries() {
         {
             field: "message",
             headerName: "Message",
-            width: 400,
+            width: 200,
+        },
+        {
+            field: "date",
+            headerName: "Data & Time",
+            width: 200,
         },
         {
             field: "action",
@@ -84,7 +97,7 @@ export default function Enquiries() {
                 <p className="h1">Manage Enquiries</p>
                 <div className="d-flex gap-3">
                     <Button className="btn btn-warning fw-bold" onClick={exportToExcel}>
-                        <FontAwesomeIcon width={15} className="mx-2" icon={faFileExcel}/>
+                        <FontAwesomeIcon width={15} className="mx-2" icon={faFileExcel} />
                         Export to excel
                     </Button>
                     <Button className="btn btn-success">

@@ -172,10 +172,10 @@ export default function SideNav() {
             Manage Enquiries
           </Link>
         </li>
-        <li className={activeDropdown === "dropdown3" ? "active" : ""}>
+        <li className={activeDropdown === "dropdown4" ? "active" : ""}>
           <Link
             href="#"
-            onClick={() => toggleDropdown("dropdown3")}
+            onClick={() => toggleDropdown("dropdown4")}
             data-toggle="collapse"
             aria-expanded="false"
             className="dropdown-toggle"
@@ -183,7 +183,7 @@ export default function SideNav() {
             Blog management
           </Link>
           <ul
-            className={`collapse list-unstyled ${activeDropdown === "dropdown3" ? "show" : ""
+            className={`collapse list-unstyled ${activeDropdown === "dropdown4" ? "show" : ""
               }`}
           >
             <li>

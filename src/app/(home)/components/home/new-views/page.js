@@ -3,6 +3,7 @@ import "./newviews.css";
 import Image from "next/image";
 import { useState } from "react";
 import CommonPopUpform from "../../common/popupform";
+import Link from "next/link";
 export default function NewsViews() {
   const [isOpen, setIsOpen] = useState(false);
   //defining arry of datas
@@ -46,6 +47,8 @@ export default function NewsViews() {
         <div className="row">
           {dataArray.map((item, index) => (
             <div key={`${item.id}-${index}`} className="col-12 col-sm-6 col-md-4 col-lg-3 mt-3">
+              
+                {/* <Link href="http://localhost:8005/stories/my-story" className="flip-card"> */}
               <div className="flip-card">
                 <div className="flip-card-inner">
                   {/* Front */}
@@ -68,6 +71,7 @@ export default function NewsViews() {
                   </div>
                 </div>
               </div>
+              {/* </Link> */}
             </div>
 
           ))}

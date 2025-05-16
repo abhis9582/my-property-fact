@@ -154,27 +154,23 @@ export default function Footer() {
             <div className="row">
               <div className="col-md-3">
                 <ul>
-                  <p className="text-golden">Apartments in India</p>
-                  <CityList cityList={cityList} />
+                  <CityList prefix={"Apartments in "} cityList={cityList} />
                 </ul>
               </div>
               <div className="col-md-3">
                 <ul>
-                  <p className="text-golden">New Projects in India</p>
-                  <CityList cityList={cityList} />
+                  <CityList prefix={"New Projects in "} cityList={cityList} />
                 </ul>
               </div>
               <div className="col-md-3">
                 <ul>
-                  <p className="text-golden">Flats in India</p>
-                  <CityList cityList={cityList} />
+                  <CityList prefix={"Flats in "} cityList={cityList} />
                 </ul>
               </div>
 
               <div className="col-md-3">
                 <ul>
-                  <p className="text-golden">Commercial Property in India</p>
-                  <CityList cityList={cityList} />
+                  <CityList prefix={"Commercial Property in "} cityList={cityList} />
                 </ul>
               </div>
             </div>
