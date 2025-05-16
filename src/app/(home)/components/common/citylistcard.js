@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-const CityList = ({ cityList }) => {
+const CityList = ({ cityList, prefix }) => {
   const [showAll, setShowAll] = useState(false);
   const visibleCities = showAll ? cityList : cityList.slice(0, 5);
 
   return (
     <ul>
+      <p className="text-golden">{prefix} India</p>
       {visibleCities.map((item, index) => (
         <li key={`${item.name}-${index}`}>
           <Link className="footer-text" href={`/city/${item.slugUrl}`}>
-            Apartments in {item.name}
+            {prefix}{item.name}
           </Link>
         </li>
       ))}
