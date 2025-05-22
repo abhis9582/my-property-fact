@@ -67,3 +67,10 @@
 }
 
 /* All media queries for header banner ends*/
+
+.blog-date {
+    font-size: 14px;
+    color: #555;
+    margin-top: 10px;
+    font-style: italic !important;
+}

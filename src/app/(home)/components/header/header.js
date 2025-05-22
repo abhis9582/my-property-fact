@@ -2,13 +2,9 @@
 import Link from "next/link";
 import "./header.css";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Image from "next/image";
 import { usePathname } from 'next/navigation';
-const Header = () => {
-  const [cityList, setCityList] = useState([]);
-  const [builderList, setBuilderList] = useState([]);
-  const [projectTypes, setProjectTypes] = useState([]);
+const Header = ({cityList, projectTypes, builderList}) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const pathname = usePathname();
 
@@ -19,31 +15,6 @@ const Header = () => {
   const isBlogTypeRoute = pathname.startsWith('/blog');
   //Defining scroll variable
   const [isScrolled, setIsScrolled] = useState(false);
-
-  const fetchData = async () => {
-    const cityResponse = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}city/all`
-    );
-    if (cityResponse) {
-      setCityList(cityResponse.data);
-    }
-  };
-  const fetchBuilders = async () => {
-    const builderResponse = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}builders/get-all`
-    );
-    if (builderResponse) {
-      setBuilderList(builderResponse.data.builders);
-    }
-  };
-  const fetchProjectTypes = async () => {
-    const projectTypesResponse = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`
-    );
-    if (projectTypesResponse) {
-      setProjectTypes(projectTypesResponse.data);
-    }
-  };
   const openMenuMobile = (dropdown) => {
     setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
   };
@@ -62,11 +33,7 @@ const Header = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  useEffect(() => {
-    fetchData();
-    fetchBuilders();
-    fetchProjectTypes();
-  }, []);
+  
   const openMenu = () => {
     const menuButtons = document.getElementsByClassName("menuBtn");
     const menu = document.getElementById("mbdiv");

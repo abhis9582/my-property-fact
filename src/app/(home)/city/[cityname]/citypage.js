@@ -4,31 +4,10 @@ import "../../components/home/home.css";
 import Link from "next/link";
 import PropertyContainer from "@/app/(home)/components/common/page";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import CommonHeaderBanner from "../../components/common/commonheaderbanner";
 import CommonBreadCrum from "../../components/common/breadcrum";
 import { LoadingSpinner } from "../../contact-us/page";
-export default function CityPage({ city }) {
-  const [propertyList, setPropertyList] = useState([]);
-  const [cityData, setCityData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const fetchCityData = async () => {
-    const cityData = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}city/get/${city}`
-    );
-    setCityData(cityData.data);
-  };
-  const fetchProperties = async () => {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}city/${city}`
-    );
-    setPropertyList(response.data);
-    setLoading(false);
-  };
-  useEffect(() => {
-    fetchCityData();
-    fetchProperties();
-  }, []);
+export default function CityPage({ cityData, projectsList }) {
   return (
     <>
       <div className="p-0">
@@ -50,14 +29,14 @@ export default function CityPage({ city }) {
             </Link>
           </div>
         </div>
-        {loading ?
+        {false ?
           <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "250px" }}>
             <LoadingSpinner show={loading} />
           </div>
           :
           <div className="container my-3">
             <div className="row g-3">
-              {propertyList.length > 0 ? propertyList.map((item) => (
+              {projectsList.length > 0 ? projectsList.map((item) => (
                 <div key={item.id} className="col-12 col-sm-6 col-md-4">
                   <PropertyContainer data={item} />
                 </div>

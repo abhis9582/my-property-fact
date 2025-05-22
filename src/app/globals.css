@@ -144,8 +144,21 @@ ul {
 }
 
 .modal-header .btn-close {
-    filter: invert(1); /* Makes it white, or you can customize using background */
-    background-color: #fff; /* Optional: for background color */
+    filter: invert(1);
+    /* Makes it white, or you can customize using background */
+    background-color: #fff;
+    /* Optional: for background color */
     border-radius: 50%;
     padding: 0.5rem;
+}
+
+.accordion-button:not(.collapsed) {
+    background: var(--bg-with-gradient) !important;
+    color: #ffffff;
+}
+
+.accordion-item {
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+    margin-bottom: 10px;
 }

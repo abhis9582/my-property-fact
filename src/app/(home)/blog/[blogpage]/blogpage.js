@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import "./../media.css";
 import { Button, Form } from "react-bootstrap";
-import { LoadingSpinner } from "../../contact-us/page";
 import { toast } from "react-toastify";
+import { LoadingSpinner } from "../../contact-us/page";
 export default function BlogDetail({ slug }) {
     const [blogDetail, setBlogDetail] = useState({});
     const [showLoading, setShowLoading] = useState(false);

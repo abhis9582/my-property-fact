@@ -10,6 +10,8 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Button, Col, Form, Modal, Row, Table } from "react-bootstrap";
 import { toast } from "react-toastify";
+import CommonModal from "../common-model/common-model";
+import DataTable from "../common-model/data-table";
 // Dynamically import JoditEditor with SSR disabled
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 export default function AddProject() {
@@ -126,24 +128,6 @@ export default function AddProject() {
     });
   };
 
-  //Handling deletion of project
-  const deleteProject = async () => {
-    if (projectId > 0) {
-      try {
-        const response = await axios.delete(
-          `${process.env.NEXT_PUBLIC_API_URL}projects/delete/${projectId}`
-        );
-        if (response.data.isSuccess === 1) {
-          setConfirmBox(false);
-          toast.success(response.data.message);
-          fetchProjectsWithDetail();
-        }
-      } catch (error) {
-        toast.error(error);
-      }
-    }
-  };
-
   //Opening delete confirmation box
   const openConfirmationBox = (id) => {
     setConfirmBox(true);
@@ -225,7 +209,7 @@ export default function AddProject() {
   };
   //Defining table columns
   const columns = [
-    { field: "index", headerName: "S.no", width: 100 },
+    { field: "index", headerName: "S.no", width: 100, cellClassName: "centered-cell", },
     { field: "projectName", headerName: "Project Name", width: 180 },
     { field: "projectBy", headerName: "Project By", width: 150 },
     {
@@ -276,23 +260,7 @@ export default function AddProject() {
         </Button>
       </div>
       <div className="table-container mt-5">
-        <Paper sx={{ height: 550, width: "100%" }}>
-          <DataGrid
-            rows={projectDetailList}
-            columns={columns}
-            initialState={{ pagination: { paginationModel } }}
-            pageSizeOptions={[10, 15, 20, 50]}
-            checkboxSelection
-            sx={{
-              border: 0,
-              "& .MuiDataGrid-columnHeader": {
-                fontWeight: "bold", // Make headings bold
-                fontSize: "16px", // Optional: Adjust size
-                backgroundColor: "#68ac78", // Optional: Light background
-              },
-            }}
-          />
-        </Paper>
+        <DataTable list={projectDetailList} columns={columns}/>
       </div>
       {/* Modal for adding a new project */}
       <Modal size="xl" show={showModal} onHide={() => setShowModal(false)} centered>
@@ -702,20 +670,12 @@ export default function AddProject() {
           </Form>
         </Modal.Body>
       </Modal>
-      <Modal show={confirmBox} onHide={() => setConfirmBox(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Are you sure you want to delete ?</Modal.Title>
-        </Modal.Header>
-        {/* <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body> */}
-        <Modal.Footer className="d-flex justify-content-center">
-          <Button variant="secondary" onClick={() => setConfirmBox(false)}>
-            Close
-          </Button>
-          <Button variant="danger" onClick={deleteProject}>
-            Delete
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <CommonModal
+        confirmBox={confirmBox}
+        setConfirmBox={setConfirmBox}
+        api={`${process.env.NEXT_PUBLIC_API_URL}projects/delete/${projectId}`}
+        fetchAllHeadersList={fetchProjectsWithDetail}
+      />
     </>
   );
 }
