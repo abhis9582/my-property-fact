@@ -38,6 +38,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-# public/properties
+public/properties
+public/blog
+public/amenity
 # public/icon
 # /public/**

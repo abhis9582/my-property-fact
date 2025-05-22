@@ -1,13 +1,12 @@
 "use client";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { DataGrid } from "@mui/x-data-grid";
-import Paper from "@mui/material/Paper";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
+import DataTable from "../common-model/data-table";
 export default function City() {
   const [showModal, setShowModal] = useState(false);
   const [cityName, setCityName] = useState("");
@@ -62,7 +61,7 @@ export default function City() {
         }
       } catch (error) {
         console.error("Error submitting form:", error);
-      }finally{
+      } finally {
         setButtonName("Add City");
         setShowLoading(false);
       }
@@ -173,23 +172,7 @@ export default function City() {
         </Button>
       </div>
       <div className="table-container mt-5">
-        <Paper sx={{ height: 550, width: "100%" }}>
-          <DataGrid
-            rows={cityList}
-            columns={columns}
-            initialState={{ pagination: { paginationModel } }}
-            pageSizeOptions={[10, 15, 20, 50]}
-            checkboxSelection
-            sx={{
-              border: 0,
-              "& .MuiDataGrid-columnHeader": {
-                fontWeight: "bold", // Make headings bold
-                fontSize: "16px", // Optional: Adjust size
-                backgroundColor: "#68ac78", // Optional: Light background
-              },
-            }}
-          />
-        </Paper>
+        <DataTable list={cityList} columns={columns} />
       </div>
       {/* Modal for adding a new city */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>

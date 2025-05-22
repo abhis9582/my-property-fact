@@ -198,6 +198,32 @@ export default function SideNav() {
             </li>
           </ul>
         </li>
+        <li className={activeDropdown === "dropdown5" ? "active" : ""}>
+          <Link
+            href="#"
+            onClick={() => toggleDropdown("dropdown5")}
+            data-toggle="collapse"
+            aria-expanded="false"
+            className="dropdown-toggle"
+          >
+            Web story management
+          </Link>
+          <ul
+            className={`collapse list-unstyled ${activeDropdown === "dropdown5" ? "show" : ""
+              }`}
+          >
+            <li>
+              <Link href="/admin/dashboard/web-story-category">
+                Web Story category
+              </Link>
+            </li>
+            <li>
+              <Link href="/admin/dashboard/web-story">
+                Web Story
+              </Link>
+            </li>
+          </ul>
+        </li>
         <li>
           <Link href="#" onClick={() => handleLogout()}>
             Log out

@@ -1,12 +1,10 @@
 "use client";
-import Image from "next/image";
 import PropertyContainer from "../components/common/page";
 import "./project.css";
 import { useEffect, useState, Suspense } from "react";
 import axios from "axios";
 import CommonBreadCrum from "../components/common/breadcrum";
 import { useSearchParams } from "next/navigation";
-import { Spinner } from "react-bootstrap";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import { LoadingSpinner } from "../contact-us/page";
 
@@ -84,8 +82,6 @@ function ProjectsContent() {
     </div>
   );
 }
-
-// Wrap `ProjectsContent` inside Suspense
 export default function Projects() {
   return (
     <Suspense fallback={<div>Loading...</div>}>

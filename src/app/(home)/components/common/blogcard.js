@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-
+import './common.css';
 export default function BlogCard({ blog }) {
 
     const truncateWords = (text, wordLimit) => {
@@ -26,6 +26,10 @@ export default function BlogCard({ blog }) {
                     unoptimized={true}
                 />
                 <div className="card-body d-flex flex-column">
+                    <p className="blog-date">{new Date(blog.createdAt).toLocaleString('en-US', {
+                        dateStyle: 'medium',
+                        // timeStyle: 'short'
+                    })}</p>
                     <h4 className="card-title fw-bold">{blog.blogTitle.replace(/\u00A0/g, ' ')}</h4>
 
                     <div className="flex-grow-1 mb-3">

@@ -1,25 +1,36 @@
 import axios from "axios";
 import BuilderPage from "./builderpage";
 
-async function fetchSeoData(slug) {
-  const data = await axios.get(
-    process.env.NEXT_PUBLIC_API_URL + `builders/get/${slug}`
+//Fetching all details of builder
+async function fetchBuilderDetails(slug) {
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}builders/get/${slug}`
   );
-  return data;
+  return response.data;
 }
+
+//Fetching all projects of the builder
+const fetchProjectsListOfBuilder = async (id) => {
+  const projects = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}projects/builder/${id}`
+  );
+  return projects.data;
+};
+
+//Generating metatitle and meta description
 export async function generateMetadata({ params }) {
-  const url = await params;  
-  const response = await fetchSeoData(url.buildername);
-  const title = response.data.metaTitle;
-  const desc = response.data.metaDescription;
-  return { title: title, descritpion: desc };
+  const response = await fetchBuilderDetails(params.buildername);
+  return {
+    title: response.metaTitle,
+    descritpion: response.metaDescription
+  };
 }
 
 export default async function Builder({ params }) {
   const { buildername } = await params;
-  return (
-    <>
-      <BuilderPage builderName={buildername} />
-    </>
-  );
+  const builderDetails = await fetchBuilderDetails(buildername);
+  const projectsList = await fetchProjectsListOfBuilder(builderDetails.id);
+
+  return <BuilderPage builderDetails={builderDetails} projectsList={projectsList} />
+
 }

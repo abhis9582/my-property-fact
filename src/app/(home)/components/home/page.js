@@ -1,21 +1,22 @@
 import ClientSideHomePage from "./homepage";
-import Featured from "./featured/page";
 import DreamProject from "./dream-project/page";
 import InsightNew from "./insight/page";
 import NewsViews from "./new-views/page";
-import SocialFeed from "./social-feed/page";
+import Featured from "./featured/featured";
+import SocialFeedPage from "./social-feed/page";
 
 export default async function HomePage() {
 
   //calling apis
-  const [projectTypeListRes, cityListRes] = await Promise.all([
+  const [projectTypeListRes, cityListRes, projectsList] = await Promise.all([
     fetch(`${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`, { cache: "force-cache" }),
     fetch(`${process.env.NEXT_PUBLIC_API_URL}city/all`, { cache: "force-cache" }),
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}projects/get-all`, { cache: "force-cache" })
   ]);
 
   const projectTypeList = await projectTypeListRes.json();
   const cityList = await cityListRes.json();
-
+  const list = await projectsList.json();
   return (
     <>
       {/* Pass props to client component if needed */}
@@ -30,7 +31,7 @@ export default async function HomePage() {
 
         {/* featured projects section  */}
         <h2 className="fw-bold text-center pt-5 pb-3">Featured Projects</h2>
-        <Featured />
+        <Featured allFeaturedProperties={list}/>
 
         {/* dream cities section  */}
         <h2 className="fw-bold text-center pt-5">
@@ -40,11 +41,11 @@ export default async function HomePage() {
 
         {/* residential projects section  */}
         <h2 className="fw-bold text-center pt-5 pb-3">Explore Our Premier Residential Projects</h2>
-        <Featured type={"1"} url={"residential"} />
+        <Featured type={"1"} url={"residential"} allFeaturedProperties={list}/>
 
         {/* commertial projects section  */}
         <h2 className="fw-bold text-center pt-5 pb-3">Explore Top Commercial Spaces for Growth</h2>
-        <Featured type={"2"} url={"commercial"} />
+        <Featured type={"2"} url={"commercial"} allFeaturedProperties={list}/>
 
         {/* web story section  */}
         <h2 className="fw-bold text-center pt-5">Realty Updates</h2>
@@ -52,7 +53,7 @@ export default async function HomePage() {
 
         {/* blogs section  */}
         <h2 className="fw-bold text-center pt-5">Investor Education </h2>
-        <SocialFeed />
+        <SocialFeedPage />
       </div>
     </>
   )

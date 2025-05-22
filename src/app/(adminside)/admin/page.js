@@ -63,7 +63,7 @@ export default function AdminPage() {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value, // Dynamically set the value based on the input's name attribute
+      [name]: value,
     });
   };
 
