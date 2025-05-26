@@ -41,11 +41,11 @@ export default async function HomePage() {
 
         {/* residential projects section  */}
         <h2 className="fw-bold text-center pt-5 pb-3">Explore Our Premier Residential Projects</h2>
-        <Featured type={"1"} url={"residential"} allFeaturedProperties={list}/>
+        <Featured type={1} url={"residential"} allFeaturedProperties={list}/>
 
         {/* commertial projects section  */}
         <h2 className="fw-bold text-center pt-5 pb-3">Explore Top Commercial Spaces for Growth</h2>
-        <Featured type={"2"} url={"commercial"} allFeaturedProperties={list}/>
+        <Featured type={2} url={"commercial"} allFeaturedProperties={list}/>
 
         {/* web story section  */}
         <h2 className="fw-bold text-center pt-5">Realty Updates</h2>
