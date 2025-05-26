@@ -13,7 +13,7 @@ export default function Featured({ type= null, url= "", allFeaturedProperties= n
 
   // Filter based on type prop
   useEffect(() => {
-    if (type === 1 || type === 1) {
+    if (type === 1 || type === 2) {
       const filtered = allFeaturedProperties.filter(
         (p) => p.propertyType === type
       );      
