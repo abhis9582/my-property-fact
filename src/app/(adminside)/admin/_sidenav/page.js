@@ -2,7 +2,6 @@
 import Link from "next/link";
 import "./sidenav.css";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import Image from "next/image";
@@ -58,7 +57,7 @@ export default function SideNav() {
               }`}
           >
             <li>
-              <Link href="/admin/dashboard/city">Manage Cities</Link>
+              <Link href="/admin/dashboard/manage-cities">Manage Cities</Link>
             </li>
             <li>
               <Link href="/admin/dashboard/project-types">
@@ -126,7 +125,7 @@ export default function SideNav() {
           </ul>
         </li>
         <li>
-          <Link href="/admin/dashboard/add-project">Projects</Link>
+          <Link href="/admin/dashboard/manage-projects">Manage Projects</Link>
         </li>
         <li className={activeDropdown === "dropdown2" ? "active" : ""}>
           <Link

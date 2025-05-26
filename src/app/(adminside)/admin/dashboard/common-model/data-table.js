@@ -8,7 +8,7 @@ export default function DataTable({ list, columns }) {
 
     return (
         <>
-            <Paper sx={{ height: 550, width: "100%" }}>
+            <Paper sx={{ height: 650, width: "100%" }}>
                 <DataGrid
                     rows={list}
                     columns={columns}

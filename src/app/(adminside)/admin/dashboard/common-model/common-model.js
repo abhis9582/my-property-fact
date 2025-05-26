@@ -1,10 +1,12 @@
 "use client";
 
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { Button, Modal } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 export default function CommonModal({ confirmBox, setConfirmBox, api, fetchAllHeadersList }) {
+  const router = useRouter();
   const deleteData = async () => {
     try {
       const response = await axios.delete(api);
@@ -14,7 +16,8 @@ export default function CommonModal({ confirmBox, setConfirmBox, api, fetchAllHe
         toast.error("Something went wrong!");
       }
       setConfirmBox(false);
-      fetchAllHeadersList();
+      // fetchAllHeadersList();
+      router.refresh();
     } catch (error) {
       toast.error("Error deleting data. Please try again.");
       console.error("Delete Error:", error);

@@ -26,12 +26,9 @@ import {
   faChartArea,
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
-import Featured from "../(home)/components/home/featured/page";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Image from "next/image";
-import Footer from "../(home)/components/footer/page";
-import { Spinner } from "react-bootstrap";
 import NotFound from "../not-found";
 import CommonPopUpform from "../(home)/components/common/popupform";
 import { LoadingSpinner } from "../(home)/contact-us/page";
@@ -986,16 +983,6 @@ export default function Property({ slug }) {
           ))}
         </div>
       </div>
-      <div className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3">
-        <h2 className="text-center">Similar projects</h2>
-        <Featured />
-      </div>
-      {/* <div className="container-fluid" style={{ background: "#68ac78" }}>
-        <div className="d-flex justify-content-center">
-          <Image width={100} height={100} src="/logo.png" alt="mpf-logo" />
-        </div>
-      </div> */}
-      <Footer />
       <CommonPopUpform show={showPopUp} handleClose={setShowPopUp} />
     </>
   );
