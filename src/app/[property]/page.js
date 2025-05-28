@@ -4,7 +4,7 @@ import FeaturedPage from "../(home)/components/home/featured/page";
 import Footer from "../(home)/components/footer/page";
 
 async function fetchSeoData(slug) {
-  const data = await axios.get(process.env.NEXT_PUBLIC_API_URL + `projects/get/${slug}`);
+  const data = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}projects/get/${slug}`);
   return data;
 }
 
@@ -51,8 +51,11 @@ const fetchAllData = async () => {
 
 export async function generateMetadata({ params }) {
   const response = await fetchSeoData(params.property);
+  if (!response.data.projectAddress) {
+    response.data.projectAddress = "";
+  }
   return {
-    title: response.data.metaTitle,
+    title: response.data.metaTitle + " " + response.data.projectAddress + " | Price List & Brochure, Floor Plan, Location Map & Reviews",
     description: response.data.metaDescription
   }
 }
