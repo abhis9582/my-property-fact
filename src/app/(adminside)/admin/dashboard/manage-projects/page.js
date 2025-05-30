@@ -1,6 +1,6 @@
 import axios from "axios";
 import ManageProjects from "./manageProjects";
-
+export const dynamic = 'force-dynamic';
 //Fetching all builder list from api
 const fetchBuilders = async () => {
   const builders = await axios.get(

@@ -1,6 +1,6 @@
 import axios from "axios";
 import ProjectTypes from "./projectTypes";
-
+export const dynamic = 'force-dynamic';
 //Fetch all types of projects
 const fetchProjectType = async () => {
   const response = await axios.get(
