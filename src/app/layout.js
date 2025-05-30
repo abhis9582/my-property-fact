@@ -16,6 +16,21 @@ export default function RootLayout({ children }) {
                 <link rel="preload" href="/fonts/Gotham-Bold.ttf" as="font" type="font/woff2" crossOrigin="anonymous" />
                 <link rel="preload" href="/fonts/Heading-Pro-ExtraBold-trial.ttf" as="font" type="font/woff2" crossOrigin="anonymous" />
                 <link rel="preload" href="/fonts/Gotham-Light.ttf" as="font" type="font/woff2" crossOrigin="anonymous" />
+                {/* Meta Pixel Script */}
+                <Script id="facebook-pixel" strategy="afterInteractive">
+                    {`
+                        !function(f,b,e,v,n,t,s)
+                        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                        n.queue=[];t=b.createElement(e);t.async=!0;
+                        t.src=v;s=b.getElementsByTagName(e)[0];
+                        s.parentNode.insertBefore(t,s)}(window, document,'script',
+                        'https://connect.facebook.net/en_US/fbevents.js');
+                        fbq('init', '1153798529848547');
+                        fbq('track', 'PageView');
+                    `}
+                </Script>
             </head>
             <body>
                 <main>{children}</main>
@@ -52,6 +67,16 @@ export default function RootLayout({ children }) {
             `,
                     }}
                 />
+                {/* Noscript fallback for Facebook Pixel */}
+                <noscript>
+                    <img
+                        height="1"
+                        width="1"
+                        style={{ display: 'none' }}
+                        src="https://www.facebook.com/tr?id=1153798529848547&ev=PageView&noscript=1"
+                        alt=""
+                    />
+                </noscript>
             </body>
         </html>
     );
