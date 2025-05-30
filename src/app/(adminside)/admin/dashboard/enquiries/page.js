@@ -1,5 +1,6 @@
 import axios from "axios";
 import Enquiries from "./enquires";
+export const dynamic = 'force-dynamic';
 
 //Fetching all enquries from api
 const fetchEnquiries = async () => {
