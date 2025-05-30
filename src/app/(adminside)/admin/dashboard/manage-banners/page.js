@@ -1,6 +1,6 @@
 import axios from "axios";
 import ManageBanners from "./manageBanners";
-
+export const dynamic = 'force-dynamic';
 //Fetching all banners of projects from api
 const fetchBannerImages = async () => {
   const projectResponse = await axios.get(

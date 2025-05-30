@@ -1,6 +1,6 @@
 import axios from "axios";
 import City from "./manageCity";
-
+export const dynamic = 'force-dynamic';
 //Fetching all cities from api
 const fetchCities = async () => {
   const cityList = await axios.get(

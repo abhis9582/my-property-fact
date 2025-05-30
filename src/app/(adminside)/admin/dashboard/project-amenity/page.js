@@ -1,6 +1,6 @@
 import axios from "axios";
 import ProjectsAmenity from "./projectAmenity";
-
+export const dynamic = 'force-dynamic';
 //Fetch all project amenity from api
 const fetchPrjectsAmenity = async () => {
   const response = await axios.get(
