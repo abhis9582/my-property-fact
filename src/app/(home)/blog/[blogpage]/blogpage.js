@@ -8,8 +8,7 @@ import "./../media.css";
 import { Button, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { LoadingSpinner } from "../../contact-us/page";
-export default function BlogDetail({ slug }) {
-    const [blogDetail, setBlogDetail] = useState({});
+export default function BlogDetail({ blogDetail }) {
     const [showLoading, setShowLoading] = useState(false);
     const [buttonName, setButtonName] = useState("Submit Enquiry");
     const [blogImage, setBlogImage] = useState(null);
@@ -21,12 +20,6 @@ export default function BlogDetail({ slug }) {
     };
     const [formData, setFormData] = useState(initialFormData);
     const [validated, setValidated] = useState(false);
-    //fetch blog detail using slug
-    const fetchBlogDetail = async (url) => {
-        // fetching blog detail from api using slug
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}blog/get/${url}`);
-        setBlogDetail(response.data);
-    }
 
     //handle form submit
     const handleSubmit = async (event) => {
@@ -73,27 +66,16 @@ export default function BlogDetail({ slug }) {
             [name]: value,
         });
     };
-
-    useEffect(() => {
-        fetchBlogDetail(slug);
-    }, [slug]);
-
-    useEffect(() => {
-        if (blogDetail && blogDetail.blogImage) {
-            setBlogImage(blogDetail.blogImage);
-        }
-    }, [blogDetail]);
-
     return (
         <div>
             <CommonHeaderBanner image={"builder-banner.jp"} headerText={"Blog-Detail"} />
-            <CommonBreadCrum pageName={slug} firstPage={"Blog"} />
+            <CommonBreadCrum pageName={blogDetail.slugUrl} firstPage={"Blog"} />
             <div className="container py-5">
                 <div className="row g-5">
                     {/* Blog Content */}
-                    {blogImage != null ? <div className="col-lg-8">
-                        {blogImage && <Image
-                            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}blog/${blogImage}`}
+                    {<div className="col-lg-8">
+                        {blogDetail.blogImage && <Image
+                            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}blog/${blogDetail.blogImage}`}
                             alt={blogDetail.blogTitle || ""}
                             className="img-fluid rounded shadow-sm mb-4"
                             width={1200}
@@ -120,8 +102,6 @@ export default function BlogDetail({ slug }) {
                                     </span>
                                 ))}
                         </div>
-                    </div> : <div className="col-lg-8 d-flex justify-content-center align-items-center">
-                        <LoadingSpinner show={true} />
                     </div>}
 
                     {/* Contact Form */}

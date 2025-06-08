@@ -50,7 +50,8 @@ const fetchAllData = async () => {
 };
 
 export async function generateMetadata({ params }) {
-  const response = await fetchSeoData(params.property);
+  const {property} = await params;
+  const response = await fetchSeoData(property);
   if (!response.data.projectAddress) {
     response.data.projectAddress = "";
   }
@@ -76,7 +77,7 @@ const fetchProjectTypes = async () => {
 };
 
 export default async function PropertyPage({ params }) {
-  const { property } = params;
+  const { property } = await params;
   const [list, typesList] = await Promise.all([
     fetchCityData(),
     fetchProjectTypes()

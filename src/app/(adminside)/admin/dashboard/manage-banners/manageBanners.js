@@ -136,7 +136,7 @@ export default function ManageBanners({ list }) {
         {
             field: "mobileBanner",
             headerName: "Mobile Banner",
-            width: 250,
+            flex: 1,
             renderCell: (params) => (
                 <Image
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${params.row.slugURL}/${params.row.mobileBanner}`}
@@ -151,7 +151,7 @@ export default function ManageBanners({ list }) {
         {
             field: "deskktopBanner",
             headerName: "Mobile Banner",
-            width: 250,
+            flex: 1,
             renderCell: (params) => (
                 <Image
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${params.row.slugURL}/${params.row.desktopBanner}`}
@@ -163,20 +163,14 @@ export default function ManageBanners({ list }) {
                 />
             ),
         },
-        { field: "projectName", headerName: "Project Name", width: 300 },
-        { field: "altTag", headerName: "Alt Tag", width: 270 },
+        { field: "projectName", headerName: "Project Name", flex: 1 },
+        { field: "altTag", headerName: "Alt Tag", flex: 1 },
         {
             field: "action",
             headerName: "Action",
-            width: 200,
+            width: 100,
             renderCell: (params) => (
                 <div>
-                    <FontAwesomeIcon
-                        className="mx-3 text-danger"
-                        style={{ cursor: "pointer" }}
-                        icon={faTrash}
-                        onClick={() => openConfirmationBox(params.row.id)}
-                    />
                     <FontAwesomeIcon
                         className="text-warning"
                         style={{ cursor: "pointer" }}

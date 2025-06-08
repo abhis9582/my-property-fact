@@ -1,6 +1,8 @@
 import axios from "axios";
 import Builder from "./builder";
 
+export const dynamic = 'force-dynamic';
+
 //Fetching all builders list from api
 const fetchBuilders = async () => {
   const builders = await axios.get(

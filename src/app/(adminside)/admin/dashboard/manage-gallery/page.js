@@ -10,6 +10,7 @@ const fetchGalleryImage = async () => {
   const list = res.map((item, index) => ({
     ...item,
     index: index + 1,
+    id: item.projectId
   }));
   return list;
 };

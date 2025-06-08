@@ -20,6 +20,8 @@ export default function ManageGallery({ list, projectsList }) {
     const [confirmBox, setConfirmBox] = useState(false);
     const [showLoading, setShowLoading] = useState(false);
     const [galleryId, setGalleryId] = useState(0);
+    const [popUpImageSrc, setPopUpImageSrc] = useState(null);
+    const [imagePopUp, setImagePopUp] = useState(false);
     const handleShow = () => {
         setShow(true);
         setButtonName("Add");
@@ -77,28 +79,43 @@ export default function ManageGallery({ list, projectsList }) {
         setGalleryId(id);
         setConfirmBox(true);
     };
+    //Opening image popup to view image
+    const openImagePopUp = (src) => {
+        setPopUpImageSrc(src);
+        setImagePopUp(true);
+    }
     //Defining table columns
     const columns = [
         { field: "index", headerName: "S.no", width: 100, cellClassName: "centered-cell" },
-        { field: "pname", headerName: "Project Name", width: 500 },
+        { field: "pName", headerName: "Project Name", width: 200 },
         {
             field: "image",
             headerName: "Gallery Image",
-            width: 500,
+            flex: 1,
             renderCell: (params) => (
-                <Image
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${params.row.slugURL}/${params.row.image}`}
-                    alt={`${params.row.pname}`}
-                    width={100}
-                    height={50}
-                    unoptimized
-                />
+                <>
+                    {
+                        // console.log(params)                   
+                        params.row.galleryImage.map((item, index) => (
+                            <Image
+                                className="mx-2 rounded-2 cursor-pointer"
+                                key={index}
+                                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${params.row.slugURL}/${item.image}`}
+                                alt={`${params.row.pname}`}
+                                width={100}
+                                height={40}
+                                unoptimized
+                                onClick={() => openImagePopUp(`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${params.row.slugURL}/${item.image}`)}
+                            />
+                        ))
+                    }
+                </>
             ),
         },
         {
             field: "action",
             headerName: "Action",
-            width: 270,
+            width: 100,
             renderCell: (params) => (
                 <div>
                     <FontAwesomeIcon
@@ -115,7 +132,10 @@ export default function ManageGallery({ list, projectsList }) {
         <div className="container_fluid">
             <DashboardHeader buttonName={"+ Add Gallery Image"} functionName={handleShow} heading={"Manage Project's Gallery"} />
             <div className="table-container mt-5">
-                <DataTable columns={columns} list={list} />
+                <DataTable columns={columns} list={list.map(item => ({
+                    ...item,
+                    image: item.galleryImage.map(item => item.image),
+                }))} />
             </div>
             <Modal show={show} onHide={() => setShow(false)} centered>
                 <Modal.Header closeButton>
@@ -159,6 +179,21 @@ export default function ManageGallery({ list, projectsList }) {
                 </Modal.Body>
             </Modal>
             <CommonModal confirmBox={confirmBox} setConfirmBox={setConfirmBox} api={`${process.env.NEXT_PUBLIC_API_URL}project-gallery/delete/${galleryId}`} />
+            <Modal size="lg" show={imagePopUp} onHide={() => setImagePopUp(false)} centered>
+                <Modal.Body>
+                    {popUpImageSrc && (
+                        <Image
+                            className="rounded-2"
+                            src={popUpImageSrc}
+                            alt="pop-up-image"
+                            width={0}
+                            height={0}
+                            sizes="100vw"
+                            style={{ height: 'auto', width: 'auto', maxWidth: '100%', maxHeight: '80vh' }}
+                        />
+                    )}
+                </Modal.Body>
+            </Modal>
         </div>
     );
 }

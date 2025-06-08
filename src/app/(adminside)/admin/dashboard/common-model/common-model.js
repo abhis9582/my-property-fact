@@ -11,6 +11,7 @@ export default function CommonModal({ confirmBox, setConfirmBox, api, fetchAllHe
     try {
       const response = await axios.delete(api);
       if (response && response.data && response.data.message) {
+
         toast.success(response.data.message);
       } else {
         toast.error("Something went wrong!");

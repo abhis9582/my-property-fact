@@ -1,19 +1,18 @@
 "use client";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { toast } from "react-toastify";
 import Multiselect from "multiselect-react-dropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPencil } from "@fortawesome/free-solid-svg-icons";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import CommonModal from "../common-model/common-model";
 import { useRouter } from "next/navigation";
 import DashboardHeader from "../common-model/dashboardHeader";
 import DataTable from "../common-model/data-table";
-export default function ProjectsAmenity({ list, projectList, amenityList }) {
+export default function ProjectsAmenity({ projectList, amenityList }) {
     const router = useRouter();
-
     const [showModal, setShowModal] = useState(false);
     const [title, setTitle] = useState("");
     const [validated, setValidated] = useState(false);
@@ -23,6 +22,8 @@ export default function ProjectsAmenity({ list, projectList, amenityList }) {
     const [showLoading, setShowLoading] = useState(false);
     const [selectedValue, setSelectedValue] = useState([]);
     const [showAmenityError, setShowAmenityError] = useState(false);
+    const [projectListOptions, setProjectListOptions] = useState([]);
+    const [isDisabled, setIsDisabled] = useState(false);
 
     // Handler for selecting an option
     const onSelect = (selectedList) => {
@@ -33,6 +34,8 @@ export default function ProjectsAmenity({ list, projectList, amenityList }) {
         setSelectedValue(removedList); // Update selected values state
     };
     const openAddModel = () => {
+        setIsDisabled(false);
+        setProjectListOptions(projectList.filter(item => item.amenities.length === 0));
         setValidated(false);
         setShowAmenityError(false);
         setShowModal(true);
@@ -55,15 +58,12 @@ export default function ProjectsAmenity({ list, projectList, amenityList }) {
             if (selectedValue.length === 0) {
                 setShowAmenityError(true);
             }
-            setValidated(true);
-            return;
-        }
-        if (form.checkValidity() === true) {
+        } else {
             try {
                 setShowLoading(true);
                 setButtonName("");
                 const response = await axios.post(
-                    `${process.env.NEXT_PUBLIC_API_URL}project-amenity/add-update`,
+                    `${process.env.NEXT_PUBLIC_API_URL}projects/add-update-amenity`,
                     data
                 );
                 if (response.data.isSuccess === 1) {
@@ -75,12 +75,13 @@ export default function ProjectsAmenity({ list, projectList, amenityList }) {
                 }
             } catch (error) {
                 console.log(error);
-
+                toast.error(error);
             } finally {
                 setShowLoading(false);
                 setButtonName("Add");
             }
         }
+        setValidated(true);
     };
 
     const openConfirmationBox = (id) => {
@@ -89,33 +90,26 @@ export default function ProjectsAmenity({ list, projectList, amenityList }) {
     };
 
     const openEditPopUp = async (item) => {
-        const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}project-amenity/${item.projectId}`
-        );
+        setProjectListOptions(projectList);
+        setIsDisabled(true);
         setShowModal(true);
         setTitle("Update Project Amenity");
         setButtonName("Update");
-        setSelectedValue(response.data);
-        setProjectId(item.projectId);
+        setSelectedValue(item.amenities);
+        setProjectId(item.id);
     };
 
     //Defining table columns
     const columns = [
         { field: "index", headerName: "S.no", width: 100, cellClassName: "centered-cell" },
-        { field: "projectName", headerName: "Project Name", width: 250 },
-        { field: "amenities", headerName: "Amenities", width: 820 },
+        { field: "projectName", headerName: "Project Name", flex: 1 },
+        { field: "amenitiesName", headerName: "Amenities", flex: 1 },
         {
             field: "action",
             headerName: "Action",
-            width: 200,
+            width: 100,
             renderCell: (params) => (
                 <div>
-                    <FontAwesomeIcon
-                        className="mx-3 text-danger"
-                        style={{ cursor: "pointer" }}
-                        icon={faTrash}
-                        onClick={() => openConfirmationBox(params.row.id)}
-                    />
                     <FontAwesomeIcon
                         className="text-warning"
                         style={{ cursor: "pointer" }}
@@ -134,7 +128,7 @@ export default function ProjectsAmenity({ list, projectList, amenityList }) {
                 heading={"Manage Project & Amenity"}
             />
             <div className="table-container mt-5">
-                <DataTable columns={columns} list={list} />
+                <DataTable columns={columns} list={projectList.filter(item => item.amenities.length > 0)} />
             </div>
             {/* Modal for adding a new city */}
             <Modal show={showModal} onHide={() => setShowModal(false)} centered>
@@ -150,9 +144,10 @@ export default function ProjectsAmenity({ list, projectList, amenityList }) {
                                 onChange={(e) => setProjectId(e.target.value)}
                                 value={projectId}
                                 required
+                                disabled={isDisabled}
                             >
                                 <option value="">Select Project</option>
-                                {projectList.map((item) => (
+                                {projectListOptions.map((item) => (
                                     <option
                                         className="text-uppercase"
                                         key={item.id}

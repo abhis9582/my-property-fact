@@ -1,6 +1,8 @@
 import axios from "axios";
 import ManageAminity from "./manageAmenity";
 
+export const dynamic = 'force-dynamic';
+
 //Fetching all amenities list
 const fetchAmenities = async () => {
   const response = await axios.get(

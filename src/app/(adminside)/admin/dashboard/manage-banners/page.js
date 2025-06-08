@@ -9,7 +9,7 @@ const fetchBannerImages = async () => {
   const list = projectResponse.data.map((item, index) => ({
     ...item,
     index: index + 1,
-  }));
+  }));  
   return list;
 }
 export default async function ManageBannersPage() {

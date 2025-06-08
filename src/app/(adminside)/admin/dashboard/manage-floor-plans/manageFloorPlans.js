@@ -1,7 +1,5 @@
 "use client";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
-import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
@@ -9,6 +7,8 @@ import { toast } from "react-toastify";
 import CommonModal from "../common-model/common-model";
 import DataTable from "../common-model/data-table";
 import DashboardHeader from "../common-model/dashboardHeader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 export default function ManageFloorPlans({ list, projectsList }) {
     const router = useRouter();
@@ -22,33 +22,37 @@ export default function ManageFloorPlans({ list, projectsList }) {
     const [floorId, setFloorId] = useState(0);
     const [confirmBox, setConfirmBox] = useState(false);
     const [showLoading, setShowLoading] = useState(false);
+    const [showPlans, setShowPlans] = useState(false);
     const handleClose = () => setShow(false);
-    const handleShow = () => {
+
+    const openAddFloorPlan = () => {
         setValidated(false);
         setButtonName("Add Floor Plan");
         setTitle("Add Floor Plan");
         setShow(true);
-        setProjectId(0);
         setPlanType("");
         setArea("");
         setFloorId(0);
     };
     const handleSubmit = async (e) => {
-        e.preventDefault();
         const form = e.currentTarget;
         if (form.checkValidity() === false) {
+            e.preventDefault();
             e.stopPropagation();
-            setValidated(true);
-            return;
-        }
-        if (form.checkValidity() === true) {
+        } else {
+            if (isNaN(area)) {
+                toast.error("Area should be in number");
+                e.preventDefault();
+                return;
+            }
             let data = {
                 projectId: projectId,
                 planType: planType,
-                areaSqft: area,
+                areaSqFt: area,
+                floorId: 0
             };
             if (floorId > 0) {
-                data.id = floorId;
+                data.floorId = floorId;
             }
             try {
                 setShowLoading(true);
@@ -61,6 +65,8 @@ export default function ManageFloorPlans({ list, projectsList }) {
                     toast.success(response.data.message);
                     router.refresh();
                     setShow(false);
+                } else {
+                    toast.error(response.data.message);
                 }
             } catch (error) {
                 console.log("Error Occured", error);
@@ -70,65 +76,82 @@ export default function ManageFloorPlans({ list, projectsList }) {
                 setButtonName("Add Floor Plan");
             }
         }
+        setValidated(true);
     };
 
-
-    const openEditModel = (item) => {
-        setTitle("Update Floor Plan");
-        setButtonName("Update");
-        setShow(true);
-        setProjectId(item.projectId);
-        setArea(item.areaSq);
-        setPlanType(item.type);
-        setFloorId(item.floorId);
-    };
+    //Opening confirmation box
     const openConfirmationBox = (id) => {
         setConfirmBox(true);
         setFloorId(id);
     };
+    //Opening edit model which contains all plans
+    const openEditModel = (item) => {
+        setShowPlans(true);
+        setProjectId(item.id);
+    };
+
+    //Opening of update floor plan model
+    const openUpdateFloorPlan = (floorPlan) => {
+        setShow(true);
+        setArea(floorPlan.areaSqft);
+        setTitle("Update Floor Plan");
+        setButtonName("Update");
+        setPlanType(floorPlan.planType);
+        setFloorId(floorPlan.id);
+    }
 
     //Defining table columns
     const columns = [
-        { field: "index", headerName: "S.no", width: 70, cellClassName: "centered-cell" },
-        { field: "pname", headerName: "Project Name", width: 300 },
-        { field: "type", headerName: "Type", width: 300 },
+        { field: "index", headerName: "S.no", width: 100, cellClassName: "centered-cell" },
+        { field: "projectName", headerName: "Project Name", flex: 1 },
+        { field: "type", headerName: "Type", flex: 1 },
         {
             field: "areaSq",
             headerName: "Area(sqft)",
-            width: 280,
+            flex: 1,
         },
         {
             field: "areaMt",
             headerName: "Area(mt)",
-            width: 280,
+            flex: 1,
         },
         {
             field: "action",
             headerName: "Action",
-            width: 140,
+            flex: 1,
             renderCell: (params) => (
                 <div>
-                    <FontAwesomeIcon
-                        className="mx-3 text-danger"
-                        style={{ cursor: "pointer" }}
-                        icon={faTrash}
-                        onClick={() => openConfirmationBox(params.row.id)}
-                    />
-                    <FontAwesomeIcon
-                        className="text-warning"
-                        style={{ cursor: "pointer" }}
-                        icon={faPencil}
-                        onClick={() => openEditModel(params.row)}
-                    />
+                    <Button className="btn btn-success"
+                        onClick={() => openEditModel(params.row)}>Show Floor Plans</Button>
                 </div>
             ),
         },
     ];
     return (
         <div>
-            <DashboardHeader buttonName={"+ Add Floor Plan"} functionName={handleShow} heading={"Manage Floor Plans"} />
+            <DashboardHeader functionName={openAddFloorPlan} heading={"Manage Floor Plans"} />
             <div className="table-container mt-5">
-                <DataTable columns={columns} list={list} />
+                <DataTable
+                    columns={columns}
+                    list={list
+                        .slice() // create a shallow copy to avoid mutating original list
+                        .sort((a, b) => {
+                            const nameA = a.projectName.toLowerCase();
+                            const nameB = b.projectName.toLowerCase();
+                            if (nameA < nameB) return -1;
+                            if (nameA > nameB) return 1;
+                            return 0;
+                        })
+                        .map((item, index) => ({
+                            id: item.projectId,
+                            projectName: item.projectName,
+                            index: index + 1,
+                            type: item.plans?.map(plan => plan.planType).join(", ") || '',
+                            areaSq: item.plans?.map(plan => plan.areaSqft).join(", ") || '',
+                            areaMt: item.plans?.map(plan => plan.areaSqMt?.toFixed(2)).join(", ") || ''
+                        }))}
+                />
+
             </div>
             <Modal show={show} onHide={handleClose} centered>
                 <Modal.Header closeButton>
@@ -143,6 +166,7 @@ export default function ManageFloorPlans({ list, projectsList }) {
                                 onChange={(e) => setProjectId(e.target.value)}
                                 value={projectId}
                                 required
+                                disabled
                             >
                                 <option value="">Select Project</option>
                                 {projectsList.map((item) => (
@@ -196,6 +220,26 @@ export default function ManageFloorPlans({ list, projectsList }) {
                 confirmBox={confirmBox}
                 setConfirmBox={setConfirmBox}
             />
+            <Modal show={showPlans} onHide={() => setShowPlans(false)} centered
+                style={{ minHeight: "400px" }}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Floor Plans</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {list
+                        .filter(item => item.projectId === projectId)
+                        .flatMap(item => item.plans)
+                        .map((plan, index) => (
+                            <div key={plan.id || index} className="btn btn-success mb-3 mx-2 w-25">
+                                <div className="d-flex align-items-center justify-content-between">
+                                    <div onClick={() => openUpdateFloorPlan(plan)}>{plan.planType}</div>
+                                    <FontAwesomeIcon className="m-0 p-0 text-light bg-danger p-2 rounded-pill" icon={faClose} onClick={() => openConfirmationBox(plan.id)} />
+                                </div>
+                            </div>
+                        ))}
+                    <Button className="mb-3 mx-2" onClick={openAddFloorPlan}>+ Add New</Button>
+                </Modal.Body>
+            </Modal>
         </div>
     );
 }
