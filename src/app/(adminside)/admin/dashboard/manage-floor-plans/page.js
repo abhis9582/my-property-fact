@@ -1,6 +1,6 @@
 import axios from "axios";
 import ManageFloorPlans from "./manageFloorPlans";
-
+export const dynamic = 'force-dynamic';
 //Fetching all floor plans from api
 const fetchAllFloorPlans = async () => {
   const floorPlans = await axios.get(

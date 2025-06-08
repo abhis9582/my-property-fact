@@ -1,6 +1,7 @@
 import axios from "axios";
 import ManageFaqs from "./manageFaq";
 //fetching all projects list
+export const dynamic = 'force-dynamic';
 const fetchProjects = async () => {
   const projectResponse = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}projects/get-all`
