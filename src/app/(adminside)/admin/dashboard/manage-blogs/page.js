@@ -1,6 +1,6 @@
 import axios from "axios";
 import ManageBlogs from "./manageBlogs";
-
+export const dynamic = 'force-dynamic';
 //Fetching all blogs list from api
 const fetchBlogList = async () => {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}blog/get-all`);

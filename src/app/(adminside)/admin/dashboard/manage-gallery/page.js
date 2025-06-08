@@ -1,6 +1,6 @@
 import axios from "axios";
 import ManageGallery from "./manageGallery";
-
+export const dynamic = 'force-dynamic';
 //Fetching all gallery images
 const fetchGalleryImage = async () => {
   const response = await axios.get(
