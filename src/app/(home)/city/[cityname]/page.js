@@ -15,7 +15,8 @@ async function fetchProperties(citySlug) {
 
 // Generate dynamic metadata for SEO
 export async function generateMetadata({ params }) {
-  const cityData = await fetchSeoData(params.cityname);
+  const { cityname } = await params;
+  const cityData = await fetchSeoData(cityname);
   return {
     title: cityData.metaTitle,
     description: cityData.metaDescription,
@@ -24,12 +25,12 @@ export async function generateMetadata({ params }) {
 
 // Main page component
 export default async function AllCityProjects({ params }) {
-  const citySlug = params.cityname;
+  const { cityname } = await params;
 
   // Fetch both in parallel
   const [cityData, projectsList] = await Promise.all([
-    fetchSeoData(citySlug),
-    fetchProperties(citySlug),
+    fetchSeoData(cityname),
+    fetchProperties(cityname),
   ]);
 
   return (

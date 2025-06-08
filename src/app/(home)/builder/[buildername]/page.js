@@ -19,7 +19,8 @@ const fetchProjectsListOfBuilder = async (id) => {
 
 //Generating metatitle and meta description
 export async function generateMetadata({ params }) {
-  const response = await fetchBuilderDetails(params.buildername);
+  const { buildername } = await params;
+  const response = await fetchBuilderDetails(buildername);
   return {
     title: response.metaTitle,
     descritpion: response.metaDescription

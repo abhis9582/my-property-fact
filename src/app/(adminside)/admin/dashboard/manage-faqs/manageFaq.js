@@ -94,13 +94,13 @@ export default function ManageFaqs({ list, projectsList }) {
     //Defining table columns
     const columns = [
         { field: "index", headerName: "S.no", width: 100, cellClassName: "centered-cell" },
-        { field: "projectName", headerName: "Project Name", width: 250 },
-        { field: "question", headerName: "Question", width: 600 },
-        { field: "answer", headerName: "Answer", width: 600 },
+        { field: "projectName", headerName: "Project Name", flex: 1 },
+        { field: "question", headerName: "Question", flex: 1 },
+        { field: "answer", headerName: "Answer", flex: 1 },
         {
             field: "action",
             headerName: "Action",
-            width: 200,
+            width: 100,
             renderCell: (params) => (
                 <div className="gap-3">
                     <FontAwesomeIcon

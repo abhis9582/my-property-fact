@@ -3,34 +3,35 @@ import { useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { Button, Form, Modal } from "react-bootstrap";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { toast } from "react-toastify";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import CommonModal from "../common-model/common-model";
-import DataTable from "../common-model/data-table";
 import DashboardHeader from "../common-model/dashboardHeader";
+import DataTable from "../common-model/data-table";
+
 // Dynamically import JoditEditor with SSR disabled
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
-export default function ManageProjectAbout({ list, projectsList }) {
+export default function ManageProjectWalkthrough({ list, projectList }) {
     const editor = useRef(null);
-    const [shortDesc, setShortDesc] = useState("");
-    const [longDesc, setLongDesc] = useState("");
+    const [walkthroughDesc, setWalkthroughDesc] = useState("");
     const [projectId, setProjectId] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [title, setTitle] = useState("");
-    const [aboutId, setAboutId] = useState(0);
+    const [buttonName, setButtonName] = useState("");
     const [confirmBox, setConfirmBox] = useState(false);
     const [validated, setValidated] = useState(false);
     const [showLoading, setShowLoading] = useState(false);
-
+    const [walkthroughId, setWalkthroughId] = useState(0);
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = {
-            shortDesc: shortDesc,
-            longDesc: longDesc,
+            walkthroughDesc: walkthroughDesc,
             projectId: projectId,
+            id: 0
         };
         const form = e.currentTarget;
         if (form.checkValidity() === false) {
@@ -39,59 +40,59 @@ export default function ManageProjectAbout({ list, projectsList }) {
             return;
         }
         if (form.checkValidity() === true) {
-            setShowLoading(true);
+            if (walkthroughId > 0) {
+                data.id = walkthroughId;
+            }
             try {
-                if (aboutId > 0) {
-                    data.id = aboutId;
-                }
+                setShowLoading(true);
+                setButtonName("");
                 const response = await axios.post(
-                    `${process.env.NEXT_PUBLIC_API_URL}project-about/add-update`,
+                    `${apiUrl}project-walkthrough/add-update`,
                     data
                 );
                 if (response.data.isSuccess === 1) {
                     toast.success(response.data.message);
                     setShowModal(false);
-                    fetchProjectsAbout();
-                } else {
-                    toast.error(response.data.message);
+                    fetchProjects();
                 }
             } catch (error) {
                 toast.error(error);
             } finally {
                 setShowLoading(false);
+                setButtonName("Add");
             }
         }
     };
 
-    const openAddModel = () => {
-        setShowModal(true);
-        setTitle("Add Project About");
-        setProjectId(0);
-        setShortDesc("");
-        setLongDesc("");
-        setAboutId(0);
+    //Handle open model
+    const openAddModal = () => {
         setValidated(false);
-    };
-    const openEditModel = (item) => {
         setShowModal(true);
-        setTitle("Edit Project About");
-        setProjectId(item.projectId);
-        setShortDesc(item.shortDesc);
-        setLongDesc(item.longDesc);
-        setAboutId(item.id);
+        setTitle("Add Walkthrough");
+        setButtonName("Add");
+        setWalkthroughDesc(null);
+        setProjectId(0);
     };
 
+    //Handle deleting walkthrough
     const openConfirmationBox = (id) => {
-        setAboutId(id);
         setConfirmBox(true);
+        setWalkthroughId(id);
     };
 
+    const openEditPopUp = (item) => {
+        setShowModal(true);
+        setTitle("Update Walkthrough");
+        setButtonName("Update");
+        setWalkthroughDesc(item.walkthroughDesc);
+        setProjectId(item.projectId);
+        setWalkthroughId(item.id);
+    };
     //Defining table columns
     const columns = [
-        { field: "index", headerName: "S.no", width: 100, cellClassName: "centered-cell" },
+        { field: "index", headerName: "S.no", width: 100 },
         { field: "projectName", headerName: "Project Name", flex: 1 },
-        { field: "shortDesc", headerName: "Short Description", flex: 1 },
-        { field: "longDesc", headerName: "Long Description", flex: 1 },
+        { field: "walkthroughDesc", headerName: "Amenities", flex: 1 },
         {
             field: "action",
             headerName: "Action",
@@ -108,7 +109,7 @@ export default function ManageProjectAbout({ list, projectsList }) {
                         className="text-warning pointer mx-2"
                         style={{ cursor: "pointer" }}
                         icon={faPencil}
-                        onClick={() => openEditModel(params.row)}
+                        onClick={() => openEditPopUp(params.row)}
                     />
                 </div>
             ),
@@ -116,27 +117,28 @@ export default function ManageProjectAbout({ list, projectsList }) {
     ];
     return (
         <div className="container-fluid">
-            <DashboardHeader buttonName={"+ Add"} functionName={openAddModel} heading={"Manage Project About"} />
-            <div className="table-container mt-5">
+            <DashboardHeader buttonName={'+ Add Walkthrough'} functionName={openAddModal} heading={'Manage Project Walkthrough'} />
+            {/* Show All data in tabular form */}
+            <div className="mt-5">
                 <DataTable columns={columns} list={list} />
             </div>
-            {/* Modal for adding a new city */}
-            <Modal size="lg" show={showModal} onHide={() => setShowModal(false)} centered>
+            {/* Model for adding walkthrough */}
+            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                        <Form.Group md="4" controlId="validationCustom01">
+                        <Form.Group controlId="selectProject">
                             <Form.Label>Select Project</Form.Label>
                             <Form.Select
-                                aria-label="Default select example"
-                                onChange={(e) => setProjectId(e.target.value)}
+                                aria-label="projects"
                                 value={projectId}
+                                onChange={(e) => setProjectId(e.target.value)}
                                 required
                             >
                                 <option value="">Select Project</option>
-                                {projectsList.map((item) => (
+                                {projectList.map((item) => (
                                     <option
                                         className="text-uppercase"
                                         key={item.id}
@@ -150,29 +152,21 @@ export default function ManageProjectAbout({ list, projectsList }) {
                                 Project is required !
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="formCityName">
-                            <Form.Label>Write short description</Form.Label>
+                        <Form.Group className="mb-3 mt-4" controlId="formCityName">
+                            <Form.Label>Walkthrough description</Form.Label>
                             <JoditEditor
                                 ref={editor}
-                                value={shortDesc}
-                                onChange={(newcontent) => setShortDesc(newcontent)}
-                            />
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="formCityName">
-                            <Form.Label>Write long description</Form.Label>
-                            <JoditEditor
-                                ref={editor}
-                                value={longDesc}
-                                onChange={(newcontent) => setLongDesc(newcontent)}
+                                value={walkthroughDesc}
+                                onChange={(newcontent) => setWalkthroughDesc(newcontent)}
                             />
                         </Form.Group>
                         <Button className="btn btn-success" type="submit" disabled={showLoading}>
-                            Submit <LoadingSpinner show={showLoading} />
+                            {buttonName} <LoadingSpinner show={showLoading} />
                         </Button>
                     </Form>
                 </Modal.Body>
             </Modal>
-            <CommonModal api={`${process.env.NEXT_PUBLIC_API_URL}project-about/delete/${aboutId}`} confirmBox={confirmBox} setConfirmBox={setConfirmBox} />
+            <CommonModal confirmBox={confirmBox} setConfirmBox={setConfirmBox} api={`${process.env.NEXT_PUBLIC_API_URL}project-walkthrough/delete/${walkthroughId}`} />
         </div>
     );
 }

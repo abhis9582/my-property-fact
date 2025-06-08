@@ -19,7 +19,8 @@ const fetchProjectsList = async (type) => {
 
 //Generating metatitle and meta description
 export async function generateMetadata({ params }) {
-  const response = await fetchProjectTypeDetail(params.projecttype);
+  const { projecttype } = await params;
+  const response = await fetchProjectTypeDetail(projecttype);
   return {
     title: response.metaTitle,
     descritpion: response.metaDesc
@@ -33,5 +34,5 @@ export default async function ProjectType({ params }) {
     fetchProjectsList(projecttype)
   ]);
 
-  return <PropertyPage projectTypeDetails={projectTypeDetail} projectsList={projectsList}/>
+  return <PropertyPage projectTypeDetails={projectTypeDetail} projectsList={projectsList} />
 }

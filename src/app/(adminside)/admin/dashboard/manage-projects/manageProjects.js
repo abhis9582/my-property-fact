@@ -116,7 +116,7 @@ export default function ManageProjects({ builderList }) {
     //fetching all project list details
     const fetchProjectsWithDetail = async () => {
         const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}projects/get-all`
+            `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
         );
         const res = response.data;
         const list = res.map((item, index) => ({
@@ -185,28 +185,38 @@ export default function ManageProjects({ builderList }) {
     };
     //Defining table columns
     const columns = [
-        { field: "index", headerName: "S.no", width: 100, cellClassName: "centered-cell", },
-        { field: "projectName", headerName: "Project Name", width: 180 },
-        { field: "projectBy", headerName: "Project By", width: 150 },
+        {
+            field: "index", headerName: "S.no",
+            width: 100,
+            cellClassName: "centered-cell",
+        },
+        {
+            field: "projectName", headerName: "Project Name",
+            flex: 1,
+        },
+        {
+            field: "projectBy", headerName: "Project By",
+            flex: 1,
+        },
         {
             field: "projectLocality",
             headerName: "Project Locality",
-            width: 239,
+            flex: 1,
         },
         {
             field: "projectConfiguration",
             headerName: "Project Configuration",
-            width: 260,
+            flex: 1,
         },
         {
             field: "propertyType",
             headerName: "Property Type",
-            width: 150,
+            flex: 1,
         },
         {
             field: "action",
             headerName: "Action",
-            width: 150,
+            width: 100,
             renderCell: (params) => (
                 <div>
                     <FontAwesomeIcon

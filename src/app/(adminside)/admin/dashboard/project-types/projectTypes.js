@@ -71,14 +71,14 @@ export default function ProjectTypes({ list }) {
     //Defining table columns
     const columns = [
         { field: "index", headerName: "S.no", width: 100, cellClassName: "centered-cell" },
-        { field: "projectTypeName", headerName: "Project Type Name", width: 250 },
-        { field: "metaTitle", headerName: "Meta Title", width: 300 },
-        { field: "metaDesc", headerName: "Meta Description", width: 315 },
-        { field: "metaKeyword", headerName: "Meta Keyword", width: 200 },
+        { field: "projectTypeName", headerName: "Project Type Name", flex: 1 },
+        { field: "metaTitle", headerName: "Meta Title", flex: 1 },
+        { field: "metaDesc", headerName: "Meta Description", flex: 1 },
+        { field: "metaKeyword", headerName: "Meta Keyword", flex: 1 },
         {
             field: "action",
             headerName: "Action",
-            width: 200,
+            width: 100,
             renderCell: (params) => (
                 <div>
                     <FontAwesomeIcon

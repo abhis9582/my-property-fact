@@ -8,13 +8,12 @@ export default function DataTable({ list, columns }) {
 
     return (
         <>
-            <Paper sx={{ height: 650, width: "100%" }}>
+            <Paper sx={{ height: 'auto', width: "auto" }}>
                 <DataGrid
                     rows={list}
                     columns={columns}
                     initialState={{ pagination: { paginationModel } }}
                     pageSizeOptions={[10, 15, 20, 50]}
-                    // checkboxSelection
                     sx={{
                         border: 0,
                         "& .MuiDataGrid-columnHeader": {

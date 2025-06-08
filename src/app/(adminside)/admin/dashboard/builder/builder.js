@@ -70,22 +70,22 @@ export default function Builder({ list }) {
     //Defining table columns
     const columns = [
         { field: "index", headerName: "S.no", width: 100, cellClassName: "centered-cell" },
-        { field: "builderName", headerName: "Builder Name", width: 180 },
-        { field: "metaTitle", headerName: "Meta title", width: 150 },
+        { field: "builderName", headerName: "Builder Name", flex: 1 },
+        { field: "metaTitle", headerName: "Meta title", flex: 1 },
         {
             field: "metaKeyword",
             headerName: "Meta Keyword",
-            width: 400,
+            flex: 1,
         },
         {
             field: "metaDesc",
             headerName: "Meta Description",
-            width: 420,
+            flex: 1,
         },
         {
             field: "action",
             headerName: "Action",
-            width: 110,
+            width: 100,
             renderCell: (params) => (
                 <div>
                     <FontAwesomeIcon

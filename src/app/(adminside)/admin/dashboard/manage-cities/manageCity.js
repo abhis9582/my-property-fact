@@ -73,23 +73,23 @@ export default function City({ list }) {
 
     //Defining table columns
     const columns = [
-        { field: "index", headerName: "S.no", width: 70, cellClassName: "centered-cell" },
-        { field: "name", headerName: "City Name", width: 150 },
-        { field: "state", headerName: "State", width: 150 },
+        { field: "index", headerName: "S.no", width: 100, cellClassName: "centered-cell" },
+        { field: "name", headerName: "City Name", flex: 1 },
+        { field: "state", headerName: "State", flex: 1 },
         {
             field: "metaTitle",
             headerName: "Meta Title",
-            width: 250,
+            flex: 1
         },
         {
             field: "metaKeyWords",
             headerName: "Meta Keyword",
-            width: 295,
+            flex: 1
         },
         {
             field: "metaDescription",
             headerName: "Meta Description",
-            width: 350,
+            flex: 1
         },
         {
             field: "action",
@@ -134,7 +134,7 @@ export default function City({ list }) {
                 title={title}
                 validated={validated}
                 setFormData={setFormData}
-                api= {"city/add-new"}
+                api={"city/add-new"}
             />
             <CommonModal
                 api={`${process.env.NEXT_PUBLIC_API_URL}city/delete/${cityId}`}
