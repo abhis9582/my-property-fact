@@ -106,17 +106,17 @@ export default function Home() {
     };
   }, []);
 
-   useEffect(() => {
+  useEffect(() => {
     const handleScroll = () => {
       const div = document.querySelector('.pricelistdiv12');
       const img = document.querySelector('.iconimgTop');
 
       if (window.innerWidth > 768 && window.scrollY > 300) {
         if (div) (div).style.display = 'none';
-        if (img) img.src = '/eldeco-la-vida-bella-images/assets/images/plus.png';
+        if (img) img.src = '/eldeco-la-vida-bella-images/images/images/plus.png';
       } else {
         if (div) (div).style.display = 'block';
-        if (img) img.src = '/eldeco-la-vida-bella-images/assets/images/minus.png';
+        if (img) img.src = '/eldeco-la-vida-bella-images/images/images/minus.png';
       }
     };
 
@@ -129,7 +129,7 @@ export default function Home() {
       }
 
       if (img) {
-        img.src = img.src.includes('plus.png') ? '/eldeco-la-vida-bella-images/assets/images/minus.png' : '/eldeco-la-vida-bella-images/assets/images/plus.png';
+        img.src = img.src.includes('plus.png') ? '/eldeco-la-vida-bella-images/images/minus.png' : '/eldeco-la-vida-bella-images/images/plus.png';
       }
     };
 
@@ -248,56 +248,56 @@ export default function Home() {
 
       <div className="container-fluid navbar_container" id="header_menu">
         <nav className="navbar navbar-expand-md navbar-light bg-white"> {/* Adjust classes as needed */}
-      <div className="container"> {/* Optional: Add a container for better layout */}
-        <Link className="navbar-brand" href="#"> {/* Replace with your logo or brand name */}
-          {/* Your Logo Here */}
-          <img src="/eldeco-la-vida-bella-images/assets/images/developer-logo.webp" alt="Logo" />
-        </Link>
+          <div className="container"> {/* Optional: Add a container for better layout */}
+            <Link className="navbar-brand" href="#"> {/* Replace with your logo or brand name */}
+              {/* Your Logo Here */}
+              <img src="/eldeco-la-vida-bella-images/images/developer-logo.webp" alt="Logo" />
+            </Link>
 
-        <button
-          className="navbar-toggler"
-          type="button"
-          onClick={toggleMenu} // Use onClick instead of data-toggle/data-target
-          aria-controls="collapsibleNavbar"
-          aria-expanded={isMenuOpen}
-          aria-label="Toggle navigation"
-        >
-          <img src="/eldeco-la-vida-bella-images/assets/images/menu-bar.png" alt="Menu" className="img-fluid menu_bar" width={30} height={30} />
-        </button>
+            <button
+              className="navbar-toggler"
+              type="button"
+              onClick={toggleMenu} // Use onClick instead of data-toggle/data-target
+              aria-controls="collapsibleNavbar"
+              aria-expanded={isMenuOpen}
+              aria-label="Toggle navigation"
+            >
+              <img src="/eldeco-la-vida-bella-images/images/menu-bar.png" alt="Menu" className="img-fluid menu_bar" width={30} height={30} />
+            </button>
 
-        <div
-          className={`collapse navbar-collapse justify-content-end ${isMenuOpen ? 'show' : ''}`} // Conditionally add 'show' class
-          id="collapsibleNavbar"
-        >
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <Link className="nav-link" href="#">Home</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link nav-link-custom" href="#overview">Overview</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link nav-link-custom" href="#highlights">Highlights</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link nav-link-custom" href="#price-list">Price List</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link nav-link-custom" href="#amenities">Amenities</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link nav-link-custom" href="#floors-plan">Floors plan</Link>
-            </li>
-            <li className="nav-item specail-li">
-              <Link className="nav-link nav-link-custom" href="#location">Location</Link>
-            </li>
-            <li className="nav-item specail-li">
-              <Link className="nav-link nav-link-custom" href="#gallery">Gallery</Link>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+            <div
+              className={`collapse navbar-collapse justify-content-end ${isMenuOpen ? 'show' : ''}`} // Conditionally add 'show' class
+              id="collapsibleNavbar"
+            >
+              <ul className="navbar-nav">
+                <li className="nav-item">
+                  <Link className="nav-link" href="#">Home</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link nav-link-custom" href="#overview">Overview</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link nav-link-custom" href="#highlights">Highlights</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link nav-link-custom" href="#price-list">Price List</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link nav-link-custom" href="#amenities">Amenities</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link nav-link-custom" href="#floors-plan">Floors plan</Link>
+                </li>
+                <li className="nav-item specail-li">
+                  <Link className="nav-link nav-link-custom" href="#location">Location</Link>
+                </li>
+                <li className="nav-item specail-li">
+                  <Link className="nav-link nav-link-custom" href="#gallery">Gallery</Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
       </div>
       {/* <!-------------------------- Navbar End From Here ------------------------------> */}
       {/* <!-------------------------- Slider Start From Here  ------------------------------> */}
@@ -308,14 +308,14 @@ export default function Home() {
           <div className="carousel-inner">
             <div className="carousel-item active">
               <img
-                src="/eldeco-la-vida-bella-images/assets/images/banner_img.jpg"
+                src="/eldeco-la-vida-bella-images/images/banner_img.jpg"
                 alt="Eldeco-la-vida-bella "
                 className="w-100"
               />
             </div>
             {/* <!-- <div className="carousel-item">
             <img
-              src="/eldeco-la-vida-bella-images/assets/images/banner-2.jpg"
+              src="/eldeco-la-vida-bella-images/images/banner-2.jpg"
               alt="Eldeco-la-vida-bella "
               className="w-100"
             />
@@ -325,10 +325,10 @@ export default function Home() {
           {/* <!-- Left and right controls --> */}
           {/* <!-- <div className="btn-group">
                 <Link className="carousel-control-prev" href="#demo" data-slide="prev">
-                    <img src="/eldeco-la-vida-bella-images/assets/images/leftarrow.png" alt="left arrow" className="img-fluid arrow-icon">
+                    <img src="/eldeco-la-vida-bella-images/images/leftarrow.png" alt="left arrow" className="img-fluid arrow-icon">
                 </Link>
                 <Link className="carousel-control-next" href="#demo" data-slide="next">
-                    <img src="/eldeco-la-vida-bella-images/assets/images/rightarrow.png" alt="left arrow" className="img-fluid arrow-icon">
+                    <img src="/eldeco-la-vida-bella-images/images/rightarrow.png" alt="left arrow" className="img-fluid arrow-icon">
                 </Link>
             </div> --> */}
         </div>
@@ -340,7 +340,7 @@ export default function Home() {
                         <div className="box-1">
                             <p className="location-p">Sector 12, Greater Noida (west)</p>
                             <h1 className="projectName_heading">
-                                <img src="/eldeco-la-vida-bella-images/assets/images/project-logo.png" alt="developer-logo" className="img-fluid project-logo" />
+                                <img src="/eldeco-la-vida-bella-images/images/project-logo.png" alt="developer-logo" className="img-fluid project-logo" />
                             </h1>
                             <h4 className="typology_heading">3/4 BR Premium Residences</h4>
                             <p className="price_heading">STARTING AT</p>
@@ -363,7 +363,7 @@ export default function Home() {
             Contact With Us!
             <span>
               <img
-                src="/eldeco-la-vida-bella-images/assets/images/minus.png"
+                src="/eldeco-la-vida-bella-images/images/minus.png"
                 alt="minus-icon"
                 className="img-fluid mybtn iconimgTop"
                 id="showfrm"
@@ -440,35 +440,35 @@ export default function Home() {
 
       {/* <!-------------- Overview Section Codes Starts From Here -----------------> */}
       <div className="container-fluid overview_container p-0" id="overview">
-        {/* <!-- <img src="/eldeco-la-vida-bella-images/assets/images/logo/rotate-logo.png" alt="" className="img-fluid overview_bg_logo">  --> */}
+        {/* <!-- <img src="/eldeco-la-vida-bella-images/images/logo/rotate-logo.png" alt="" className="img-fluid overview_bg_logo">  --> */}
         <div className="row">
           <div className="col-sm-12 col-md-6 col-lg-6">
             <div className="forbox_imgs">
               <div className="row">
                 <div className="col-6 col-sm-12 col-md-6 col-lg-6 first_col">
                   <img
-                    src="/eldeco-la-vida-bella-images/assets/images/o1.png"
+                    src="/eldeco-la-vida-bella-images/images/o1.png"
                     alt="Eldeco-la-vida-bella "
                     className="img-fluid img-1"
                   />
                 </div>
                 <div className="col-6 col-sm-12 col-md-6 col-lg-6 second_col">
                   <img
-                    src="/eldeco-la-vida-bella-images/assets/images/o2.png"
+                    src="/eldeco-la-vida-bella-images/images/o2.png"
                     alt="Eldeco-la-vida-bella "
                     className="img-fluid img-1"
                   />
                 </div>
                 <div className="col-6 col-sm-12 col-md-6 col-lg-6 third_col">
                   <img
-                    src="/eldeco-la-vida-bella-images/assets/images/o3.png"
+                    src="/eldeco-la-vida-bella-images/images/o3.png"
                     alt="Eldeco-la-vida-bella "
                     className="img-fluid img-1"
                   />
                 </div>
                 <div className="col-6 col-sm-12 col-md-6 col-lg-6 forth_col">
                   <img
-                    src="/eldeco-la-vida-bella-images/assets/images/o4.png"
+                    src="/eldeco-la-vida-bella-images/images/o4.png"
                     alt="Eldeco-la-vida-bella "
                     className="img-fluid img-1"
                   />
@@ -528,7 +528,7 @@ export default function Home() {
                 <div className="highlight_box">
                   <span className="span-count">1</span>
                   <img
-                    src="/eldeco-la-vida-bella-images/assets/images/h1.png"
+                    src="/eldeco-la-vida-bella-images/images/h1.png"
                     alt=""
                     className="img-fluid highlights-icons"
                   />
@@ -543,7 +543,7 @@ export default function Home() {
                 <div className="highlight_box">
                   <span className="span-count">2</span>
                   <img
-                    src="/eldeco-la-vida-bella-images/assets/images/h2.png"
+                    src="/eldeco-la-vida-bella-images/images/h2.png"
                     alt=""
                     className="img-fluid highlights-icons"
                   />
@@ -558,7 +558,7 @@ export default function Home() {
                 <div className="highlight_box">
                   <span className="span-count">3</span>
                   <img
-                    src="/eldeco-la-vida-bella-images/assets/images/h3.png"
+                    src="/eldeco-la-vida-bella-images/images/h3.png"
                     alt=""
                     className="img-fluid highlights-icons"
                   />
@@ -573,7 +573,7 @@ export default function Home() {
                 <div className="highlight_box">
                   <span className="span-count">4</span>
                   <img
-                    src="/eldeco-la-vida-bella-images/assets/images/h4.png"
+                    src="/eldeco-la-vida-bella-images/images/h4.png"
                     alt=""
                     className="img-fluid highlights-icons"
                   />
@@ -588,7 +588,7 @@ export default function Home() {
                 <div className="highlight_box">
                   <span className="span-count">5</span>
                   <img
-                    src="/eldeco-la-vida-bella-images/assets/images/h5.png"
+                    src="/eldeco-la-vida-bella-images/images/h5.png"
                     alt=""
                     className="img-fluid highlights-icons"
                   />
@@ -603,7 +603,7 @@ export default function Home() {
                 <div className="highlight_box">
                   <span className="span-count">6</span>
                   <img
-                    src="/eldeco-la-vida-bella-images/assets/images/h3.png"
+                    src="/eldeco-la-vida-bella-images/images/h3.png"
                     alt=""
                     className="img-fluid highlights-icons"
                   />
@@ -639,9 +639,9 @@ export default function Home() {
                   data-toggle="modal"
                   data-target="#myModal"
                   onClick={() => {
-                  const modal = document.getElementById('myModal');
-                  if (modal) modal.style.display = 'block';
-                }}
+                    const modal = document.getElementById('myModal');
+                    if (modal) modal.style.display = 'block';
+                  }}
                 >
                   Enquire Now
                 </button>
@@ -660,9 +660,9 @@ export default function Home() {
                   data-toggle="modal"
                   data-target="#myModal"
                   onClick={() => {
-                  const modal = document.getElementById('myModal');
-                  if (modal) modal.style.display = 'block';
-                }}
+                    const modal = document.getElementById('myModal');
+                    if (modal) modal.style.display = 'block';
+                  }}
                 >
                   Enquire Now
                 </button>
@@ -690,7 +690,7 @@ export default function Home() {
               <div className="amenities_box">
                 <div className="box">
                   <span>01</span>
-                  <img src="/eldeco-la-vida-bella-images/assets/images/a1.png" alt="amenities" className="img-fluid" />
+                  <img src="/eldeco-la-vida-bella-images/images/a1.png" alt="amenities" className="img-fluid" />
                   <h4>Lifestyle club</h4>
                 </div>
               </div>
@@ -699,7 +699,7 @@ export default function Home() {
               <div className="amenities_box">
                 <div className="box">
                   <span>02</span>
-                  <img src="/eldeco-la-vida-bella-images/assets/images/a2.png" alt="amenities" className="img-fluid" />
+                  <img src="/eldeco-la-vida-bella-images/images/a2.png" alt="amenities" className="img-fluid" />
                   <h4>Roof Top Swimming Pool With Loungers</h4>
                 </div>
               </div>
@@ -708,7 +708,7 @@ export default function Home() {
               <div className="amenities_box">
                 <div className="box">
                   <span>03</span>
-                  <img src="/eldeco-la-vida-bella-images/assets/images/a3.png" alt="amenities" className="img-fluid" />
+                  <img src="/eldeco-la-vida-bella-images/images/a3.png" alt="amenities" className="img-fluid" />
                   <h4>Gym</h4>
                 </div>
               </div>
@@ -717,7 +717,7 @@ export default function Home() {
               <div className="amenities_box">
                 <div className="box">
                   <span>04</span>
-                  <img src="/eldeco-la-vida-bella-images/assets/images/a4.png" alt="amenities" className="img-fluid" />
+                  <img src="/eldeco-la-vida-bella-images/images/a4.png" alt="amenities" className="img-fluid" />
                   <h4>Yoga and Meditation</h4>
                 </div>
               </div>
@@ -726,7 +726,7 @@ export default function Home() {
               <div className="amenities_box">
                 <div className="box">
                   <span>05</span>
-                  <img src="/eldeco-la-vida-bella-images/assets/images/a5.png" alt="amenities" className="img-fluid" />
+                  <img src="/eldeco-la-vida-bella-images/images/a5.png" alt="amenities" className="img-fluid" />
                   <h4>Amphitheatre</h4>
                 </div>
               </div>
@@ -735,7 +735,7 @@ export default function Home() {
               <div className="amenities_box">
                 <div className="box">
                   <span>06</span>
-                  <img src="/eldeco-la-vida-bella-images/assets/images/a6.png" alt="amenities" className="img-fluid" />
+                  <img src="/eldeco-la-vida-bella-images/images/a6.png" alt="amenities" className="img-fluid" />
                   <h4>Multi-Purpose Court</h4>
                 </div>
               </div>
@@ -744,7 +744,7 @@ export default function Home() {
               <div className="amenities_box">
                 <div className="box">
                   <span>07</span>
-                  <img src="/eldeco-la-vida-bella-images/assets/images/a7.png" alt="amenities" className="img-fluid" />
+                  <img src="/eldeco-la-vida-bella-images/images/a7.png" alt="amenities" className="img-fluid" />
                   <h4>Table Tennis</h4>
                 </div>
               </div>
@@ -753,7 +753,7 @@ export default function Home() {
               <div className="amenities_box">
                 <div className="box">
                   <span>08</span>
-                  <img src="/eldeco-la-vida-bella-images/assets/images/a9.png" alt="amenities" className="img-fluid" />
+                  <img src="/eldeco-la-vida-bella-images/images/a9.png" alt="amenities" className="img-fluid" />
                   <h4>Kids Play Area</h4>
                 </div>
               </div>
@@ -765,119 +765,119 @@ export default function Home() {
       {/* <!-------------- Amenities Section Codes End From Here ----------------->
     <!-------------- Floor Plans Section codes Starts From Here -----------------> */}
 
-    <div className="container-fluid floorsplan_container" id="floors-plan">
-      <div className="container">
-        <div className="row">
-          <div className="col-sm-12">
-            <div className="all_custom_heading">
-              <h6 className="custom_heading">PROJECT</h6>
-              <h1>Floors Plan</h1>
+      <div className="container-fluid floorsplan_container" id="floors-plan">
+        <div className="container">
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="all_custom_heading">
+                <h6 className="custom_heading">PROJECT</h6>
+                <h1>Floors Plan</h1>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="row">
-          <div className="col-md-8 position-relative">
-            <div className="tab-content">
-              <div className={`tab-pane fade ${activeTab === 'menu' ? 'show active' : ''}`} id="menu">
-                <a href="/eldeco-la-vida-bella-images/assets/images/m-plan.png" className="with-caption image-link" title="floor plan">
+          <div className="row">
+            <div className="col-md-8 position-relative">
+              <div className="tab-content">
+                <div className={`tab-pane fade ${activeTab === 'menu' ? 'show active' : ''}`} id="menu">
+                  <a href="/eldeco-la-vida-bella-images/images/m-plan.png" className="with-caption image-link" title="floor plan">
+                    <img
+                      src="/eldeco-la-vida-bella-images/images/m-plan.png"
+                      alt="floor plan"
+                      className="img-fluid"
+                      width={800} // Adjust width as needed
+                      height={600} // Adjust height as needed
+                      layout="responsive" // Optional: Make the image responsive
+                    />
+                  </a>
+                  <button
+                    className="btn btn-custom position-absolute top-50 start-50 translate-middle"
+                    style={{ background: '#022e21', color: '#fff' }}
+                    data-bs-toggle="modal"
+                    data-bs-target="#myModal"
+                  >
+                    View Plan
+                  </button>
+                </div>
+                <div className={`tab-pane fade ${activeTab === 'menu1' ? 'show active' : ''}`} id="menu1">
                   <img
-                    src="/eldeco-la-vida-bella-images/assets/images/m-plan.png"
+                    src="/eldeco-la-vida-bella-images/images/floorplan-min-1.webp"
                     alt="floor plan"
+                    style={{ filter: 'blur(5px)' }}
                     className="img-fluid"
                     width={800} // Adjust width as needed
                     height={600} // Adjust height as needed
                     layout="responsive" // Optional: Make the image responsive
                   />
-                </a>
-                <button
-                  className="btn btn-custom position-absolute top-50 start-50 translate-middle"
-                  style={{ background: '#022e21', color: '#fff' }}
-                  data-bs-toggle="modal"
-                  data-bs-target="#myModal"
-                >
-                  View Plan
-                </button>
-              </div>
-              <div className={`tab-pane fade ${activeTab === 'menu1' ? 'show active' : ''}`} id="menu1">
-                <img
-                  src="/eldeco-la-vida-bella-images/assets/images/floorplan-min-1.webp"
-                  alt="floor plan"
-                  style={{ filter: 'blur(5px)' }}
-                  className="img-fluid"
-                  width={800} // Adjust width as needed
-                  height={600} // Adjust height as needed
-                  layout="responsive" // Optional: Make the image responsive
-                />
-                <button
-                  className="btn btn-custom position-absolute top-50 start-50 translate-middle"
-                  style={{ background: '#022e21', color: '#fff' }}
-                  data-bs-toggle="modal"
-                  data-bs-target="#myModal"
-                >
-                  View Plan
-                </button>
-              </div>
-              <div className={`tab-pane fade ${activeTab === 'menu2' ? 'show active' : ''}`} id="menu2">
-                <img
-                  src="/a"
-                  alt="floor plan"
-                  style={{ filter: 'blur(5px)' }}
-                  className="img-fluid"
-                  width={800} // Adjust width as needed
-                  height={600} // Adjust height as needed
-                  layout="responsive" // Optional: Make the image responsive
-                />
-                <button
-                  className="btn btn-custom position-absolute top-50 start-50 translate-middle"
-                  style={{ background: '#022e21', color: '#fff' }}
-                  data-bs-toggle="modal"
-                  data-bs-target="#myModal"
-                >
-                  View Plan
-                </button>
+                  <button
+                    className="btn btn-custom position-absolute top-50 start-50 translate-middle"
+                    style={{ background: '#022e21', color: '#fff' }}
+                    data-bs-toggle="modal"
+                    data-bs-target="#myModal"
+                  >
+                    View Plan
+                  </button>
+                </div>
+                <div className={`tab-pane fade ${activeTab === 'menu2' ? 'show active' : ''}`} id="menu2">
+                  <img
+                    src="/a"
+                    alt="floor plan"
+                    style={{ filter: 'blur(5px)' }}
+                    className="img-fluid"
+                    width={800} // Adjust width as needed
+                    height={600} // Adjust height as needed
+                    layout="responsive" // Optional: Make the image responsive
+                  />
+                  <button
+                    className="btn btn-custom position-absolute top-50 start-50 translate-middle"
+                    style={{ background: '#022e21', color: '#fff' }}
+                    data-bs-toggle="modal"
+                    data-bs-target="#myModal"
+                  >
+                    View Plan
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="col-md-4">
-            <ul className="nav nav-tabs">
-              <li className="nav-item">
-                <a
-                  className={`nav-link ${activeTab === 'menu' ? 'active' : ''}`}
-                  onClick={() => handleTabClick('menu')}
-                  href="#menu"
-                  role="tab" // Add role="tab" for accessibility
-                  data-bs-toggle="tab" // Keep data-bs-toggle for Bootstrap's styling
-                >
-                  Master Plan
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className={`nav-link ${activeTab === 'menu1' ? 'active' : ''}`}
-                  onClick={() => handleTabClick('menu1')}
-                  href="#menu1"
-                  role="tab" // Add role="tab" for accessibility
-                  data-bs-toggle="tab" // Keep data-bs-toggle for Bootstrap's styling
-                >
-                  3 BR Apartments (SOLD)
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className={`nav-link ${activeTab === 'menu2' ? 'active' : ''}`}
-                  onClick={() => handleTabClick('menu2')}
-                  href="#menu2"
-                  role="tab" // Add role="tab" for accessibility
-                  data-bs-toggle="tab" // Keep data-bs-toggle for Bootstrap's styling
-                >
-                  4 BR Apartments
-                </a>
-              </li>
-            </ul>
+            <div className="col-md-4">
+              <ul className="nav nav-tabs">
+                <li className="nav-item">
+                  <a
+                    className={`nav-link ${activeTab === 'menu' ? 'active' : ''}`}
+                    onClick={() => handleTabClick('menu')}
+                    href="#menu"
+                    role="tab" // Add role="tab" for accessibility
+                    data-bs-toggle="tab" // Keep data-bs-toggle for Bootstrap's styling
+                  >
+                    Master Plan
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className={`nav-link ${activeTab === 'menu1' ? 'active' : ''}`}
+                    onClick={() => handleTabClick('menu1')}
+                    href="#menu1"
+                    role="tab" // Add role="tab" for accessibility
+                    data-bs-toggle="tab" // Keep data-bs-toggle for Bootstrap's styling
+                  >
+                    3 BR Apartments (SOLD)
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className={`nav-link ${activeTab === 'menu2' ? 'active' : ''}`}
+                    onClick={() => handleTabClick('menu2')}
+                    href="#menu2"
+                    role="tab" // Add role="tab" for accessibility
+                    data-bs-toggle="tab" // Keep data-bs-toggle for Bootstrap's styling
+                  >
+                    4 BR Apartments
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
       {/* <!-------------- Floor Plans Section Codes End From Here ----------------->
     <!-------------- Location Map Section Codes Starts From Here -----------------> */}
@@ -942,12 +942,12 @@ export default function Home() {
           <div className="row">
             <div className="col-6 col-sm-12 col-md-3 col-lg-3">
               <Link
-                href="/eldeco-la-vida-bella-images/assets/images/g1-sm.png"
+                href="/eldeco-la-vida-bella-images/images/g1-sm.png"
                 className="with-caption image-link"
                 title="Eldeco-la-vida-bella"
               >
                 <img
-                  src="/eldeco-la-vida-bella-images/assets/images/g1-sm.png"
+                  src="/eldeco-la-vida-bella-images/images/g1-sm.png"
                   alt="Eldeco-la-vida-bella "
                   className="img-fluid gallery_img"
                 />
@@ -955,12 +955,12 @@ export default function Home() {
             </div>
             <div className="col-6 col-sm-12 col-md-3 col-lg-3">
               <Link
-                href="/eldeco-la-vida-bella-images/assets/images/g2-sm.png"
+                href="/eldeco-la-vida-bella-images/images/g2-sm.png"
                 className="with-caption image-link"
                 title="Eldeco-la-vida-bella"
               >
                 <img
-                  src="/eldeco-la-vida-bella-images/assets/images/g2-sm.png"
+                  src="/eldeco-la-vida-bella-images/images/g2-sm.png"
                   alt="Eldeco-la-vida-bella "
                   className="img-fluid gallery_img"
                 />
@@ -968,12 +968,12 @@ export default function Home() {
             </div>
             <div className="col-6 col-sm-12 col-md-3 col-lg-3">
               <Link
-                href="/eldeco-la-vida-bella-images/assets/images/g3-sm.png"
+                href="/eldeco-la-vida-bella-images/images/g3-sm.png"
                 className="with-caption image-link"
                 title="Eldeco-la-vida-bella"
               >
                 <img
-                  src="/eldeco-la-vida-bella-images/assets/images/g3-sm.png"
+                  src="/eldeco-la-vida-bella-images/images/g3-sm.png"
                   alt="Eldeco-la-vida-bella "
                   className="img-fluid gallery_img"
                 />
@@ -981,12 +981,12 @@ export default function Home() {
             </div>
             <div className="col-6 col-sm-12 col-md-3 col-lg-3">
               <Link
-                href="/eldeco-la-vida-bella-images/assets/images/g4-sm.png"
+                href="/eldeco-la-vida-bella-images/images/g4-sm.png"
                 className="with-caption image-link"
                 title="Eldeco-la-vida-bella"
               >
                 <img
-                  src="/eldeco-la-vida-bella-images/assets/images/g4-sm.png"
+                  src="/eldeco-la-vida-bella-images/images/g4-sm.png"
                   alt="Eldeco-la-vida-bella "
                   className="img-fluid gallery_img"
                 />
@@ -994,12 +994,12 @@ export default function Home() {
             </div>
             <div className="col-6 col-sm-12 col-md-3 col-lg-3">
               <Link
-                href="/eldeco-la-vida-bella-images/assets/images/g5-sm.png"
+                href="/eldeco-la-vida-bella-images/images/g5-sm.png"
                 className="with-caption image-link"
                 title="Eldeco-la-vida-bella"
               >
                 <img
-                  src="/eldeco-la-vida-bella-images/assets/images/g5-sm.png"
+                  src="/eldeco-la-vida-bella-images/images/g5-sm.png"
                   alt="Eldeco-la-vida-bella "
                   className="img-fluid gallery_img"
                 />
@@ -1007,12 +1007,12 @@ export default function Home() {
             </div>
             <div className="col-6 col-sm-12 col-md-3 col-lg-3">
               <Link
-                href="/eldeco-la-vida-bella-images/assets/images/g6-sm.png"
+                href="/eldeco-la-vida-bella-images/images/g6-sm.png"
                 className="with-caption image-link"
                 title="Eldeco-la-vida-bella"
               >
                 <img
-                  src="/eldeco-la-vida-bella-images/assets/images/g6-sm.png"
+                  src="/eldeco-la-vida-bella-images/images/g6-sm.png"
                   alt="Eldeco-la-vida-bella "
                   className="img-fluid gallery_img"
                 />
@@ -1020,12 +1020,12 @@ export default function Home() {
             </div>
             <div className="col-6 col-sm-12 col-md-3 col-lg-3">
               <Link
-                href="/eldeco-la-vida-bella-images/assets/images/g7-sm.png"
+                href="/eldeco-la-vida-bella-images/images/g7-sm.png"
                 className="with-caption image-link"
                 title="Eldeco-la-vida-bella"
               >
                 <img
-                  src="/eldeco-la-vida-bella-images/assets/images/g7-sm.png"
+                  src="/eldeco-la-vida-bella-images/images/g7-sm.png"
                   alt="Eldeco-la-vida-bella "
                   className="img-fluid gallery_img"
                 />
@@ -1033,12 +1033,12 @@ export default function Home() {
             </div>
             <div className="col-6 col-sm-12 col-md-3 col-lg-3">
               <Link
-                href="/eldeco-la-vida-bella-images/assets/images/g8-sm.png"
+                href="/eldeco-la-vida-bella-images/images/g8-sm.png"
                 className="with-caption image-link"
                 title="Eldeco-la-vida-bella"
               >
                 <img
-                  src="/eldeco-la-vida-bella-images/assets/images/g8-sm.png"
+                  src="/eldeco-la-vida-bella-images/images/g8-sm.png"
                   alt="Eldeco-la-vida-bella "
                   className="img-fluid gallery_img"
                 />
@@ -1087,8 +1087,8 @@ export default function Home() {
                   >Disclaimer &amp; Privacy Policy</Link
                   >
                 </p>
-                {/* <!-- <Link href="/eldeco-la-vida-bella-images/assets/images/qrcode.jpeg" className="with-caption image-link" title="Eldeco-la-vida-bella"> -->
-              <!-- <img src="/eldeco-la-vida-bella-images/assets/images/qrcode.jpeg" alt="Eldeco-la-vida-bella " className="img-fluid gallery_img"> --> */}
+                {/* <!-- <Link href="/eldeco-la-vida-bella-images/images/qrcode.jpeg" className="with-caption image-link" title="Eldeco-la-vida-bella"> -->
+              <!-- <img src="/eldeco-la-vida-bella-images/images/qrcode.jpeg" alt="Eldeco-la-vida-bella " className="img-fluid gallery_img"> --> */}
               </div>
             </div>
           </div>
@@ -1104,9 +1104,9 @@ export default function Home() {
             data-toggle="modal"
             data-target="#myModal"
             onClick={() => {
-                  const modal = document.getElementById('myModal');
-                  if (modal) modal.style.display = 'block';
-                }}
+              const modal = document.getElementById('myModal');
+              if (modal) modal.style.display = 'block';
+            }}
           >
             Enquire Now</Link
           >
@@ -1119,7 +1119,7 @@ export default function Home() {
           <div className="modal-content">
             <button type="button" className="close" data-dismiss="modal">
               <img
-                src="/eldeco-la-vida-bella-images/assets/images/modal-close.png"
+                src="/eldeco-la-vida-bella-images/images/modal-close.png"
                 alt="close-icon"
                 className="img-fluid modal_close"
               />
@@ -1128,7 +1128,7 @@ export default function Home() {
             <div className="modal-body">
               <div className="top_modal_content">
                 <img
-                  src="/eldeco-la-vida-bella-images/assets/images/project-logo.png"
+                  src="/eldeco-la-vida-bella-images/images/project-logo.png"
                   alt="project-logo"
                   className="img-fluid modal-logo"
                 />
@@ -1182,7 +1182,7 @@ export default function Home() {
                     type="submit"
                     className="btn btn-warning bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded w-full"
                     disabled={loading}
-                    style={{width: "100%"}}
+                    style={{ width: "100%" }}
                   >
                     {loading ? 'Submitting...' : 'Schedule Site Visit'}
                   </button>
@@ -1255,7 +1255,7 @@ export default function Home() {
               <div className="row">
                 <div className="col-md-6 left_col">
                   <img
-                    src="/eldeco-la-vida-bella-images/assets/images/modal-img.webp"
+                    src="/eldeco-la-vida-bella-images/images/modal-img.webp"
                     alt="modal img"
                     className="img-fluid"
                   />
@@ -1267,7 +1267,7 @@ export default function Home() {
                   </button>
                   <div className="formbox2">
                     <div className="top_modal_content">
-                      {/* <!-- <img src="/eldeco-la-vida-bella-images/assets/images/logo/project-logo.png" alt="project-logo"
+                      {/* <!-- <img src="/eldeco-la-vida-bella-images/images/logo/project-logo.png" alt="project-logo"
                                         className="img-fluid modal-logo"> --> */}
                       <p className="location-p">Sector 12, Greater Noida (west)</p>
                       <h4 className="typology_heading">4 BR Premium Residences</h4>
