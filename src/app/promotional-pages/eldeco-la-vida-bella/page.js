@@ -59,18 +59,30 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const closeModal = () => {
-      const modal = document.getElementById('myModal');
-      if (modal) modal.style.display = 'none';
-    };
+  const closeModal = () => {
+    const modal = document.getElementById('myModal');
+    if (modal) modal.style.display = 'none';
+  };
 
-    const buttons = document.querySelectorAll('.close');
-    buttons.forEach(btn => btn.addEventListener('click', closeModal));
+  const buttons = document.querySelectorAll('.close');
+  buttons.forEach(btn => btn.addEventListener('click', closeModal));
 
-    return () => {
-      buttons.forEach(btn => btn.removeEventListener('click', closeModal));
-    };
-  }, []);
+  const handleOutsideClick = (event) => {
+    const modal = document.getElementById('myModal');
+    if (modal && event.target === modal) {
+      closeModal();
+    }
+  };
+
+  document.addEventListener('mousedown', handleOutsideClick);
+
+
+  return () => {
+    buttons.forEach(btn => btn.removeEventListener('click', closeModal));
+    document.removeEventListener('mousedown', handleOutsideClick);
+  };
+}, []);
+
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -819,7 +831,7 @@ export default function Home() {
                 </div>
                 <div className={`tab-pane fade ${activeTab === 'menu2' ? 'show active' : ''}`} id="menu2">
                   <img
-                    src="/a"
+                    src="/eldeco-la-vida-bella-images/images/floorplan-min-1.webp"
                     alt="floor plan"
                     style={{ filter: 'blur(5px)' }}
                     className="img-fluid"
@@ -1115,7 +1127,7 @@ export default function Home() {
 
       {/* <!-- The Modal --> */}
       <div className="modal" id="myModal" aria-hidden="true" style={{ display: "none" }}>
-        <div className="modal-dialog">
+        <div className="modal-dialog" style={{height: "100vh"}}>
           <div className="modal-content">
             <button type="button" className="close" data-dismiss="modal">
               <img
