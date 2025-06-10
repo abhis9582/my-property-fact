@@ -1103,6 +1103,7 @@ img.img-fluid.offer-logo {
   border-radius: .3rem;
   outline: 0;
   top: 50%;
+  transform: translateY(-50%);
 }
 
 .form_inner.form_inner_2 {
