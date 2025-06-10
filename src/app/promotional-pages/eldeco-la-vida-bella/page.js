@@ -491,7 +491,7 @@ export default function Home() {
           <div className="col-sm-12 col-md-6 col-lg-6 col_right">
             <div className="content-box">
               <h6 className="custom_heading">ABOUT US</h6>
-              <h1>Discover Luxury At It's Best.</h1>
+              <h1>Discover Luxury At It&apos;s Best.</h1>
               <p>
                 Eldeco La Vida Bella takes you to the center of excitement and
                 comfort. Situated amidst beautiful scenery in the thriving area of
