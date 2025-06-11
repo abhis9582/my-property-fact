@@ -8,23 +8,23 @@ export default function Home() {
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
   };
-  const formRef = useRef(null);
+  const formRef1 = useRef(null);
+  const formRef2 = useRef(null);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const scriptURL =
-    'https://script.google.com/macros/s/AKfycbyP670paikqZHr-Kl0sMzslmEJTs8k3K7yw2cUFMl0mMaKetH3KE_gvEx1B6HyR_Yty/exec';
+    'https://script.google.com/macros/s/AKfycbzixiVyziEnKNKnS72yHhzwzOoDLuMjyFf2xqOPh0hHaru2kld7-LV1pUtZpAYKXR0/exec';
 
   const isValidMobile = (mobile) => /^[6-9]\d{9}$/.test(mobile);
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, formRef) => {
     e.preventDefault();
 
     const form = formRef.current;
     const mobileNo = form.qMobileNo.value.trim();
     const email = form.qEmailID.value.trim();
-
     if (!isValidMobile(mobileNo)) {
       alert('Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9.');
       return;
@@ -36,16 +36,23 @@ export default function Home() {
     }
 
     setLoading(true);
-
     try {
+      const formData = new FormData(form);
+      const currentTime = new Date().toLocaleTimeString('en-GB', {
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+      formData.append('Time', currentTime);
       const response = await fetch(scriptURL, {
         method: 'POST',
-        body: new FormData(form),
+        body: formData,
       });
 
       if (response.ok) {
         form.reset();
-        router.push('thankyou'); // make sure you have this page
+        router.push('eldeco-la-vida-bella/thankyou'); // make sure you have this page
       } else {
         console.error('Form submission failed:', await response.text());
         alert('There was an issue submitting the form. Please try again.');
@@ -59,29 +66,29 @@ export default function Home() {
   };
 
   useEffect(() => {
-  const closeModal = () => {
-    const modal = document.getElementById('myModal');
-    if (modal) modal.style.display = 'none';
-  };
+    const closeModal = () => {
+      const modal = document.getElementById('myModal');
+      if (modal) modal.style.display = 'none';
+    };
 
-  const buttons = document.querySelectorAll('.close');
-  buttons.forEach(btn => btn.addEventListener('click', closeModal));
+    const buttons = document.querySelectorAll('.close');
+    buttons.forEach(btn => btn.addEventListener('click', closeModal));
 
-  const handleOutsideClick = (event) => {
-    const modal = document.getElementById('myModal');
-    if (modal && event.target === modal) {
-      closeModal();
-    }
-  };
+    const handleOutsideClick = (event) => {
+      const modal = document.getElementById('myModal');
+      if (modal && event.target === modal) {
+        closeModal();
+      }
+    };
 
-  document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('mousedown', handleOutsideClick);
 
 
-  return () => {
-    buttons.forEach(btn => btn.removeEventListener('click', closeModal));
-    document.removeEventListener('mousedown', handleOutsideClick);
-  };
-}, []);
+    return () => {
+      buttons.forEach(btn => btn.removeEventListener('click', closeModal));
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, []);
 
 
   useEffect(() => {
@@ -391,12 +398,12 @@ export default function Home() {
                   <form
                     id="form1"
                     name="submit-to-google-sheet-form-1"
-                    ref={formRef}
-                    onSubmit={handleSubmit}
+                    ref={formRef1}
+                    onSubmit={(e) => handleSubmit(e, formRef1)}
                   >
                     <input
                       type="text"
-                      name="name"
+                      name="Name"
                       className="form-control"
                       placeholder="Name"
                       id="qSenderName"
@@ -404,7 +411,7 @@ export default function Home() {
                     />
                     <input
                       type="tel"
-                      name="contact"
+                      name="Mobile"
                       className="form-control number-only"
                       placeholder="Mobile No"
                       id="qMobileNo"
@@ -413,7 +420,7 @@ export default function Home() {
                     />
                     <input
                       type="email"
-                      name="email"
+                      name="Email"
                       className="form-control email-address"
                       placeholder="E-Mail Address"
                       id="qEmailID"
@@ -423,11 +430,11 @@ export default function Home() {
                       className="form-control"
                       type="text"
                       placeholder="Comments.."
-                      name="message"
+                      name="Message"
                       id="qMessage"
                       required
                     />
-                    <input type="hidden" name="project" value="Eldeco-La-Vida-Bella" />
+                    <input type="hidden" name="Project" value="Eldeco-La-Vida-Bella-taboola" />
                     <button
                       type="submit"
                       className="btn btn-warning enquire-btn"
@@ -491,7 +498,7 @@ export default function Home() {
           <div className="col-sm-12 col-md-6 col-lg-6 col_right">
             <div className="content-box">
               <h6 className="custom_heading">ABOUT US</h6>
-              <h1>Discover Luxury At It's Best.</h1>
+              <h1>Discover Luxury At It&apos;s Best.</h1>
               <p>
                 Eldeco La Vida Bella takes you to the center of excitement and
                 comfort. Situated amidst beautiful scenery in the thriving area of
@@ -1127,7 +1134,7 @@ export default function Home() {
 
       {/* <!-- The Modal --> */}
       <div className="modal" id="myModal" aria-hidden="true" style={{ display: "none" }}>
-        <div className="modal-dialog" style={{height: "100vh"}}>
+        <div className="modal-dialog" style={{ height: "100vh" }}>
           <div className="modal-content">
             <button type="button" className="close" data-dismiss="modal">
               <img
@@ -1151,13 +1158,13 @@ export default function Home() {
                 <form
                   id="form1"
                   name="submit-to-google-sheet-form-1"
-                  ref={formRef}
-                  onSubmit={handleSubmit}
+                  ref={formRef2}
+                  onSubmit={(e) => handleSubmit(e, formRef2)}
                   className="space-y-4"
                 >
                   <input
                     type="text"
-                    name="name"
+                    name="Name"
                     className="form-control w-full px-4 py-2 border rounded"
                     placeholder="Name"
                     id="qSenderName"
@@ -1165,7 +1172,7 @@ export default function Home() {
                   />
                   <input
                     type="tel"
-                    name="contact"
+                    name="Mobile"
                     className="form-control w-full px-4 py-2 border rounded"
                     placeholder="Mobile No"
                     id="qMobileNo"
@@ -1174,7 +1181,7 @@ export default function Home() {
                   />
                   <input
                     type="email"
-                    name="email"
+                    name="Email"
                     className="form-control w-full px-4 py-2 border rounded"
                     placeholder="E-Mail Address"
                     id="qEmailID"
@@ -1184,11 +1191,11 @@ export default function Home() {
                     className="form-control w-full px-4 py-2 border rounded"
                     type="text"
                     placeholder="Comments.."
-                    name="message"
+                    name="Message"
                     id="qMessage"
                     required
                   />
-                  <input type="hidden" name="project" value="Eldeco-La-Vida-Bella" />
+                  <input type="hidden" name="Project" value="Eldeco-La-Vida-Bella-taboola" />
 
                   <button
                     type="submit"
@@ -1266,11 +1273,11 @@ export default function Home() {
             <div className="modal-body inq-form">
               <div className="row">
                 <div className="col-md-6 left_col">
-                  <img
+                  {/* <img
                     src="/eldeco-la-vida-bella-images/images/modal-img.webp"
                     alt="modal img"
                     className="img-fluid"
-                  />
+                  /> */}
                 </div>
 
                 <div className="col-md-6 right_col">
