@@ -27,7 +27,9 @@ export default function Header() {
 
   return (
     <header
-      className={`w-100 transition-all duration-300 ${isScrolled ? "bg-white shadow-md" : "bg-white bg-opacity-75"}`}
+      className={`w-100 transition-all duration-300 ${
+        isScrolled ? "bg-white shadow-md" : "bg-white bg-opacity-75"
+      }`}
       style={{
         position: "fixed", // Sticky behavior
         top: 0,
@@ -40,7 +42,10 @@ export default function Header() {
       }}
     >
       <div className="container-fluid py-2 px-3">
-        <div className="d-flex align-items-center justify-content-between" style={{ height: "4rem" }}>
+        <div
+          className="d-flex align-items-center justify-content-between"
+          style={{ height: "4rem" }}
+        >
           {/* Left Side Logos */}
           <div className="d-flex align-items-center">
             {/* Desktop Logo */}
@@ -86,12 +91,15 @@ export default function Header() {
           </nav>
 
           {/* Hamburger Menu Button */}
-          <div className="d-md-none" style={{ zIndex: 1100, position: 'relative' }}>
+          <div
+            className="d-md-none"
+            style={{ zIndex: 1100, position: "relative" }}
+          >
             <button
               className="btn p-0 border-0 bg-transparent"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle mobile menu"
-              style={{ zIndex: 1101, position: 'relative' }}
+              style={{ zIndex: 1101, position: "relative" }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -122,8 +130,9 @@ export default function Header() {
 
           {/* Full-Screen Mobile Menu */}
           <div
-            className={`d-md-none position-fixed top-0 start-0 w-100 vh-100 bg-white ${mobileMenuOpen ? "show" : ""
-              }`}
+            className={`d-md-none position-fixed top-0 start-0 w-100 vh-100 bg-white ${
+              mobileMenuOpen ? "show" : ""
+            }`}
             style={{
               transition: "transform 0.5s ease-in-out, opacity 0.5s",
               transform: mobileMenuOpen ? "translateY(0)" : "translateY(-100%)",
