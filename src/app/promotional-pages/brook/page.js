@@ -9,11 +9,14 @@ import ContactSection from "./sections/ContactSection";
 import PopupForm from "./components/PopupForm";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 const page = () => {
   return (
     <>
       <PopupForm />
+      <Header />
       <HeroSection />
       <AboutSection />
       <HighlightsSection />
@@ -21,6 +24,7 @@ const page = () => {
       <LocationSection />
       <FloorPlansSection />
       <ContactSection />
+      <Footer />
     </>
   );
 };
