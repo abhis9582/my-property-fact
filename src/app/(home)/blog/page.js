@@ -29,7 +29,7 @@ export default function Media() {
 
   // Handle page change from pagination
   const handlePageChange = (event, value) => {
-    event.preventDefault(); 
+    event.preventDefault();
     setPage(value - 1); // update page state, which triggers useEffect
     setLoading(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
