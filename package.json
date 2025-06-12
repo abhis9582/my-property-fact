@@ -46,6 +46,7 @@
     "react-icons": "^5.5.0",
     "aos": "^2.3.4",
     "framer-motion": "^12.15.0",
+    "@fancyapps/ui": "^5.0.36",
     "react-turnstile": "^1.1.4"
   },
   "devDependencies": {
