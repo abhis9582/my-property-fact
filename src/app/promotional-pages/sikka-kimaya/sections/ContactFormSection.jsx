@@ -3,8 +3,10 @@
 import React, { useState, useRef } from "react";
 import contactImg from "../assets/kimaya-creative.jpeg";
 import ReCAPTCHA from "react-google-recaptcha";
+import { useRouter } from "next/navigation";
 
 export default function ContactForm() {
+  const router = useRouter();
   const [status, setStatus] = useState("");
   const [captchaToken, setCaptchaToken] = useState(null);
   const formRef = useRef();
@@ -38,6 +40,7 @@ export default function ContactForm() {
       const result = await response.json();
       if (result.result === "success") {
         setStatus("Message sent successfully!");
+        router.push("sikka-kimaya/thankyou");
         formRef.current.reset();
         setCaptchaToken(null);
       } else {
