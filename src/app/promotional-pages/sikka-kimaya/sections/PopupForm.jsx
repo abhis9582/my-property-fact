@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import logo from "../assets/Kimaya_Greens_Hero_Image.jpg";
 import ReCAPTCHA from "react-google-recaptcha";
+import { useRouter } from "next/navigation";
 
 export default function PopupForm() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,6 +13,8 @@ export default function PopupForm() {
   const [captchaToken, setCaptchaToken] = useState(null);
   const recaptchaRef = useRef();
   const nameInputRef = useRef();
+
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -81,6 +84,7 @@ export default function PopupForm() {
       const result = await response.json();
       if (result.result === "success") {
         setStatus("Form submitted successfully!");
+        router.push("sikka-kimaya/thankyou");
         setFormData({ name: "", email: "", phone: "", message: "" });
         recaptchaRef.current?.reset();
         setCaptchaToken(null);
