@@ -13,22 +13,27 @@ export default function ProjectTypes({ list }) {
         {
             id: "projectTypeName",
             label: "Project Type",
+            type: "text"
         },
         {
             id: "metaTitle",
             label: "Meta Title",
+            type: "text"
         },
         {
             id: "projectTypeDesc",
             label: "Project Type Description",
+            type: "textarea"
         },
         {
             id: "metaKeyword",
             label: "Meta Keywords",
+            type: "textarea"
         },
         {
             id: "metaDesc",
             label: "Meta Description",
+            type: "textarea"
         },
     ];
     //defining initial form fields value

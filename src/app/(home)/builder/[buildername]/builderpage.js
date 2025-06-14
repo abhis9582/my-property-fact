@@ -4,21 +4,21 @@ import PropertyContainer from "@/app/(home)/components/common/page";
 import CommonBreadCrum from "../../components/common/breadcrum";
 import CommonHeaderBanner from "../../components/common/commonheaderbanner";
 import { LoadingSpinner } from "../../contact-us/page";
-export default function BuilderPage({ builderDetails, projectsList}) {
+export default function BuilderPage({ builderDetail, projectsList}) {
   return (
     <>
       <CommonHeaderBanner
         image={"builder-banner.jpg"}
-        headerText={builderDetails.builderName}
+        headerText={builderDetail.builderName}
       />
       <CommonBreadCrum
         firstPage={"projects"}
-        pageName={builderDetails.builderName}
+        pageName={builderDetail.builderName}
       />
       <div className="container">
         <div className="d-flex justify-content-center">
           <div className="w-80">
-            <p className="text-center">{builderDetails.builderDesc}</p>
+            <p className="text-center">{builderDetail.builderDesc}</p>
           </div>
         </div>
         <div className="text-center">
@@ -34,8 +34,8 @@ export default function BuilderPage({ builderDetails, projectsList}) {
         :
         <div className="container my-3">
           <div className="row g-3">
-            {projectsList.length > 0 ? projectsList.map((item) => (
-              <div key={item.id} className="col-12 col-sm-6 col-md-4">
+            {builderDetail.projects.length > 0 ? builderDetail.projects.map((item, index) => (
+              <div key={index} className="col-12 col-sm-6 col-md-4">
                 <PropertyContainer data={item} />
               </div>
             )) : (<p className="text-center fs-4 fw-bold">No projects found</p>)}

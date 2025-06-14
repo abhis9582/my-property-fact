@@ -4,7 +4,7 @@ import Featured from "./featured";
 //Fetching all projects
 const fetchAllProjects = async () => {
   const allFeaturedProperties = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}projects/get-all`
+    `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
   );  
   return allFeaturedProperties.data;
 };

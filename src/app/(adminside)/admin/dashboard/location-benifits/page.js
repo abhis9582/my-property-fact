@@ -11,6 +11,7 @@ const fetchAllBenefits = async () => {
   const list = res.map((item, index) => ({
     ...item,
     index: index + 1,
+    id: item.projectId
   }));  
   return list;
 };
@@ -18,7 +19,7 @@ const fetchAllBenefits = async () => {
 //Fetching all projects list
 const fetchProjects = async () => {
   const projectResponse = await axios.get(
-    process.env.NEXT_PUBLIC_API_URL + "projects/get-all"
+    process.env.NEXT_PUBLIC_API_URL + "projects/get-all-projects-list"
   );  
   return projectResponse.data;
 };

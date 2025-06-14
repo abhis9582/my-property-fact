@@ -22,15 +22,20 @@ export default function GenerateForm({ inputFields, showModal, setShowModal, val
                     ...formData,
                     id: formData.id || 0
                 }
-                // Make API request
+                console.log(payload);
+                
                 const response = await axios.post(
                     `${process.env.NEXT_PUBLIC_API_URL}${api}`,
-                    payload
+                    payload,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }
                 );
-                // Check if response is successful
                 if (response.data.isSuccess === 1) {
                     router.refresh();
-                    setShowModal(false); // Close modal or handle success
+                    setShowModal(false);
                     toast.success(response.data.message);
                 } else {
                     toast.error(response.data.message);
@@ -59,19 +64,58 @@ export default function GenerateForm({ inputFields, showModal, setShowModal, val
             <Modal.Body>
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     {inputFields.map((item, index) => (
-                        <Form.Group key={`${item.id}-${index}`} className="mb-3" controlId={item.id}>
-                            <Form.Label>{item.label}</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder={`Enter ${item.label}`}
-                                value={formData[item.id]}
-                                onChange={handleChange}
-                                required
-                            />
-                            <Form.Control.Feedback type="invalid">
-                                {`${item.label} is required !`}
-                            </Form.Control.Feedback>
-                        </Form.Group>
+                        <div key={index}>
+                            {item.type === "text" ?
+                                <Form.Group key={`${item.id}-${index}`} className="mb-3" controlId={item.id}>
+                                    <Form.Label>{item.label}</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder={`Enter ${item.label}`}
+                                        value={formData[item.id]}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        {`${item.label} is required !`}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                                :
+                                (item.type === "select" ? <Form.Group key={`${item.id}-${index}`} className="mb-3" controlId={item.id}>
+                                    <Form.Label>{item.label}</Form.Label>
+                                    <Form.Select
+                                        name={item.id}
+                                        value={formData[item.id] || ""}
+                                        onChange={handleChange}
+                                        required
+                                    >
+                                        <option value="">Select {item.label}</option>
+                                        {item.list?.map((option, idx) => (
+                                            <option key={idx} value={option.id}>
+                                                {option.stateName}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+                                    <Form.Control.Feedback type="invalid">
+                                        {`${item.label} is required!`}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                                    :
+                                    <Form.Group key={`${item.id}-${index}`} className="mb-3" controlId={item.id}>
+                                        <Form.Label>{item.label}</Form.Label>
+                                        <Form.Control
+                                            as="textarea"
+                                            placeholder={`Enter ${item.label}`}
+                                            value={formData[item.id] || ""}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                        <Form.Control.Feedback type="invalid">
+                                            {`${item.label} is required !`}
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                )
+                            }
+                        </div>
                     ))}
                     <Button className="btn btn-success" type="submit" disabled={showLoading}>
                         {buttonName}<LoadingSpinner show={showLoading} />

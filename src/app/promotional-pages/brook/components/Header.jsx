@@ -71,7 +71,7 @@ export default function Header() {
           {/* Desktop Nav */}
           <nav className="d-none d-md-flex gap-4">
             {[
-              ["#hero", "Home"],
+              ["#", "Home"],
               ["#about", "About"],
               ["#highlights", "Highlights"],
               ["#amenities", "Amenities"],
@@ -143,7 +143,7 @@ export default function Header() {
           >
             <div className="d-flex flex-column px-4 pt-5 pb-3 gap-3">
               {[
-                ["#hero", "Home"],
+                ["#", "Home"],
                 ["#about", "About"],
                 ["#highlights", "Highlights"],
                 ["#amenities", "Amenities"],

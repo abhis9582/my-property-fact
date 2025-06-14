@@ -3,61 +3,20 @@ import Property from "./propertypage";
 import FeaturedPage from "../(home)/components/home/featured/page";
 import Footer from "../(home)/components/footer/page";
 
-async function fetchSeoData(slug) {
-  const data = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}projects/get/${slug}`);
-  return data;
-}
-
-const fetchAllData = async () => {
-  const apiBase = process.env.NEXT_PUBLIC_API_URL;
-
-  // Creating an array of API promises
-  const apiCalls = [
-    axios.get(`${apiBase}projects/get/${slug}`),
-    axios.get(`${apiBase}floor-plans/get/${slug}`),
-    axios.get(`${apiBase}project-amenity/get/${slug}`),
-    axios.get(`${apiBase}location-benefit/get/${slug}`),
-    axios.get(`${apiBase}project-gallery/get/${slug}`),
-    axios.get(`${apiBase}project-walkthrough/get/${slug}`),
-    axios.get(`${apiBase}project-faqs/get/${slug}`),
-    axios.get(`${apiBase}project-about/get/${slug}`),
-    axios.get(`${apiBase}project-banner/get/${slug}`),
-  ];
-
-  // Await all API responses
-  const [
-    projectRes,
-    floorPlansRes,
-    amenitiesRes,
-    benefitsRes,
-    galleryRes,
-    walkthroughRes,
-    faqsRes,
-    aboutRes,
-    bannerRes,
-  ] = await Promise.all(apiCalls);
-
-  // Set state after fetching all data
-  setProjectDetail(projectRes.data);
-  setFloorPlanList(floorPlansRes.data);
-  setAmenities(amenitiesRes.data);
-  setBenefitList(benefitsRes.data);
-  setGalleryList(galleryRes.data);
-  setWalkthrough(walkthroughRes.data);
-  setFaqs(faqsRes.data);
-  setAboutData(aboutRes.data);
-  setBannerData(bannerRes.data);
+const fetchProjectDetail = async (slug) => {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}projects/get/${slug}`);
+  return response.data;
 };
 
 export async function generateMetadata({ params }) {
   const {property} = await params;
-  const response = await fetchSeoData(property);
-  if (!response.data.projectAddress) {
-    response.data.projectAddress = "";
+  const response = await fetchProjectDetail(property);
+  if (!response.projectAddress) {
+    response.projectAddress = "";
   }
   return {
-    title: response.data.metaTitle + " " + response.data.projectAddress + " | Price List & Brochure, Floor Plan, Location Map & Reviews",
-    description: response.data.metaDescription
+    title: response.metaTitle + " " + response.projectAddress + " | Price List & Brochure, Floor Plan, Location Map & Reviews",
+    description: response.metaDescription
   }
 }
 //Fetching all list from api
@@ -78,18 +37,19 @@ const fetchProjectTypes = async () => {
 
 export default async function PropertyPage({ params }) {
   const { property } = await params;
-  const [list, typesList] = await Promise.all([
+  const [cityList, projectTypesList, projectDetail] = await Promise.all([
     fetchCityData(),
-    fetchProjectTypes()
+    fetchProjectTypes(),
+    fetchProjectDetail(property)
   ]);
   return (
     <>
-      <Property slug={property} />
+      <Property projectDetail={projectDetail} />
       <div className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3">
         <h2 className="text-center">Similar projects</h2>
         <FeaturedPage />
       </div>
-      <Footer cityList={list} projectTypes={typesList} />
+      <Footer cityList={cityList} projectTypes={projectTypesList} />
     </>
   );
 }
