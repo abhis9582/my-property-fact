@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import bannerImg from "../assets/Kimaya_Greens_Hero_Image.jpg";
 import ReCAPTCHA from "react-google-recaptcha";
+import { useRouter } from "next/navigation";
 
 export default function HeroSection() {
+  const router = useRouter();
   const [captchaToken, setCaptchaToken] = useState(null);
 
   const handleCaptchaChange = (token) => {
@@ -38,7 +40,7 @@ export default function HeroSection() {
 
       const result = await response.json();
       if (result.result === "success") {
-        alert("Thanks! We’ll get back to you soon.");
+        router.push("sikka-kimaya/thankyou");
         form.reset();
         setCaptchaToken(null);
       } else {
