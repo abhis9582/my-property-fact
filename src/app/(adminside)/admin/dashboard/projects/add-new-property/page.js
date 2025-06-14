@@ -40,7 +40,7 @@ export default function AddNewProperty() {
   });
   const fetchBuilders = async () => {
     const builders = await axios.get(
-      process.env.NEXT_PUBLIC_API_URL + "builders/get-all"
+      process.env.NEXT_PUBLIC_API_URL + "builder/get-all"
     );
     if (builders) {
       setBuilderList(builders.data.builders);

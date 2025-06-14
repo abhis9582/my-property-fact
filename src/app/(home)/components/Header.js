@@ -20,7 +20,7 @@ const Header = ({ cityList, projectTypes }) => {
 
     const fetchBuilders = async () => {
         const builderResponse = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}builders/get-all`
+            `${process.env.NEXT_PUBLIC_API_URL}builder/get-all`
         );
         if (builderResponse) {
             setBuilderList(builderResponse.data.builders);

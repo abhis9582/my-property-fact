@@ -3,7 +3,7 @@ import CommonBreadCrum from "../../components/common/breadcrum";
 import CommonHeaderBanner from "../../components/common/commonheaderbanner";
 import { LoadingSpinner } from "../../contact-us/page";
 
-export default function PropertyPage({ projectTypeDetails, projectsList }) {
+export default function PropertyPage({ projectTypeDetails }) {
   return (
     <>
       <CommonHeaderBanner
@@ -21,8 +21,8 @@ export default function PropertyPage({ projectTypeDetails, projectsList }) {
         :
         <div className="container my-3">
           <div className="row g-3">
-            {projectsList.length > 0 ? projectsList.map((item) => (
-              <div key={item.id} className="col-12 col-sm-6 col-md-4">
+            {projectTypeDetails.projects.length > 0 ? projectTypeDetails.projects.map((item, index) => (
+              <div key={index} className="col-12 col-sm-6 col-md-4">
                 <PropertyContainer data={item} />
               </div>
             )) : (<p className="text-center fs-4 fw-bold">No projects found</p>)}

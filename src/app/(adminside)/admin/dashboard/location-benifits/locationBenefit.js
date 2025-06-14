@@ -82,7 +82,7 @@ export default function LocationBenefit({ list, projectList }) {
         setButtonName("Add");
         setValidated(false);
     };
-    
+
     const openEditModel = (item) => {
         setShowModal(true);
         setDistance(item.distance);
@@ -109,12 +109,20 @@ export default function LocationBenefit({ list, projectList }) {
             headerName: "Benefit Image",
             flex: 1,
             renderCell: (params) => (
-                <Image
-                    src={`/icon/${params.row.image}`}
-                    alt="Project"
-                    width={50}
-                    height={50}
-                />
+                <>
+                    {
+                        params.row.image.map((item, index) => (
+                            <Image
+                                className="mx-2"
+                                key={index}
+                                src={`/icon/${item}`}
+                                alt="Project"
+                                width={50}
+                                height={50}
+                            />
+                        ))
+                    }
+                </>
             ),
         },
         {
@@ -153,7 +161,12 @@ export default function LocationBenefit({ list, projectList }) {
         <>
             <DashboardHeader buttonName={'+ Add New'} functionName={openAddModel} heading={'Manage Location Benefits'} />
             <div className="table-container mt-5">
-                <DataTable columns={columns} list={list} />
+                <DataTable columns={columns} list={list.map(item => ({
+                    ...item,
+                    image: item.locationBenefits.map(item => item.image),
+                    distance: item.locationBenefits.map(item => item.distance),
+                    benefitName: item.locationBenefits.map(item => item.benefitName)
+                }))} />
             </div>
             <Modal show={showModal} onHide={() => setShowModal(false)} centered>
                 <Modal.Header closeButton>

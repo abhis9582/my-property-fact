@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 //Fetching all builders list from api
 const fetchBuilders = async () => {
   const builders = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}builders/get-all-builders`
+    `${process.env.NEXT_PUBLIC_API_URL}builder/get-all-builders`
   );  
   const res = builders.data;
   const builderResult = res.map((res, index) => ({

@@ -13,7 +13,7 @@ import DataTable from "../common-model/data-table";
 import DashboardHeader from "../common-model/dashboardHeader";
 // Dynamically import JoditEditor with SSR disabled
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
-export default function ManageProjects({ builderList }) {
+export default function ManageProjects({ builderList, typeList, countryData }) {
 
     const editor = useRef(null);
 
@@ -24,9 +24,8 @@ export default function ManageProjects({ builderList }) {
         metaKeyword: "",
         metaDescription: "",
         projectName: "",
-        projectAddress: "",
-        state: "",
-        cityLocation: "",
+        stateId: "",
+        cityId: "",
         projectLocality: "",
         projectConfiguration: "",
         projectBy: 0,
@@ -43,14 +42,13 @@ export default function ManageProjects({ builderList }) {
         slugURL: "",
         showFeaturedProperties: true,
         status: true,
-        amenityDesc: "",
-        locationDesc: "",
-        floorPlanDesc: "",
-        country: "",
+        amenityDescription: "",
+        locationDescription: "",
+        floorPlanDescription: "",
+        countryId: "",
     };
 
     const [validated, setValidated] = useState(false);
-    const [projectTypeList, setProjectTypeList] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [title, setTitle] = useState("");
     const [amenityDesc, setAmenityDesc] = useState("");
@@ -65,6 +63,34 @@ export default function ManageProjects({ builderList }) {
     const [locationPreview, setLocationPreview] = useState(null);
     const [projectThumbnailPreview, setProjectThumbnailPreview] = useState(null);
     const [projectLogoPreview, setProjectLogoPreview] = useState(null);
+    const [selectedCountryId, setSelectedCountryId] = useState('');
+    const [selectedStateId, setSelectedStateId] = useState('');
+    const [states, setStates] = useState([]);
+    const [cities, setCities] = useState([]);
+
+    const handleCountryChange = (e) => {
+        const countryId = parseInt(e.target.value);
+        setFormData((prev) => ({
+            ...prev,
+            country: String(countryId),
+        }));
+        setSelectedCountryId(countryId);
+        const country = countryData.find(c => c.countryId === countryId);
+        setStates(country ? country.states : []);
+        setSelectedStateId('');
+        setCities([]);
+    };
+
+    const handleStateChange = (e) => {
+        const stateId = parseInt(e.target.value);
+        setFormData((prev) => ({
+            ...prev,
+            state: String(stateId),
+        }));
+        setSelectedStateId(stateId);
+        const state = states.find(s => s.stateId === stateId);
+        setCities(state ? state.cities : []);
+    };
 
     //Handle opening model
     const openAddModel = () => {
@@ -80,6 +106,7 @@ export default function ManageProjects({ builderList }) {
         setLocationPreview(null);
         setValidated(false);
     };
+
     //Handling opening of edit model
     const openEditModel = (item) => {
         setTitle("Edit Project");
@@ -105,6 +132,10 @@ export default function ManageProjects({ builderList }) {
             projectLogo: null,
             projectThumbnail: null,
         });
+        const country = countryData.find(c => c.countryId === item.country);
+        setStates(country ? country.states : []);
+        const state = states.find(s => s.stateId === item.state);
+        setCities(state ? state.cities : []);
     };
 
     //Opening delete confirmation box
@@ -125,18 +156,40 @@ export default function ManageProjects({ builderList }) {
         }));
         setProjectDetailList(list);
     };
+
     useEffect(() => {
         fetchProjectsWithDetail();
     }, []);
 
     //Handling form data changes
+    // const handleChange = (e) => {
+    //     const { name, value, type, checked } = e.target;
+    //     setFormData({
+    //         ...formData,
+    //         [name]: type === "checkbox" ? checked : value,
+    //     });
+    // };
     const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFormData({
-            ...formData,
-            [name]: type === "checkbox" ? checked : value,
-        });
+        const { name, type, files, value } = e.target;
+
+        if (type === "file") {
+            const file = files[0];
+            if (file) {
+                const previewUrl = URL.createObjectURL(file);
+                setFormData((prev) => ({
+                    ...prev,
+                    [name]: file,
+                    [`${name}Preview`]: previewUrl,
+                }));
+            }
+        } else {
+            setFormData((prev) => ({
+                ...prev,
+                [name]: value,
+            }));
+        }
     };
+
     //Handling file changing
     const handleFileChange = (e) => {
         const { name, files } = e.target;
@@ -148,41 +201,243 @@ export default function ManageProjects({ builderList }) {
     // Handling submitting project
     const handleSubmit = async (event) => {
         event.preventDefault();
+        event.stopPropagation();
+
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
-            event.stopPropagation();
-            setValidated(true);
-            return;
-        }
-        if (form.checkValidity() === true) {
-            const data = new FormData();
-            for (let key in formData) {
-                data.append(key, formData[key]);
-            }
-            try {
-                setShowLoading(true);
-                const response = await axios.post(
-                    process.env.NEXT_PUBLIC_API_URL + "projects/add-new",
-                    data,
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                        },
-                    }
-                );
-                if (response.data.isSuccess === 1) {
-                    toast.success(response.data.message);
-                    setFormData(initialFormData);
-                    setShowModal(false);
-                    fetchProjectsWithDetail();
-                }
-            } catch (error) {
-                toast.error("Error saving Project");
-            } finally {
-                setShowLoading(false);
+            // Scroll to the first invalid field
+            const firstInvalid = form.querySelector(":invalid");
+            if (firstInvalid) {
+                firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+                firstInvalid.focus();
             }
         }
+        setValidated(true);
+        console.log(formData);
+
+        // if (form.checkValidity()) {
+        //     const data = new FormData();
+        //     for (let key in formData) {
+        //         data.append(key, formData[key]);
+        //     }
+        //     try {
+        //         setShowLoading(true);
+        //         const response = await axios.post(
+        //             process.env.NEXT_PUBLIC_API_URL + "projects/add-new",
+        //             data,
+        //             {
+        //                 headers: {
+        //                     "Content-Type": "multipart/form-data",
+        //                 },
+        //             }
+        //         );
+        //         if (response.data.isSuccess === 1) {
+        //             toast.success(response.data.message);
+        //             setFormData(initialFormData);
+        //             setShowModal(false);
+        //             fetchProjectsWithDetail();
+        //         }
+        //     } catch (error) {
+        //         toast.error("Error saving Project");
+        //     } finally {
+        //         setShowLoading(false);
+        //     }
+        // }
     };
+
+    const formFields = [
+        {
+            label: "Meta Title",
+            name: "metaTitle",
+            type: "text",
+            placeholder: "Meta Title",
+            required: true,
+            colSize: 6,
+        },
+        {
+            label: "Meta Description",
+            name: "metaDescription",
+            type: "text",
+            placeholder: "Meta Description",
+            required: true,
+            colSize: 6,
+        },
+        {
+            label: "Meta Keyword",
+            name: "metaKeyword",
+            type: "text",
+            placeholder: "Meta Keyword",
+            required: true,
+            colSize: 6,
+        },
+        {
+            label: "Project Name",
+            name: "projectName",
+            type: "text",
+            placeholder: "Project Name",
+            required: true,
+            colSize: 6,
+        },
+        {
+            label: "Project Locality",
+            name: "projectLocality",
+            type: "text",
+            placeholder: "Project Locality",
+            required: true,
+            colSize: 6,
+        },
+        {
+            label: "Country",
+            name: "country",
+            type: "select",
+            required: true,
+            colSize: 6,
+            options: countryData,
+            valueKey: "countryId",
+            labelKey: "countryName",
+            onChange: handleCountryChange,
+        },
+        {
+            label: "State",
+            name: "state",
+            type: "select",
+            required: true,
+            colSize: 6,
+            options: states,
+            valueKey: "stateId",
+            labelKey: "stateName",
+            onChange: handleStateChange,
+            disabled: !states.length,
+        },
+        {
+            label: "City",
+            name: "city",
+            type: "select",
+            required: true,
+            colSize: 6,
+            options: cities,
+            valueKey: "id",
+            labelKey: "cityName",
+            disabled: !cities.length,
+        },
+        {
+            label: "Project Configuration",
+            name: "projectConfiguration",
+            type: "text",
+            placeholder: "Project Configuration",
+            required: true,
+            colSize: 6,
+        },
+        {
+            label: "Project By",
+            name: "projectBy",
+            type: "select",
+            required: true,
+            colSize: 6,
+            options: builderList,
+            valueKey: "id",
+            labelKey: "builderName",
+        },
+        {
+            label: "Location Map",
+            name: "locationMap",
+            previousImage: locationPreview,
+            type: "file",
+            required: false,
+            colSize: 6,
+        },
+        {
+            label: "Project Logo",
+            name: "projectLogo",
+            previousImage: projectLogoPreview,
+            type: "file",
+            required: false,
+            colSize: 6,
+        },
+        {
+            label: "Project Thumbnail",
+            name: "projectThumbnail",
+            previousImage: projectThumbnailPreview,
+            type: "file",
+            required: false,
+            colSize: 6,
+        },
+        {
+            label: "Project price",
+            name: "projectPrice",
+            type: "text",
+            placeholder: "Project price",
+            required: true,
+            colSize: 6,
+        },
+        {
+            label: "Rera Number",
+            name: "reraNo",
+            type: "text",
+            placeholder: "Reara Number",
+            required: true,
+            colSize: 6,
+        },
+        {
+            label: "Rera website",
+            name: "reraWebsite",
+            type: "text",
+            placeholder: "Rera website",
+            required: false,
+            colSize: 6,
+        },
+        {
+            label: "Slug Url",
+            name: "slugURL",
+            type: "text",
+            placeholder: "Slug url",
+            required: false,
+            colSize: 6,
+        },
+        {
+            label: "IVR number",
+            name: "ivrNo",
+            type: "text",
+            placeholder: "IVR number",
+            required: false,
+            colSize: 6,
+        },
+        {
+            label: "Property type",
+            name: "propertyType",
+            type: "select",
+            required: true,
+            colSize: 6,
+            options: typeList,
+            valueKey: "id",
+            labelKey: "projectTypeName",
+        },
+        {
+            label: "Amenity Description",
+            name: "amenityDescription",
+            type: "jodit",
+            value: amenityDesc,
+            required: true,
+            colSize: 12, // full width
+        },
+        {
+            label: "Location Description",
+            name: "locationDescription",
+            type: "jodit",
+            value: locationDesc,
+            required: true,
+            colSize: 12, // full width
+        },
+        {
+            label: "Floor Plan Description",
+            name: "floorPlanDescription",
+            type: "jodit",
+            value: floorPlanDesc,
+            required: true,
+            colSize: 12, // full width
+        },
+    ];
+
     //Defining table columns
     const columns = [
         {
@@ -195,7 +450,7 @@ export default function ManageProjects({ builderList }) {
             flex: 1,
         },
         {
-            field: "projectBy", headerName: "Project By",
+            field: "builderName", headerName: "Project By",
             flex: 1,
         },
         {
@@ -209,7 +464,7 @@ export default function ManageProjects({ builderList }) {
             flex: 1,
         },
         {
-            field: "propertyType",
+            field: "typeName",
             headerName: "Property Type",
             flex: 1,
         },
@@ -248,401 +503,79 @@ export default function ManageProjects({ builderList }) {
                 </Modal.Header>
                 <Modal.Body>
                     <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                        <Row className="mb-3">
-                            <Form.Group as={Col} md="6" controlId="validationCustom01">
-                                <Form.Label>Meta Title</Form.Label>
-                                <Form.Control
-                                    required
-                                    type="text"
-                                    placeholder="Meta Title"
-                                    name="metaTitle"
-                                    value={formData.metaTitle || ""}
-                                    onChange={handleChange}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    Meta Title is required.
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                            <Form.Group as={Col} md="6" controlId="validationCustom02">
-                                <Form.Label>Meta Description</Form.Label>
-                                <Form.Control
-                                    required
-                                    type="text"
-                                    placeholder="Meta Description"
-                                    name="metaDescription"
-                                    value={formData.metaDescription || ""}
-                                    onChange={handleChange}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    Meta Description is required!
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                        </Row>
                         <Row>
-                            <Form.Group
-                                as={Col}
-                                md="6"
-                                controlId="validationCustom03"
-                                className="position-relative mb-3"
-                            >
-                                <Form.Label>Meta Keyword</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    required
-                                    placeholder="Meta Keyword"
-                                    name="metaKeyword"
-                                    value={formData.metaKeyword || ""}
-                                    onChange={handleChange}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    Meta Keyword is required!
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                            <Form.Group
-                                as={Col}
-                                md="6"
-                                controlId="validationCustom04"
-                                className="position-relative mb-3"
-                            >
-                                <Form.Label>Project Name</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    required
-                                    name="projectName"
-                                    placeholder="Project Name"
-                                    value={formData.projectName || ""}
-                                    onChange={handleChange}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    Project Name is required!
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                        </Row>
-                        <Row>
-                            <Form.Group as={Col} md="6" controlId="validationCustom05">
-                                <Form.Label>Project Address</Form.Label>
-                                <Form.Control
-                                    required
-                                    type="text"
-                                    placeholder="Project Address"
-                                    name="projectAddress"
-                                    value={formData.projectAddress || ""}
-                                    onChange={handleChange}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    Project Address is required!
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                            <Form.Group
-                                as={Col}
-                                md="6"
-                                controlId="validationCustom06"
-                                className="position-relative mb-3"
-                            >
-                                <Form.Label>State</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    required
-                                    name="state"
-                                    placeholder="State"
-                                    value={formData.state || ""}
-                                    onChange={handleChange}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    State is required!
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                        </Row>
-                        <Row className="mb-3">
-                            <Form.Group as={Col} md="6" controlId="validationCustom07">
-                                <Form.Label>City</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="City"
-                                    name="cityLocation"
-                                    value={formData.cityLocation || ""}
-                                    onChange={handleChange}
-                                    required
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    City is required!
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                            <Form.Group as={Col} md="6" controlId="validationCustom08">
-                                <Form.Label>Project Locality</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Project Locality"
-                                    name="projectLocality"
-                                    value={formData.projectLocality || ""}
-                                    onChange={handleChange}
-                                    required
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    Project Locality is required!
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                        </Row>
-                        <Row className="mb-3">
-                            <Form.Group as={Col} md="6" controlId="validationCustom09">
-                                <Form.Label>Project Configuration</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Project Configuration"
-                                    name="projectConfiguration"
-                                    value={formData.projectConfiguration || ""}
-                                    onChange={handleChange}
-                                    required
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    Project Configuration is required!
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                            <Form.Group as={Col} md="6" controlId="validationCustom10">
-                                <Form.Label>Project By</Form.Label>
-                                <Form.Select
-                                    aria-label="Default select example"
-                                    name="projectBy"
-                                    onChange={handleChange}
-                                    value={formData.projectBy || 0}
+                            {formFields.map((field, index) => (
+                                <Form.Group
+                                    as={Col}
+                                    md={field.colSize || 6}
+                                    className="mb-3"
+                                    controlId={`form-${field.name}`}
+                                    key={index}
                                 >
-                                    <option>Select Builder</option>
-                                    {builderList.map((item) => (
-                                        <option
-                                            className="text-uppercase"
-                                            key={item.id}
-                                            value={item.id}
+                                    <Form.Label>{field.label}</Form.Label>
+
+                                    {field.type === "jodit" ? (
+                                        <JoditEditor
+                                            value={field.value || ""}
+                                            onBlur={(newContent) =>
+                                                setFormData((prev) => ({ ...prev, [field.name]: newContent }))
+                                            }
+                                        />
+                                    ) : field.type === "select" ? (
+                                        <Form.Select
+                                            name={field.name}
+                                            value={formData[field.name] ?? ""}
+                                            onChange={field.onChange || handleChange}
+                                            disabled={field.disabled}
+                                            required={field.required}
                                         >
-                                            {item.builderName}
-                                        </option>
-                                    ))}
-                                </Form.Select>
-                                <Form.Control.Feedback type="invalid">
-                                    Project By is required!
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                        </Row>
-                        <Row className="mb-3">
-                            <Form.Group as={Col} md="6" controlId="validationCustom11">
-                                <Form.Label>Project Price</Form.Label>
-                                <Form.Control
-                                    required
-                                    type="text"
-                                    placeholder="Project Price"
-                                    name="projectPrice"
-                                    value={formData.projectPrice || ""}
-                                    onChange={handleChange}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    Project price is required!
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                            <Form.Group as={Col} md="6" controlId="validationCustom12">
-                                <Form.Label>IVR Number</Form.Label>
-                                <Form.Control
-                                    required
-                                    type="text"
-                                    placeholder="IVR number"
-                                    name="ivrNo"
-                                    value={formData.ivrNo || ""}
-                                    onChange={handleChange}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    IVR Number is required!
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                        </Row>
-                        <Row className="mb-3">
-                            <Form.Group as={Col} md="6" controlId="validationCustom13">
-                                <Form.Label>Location Map</Form.Label>
-                                {locationPreview && (
-                                    <div>
-                                        <Image
-                                            src={locationPreview}
-                                            alt="Current Project locationmap"
-                                            width={200}
-                                            height={100}
-                                            unoptimized
+                                            <option value="">Select {field.label}</option>
+                                            {field.options?.map((opt) => (
+                                                <option key={opt[field.valueKey]} value={opt[field.valueKey]}>
+                                                    {opt[field.labelKey]}
+                                                </option>
+                                            ))}
+                                        </Form.Select>
+                                    ) : field.type === "file" ? (
+                                        <>
+                                            {field.previousImage && (
+                                                <div>
+                                                    <Image
+                                                        src={field.previousImage}
+                                                        alt="Current Project Logo"
+                                                        width={200}
+                                                        height={100}
+                                                        unoptimized
+                                                    />
+                                                    <br />
+                                                </div>
+                                            )}
+                                            <Form.Control
+                                                type="file"
+                                                name={field.name}
+                                                onChange={field.onChange || handleChange}
+                                                required={field.required}
+                                                disabled={field.disabled}
+                                            />
+                                        </>
+                                    ) : (
+                                        <Form.Control
+                                            type={field.type}
+                                            name={field.name}
+                                            placeholder={field.placeholder}
+                                            value={formData[field.name] || ""}
+                                            onChange={field.onChange || handleChange}
+                                            required={field.required}
+                                            disabled={field.disabled}
                                         />
-                                        <br />
-                                    </div>
-                                )}
-                                <Form.Control
-                                    type="file"
-                                    // required
-                                    name="locationMap"
-                                    onChange={handleFileChange}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    Location map is required!
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                            <Form.Group as={Col} md="6" controlId="validationCustom14">
-                                <Form.Label>Reara Number</Form.Label>
-                                <Form.Control
-                                    required
-                                    type="text"
-                                    placeholder="Reara Number"
-                                    name="reraNo"
-                                    value={formData.reraNo || ""}
-                                    onChange={handleChange}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    Reara Number is required!
-                                </Form.Control.Feedback>
-                            </Form.Group>
+                                    )}
+                                    <Form.Control.Feedback type="invalid">
+                                        {field.label} is required!
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                            ))}
                         </Row>
-                        <Row className="mb-3">
-                            <Form.Group as={Col} md="6" controlId="validationCustom15">
-                                <Form.Label>Reara Website</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Reara Website"
-                                    name="reraWebsite"
-                                    value={formData.reraWebsite || ""}
-                                    onChange={handleChange}
-                                />
-                            </Form.Group>
-                            <Form.Group as={Col} md="6" controlId="validationCustom16">
-                                <Form.Label>Project Logo</Form.Label>
-                                {projectLogoPreview && (
-                                    <div>
-                                        <Image
-                                            src={projectLogoPreview}
-                                            alt="Current Project Logo"
-                                            width={200}
-                                            height={100}
-                                            unoptimized
-                                        />
-                                        <br />
-                                    </div>
-                                )}
-                                <Form.Control
-                                    // required
-                                    type="file"
-                                    placeholder="Project Logo"
-                                    name="projectLogo"
-                                    onChange={handleFileChange}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    Project logo is required!
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                        </Row>
-                        <Row className="mb-3">
-                            <Form.Group as={Col} md="6" controlId="validationCustom17">
-                                <Form.Label>Project Thumbnail</Form.Label>
-                                {projectThumbnailPreview && (
-                                    <div>
-                                        <Image
-                                            src={projectThumbnailPreview}
-                                            alt="Current Project Thumbnail"
-                                            width={100}
-                                            height={100}
-                                            unoptimized
-                                        />
-                                        <br />
-                                    </div>
-                                )}
-                                <Form.Control
-                                    // required
-                                    type="file"
-                                    name="projectThumbnail"
-                                    onChange={handleFileChange}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    Project thumbnail is required!
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                            <Form.Group as={Col} md="6" controlId="validationCustom18">
-                                <Form.Label>Project Type</Form.Label>
-                                <Form.Select
-                                    aria-label="Default select example"
-                                    name="propertyType"
-                                    onChange={handleChange}
-                                    value={formData.propertyType || 0}
-                                >
-                                    <option>Select Type</option>
-                                    {projectTypeList.map((item) => (
-                                        <option
-                                            className="text-uppercase"
-                                            key={item.id}
-                                            value={item.id}
-                                        >
-                                            {item.projectTypeName}
-                                        </option>
-                                    ))}
-                                </Form.Select>
-                                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                            </Form.Group>
-                        </Row>
-                        <Row className="mb-3">
-                            <Form.Group as={Col} md="6" controlId="validationCustom19">
-                                <Form.Label>Slug Url</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Slug Url"
-                                    name="slugURL"
-                                    value={formData.slugURL || ""}
-                                    onChange={handleChange}
-                                />
-                            </Form.Group>
-                            <Form.Group as={Col} md="6" controlId="validationCustom85">
-                                <Form.Label>Country</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Country"
-                                    name="country"
-                                    value={formData.country || ""}
-                                    onChange={handleChange}
-                                />
-                            </Form.Group>
-                        </Row>
-                        <Row className="mb-3">
-                            <Form.Group controlId="amenity_desc">
-                                <Form.Label>Amenity Description</Form.Label>
-                                <JoditEditor
-                                    ref={editor}
-                                    value={amenityDesc || ""}
-                                    onChange={(newcontent) =>
-                                        setFormData((prevState) => ({
-                                            ...prevState,
-                                            amenityDesc: newcontent,
-                                        }))
-                                    }
-                                />
-                            </Form.Group>
-                        </Row>
-                        <Row className="mb-3">
-                            <Form.Group controlId="amenity_desc">
-                                <Form.Label>Location Description</Form.Label>
-                                <JoditEditor
-                                    ref={editor}
-                                    value={locationDesc || ""}
-                                    onChange={(newcontent) =>
-                                        setFormData((prevState) => ({
-                                            ...prevState,
-                                            locationDesc: newcontent,
-                                        }))
-                                    }
-                                />
-                            </Form.Group>
-                        </Row>
-                        <Row className="mb-3">
-                            <Form.Group controlId="amenity_desc">
-                                <Form.Label>Floor Plan Description</Form.Label>
-                                <JoditEditor
-                                    ref={editor}
-                                    value={floorPlanDesc || ""}
-                                    onChange={(newcontent) =>
-                                        setFormData((prevState) => ({
-                                            ...prevState,
-                                            floorPlanDesc: newcontent,
-                                        }))
-                                    }
-                                />
-                            </Form.Group>
-                        </Row>
+
                         <Button className="mt-3 btn btn-success" type="submit" disabled={showLoading}>
                             {buttonName} <LoadingSpinner show={showLoading} />
                         </Button>

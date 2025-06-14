@@ -26,7 +26,7 @@ const fetchProjectTypes = async () => {
 //Fetching all builders list
 const fetchBuilderList = async () => {
   const builderResponse = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}builders/get-all`
+    `${process.env.NEXT_PUBLIC_API_URL}builder/get-all`
   );  
   return builderResponse.data.builders;
 };

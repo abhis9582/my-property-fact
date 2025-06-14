@@ -1,10 +1,10 @@
 "use client";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
-import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import { useState } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Accordion, Button, Form, Modal } from "react-bootstrap";
 import { toast } from "react-toastify";
 import CommonModal from "../common-model/common-model";
 import DataTable from "../common-model/data-table";
@@ -17,14 +17,17 @@ export default function ManageFaqs({ list, projectsList }) {
     const [title, setTitle] = useState("");
     const [buttonName, setButtonName] = useState("");
     const [validated, setValidated] = useState(false);
-    const [projectId, setProjectId] = useState("");
+    const [projectId, setProjectId] = useState(0);
     const [question, setQuestion] = useState("");
     const [answer, setAnswer] = useState("");
-    const handleClose = () => setShow(false);
     const [faqId, setFaqId] = useState(0);
     const [showLoading, setShowLoading] = useState(false);
     const [showConfirmationBox, setShowConfirmationBox] = useState(false);
+    const [showFaqList, setShowFaqList] = useState(false);
+    const [faqList, setFaqList] = useState([]);
+    const [projetOption, setProjectOption] = useState([]);
 
+    //Handling submitting form
     const handleSubmit = async (e) => {
         e.preventDefault();
         const form = e.currentTarget;
@@ -35,8 +38,8 @@ export default function ManageFaqs({ list, projectsList }) {
         }
         if (form.checkValidity() === true) {
             const data = {
-                faqQuestion: question,
-                faqAnswer: answer,
+                question: question,
+                answer: answer,
                 projectId: projectId,
             };
             if (faqId > 0) {
@@ -53,6 +56,7 @@ export default function ManageFaqs({ list, projectsList }) {
                     toast.success(response.data.message);
                     router.refresh();
                     setShow(false);
+                    setShowFaqList(false);
                 }
             } catch (error) {
                 toast.error("Error Occured");
@@ -63,6 +67,21 @@ export default function ManageFaqs({ list, projectsList }) {
             }
         }
     };
+
+    const projectWithoutFaq = () => {
+        const excludedIds = list.map(item => item.projectId);
+        let res = [];
+        console.log(projectId);
+        console.log(showFaqList);
+
+        if (projectId === 0) {
+            res = projectsList.filter(project => !excludedIds.includes(project.id));
+            setProjectOption(res);
+        } else {
+            setProjectOption(projectsList);
+        }
+    };
+
     //Handle Add FAQ
     const openAddModel = () => {
         setValidated(false);
@@ -71,7 +90,12 @@ export default function ManageFaqs({ list, projectsList }) {
         setButtonName("Add FAQ");
         setAnswer("");
         setQuestion("");
-        setProjectId(0);
+        console.log(showFaqList);
+
+        if (!showFaqList) {
+            setProjectId(0);
+        }
+        projectWithoutFaq();
         setFaqId(0);
     };
     //Handle edit FAQ
@@ -81,51 +105,52 @@ export default function ManageFaqs({ list, projectsList }) {
         setButtonName("Update");
         setAnswer(item.answer);
         setQuestion(item.question);
-        setProjectId(item.projectId);
         setFaqId(item.id);
+        projectWithoutFaq();
     };
 
+    useEffect(() => {
+        projectWithoutFaq();
+    }, []);
 
     //Handle delete faq
     const openConfirmationBox = (id) => {
         setFaqId(id);
         setShowConfirmationBox(true);
     };
+    //opening faqs list
+    const openFaqList = (data) => {
+        setShowFaqList(true);
+        setFaqList(data.projectFaq);
+        setProjectId(data.projectId);
+    }
     //Defining table columns
     const columns = [
         { field: "index", headerName: "S.no", width: 100, cellClassName: "centered-cell" },
         { field: "projectName", headerName: "Project Name", flex: 1 },
-        { field: "question", headerName: "Question", flex: 1 },
-        { field: "answer", headerName: "Answer", flex: 1 },
         {
-            field: "action",
-            headerName: "Action",
-            width: 100,
+            field: "noOfFaqs", headerName: "Total FAQs", flex: 1,
             renderCell: (params) => (
-                <div className="gap-3">
+                <div className="d-flex align-items-center">
+                    <span className="p-0 fs-5">{params.row.noOfFaqs}</span>
                     <FontAwesomeIcon
-                        className="text-danger mx-2"
+                        className="text-warning mx-4 fs-5"
                         style={{ cursor: "pointer" }}
-                        icon={faTrash}
-                        onClick={() => openConfirmationBox(params.row.id)}
-                    />
-                    <FontAwesomeIcon
-                        className="text-warning pointer mx-2"
-                        style={{ cursor: "pointer" }}
-                        icon={faPencil}
-                        onClick={() => openEditModel(params.row)}
+                        icon={faEye}
+                        onClick={() => openFaqList(params.row)}
+                        title="View faqs list"
                     />
                 </div>
-            ),
+            )
         },
     ];
     return (
         <>
-            <DashboardHeader buttonName={"+ Add FAQ"} functionName={openAddModel} heading={"Manage FAQs"} />
+            <DashboardHeader buttonName={"+Add FAQ"} functionName={openAddModel} heading={"Manage FAQs"} />
             <div className="table-container mt-5">
                 <DataTable columns={columns} list={list} />
             </div>
-            <Modal show={show} onHide={handleClose} centered>
+            <Modal size="lg" show={show} onHide={() => setShow(false)} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>
@@ -138,17 +163,20 @@ export default function ManageFaqs({ list, projectsList }) {
                                 onChange={(e) => setProjectId(e.target.value)}
                                 value={projectId}
                                 required
+                                disabled={projectId !== 0 ? true : false}
                             >
                                 <option value="">Select Project</option>
-                                {projectsList.map((item) => (
-                                    <option
-                                        className="text-uppercase"
-                                        key={item.id}
-                                        value={item.id}
-                                    >
-                                        {item.projectName}
-                                    </option>
-                                ))}
+                                {projetOption
+                                    .map((item) => (
+                                        <option
+                                            className="text-uppercase"
+                                            key={item.id}
+                                            value={item.id}
+                                        >
+                                            {item.projectName}
+                                        </option>
+                                    ))
+                                }
                             </Form.Select>
                             <Form.Control.Feedback type="invalid">
                                 Project is required !
@@ -188,6 +216,48 @@ export default function ManageFaqs({ list, projectsList }) {
                             {buttonName} <LoadingSpinner show={showLoading} />
                         </Button>
                     </Form>
+                </Modal.Body>
+            </Modal>
+
+            <Modal show={showFaqList} onHide={() => {
+                setShowFaqList(false)
+                setProjectId(0);
+            }} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>
+                        <DashboardHeader buttonName={"+ Add FAQ"} functionName={openAddModel} heading={"FAQs"} />
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Accordion defaultActiveKey="0">
+                        {faqList.map((item, index) => (
+                            <Accordion.Item eventKey={index.toString()} key={index}>
+                                <div className="d-flex align-items-center justify-content-between px-3 pt-3">
+                                    <Accordion.Header className="flex-grow-1">
+                                        {`Q ${index + 1} - ${item.question}`}
+                                    </Accordion.Header>
+                                    <Button
+                                        variant="outline-primary"
+                                        size="sm"
+                                        className="ms-3"
+                                        onClick={(e) => {
+                                            e.stopPropagation(); // prevent accordion toggle
+                                            openEditModel(item);
+                                        }}
+                                    >
+                                        Edit
+                                    </Button>
+                                    <FontAwesomeIcon
+                                        className="text-danger mx-2"
+                                        style={{ cursor: "pointer" }}
+                                        icon={faTrash}
+                                        onClick={() => openConfirmationBox(item.id)}
+                                    />
+                                </div>
+                                <Accordion.Body>{`Ans - ${item.answer}`}</Accordion.Body>
+                            </Accordion.Item>
+                        ))}
+                    </Accordion>
                 </Modal.Body>
             </Modal>
             <CommonModal

@@ -1,14 +1,14 @@
 "use client";
 import PropertyContainer from "../components/common/page";
 import "./project.css";
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import CommonBreadCrum from "../components/common/breadcrum";
 import { useSearchParams } from "next/navigation";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import { LoadingSpinner } from "../contact-us/page";
 
-function ProjectsContent() {
+export default function Projects() {
   const [allProjectsList, setAllProjectsList] = useState([]);
   const [pageName, setPageName] = useState("Projects");
   const searchParams = useSearchParams();
@@ -21,7 +21,7 @@ function ProjectsContent() {
   };
 
   useEffect(() => {
-    var api = "projects/get-all";
+    var api = "projects/get-all-projects-list";
     var data = {};
 
     if (
@@ -61,7 +61,7 @@ function ProjectsContent() {
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: "50vh" }}>
-        <LoadingSpinner show={loading}/>
+        <LoadingSpinner show={loading} />
       </div>
     );
   }
@@ -80,12 +80,5 @@ function ProjectsContent() {
         </div>
       </div>
     </div>
-  );
-}
-export default function Projects() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ProjectsContent />
-    </Suspense>
   );
 }

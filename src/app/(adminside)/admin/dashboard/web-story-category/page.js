@@ -1,14 +1,22 @@
-import { Button } from "react-bootstrap";
+import axios from "axios";
+import WebStroyCategory from "./webStroyCategory";
+export const dynamic = 'force-dynamic';
 
-export default function WebStoryCategory() {
+//fetching web story category data
+const fetchCategoryList = async () => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}web-story-category/get-all`);
+    const res = response.data.map((item, index)=> ({
+        ...item,
+        noOfStories: item.webStories.length,
+        index: index + 1,
+        storyUrl: `${process.env.NEXT_PUBLIC_API_URL}web-story/${item.categoryName}`
+    }))
+    return res;
+}
+
+export default async function WebStoryCategoryPage() {
+    const list = await fetchCategoryList();
     return (
-        <>
-            <div className="d-flex justify-content-between mt-3">
-                <h1 className="text-capitalize">Manage web story category</h1>
-                <Button className="text-capitalize btn-success border-0">
-                    + Add story category
-                </Button>
-            </div>
-        </>
+        <WebStroyCategory list={list}/>
     )
 }

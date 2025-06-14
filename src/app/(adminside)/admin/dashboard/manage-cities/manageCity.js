@@ -6,31 +6,38 @@ import DataTable from "../common-model/data-table";
 import DashboardHeader from "../common-model/dashboardHeader";
 import CommonModal from "../common-model/common-model";
 import GenerateForm from "../common-model/generateForm";
-export default function City({ list }) {
+export default function City({ list, stateList }) {
     const inputFields = [
         {
             id: "name",
             label: "City Name",
+            type: "text",
         },
         {
-            id: "state",
+            id: "stateId",
             label: "State Name",
+            type: "select",
+            list: stateList
         },
         {
             id: "metaTitle",
             label: "Meta Title",
+            type: "text",
         },
         {
             id: "metaKeyWords",
             label: "Meta Keywords",
+            type: "text",
         },
         {
             id: "metaDescription",
             label: "Meta Description",
+            type: "textarea",
         },
         {
             id: "cityDisc",
             label: "City Description",
+            type: "textarea",
         },
     ];
     const getInitialFormData = () =>
@@ -49,7 +56,7 @@ export default function City({ list }) {
     const openEditPopUp = (data) => {
         setTitle("Edit City");
         setButtonName("Update City");
-        setShowModal(true);
+        setShowModal(true);        
         setFormData({
             id: data.id || 0,
             ...data
@@ -75,7 +82,9 @@ export default function City({ list }) {
     const columns = [
         { field: "index", headerName: "S.no", width: 100, cellClassName: "centered-cell" },
         { field: "name", headerName: "City Name", flex: 1 },
-        { field: "state", headerName: "State", flex: 1 },
+        { field: "stateName", headerName: "State", flex: 1 },
+        { field: "cityDisc", headerName: "City Description", flex: 1},
+        { field: "countryName", headerName: "Country", flex: 1 },
         {
             field: "metaTitle",
             headerName: "Meta Title",

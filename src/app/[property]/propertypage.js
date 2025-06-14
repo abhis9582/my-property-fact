@@ -34,17 +34,8 @@ import CommonPopUpform from "../(home)/components/common/popupform";
 import { LoadingSpinner } from "../(home)/contact-us/page";
 import { toast } from "react-toastify";
 
-export default function Property({ slug }) {
-  const [amenities, setAmenities] = useState([]);
-  const [projectDetail, setProjectDetail] = useState([]);
+export default function Property({ projectDetail }) {
   const [isAnswerVisible, setIsAnswerVisible] = useState([false, false]);
-  const [floorPlanList, setFloorPlanList] = useState([]);
-  const [galleryList, setGalleryList] = useState([]);
-  const [benefitList, setBenefitList] = useState([]);
-  const [aboutData, setAboutData] = useState([]);
-  const [walkthrough, setWalkthrough] = useState([]);
-  const [bannerData, setBannerData] = useState([]);
-  const [faqs, setFaqs] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
@@ -211,55 +202,6 @@ export default function Property({ slug }) {
   }
 
   useEffect(() => {
-    // calling all apis for getting data for page
-    const fetchAllData = async () => {
-      try {
-        const apiBase = process.env.NEXT_PUBLIC_API_URL;
-
-        // Creating an array of API promises
-        const apiCalls = [
-          axios.get(`${apiBase}projects/get/${slug}`),
-          axios.get(`${apiBase}floor-plans/get/${slug}`),
-          axios.get(`${apiBase}project-amenity/get/${slug}`),
-          axios.get(`${apiBase}location-benefit/get/${slug}`),
-          axios.get(`${apiBase}project-gallery/get/${slug}`),
-          axios.get(`${apiBase}project-walkthrough/get/${slug}`),
-          axios.get(`${apiBase}project-faqs/get/${slug}`),
-          axios.get(`${apiBase}project-about/get/${slug}`),
-          axios.get(`${apiBase}project-banner/get/${slug}`),
-        ];
-
-        // Await all API responses
-        const [
-          projectRes,
-          floorPlansRes,
-          amenitiesRes,
-          benefitsRes,
-          galleryRes,
-          walkthroughRes,
-          faqsRes,
-          aboutRes,
-          bannerRes,
-        ] = await Promise.all(apiCalls);
-
-        // Set state after fetching all data
-        setProjectDetail(projectRes.data);
-        setFloorPlanList(floorPlansRes.data);
-        setAmenities(amenitiesRes.data);
-        setBenefitList(benefitsRes.data);
-        setGalleryList(galleryRes.data);
-        setWalkthrough(walkthroughRes.data);
-        setFaqs(faqsRes.data);
-        setAboutData(aboutRes.data);
-        setBannerData(bannerRes.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAllData();
     //Handle header on scrolling page
     const handleScroll = () => {
       if (window.scrollY > 200) {
@@ -320,18 +262,8 @@ export default function Property({ slug }) {
     }
   };
 
-
-  //If loading state show loading 
-  if (loading) {
-    return (
-      <div className="project-loader">
-        <LoadingSpinner show={true} />
-      </div>
-    );
-  }
-
   //Generating banner src
-  const imageSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${bannerData.slugURL}/${bannerData.desktopBanner}`;
+  const imageSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.banners[0].desktopImage}`;
   // const imageSrc = `/properties/${projectDetail.slugURL}/${projectDetail.projectThumbnail}`;
 
   //Checking If project detail is not available then show not found page
@@ -497,7 +429,7 @@ export default function Property({ slug }) {
           <Slider {...settings}>
             <picture className="project-detail-banner">
               <source
-                srcSet={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${bannerData.slugURL}/${bannerData.mobileBanner}`}
+                srcSet={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.banners[0].mobileImage}`}
                 media="(max-width: 640px)"
               />
               <source srcSet={imageSrc} media="(max-width: 1024px)" />
@@ -576,26 +508,9 @@ export default function Property({ slug }) {
               </Button>
             </Form>
           </div>
-          {/* Short info section */}
-          {/* <div className="short-info d-none d-md-flex justify-content-center ">
-            <div>
-              <p className="project-name fs-2 fw-bold m-0 text-white">{projectDetail.projectName}</p>
-              <p className="project-address fs-5 font-bold text-white m-0">
-                <FontAwesomeIcon icon={faLocationDot} className="text-success me-2" size="sm" />
-                {projectDetail.projectAddress}
-              </p>
-              <p className="fs-6 text-white">
-                {generatePrice(projectDetail.projectPrice)}* |{" "}
-                {projectDetail.projectConfiguration}
-              </p>
-              <div className="btn btn-success mt-3 w-100" onClick={() => setShowPopUp(true)}>
-                Get Details
-              </div>
-            </div>
-          </div> */}
         </div>
 
-        <div className="container py-5 shadow-lg bg-white rounded-4 mt-3 mb-3">
+        <div className="container py-5 bg-white rounded-4 mt-3 mb-3">
           <div className="row gy-5 align-items-stretch">
             {/* Project Info */}
             <div className="col-lg-4">
@@ -631,7 +546,7 @@ export default function Property({ slug }) {
                 <div
                   className="text-muted fs-6 lh-lg"
                   dangerouslySetInnerHTML={{
-                    __html: walkthrough.walkthroughDesc,
+                    __html: projectDetail.walkthroughDesc,
                   }}
                 ></div>
               </div>
@@ -653,14 +568,14 @@ export default function Property({ slug }) {
 
           {/* Amenities Grid */}
           <div className="row justify-content-center g-3">
-            {amenities.map((item) => (
-              <div key={item.id} className="col-6 col-sm-4 col-md-3 col-lg-2">
+            {projectDetail.amenities.map((item, index) => (
+              <div key={index} className="col-6 col-sm-4 col-md-3 col-lg-2">
                 <div className="border rounded-4 bg-light h-100 d-flex align-items-center justify-content-around text-center custom-shadow amenity-box p-2">
                   <Image
                     src={"/amenity/" + item.amenityImageUrl}
                     height={20}
                     width={20}
-                    alt={item.altTag}
+                    alt={item.altTag || ""}
                   />
                   <p className="m-0 fw-semibold text-dark fs-6">{item.title}</p>
                 </div>
@@ -682,10 +597,8 @@ export default function Property({ slug }) {
         <div className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3" id="floorplan">
           <div className="p-2 p-md-4 p-lg-5">
             <h2 className="text-center">Floor Plans</h2>
-            <p
-              className="text-center"
-              dangerouslySetInnerHTML={{ __html: projectDetail.floorPlanDesc }}
-            ></p>
+            {projectDetail.floorPlanDesc && <div dangerouslySetInnerHTML={{ __html: projectDetail.floorPlanDesc }}>
+            </div>}
           </div>
           {/* <div className="d-flex justify-content-center p-2 d-flex flex-column flex-md-row gap-md-3 flex-wrap flex-lg-nowrap"> */}
           <Swiper
@@ -704,7 +617,7 @@ export default function Property({ slug }) {
             modules={[Navigation]}
             className="mySwiper"
           >
-            {floorPlanList?.map((item, index) => (
+            {projectDetail.floorPlan?.map((item, index) => (
               <SwiperSlide key={`${item.planType}-${index}`}>
                 <div className="card mt-3 custom-shadow">
                   <div className="p-3 rounded-sm">
@@ -750,10 +663,10 @@ export default function Property({ slug }) {
             <div className="row justify-content-center">
               <div className="col-12">
                 <Slider {...settings1} className="gallery-slider">
-                  {galleryList.map((item) => (
+                  {projectDetail.projectGalleryImages.map((item) => (
                     <div key={item.id} className="project-detail-gallery-container ">
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.image}`}
+                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.galleyImage}`}
                         alt="gallery_image"
                         fill
                         unoptimized
@@ -780,12 +693,12 @@ export default function Property({ slug }) {
             <div className="col-md-6">
               {/* Nearby Benefits Section */}
               <div className="row g-3">
-                {benefitList.map((item) => (
-                  <div key={item.id} className="col-6">
+                {projectDetail.locationBenefits.map((item, index) => (
+                  <div key={index} className="col-6">
                     <div className="border rounded-4 p-3 h-100 d-flex align-items-center gap-3 bg-light shadow-sm">
                       <Image
                         src={`/icon/${item.iconImage}`}
-                        alt={item.iconImage}
+                        alt={item.iconImage || ""}
                         width={40}
                         height={40}
                       />
@@ -829,7 +742,7 @@ export default function Property({ slug }) {
             <div className="col-md-6 p-3">
               <div className="position-relative border rounded-4 overflow-hidden shadow-sm" style={{ height: "350px" }}>
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.locationMap}`}
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.locationMapImage}`}
                   alt="Project Location Map"
                   fill
                   unoptimized
@@ -855,7 +768,7 @@ export default function Property({ slug }) {
         <div className="mx-auto" style={{ maxWidth: "800px" }}>
           <p
             className="text-center text-muted fs-6"
-            dangerouslySetInnerHTML={{ __html: aboutData.shortDesc }}
+            dangerouslySetInnerHTML={{ __html: projectDetail.projectShortDesc }}
           ></p>
         </div>
 
@@ -958,7 +871,7 @@ export default function Property({ slug }) {
         className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3">
         <h2 className="text-center pt-5">FAQs</h2>
         <div className="container mt-3">
-          {faqs.map((item, index) => (
+          {projectDetail.projectFaqs.map((item, index) => (
             <div key={`${item.id}-${index}`}>
               <div
                 className="container questions mt-3 d-flex"
@@ -966,7 +879,7 @@ export default function Property({ slug }) {
                 onClick={() => toggleAnswer(item.id)}
               >
                 <h5 className="m-0">Q {index + 1}: </h5>
-                <h5 className="ps-2 m-0">{item.faqQuestion}</h5>
+                <h5 className="ps-2 m-0">{item.question}</h5>
                 <span className="plus-icon">{isAnswerVisible[item.id] ? "-" : "+"}</span>
               </div>
               <div
@@ -977,7 +890,7 @@ export default function Property({ slug }) {
                 <div className="m-0 text-success">
                   <h5>Ans: </h5>
                 </div>
-                <p className="ps-2 text-success">{item.faqAnswer}</p>
+                <p className="ps-2 text-success">{item.answer}</p>
               </div>
             </div>
           ))}

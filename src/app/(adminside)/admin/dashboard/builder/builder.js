@@ -11,23 +11,28 @@ export default function Builder({ list }) {
     const inputFields = [
         {
             id: "builderName",
-            label: "Builder name"
+            label: "Builder name",
+            type: "text"
         },
         {
             id: "builderDesc",
-            label: "Builder description"
+            label: "Builder description",
+            type: "textarea"
         },
         {
             id: "metaTitle",
-            label: "Meta title"
+            label: "Meta title",
+            type: "text"
         },
         {
             id: "metaKeyword",
-            label: "Meta keyword"
+            label: "Meta keyword",
+            type: "textarea"
         },
         {
             id: "metaDesc",
-            label: "Meta description"
+            label: "Meta description",
+            type: "textarea"
         },
     ];
 
@@ -124,10 +129,10 @@ export default function Builder({ list }) {
                 title={title}
                 validated={validated}
                 setFormData={setFormData}
-                api={"builders/add-update"}
+                api={"builder/add-update"}
             />
             <CommonModal
-                api={`${process.env.NEXT_PUBLIC_API_URL}builders/delete/${id}`}
+                api={`${process.env.NEXT_PUBLIC_API_URL}builder/delete/${id}`}
                 confirmBox={confirmBox}
                 setConfirmBox={setConfirmBox}
             />

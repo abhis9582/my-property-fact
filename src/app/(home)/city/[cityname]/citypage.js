@@ -3,11 +3,10 @@ import "./citypage.css";
 import "../../components/home/home.css";
 import Link from "next/link";
 import PropertyContainer from "@/app/(home)/components/common/page";
-import { useEffect, useState } from "react";
 import CommonHeaderBanner from "../../components/common/commonheaderbanner";
 import CommonBreadCrum from "../../components/common/breadcrum";
 import { LoadingSpinner } from "../../contact-us/page";
-export default function CityPage({ cityData, projectsList }) {
+export default function CityPage({ cityData }) {
   return (
     <>
       <div className="p-0">
@@ -21,7 +20,7 @@ export default function CityPage({ cityData, projectsList }) {
         <div className="container-fluid mt-4">
           {/* <p className="h1 text-center">Property in {cityData.name}</p> */}
           <div className="container d-flex justify-content-center">
-            <p className="text-center">{cityData.cityDisc}</p>
+            <p className="text-center">{cityData.cityDesc}</p>
           </div>
           <div className="text-center">
             <Link href="#" className="btn text-white btn-background">
@@ -36,8 +35,8 @@ export default function CityPage({ cityData, projectsList }) {
           :
           <div className="container my-3">
             <div className="row g-3">
-              {projectsList.length > 0 ? projectsList.map((item) => (
-                <div key={item.id} className="col-12 col-sm-6 col-md-4">
+              {cityData.projects.length > 0 ? cityData.projects.map((item, index) => (
+                <div key={`${index}`} className="col-12 col-sm-6 col-md-4">
                   <PropertyContainer data={item} />
                 </div>
               )) : (<p className="text-center fs-4 fw-bold">No projects found</p>)}

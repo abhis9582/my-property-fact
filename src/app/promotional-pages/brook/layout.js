@@ -23,14 +23,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body
+      <div
         className={`${inter.variable} ${playfair.variable} antialiased`}
       >
         {/* <Header /> */}
         {children}
         {/* <Footer /> */}
-      </body>
-    </html>
+      </div>
   );
 }

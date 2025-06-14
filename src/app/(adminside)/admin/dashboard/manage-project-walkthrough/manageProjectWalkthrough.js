@@ -10,12 +10,14 @@ import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import CommonModal from "../common-model/common-model";
 import DashboardHeader from "../common-model/dashboardHeader";
 import DataTable from "../common-model/data-table";
+import { useRouter } from "next/navigation";
 
 // Dynamically import JoditEditor with SSR disabled
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
 export default function ManageProjectWalkthrough({ list, projectList }) {
     const editor = useRef(null);
+    const router = useRouter();
     const [walkthroughDesc, setWalkthroughDesc] = useState("");
     const [projectId, setProjectId] = useState("");
     const [showModal, setShowModal] = useState(false);
@@ -26,6 +28,8 @@ export default function ManageProjectWalkthrough({ list, projectList }) {
     const [showLoading, setShowLoading] = useState(false);
     const [walkthroughId, setWalkthroughId] = useState(0);
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+    //Handling submition of from
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = {
@@ -51,6 +55,7 @@ export default function ManageProjectWalkthrough({ list, projectList }) {
                     data
                 );
                 if (response.data.isSuccess === 1) {
+                    router.refresh();
                     toast.success(response.data.message);
                     setShowModal(false);
                     fetchProjects();
@@ -80,7 +85,7 @@ export default function ManageProjectWalkthrough({ list, projectList }) {
         setWalkthroughId(id);
     };
 
-    const openEditPopUp = (item) => {
+    const openEditPopUp = (item) => {        
         setShowModal(true);
         setTitle("Update Walkthrough");
         setButtonName("Update");
@@ -92,19 +97,13 @@ export default function ManageProjectWalkthrough({ list, projectList }) {
     const columns = [
         { field: "index", headerName: "S.no", width: 100 },
         { field: "projectName", headerName: "Project Name", flex: 1 },
-        { field: "walkthroughDesc", headerName: "Amenities", flex: 1 },
+        { field: "walkthroughDesc", headerName: "Walkthrough Description", flex: 1 },
         {
             field: "action",
             headerName: "Action",
             width: 100,
             renderCell: (params) => (
                 <div className="gap-3">
-                    <FontAwesomeIcon
-                        className="text-danger mx-2"
-                        style={{ cursor: "pointer" }}
-                        icon={faTrash}
-                        onClick={() => openConfirmationBox(params.row.id)}
-                    />
                     <FontAwesomeIcon
                         className="text-warning pointer mx-2"
                         style={{ cursor: "pointer" }}
