@@ -3,10 +3,52 @@
 // import React from "react";
 
 // const MainSection = () => {
+//   const [formData, setFormData] = useState({
+//     name: "",
+//     email: "",
+//     phone: "",
+//     message: "",
+//   });
+
+//   const handleChange = (e) => {
+//     setFormData({
+//       ...formData,
+//       [e.target.name]: e.target.value,
+//     });
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setStatus("Submitting...");
+
+//     try {
+//       const response = await fetch(
+//         "https://script.google.com/macros/s/AKfycbx4BfR6EITWPi0bnFPKlwLknP8vz2bdNiIv3mRHNklGeyfaaQyuNKGocZWSd738CrUy/exec",
+//         {
+//           method: "POST",
+//           body: JSON.stringify(formData),
+//         }
+//       );
+
+//       const result = await response.json();
+//       if (result.result === "success") {
+//         setStatus("Form submitted successfully!");
+//         router.push("brook/thankyou");
+//         setFormData({ name: "", email: "", phone: "", message: "" });
+//         console.log("data submitted");
+//       } else {
+//         setStatus("Failed to submit. Please try again.");
+//       }
+//     } catch (error) {
+//       console.error("Error:", error);
+//       setStatus("Submission error. Please try again later.");
+//     }
+//   };
+
 //   return (
-//     <div className="main-section container-fluid position-relative d-flex flex-column flex-md-row px-3 px-md-5">
+//     <div className="main-section container-fluid d-flex flex-column flex-md-row">
 //       {/* Left: About Section */}
-//       <div className="left-section d-flex flex-column justify-content-center w-100 w-md-50 pe-md-4 mb-4 mb-md-0">
+//       <div className="left-section d-flex flex-column justify-content-center px-3 px-md-5 w-100 w-md-50 mb-4 mb-md-0">
 //         <h2 className="mb-3">About Subh Anandam</h2>
 //         <p>
 //           About Shubh Anandam A Legacy of Harmony, A Future of Fulfillment Shubh
@@ -26,13 +68,14 @@
 //       </div>
 
 //       {/* Right: Form Section */}
-//       <div className="right-section w-100 w-md-50 d-flex justify-content-center align-items-center position-relative">
+//       <div className="right-section d-flex justify-content-center align-items-start align-items-md-center w-100 w-md-50 px-3 px-md-5">
 //         <div className="form-container bg-white shadow p-4">
 //           <h5 className="mb-3">Contact Us</h5>
 //           <form>
 //             <div className="mb-3">
 //               <input
 //                 type="text"
+//                 name="name"
 //                 className="form-control"
 //                 placeholder="Name"
 //                 style={{ padding: "15px 30px" }}
@@ -41,6 +84,7 @@
 //             <div className="mb-3">
 //               <input
 //                 type="text"
+//                 name="phone"
 //                 className="form-control"
 //                 placeholder="Phone"
 //                 style={{ padding: "15px 30px" }}
@@ -49,6 +93,7 @@
 //             <div className="mb-3">
 //               <input
 //                 type="email"
+//                 name="email"
 //                 className="form-control"
 //                 placeholder="Email"
 //                 style={{ padding: "15px 30px" }}
@@ -57,9 +102,10 @@
 //             <div className="mb-3">
 //               <textarea
 //                 className="form-control"
+//                 name="message"
 //                 placeholder="Message"
 //                 rows="3"
-//                 style={{ padding: "15px 30px" }}
+//                 style={{ padding: "15px 30px", resize: "none" }}
 //               />
 //             </div>
 //             <button type="submit" className="w-100">
@@ -70,37 +116,36 @@
 //       </div>
 
 //       <style jsx>{`
-//         h2 {
-//           font-size: 36px;
-//           font-weight: 600;
-//         }
-//         p {
-//           font-size: 18px;
-//           line-height: 34px;
-//         }
 //         .main-section {
-//           height: 60vh;
-//           padding-left: 3rem;
-//           padding-right: 3rem;
+//           min-height: 60vh;
 //           background-color: #f8f9fa;
-//           width: 80%;
-//           margin: auto;
-//           position: relative;
-//         }
-//         .form-container {
 //           width: 100%;
-//           max-width: 400px;
-//           height: 520px;
-//           z-index: 2;
-//           border-radius: 30px;
-//           position: relative;
-//           top: -6rem;
-//           transition: top 0.3s ease;
+//           max-width: 1400px;
+//           margin: 0 auto;
+//           padding-top: 3rem;
+//           padding-bottom: 3rem;
+//         }
+
+//         h2 {
+//           font-size: 2.25rem;
+//           font-weight: 600;
 //         }
 
 //         h5 {
-//           font-size: 36px;
+//           font-size: 2.25rem;
 //           font-weight: 600;
+//         }
+
+//         p {
+//           font-size: 1.125rem;
+//           line-height: 2rem;
+//         }
+
+//         .form-container {
+//           width: 100%;
+//           max-width: 400px;
+//           border-radius: 30px;
+//           height: auto;
 //         }
 
 //         button {
@@ -112,28 +157,19 @@
 //           font-weight: 600;
 //         }
 
-//         /* Responsive tweaks */
 //         @media (max-width: 767.98px) {
-//           .main-section {
-//             height: auto;
-//             padding-left: 1.5rem;
-//             padding-right: 1.5rem;
-//             width: 95%;
-//           }
 //           h2 {
-//             font-size: 28px;
+//             font-size: 1.75rem;
 //           }
 //           p {
-//             font-size: 16px;
-//             line-height: 28px;
+//             font-size: 1rem;
+//             line-height: 1.75rem;
 //           }
 //           h5 {
-//             font-size: 28px;
+//             font-size: 1.75rem;
 //           }
 //           .form-container {
-//             position: static !important;
 //             max-width: 100%;
-//             top: 0 !important;
 //             border-radius: 20px;
 //             padding: 20px;
 //           }
@@ -141,8 +177,13 @@
 //             padding: 12px 24px;
 //             font-size: 1rem;
 //           }
-//           .left-section {
-//             padding-right: 0 !important;
+//         }
+
+//         /* Handles 125% zoom scaling */
+//         @media (min-width: 768px) and (max-width: 1024px) {
+//           .main-section {
+//             padding-left: 2rem;
+//             padding-right: 2rem;
 //           }
 //         }
 //       `}</style>
@@ -152,14 +193,57 @@
 
 // export default MainSection;
 
-
-
-
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const MainSection = () => {
+  const router = useRouter();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  const [status, setStatus] = useState("");
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus("Submitting...");
+
+    try {
+      const response = await fetch(
+        "https://script.google.com/macros/s/AKfycbx4BfR6EITWPi0bnFPKlwLknP8vz2bdNiIv3mRHNklGeyfaaQyuNKGocZWSd738CrUy/exec",
+        {
+          method: "POST",
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const result = await response.json();
+
+      if (result.result === "success") {
+        setStatus("Form submitted successfully!");
+        setFormData({ name: "", email: "", phone: "", message: "" });
+        router.push("landing-page/thankyou");
+      } else {
+        setStatus("Failed to submit. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <div className="main-section container-fluid d-flex flex-column flex-md-row">
       {/* Left: About Section */}
@@ -171,14 +255,7 @@ const MainSection = () => {
           ecosystem where comfort, culture, and community come together. With
           integrated townships across different parts of India, we offer spaces
           that go beyond just living — they inspire a way of life that is rooted
-          in values and designed for tomorrow. Every detail — from
-          Vastu-compliant planning to lush green environments and holistic
-          amenities — reflects our belief in creating not just homes, but
-          experiences that nurture body, mind, and soul. Whether it is your
-          first home or a generational gift, Shubh Anandam brings together
-          spiritual serenity, modern infrastructure, and community harmony — all
-          under one timeless vision. Crafted with Purpose. Designed for
-          Generations.
+          in values and designed for tomorrow...
         </p>
       </div>
 
@@ -186,41 +263,57 @@ const MainSection = () => {
       <div className="right-section d-flex justify-content-center align-items-start align-items-md-center w-100 w-md-50 px-3 px-md-5">
         <div className="form-container bg-white shadow p-4">
           <h5 className="mb-3">Contact Us</h5>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <input
                 type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
                 className="form-control"
                 placeholder="Name"
                 style={{ padding: "15px 30px" }}
+                required
               />
             </div>
             <div className="mb-3">
               <input
                 type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
                 className="form-control"
                 placeholder="Phone"
                 style={{ padding: "15px 30px" }}
+                required
               />
             </div>
             <div className="mb-3">
               <input
                 type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 className="form-control"
                 placeholder="Email"
                 style={{ padding: "15px 30px" }}
+                required
               />
             </div>
             <div className="mb-3">
               <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
                 className="form-control"
                 placeholder="Message"
                 rows="3"
                 style={{ padding: "15px 30px", resize: "none" }}
+                required
               />
             </div>
             <button type="submit" className="w-100">
-              Submit Enquery
+              Submit Enquiry
             </button>
           </form>
         </div>
@@ -290,7 +383,6 @@ const MainSection = () => {
           }
         }
 
-        /* Handles 125% zoom scaling */
         @media (min-width: 768px) and (max-width: 1024px) {
           .main-section {
             padding-left: 2rem;
