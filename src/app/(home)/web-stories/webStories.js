@@ -24,6 +24,7 @@ export default function WebStories({ webStoryList }) {
                                             width={300}
                                             height={300}
                                             className="card-img-top object-fit-cover"
+                                            unoptimized
                                         />
                                     </div>
                                     <div className="card-body">
