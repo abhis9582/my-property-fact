@@ -572,7 +572,7 @@ export default function Property({ projectDetail }) {
               <div key={index} className="col-6 col-sm-4 col-md-3 col-lg-2">
                 <div className="border rounded-4 bg-light h-100 d-flex align-items-center justify-content-around text-center custom-shadow amenity-box p-2">
                   <Image
-                    src={"/amenity/" + item.amenityImageUrl}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.image}`}
                     height={20}
                     width={20}
                     alt={item.altTag || ""}
@@ -697,8 +697,8 @@ export default function Property({ projectDetail }) {
                   <div key={index} className="col-6">
                     <div className="border rounded-4 p-3 h-100 d-flex align-items-center gap-3 bg-light shadow-sm">
                       <Image
-                        src={`/icon/${item.iconImage}`}
-                        alt={item.iconImage || ""}
+                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.image}`}
+                        alt={item.benefitName || ""}
                         width={40}
                         height={40}
                       />
