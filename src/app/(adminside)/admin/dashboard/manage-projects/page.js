@@ -3,6 +3,19 @@ import ManageProjects from "./manageProjects";
 
 export const dynamic = 'force-dynamic';
 
+//fetching all project list details
+const fetchProjectsWithDetail = async () => {
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
+  );
+  const res = response.data;
+  const list = res.map((item, index) => ({
+    ...item,
+    index: index + 1,
+  }));
+  return list;
+};
+
 //Fetching all builder list from api
 const fetchBuilders = async () => {
   const builders = await axios.get(
@@ -27,10 +40,16 @@ const fetchCountryData = async () => {
   return response.data;
 }
 export default async function ManageProjectsPage() {
-  const [builderList, typeList, countryData] = await Promise.all([
+  const [builderList, typeList, countryData, projectDetailList] = await Promise.all([
     fetchBuilders(),
     fetchProjectTypes(),
-    fetchCountryData()
-  ]);  
-  return <ManageProjects builderList={builderList} typeList={typeList} countryData={countryData}/>
+    fetchCountryData(),
+    fetchProjectsWithDetail()
+  ]);
+  return <ManageProjects
+    builderList={builderList}
+    typeList={typeList}
+    countryData={countryData}
+    projectDetailList={projectDetailList}
+  />
 }

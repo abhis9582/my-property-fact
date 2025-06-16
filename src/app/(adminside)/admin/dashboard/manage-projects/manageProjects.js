@@ -11,14 +11,17 @@ import { toast } from "react-toastify";
 import CommonModal from "../common-model/common-model";
 import DataTable from "../common-model/data-table";
 import DashboardHeader from "../common-model/dashboardHeader";
+import { useRouter } from "next/navigation";
 // Dynamically import JoditEditor with SSR disabled
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
-export default function ManageProjects({ builderList, typeList, countryData }) {
+export default function ManageProjects({ builderList, typeList, countryData, projectDetailList }) {
 
     const editor = useRef(null);
+    const router = useRouter();
 
     // Defining the initial state
     const initialFormData = {
+        amenities: [],
         id: 0,
         metaTitle: "",
         metaKeyword: "",
@@ -59,7 +62,6 @@ export default function ManageProjects({ builderList, typeList, countryData }) {
     const [projectId, setProjectId] = useState(0);
     const [showLoading, setShowLoading] = useState(false);
     const [formData, setFormData] = useState(initialFormData);
-    const [projectDetailList, setProjectDetailList] = useState([]);
     const [locationPreview, setLocationPreview] = useState(null);
     const [projectThumbnailPreview, setProjectThumbnailPreview] = useState(null);
     const [projectLogoPreview, setProjectLogoPreview] = useState(null);
@@ -144,23 +146,6 @@ export default function ManageProjects({ builderList, typeList, countryData }) {
         setProjectId(id);
     };
 
-    //fetching all project list details
-    const fetchProjectsWithDetail = async () => {
-        const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
-        );
-        const res = response.data;
-        const list = res.map((item, index) => ({
-            ...item,
-            index: index + 1,
-        }));
-        setProjectDetailList(list);
-    };
-
-    useEffect(() => {
-        fetchProjectsWithDetail();
-    }, []);
-
     //Handling form data changes
     // const handleChange = (e) => {
     //     const { name, value, type, checked } = e.target;
@@ -215,34 +200,35 @@ export default function ManageProjects({ builderList, typeList, countryData }) {
         setValidated(true);
         console.log(formData);
 
-        // if (form.checkValidity()) {
-        //     const data = new FormData();
-        //     for (let key in formData) {
-        //         data.append(key, formData[key]);
-        //     }
-        //     try {
-        //         setShowLoading(true);
-        //         const response = await axios.post(
-        //             process.env.NEXT_PUBLIC_API_URL + "projects/add-new",
-        //             data,
-        //             {
-        //                 headers: {
-        //                     "Content-Type": "multipart/form-data",
-        //                 },
-        //             }
-        //         );
-        //         if (response.data.isSuccess === 1) {
-        //             toast.success(response.data.message);
-        //             setFormData(initialFormData);
-        //             setShowModal(false);
-        //             fetchProjectsWithDetail();
-        //         }
-        //     } catch (error) {
-        //         toast.error("Error saving Project");
-        //     } finally {
-        //         setShowLoading(false);
-        //     }
-        // }
+        if (form.checkValidity()) {
+            const data = new FormData();
+            for (let key in formData) {
+                if (key === "amenities") continue; 
+                data.append(key, formData[key]);
+            }
+            try {
+                setShowLoading(true);
+                const response = await axios.post(
+                    process.env.NEXT_PUBLIC_API_URL + "projects/add-new",
+                    data,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    }
+                );
+                if (response.data.isSuccess === 1) {
+                    router.refresh();
+                    toast.success(response.data.message);
+                    setFormData(initialFormData);
+                    setShowModal(false);
+                }
+            } catch (error) {
+                toast.error("Error saving Project");
+            } finally {
+                setShowLoading(false);
+            }
+        }
     };
 
     const formFields = [
@@ -414,7 +400,7 @@ export default function ManageProjects({ builderList, typeList, countryData }) {
         },
         {
             label: "Amenity Description",
-            name: "amenityDescription",
+            name: "amenityDesc",
             type: "jodit",
             value: amenityDesc,
             required: true,
@@ -422,7 +408,7 @@ export default function ManageProjects({ builderList, typeList, countryData }) {
         },
         {
             label: "Location Description",
-            name: "locationDescription",
+            name: "locationDesc",
             type: "jodit",
             value: locationDesc,
             required: true,
@@ -430,7 +416,7 @@ export default function ManageProjects({ builderList, typeList, countryData }) {
         },
         {
             label: "Floor Plan Description",
-            name: "floorPlanDescription",
+            name: "floorPlanDesc",
             type: "jodit",
             value: floorPlanDesc,
             required: true,
