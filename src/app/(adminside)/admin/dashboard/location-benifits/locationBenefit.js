@@ -110,16 +110,19 @@ export default function LocationBenefit({ list, projectList }) {
             flex: 1,
             renderCell: (params) => (
                 <>
-                    {
+                    {                        
                         params.row.image.map((item, index) => (
-                            <Image
-                                className="mx-2"
-                                key={index}
-                                src={`/icon/${item}`}
-                                alt="Project"
-                                width={50}
-                                height={50}
-                            />
+                            <>
+                                <Image
+                                    className="mx-2"
+                                    key={index}
+                                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${params.row.slugUrl}/${item}`}
+                                    alt="Project"
+                                    width={50}
+                                    height={50}
+                                    unoptimized
+                                />
+                            </>
                         ))
                     }
                 </>
@@ -165,7 +168,7 @@ export default function LocationBenefit({ list, projectList }) {
                     ...item,
                     image: item.locationBenefits.map(item => item.image),
                     distance: item.locationBenefits.map(item => item.distance),
-                    benefitName: item.locationBenefits.map(item => item.benefitName)
+                    benefitName: item.locationBenefits.map(item => item.benefitName),
                 }))} />
             </div>
             <Modal show={showModal} onHide={() => setShowModal(false)} centered>
