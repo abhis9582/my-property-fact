@@ -1,14 +1,30 @@
+import axios from "axios";
 import { Button } from "react-bootstrap";
+import WebStory from "./webStory";
 
-export default function WebStroy() {
+//fetching category list form api
+const fetchCategoryList = async () => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}web-story-category/get-all`);
+    return response.data;
+}
+
+//fetching category list form api
+const fetchStoryList = async () => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}web-story/get-all`);
+    const res = response.data.map((item, index)=> ({
+        ...item,
+        index: index + 1
+    }));    
+    return res;
+}
+
+export default async function WebStroyPage() {
+    const categoryList = await fetchCategoryList();
+    const list = await fetchStoryList();
+    
     return (
         <>
-            <div className="d-flex justify-content-between mt-3">
-                <h1 className="text-capitalize">Manage web story</h1>
-                <Button className="text-capitalize btn-success border-0">
-                    + Add new story
-                </Button>
-            </div>
+            <WebStory categoryList={categoryList} list={list}/>
         </>
     )
 }
