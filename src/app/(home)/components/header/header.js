@@ -148,6 +148,11 @@ const Header = ({cityList, projectTypes, builderList}) => {
                   Blog
                 </Link>
               </li>
+              <li className="hasChild">
+                <Link href="/web-stories" className={`text-light py-3 text-uppercase  ${pathname === "/web-stories" ? "header-link-active" : ""}`}>
+                  Web-stories
+                </Link>
+              </li>
               {/* <li className="hasChild">
                 <Link href="/clients-speak" className={`text-light text-uppercase ${pathname === "/clients-speak" ? "header-link-active" : ""}`}>Clients Speak</Link>
               </li> */}
@@ -246,6 +251,9 @@ const Header = ({cityList, projectTypes, builderList}) => {
               <ul className="list-inline">
                 <li>
                   <Link href="/blog" onClick={openMenu}>Blog</Link>
+                </li>
+                <li>
+                  <Link href="/web-stories" onClick={openMenu}>Web Stories</Link>
                 </li>
                 <li>
                   <Link href="/about-us" onClick={openMenu}>About Us</Link>

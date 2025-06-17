@@ -2,9 +2,9 @@
 import axios from "axios";
 import CommonBreadCrum from "../../components/common/breadcrum";
 import CommonHeaderBanner from "../../components/common/commonheaderbanner";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import "./../media.css";
+import "./../page.module.css";
 import { Button, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { LoadingSpinner } from "../../contact-us/page";
