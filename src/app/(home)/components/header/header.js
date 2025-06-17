@@ -149,7 +149,7 @@ const Header = ({cityList, projectTypes, builderList}) => {
                 </Link>
               </li>
               <li className="hasChild">
-                <Link href="/web-stories" className={`text-light py-3 text-uppercase ${isBlogTypeRoute ? "header-link-active" : ""}`}>
+                <Link href="/web-stories" className={`text-light py-3 text-uppercase  ${pathname === "/web-stories" ? "header-link-active" : ""}`}>
                   Web-stories
                 </Link>
               </li>

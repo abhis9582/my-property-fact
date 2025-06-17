@@ -2,11 +2,19 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import CommonHeaderBanner from "../components/common/commonheaderbanner";
+import CommonBreadCrum from "../components/common/breadcrum";
 
 export default function WebStories({ webStoryList }) {
     return (
         <>
-            <h2 className="mt-5 text-center">Web Stories</h2>
+            <CommonHeaderBanner
+                image={"project-banner.jpg"}
+                headerText={"Web Stories"}
+            />
+            <CommonBreadCrum
+                pageName={"web-stories"}
+            />
             <div className="container py-4">
                 <div className="d-flex flex-row flex-nowrap overflow-auto gap-3">
                     {webStoryList

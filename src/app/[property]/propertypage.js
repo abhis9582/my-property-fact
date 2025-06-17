@@ -561,10 +561,10 @@ export default function Property({ projectDetail }) {
           <h2 className="text-center mb-3">Amenities</h2>
 
           {/* Description */}
-          <p
+          <div
             className="text-center text-muted mb-5 px-2 px-md-5"
             dangerouslySetInnerHTML={{ __html: projectDetail.amenityDesc }}
-          ></p>
+          ></div>
 
           {/* Amenities Grid */}
           <div className="row justify-content-center g-3">
@@ -572,10 +572,11 @@ export default function Property({ projectDetail }) {
               <div key={index} className="col-6 col-sm-4 col-md-3 col-lg-2">
                 <div className="border rounded-4 bg-light h-100 d-flex align-items-center justify-content-around text-center custom-shadow amenity-box p-2">
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.image}`}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}amenity/${item.image}`}
                     height={20}
                     width={20}
                     alt={item.altTag || ""}
+                    unoptimized
                   />
                   <p className="m-0 fw-semibold text-dark fs-6">{item.title}</p>
                 </div>
@@ -685,9 +686,9 @@ export default function Property({ projectDetail }) {
             <h2 className="text-center">Location</h2>
           </div>
           <div className="text-center p-2 p-md-4 p-lg-5">
-            <p
+            <div
               dangerouslySetInnerHTML={{ __html: projectDetail.locationDesc }}
-            ></p>
+            ></div>
           </div>
           <div className="row">
             <div className="col-md-6">
@@ -766,10 +767,10 @@ export default function Property({ projectDetail }) {
 
         {/* Description */}
         <div className="mx-auto" style={{ maxWidth: "800px" }}>
-          <p
+          <div
             className="text-center text-muted fs-6"
             dangerouslySetInnerHTML={{ __html: projectDetail.projectShortDesc }}
-          ></p>
+          ></div>
         </div>
 
         {/* Action Buttons */}
