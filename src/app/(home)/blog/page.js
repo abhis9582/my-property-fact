@@ -1,5 +1,5 @@
 "use client";
-import "./media.css";
+import "./page.module.css";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import CommonBreadCrum from "../components/common/breadcrum";
 import { useEffect, useState } from "react";
