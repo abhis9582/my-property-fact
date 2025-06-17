@@ -1,7 +1,6 @@
 import axios from "axios";
-import { Button } from "react-bootstrap";
 import WebStory from "./webStory";
-
+export const dynamic = 'force-dynamic';
 //fetching category list form api
 const fetchCategoryList = async () => {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}web-story-category/get-all`);

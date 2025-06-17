@@ -10,7 +10,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
-export const dynamic = 'force-dynamic';
 
 export default function WebStory({ categoryList, list }) {
 
