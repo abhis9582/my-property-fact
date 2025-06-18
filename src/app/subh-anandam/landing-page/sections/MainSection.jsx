@@ -75,7 +75,7 @@ const MainSection = () => {
 
       {/* Right: Form Section */}
       <div className="right-section d-flex justify-content-center align-items-start align-items-md-center w-100 w-md-50 px-3 px-md-5">
-        <div className="form-container bg-white shadow p-4">
+        <div className="form-container bg-white shadow p-4" id="form-container">
           <h5 className="mb-3">Contact Us</h5>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
