@@ -53,7 +53,7 @@ const MainSection = () => {
     <div className="main-section container-fluid d-flex flex-column flex-md-row">
       {/* Left: About Section */}
       <div className="left-section d-flex flex-column justify-content-center px-3 px-md-5 w-100 w-md-50 mb-4 mb-md-0">
-        <h2 className="mb-3">About Subh Anandam</h2>
+        <h2 className="mb-3">About Shubh Anandam</h2>
         <p>
           A Legacy of Harmony, A Future of Fulfillment Shubh Anandam is more
           than a housing project — it’s a thoughtfully built ecosystem where
