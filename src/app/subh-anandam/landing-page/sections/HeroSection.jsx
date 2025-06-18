@@ -23,14 +23,14 @@ const HeroSection = () => {
       <div className="position-absolute top-0 start-0 w-100 h-100 overlay z-0"></div>
 
       {/* Top-left Logo with margin */}
-      <div className="position-absolute top-0 start-0 z-1 p-3 p-sm-4 ms-3 ms-sm-4 mt-3 mt-sm-3">
+      {/* <div className="position-absolute top-0 start-0 z-1 p-3 p-sm-4 ms-3 ms-sm-4 mt-3 mt-sm-3">
         <Image src={logo} alt="Logo" width={80} height={60} />
-      </div>
+      </div> */}
 
       {/* Top-right Button with margin */}
-      <div className="position-absolute top-0 end-0 z-1 p-3 p-sm-4 me-3 me-sm-4 mt-3 mt-sm-3">
+      {/* <div className="position-absolute top-0 end-0 z-1 p-3 p-sm-4 me-3 me-sm-4 mt-3 mt-sm-3">
         <button className="cta-btn">Enquire now</button>
-      </div>
+      </div> */}
 
       {/* Centered Heading */}
       <div className="d-flex justify-content-center align-items-center h-100 z-1 position-relative px-3">
