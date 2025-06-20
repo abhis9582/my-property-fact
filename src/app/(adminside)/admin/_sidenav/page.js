@@ -57,6 +57,12 @@ export default function SideNav() {
               }`}
           >
             <li>
+              <Link href="/admin/dashboard/manage-countries">Manage Countries</Link>
+            </li>
+            <li>
+              <Link href="/admin/dashboard/manage-states">Manage States</Link>
+            </li>
+            <li>
               <Link href="/admin/dashboard/manage-cities">Manage Cities</Link>
             </li>
             <li>

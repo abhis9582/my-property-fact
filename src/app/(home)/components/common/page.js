@@ -50,7 +50,11 @@ export default function PropertyContainer(props) {
               unoptimized
             />
           </div>
-
+          <div className="position-absolute top-0 end-0 m-2">
+            <h6 className="border p-2 d-inline-block rounded bg-light text-dark shadow-sm">
+              {props.data.typeName}
+            </h6>
+          </div>
           <div className="mt-3 ms-3">
             <h5 className="mb-2">{props.data.projectName}</h5>
             <h5 className="text-success mb-0">{generatePrice(props.data.projectPrice)}*</h5>

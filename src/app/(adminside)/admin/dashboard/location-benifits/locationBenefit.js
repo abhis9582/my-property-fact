@@ -110,19 +110,17 @@ export default function LocationBenefit({ list, projectList }) {
             flex: 1,
             renderCell: (params) => (
                 <>
-                    {                        
+                    {
                         params.row.image.map((item, index) => (
-                            <>
-                                <Image
-                                    className="mx-2"
-                                    key={index}
-                                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${params.row.slugUrl}/${item}`}
-                                    alt="Project"
-                                    width={50}
-                                    height={50}
-                                    unoptimized
-                                />
-                            </>
+                            <Image
+                                className="mx-2"
+                                key={index}
+                                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${params.row.slugUrl}/${item}`}
+                                alt="Project"
+                                width={50}
+                                height={50}
+                                unoptimized
+                            />
                         ))
                     }
                 </>
@@ -141,21 +139,13 @@ export default function LocationBenefit({ list, projectList }) {
         {
             field: "action",
             headerName: "Action",
-            width: 100,
+            flex: 1,
             renderCell: (params) => (
                 <div>
-                    <FontAwesomeIcon
-                        className="mx-3 text-danger"
-                        style={{ cursor: "pointer" }}
-                        icon={faTrash}
-                        onClick={() => openConfirmationBox(params.row.id)}
-                    />
-                    {/* <FontAwesomeIcon
-            className="text-warning"
-            style={{ cursor: "pointer" }}
-            icon={faPencil}
-            onClick={() => openEditModel(params.row)}
-          /> */}
+                    <Button className="btn btn-sm btn-success"
+                    onClick={() => openConfirmationBox(params.row.id)}>
+                        View All
+                    </Button>
                 </div>
             ),
         },
