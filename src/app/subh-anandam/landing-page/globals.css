@@ -18,10 +18,15 @@ h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+span {
   font-family: var(--font-montserrat);
 }
 
 a {
   text-decoration: none;
+}
+
+.tagline {
+  font-size: 1.2rem;
 }

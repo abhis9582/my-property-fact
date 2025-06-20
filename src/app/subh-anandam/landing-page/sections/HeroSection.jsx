@@ -2,10 +2,16 @@
 
 import React from "react";
 import Image from "next/image";
-import logo from "../assets/logo.png";
+import logo from "../assets/newLogo.png";
 import bgImage from "../assets/image.png";
 
 const HeroSection = () => {
+  const handleScrollToForm = () => {
+    const formEl = document.getElementById("form-container");
+    if (formEl) {
+      formEl.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   return (
     <div className="hero-section position-relative text-white">
       {/* Background Image */}
@@ -22,28 +28,38 @@ const HeroSection = () => {
       {/* Dark Overlay */}
       <div className="position-absolute top-0 start-0 w-100 h-100 overlay z-0"></div>
 
-      {/* Top-left Logo with margin */}
-      <div className="position-absolute top-0 start-0 z-1 p-3 p-sm-4 ms-3 ms-sm-4 mt-3 mt-sm-3">
-        <Image src={logo} alt="Logo" width={80} height={60} />
+      <div className="head">
+        {/* Top Bar: Logo + CTA */}
+        <div className="top-bar position-relative z-1 px-3 px-sm-4 py-3 d-flex justify-content-between align-items-center">
+          <Image src={logo} alt="Logo" />
+          <button className="cta-btn" onClick={handleScrollToForm}>
+            Enquire now
+          </button>
+        </div>
+
+        {/* Centered Heading */}
+        <div
+          className="d-flex justify-content-center align-items-center h-100 z-1 position-relative px-3"
+          style={{ marginTop: "7.5rem" }}
+        >
+          <h1 className="display-5 display-sm-4 fw-bold text-center">
+            Coming Soon...
+          </h1>
+        </div>
       </div>
 
-      {/* Top-right Button with margin */}
-      <div className="position-absolute top-0 end-0 z-1 p-3 p-sm-4 me-3 me-sm-4 mt-3 mt-sm-3">
-        <button className="cta-btn">Enquire now</button>
-      </div>
-
-      {/* Centered Heading */}
-      <div className="d-flex justify-content-center align-items-center h-100 z-1 position-relative px-3">
-        <h1 className="display-5 display-sm-4 fw-bold text-center">
-          Coming Soon...
-        </h1>
-      </div>
-
+      {/* Component Styles */}
       <style jsx>{`
         .hero-section {
           height: 60vh;
           overflow: hidden;
         }
+
+        .head {
+          width: 75%;
+          margin: auto;
+        }
+
         .overlay {
           background-color: rgba(0, 0, 0, 0.25);
         }
@@ -73,6 +89,10 @@ const HeroSection = () => {
         @media (max-width: 575.98px) {
           h1 {
             font-size: 1.75rem !important;
+          }
+          .head {
+            width: 100%;
+            margin: none;
           }
         }
       `}</style>

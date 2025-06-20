@@ -53,23 +53,29 @@ const MainSection = () => {
     <div className="main-section container-fluid d-flex flex-column flex-md-row">
       {/* Left: About Section */}
       <div className="left-section d-flex flex-column justify-content-center px-3 px-md-5 w-100 w-md-50 mb-4 mb-md-0">
-        <h2 className="mb-3">About Subh Anandam</h2>
+        <h2 className="mb-3">About Shubh Anandam</h2>
         <p>
-          A Legacy of Harmony, A Future of Fulfillment
-
-          Shubh Anandam is more than a housing project — it’s a thoughtfully built ecosystem where comfort, culture, and community come together. With integrated townships across different parts of India, we offer spaces that go beyond just living — they inspire a way of life that’s rooted in values and designed for tomorrow.
-
-          Every detail — from Vastu-compliant planning to lush green environments and holistic amenities — reflects our belief in creating not just homes, but experiences that nurture body, mind, and soul.
-
-          Whether it’s your first home or a generational gift, Shubh Anandam brings together spiritual serenity, modern infrastructure, and community harmony — all under one timeless vision.
-
-          Crafted with Purpose. Designed for Generations.
+          A Legacy of Harmony, A Future of Fulfillment Shubh Anandam is more
+          than a housing project — it’s a thoughtfully built ecosystem where
+          comfort, culture, and community come together. With integrated
+          townships across different parts of India, we offer spaces that go
+          beyond just living — they inspire a way of life that’s rooted in
+          values and designed for tomorrow. Every detail — from Vastu-compliant
+          planning to lush green environments and holistic amenities — reflects
+          our belief in creating not just homes, but experiences that nurture
+          body, mind, and soul. Whether it’s your first home or a generational
+          gift, Shubh Anandam brings together spiritual serenity, modern
+          infrastructure, and community harmony — all under one timeless vision.
+          <br />
         </p>
+        <span className="tagline" style={{ fontWeight: "bold" }}>
+          Crafted with Purpose. Designed for Generations.
+        </span>
       </div>
 
       {/* Right: Form Section */}
       <div className="right-section d-flex justify-content-center align-items-start align-items-md-center w-100 w-md-50 px-3 px-md-5">
-        <div className="form-container bg-white shadow p-4">
+        <div className="form-container bg-white shadow p-4" id="form-container">
           <h5 className="mb-3">Contact Us</h5>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
