@@ -432,8 +432,8 @@ export default function Calculator() {
                                                     series={[
                                                         {
                                                             data: [
-                                                                { id: 0, value: intrestPayable, label: 'Intrest Payable' },
-                                                                { id: 1, value: totalAmountPaid, label: 'Total Amount Paid' },
+                                                                { id: 0, value: intrestPayable, label: 'Total Interest' },
+                                                                { id: 1, value: loanAmount, label: 'Principle Amount' },
                                                             ],
                                                         },
                                                     ]}
