@@ -1,0 +1,10 @@
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  color: white;
+  padding: 2rem;
+}

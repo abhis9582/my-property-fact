@@ -11,12 +11,14 @@ export default async function HomePage() {
   const [projectTypeListRes, cityListRes, projectsList] = await Promise.all([
     fetch(`${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`, { cache: "force-cache" }),
     fetch(`${process.env.NEXT_PUBLIC_API_URL}city/all`, { cache: "force-cache" }),
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}projects/get-all`, { cache: "force-cache" })
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`, { cache: "force-cache" })
   ]);
 
   const projectTypeList = await projectTypeListRes.json();
   const cityList = await cityListRes.json();
   const list = await projectsList.json();
+  console.log(list);
+  
   return (
     <>
       {/* Pass props to client component if needed */}
