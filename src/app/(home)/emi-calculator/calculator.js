@@ -2,9 +2,11 @@
 import { useState } from 'react';
 import CommonHeaderBanner from '../components/common/commonheaderbanner';
 import CommonBreadCrum from '../components/common/breadcrum';
-import { PieChart } from '@mui/x-charts/PieChart';
+import styles from './page.module.css';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import { Accordion, Container } from 'react-bootstrap';
+import { Accordion, Container, Modal } from 'react-bootstrap';
+import CalculatorForm from './_calculator';
+import { PieChart } from '@mui/x-charts';
 
 
 export default function Calculator() {
@@ -15,6 +17,9 @@ export default function Calculator() {
     const [emi, setEmi] = useState(null);
     const [intrestPayable, setIntrestPayable] = useState(null);
     const [totalAmountPaid, setTotalAmountPaid] = useState(null);
+    const [showCalculator, setShowCalculator] = useState(false);
+    const [title, setTitle] = useState("");
+    const [childList, setChildList] = useState([]);
     // EMI calculation logic
     const calculateEMI = () => {
         if (loanAmount && interestRate && loanTenure) {
@@ -30,6 +35,7 @@ export default function Calculator() {
             setIntrestPayable(intrest.toFixed(2));
             setEmi(emi.toFixed(2)); // Set EMI result
             setTotalAmountPaid(emi.toFixed(2) * months);
+            setShowCalculator(false);
         } else {
             alert('Please fill in all the fields');
         }
@@ -39,22 +45,114 @@ export default function Calculator() {
         {
             id: 1,
             title: "Monthly EMI",
-            description: "the bite out of your salary each month"
+            description: "the bite out of your salary each month",
+            heading: "Monthly EMI – What You Should Know",
+            childData: [
+                {
+                    id: 1,
+                    text: "<p>Keep your EMI within <b>35% of your net monthly income</b> to stay financially comfortable.</p>"
+                },
+                {
+                    id: 2,
+                    text: "<p>A <b>lower EMI isn’t always better</b>. Longer tenures mean much higher total interest.</p>"
+                },
+                {
+                    id: 3,
+                    text: "<p>Use EMI estimates to plan <b>prepayments</b>, which can reduce your loan term drastically.</p>"
+                },
+                {
+                    id: 4,
+                    text: "<p>Always <b>stress-test EMI</b> by adding 1–1.5% to the interest rate. It prepares you for future hikes.</p>"
+                },
+                {
+                    id: 5,
+                    text: "<p>EMI amounts help <b>determine eligibility</b> but never borrow more than you can breathe under.</p>"
+                },
+            ]
         },
         {
             id: 2,
             title: "Total Interest Payable ",
-            description: "what the bank earns from you"
+            description: "what the bank earns from you",
+            heading: "Total Interest Payable – What You Should Know",
+            childData: [
+                {
+                    id: 1,
+                    text: "<p>The longer your loan tenure, the more interest you pay. <b>Even small tenure cuts can save lakhs.</b></p>"
+                },
+                {
+                    id: 2,
+                    text: "<p><b>Prepaying early</b> in the loan cycle reduces interest drastically due to the front-loaded structure.</p>"
+                },
+                {
+                    id: 3,
+                    text: "<p>Avoid being lured by low EMI if it <b>balloons your total interest burden</b>.</p>"
+                },
+                {
+                    id: 4,
+                    text: "<p>Use total interest figures to <b>evaluate true loan cost</b>, not just monthly affordability.</p>"
+                },
+                {
+                    id: 5,
+                    text: "<p>Compare lenders beyond rates, <b>processing fees, and reset clauses</b> impact overall payout.</p>"
+                },
+            ]
         },
         {
             id: 3,
             title: "Total Payout ",
-            description: "principal + interest over the loan’s life"
+            description: "principal + interest over the loan’s life",
+            heading: "Total Payout – What You Should Know",
+            childData: [
+                {
+                    id: 1,
+                    text: "<p><b>Total payout = principal + interest.</b> It shows the real cost of your loan, not just EMI.</p>"
+                },
+                {
+                    id: 2,
+                    text: "<p>A ₹50L loan over 20 years could mean a <b>total payout of ₹90L+</b>. Double-check before committing.</p>"
+                },
+                {
+                    id: 3,
+                    text: "<p><b>Shorter tenures</b> dramatically reduce total payout, even if EMIs are higher.</p>"
+                },
+                {
+                    id: 4,
+                    text: "<p>Prepayments lower your total payout by cutting down <b>future interest obligations</b>.</p>"
+                },
+                {
+                    id: 5,
+                    text: "<p>Always evaluate <b>total payout vs. property appreciation</b> to judge investment viability.</p>"
+                },
+            ]
         },
         {
             id: 4,
             title: "Loan Term Visual ",
-            description: "how long you’ll be in repayment mode"
+            description: "how long you’ll be in repayment mode",
+            heading: "Loan Term Visual – What You Should Know",
+            childData: [
+                {
+                    id: 1,
+                    text: "<p>The visual shows how <b>EMI components shift over time</b>. Interest dominates early, principal later.</p>"
+                },
+                {
+                    id: 2,
+                    text: "<p>Helps you identify <b>ideal prepayment windows</b>. Earlier = greater savings.</p>"
+                },
+                {
+                    id: 3,
+                    text: "<p>See how reducing tenure affects your <b>interest outgo and repayment timeline</b> instantly.</p>"
+                },
+                {
+                    id: 4,
+                    text: "<p>Use it to plan major life goals, know when your <b>loan-free milestone</b> is coming.</p>"
+                },
+                {
+                    id: 5,
+                    text: "<p>Great tool to <b>stress-test different scenarios</b> before finalizing your loan structure.</p>"
+                },
+            ]
         },
 
     ];
@@ -82,15 +180,81 @@ export default function Calculator() {
     const intepreatingYourResult = [
         {
             title: "If EMI feels tight ",
-            desc: "consider a larger down payment or longer tenure (but note total interest jump)."
+            desc: "consider a larger down payment or longer tenure (but note total interest jump).",
+            childData: [
+                {
+                    id: 1,
+                    text: "<p>Increase your <b>down payment</b> to reduce the loan amount and lower your monthly payments.</p>"
+                },
+                {
+                    id: 2,
+                    text: "<p>Opt for a <b>slightly longer tenure</b>, but only if you're disciplined about future prepayments.</p>"
+                },
+                {
+                    id: 3,
+                    text: "<p>Review all existing EMIs. <b>Consolidate or close small debts</b> to free up cash.</p>"
+                },
+                {
+                    id: 4,
+                    text: "<p>Consider <b>joint loans</b> to boost eligibility and ease the burden.</p>"
+                },
+                {
+                    id: 5,
+                    text: "<p>Delay purchase if needed. <b>Financial comfort beats rushed ownership.</b></p>"
+                },
+            ]
         },
         {
             title: "If total interest shocks you ",
-            desc: "target aggressive pre payments. Even one extra EMI a year can shave multiple years off."
+            desc: "target aggressive pre payments. Even one extra EMI a year can shave multiple years off.",
+            childData: [
+                {
+                    id: 1,
+                    text: "<p>Choose a <b>shorter tenure.</b> It significantly reduces interest paid over time.</p>"
+                },
+                {
+                    id: 2,
+                    text: "<p>Plan for <b>aggressive prepayments,</b> especially in the first 5 years.</p>"
+                },
+                {
+                    id: 3,
+                    text: "<p>Increase your <b>EMI slightly</b> if your budget allows. It cuts interest fast.</p>"
+                },
+                {
+                    id: 4,
+                    text: "<p>Avoid loans with <b>teaser rates</b> that spike later.</p>"
+                },
+                {
+                    id: 5,
+                    text: "<p>Use the shock as a trigger to <b>negotiate better terms or reconsider the loan amount.</b></p>"
+                },
+            ]
         },
         {
             title: "If the calculator shows affordability ",
-            desc: "still stress test: add 1–1.5 % to the rate and see if EMI remains comfortable."
+            desc: "still stress test: add 1–1.5 % to the rate and see if EMI remains comfortable.",
+            childData: [
+                {
+                    id: 1,
+                    text: "<p>Still perform a <b>stress test</b> by adding 1–1.5% to the interest rate. Future hikes are real.</p>"
+                },
+                {
+                    id: 2,
+                    text: "<p>Don’t stretch to your max. Leave room for <b>emergencies and future goals.</b></p>"
+                },
+                {
+                    id: 3,
+                    text: "<p>Consider <b>shortening the tenure</b> to save on interest while it’s affordable.</p>"
+                },
+                {
+                    id: 4,
+                    text: "<p>Use your position to <b>negotiate better terms</b> with lenders.</p>"
+                },
+                {
+                    id: 5,
+                    text: "<p>Plan <b>prepayments early</b> to close the loan more quickly and affordably.</p>"
+                },
+            ]
         },
     ];
 
@@ -222,6 +386,18 @@ export default function Calculator() {
         setActiveKey(prevKey => (prevKey === key ? null : key));
     };
 
+    const openCalculator = (item) => {
+        setShowCalculator(true);
+        setInterestRate("");
+        setIntrestPayable("");
+        setTotalAmountPaid("");
+        setLoanAmount("");
+        setLoanTenure("");
+        setEmi("");
+        setTitle(item.heading);
+        setChildList(item.childData);
+    }
+
     return (
         <>
             <CommonHeaderBanner image={"contact-banner.jpg"} headerText={"Emi-calculator"} />
@@ -235,10 +411,37 @@ export default function Calculator() {
                             on the dotted line. Enter your loan amount, interest rate, and tenure to see:</p>
                         <div className='row'>
                             {dataArray.map((item, index) => (
-                                <div key={`${index}-${item.id}`} className='p-2 col-12 col-sm-6'>
-                                    <div className='card p-3'>
+                                <div key={`${index}-${item.id}`} className={`p-2 col-12 col-sm-6 ${styles.cardHover}`}>
+                                    <div className='card p-3' onClick={() => openCalculator(item)}>
                                         <h3 className='text-golden'>{item.title}</h3>
                                         <p>{item.description}</p>
+                                        {emi && item.id !== 4 && (
+                                            <div className="alert-success mt-4 text-center">
+                                                {item.id === 1 && <h2>₹{Number(emi).toLocaleString('en-IN')}</h2>}
+                                                {item.id === 2 && <h2>₹{Number(intrestPayable).toLocaleString('en-IN')}</h2>}
+                                                {item.id === 3 && <h2>₹{Number(totalAmountPaid.toFixed(2)).toLocaleString('en-IN')}</h2>}
+                                            </div>
+                                        )}
+                                        {emi && item.id === 4 &&
+                                            <div className='d-flex justify-content-center align-items-center'>
+                                                <div className='text-center'>
+                                                    <h5 className='p-0 m-0 text-danger'>{loanTenure}</h5>
+                                                    <h6 >Month(s)</h6>
+                                                </div>
+                                                <PieChart
+                                                    series={[
+                                                        {
+                                                            data: [
+                                                                { id: 0, value: intrestPayable, label: 'Intrest Payable' },
+                                                                { id: 1, value: totalAmountPaid, label: 'Total Amount Paid' },
+                                                            ],
+                                                        },
+                                                    ]}
+                                                    width={70}
+                                                    height={70}
+                                                />
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             ))}
@@ -248,19 +451,19 @@ export default function Calculator() {
 
                         <div className='mb-5'>
                             <h2 className='mb-5 '>How to Calibrate Your Loan (DOs)</h2>
-                            <TableContainer component={Paper}>
+                            <TableContainer component={Paper} className='custom-shadow p-3'>
                                 <Table aria-label="simple table">
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell sx={{ borderRight: '1px solid rgba(224, 224, 224, 1)' }} className='h4 font-bold'>Guideline</TableCell>
-                                            <TableCell className='h4 font-bold'>Why It Matters</TableCell>
+                                            <TableCell sx={{ borderRight: '1px solid rgba(224, 224, 224, 1)' }}><h4>Guideline</h4></TableCell>
+                                            <TableCell ><h4>Why It Matters</h4></TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {rows.map((row, index) => (
                                             <TableRow
                                                 key={index}
-                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                            // sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                             >
                                                 <TableCell component="th" scope="row"
                                                     sx={{ borderRight: '1px solid rgba(224, 224, 224, 1)' }}>
@@ -284,12 +487,26 @@ export default function Calculator() {
                         <div className='mb-5'>
                             <h2>Interpreting Your Results</h2>
                             <div>
-                                {intepreatingYourResult.map((item, index) => (
-                                    <div key={index} className='p-3 card my-3'>
-                                        <h4 className='text-golden'>{item.title}</h4>
-                                        <p className='fst-italic'>{item.desc}</p>
-                                    </div>
-                                ))}
+                                <Accordion className={styles.customAccordion} activeKey={activeKey} onSelect={handleToggle}>
+                                    {intepreatingYourResult.map((item, index) => (
+                                        <Accordion.Item eventKey={index.toString()} key={index}>
+                                            <Accordion.Header>
+                                                <div>
+                                                    <h4 className='text-golden'>{item.title}</h4>
+                                                    <p className='fst-italic'>{item.desc}</p>
+                                                </div>
+                                            </Accordion.Header>
+                                            {item.childData.map((item, index) => (
+                                                // <Accordion.Body key={`${index}_${item.id}`}>{item.text}</Accordion.Body>
+                                                <Accordion.Body className={`p-0 ps-3 pt-3 ${styles.childList}`} key={`${index}_${item.id}`}>
+                                                    <ul>
+                                                        <li><div dangerouslySetInnerHTML={{ __html: item.text }} /></li>
+                                                    </ul>
+                                                </Accordion.Body>
+                                            ))}
+                                        </Accordion.Item>
+                                    ))}
+                                </Accordion>
                             </div>
                         </div>
                         <div className='mb-5'>
@@ -310,67 +527,18 @@ export default function Calculator() {
                     <div className='col-md-4'>
                         <div className="container py-5 custom-shadow my-3 rounded-4 p-3 p-md-5" style={{ maxWidth: '600px', position: 'sticky', top: '100px' }}>
                             <h3 className='text-center mb-4 text-golden text-uppercase'>Calculate here</h3>
-                            <div className="mb-5">
-                                <label htmlFor="loanAmount" className="form-label">Loan Amount (₹)</label>
-                                <input
-                                    type="number"
-                                    className="form-control"
-                                    id="loanAmount"
-                                    value={loanAmount}
-                                    onChange={(e) => setLoanAmount(e.target.value)}
-                                    placeholder="Enter loan amount"
-                                />
-                            </div>
-
-                            <div className="mb-5">
-                                <label htmlFor="interestRate" className="form-label">Interest Rate (annual %)</label>
-                                <input
-                                    type="number"
-                                    className="form-control"
-                                    id="interestRate"
-                                    value={interestRate}
-                                    onChange={(e) => setInterestRate(e.target.value)}
-                                    placeholder="Enter annual interest rate"
-                                />
-                            </div>
-
-                            <div className="mb-5">
-                                <label htmlFor="loanTenure" className="form-label">Loan Tenure (months)</label>
-                                <input
-                                    type="number"
-                                    className="form-control"
-                                    id="loanTenure"
-                                    value={loanTenure}
-                                    onChange={(e) => setLoanTenure(e.target.value)}
-                                    placeholder="Enter loan tenure in months"
-                                />
-                            </div>
-
-                            <div className="d-grid gap-2">
-                                <button className="btn btn-background text-white" onClick={calculateEMI}>
-                                    <h5 className='m-0 p-0'>Calculate EMI</h5>
-                                </button>
-                            </div>
-
-                            {emi && (
-                                <div className="alert alert-success mt-4 text-center">
-                                    <h4>Your EMI is: ₹{emi}</h4>
-                                    <h4>Intrest Payable is: ₹{intrestPayable}</h4>
-                                    <h4>Total Amount paid: ₹{totalAmountPaid}</h4>
-                                </div>
-                            )}
-                            {emi && <PieChart
-                                series={[
-                                    {
-                                        data: [
-                                            { id: 0, value: intrestPayable, label: 'intrestPayable' },
-                                            { id: 1, value: totalAmountPaid, label: 'totalAmountPaid' },
-                                        ],
-                                    },
-                                ]}
-                                width={200}
-                                height={200}
-                            />}
+                            <CalculatorForm
+                                emi={emi}
+                                interestRate={interestRate}
+                                intrestPayable={intrestPayable}
+                                loanAmount={loanAmount}
+                                loanTenure={loanTenure}
+                                setInterestRate={setInterestRate}
+                                setLoanAmount={setLoanAmount}
+                                setLoanTenure={setLoanTenure}
+                                totalAmountPaid={totalAmountPaid}
+                                calculateEMI={calculateEMI}
+                            />
                         </div>
                     </div>
                 </div>
@@ -386,6 +554,40 @@ export default function Calculator() {
                     </Accordion>
                 </Container>
             </div>
+            <Modal size='xl' show={showCalculator} onHide={() => setShowCalculator(false)} centered>
+                <Modal.Header className={styles.modalHeader} closeButton>
+                    <Modal.Title>{title}</Modal.Title>
+                </Modal.Header>
+                <div className='row'>
+                    <div className={`col-md-6 order-2 order-md-1 d-flex justify-content-center align-items-center ${styles.childList}`}>
+                        <div className='p-3'>
+                            {/* <h3>{title}</h3> */}
+                            {childList.map((item, index) => (
+                                <ul key={index}>
+                                    <li><div dangerouslySetInnerHTML={{ __html: item.text }} /></li>
+                                </ul>
+                            ))}
+                        </div>
+                    </div>
+                    <div className='col-md-6 order-1 order-md-2'>
+                        <div className="container custom-shadow p-3 p-md-5" style={{ maxWidth: '600px', position: 'sticky', top: '100px' }}>
+                            <h3 className='text-center mb-4 text-golden text-uppercase'>Calculate here</h3>
+                            <CalculatorForm
+                                emi={emi}
+                                interestRate={interestRate}
+                                intrestPayable={intrestPayable}
+                                loanAmount={loanAmount}
+                                loanTenure={loanTenure}
+                                setInterestRate={setInterestRate}
+                                setLoanAmount={setLoanAmount}
+                                setLoanTenure={setLoanTenure}
+                                totalAmountPaid={totalAmountPaid}
+                                calculateEMI={calculateEMI}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </Modal>
         </>
     );
 }
