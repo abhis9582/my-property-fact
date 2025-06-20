@@ -14,9 +14,9 @@ export default function Featured({ type= null, url= "", allFeaturedProperties= n
   // Filter based on type prop
   useEffect(() => {
     if (type === 1 || type === 2) {
-      const filtered = allFeaturedProperties.filter(
+      const filtered = Array.isArray(allFeaturedProperties)? Array.isArray(allFeaturedProperties).filter(
         (p) => p.propertyType === type
-      );      
+      ): [];      
       setFeaturedProperties(filtered);
     } else {
       setFeaturedProperties(allFeaturedProperties);
