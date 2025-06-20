@@ -8,20 +8,21 @@ import Link from "next/link";
 import PropertyContainer from "../../common/page";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 
-export default function Featured({ type= null, url= "", allFeaturedProperties= null }) {
+export default function Featured({ type = null, url = "", allFeaturedProperties = null }) {
   const [featuredProperties, setFeaturedProperties] = useState([]);
 
   // Filter based on type prop
   useEffect(() => {
     if (type === 1 || type === 2) {
-      const filtered = Array.isArray(allFeaturedProperties)? Array.isArray(allFeaturedProperties).filter(
-        (p) => p.propertyType === type
-      ): [];      
+      const filtered = Array.isArray(allFeaturedProperties)
+        ? allFeaturedProperties.filter((p) => p.propertyType === type)
+        : [];
       setFeaturedProperties(filtered);
     } else {
-      setFeaturedProperties(allFeaturedProperties);
+      setFeaturedProperties(Array.isArray(allFeaturedProperties) ? allFeaturedProperties : []);
     }
   }, [type, allFeaturedProperties]);
+
 
   const settings = {
     dots: false,
@@ -66,9 +67,9 @@ export default function Featured({ type= null, url= "", allFeaturedProperties= n
   return (
     <>
       <div className="container">
-        {false ? 
-        <div className="d-flex justify-content-center align-items-center" style={{ height: "250px" }}><LoadingSpinner show={true} /></div> : 
-        featuredProperties &&
+        {false ?
+          <div className="d-flex justify-content-center align-items-center" style={{ height: "250px" }}><LoadingSpinner show={true} /></div> :
+          featuredProperties &&
           <>{featuredProperties?.length > 0 && (
             <Slider {...settings}>
               {featuredProperties.map((item) => (
