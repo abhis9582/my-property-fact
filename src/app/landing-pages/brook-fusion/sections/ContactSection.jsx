@@ -146,9 +146,6 @@
 //   );
 // }
 
-
-
-
 "use client";
 
 import { useState } from "react";
@@ -200,7 +197,7 @@ export default function ContactSection() {
           unitType: "",
           message: "",
         });
-        router.push("brook/thankyou");
+        router.push("brook-fusion/thankyou");
       } else {
         setStatus("Failed to submit. Please try again.");
       }

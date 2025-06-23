@@ -57,7 +57,7 @@ export default function PopupForm() {
       const result = await response.json();
       if (result.result === "success") {
         setStatus("Form submitted successfully!");
-        router.push("brook/thankyou");
+        router.push("brook-fusion/thankyou");
         setFormData({ name: "", email: "", phone: "", message: "" });
       } else {
         setStatus("Failed to submit. Please try again.");
