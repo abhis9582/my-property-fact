@@ -16,9 +16,7 @@ export default async function HomePage() {
 
   const projectTypeList = await projectTypeListRes.json();
   const cityList = await cityListRes.json();
-  const list = await projectsList.json();
-  console.log(list);
-  
+  const list = await projectsList.json();  
   return (
     <>
       {/* Pass props to client component if needed */}

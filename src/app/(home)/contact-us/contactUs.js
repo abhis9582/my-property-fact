@@ -57,7 +57,6 @@ export default function ContactUs() {
                 }
             } catch (error) {
                 toast.error(error);
-                console.log(error);
             } finally {
                 setShowLoading(false);
                 setButtonName("Get a free service");

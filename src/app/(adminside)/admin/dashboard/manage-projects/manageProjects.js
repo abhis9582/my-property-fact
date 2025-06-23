@@ -198,7 +198,6 @@ export default function ManageProjects({ builderList, typeList, countryData, pro
             }
         }
         setValidated(true);
-        console.log(formData);
 
         if (form.checkValidity()) {
             const data = new FormData();

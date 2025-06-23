@@ -87,7 +87,6 @@ export default function ManageBlogs({ list, categoryList }) {
                     toast.error(response.data.message);
                 }
             } catch (error) {
-                console.log(error);
                 toast.error(error.response.data.blogMetaDescription);
                 toast.error(error.response.data.error);
             } finally {
