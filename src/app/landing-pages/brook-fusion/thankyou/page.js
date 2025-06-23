@@ -9,9 +9,11 @@ export default function ThankYouPage() {
       {/* Optional: Taboola Pixel */}
       {/* <Script id="taboola-pixel" strategy="afterInteractive">...</Script> */}
 
-      <main className="min-h-screen bg-[#f9fafb] text-gray-800 flex flex-col" style={{ zIndex: 9000000 }}>
+      <main
+        className="min-h-screen bg-[#f9fafb] text-gray-800 flex flex-col"
+        style={{ zIndex: 9000000 }}
+      >
         {/* Header */}
-
 
         {/* Main Content */}
         <section className="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8 py-20">
@@ -20,14 +22,12 @@ export default function ThankYouPage() {
               Thank You
             </h1>
             <p className="text-base sm:text-lg text-gray-600 mb-10 leading-relaxed">
-              We sincerely appreciate your submission. A member of our team will contact you shortly with the next steps.
+              We sincerely appreciate your submission. A member of our team will
+              contact you shortly with the next steps.
             </p>
 
-
-
-
             <Link
-              href="/promotional-pages/brook"
+              href="/landing-pages/brook-fusion"
               className="btn px-4 py-2 mt-4 fw-semibold text-white"
               style={{
                 backgroundColor: "#D0B674",
