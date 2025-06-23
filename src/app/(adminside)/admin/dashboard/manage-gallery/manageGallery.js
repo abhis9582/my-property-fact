@@ -94,8 +94,7 @@ export default function ManageGallery({ list, projectsList }) {
             flex: 1,
             renderCell: (params) => (
                 <>
-                    {
-                        // console.log(params)                   
+                    {                 
                         params.row.galleryImage.map((item, index) => (
                             <Image
                                 className="mx-2 rounded-2 cursor-pointer"

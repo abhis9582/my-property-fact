@@ -35,8 +35,6 @@ export default function WebStroyCategory({ list }) {
 
     //Handle opening of edit model
     const openEditPopUp = (data) => {
-        console.log(data);
-        
         setButtonName("Update Category");
         setShow(true);
         setTitle("Update web story category");

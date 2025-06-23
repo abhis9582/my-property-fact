@@ -21,9 +21,7 @@ export default function GenerateForm({ inputFields, showModal, setShowModal, val
                 const payload = {
                     ...formData,
                     id: formData.id || 0
-                }
-                console.log(payload);
-                
+                }                
                 const response = await axios.post(
                     `${process.env.NEXT_PUBLIC_API_URL}${api}`,
                     payload,

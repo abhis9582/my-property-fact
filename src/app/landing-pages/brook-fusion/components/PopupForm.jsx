@@ -59,8 +59,6 @@ export default function PopupForm() {
         setStatus("Form submitted successfully!");
         router.push("brook/thankyou");
         setFormData({ name: "", email: "", phone: "", message: "" });
-        console.log("data submitted");
-
       } else {
         setStatus("Failed to submit. Please try again.");
       }

@@ -60,7 +60,6 @@ export default function ManageFaqs({ list, projectsList }) {
                 }
             } catch (error) {
                 toast.error("Error Occured");
-                console.log(error);
             } finally {
                 setShowLoading(false);
                 setButtonName("Add FAQ");
@@ -71,9 +70,6 @@ export default function ManageFaqs({ list, projectsList }) {
     const projectWithoutFaq = () => {
         const excludedIds = list.map(item => item.projectId);
         let res = [];
-        console.log(projectId);
-        console.log(showFaqList);
-
         if (projectId === 0) {
             res = projectsList.filter(project => !excludedIds.includes(project.id));
             setProjectOption(res);
@@ -90,8 +86,6 @@ export default function ManageFaqs({ list, projectsList }) {
         setButtonName("Add FAQ");
         setAnswer("");
         setQuestion("");
-        console.log(showFaqList);
-
         if (!showFaqList) {
             setProjectId(0);
         }

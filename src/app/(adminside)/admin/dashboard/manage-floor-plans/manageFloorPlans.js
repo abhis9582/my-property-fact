@@ -69,7 +69,6 @@ export default function ManageFloorPlans({ list, projectsList }) {
                     toast.error(response.data.message);
                 }
             } catch (error) {
-                console.log("Error Occured", error);
                 toast.error("Error Occured");
             } finally {
                 setShowLoading(false);

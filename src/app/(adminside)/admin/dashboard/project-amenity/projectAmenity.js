@@ -74,7 +74,6 @@ export default function ProjectsAmenity({ projectList, amenityList }) {
                     toast.error(response.data.message);
                 }
             } catch (error) {
-                console.log(error);
                 toast.error(error);
             } finally {
                 setShowLoading(false);
