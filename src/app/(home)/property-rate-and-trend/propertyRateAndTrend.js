@@ -70,7 +70,7 @@ export default function PropertyRateAndTrend({ cityList, insightData }) {
                             <Link href={`/property-rate-and-trend/${item.name.toLowerCase()}`} key={index + 1} onClick={() => setCityName(item.name)}>{item.name}</Link>
                         ))} */}
                         {['Ghaziabad', 'Mumbai', 'Noida'].map((item, index) => (
-                            <Link href={`/property-rate-and-trend/${item?.name?.toLowerCase()}`} key={index + 1} onClick={() => setCityName(item.name)}>{item.name}</Link>
+                            <Link href={`/property-rate-and-trend/${item?.toLowerCase()}`} key={index + 1} onClick={() => setCityName(item)}>{item}</Link>
                         ))}
                     </div>
                 </div>
