@@ -640,8 +640,8 @@ export default function Property({ projectDetail }) {
                     <p>
                       <FontAwesomeIcon icon={faChartArea} width={20} color="green" /> Area
                     </p>
-                    <p>{item.areaSqft} sqft*</p>
-                    <p>{parseFloat(item.areaSqmt).toFixed(2)} sqmt*</p>
+                    <p>{item.areaSqFt} sqft*</p>
+                    <p>{parseFloat(item.areaSqMt).toFixed(2)} sqmt*</p>
                   </div>
                   <div className="pb-4 ps-2 mt-4">
                     <button className="btn btn-background text-white" onClick={() => setShowPopUp(true)}>
