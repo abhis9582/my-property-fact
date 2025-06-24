@@ -135,8 +135,8 @@ export default function ManageFloorPlans({ list, projectsList }) {
                     list={list
                         .slice() // create a shallow copy to avoid mutating original list
                         .sort((a, b) => {
-                            const nameA = a.projectName.toLowerCase();
-                            const nameB = b.projectName.toLowerCase();
+                            const nameA = a.projectName?.toLowerCase();
+                            const nameB = b.projectName?.toLowerCase();
                             if (nameA < nameB) return -1;
                             if (nameA > nameB) return 1;
                             return 0;
