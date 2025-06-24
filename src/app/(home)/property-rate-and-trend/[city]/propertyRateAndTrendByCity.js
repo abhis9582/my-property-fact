@@ -19,7 +19,7 @@ export default function PropertyRateAndTrendByCity({ cityList, insightArray, cit
                     <div className={styles.searchContainerChild}>
                         <div className={styles.searchCityContainer}>
                             <select
-                                value={name.toLowerCase()}
+                                value={name?.toLowerCase()}
                                 onChange={(e) => setName(e.target.value)}
                             >
                                 <option value="">Select city</option>
@@ -46,7 +46,7 @@ export default function PropertyRateAndTrendByCity({ cityList, insightArray, cit
                             <Link href={`/property-rate-and-trend/${item.name.toLowerCase()}`} key={index + 1}>{item.name}</Link>
                         ))} */}
                         {['Ghaziabad', 'Mumbai', 'Noida'].map((item, index) => (
-                            <Link href={`/property-rate-and-trend/${item.toLowerCase()}`} key={index + 1}>{item}</Link>
+                            <Link href={`/property-rate-and-trend/${item?.toLowerCase()}`} key={index + 1}>{item}</Link>
                         ))}
                     </div>
                 </div>
