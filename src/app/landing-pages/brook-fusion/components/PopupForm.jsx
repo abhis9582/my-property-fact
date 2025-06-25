@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "../assets/amenities.png";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function PopupForm() {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,6 +44,17 @@ export default function PopupForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Phone number validation
+    const phoneRegex = /^\d{10}$/;
+    if (!/^\d{10}$/.test(formData.phone)) {
+      toast.error("Phone number must be exactly 10 digits and numeric only.");
+      return;
+    } else if (isNaN(formData.phone)) {
+      toast.error("Phone number must be a valid number.");
+      return;
+    }
+
     setStatus("Submitting...");
 
     try {
