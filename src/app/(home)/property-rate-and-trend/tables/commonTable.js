@@ -46,33 +46,41 @@ export default function CommonTableForInsight({ insightData = [] }) {
             case !!row.projectName:
                 return (
                     <div>
-                        {row.projectName} <br />
+                        <h6 className="m-0">{row.projectName}</h6>
                         {row.noOfProjects}
                     </div>
                 );
             case !!row.microMarket:
                 return (
                     <div>
-                        {row.microMarket} <br />
+                        <h6 className="m-0">{row.microMarket}</h6>
                         {row.noOfProjects}
                     </div>
                 );
             case !!row.developerName:
-                return(
+                return (
                     <div>
-                        {row.developerName}
+                        <h6 className="m-0">{row.developerName}</h6>
                     </div>
                 )
             default:
                 return (
                     <div>
-                        {row.location} <br />
+                        <h6 className="m-0">{row.location}</h6>
                         {row.noOfProjects}
                     </div>
                 );
         }
     };
 
+    const randerChangeValue = (value) => {
+        const stringValue = String(value); 
+        if (stringValue.startsWith('-')) {
+            return <div className='text-danger fw-bold'>{value}</div>
+        } else {
+            return <div className='text-success fw-bold'>{value}</div>
+        }
+    }
     return (
         <>
             <div className="insight-property-rate-filter">
@@ -109,15 +117,15 @@ export default function CommonTableForInsight({ insightData = [] }) {
             </div>
             <TableContainer
                 component={Paper}
-                sx={{ maxHeight: 400, overflowY: "auto" }}
+                sx={{ maxHeight: "450px" }}
             >
-                <Table sx={{ minWidth: 650 }} stickyHeader aria-label="simple table">
+                <Table stickyHeader aria-label="simple table">
                     <TableHead>
                         <TableRow>
                             {tableHeaders?.map((item, index) => (
                                 <TableCell
                                     key={`${item}-${index}`}
-                                    className="fw-bold"
+                                    className="fw-bold bg-success text-white"
                                 >
                                     {item.headerDisplayName}
                                 </TableCell>
@@ -133,9 +141,9 @@ export default function CommonTableForInsight({ insightData = [] }) {
                                 <TableCell component="th" scope="row">
                                     {renderProjectInfo(row)}
                                 </TableCell>
-                                <TableCell>{row.noOfTransactions}</TableCell>
-                                {tableHeaders.length >2 && <TableCell>{row.currentRate}</TableCell>}
-                                {tableHeaders.length >3  && <TableCell>{row.changeValue}</TableCell>}
+                                <TableCell><div className='fw-bold'>{row.noOfTransactions}</div></TableCell>
+                                {tableHeaders.length > 2 && <TableCell><div className='fw-bold'>{row.currentRate}</div></TableCell>}
+                                {tableHeaders.length > 3 && <TableCell>{randerChangeValue(row.changeValue)}</TableCell>}
                             </TableRow>
                         ))}
                     </TableBody>
