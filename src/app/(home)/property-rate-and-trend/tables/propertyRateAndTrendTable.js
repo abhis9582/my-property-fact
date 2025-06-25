@@ -1,5 +1,39 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 export default function PropertyRateAndTrendTable({ tableHeaders = [], data = [] }) {
+    const renderProjectInfo = (row, headers) => {
+        const hasCityHeader = headers.some(h => h.headerDisplayName === 'City Name');
+        const hasLocationHeader = headers.some(h => h.headerDisplayName === 'Location');
+
+        if (hasCityHeader) {
+            return <div>
+                <h6 className="m-0">{row.city}</h6>
+                {row.noOfProjects}
+            </div>;
+        } else if (hasLocationHeader) {
+            return <div>
+                <h6 className="m-0">{row.location}</h6>
+                {row.city}
+            </div>;
+        } else if (row.projectName) {
+            return (
+                <div>
+                    <h6 className="m-0">{row.projectName}</h6>
+                    {row.noOfProjects}
+                </div>
+            );
+        } else if (row.developerName) {
+            return <div><h6 className="m-0">{row.developerName}</h6></div>;
+        }
+    };
+
+    const randerChangeValue = (value) => {
+        const stringValue = String(value); 
+        if(stringValue.startsWith('-')){
+            return <div className='text-danger fw-bold'>{value}</div>
+        }else{
+            return <div className='text-success fw-bold'>{value}</div>
+        }
+    }
     return (
         <>
             <TableContainer
@@ -12,26 +46,25 @@ export default function PropertyRateAndTrendTable({ tableHeaders = [], data = []
                             {tableHeaders.map((item, index) => (
                                 <TableCell
                                     key={`${item}-${index}`}
-                                    className="fw-bold"
+                                    className="fw-bold bg-success text-white"
                                 >
-                                    {item.headerDisplayName}
+                                    <div className='fs-5'>{item.headerDisplayName}</div>
                                 </TableCell>
                             ))}
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.map((row) => (
+                        {data.map((row, index) => (
                             <TableRow
-                                key={row.city}
+                                key={`${row.city}_${index}`}
                                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row">
-                                    {row.city}<br />
-                                    {row.noOfProjects}
+                                    {renderProjectInfo(row, tableHeaders)}
                                 </TableCell>
-                                <TableCell>{row.noOfTransactions}</TableCell>
-                                <TableCell>{row.currentRate}</TableCell>
-                                <TableCell>{row.changeValue}</TableCell>
+                                <TableCell><div className='fw-bold'>{row.noOfTransactions}</div></TableCell>
+                                {tableHeaders.length >= 3 && row.currentRate && <TableCell><div className='fw-bold'>{row.currentRate}</div></TableCell>}
+                                {tableHeaders.length > 3 && <TableCell>{randerChangeValue(row.changeValue)}</TableCell>}
                             </TableRow>
                         ))}
                     </TableBody>
