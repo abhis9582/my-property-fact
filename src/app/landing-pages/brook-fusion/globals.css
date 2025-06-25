@@ -15,3 +15,7 @@ h5,
 h6 {
     font-family: var(--font-playfair);
 }
+
+.Toastify__toast-container--top-right {
+    top: 100px !important;
+}
