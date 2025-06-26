@@ -21,7 +21,7 @@ export default function Projects() {
     };
 
     useEffect(() => {
-        var api = "projects/get-all";
+        var api = "projects/get-all-projects-list";
         var data = {};
 
         if (

@@ -9,13 +9,18 @@ import "./footer.css";
 import Link from "next/link";
 import CityList from "../common/citylistcard";
 
-export default function Footer({ cityList=[], projectTypes=[] }) {
+export default function Footer({ cityList = [], projectTypes = [] }) {
   // Defining footer media array
   const mediaArr = [
     {
       id: 2,
       name: "Blog",
       slugUrl: "/blog",
+    },
+    {
+      id: 3,
+      name: "Web Stories",
+      slugUrl: "/web-stories"
     }
   ];
 

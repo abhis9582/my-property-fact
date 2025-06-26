@@ -5,12 +5,12 @@
   overflow: hidden;
 }
 
-.blog-contact-form {
+.blogContactForm {
   position: sticky !important;
   top: 80px;
 }
 
-.keyword-tag {
+.keywordTag {
   background: linear-gradient(145deg, #f0f0f0, #ffffff);
   border: 1px solid #dee2e6;
   color: #333;
@@ -25,7 +25,7 @@
   font-style: italic;
 }
 
-.keyword-tag:hover {
+.keywordTag:hover {
   background: #5cc50d;
   color: #fff;
   border-color: #5cc50d;

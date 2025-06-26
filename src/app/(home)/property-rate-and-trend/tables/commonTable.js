@@ -74,7 +74,7 @@ export default function CommonTableForInsight({ insightData = [] }) {
     };
 
     const randerChangeValue = (value) => {
-        const stringValue = String(value); 
+        const stringValue = String(value);
         if (stringValue.startsWith('-')) {
             return <div className='text-danger fw-bold'>{value}</div>
         } else {
