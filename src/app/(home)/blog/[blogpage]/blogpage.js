@@ -4,14 +4,13 @@ import CommonBreadCrum from "../../components/common/breadcrum";
 import CommonHeaderBanner from "../../components/common/commonheaderbanner";
 import { useState } from "react";
 import Image from "next/image";
-import "./../page.module.css";
+import styles from "./../page.module.css";
 import { Button, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { LoadingSpinner } from "../../contact-us/page";
 export default function BlogDetail({ blogDetail }) {
     const [showLoading, setShowLoading] = useState(false);
     const [buttonName, setButtonName] = useState("Submit Enquiry");
-    const [blogImage, setBlogImage] = useState(null);
     const initialFormData = {
         name: "",
         email: "",
@@ -96,7 +95,7 @@ export default function BlogDetail({ blogDetail }) {
                                 .map((keyword, index) => (
                                     <span
                                         key={index}
-                                        className="keyword-tag"
+                                        className={styles.keywordTag}
                                     >
                                         {keyword.trim()}
                                     </span>
@@ -106,7 +105,7 @@ export default function BlogDetail({ blogDetail }) {
 
                     {/* Contact Form */}
                     <div className="col-lg-4">
-                        <div className="card shadow-sm rounded-4 p-4 blog-contact-form">
+                        <div className={`card shadow-sm rounded-4 p-4 ${styles.blogContactForm}`}>
                             <h4 className="fw-semibold mb-4">Get in Touch</h4>
                             <Form noValidate validated={validated} onSubmit={handleSubmit}>
                                 <Form.Group className="mb-3" controlId="name">

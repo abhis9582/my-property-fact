@@ -15,7 +15,10 @@ export async function generateMetadata({ params }) {
   const response = await fetchProjectTypeDetail(projecttype);
   return {
     title: response.metaTitle,
-    descritpion: response.metaDesc
+    descritpion: response.metaDesc,
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_ROOT_URL}${projecttype}`,
+    },
   };
 }
 
@@ -25,5 +28,5 @@ export default async function ProjectType({ params }) {
     fetchProjectTypeDetail(projecttype)
   ]);
 
-  return <PropertyPage projectTypeDetails={projectTypeDetail}/>
+  return <PropertyPage projectTypeDetails={projectTypeDetail} />
 }

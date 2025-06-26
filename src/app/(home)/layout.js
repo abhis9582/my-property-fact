@@ -4,8 +4,8 @@ import Header from "./components/header/header";
 import Footer from "./components/footer/page";
 
 export const metadata = {
-  title: "My Property Fact",
-  description: "my-property-fact",
+  title: "My Property Fact | Smarter Real Estate Decisions Start Here",
+  description: "Discover top property insights, LOCATE scores, expert guides, and real-time trends to help you make smarter real estate investment decisions across India. Trusted by first-time and seasoned investors alike.",
 };
 
 //Fetching all list from api

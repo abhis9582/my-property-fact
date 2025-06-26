@@ -3,6 +3,10 @@ import { Button } from "react-bootstrap";
 import CommonBreadCrum from "../components/common/breadcrum";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 
+export const metadata = {
+  title: "Careers at MyPropertyFact | Join Our Real Estate Innovation Team",
+  description: "Explore exciting career opportunities at MyPropertyFact. Join a passionate team shaping the future of real estate data, insights, and technology in India."
+}
 export default function Career() {
   const jobsArr = [
     {

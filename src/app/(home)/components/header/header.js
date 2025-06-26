@@ -148,11 +148,6 @@ const Header = ({cityList, projectTypes, builderList}) => {
                   Blog
                 </Link>
               </li>
-              <li className="hasChild">
-                <Link href="/web-stories" className={`text-light py-3 text-uppercase  ${pathname === "/web-stories" ? "header-link-active" : ""}`}>
-                  Web-stories
-                </Link>
-              </li>
               {/* <li className="hasChild">
                 <Link href="/clients-speak" className={`text-light text-uppercase ${pathname === "/clients-speak" ? "header-link-active" : ""}`}>Clients Speak</Link>
               </li> */}

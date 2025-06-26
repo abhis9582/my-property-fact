@@ -10,6 +10,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
+import Image from "next/image";
 
 export default function WebStory({ categoryList, list }) {
 
@@ -22,11 +23,13 @@ export default function WebStory({ categoryList, list }) {
     const router = useRouter();
     const [confirmBox, setConfirmBox] = useState(false);
     const [formData, setFormData] = useState({
-        categoryId: "",
+        id: 0,
+        categoryId: 0,
         storyTitle: "",
         storyDescription: "",
     });
     const [imageFile, setImageFile] = useState(null);
+    const [prevImage, setPrevImage] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -46,6 +49,14 @@ export default function WebStory({ categoryList, list }) {
         setShow(true);
         setTitle("Add web story");
         setCategoryId(0);
+        setFormData({
+            id: 0,
+            categoryId: 0,
+            storyTitle: "",
+            storyDescription: "",
+        })
+        setValidated(false);
+        setPrevImage(null);
     }
 
     //Handle opening of edit model
@@ -53,7 +64,8 @@ export default function WebStory({ categoryList, list }) {
         setButtonName("Update Story");
         setShow(true);
         setTitle("Update web story");
-        setCategoryId(data.id);
+        setFormData(data);
+        setPrevImage(`${process.env.NEXT_PUBLIC_IMAGE_URL}web-story/${data.storyImage}`)
     }
 
     const openConfirmationBox = (id) => {
@@ -76,6 +88,7 @@ export default function WebStory({ categoryList, list }) {
         setShowLoading(true);
 
         const payload = new FormData();
+        payload.append("id", formData.id);
         payload.append("categoryId", formData.categoryId);
         payload.append("storyTitle", formData.storyTitle);
         payload.append("storyDescription", formData.storyDescription);
@@ -192,14 +205,18 @@ export default function WebStory({ categoryList, list }) {
                                 Story Title is required!
                             </Form.Control.Feedback>
                         </Form.Group>
-
+                        {prevImage && <Image
+                            src={prevImage}
+                            height={150}
+                            width={75}
+                            alt="previous image"
+                        />}
                         <Form.Group className="mb-3" controlId="storyImage">
                             <Form.Label>Story Image</Form.Label>
                             <Form.Control
                                 type="file"
                                 name="image"
                                 onChange={handleFileChange}
-                                required
                             />
                             <Form.Control.Feedback type="invalid">
                                 Image is required!
@@ -228,7 +245,7 @@ export default function WebStory({ categoryList, list }) {
                 </Modal.Body>
             </Modal>
             <CommonModal
-                api={`${process.env.NEXT_PUBLIC_API_URL}web-story-category/delete/${categoryId}`}
+                api={`${process.env.NEXT_PUBLIC_API_URL}web-story/delete/${categoryId}`}
                 confirmBox={confirmBox}
                 setConfirmBox={setConfirmBox}
             />

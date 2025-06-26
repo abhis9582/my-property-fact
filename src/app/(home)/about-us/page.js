@@ -2,6 +2,11 @@ import CommonBreadCrum from "../components/common/breadcrum";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import AboutUs from "./aboutUs";
 
+export const metadata = {
+  title: "About Us | MyPropertyFact – Real Estate Price Trends & Insights",
+  description: "Discover the story behind MyPropertyFact – your trusted source for accurate real estate price trends, market insights, and property data across major Indian cities.",
+}
+
 export default function AboutUsPage() {
   //Defining what we offer array
   const whatWeOffer = [
