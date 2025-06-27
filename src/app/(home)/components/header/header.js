@@ -247,9 +247,9 @@ const Header = ({cityList, projectTypes, builderList}) => {
                 <li>
                   <Link href="/blog" onClick={openMenu}>Blog</Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link href="/web-stories" onClick={openMenu}>Web Stories</Link>
-                </li>
+                </li> */}
                 <li>
                   <Link href="/about-us" onClick={openMenu}>About Us</Link>
                 </li>

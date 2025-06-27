@@ -32,6 +32,26 @@ export default function RootLayout({ children }) {
                         fbq('track', 'PageView');
                     `}
                 </Script>
+                <Script
+                    id="schema-org"
+                    type="application/ld+json"
+                    strategy="afterInteractive"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            "@context": "https://schema.org",
+                            "@type": "Organization",
+                            name: "My Property Fact",
+                            url: "https://www.mypropertyfact.in",
+                            logo: "https://www.mypropertyfact.in/logo.png", // optional
+                            description:
+                                "Discover top property insights, LOCATE scores, and real estate trends across India.",
+                            sameAs: [
+                                "https://www.facebook.com/mypropertyfact1",
+                                "https://www.instagram.com/my.property.fact",
+                            ],
+                        }),
+                    }}
+                />
             </head>
             <body>
                 <GoogleAnalytics />
