@@ -5,8 +5,23 @@ import Footer from "./components/footer/page";
 
 export const metadata = {
   title: "My Property Fact | Smarter Real Estate Decisions Start Here",
-  description: "Discover top property insights, LOCATE scores, expert guides, and real-time trends to help you make smarter real estate investment decisions across India. Trusted by first-time and seasoned investors alike.",
+  description:
+    "Discover top property insights, LOCATE scores, expert tips, and trends to make smarter real estate decisions across India. Trusted by investors.",
+  keywords: [
+    "real estate India",
+    "property insights",
+    "real estate trends",
+    "investment property",
+    "LOCATE score",
+    "smart real estate decisions",
+    "property investment tips",
+    "real estate guide India",
+  ],
+  alternates: {
+    canonical: "https://www.mypropertyfact.com", // Replace with your actual domain
+  },
 };
+
 
 //Fetching all list from api
 const fetchCityData = async () => {
@@ -27,7 +42,7 @@ const fetchProjectTypes = async () => {
 const fetchBuilderList = async () => {
   const builderResponse = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}builder/get-all`
-  );  
+  );
   return builderResponse.data.builders;
 };
 
@@ -38,7 +53,7 @@ export default async function RootLayout({ children, params }) {
   return (
     <>
       {/* header for the user side  */}
-      <Header cityList={cityList} projectTypes={projectTypes} builderList={builderList}/>
+      <Header cityList={cityList} projectTypes={projectTypes} builderList={builderList} />
 
       {/* dynamic render all its child components  */}
       {children}
