@@ -1,6 +1,6 @@
 import CityPage from "./citypage";
 import axios from "axios";
-
+export const dynamic = 'force-dynamic';
 // Fetch SEO data by city slug
 async function fetchData(slug) {
   const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}city/get/${slug}`);

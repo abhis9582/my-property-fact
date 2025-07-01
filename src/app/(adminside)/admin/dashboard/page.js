@@ -1,6 +1,6 @@
 import axios from "axios";
 import Dashboard from "./dashboard";
-
+export const dynamic = 'force-dynamic';
 //Getting all projects count
 const countAllProjects = async () => {
   const response = await axios.get(

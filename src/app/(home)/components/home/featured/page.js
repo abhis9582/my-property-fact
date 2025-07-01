@@ -1,6 +1,6 @@
 import axios from "axios";
 import Featured from "./featured";
-
+export const dynamic = 'force-dynamic';
 //Fetching all projects
 const fetchAllProjects = async () => {
   const allFeaturedProperties = await axios.get(
