@@ -4,7 +4,7 @@
 import Script from 'next/script';
 
 export default function GoogleAnalytics() {
-    const GA_MEASUREMENT_ID = 'G-LEV23BGVSH';
+    const GA_MEASUREMENT_ID = 'G-QCFJENDW3M';
 
     return (
         <>
@@ -13,15 +13,14 @@ export default function GoogleAnalytics() {
                 src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
                 strategy="afterInteractive"
             />
-
             {/* Initialize GA */}
-            <Script id="ga-init" strategy="afterInteractive">
+            <Script id="google-analytics" strategy="afterInteractive">
                 {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', '${GA_MEASUREMENT_ID}');
-        `}
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', '${GA_MEASUREMENT_ID}');
+                `}
             </Script>
         </>
     );
