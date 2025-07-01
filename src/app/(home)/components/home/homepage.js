@@ -149,9 +149,9 @@ export default function ClientSideHomePage({ projectTypeList, cityList }) {
                                         title="location"
                                         onChange={(e) => setPropertyLocation(e.target.value)}
                                     >
-                                        <option>Select Location</option>
+                                        <option value="">Select Location</option>
                                         {cityList.map((item, index) => (
-                                            <option key={`${item.name}-${index}`} value={item.name}>
+                                            <option key={`${item.name}-${index}`} value={item.id}>
                                                 {item.name}
                                             </option>
                                         ))}

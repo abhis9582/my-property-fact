@@ -1,6 +1,7 @@
 import axios from "axios";
 import PropertyRateAndTrendByCity from "./propertyRateAndTrendByCity";
 import indiaInsight from "../../../_global_components/insight-india-data.json";
+export const dynamic = 'force-dynamic';
 // fetching all cities
 const fetchAllCities = async () => {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}city/all`);

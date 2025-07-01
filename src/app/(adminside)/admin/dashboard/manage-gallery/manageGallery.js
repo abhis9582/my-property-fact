@@ -10,6 +10,7 @@ import CommonModal from "../common-model/common-model";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import DataTable from "../common-model/data-table";
 import DashboardHeader from "../common-model/dashboardHeader";
+import { useRouter } from "next/navigation";
 export default function ManageGallery({ list, projectsList }) {
     const [title, setTitle] = useState("");
     const [buttonName, setButtonName] = useState("");
@@ -22,6 +23,7 @@ export default function ManageGallery({ list, projectsList }) {
     const [galleryId, setGalleryId] = useState(0);
     const [popUpImageSrc, setPopUpImageSrc] = useState(null);
     const [imagePopUp, setImagePopUp] = useState(false);
+    const router = useRouter();
     const handleShow = () => {
         setShow(true);
         setButtonName("Add");
@@ -60,9 +62,10 @@ export default function ManageGallery({ list, projectsList }) {
                         },
                     }
                 );
-                if (response.status == 200) {
+                if (response.data.isSuccess === 1) {
                     toast.success(response.data.message);
-                    fetchGalleryImage();
+                    // fetchGalleryImage();
+                    router.refresh();
                     setShow(false);
                 }
             } catch (error) {

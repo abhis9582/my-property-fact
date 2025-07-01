@@ -2,7 +2,7 @@ import axios from "axios";
 import Property from "./propertypage";
 import FeaturedPage from "../(home)/components/home/featured/page";
 import Footer from "../(home)/components/footer/page";
-
+export const dynamic = 'force-dynamic';
 const fetchProjectDetail = async (slug) => {
   const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}projects/get/${slug}`);
   return response.data;

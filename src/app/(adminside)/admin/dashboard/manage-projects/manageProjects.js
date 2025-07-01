@@ -110,7 +110,7 @@ export default function ManageProjects({ builderList, typeList, countryData, pro
     };
 
     //Handling opening of edit model
-    const openEditModel = (item) => {
+    const openEditModel = (item) => {        
         setTitle("Edit Project");
         setShowModal(true);
         setButtonName("Update Project");
@@ -136,7 +136,8 @@ export default function ManageProjects({ builderList, typeList, countryData, pro
         });
         const country = countryData.find(c => c.countryId === item.country);
         setStates(country ? country.states : []);
-        const state = states.find(s => s.stateId === item.state);
+        const state = country.states?.find(s => s.stateId === item.state);
+        console.log(country);
         setCities(state ? state.cities : []);
     };
 

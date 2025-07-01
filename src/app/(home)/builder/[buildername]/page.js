@@ -1,6 +1,6 @@
 import axios from "axios";
 import BuilderPage from "./builderpage";
-
+export const dynamic = 'force-dynamic';
 //Fetching all details of builder
 async function fetchBuilderDetail(slug) {
   const response = await axios.get(

@@ -1,6 +1,6 @@
 import PropertyPage from "./propertypage";
 import axios from "axios";
-
+export const dynamic = 'force-dynamic';
 //Fetching details of project type 
 const fetchProjectTypeDetail = async (slug) => {
   const data = await axios.get(

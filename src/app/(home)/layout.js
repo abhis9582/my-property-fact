@@ -2,6 +2,7 @@ import "../globals.css";
 import axios from "axios";
 import Header from "./components/header/header";
 import Footer from "./components/footer/page";
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: "My Property Fact | Smarter Real Estate Decisions Start Here",

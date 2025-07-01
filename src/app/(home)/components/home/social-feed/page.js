@@ -1,6 +1,6 @@
 import axios from "axios";
 import SocialFeed from "./socialfeed";
-
+export const dynamic = 'force-dynamic';
 // fetching blogs list from api
 const getBlogsList = async () => {
   const response = await axios.get(

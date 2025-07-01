@@ -63,11 +63,11 @@ export default function GenerateForm({ inputFields, showModal, setShowModal, val
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     {inputFields.map((item, index) => (
                         <div key={index}>
-                            {item.type === "text" ?
+                            {item.type === "text" || item.type === "number" ?
                                 <Form.Group key={`${item.id}-${index}`} className="mb-3" controlId={item.id}>
                                     <Form.Label>{item.label}</Form.Label>
                                     <Form.Control
-                                        type="text"
+                                        type={item.type}
                                         placeholder={`Enter ${item.label}`}
                                         value={formData[item.id]}
                                         onChange={handleChange}
