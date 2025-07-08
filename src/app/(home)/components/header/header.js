@@ -98,7 +98,7 @@ const Header = ({cityList, projectTypes, builderList}) => {
                 </Link>
                 <div className="dropdown dropdown-lg z-3">
                   <ul className="list-inline">
-                    {cityList.map((city) => (
+                    {cityList?.map((city) => (
                       <li key={city.id}>
                         <Link href={`/city/${city.slugUrl}`} className={`text-light py-3 ${pathname === "/city/" + city.slugUrl ? "header-link-active" : ""}`}>
                           {city.name}
@@ -114,7 +114,7 @@ const Header = ({cityList, projectTypes, builderList}) => {
                 </Link>
                 <div className="dropdown dropdown-lg z-3">
                   <ul className="list-inline">
-                    {builderList.map((builder) => (
+                    {builderList?.map((builder) => (
                       <li key={builder.id}>
                         <Link href={`/builder/${builder.slugUrl}`} className={`text-light ${pathname === "/builder/" + builder.slugUrl ? "header-link-active" : ""}`}>
                           {builder.builderName}
@@ -130,7 +130,7 @@ const Header = ({cityList, projectTypes, builderList}) => {
                 </Link>
                 <div className="dropdown projects-dropdown z-3">
                   <ul className="list-inline">
-                    {projectTypes.map((project) => (
+                    {projectTypes?.map((project) => (
                       <li key={project.id}>
                         <Link href={`/projects/${project.slugUrl}`} className={`text-light ${pathname === "/projects/" + project.slugUrl ? "header-link-active" : ""}`}>
                           {project.projectTypeName}
@@ -186,7 +186,7 @@ const Header = ({cityList, projectTypes, builderList}) => {
                       }`}
                   >
                     <ul className="list-inline">
-                      {cityList.map((city) => (
+                      {cityList?.map((city) => (
                         <li key={city.id}>
                           <Link href={`/city/${city.slugUrl}`} onClick={openMenu}>
                             {city.name}
@@ -208,7 +208,7 @@ const Header = ({cityList, projectTypes, builderList}) => {
                       }`}
                   >
                     <ul className="list-inline">
-                      {builderList.map((builder) => (
+                      {builderList?.map((builder) => (
                         <li key={builder.id}>
                           <Link href={`/builder/${builder.slugUrl}`} onClick={openMenu}>
                             {builder.builderName}
@@ -230,7 +230,7 @@ const Header = ({cityList, projectTypes, builderList}) => {
                       }`}
                   >
                     <ul className="list-inline">
-                      {projectTypes.map((project) => (
+                      {projectTypes?.map((project) => (
                         <li key={project.id}>
                           <Link href={`/projects/${project.slugUrl}`} onClick={openMenu}>
                             {project.projectTypeName}
