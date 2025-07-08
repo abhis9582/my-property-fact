@@ -137,7 +137,6 @@ export default function ManageProjects({ builderList, typeList, countryData, pro
         const country = countryData.find(c => c.countryId === item.country);
         setStates(country ? country.states : []);
         const state = country.states?.find(s => s.stateId === item.state);
-        console.log(country);
         setCities(state ? state.cities : []);
     };
 

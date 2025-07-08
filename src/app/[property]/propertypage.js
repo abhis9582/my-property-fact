@@ -717,19 +717,20 @@ export default function Property({ projectDetail }) {
                 <div className="row">
                   <div className="col-sm-6 mb-3">
                     <p className="mb-1 text-success fw-semibold">Address</p>
-                    <p className="mb-0">{projectDetail.projectLocality}</p>
+                    <p className="mb-0">{projectDetail.projectAddress}</p>
                   </div>
                   <div className="col-sm-6 mb-3">
                     <p className="mb-1 text-success fw-semibold">State</p>
-                    <p className="mb-0">{projectDetail.state}</p>
+                    <p className="mb-0">{projectDetail.stateName}</p>
                   </div>
+                  {console.log(projectDetail)}
                   <div className="col-sm-6 mb-3">
                     <p className="mb-1 text-success fw-semibold">City</p>
-                    <p className="mb-0">{projectDetail.cityLocation}</p>
+                    <p className="mb-0">{projectDetail.cityName}</p>
                   </div>
                   <div className="col-sm-6 mb-3">
                     <p className="mb-1 text-success fw-semibold">Country</p>
-                    <p className="mb-0">India</p>
+                    <p className="mb-0">{projectDetail.countryName}</p>
                   </div>
                 </div>
 
