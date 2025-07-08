@@ -39,7 +39,7 @@ export default function GenerateForm({ inputFields, showModal, setShowModal, val
                     toast.error(response.data.message);
                 }
             } catch (error) {
-                console.error("Error submitting form:", error);
+                toast.error(error.response.data.error);
             } finally {
                 setButtonName(buttonName);
                 setShowLoading(false);
@@ -69,7 +69,7 @@ export default function GenerateForm({ inputFields, showModal, setShowModal, val
                                     <Form.Control
                                         type={item.type}
                                         placeholder={`Enter ${item.label}`}
-                                        value={formData[item.id]}
+                                        value={formData[item.id] || ""}
                                         onChange={handleChange}
                                         required
                                     />
@@ -89,7 +89,7 @@ export default function GenerateForm({ inputFields, showModal, setShowModal, val
                                         <option value="">Select {item.label}</option>
                                         {item.list?.map((option, idx) => (
                                             <option key={idx} value={option.id}>
-                                                {option.stateName}
+                                                {item.from === "localities" ? option.name : option.stateName}
                                             </option>
                                         ))}
                                     </Form.Select>

@@ -25,8 +25,8 @@ export default function Projects() {
         var data = {};
 
         if (
-            searchValues.category !== null &&
-            searchValues.location !== null &&
+            searchValues.category !== null ||
+            searchValues.location !== null ||
             searchValues.projectname !== null
         ) {
             api = "projects/search-by-type-city-budget";

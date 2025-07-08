@@ -1,7 +1,7 @@
 "use client";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import dynamic from 'next/dynamic';
 import { toast } from "react-toastify";
@@ -12,6 +12,7 @@ import Image from "next/image";
 import ImageUrlPopup from "../common-model/imageiurl-popup";
 import DataTable from "../common-model/data-table";
 import DashboardHeader from "../common-model/dashboardHeader";
+import { useRouter } from "next/navigation";
 // 🔥 This prevents SSR errors
 const Editor = dynamic(() => import('../common-model/joe-editor'), {
     ssr: false,
@@ -29,6 +30,7 @@ export default function ManageBlogs({ list, categoryList }) {
     const [confirmBox, setConfirmBox] = useState(false);
     const [previousBlogImage, setPreviousBlogImage] = useState(null);
     const [urlPopUp, setUrlPopUp] = useState(false);
+    const router = useRouter();
     //Definign input fields for blog form
 
     const inputFields = {
@@ -78,17 +80,16 @@ export default function ManageBlogs({ list, categoryList }) {
                 });
 
                 if (response.data.isSuccess === 1) {
+                    router.refresh();
                     toast.success(response.data.message);
                     setShowModal(false);
                     setFormData(inputFields);
                     setBlogDescription("");
-                    fetchBlogList();
                 } else {
                     toast.error(response.data.message);
                 }
             } catch (error) {
-                toast.error(error.response.data.blogMetaDescription);
-                toast.error(error.response.data.error);
+                toast.error(error);
             } finally {
                 setShowLoading(false);
                 setButtonName("Add Blog");

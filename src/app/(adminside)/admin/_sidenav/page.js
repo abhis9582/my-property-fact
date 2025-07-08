@@ -69,6 +69,9 @@ export default function SideNav() {
               <Link href="/admin/dashboard/manage-localities">Manage Localities</Link>
             </li>
             <li>
+              <Link href="/admin/dashboard/manage-score-evalution">Manage Score Evalution</Link>
+            </li>
+            <li>
               <Link href="/admin/dashboard/project-types">
                 Manage Project Types
               </Link>

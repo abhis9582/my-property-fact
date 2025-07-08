@@ -40,6 +40,7 @@ export default function InsightNew() {
         "We deliver price trends, policy updates, infrastructure news, enabling investors, developers, and lenders to recalibrate market strategies regularly.",
       color: "light-yellow",
       button_color: "dark-yellow",
+      // href: "/market-analysis",
       href: "#",
     },
     {
@@ -50,7 +51,7 @@ export default function InsightNew() {
       sub_heading: "This converts economy, projects, connectivity, amenities, trends, supply data into one 1000‑point LOCATE rating guiding smart investments with clarity.",
       color: "light-blue",
       button_color: "dark-blue",
-      href: "#",
+      href: "/locate-score",
     },
   ];
   //opeaning pop

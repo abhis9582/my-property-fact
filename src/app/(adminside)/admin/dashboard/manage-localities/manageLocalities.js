@@ -5,8 +5,9 @@ import DataTable from "../common-model/data-table";
 import GenerateForm from "../common-model/generateForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
+import CommonModal from "../common-model/common-model";
 
-export default function ManageLocality({ cityList }) {
+export default function ManageLocality({ cityList, localityList, typeList }) {
     const inputFields = [
         {
             id: "localityName",
@@ -17,7 +18,8 @@ export default function ManageLocality({ cityList }) {
             id: "cityId",
             label: "City",
             type: "select",
-            list: cityList
+            list: cityList,
+            from: "localities"
         },
         {
             id: "averagePricePerSqFt",
@@ -29,6 +31,15 @@ export default function ManageLocality({ cityList }) {
             label: "Locality Description",
             type: "textarea",
         },
+        {
+            id: "localityCategory",
+            label: "Locality Category",
+            type: "select",
+            list: typeList.map((item, index)=> ({
+                ...item,
+                stateName: item.projectTypeName
+            }))
+        },
     ];
     const getInitialFormData = () =>
         Object.fromEntries(inputFields.map(item => [item.id, ""]));
@@ -39,7 +50,8 @@ export default function ManageLocality({ cityList }) {
     const [formData, setFormData] = useState(getInitialFormData);
     const [title, setTitle] = useState(null);
     const [cityId, setCityId] = useState(0);
-
+    const [localityId, setLocalityId] = useState(0);
+    const [confirmBox, setConfirmBox] = useState(false);
     //Handeling opening of add model
     const openAddModel = () => {
         setFormData(getInitialFormData);
@@ -50,13 +62,30 @@ export default function ManageLocality({ cityList }) {
         setShowModel(true);
     };
 
+    //Handeling opening of add model
+    const openEditPopUp = (data) => {
+        setFormData(data);
+        setValidated(false);
+        setCityId(data.cityId);
+        setTitle("Update Locality");
+        setButtonName("Update Locality");
+        setShowModel(true);
+    };
+
+    //Handle deletion of locality
+    const openConfirmationDialog = (id) => {
+        setLocalityId(id);
+        setConfirmBox(true);
+    }
+
     //Defining table columns
     const columns = [
         { field: "index", headerName: "S.no", width: 100, cellClassName: "centered-cell" },
-        { field: "localityName", headerName: "Locality Name", flex: 1 },
+        { field: "localityName", headerName: "Locality Name", flex: 1, cellClassName: "text-capitalize" },
         { field: "cityName", headerName: "City Name", flex: 1 },
         { field: "stateName", headerName: "State Name", flex: 1 },
-        { field: "description", headerName: "Locality Description", flex: 1 },
+        { field: "description", headerName: "Locality Description", flex: 1, cellClassName: "text-capitalize" },
+        { field: "localityCategoryName", headerName: "Locality Category", flex: 1, cellClassName: "text-capitalize" },
         {
             field: "action",
             headerName: "Action",
@@ -90,7 +119,7 @@ export default function ManageLocality({ cityList }) {
 
             {/* table section  */}
             <div className="mt-5">
-                <DataTable columns={columns} list={[]} />
+                <DataTable columns={columns} list={localityList} />
             </div>
 
             {/* form section  */}
@@ -108,6 +137,12 @@ export default function ManageLocality({ cityList }) {
                 showModal={showModel}
                 title={title}
                 validated={validated}
+            />
+
+            <CommonModal 
+                api={`${process.env.NEXT_PUBLIC_API_URL}locality/delete/${localityId}`}
+                confirmBox={confirmBox}
+                setConfirmBox={setConfirmBox}
             />
         </>
     )
