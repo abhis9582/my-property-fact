@@ -2,7 +2,7 @@ import "../globals.css";
 import axios from "axios";
 import Header from "./components/header/header";
 import Footer from "./components/footer/page";
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "My Property Fact | Smarter Real Estate Decisions Start Here",
@@ -23,44 +23,81 @@ export const metadata = {
   },
 };
 
-
 //Fetching all list from api
 const fetchCityData = async () => {
-  const cityResponse = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}city/all`
-  );
-  return cityResponse.data;
+  try {
+    const cityResponse = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}city/all`
+    );
+    return cityResponse.data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
 };
 
 // Fetching project type
 const fetchProjectTypes = async () => {
-  const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`
-  );
-  return response.data;
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
 };
 //Fetching all builders list
 const fetchBuilderList = async () => {
-  const builderResponse = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}builder/get-all`
-  );
-  return builderResponse.data.builders;
+  try {
+    const builderResponse = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}builder/get-all`
+    );
+    return builderResponse.data.builders;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
 };
 
 export default async function RootLayout({ children, params }) {
-  const cityList = await fetchCityData();
-  const projectTypes = await fetchProjectTypes();
-  const builderList = await fetchBuilderList();
-  return (
-    <>
-      {/* header for the user side  */}
-      <Header cityList={cityList} projectTypes={projectTypes} builderList={builderList} />
+  let cityList = [];
+  let projectTypes = [];
+  let builderList = [];
+  try {
+    const [cities, projects, builders] = await Promise.all([
+      fetchCityData(),
+      fetchProjectTypes(),
+      fetchBuilderList(),
+    ]);
 
-      {/* dynamic render all its child components  */}
-      {children}
+    cityList = cities;
+    projectTypes = projects;
+    builderList = builders;
+    return (
+      <>
+        {/* header for the user side  */}
+        <Header
+          cityList={cityList}
+          projectTypes={projectTypes}
+          builderList={builderList}
+        />
 
-      {/* footer for user side  */}
-      <Footer cityList={cityList} projectTypes={projectTypes} />
-    </>
+        {/* dynamic render all its child components  */}
+        {children}
+
+        {/* footer for user side  */}
+        <Footer cityList={cityList} projectTypes={projectTypes} />
+      </>
+    );
+  } catch (err) {
+    console.error("Error loading layout data:", err);
+    return (
+    <div>
+      <h1>Failed to load data from server.</h1>
+      <p>The server might be down or unreachable.</p>
+    </div>
   );
+  }
 }

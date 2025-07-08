@@ -187,27 +187,27 @@ export default function ManageScoreEvalution({ localityList, list }) {
       headerName: "Existing Supply Score",
       flex: 1,
     },
-    {
-      field: "action",
-      headerName: "Action",
-      width: 100,
-      renderCell: (params) => (
-        <div>
-          <FontAwesomeIcon
-            className="mx-3 text-danger"
-            style={{ cursor: "pointer" }}
-            icon={faTrash}
-            onClick={() => openConfirmationBox(params.row.id)}
-          />
-          <FontAwesomeIcon
-            className="text-warning"
-            style={{ cursor: "pointer" }}
-            icon={faPencil}
-            onClick={() => openEditModel(params.row)}
-          />
-        </div>
-      ),
-    },
+    // {
+    //   field: "action",
+    //   headerName: "Action",
+    //   width: 100,
+    //   renderCell: (params) => (
+    //     <div>
+    //       {/* <FontAwesomeIcon
+    //         className="mx-3 text-danger"
+    //         style={{ cursor: "pointer" }}
+    //         icon={faTrash}
+    //         // onClick={() => openConfirmationBox(params.row.id)}
+    //       />
+    //       <FontAwesomeIcon
+    //         className="text-warning"
+    //         style={{ cursor: "pointer" }}
+    //         icon={faPencil}
+    //         // onClick={() => openEditModel(params.row)}
+    //       /> */}
+    //     </div>
+    //   ),
+    // },
   ];
   return (
     <>

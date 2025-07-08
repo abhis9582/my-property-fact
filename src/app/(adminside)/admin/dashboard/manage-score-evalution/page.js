@@ -1,6 +1,6 @@
 import axios from "axios";
 import ManageScoreEvalution from "./manageScoreEvalution";
-
+export const dynamic = 'force-dynamic';
 //Fetch all localities from api
 const fetchAllLocalities = async () => {
   const res = await axios.get(
