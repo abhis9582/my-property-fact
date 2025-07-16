@@ -13,11 +13,57 @@ const fetchAllLocalities = async () => {
   return res;
 };
 
+const locateCategories = [
+  {
+    key: "localEconomy",
+    label: "L – Local Economy & Indicators",
+    maxScore: 200,
+    listKey: "localEconomyList",
+    scoreKey: "localEconomyScore",
+  },
+  {
+    key: "onGoingFutureProjects",
+    label: "O – Ongoing / Future Projects",
+    maxScore: 150,
+    listKey: "onGoingFutureProjectsList",
+    scoreKey: "onGoingFutureProjectsScore",
+  },
+  {
+    key: "connectivityAndCommute",
+    label: "C – Connectivity & Commute",
+    maxScore: 150,
+    listKey: "connectivityAndCommuteList",
+    scoreKey: "connectivityAndCommuteScore",
+  },
+  {
+    key: "amenitiesAndGentrification",
+    label: "A – Amenities & Gentrification",
+    maxScore: 150,
+    listKey: "amenitiesAndGentrificationList",
+    scoreKey: "amenitiesAndGentrificationScore",
+  },
+  {
+    key: "trendsAndHistoricalData",
+    label: "T – Trends & Historical Data",
+    maxScore: 150,
+    listKey: "trendsAndHostoricalDataList", // typo in your API key?
+    scoreKey: "trendsAndHistoricalDataScore",
+  },
+  {
+    key: "existingSupply",
+    label: "E – Existing Supply vs Demand",
+    maxScore: 200,
+    listKey: "exestingSupplyList", // typo? should be `existingSupplyList`?
+    scoreKey: "existingSupplyScore",
+  },
+];
+
+
 export default async function LocateScorePage() {
   const localities = await fetchAllLocalities();
   return (
     <div>
-      <LocateScore localities={localities} />
+      <LocateScore localities={localities} locateCategories={locateCategories}/>
     </div>
   );
 }

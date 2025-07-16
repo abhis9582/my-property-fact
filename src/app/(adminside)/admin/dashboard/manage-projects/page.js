@@ -32,6 +32,14 @@ const fetchProjectTypes = async () => {
   return response.data;
 };
 
+//Fetching all types of projects
+const fetchProjectStatusList = async () => {
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}project-status`
+  );
+  return response.data;
+};
+
 //Fetch all country with state and cities
 const fetchCountryData = async () => {
   const response = await axios.get(
@@ -40,16 +48,18 @@ const fetchCountryData = async () => {
   return response.data;
 }
 export default async function ManageProjectsPage() {
-  const [builderList, typeList, countryData, projectDetailList] = await Promise.all([
+  const [builderList, typeList, countryData, projectDetailList, projectStatusList] = await Promise.all([
     fetchBuilders(),
     fetchProjectTypes(),
     fetchCountryData(),
-    fetchProjectsWithDetail()
+    fetchProjectsWithDetail(),
+    fetchProjectStatusList()
   ]);
   return <ManageProjects
     builderList={builderList}
     typeList={typeList}
     countryData={countryData}
     projectDetailList={projectDetailList}
+    projectStatusList= {projectStatusList}
   />
 }

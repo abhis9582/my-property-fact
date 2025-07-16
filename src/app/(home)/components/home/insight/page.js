@@ -41,7 +41,7 @@ export default function InsightNew() {
       color: "light-yellow",
       button_color: "dark-yellow",
       // href: "/market-analysis",
-      href: "#",
+      href: "/market-analysis",
     },
     {
       id: 4,

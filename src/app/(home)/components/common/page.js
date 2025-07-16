@@ -1,10 +1,14 @@
 "use client";
 import "../home/featured/featured.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faIndianRupee, faMapMarker, faRupee } from "@fortawesome/free-solid-svg-icons";
+import {
+  faIndianRupee,
+  faMapMarker,
+  faRupee,
+} from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import Link from "next/link";
-import './common.css';
+import "./common.css";
 
 export default function PropertyContainer(props) {
   // Ensure props.data is defined before accessing its properties
@@ -14,10 +18,12 @@ export default function PropertyContainer(props) {
 
   //Generating price in lakh & cr
   const generatePrice = (price) => {
-    if(/[a-zA-Z]/.test(price)){
+    if (/[a-zA-Z]/.test(price)) {
       return price;
     }
-    return price < 1 ? Math.round(parseFloat(price) * 100) + " Lakh* Onwards" : parseFloat(price) + " Cr* Onwards";
+    return price < 1
+      ? Math.round(parseFloat(price) * 100) + " Lakh* Onwards"
+      : parseFloat(price) + " Cr* Onwards";
   };
   return (
     <>
@@ -37,14 +43,20 @@ export default function PropertyContainer(props) {
               unoptimized
             />
           </div>
-          <div className="position-absolute top-0 end-0 m-2">
-            <h6 className="border p-2 d-inline-block rounded bg-light text-dark shadow-sm">
-              {props.data.typeName}
-            </h6>
-          </div>
+          {props.data.projectStatusName && (
+            <div className="position-absolute top-0 end-0 m-2">
+              <h6 className="border p-2 d-inline-block rounded bg-light text-dark shadow-sm">
+                {props.data.projectStatusName}
+              </h6>
+            </div>
+          )}
           <div className="mt-3 ms-3">
             <h5 className="mb-2">{props.data.projectName}</h5>
-            <h5 className="text-success mb-0"><FontAwesomeIcon icon={faIndianRupee} width={10}/> {generatePrice(props.data.projectPrice)}</h5>
+            <p>{props.data.typeName}</p>
+            <h5 className="text-success mb-0">
+              <FontAwesomeIcon icon={faIndianRupee} width={10} />{" "}
+              {generatePrice(props.data.projectPrice)}
+            </h5>
           </div>
 
           <div className="ms-3 pb-3 text-truncate small fw-medium mt-2 d-flex align-items-center">

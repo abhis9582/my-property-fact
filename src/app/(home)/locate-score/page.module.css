@@ -1,0 +1,6 @@
+.localityButton {
+  box-shadow: 1px 1px 10px 1px greenyellow;
+  padding: 0.5rem 2rem;
+  border-radius: 2rem;
+  font-weight: 500;
+}

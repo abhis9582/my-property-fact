@@ -1,159 +1,79 @@
 "use client";
-import axios from "axios";
+import "./page.module.css";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
-import { useState } from "react";
-
-export default function MarketAnalysis({ localities }) {
-  const [localityDetail, setLocalityDetail] = useState(null);
-  const [localityName, setLocalityName] = useState("");
-  const getLocalityDetails = async (data) => {
-    const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}locality-data/${data.id}`
-    );
-    setLocalityDetail(res.data);
-    setLocalityName(data.localityName);
+import CommonBreadCrum from "../components/common/breadcrum";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { LoadingSpinner } from "../contact-us/page";
+import { Pagination, Stack } from "@mui/material";
+import BlogCard from "../components/common/blogcard";
+export default function MarketAnalysis() {
+  // defining state for list of blogs
+  const [blogsList, setBlogsList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(0);
+  const [size, setSize] = useState(9);
+  const [totalPages, setTotalPages] = useState(0);
+  //fetching all blogs list
+  const getBlogsList = async () => {
+    // fetching blogs list from api
+    try {
+      const response = await axios.get(
+        `${
+          process.env.NEXT_PUBLIC_API_URL
+        }blog/get?page=${page}&size=${size}&from=${'market'}`
+      );
+      setBlogsList(response.data.content);
+      setTotalPages(response.data.totalPages);
+      setLoading(false);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
   };
+  useEffect(() => {
+    getBlogsList();
+  }, [page]);
+
+  // Handle page change from pagination
+  const handlePageChange = (event, value) => {
+    event.preventDefault();
+    setPage(value - 1); // update page state, which triggers useEffect
+    setLoading(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <div>
-      <CommonHeaderBanner headerText={"Market Analysis"} />
-
-      <h1 className="mt-5 text-center">Welcome to analysis page.</h1>
-      <div className="container d-flex flex-wrap gap-3 my-5">
-        {localities.map((item, index) => (
-          <div
-            key={index}
-            onClick={() => getLocalityDetails(item)}
-            className="border border-2 rounded-2 py-1 px-2 cursor-pointer"
-          >
-            {item.localityName}
-          </div>
-        ))}
-      </div>
-      {localityDetail && (
-        <div className="container my-5">
-          <h1 className="m-0">LOCATE score evaluation for {localityName}</h1>
-          <span className="m-0 text-sm">
-            focusing on <b>commercial real estate investment.</b>
-          </span>
-          <div>
-            <div>
-              <h2 className="mt-5">O – Ongoing / Future Projects (150 pts)</h2>
-              <ul className="mt-3">
-                {console.log(localityDetail)}
-                {localityDetail.onGoingFutureProjectsList.map((item, index) => (
-                  <li className="my-2" key={index}>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <span>
-                Score Estimate: {localityDetail.onGoingFutureProjectsScore}/200
-              </span>
+    <>
+      <CommonHeaderBanner image={"blog-banner.jpg"} headerText={"Market Analysis"} />
+      <CommonBreadCrum pageName={"Market Analysis"} />
+      <div className="container-fluid mb-3">
+        {/* <p className="text-center h2 mt-3">Blog</p> */}
+        <div className="container-fluid d-flex justify-content-center gap-4 flex-wrap">
+          {loading ? (
+            <div
+              className="d-flex justify-content-center align-items-center"
+              style={{ height: "250px" }}
+            >
+              <LoadingSpinner show={loading} />
             </div>
-            <div>
-              <h2 className="mt-5">C – Connectivity & Commute (150 pts)</h2>
-              <ul className="mt-3">
-                {localityDetail.connectivityAndCommuteList.map(
-                  (item, index) => (
-                    <li className="my-2" key={index}>
-                      {item}
-                    </li>
-                  )
-                )}
-              </ul>
-              <span>
-                Score Estimate: {localityDetail.connectivityAndCommuteScore}/200
-              </span>
-            </div>
-            <div>
-              <h2 className="mt-5">A – Amenities & Gentrification (150 pts)</h2>
-              <ul className="mt-3">
-                {localityDetail.amenitiesAndGentrificationList.map(
-                  (item, index) => (
-                    <li className="my-2" key={index}>
-                      {item}
-                    </li>
-                  )
-                )}
-              </ul>
-              <span>
-                Score Estimate: {localityDetail.amenitiesAndGentrificationScore}
-                /200
-              </span>
-            </div>
-            <div>
-              <h2 className="mt-5">T – Trends & Historical Data (150 pts)</h2>
-              <ul className="mt-3">
-                {localityDetail.trendsAndHostoricalDataList.map(
-                  (item, index) => (
-                    <li className="my-2" key={index}>
-                      {item}
-                    </li>
-                  )
-                )}
-              </ul>
-              <span>
-                Score Estimate: {localityDetail.trendsAndHistoricalDataScore}
-                /200
-              </span>
-            </div>
-            <div>
-              <h2 className="mt-5">E – Existing Supply vs Demand (200 pts)</h2>
-              <ul className="mt-3">
-                {localityDetail.exestingSupplyList.map((item, index) => (
-                  <li className="my-2" key={index}>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <span>
-                Score Estimate: {localityDetail.existingSupplyScore}/200
-              </span>
-            </div>
-            <table className="my-3 table table-bordered table-striped table-hover">
-              <thead className="table-light">
-                <tr>
-                  <th scope="col">Category</th>
-                  <th scope="col">Score (Max)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[...Array(7)].map((_, index) => (
-                  <tr key={index}>
-                    <td>Local Economy (L)</td>
-                    <td>{localityDetail.localEconomyScore}/200</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
-            <div>
-                <h3>Final LOCATE Score: ~865/1000</h3>
-                <span className="text-sm">Grade: Excellent (Investment Grade A)</span>
-            </div>
-            <div>
-              <h2 className="mt-5">Interpretation & Outlook</h2>
-              <ul className="mt-3">
-                {localityDetail.interpretationAndOutlookList.map((item, index) => (
-                  <li className="my-2" key={index}>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h2 className="mt-5">Recommendations for Investors</h2>
-              <ol className="mt-3">
-                {localityDetail.recommendationsForInvestorsList.map((item, index) => (
-                  <li className="my-2" key={index}>
-                    {item}
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
+          ) : (
+            blogsList.map((blog, index) => (
+              <BlogCard key={index} blog={blog} index={index} />
+            ))
+          )}
         </div>
-      )}
-    </div>
+      </div>
+      <div className="d-flex justify-content-center align-items-center my-5">
+        <Stack spacing={2}>
+          <Pagination
+            count={totalPages}
+            page={page + 1}
+            color="secondary"
+            onChange={handlePageChange}
+          />
+        </Stack>
+      </div>
+    </>
   );
 }

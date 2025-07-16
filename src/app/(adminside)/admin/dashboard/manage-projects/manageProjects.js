@@ -14,7 +14,9 @@ import DashboardHeader from "../common-model/dashboardHeader";
 import { useRouter } from "next/navigation";
 // Dynamically import JoditEditor with SSR disabled
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
-export default function ManageProjects({ builderList, typeList, countryData, projectDetailList }) {
+export default function ManageProjects({ builderList, typeList, countryData, projectDetailList,
+    projectStatusList
+ }) {
 
     const editor = useRef(null);
     const router = useRouter();
@@ -49,6 +51,7 @@ export default function ManageProjects({ builderList, typeList, countryData, pro
         locationDescription: "",
         floorPlanDescription: "",
         countryId: "",
+        projectStatus: ""
     };
 
     const [validated, setValidated] = useState(false);
@@ -398,6 +401,16 @@ export default function ManageProjects({ builderList, typeList, countryData, pro
             labelKey: "projectTypeName",
         },
         {
+            label: "Project Status",
+            name: "projectStatus",
+            type: "select",
+            required: true,
+            colSize: 6,
+            options: projectStatusList,
+            valueKey: "id",
+            labelKey: "statusName",
+        },
+        {
             label: "Amenity Description",
             name: "amenityDesc",
             type: "jodit",
@@ -451,6 +464,11 @@ export default function ManageProjects({ builderList, typeList, countryData, pro
         {
             field: "typeName",
             headerName: "Property Type",
+            flex: 1,
+        },
+        {
+            field: "projectStatusName",
+            headerName: "Project Status",
             flex: 1,
         },
         {
