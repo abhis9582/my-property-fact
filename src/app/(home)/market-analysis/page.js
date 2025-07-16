@@ -4,7 +4,7 @@ import MarketAnalysis from "./marketAnalysis";
 // fetch all localities
 const fetchAllLocalities = async () => {
   const localities = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}locality/get-all`
+    `${process.env.NEXT_PUBLIC_API_URL}city/all`
   );
   const res = localities.data.map((item, index) => ({
     ...item,

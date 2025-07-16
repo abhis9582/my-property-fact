@@ -77,6 +77,11 @@ export default function SideNav() {
               </Link>
             </li>
             <li>
+              <Link href="/admin/dashboard/manage-project-status">
+                Manage Project Status
+              </Link>
+            </li>
+            <li>
               <Link href="/admin/dashboard/builder">Manage Builders</Link>
             </li>
             <li>

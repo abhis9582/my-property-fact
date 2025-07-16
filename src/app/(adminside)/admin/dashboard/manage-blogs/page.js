@@ -15,10 +15,16 @@ const fetchBlogCategory = async () => {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}blog-category/get-all`);
     return response.data;
 }
+//Fetching all cities categories
+const fetchCities = async () => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}city/all`);
+    return response.data;
+}
 export default async function ManageBlogPage() {
-    const [list, categoryList] = await Promise.all([
+    const [list, categoryList, cityList] = await Promise.all([
         fetchBlogList(),
-        fetchBlogCategory()
+        fetchBlogCategory(),
+        fetchCities()
     ]);
-    return <ManageBlogs list={list} categoryList={categoryList} />
+    return <ManageBlogs list={list} categoryList={categoryList} cityList={cityList}/>
 }
