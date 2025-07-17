@@ -190,7 +190,7 @@ export default function ManageProjects({ builderList, typeList, countryData, pro
     const handleSubmit = async (event) => {
         event.preventDefault();
         event.stopPropagation();
-
+        debugger
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             // Scroll to the first invalid field
@@ -209,6 +209,7 @@ export default function ManageProjects({ builderList, typeList, countryData, pro
                 data.append(key, formData[key]);
             }
             try {
+                debugger
                 setShowLoading(true);
                 const response = await axios.post(
                     process.env.NEXT_PUBLIC_API_URL + "projects/add-new",

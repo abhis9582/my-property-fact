@@ -8,6 +8,8 @@ import CommonBreadCrum from "../components/common/breadcrum";
 import { useSearchParams } from "next/navigation";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import { LoadingSpinner } from "../contact-us/page";
+import Media from "@/app/_global_components/skeleton";
+import YouTube from "@/app/_global_components/skeleton";
 
 export default function Projects() {
   const [allProjectsList, setAllProjectsList] = useState([]);
@@ -105,7 +107,6 @@ export default function Projects() {
     <div className="containr-fluid">
       <CommonHeaderBanner image={"project-banner.jpg"} headerText={pageName} />
       <CommonBreadCrum pageName={pageName} />
-
       <div className="container my-3">
         <div className="row g-3">
           {allProjectsList.map((item, index) => (
@@ -123,7 +124,7 @@ export default function Projects() {
           <div ref={loadMoreRef} className="text-center my-3">
             {loading && (
               <div style={{height: "400px", alignItems: "center", display: "flex", justifyContent: "center"}}>
-                <LoadingSpinner show={true} />
+                <YouTube show={loading} />
               </div>
             )}
           </div>
