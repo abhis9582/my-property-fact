@@ -35,7 +35,7 @@ export default function PropertyContainer(props) {
         >
           <div className="w-100 project-image-container">
             <Image
-              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${props.data.slugURL}/${props.data.projectThumbnail}`}
+              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${props.data.slugURL}/${props.data.projectThumbnail || props.data.projectThumbnailImage}`}
               alt={props.data.projectName}
               className="img-fluid w-100 rounded-top-4 object-fit-cover"
               width={400}
