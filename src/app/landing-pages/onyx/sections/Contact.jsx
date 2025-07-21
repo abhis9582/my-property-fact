@@ -7,7 +7,6 @@ export default function Contact() {
   const formRef = useRef(null);
   const nameInputRef = useRef(null);
   const sectionRef = useRef(null);
-
   const router = useRouter();
 
   const handleDownloadClick = (e) => {
@@ -38,12 +37,32 @@ export default function Contact() {
     const formData = {
       name: form.name.value.trim(),
       email: form.email.value.trim(),
+      phone: form.phone.value.trim(),
       message: form.message.value.trim(),
     };
 
     // Basic validation
-    if (!formData.name || !formData.email || !formData.message) {
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.message
+    ) {
       alert("Please fill in all required fields.");
+      return;
+    }
+
+    // Email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
+    // Phone number format (Indian 10-digit)
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(formData.phone)) {
+      alert("Please enter a valid 10-digit phone number.");
       return;
     }
 
@@ -148,6 +167,20 @@ export default function Contact() {
                   type="email"
                   id="email"
                   name="email"
+                  required
+                  className="form-control"
+                />
+              </div>
+
+              <div className="mb-3">
+                <label htmlFor="phone" className="form-label fw-semibold">
+                  Phone
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  placeholder="10-digit mobile number"
                   required
                   className="form-control"
                 />

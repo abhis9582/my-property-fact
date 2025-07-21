@@ -9,7 +9,6 @@ export default function PopUpForm() {
   const overlayRef = useRef(null);
   const containerRef = useRef(null);
   const formRef = useRef(null);
-
   const router = useRouter();
 
   useEffect(() => {
@@ -52,11 +51,30 @@ export default function PopUpForm() {
     const formData = {
       name: form.name.value.trim(),
       email: form.email.value.trim(),
+      phone: form.phone.value.trim(),
       message: form.message.value.trim(),
     };
 
-    if (!formData.name || !formData.email || !formData.message) {
+    // Validation
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.message
+    ) {
       alert("Please fill in all required fields.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(formData.phone)) {
+      alert("Please enter a valid 10-digit phone number.");
       return;
     }
 
@@ -92,7 +110,6 @@ export default function PopUpForm() {
           id="popupOverlay"
           onClick={handleOverlayClick}
           className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-75 z-1050 show"
-          style={{ zIndex: 1050 }}
         >
           <div
             ref={containerRef}
@@ -160,6 +177,23 @@ export default function PopUpForm() {
 
                   <div className="mb-3">
                     <label
+                      htmlFor="popupPhone"
+                      className="form-label fw-semibold"
+                    >
+                      Phone
+                    </label>
+                    <input
+                      type="tel"
+                      className="form-control"
+                      id="popupPhone"
+                      name="phone"
+                      placeholder="10-digit phone number"
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label
                       htmlFor="popupMessage"
                       className="form-label fw-semibold"
                     >
@@ -188,7 +222,7 @@ export default function PopUpForm() {
         </div>
       )}
 
-      {/* Fade out effect */}
+      {/* Styles */}
       <style jsx>{`
         .fade-out {
           opacity: 0 !important;
