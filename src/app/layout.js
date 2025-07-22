@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import GoogleAnalytics from "./_global_components/googleAnalytics";
+import { ProjectProvider } from "./_global_components/contexts/projectsContext";
 // app/layout.js
 export const metadata = {
   title: "Not found",
@@ -73,7 +74,9 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <GoogleAnalytics />
-        <main>{children}</main>
+        <main>
+          <ProjectProvider>{children}</ProjectProvider>
+        </main>
         <ToastContainer />
         {/* Meta Pixel noscript fallback */}
         <noscript>

@@ -55,9 +55,9 @@ export default function MpfTopPicks() {
                   <h3>3.9 Cr* Onwards</h3>
                   <p>3BHK Apartments</p>
                 </div>
-                <Button className="btn-background rounded-pill border-0 px-5 py-2 fs-4">
-                  Contact Us
-                </Button>
+                <Link href="/oberoi-sky-city" className="btn-background rounded-pill border-0 px-5 py-2 fs-4 text-white">
+                  More Info
+                </Link>
               </div>
             </div>
           </div>
