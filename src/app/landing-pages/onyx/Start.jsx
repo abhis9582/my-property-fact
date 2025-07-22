@@ -16,6 +16,7 @@ import PopUpForm from "./components/PopUpForm";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import Script from "next/script";
 
 const Start = () => {
   useEffect(() => {
@@ -37,6 +38,19 @@ const Start = () => {
       <Gallery />
       <Highlights />
       <Contact />
+      {/* Google tag (gtag.js) */}
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=AW-11480562062"
+        strategy="afterInteractive"
+      />
+      <Script id="gtag-init" strategy="afterInteractive">
+        {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-11480562062');
+          `}
+      </Script>
     </>
   );
 };

@@ -1,47 +1,47 @@
 /* adding font library  starts*/
 @font-face {
-    font-family: "gotham-bold";
-    src: url("/fonts/Gotham-Bold.ttf") format('truetype');
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
+  font-family: "gotham-bold";
+  src: url("/fonts/Gotham-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: "heading-pro";
-    src: url("/fonts/Heading-Pro-ExtraBold-trial.ttf") format('truetype');
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
+  font-family: "heading-pro";
+  src: url("/fonts/Heading-Pro-ExtraBold-trial.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: "gotham-light";
-    src: url("/fonts/Gotham-Light.ttf") format('truetype');
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
+  font-family: "gotham-light";
+  src: url("/fonts/Gotham-Light.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
 }
 
 /* adding font library  ends*/
 
 :root {
-    --bg-color: #68ac78;
-    --menu-color: #ffffff;
-    --text-color: #cfab5a;
-    --bg-with-gradient: radial-gradient(circle at center, #0d5834, #0c2e23);
-    --heaing-font: "gotham-bold", "sans-serif";
-    --headeing-bolded: "heading-pro";
-    --text-font: "gotham-light", "sans-serif";
-    --btn-background: linear-gradient(to right, #d1ad5b, #a07e38);
-    --btn-background-hover: linear-gradient(to right, #b8934d, #8a6b2f);
-    --footer-bg: radial-gradient(circle at center, #0d5834, #0c2e23);
-    --link-bg: linear-gradient(to right, #d1ad5b, #a07e38);
-    --light-gradient: linear-gradient(to right, #a8d5a2, #70b987);
+  --bg-color: #68ac78;
+  --menu-color: #ffffff;
+  --text-color: #cfab5a;
+  --bg-with-gradient: radial-gradient(circle at center, #0d5834, #0c2e23);
+  --heaing-font: "gotham-bold", "sans-serif";
+  --headeing-bolded: "heading-pro";
+  --text-font: "gotham-light", "sans-serif";
+  --btn-background: linear-gradient(to right, #d1ad5b, #a07e38);
+  --btn-background-hover: linear-gradient(to right, #b8934d, #8a6b2f);
+  --footer-bg: radial-gradient(circle at center, #0d5834, #0c2e23);
+  --link-bg: linear-gradient(to right, #d1ad5b, #a07e38);
+  --light-gradient: linear-gradient(to right, #a8d5a2, #70b987);
 }
 
 html {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 
 h1,
@@ -50,75 +50,75 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: var(--heaing-font);
+  font-family: var(--heaing-font);
 }
 
 p {
-    font-family: var(--text-font);
+  font-family: var(--text-font);
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 ul {
-    list-style: none;
+  list-style: none;
 }
 
 .golden-border {
-    border: 2px solid var(--text-color) !important;
+  border: 2px solid var(--text-color) !important;
 }
 
 .gradient-bg {
-    background: var(--bg-with-gradient);
+  background: var(--bg-with-gradient);
 }
 
 .light-gradient-bg {
-    background: var(--light-gradient);
+  background: var(--light-gradient);
 }
 
 .btn-background {
-    background: var(--btn-background);
+  background: var(--btn-background);
 }
 
 .btn-background:hover {
-    background: var(--btn-background-hover);
+  background: var(--btn-background-hover);
 }
 
 .font-gotham-light {
-    font-family: var(--text-font);
+  font-family: var(--text-font);
 }
 
 .footer-bg {
-    background: var(--footer-bg);
+  background: var(--footer-bg);
 }
 
 .link-btn {
-    background: var(--link-bg) !important;
+  background: var(--link-bg) !important;
 }
 
 .text-golden {
-    color: var(--text-color);
+  color: var(--text-color);
 }
 
 /* Webkit Browsers starts (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
-    width: 5px;
-    height: 10px;
+  width: 5px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #e0e0e0;
-    border-radius: 10px;
+  background: #e0e0e0;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--bg-with-gradient);
-    border-radius: 0px;
+  background: var(--bg-with-gradient);
+  border-radius: 0px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+  background: #555;
 }
 
 /* Webkit Browsers ends */
@@ -126,47 +126,75 @@ ul {
 /* cursor pointer class css */
 
 .cursor-pointer {
-    cursor: pointer !important;
+  cursor: pointer !important;
 }
 
 /* cursor pointer class css */
 
 .hover-scale:hover {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
 
 .transition {
-    transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .custom-shadow {
-    box-shadow: 0 4px 10px rgba(209, 173, 91, 0.3), 0 4px 15px rgba(160, 126, 56, 0.3) !important;
+  box-shadow: 0 4px 10px rgba(209, 173, 91, 0.3),
+    0 4px 15px rgba(160, 126, 56, 0.3) !important;
 }
 
 .modal-header .btn-close {
-    filter: invert(1);
+  filter: invert(1);
 }
 
 .modal-header .btn-close {
-    filter: invert(1);
-    /* Makes it white, or you can customize using background */
-    background-color: #fff;
-    /* Optional: for background color */
-    border-radius: 50%;
-    padding: 0.5rem;
+  filter: invert(1);
+  /* Makes it white, or you can customize using background */
+  background-color: #fff;
+  /* Optional: for background color */
+  border-radius: 50%;
+  padding: 0.5rem;
 }
 
 .accordion-button:not(.collapsed) {
-    background: var(--bg-with-gradient) !important;
-    color: #ffffff;
+  background: var(--bg-with-gradient) !important;
+  color: #ffffff;
 }
 
 .accordion-item {
-    border: 1px solid #ddd;
-    border-radius: 0.25rem;
-    margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  margin-bottom: 10px;
 }
 
-.golden-text{
-    color: var(--text-color);
+.golden-text {
+  color: var(--text-color);
+}
+
+.blog-content table {
+  width: 100%;
+  border-collapse: collapse; /* Ensures no double borders */
+}
+
+.blog-content table,
+.blog-content th,
+.blog-content td {
+  border: 2px solid rgb(150, 150, 150);
+  padding: 8px;
+}
+
+.blog-content h1,
+.blog-content h2,
+.blog-content h3,
+.blog-content h4,
+.blog-content h5,
+.blog-content h6 {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  margin: inherit;
+  padding: inherit;
+  color: inherit;
 }

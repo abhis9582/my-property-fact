@@ -84,7 +84,7 @@ export default function BlogDetail({ blogDetail }) {
 
                         <h1 className="fw-bold mb-3">{blogDetail.blogTitle.replace(/\u00A0/g, ' ')}</h1>
 
-                        <div
+                        <div className="blog-content"
                             dangerouslySetInnerHTML={{
                                 __html: blogDetail.blogDescription,
                             }}>
