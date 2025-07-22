@@ -4,6 +4,7 @@ import InsightNew from "./insight/page";
 import NewsViews from "./new-views/page";
 import Featured from "./featured/featured";
 import SocialFeedPage from "./social-feed/page";
+import MpfTopPicks from "../mpfTopPick";
 
 export default async function HomePage() {
   try {
@@ -32,10 +33,13 @@ export default async function HomePage() {
           cityList={cityList}
         />
 
+        {/* MPF-top pick section  */}
+        {/* <MpfTopPicks /> */}
+
         {/* Static Sections */}
-        <div className="position-relative mt-5 top-space">
+        <div className="position-relative">
           {/* insight section  */}
-          <h2 className="text-center fw-bold pt-5">Insights</h2>
+          <h2 className="text-center fw-bold">Insights</h2>
           <InsightNew />
 
           {/* featured projects section  */}

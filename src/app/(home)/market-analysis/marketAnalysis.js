@@ -26,7 +26,6 @@ export default function MarketAnalysis() {
       setBlogsList(response.data.content);
       setTotalPages(response.data.totalPages);
       setLoading(false);
-      console.log(response);
     } catch (error) {
       console.log(error);
     }

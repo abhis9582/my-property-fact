@@ -23,9 +23,7 @@ export default function Blog() {
       );
       setBlogsList(response.data.content);
       setTotalPages(response.data.totalPages);
-      setLoading(false);
-      console.log(response);
-      
+      setLoading(false);      
     } catch (error) {
       console.log(error);
     }
