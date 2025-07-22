@@ -65,6 +65,10 @@ ul {
     list-style: none;
 }
 
+.golden-border {
+    border: 2px solid var(--text-color) !important;
+}
+
 .gradient-bg {
     background: var(--bg-with-gradient);
 }

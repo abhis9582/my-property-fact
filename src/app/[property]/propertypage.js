@@ -6,17 +6,17 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 // Import Swiper React components
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 // import './styles.css';
 
 // import required modules
-import { Navigation } from 'swiper/modules';
+import { Navigation } from "swiper/modules";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -43,7 +43,7 @@ export default function Property({ projectDetail }) {
     name: "",
     email: "",
     phone: "",
-    message: ""
+    message: "",
   });
   const [validated, setValidated] = useState(false);
   const [validated1, setValidated1] = useState(false);
@@ -100,32 +100,21 @@ export default function Property({ projectDetail }) {
 
   //Generating price in lakh & cr
   const generatePrice = (price) => {
-    // Check if price contains any alphabetic character
     if (/[a-zA-Z]/.test(price)) {
-      return price; // Return the original string if it contains letters
+      return price;
     }
-
-    // Convert price to a number
-    const numericPrice = parseFloat(price);
-
-    // Check if conversion is successful
-    if (isNaN(numericPrice)) {
-      return price; // Return original string if it's not a valid number
-    }
-
-    // Format price
-    return numericPrice > 1
-      ? numericPrice + " Cr"
-      : (numericPrice * 100) + " Lakh";
+    return price < 1
+      ? Math.round(parseFloat(price) * 100) + " Lakh* Onwards"
+      : parseFloat(price) + " Cr* Onwards";
   };
   //Handle form input data
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((preData) => ({
       ...preData,
-      [name]: value
+      [name]: value,
     }));
-  }
+  };
 
   //Handle submit form
   const handleSubmit = async (e, form_position) => {
@@ -151,7 +140,7 @@ export default function Property({ projectDetail }) {
               name: "",
               email: "",
               phone: "",
-              message: ""
+              message: "",
             });
             toast.success(response.data.message);
             setValidated(false);
@@ -185,7 +174,7 @@ export default function Property({ projectDetail }) {
               email: "",
               name: "",
               phone: "",
-              message: ""
+              message: "",
             });
             setValidated(false);
             toast.success(response.data.message);
@@ -199,7 +188,7 @@ export default function Property({ projectDetail }) {
         }
       }
     }
-  }
+  };
 
   useEffect(() => {
     //Handle header on scrolling page
@@ -248,7 +237,10 @@ export default function Property({ projectDetail }) {
       if (targetElement) {
         const headerHeight = header ? header.offsetHeight : 0;
         const targetPosition =
-          targetElement.getBoundingClientRect().top + window.scrollY - headerHeight - 50;
+          targetElement.getBoundingClientRect().top +
+          window.scrollY -
+          headerHeight -
+          50;
 
         window.scrollTo({
           top: targetPosition,
@@ -268,13 +260,17 @@ export default function Property({ projectDetail }) {
 
   //Checking If project detail is not available then show not found page
   if (!projectDetail) {
-    return <NotFound />
+    return <NotFound />;
   }
 
   return (
     <>
       {/* Header for property detail page */}
-      <header className={`p-2 bg-root-color header ${isScrolled ? "fixed-header" : ""}`}>
+      <header
+        className={`p-2 bg-root-color header ${
+          isScrolled ? "fixed-header" : ""
+        }`}
+      >
         <div className="main-header">
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex justify-content-center align-items-center">
@@ -349,7 +345,7 @@ export default function Property({ projectDetail }) {
                   <Link
                     href="#"
                     className="text-decoration-none text-light fs-5 fw-bold"
-                    onClick={(e) => openMenu(e, 'home')}
+                    onClick={(e) => openMenu(e, "home")}
                   >
                     Home
                   </Link>
@@ -358,7 +354,7 @@ export default function Property({ projectDetail }) {
                   <Link
                     href="#overview"
                     className="text-decoration-none text-light fs-5 fw-bold"
-                    onClick={(e) => openMenu(e, 'overview')}
+                    onClick={(e) => openMenu(e, "overview")}
                   >
                     Overview
                   </Link>
@@ -367,7 +363,7 @@ export default function Property({ projectDetail }) {
                   <Link
                     href="#amenities"
                     className="text-decoration-none text-light fs-5 fw-bold"
-                    onClick={(e) => openMenu(e, 'amenities')}
+                    onClick={(e) => openMenu(e, "amenities")}
                   >
                     Amenities
                   </Link>
@@ -376,7 +372,7 @@ export default function Property({ projectDetail }) {
                   <Link
                     href="#floorplan"
                     className="text-decoration-none text-light fs-5 fw-bold"
-                    onClick={(e) => openMenu(e, 'floorplan')}
+                    onClick={(e) => openMenu(e, "floorplan")}
                   >
                     Plans &amp; Price
                   </Link>
@@ -385,7 +381,7 @@ export default function Property({ projectDetail }) {
                   <Link
                     href="#gallery"
                     className="text-decoration-none text-light fs-5 fw-bold"
-                    onClick={(e) => openMenu(e, 'gallery')}
+                    onClick={(e) => openMenu(e, "gallery")}
                   >
                     Gallery
                   </Link>
@@ -394,7 +390,7 @@ export default function Property({ projectDetail }) {
                   <Link
                     href="#location"
                     className="text-decoration-none text-light fs-5 fw-bold"
-                    onClick={(e) => openMenu(e, 'location')}
+                    onClick={(e) => openMenu(e, "location")}
                   >
                     Location
                   </Link>
@@ -503,45 +499,64 @@ export default function Property({ projectDetail }) {
                   Please provide a valid message.
                 </Form.Control.Feedback>
               </Form.Group>
-              <Button className="btn btn-background border-0" type="submit" disabled={showLoading}>
+              <Button
+                className="btn btn-background border-0"
+                type="submit"
+                disabled={showLoading}
+              >
                 Submit <LoadingSpinner show={showLoading} />
               </Button>
             </Form>
           </div>
         </div>
 
-        <div className="container py-5 bg-white rounded-4 mt-3 mb-3">
+        <div className="container py-5 bg-white rounded-3 mt-3 mb-3">
           <div className="row gy-5 align-items-stretch">
             {/* Project Info */}
             <div className="col-lg-4">
               <div className="p-4 p-lg-5 rounded-4 bg-white h-100 d-flex flex-column justify-content-center align-items-center custom-shadow">
                 <div>
-                  <h1 className="mb-3 text-dark">{projectDetail.projectName}</h1>
+                  <h1 className="mb-3 text-dark">
+                    {projectDetail.projectName}
+                  </h1>
 
                   <p className="fs-5 mb-3 text-muted d-flex align-items-center">
-                    <FontAwesomeIcon icon={faLocationDot} className="text-success me-2 fs-5" />
+                    <FontAwesomeIcon
+                      icon={faLocationDot}
+                      className="text-success me-2 fs-5"
+                    />
                     <span>{projectDetail.projectAddress}</span>
                   </p>
 
                   <p className="fs-5 text-dark mb-2">
-                    <strong>Price: {generatePrice(projectDetail.projectPrice)}</strong>
-                    <span className="text-muted"> *</span>
+                    <strong>
+                      Price: {generatePrice(projectDetail.projectPrice)}
+                    </strong>
                   </p>
 
-                  <p className="fs-6 text-muted mb-2">{projectDetail.projectConfiguration}</p>
+                  <p className="fs-6 text-muted mb-2">
+                    {projectDetail.projectConfiguration}
+                  </p>
 
                   <p className="fs-6 text-muted">
-                    <strong className="text-dark">RERA:</strong> {projectDetail.reraNo || "Not found"}
+                    <strong className="text-dark">RERA:</strong>{" "}
+                    {projectDetail.reraNo || "Not found"}
                   </p>
                 </div>
-                <button className="btn btn-success border-0 btn-background text-white w-100 p-2"
-                  onClick={() => setShowPopUp(true)}><h5 className="m-0">Get Detail</h5></button>
+                <button
+                  className="btn btn-success border-0 btn-background text-white w-100 p-2"
+                  onClick={() => setShowPopUp(true)}
+                >
+                  <h5 className="m-0">Get Detail</h5>
+                </button>
               </div>
             </div>
             {/* Walkthrough Description */}
             <div className="col-lg-8">
               <div className="bg-white p-4 p-md-5 rounded-4 custom-shadow h-100">
-                <h2 className="text-dark mb-4 text-center text-md-start">Walkthrough</h2>
+                <h2 className="text-dark mb-4 text-center text-md-start">
+                  Walkthrough
+                </h2>
 
                 <div
                   className="text-muted fs-6 lh-lg"
@@ -554,9 +569,11 @@ export default function Property({ projectDetail }) {
           </div>
         </div>
 
-
         {/* Amenities section */}
-        <div className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3" id="amenities">
+        <div
+          className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3"
+          id="amenities"
+        >
           {/* Title */}
           <h2 className="text-center mb-3">Amenities</h2>
 
@@ -586,20 +603,29 @@ export default function Property({ projectDetail }) {
 
           {/* View All Button */}
           <div className="mt-5 text-center">
-            <button className="btn btn-background px-4 py-2 rounded-pill text-white" onClick={() => setShowPopUp(true)}>
+            <button
+              className="btn btn-background px-4 py-2 rounded-pill text-white"
+              onClick={() => setShowPopUp(true)}
+            >
               VIEW ALL
             </button>
           </div>
         </div>
 
-
-
         {/* Floor plans section */}
-        <div className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3" id="floorplan">
+        <div
+          className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3"
+          id="floorplan"
+        >
           <div className="p-2 p-md-4 p-lg-5">
             <h2 className="text-center">Floor Plans</h2>
-            {projectDetail.floorPlanDesc && <div dangerouslySetInnerHTML={{ __html: projectDetail.floorPlanDesc }}>
-            </div>}
+            {projectDetail.floorPlanDesc && (
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: projectDetail.floorPlanDesc,
+                }}
+              ></div>
+            )}
           </div>
           {/* <div className="d-flex justify-content-center p-2 d-flex flex-column flex-md-row gap-md-3 flex-wrap flex-lg-nowrap"> */}
           <Swiper
@@ -632,19 +658,28 @@ export default function Property({ projectDetail }) {
                   </div>
                   <div className="border-bottom property-type-detail">
                     <p>
-                      <FontAwesomeIcon icon={faBed} width={20} color="green" /> Type
+                      <FontAwesomeIcon icon={faBed} width={20} color="green" />{" "}
+                      Type
                     </p>
                     <p>{item.planType}</p>
                   </div>
                   <div className="mt-2 property-type-detail">
                     <p>
-                      <FontAwesomeIcon icon={faChartArea} width={20} color="green" /> Area
+                      <FontAwesomeIcon
+                        icon={faChartArea}
+                        width={20}
+                        color="green"
+                      />{" "}
+                      Area
                     </p>
                     <p>{item.areaSqFt} sqft*</p>
                     <p>{parseFloat(item.areaSqMt).toFixed(2)} sqmt*</p>
                   </div>
                   <div className="pb-4 ps-2 mt-4">
-                    <button className="btn btn-background text-white" onClick={() => setShowPopUp(true)}>
+                    <button
+                      className="btn btn-background text-white"
+                      onClick={() => setShowPopUp(true)}
+                    >
                       PRICE ON REQUEST
                     </button>
                   </div>
@@ -657,7 +692,8 @@ export default function Property({ projectDetail }) {
 
         {/* Gallery section */}
         <div
-          className="container shadow-lg rounded-4 mt-3 py-5 mb-3" id="gallery"
+          className="container shadow-lg rounded-4 mt-3 py-5 mb-3"
+          id="gallery"
         >
           <h2 className="text-center">Gallery</h2>
           <div className="container-fluid">
@@ -665,7 +701,10 @@ export default function Property({ projectDetail }) {
               <div className="col-12">
                 <Slider {...settings1} className="gallery-slider">
                   {projectDetail.projectGalleryImages.map((item) => (
-                    <div key={item.id} className="project-detail-gallery-container ">
+                    <div
+                      key={item.id}
+                      className="project-detail-gallery-container "
+                    >
                       <Image
                         src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.galleyImage}`}
                         alt="gallery_image"
@@ -681,7 +720,10 @@ export default function Property({ projectDetail }) {
           </div>
         </div>
         {/* Location section */}
-        <div className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3" id="location">
+        <div
+          className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3"
+          id="location"
+        >
           <div>
             <h2 className="text-center">Location</h2>
           </div>
@@ -704,7 +746,9 @@ export default function Property({ projectDetail }) {
                         height={40}
                       />
                       <div>
-                        <p className="mb-1 fw-semibold text-dark">{item.benefitName}</p>
+                        <p className="mb-1 fw-semibold text-dark">
+                          {item.benefitName}
+                        </p>
                         <small className="text-muted">{item.distance}</small>
                       </div>
                     </div>
@@ -723,7 +767,6 @@ export default function Property({ projectDetail }) {
                     <p className="mb-1 text-success fw-semibold">State</p>
                     <p className="mb-0">{projectDetail.stateName}</p>
                   </div>
-                  {console.log(projectDetail)}
                   <div className="col-sm-6 mb-3">
                     <p className="mb-1 text-success fw-semibold">City</p>
                     <p className="mb-0">{projectDetail.cityName}</p>
@@ -735,14 +778,20 @@ export default function Property({ projectDetail }) {
                 </div>
 
                 <div className="text-center mt-3">
-                  <button className="btn btn-background text-white px-4 py-2 rounded-pill" onClick={() => setShowPopUp(true)}>
+                  <button
+                    className="btn btn-background text-white px-4 py-2 rounded-pill"
+                    onClick={() => setShowPopUp(true)}
+                  >
                     View On Map
                   </button>
                 </div>
               </div>
             </div>
             <div className="col-md-6 p-3">
-              <div className="position-relative border rounded-4 overflow-hidden shadow-sm" style={{ height: "350px" }}>
+              <div
+                className="position-relative border rounded-4 overflow-hidden shadow-sm"
+                style={{ height: "350px" }}
+              >
                 <Image
                   src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.locationMapImage}`}
                   alt="Project Location Map"
@@ -762,7 +811,10 @@ export default function Property({ projectDetail }) {
       </div>
 
       {/* About the project */}
-      <div className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3" id="overview">
+      <div
+        className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3"
+        id="overview"
+      >
         {/* Section Heading */}
         <h2 className="text-center mb-4">About The Project</h2>
 
@@ -776,18 +828,26 @@ export default function Property({ projectDetail }) {
 
         {/* Action Buttons */}
         <div className="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-4">
-          <button className="btn btn-success px-4 py-2 rounded-pill shadow-sm" onClick={() => setShowPopUp(true)}>
+          <button
+            className="btn btn-success px-4 py-2 rounded-pill shadow-sm"
+            onClick={() => setShowPopUp(true)}
+          >
             READ MORE
           </button>
-          <button className="btn btn-outline-success px-4 py-2 rounded-pill shadow-sm" onClick={() => setShowPopUp(true)}>
+          <button
+            className="btn btn-outline-success px-4 py-2 rounded-pill shadow-sm"
+            onClick={() => setShowPopUp(true)}
+          >
             DOWNLOAD BROCHURE
           </button>
-          <button className="btn btn-success px-4 py-2 rounded-pill shadow-sm" onClick={() => setShowPopUp(true)}>
+          <button
+            className="btn btn-success px-4 py-2 rounded-pill shadow-sm"
+            onClick={() => setShowPopUp(true)}
+          >
             SCHEDULE A SITE VISIT
           </button>
         </div>
       </div>
-
 
       {/* Contact us section */}
       <div className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3">
@@ -863,14 +923,19 @@ export default function Property({ projectDetail }) {
                     Please provide a valid message.
                   </Form.Control.Feedback>
                 </Form.Group>
-                <Button className="btn btn-background text-white border-0" type="submit" disabled={showLoading}>Submit <LoadingSpinner show={showLoading} /></Button>
+                <Button
+                  className="btn btn-background text-white border-0"
+                  type="submit"
+                  disabled={showLoading}
+                >
+                  Submit <LoadingSpinner show={showLoading} />
+                </Button>
               </Form>
             </div>
           </div>
         </div>
       </div>
-      <div
-        className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3">
+      <div className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3">
         <h2 className="text-center pt-5">FAQs</h2>
         <div className="container mt-3">
           {projectDetail.projectFaqs.map((item, index) => (
@@ -882,11 +947,14 @@ export default function Property({ projectDetail }) {
               >
                 <h5 className="m-0">Q {index + 1}: </h5>
                 <h5 className="ps-2 m-0">{item.question}</h5>
-                <span className="plus-icon">{isAnswerVisible[item.id] ? "-" : "+"}</span>
+                <span className="plus-icon">
+                  {isAnswerVisible[item.id] ? "-" : "+"}
+                </span>
               </div>
               <div
-                className={`container questions ${isAnswerVisible[item.id] ? "" : "d-none"
-                  } bg-light`}
+                className={`container questions ${
+                  isAnswerVisible[item.id] ? "" : "d-none"
+                } bg-light`}
                 id="answer1"
               >
                 <div className="m-0 text-success">

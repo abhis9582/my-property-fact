@@ -7,8 +7,6 @@ import axios from "axios";
 import CommonBreadCrum from "../components/common/breadcrum";
 import { useSearchParams } from "next/navigation";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
-import { LoadingSpinner } from "../contact-us/page";
-import Media from "@/app/_global_components/skeleton";
 import YouTube from "@/app/_global_components/skeleton";
 
 export default function Projects() {
