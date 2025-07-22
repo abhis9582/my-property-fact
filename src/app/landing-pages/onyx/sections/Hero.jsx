@@ -8,6 +8,7 @@ export default function Hero() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     message: "",
   });
   const router = useRouter();
@@ -19,11 +20,25 @@ export default function Hero() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { name, email, message } = formData;
+    const { name, email, phone, message } = formData;
 
     // Basic validation
-    if (!name.trim() || !email.trim() || !message.trim()) {
+    if (!name.trim() || !email.trim() || !phone.trim() || !message.trim()) {
       alert("Please fill in all required fields.");
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
+    // Phone number validation (10-digit Indian format starting with 6–9)
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(phone)) {
+      alert("Please enter a valid 10-digit phone number.");
       return;
     }
 
@@ -32,16 +47,14 @@ export default function Hero() {
         "https://script.google.com/macros/s/AKfycbwFUrsuEzkLUjc07z9MXmKwKSb1zGNo8gCJrmNLI0mCqkhopIjdHYqzvT2zcTKMpqL7Xg/exec",
         {
           method: "POST",
-          body: JSON.stringify({ name, email, message }),
+          body: JSON.stringify({ name, email, phone, message }),
         }
       );
 
       const data = await res.json();
 
       if (data.result === "success") {
-        // Reset form
-        setFormData({ name: "", email: "", message: "" });
-        // Redirect to thank you page
+        setFormData({ name: "", email: "", phone: "", message: "" });
         router.push("onyx/thankyou");
       } else {
         alert("Submission failed: " + (data.message || "Unknown error"));
@@ -166,6 +179,17 @@ export default function Hero() {
                     name="email"
                     placeholder="you@example.com"
                     value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="form-control"
+                  />
+                </div>
+                <div className="mb-3">
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="Phone number"
+                    value={formData.phone}
                     onChange={handleChange}
                     required
                     className="form-control"
