@@ -86,7 +86,7 @@ export default async function RootLayout({ children, params }) {
         />
 
         {/* dynamic render all its child components  */}
-        <ProjectProvider>{children}</ProjectProvider>
+        {children}
         {/* footer for user side  */}
         <Footer cityList={cityList} projectTypes={projectTypes} />
       </>
