@@ -2,6 +2,7 @@ import "../globals.css";
 import axios from "axios";
 import Header from "./components/header/header";
 import Footer from "./components/footer/page";
+import { ProjectProvider } from "../_global_components/contexts/projectsContext";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
@@ -85,8 +86,7 @@ export default async function RootLayout({ children, params }) {
         />
 
         {/* dynamic render all its child components  */}
-        {children}
-
+        <ProjectProvider>{children}</ProjectProvider>
         {/* footer for user side  */}
         <Footer cityList={cityList} projectTypes={projectTypes} />
       </>
@@ -94,10 +94,10 @@ export default async function RootLayout({ children, params }) {
   } catch (err) {
     console.error("Error loading layout data:", err);
     return (
-    <div>
-      <h1>Failed to load data from server.</h1>
-      <p>The server might be down or unreachable.</p>
-    </div>
-  );
+      <div>
+        <h1>Failed to load data from server.</h1>
+        <p>The server might be down or unreachable.</p>
+      </div>
+    );
   }
 }
