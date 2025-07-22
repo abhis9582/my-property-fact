@@ -26,6 +26,7 @@ export default function MpfTopPicks() {
                     width={80}
                     height={80}
                     className="img-fluid"
+                    unoptimized
                   />
                 </div>
                 <div className="ms-4">
@@ -64,6 +65,7 @@ export default function MpfTopPicks() {
             <Image
               src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/oberoi-sky-city/4be6cf23-becc-473d-aad8-7dd5fb69b965.webp`}
               alt="top-picks"
+              unoptimized
               fill
               className="rounded-3 position-relative mpf-top-pic-project-image"
               sizes="(max-width: 768px) 100vw, 800px"
