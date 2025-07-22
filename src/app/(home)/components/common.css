@@ -1,6 +1,34 @@
+.mpf-top-picks {
+  height: 578px;
+  background-color: rgb(249, 249, 249);
+}
 
-.mpf-top-picks{
-  height: 700px;
+.project-logo-container {
+  width: 125px;
+  height: 125px;
+  border-radius: 50% !important;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mpf-top-pic-project-name {
+  font-weight: 500;
+  font-style: normal;
+  font-size: 30px;
+  line-height: 100%;
+  letter-spacing: 0;
+  text-transform: capitalize;
+}
+
+.text-underline{
+  text-decoration: underline !important;
+}
+
+.mpf-top-pic-address-container svg{
+  font-size: 16px !important;
+  height: 16px;
 }
 
 @media (max-width: 426px) {
@@ -9,6 +37,14 @@
     display: flex;
     margin: 0px auto;
     z-index: 2;
+  }
+
+  .mpf-top-picks{
+    height: 650px;
+  }
+
+  .mpf-top-pic-project-details{
+    margin-left: 3rem;
   }
 
   .top-pick-mobile-container img {

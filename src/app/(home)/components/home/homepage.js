@@ -8,6 +8,8 @@ import FixedForm from "../fixedform";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useProjectContext } from "@/app/_global_components/contexts/projectsContext";
 export default function ClientSideHomePage({ projectTypeList, cityList }) {
   const [propertType, setPropertyType] = useState("");
   const [propertyLocation, setPropertyLocation] = useState("");
@@ -15,7 +17,8 @@ export default function ClientSideHomePage({ projectTypeList, cityList }) {
   const [showForm, setShowForm] = useState(false);
   const [enquiryButtonName, setEnquiryButtonName] = useState("Enquiry");
   const [resetTrigger, setResetTrigger] = useState(false);
-
+  const router = useRouter();
+  const { setProjectData } = useProjectContext();
   //defining project range
   const projectRange = ["Up to 1Cr*", "1-3 Cr*", "3-5 Cr*", "Above 5 Cr*"];
 
@@ -78,6 +81,8 @@ export default function ClientSideHomePage({ projectTypeList, cityList }) {
           },
         }
       );
+      setProjectData(response.data);
+      router.push("/projects");
       console.log(response);
     } catch (error) {
       console.log(error);

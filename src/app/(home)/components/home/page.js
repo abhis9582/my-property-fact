@@ -34,10 +34,10 @@ export default async function HomePage() {
         />
 
         {/* MPF-top pick section  */}
-        {/* <MpfTopPicks /> */}
+        <MpfTopPicks />
 
         {/* Static Sections */}
-        <div className="position-relative">
+        <div className="position-relative mt-5">
           {/* insight section  */}
           <h2 className="text-center fw-bold">Insights</h2>
           <InsightNew />
