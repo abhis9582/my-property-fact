@@ -21,7 +21,7 @@ export default function MpfTopPicks() {
               <div className="d-flex align-items-center justify-centent-center">
                 <div className="rounded-3 project-logo-container">
                   <Image
-                    src="/properties/oberoi-sky-city/2e17d502-6db2-47f7-82bc-57361ee83f27.png"
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/oberoi-sky-city/2e17d502-6db2-47f7-82bc-57361ee83f27.png`}
                     alt="Birla Arika"
                     width={80}
                     height={80}
@@ -62,7 +62,7 @@ export default function MpfTopPicks() {
           </div>
           <div className="col-md-8 m-0 p-0 position-relative">
             <Image
-              src="/properties/oberoi-sky-city/4be6cf23-becc-473d-aad8-7dd5fb69b965.webp"
+              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/oberoi-sky-city/4be6cf23-becc-473d-aad8-7dd5fb69b965.webp`}
               alt="top-picks"
               fill
               className="rounded-3 position-relative mpf-top-pic-project-image"
