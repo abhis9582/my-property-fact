@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Script from "next/script";
 
 export default function page() {
   return (
@@ -20,6 +21,26 @@ export default function page() {
           Go back home
         </Link>
       </div>
+      {/* Google tag (gtag.js) */}
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=AW-11480562062"
+        strategy="afterInteractive"
+      />
+      <Script id="gtag-init" strategy="afterInteractive">
+        {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-11480562062');
+          `}
+      </Script>
+      <Script id="gtag-conversion" strategy="afterInteractive">
+        {`
+            gtag('event', 'conversion', {
+              'send_to': 'AW-11480562062/39UhCKj1h_YaEI7zreIq'
+            });
+          `}
+      </Script>
     </main>
   );
 }
