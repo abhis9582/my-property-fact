@@ -4,7 +4,6 @@
   color: #a8a8a8;
 }
 
-
 .footer-text:hover {
   color: #fff;
 }
@@ -54,7 +53,7 @@
   font-size: 12px;
 }
 
-.footer-bottom>div {
+.footer-bottom > div {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -131,3 +130,24 @@
 }
 
 /*Footer*/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--heaing-font);
+}
+
+p {
+  font-family: var(--text-font);
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}

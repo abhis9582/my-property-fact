@@ -44,27 +44,6 @@ html {
   scroll-behavior: smooth;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--heaing-font);
-}
-
-p {
-  font-family: var(--text-font);
-}
-
-a {
-  text-decoration: none;
-}
-
-ul {
-  list-style: none;
-}
-
 .golden-border {
   border: 2px solid var(--text-color) !important;
 }
@@ -182,19 +161,4 @@ ul {
 .blog-content td {
   border: 2px solid rgb(150, 150, 150);
   padding: 8px;
-}
-
-.blog-content h1,
-.blog-content h2,
-.blog-content h3,
-.blog-content h4,
-.blog-content h5,
-.blog-content h6 {
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-  line-height: inherit;
-  margin: inherit;
-  padding: inherit;
-  color: inherit;
 }
