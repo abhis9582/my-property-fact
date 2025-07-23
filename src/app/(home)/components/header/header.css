@@ -1,265 +1,285 @@
 /*header*/
 .header {
-    transition: all 0.3s ease-in-out;
-    z-index: 9999;
-    background: var(--bg-with-gradient);
+  transition: all 0.3s ease-in-out;
+  z-index: 9999;
+  background: var(--bg-with-gradient);
 }
 
 .fixed-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
 }
 
-.notfixed{
-    background-color: #fff !important;
+.notfixed {
+  background-color: #fff !important;
 }
 
-.notfixed .mpf-logo img{
-    display: none;
+.notfixed .mpf-logo img {
+  display: none;
 }
 
 .menu ul li.hasChild a {
-    font-size: 14px;
-    transition: all 300ms ease-in-out;
+  font-size: 14px;
+  transition: all 300ms ease-in-out;
 }
 
-.header-link-active{
-    color: #ffffff !important;
-    border-bottom: 2px solid #ffffff !important;
-    padding: 5px !important;
+.header-link-active {
+  color: #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  padding: 5px !important;
 }
 .menu ul li.hasChild a sup {
-    font-size: 120%;
-    top: -6px;
-    left: 3px;
-    display: inline-block;
-    transition: all 300ms ease-in-out;
+  font-size: 120%;
+  top: -6px;
+  left: 3px;
+  display: inline-block;
+  transition: all 300ms ease-in-out;
 }
 
-.menu ul li.hasChild .dropdown ul li a:hover{
-    color: #000 !important;
+.menu ul li.hasChild .dropdown ul li a:hover {
+  color: #000 !important;
 }
 
-.menu ul li.hasChild:hover>a sup {
-    transform: rotate(45deg);
-    color: #000;
+.menu ul li.hasChild:hover > a sup {
+  transform: rotate(45deg);
+  color: #000;
 }
 
 .hasChild:hover > a,
 .hasChild .dropdown.dropdown-lg:hover ~ a {
-    color: #000 !important;
+  color: #000 !important;
 }
 
 .projects-dropdown li a {
-    display: block;
-    padding: 10px 0px;
-    border-bottom: 1px solid rgba(0, 0, 0, .1);
-    font-size: 14px;
+  display: block;
+  padding: 10px 0px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 14px;
 }
 
 .menu ul li.hasChild .dropdown {
-    width: 250px;
-    position: absolute;
-    background: var(--bg-with-gradient);
-    box-shadow: 0 10px 30px rgb(0 0 0 / 10%);
-    visibility: visible;
-    opacity: 0;
-    transform: translateY(10px);
-    pointer-events: none;
-    transition: all 300ms ease-in-out;
-    top: 30px;
+  width: 250px;
+  position: absolute;
+  background: var(--bg-with-gradient);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 10%);
+  visibility: visible;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: all 300ms ease-in-out;
+  top: 30px;
 }
 
 .menu ul li.hasChild:hover .dropdown {
-    visibility: visible;
-    opacity: 1;
-    transform: translateY(0px);
-    pointer-events: auto;
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0px);
+  pointer-events: auto;
 }
 
 .dropdown ul {
-    padding: 0 15px;
+  padding: 0 15px;
 }
 
 .dropdown ul li:last-child a {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .menu ul li.hasChild .dropdown.dropdown-lg {
-    width: 100%;
-    max-width: 100%;
-    left: 0;
-    padding: 10px;
+  width: 100%;
+  max-width: 100%;
+  left: 0;
+  padding: 10px;
 }
 
 .menu ul li.hasChild .dropdown.dropdown-lg ul {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .menu ul li.hasChild .dropdown.dropdown-lg ul li {
-    width: calc(100% / 4);
-    padding: 5px;
+  width: calc(100% / 4);
+  padding: 5px;
 }
 
 .menu ul li.hasChild .dropdown.dropdown-lg ul li a {
-    text-transform: none;
-    font-size: 13px;
-    font-family: "BentonRegular", sans-serif;
-    border-bottom: 0;
-    padding: 0 0 0 10px;
+  text-transform: none;
+  font-size: 13px;
+  font-family: "BentonRegular", sans-serif;
+  border-bottom: 0;
+  padding: 0 0 0 10px;
 }
 
 .menu ul li.hasChild .dropdown.dropdown-lg ul li a::before {
-    width: 4px;
-    height: 4px;
-    bottom: 50%;
-    transform: translateY(50%);
+  width: 4px;
+  height: 4px;
+  bottom: 50%;
+  transform: translateY(50%);
 }
 
 /* mobile menu style starts */
 .menuBtn {
-    width: 40px;
-    height: 20px;
-    overflow: hidden;
-    /* display: flex; */
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: all 300ms ease-in-out;
-    position: relative;
-    cursor: pointer;
+  width: 40px;
+  height: 20px;
+  overflow: hidden;
+  /* display: flex; */
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 300ms ease-in-out;
+  position: relative;
+  cursor: pointer;
 }
 
 .menuBtn span {
-    display: block;
-    position: relative;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: var(--menu-color);
-    transition: all 0.6s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  display: block;
+  position: relative;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--menu-color);
+  transition: all 0.6s cubic-bezier(0.785, 0.135, 0.15, 0.86);
 }
 
 .menuBtn.closeMenuBtn {
-    flex-direction: column;
-    top: 20px;
+  flex-direction: column;
+  top: 20px;
 }
 
 .menuBtn.closeMenuBtn span {
-    width: 100%;
-    height: 2px;
-    background: var(--menu-color);
-    z-index: 5555;
+  width: 100%;
+  height: 2px;
+  background: var(--menu-color);
+  z-index: 5555;
 }
 
 .menuBtn.closeMenuBtn span#menuLine1 {
-    -webkit-transform: rotate(45deg) translate(5px, 6px);
-    transform: rotate(45deg) translate(6px, 5px);
+  -webkit-transform: rotate(45deg) translate(5px, 6px);
+  transform: rotate(45deg) translate(6px, 5px);
 }
 
 .menuBtn.closeMenuBtn span#menuLine2 {
-    right: 100px;
+  right: 100px;
 }
 
 .menuBtn.closeMenuBtn span#menuLine3 {
-    -webkit-transform: rotate(-45deg) translate(5px, -6px);
-    transform: rotate(-45deg) translate(5px, -6px);
+  -webkit-transform: rotate(-45deg) translate(5px, -6px);
+  transform: rotate(-45deg) translate(5px, -6px);
 }
 
 .mbMenuContainer {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 2px;
-    bottom: 0;
-    background: rgb(0 0 0 / 82%);
-    -webkit-backdrop-filter: blur(4px) brightness(1.3);
-    backdrop-filter: blur(4px) brightness(1.3);
-    z-index: 99;
-    display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 2px;
+  bottom: 0;
+  background: rgb(0 0 0 / 82%);
+  -webkit-backdrop-filter: blur(4px) brightness(1.3);
+  backdrop-filter: blur(4px) brightness(1.3);
+  z-index: 99;
+  display: none;
 }
 
 .mbMenuContainer .mbMenu {
-    position: relative;
-    height: 100%;
-    width: 400px;
-    padding: 70px 30px;
-    margin-right: 0;
-    margin-left: auto;
-    background: var(--bg-with-gradient);
-    overflow: auto;
-    opacity: 0;
-    transition: all 0.5s linear;
+  position: relative;
+  height: 100%;
+  width: 400px;
+  padding: 70px 30px;
+  margin-right: 0;
+  margin-left: auto;
+  background: var(--bg-with-gradient);
+  overflow: auto;
+  opacity: 0;
+  transition: all 0.5s linear;
 }
 
 .mbMenuContainer.active .mbMenu {
-    opacity: 1;
+  opacity: 1;
 }
 
 .mbMenuContainer .mbMenu ul li a {
-    display: block;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    color: var(--menu-color);
-    transition: all 300ms ease-in-out;
+  display: block;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  color: var(--menu-color);
+  transition: all 300ms ease-in-out;
 }
 
-.bigMenuList ul li.active>a,
-.mbMenuContainer .mbMenu ul li:hover>a,
+.bigMenuList ul li.active > a,
+.mbMenuContainer .mbMenu ul li:hover > a,
 .mbMenuContainer .mbMenu ul li a:focus {
-    color: var(--body-color);
+  color: var(--body-color);
 }
 
 .bigMenuList,
 .smallMenuList {
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid rgb(0 0 0 / 10%);
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgb(0 0 0 / 10%);
 }
 
 .bigMenuList ul li a {
-    font-size: 2rem;
-    font-family: "Benton300", sans-serif;
-    line-height: 1;
+  font-size: 2rem;
+  font-family: "Benton300", sans-serif;
+  line-height: 1;
 }
 
 .bigMenuList ul li a sup {
-    display: inline-block;
-    transition: all 300ms ease-in-out;
+  display: inline-block;
+  transition: all 300ms ease-in-out;
 }
 
-.bigMenuList ul li.active>a sup {
-    transform: rotate(225deg);
+.bigMenuList ul li.active > a sup {
+  transform: rotate(225deg);
 }
 
 .bigMenuList .dropdown li a {
-    font-size: 1.2rem;
-    font-family: "Benton500", sans-serif;
-    position: relative;
-    padding-left: 30px;
+  font-size: 1.2rem;
+  font-family: "Benton500", sans-serif;
+  position: relative;
+  padding-left: 30px;
 }
 
 .bigMenuList .dropdown {
-    display: none;
+  display: none;
 }
 
 .bigMenuList .dropdown li a::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: calc(50% - 1px);
-    height: 2px;
-    width: 20px;
-    background-color: var(--corp-color);
-    border-radius: 10px;
+  content: "";
+  position: absolute;
+  left: 0;
+  top: calc(50% - 1px);
+  height: 2px;
+  width: 20px;
+  background-color: var(--corp-color);
+  border-radius: 10px;
 }
 
 .activeHeader {
-    display: block !important;
+  display: block !important;
 }
 
 /* mobile menu style ends */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--heaing-font);
+}
+
+p {
+  font-family: var(--text-font);
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
