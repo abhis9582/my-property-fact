@@ -170,12 +170,18 @@ export default function ManageBanners({ list }) {
             headerName: "Action",
             width: 100,
             renderCell: (params) => (
-                <div>
+                <div className="d-flex gap-3 mt-3">
                     <FontAwesomeIcon
                         className="text-warning"
                         style={{ cursor: "pointer" }}
                         icon={faPencil}
                         onClick={() => openEditModel(params.row)}
+                    />
+                    <FontAwesomeIcon
+                        className="text-danger"
+                        style={{ cursor: "pointer" }}
+                        icon={faTrash}
+                        onClick={() => openConfirmationBox(params.row.id)}
                     />
                 </div>
             ),

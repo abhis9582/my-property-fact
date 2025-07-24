@@ -16,7 +16,7 @@ export default function WebStories({ webStoryList }) {
                 pageName={"web-stories"}
             />
             <div className="container py-4">
-                <div className="d-flex flex-row flex-nowrap overflow-auto gap-3">
+                <div className="row">
                     {webStoryList
                         .filter((item) => item.webStories.length > 0)
                         .map((item, index) => (
@@ -25,18 +25,18 @@ export default function WebStories({ webStoryList }) {
                                     className="card h-100 text-decoration-none text-dark shadow-sm"
                                     href={`${process.env.NEXT_PUBLIC_API_URL}web-story/${item.categoryName}`}
                                 >
-                                    <div className="ratio ratio-1x1">
+                                    <div className="">
                                         <Image
                                             src={`${process.env.NEXT_PUBLIC_IMAGE_URL}web-story/${item.storyCategoryImage}`}
                                             alt={item.categoryName}
-                                            width={300}
-                                            height={300}
-                                            className="card-img-top object-fit-cover"
+                                            width={150}
+                                            height={450}
+                                            className="card-img-top"
                                             unoptimized
                                         />
                                     </div>
                                     <div className="card-body">
-                                        <h5 className="card-title">{item.categoryName}</h5>
+                                        <h5 className="card-title text-capitalize">{item.categoryName}</h5>
                                         <p className="card-text">{item.categoryDescription}</p>
                                     </div>
                                 </Link>

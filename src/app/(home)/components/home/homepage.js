@@ -83,7 +83,6 @@ export default function ClientSideHomePage({ projectTypeList, cityList }) {
       );
       setProjectData(response.data);
       router.push("/projects");
-      console.log(response);
     } catch (error) {
       console.log(error);
     }
