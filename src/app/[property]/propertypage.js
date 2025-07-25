@@ -945,8 +945,8 @@ export default function Property({ projectDetail }) {
                 id="question1"
                 onClick={() => toggleAnswer(item.id)}
               >
-                <h5 className="m-0">Q {index + 1}: </h5>
-                <h5 className="ps-2 m-0">{item.question}</h5>
+                <h4 className="m-0">Q {index + 1}: </h4>
+                <h4 className="ps-2 m-0">{item.question}</h4>
                 <span className="plus-icon">
                   {isAnswerVisible[item.id] ? "-" : "+"}
                 </span>
@@ -958,7 +958,7 @@ export default function Property({ projectDetail }) {
                 id="answer1"
               >
                 <div className="m-0 text-success">
-                  <h5>Ans: </h5>
+                  <h4>Ans: </h4>
                 </div>
                 <p className="ps-2 text-success">{item.answer}</p>
               </div>

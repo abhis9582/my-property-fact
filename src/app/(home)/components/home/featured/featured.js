@@ -13,6 +13,7 @@ export default function Featured({
   type = null,
   url = "",
   allFeaturedProperties = null,
+  autoPlay
 }) {
   const [featuredProperties, setFeaturedProperties] = useState([]);
   const { setProjectData } = useProjectContext();
@@ -35,26 +36,12 @@ export default function Featured({
     dots: false,
     infinite: true,
     speed: 500,
-    autoplay: true,
+    autoplay: autoPlay,
     autoplaySpeed: 5000,
-    arrows: true,
+    arrows: autoPlay,
     slidesToShow: 3,
     slidesToScroll: 1,
     responsive: [
-      {
-        breakpoint: 1280,
-        settings: {
-          slidesToShow: 4,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 1279,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-        },
-      },
       {
         breakpoint: 1024,
         settings: {
@@ -63,7 +50,7 @@ export default function Featured({
         },
       },
       {
-        breakpoint: 768,
+        breakpoint: 600,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
@@ -97,14 +84,14 @@ export default function Featured({
           )
         )}
 
-        <div className="text-center pt-3">
+        {autoPlay && <div className="text-center pt-3">
           <Link
             className="btn btn-success btn-background border-0"
             href={`/projects/${url}`}
           >
             View all
           </Link>
-        </div>
+        </div>}
       </div>
     </>
   );
