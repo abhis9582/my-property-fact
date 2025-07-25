@@ -22,13 +22,19 @@
   text-transform: capitalize;
 }
 
-.text-underline{
+.text-underline {
   text-decoration: underline !important;
 }
 
-.mpf-top-pic-address-container svg{
+.mpf-top-pic-address-container svg {
   font-size: 16px !important;
   height: 16px;
+}
+
+@media (max-width: 769px) {
+  .mpf-top-picks {
+    height: 830px !important;
+  }
 }
 
 @media (max-width: 426px) {
@@ -39,11 +45,11 @@
     z-index: 2;
   }
 
-  .mpf-top-picks{
+  .mpf-top-picks {
     height: 650px;
   }
 
-  .mpf-top-pic-project-details{
+  .mpf-top-pic-project-details {
     margin-left: 3rem;
   }
 

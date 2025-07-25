@@ -46,8 +46,7 @@ export default function NewsViews() {
       <div className="container">
         <div className="row">
           {dataArray.map((item, index) => (
-            <div key={`${item.id}-${index}`} className="col-12 col-sm-6 col-md-4 col-lg-3 mt-3">
-              
+            <div key={`${item.id}-${index}`} className="col-12 col-md-6 col-lg-3 mt-3">              
                 {/* <Link href="http://localhost:8005/stories/my-story" className="flip-card"> */}
               <div className="flip-card">
                 <div className="flip-card-inner">

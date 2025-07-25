@@ -58,13 +58,13 @@
     bottom: -25px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 769px) {
     .slick-prev {
         left: 28%;
     }
 
     .slick-next {
-        right: 32%;
+        right: 28%;
     }
 }
 

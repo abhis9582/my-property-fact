@@ -44,7 +44,7 @@ export default async function HomePage() {
 
           {/* featured projects section  */}
           <h2 className="fw-bold text-center pt-5 pb-3">Featured Projects</h2>
-          <Featured allFeaturedProperties={list} />
+          <Featured allFeaturedProperties={list} autoPlay={false}/>
 
           {/* dream cities section  */}
           <h2 className="fw-bold text-center pt-5">
@@ -56,13 +56,13 @@ export default async function HomePage() {
           <h2 className="fw-bold text-center pt-5 pb-3">
             Explore Our Premier Residential Projects
           </h2>
-          <Featured type={1} url={"residential"} allFeaturedProperties={list} />
+          <Featured type={1} url={"residential"} allFeaturedProperties={list} autoPlay={true}/>
 
           {/* commertial projects section  */}
           <h2 className="fw-bold text-center pt-5 pb-3">
             Explore Top Commercial Spaces for Growth
           </h2>
-          <Featured type={2} url={"commercial"} allFeaturedProperties={list} />
+          <Featured type={2} url={"commercial"} allFeaturedProperties={list} autoPlay={true}/>
 
           {/* web story section  */}
           <h2 className="fw-bold text-center pt-5">Realty Updates</h2>

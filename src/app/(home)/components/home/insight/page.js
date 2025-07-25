@@ -65,7 +65,7 @@ export default function InsightNew() {
       <div className="container">
         <div className="row">
           {data.map((i) => (
-            <div key={i.id} className={`col-sm-12 col-md-4 col-xl-3`}>
+            <div key={i.id} className={`col-sm-12 col-md-6 col-xl-3`}>
               <Link
                 href={i.href}
                 onClick={(e) => {

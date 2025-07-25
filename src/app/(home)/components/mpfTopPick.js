@@ -16,9 +16,9 @@ export default function MpfTopPicks() {
           </div>
         </div>
         <div className="row mb-5 border rounded-3 p-2 mpf-top-picks">
-          <div className="col-md-4 d-flex justify-content-center align-items-center">
-            <div>
-              <div className="d-flex align-items-center justify-centent-center">
+          <div className="col-12 col-md-12 col-xl-4 d-flex justify-content-center align-items-center">
+            <div className="d-block d-md-flex gap-5 d-lg-block d-xl-block">
+              <div className="d-flex d-md-block d-lg-flex d-xl-flex align-items-center justify-centent-center">
                 <div className="rounded-3 project-logo-container">
                   <Image
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/oberoi-sky-city/2e17d502-6db2-47f7-82bc-57361ee83f27.png`}
@@ -61,7 +61,7 @@ export default function MpfTopPicks() {
               </div>
             </div>
           </div>
-          <div className="col-md-8 m-0 p-0 position-relative">
+          <div className="col-12 col-md-12 col-xl-8 m-0 p-0 position-relative">
             <Image
               src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/oberoi-sky-city/4be6cf23-becc-473d-aad8-7dd5fb69b965.webp`}
               alt="top-picks"
