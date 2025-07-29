@@ -16,6 +16,8 @@ import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import CommonModal from "../common-model/common-model";
 import DataTable from "../common-model/data-table";
 import DashboardHeader from "../common-model/dashboardHeader";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 export default function ManageAminity({ list }) {
     const [showModal, setShowModal] = useState(false);
     const [title, setTitle] = useState("");
@@ -25,7 +27,7 @@ export default function ManageAminity({ list }) {
     const [confirmBox, setConfirmBox] = useState(false);
     const [amenityId, setAmenityId] = useState(0);
     const [showLoading, setShowLoading] = useState(false);
-
+    const router = useRouter();
     const [formData, setFormData] = useState({
         title: "",
         altTag: "",
@@ -68,7 +70,8 @@ export default function ManageAminity({ list }) {
                         amenityImage: null,
                     });
                     setShowModal(false);
-                    fetchAmenities();
+                    toast.success(response.data.message);
+                    router.refresh();
                 }
             } catch (error) {
                 console.error("Error submitting data", error);
@@ -132,11 +135,11 @@ export default function ManageAminity({ list }) {
     //Defining table columns
     const columns = [
         { field: "index", headerName: "S.no", width: 100, cellClassName: "centered-cell" },
-        { field: "title", headerName: "Title", width: 350 },
+        { field: "title", headerName: "Title", flex: 1 },
         {
             field: "image",
             headerName: "Amenity Image",
-            width: 600,
+            flex: 1,
             renderCell: (params) => (
                 <Image
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}amenity/${params.row.amenityImageUrl}`}
@@ -150,7 +153,7 @@ export default function ManageAminity({ list }) {
         {
             field: "action",
             headerName: "Action",
-            width: 270,
+            width: 100,
             renderCell: (params) => (
                 <div>
                     <FontAwesomeIcon

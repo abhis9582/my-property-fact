@@ -32,6 +32,7 @@ export default function PropertyContainer(props) {
           className="rounded-4 custom-shadow d-flex flex-column justify-content-between bg-light text-decoration-none text-dark project-container overflow-hidden position-relative"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label={`View details about ${props.data.projectName}`}
         >
           <div className="w-100 project-image-container">
             <Image

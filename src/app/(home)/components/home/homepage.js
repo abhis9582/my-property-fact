@@ -218,8 +218,9 @@ export default function ClientSideHomePage({ projectTypeList, cityList }) {
                     type="submit"
                     className="py-1 px-4 text-light m-0 border rounded-3 btn-background"
                     onClick={handleSubmit}
+                    aria-label="Search"
                   >
-                    <FontAwesomeIcon icon={faSearch} width={20} />
+                    <FontAwesomeIcon icon={faSearch} size="lg" />
                   </button>
                 </div>
               </div>
@@ -231,7 +232,7 @@ export default function ClientSideHomePage({ projectTypeList, cityList }) {
           onClick={openFixedForm}
         >
           <span>
-            <FontAwesomeIcon icon={faEnvelope} width={20} />
+            <FontAwesomeIcon icon={faEnvelope} size="lg" />
             <span>{enquiryButtonName}</span>
           </span>
         </button>

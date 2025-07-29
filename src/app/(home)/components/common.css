@@ -1,5 +1,5 @@
 .mpf-top-picks {
-  height: 578px;
+  /* height: 578px; */
   background-color: rgb(249, 249, 249);
 }
 
@@ -31,26 +31,12 @@
   height: 16px;
 }
 
-@media (max-width: 769px) {
-  .mpf-top-picks {
-    height: 830px !important;
-  }
-}
-
 @media (max-width: 426px) {
   .top-pick-mobile-container {
     height: 300px !important;
     display: flex;
     margin: 0px auto;
     z-index: 2;
-  }
-
-  .mpf-top-picks {
-    height: 650px;
-  }
-
-  .mpf-top-pic-project-details {
-    margin-left: 3rem;
   }
 
   .top-pick-mobile-container img {

@@ -2,7 +2,6 @@ import axios from "axios";
 import Property from "./propertypage";
 import Footer from "../(home)/components/footer/page";
 import Featured from "../(home)/components/home/featured/featured";
-import FeaturedPage from "../(home)/components/home/featured/page";
 export const dynamic = "force-dynamic";
 const fetchProjectDetail = async (slug) => {
   const response = await axios.get(

@@ -15,27 +15,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <link
-          rel="preload"
-          href="/fonts/Gotham-Bold.ttf"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/fonts/Heading-Pro-ExtraBold-trial.ttf"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/fonts/Gotham-Light.ttf"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
         {/* Meta Pixel Script */}
         <Script id="facebook-pixel" strategy="afterInteractive">
           {`
