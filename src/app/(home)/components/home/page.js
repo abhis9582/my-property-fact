@@ -9,7 +9,7 @@ import MpfTopPicks from "../mpfTopPick";
 export default async function HomePage() {
   try {
     //calling apis
-    const [projectTypeListRes, cityListRes, projectsList] = await Promise.all([
+    const [projectTypeListRes, cityListRes, projectsList, webStories] = await Promise.all([
       fetch(`${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`, {
         cache: "force-cache",
       }),
@@ -18,6 +18,10 @@ export default async function HomePage() {
       }),
       fetch(
         `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`,
+        { cache: "force-cache" }
+      ),
+      fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}web-story-category/get-all`,
         { cache: "force-cache" }
       ),
     ]);
@@ -44,7 +48,7 @@ export default async function HomePage() {
 
           {/* featured projects section  */}
           <h2 className="fw-bold text-center pt-5 pb-3">Featured Projects</h2>
-          <Featured allFeaturedProperties={list} autoPlay={false}/>
+          <Featured allFeaturedProperties={list} autoPlay={false} />
 
           {/* dream cities section  */}
           <h2 className="fw-bold text-center pt-5">
@@ -56,13 +60,23 @@ export default async function HomePage() {
           <h2 className="fw-bold text-center pt-5 pb-3">
             Explore Our Premier Residential Projects
           </h2>
-          <Featured type={1} url={"residential"} allFeaturedProperties={list} autoPlay={true}/>
+          <Featured
+            type={1}
+            url={"residential"}
+            allFeaturedProperties={list}
+            autoPlay={true}
+          />
 
           {/* commertial projects section  */}
           <h2 className="fw-bold text-center pt-5 pb-3">
             Explore Top Commercial Spaces for Growth
           </h2>
-          <Featured type={2} url={"commercial"} allFeaturedProperties={list} autoPlay={true}/>
+          <Featured
+            type={2}
+            url={"commercial"}
+            allFeaturedProperties={list}
+            autoPlay={true}
+          />
 
           {/* web story section  */}
           <h2 className="fw-bold text-center pt-5">Realty Updates</h2>

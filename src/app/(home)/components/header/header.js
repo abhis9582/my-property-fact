@@ -83,8 +83,8 @@ const Header = ({cityList, projectTypes, builderList}) => {
           <Link href="/">
             <Image
               src="/logo.png"
-              alt="My Property facts"
-              height={70}
+              alt="My Property fact"
+              height={74}
               width={80}
             />
           </Link>

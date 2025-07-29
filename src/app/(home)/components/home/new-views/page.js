@@ -14,7 +14,7 @@ export default function NewsViews() {
       src: "/news-views/Highway_const.jpg",
       alt: "highway_construction",
       title2: "NOIDA Airport to get Connectivity Boost ",
-      desc: "Yamuna Expressway is all set to gain additional connectivity with a direct link between Noida Airport and IGI."
+      desc: "Yamuna Expressway is all set to gain additional connectivity with a direct link between Noida Airport and IGI.",
     },
     {
       id: 2,
@@ -22,7 +22,7 @@ export default function NewsViews() {
       src: "/news-views/Metro_Station.jpg",
       alt: "Metro_Station",
       title2: "NOIDA Metro to decongest soon",
-      desc: "Noida authority has accepted a fresh application from NOIDA Metro Rail Corporation for an additional metro line to connect Sector 142 and Botanical Garden."
+      desc: "Noida authority has accepted a fresh application from NOIDA Metro Rail Corporation for an additional metro line to connect Sector 142 and Botanical Garden.",
     },
     {
       id: 3,
@@ -30,7 +30,7 @@ export default function NewsViews() {
       src: "/news-views/mne.jpg",
       alt: "mne",
       title2: "Noida Dealers & Developers Rejoice ",
-      desc: "Noida Authority has approved an additional hike of 30% in property circle rates. Bringing great joy to investors and developers."
+      desc: "Noida Authority has approved an additional hike of 30% in property circle rates. Bringing great joy to investors and developers.",
     },
     {
       id: 4,
@@ -38,16 +38,19 @@ export default function NewsViews() {
       src: "/news-views/Money_Distributiuon.jpg",
       alt: "Money_Distribution",
       title2: "YEIDA launches Plotted housing",
-      desc: "YEIDA has recently launched a new plotted housing scheme that will offer plots at a subsidies rate. The allotment will be done through a lottery system."
+      desc: "YEIDA has recently launched a new plotted housing scheme that will offer plots at a subsidies rate. The allotment will be done through a lottery system.",
     },
-  ]
+  ];
   return (
     <>
       <div className="container">
         <div className="row">
           {dataArray.map((item, index) => (
-            <div key={`${item.id}-${index}`} className="col-12 col-md-6 col-lg-3 mt-3">              
-                {/* <Link href="http://localhost:8005/stories/my-story" className="flip-card"> */}
+            <div
+              key={`${item.id}-${index}`}
+              className="col-12 col-md-6 col-lg-3 mt-3"
+            >
+              {/* <Link href="http://localhost:8005/stories/my-story" className="flip-card"> */}
               <div className="flip-card">
                 <div className="flip-card-inner">
                   {/* Front */}
@@ -72,10 +75,9 @@ export default function NewsViews() {
               </div>
               {/* </Link> */}
             </div>
-
           ))}
         </div>
-      </div >
+      </div>
       <CommonPopUpform show={isOpen} handleClose={setIsOpen} />
     </>
   );

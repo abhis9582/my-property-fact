@@ -48,7 +48,8 @@ export default function InsightNew() {
       src: "/static/Insight_MPF_4.png",
       alt: "price-trends-img",
       heading: "LOCATE Score",
-      sub_heading: "This converts economy, projects, connectivity, amenities, trends, supply data into one 1000‑point LOCATE rating guiding smart investments with clarity.",
+      sub_heading:
+        "This converts economy, projects, connectivity, amenities, trends, supply data into one 1000‑point LOCATE rating guiding smart investments with clarity.",
       color: "light-blue",
       button_color: "dark-blue",
       href: "/locate-score",
@@ -59,7 +60,7 @@ export default function InsightNew() {
     if (data.href.length < 3) {
       setIsOpen(true);
     }
-  }
+  };
   return (
     <>
       <div className="container">
@@ -69,9 +70,9 @@ export default function InsightNew() {
               <Link
                 href={i.href}
                 onClick={(e) => {
-                  if (i.href === '#') {
+                  if (i.href === "#") {
                     e.preventDefault(); // stop scroll-to-top
-                    openPopup(i);       // open popup
+                    openPopup(i); // open popup
                   }
                 }}
                 className="text-dark d-flex justify-content-center"
@@ -81,18 +82,17 @@ export default function InsightNew() {
                     <h5 className="text-golden">{i.heading}</h5>
                     <p>{i.sub_heading}</p>
                     <div className="d-flex justify-content-center">
-                      <Image
-                        src={i.src}
-                        alt={i.alt}
-                        width={250}
-                        height={120}
-                      />
+                      <Image src={i.src} alt={i.alt} width={250} height={139} />
                     </div>
                   </div>
                   <div className={`bg-light p-3 d-flex justify-content-center`}>
                     <button className="fw-bold text-light btn-background d-flex align-items-center rounded-4 p-2 border-0">
                       <p className="text-white mx-5 p-0 m-0">Explore Now </p>
-                      <FontAwesomeIcon color="white" icon={faArrowRight} width={15} />
+                      <FontAwesomeIcon
+                        color="white"
+                        icon={faArrowRight}
+                        width={15}
+                      />
                     </button>
                   </div>
                 </div>

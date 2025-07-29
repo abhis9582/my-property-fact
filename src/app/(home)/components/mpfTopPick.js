@@ -16,7 +16,7 @@ export default function MpfTopPicks() {
           </div>
         </div>
         <div className="row mb-5 border rounded-3 p-2 mpf-top-picks">
-          <div className="col-12 col-md-12 col-xl-4 d-flex justify-content-center align-items-center">
+          <div className="col-12 col-md-12 col-xl-4 mb-3 d-flex justify-content-center align-items-center">
             <div className="d-block d-md-flex gap-5 d-lg-block d-xl-block">
               <div className="d-flex d-md-block d-lg-flex d-xl-flex align-items-center justify-centent-center">
                 <div className="rounded-3 project-logo-container">
@@ -34,8 +34,9 @@ export default function MpfTopPicks() {
                   <Link
                     href="/builder/oberoi-realty"
                     className="fs-6 golden-text text-underline"
+                    aria-label={`View details about oberoi-realty`}
                   >
-                    View Projects
+                    View Projects by Oberoi Realty
                   </Link>
                 </div>
               </div>
@@ -52,11 +53,15 @@ export default function MpfTopPicks() {
                   </div>
                 </div>
                 <div className="my-4">
-                  <h3>3.9 Cr* Onwards</h3>
+                  <h4>3.9 Cr* Onwards</h4>
                   <p>3BHK Apartments</p>
                 </div>
-                <Link href="/oberoi-sky-city" className="btn-background rounded-pill border-0 px-5 py-2 fs-4 text-white">
-                  More Info
+                <Link
+                  href="/oberoi-sky-city"
+                  className="btn-background rounded-pill border-0 px-3 py-2 fs-6 fw-bold text-white mb-3"
+                  aria-label={`View details about oberoi-sky-city`}
+                >
+                  More About Oberoi Sky City
                 </Link>
               </div>
             </div>
@@ -66,9 +71,10 @@ export default function MpfTopPicks() {
               src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/oberoi-sky-city/4be6cf23-becc-473d-aad8-7dd5fb69b965.webp`}
               alt="top-picks"
               unoptimized
-              fill
+              layout="responsive"
+              width={2225} // original image width
+              height={1065} // original image height
               className="rounded-3 position-relative mpf-top-pic-project-image"
-              sizes="(max-width: 768px) 100vw, 800px"
             />
           </div>
         </div>

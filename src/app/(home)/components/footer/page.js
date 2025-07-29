@@ -96,23 +96,23 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
       <div className="container-fluid py-3">
         <div className="padding border-bottom footer-keywords">
           <div className="row">
-            <div className="col-12 col-md-6 col-lg-3 col-xl-4">
+            <div className="col-12 col-md-6 col-lg-3 col-xl-3">
               <ul>
                 <CityList prefix={"Apartments in "} cityList={cityList} />
               </ul>
             </div>
-            <div className="col-12 col-md-6 col-lg-3 col-xl-4">
+            <div className="col-12 col-md-6 col-lg-3 col-xl-3">
               <ul>
                 <CityList prefix={"New Projects in "} cityList={cityList} />
               </ul>
             </div>
-            <div className="col-12 col-md-6 col-lg-3 col-xl-4">
+            <div className="col-12 col-md-6 col-lg-3 col-xl-3">
               <ul>
                 <CityList prefix={"Flats in "} cityList={cityList} />
               </ul>
             </div>
 
-            <div className="col-12 col-md-6 col-lg-3 col-xl-4">
+            <div className="col-12 col-md-6 col-lg-3 col-xl-3">
               <ul>
                 <CityList prefix={"Commercial Property in "} cityList={cityList} />
               </ul>
