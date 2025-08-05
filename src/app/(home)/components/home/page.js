@@ -2,28 +2,18 @@ import ClientSideHomePage from "./homepage";
 import DreamProject from "./dream-project/page";
 import InsightNew from "./insight/page";
 import NewsViews from "./new-views/page";
-import Featured from "./featured/featured";
 import SocialFeedPage from "./social-feed/page";
 import MpfTopPicks from "../mpfTopPick";
+import { Suspense } from "react";
+import FeaturedPage from "./featured/page";
 
 export default async function HomePage() {
   try {
     //calling apis
-    const [projectTypeListRes, cityListRes, projectsList, webStories] = await Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`, {
-        cache: "force-cache",
-      }),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}city/all`, {
-        cache: "force-cache",
-      }),
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`,
-        { cache: "force-cache" }
-      ),
-      fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}web-story-category/get-all`,
-        { cache: "force-cache" }
-      ),
+    const [projectTypeListRes, cityListRes, projectsList] = await Promise.all([
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}city/all`),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`),
     ]);
 
     const projectTypeList = await projectTypeListRes.json();
@@ -48,8 +38,23 @@ export default async function HomePage() {
 
           {/* featured projects section  */}
           <h2 className="fw-bold text-center pt-5 pb-3">Featured Projects</h2>
-          <Featured allFeaturedProperties={list} autoPlay={false} />
-
+          <Suspense
+            fallback={
+              <div
+                className="d-flex justify-content-center align-items-center"
+                style={{ height: "400px" }}
+              >
+                Loading Featured...
+              </div>
+            }
+          >
+            <FeaturedPage
+              allFeaturedProperties={list.filter(
+                (item) => item.status != false
+              )}
+              autoPlay={false}
+            />
+          </Suspense>
           {/* dream cities section  */}
           <h2 className="fw-bold text-center pt-5">
             Find your dream property in the city you are searching in
@@ -60,10 +65,10 @@ export default async function HomePage() {
           <h2 className="fw-bold text-center pt-5 pb-3">
             Explore Our Premier Residential Projects
           </h2>
-          <Featured
+          <FeaturedPage
             type={1}
             url={"residential"}
-            allFeaturedProperties={list}
+            allFeaturedProperties={list.filter((item) => item.status != false)}
             autoPlay={true}
           />
 
@@ -71,10 +76,10 @@ export default async function HomePage() {
           <h2 className="fw-bold text-center pt-5 pb-3">
             Explore Top Commercial Spaces for Growth
           </h2>
-          <Featured
+          <FeaturedPage
             type={2}
             url={"commercial"}
-            allFeaturedProperties={list}
+            allFeaturedProperties={list.filter((item) => item.status != false)}
             autoPlay={true}
           />
 

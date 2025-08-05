@@ -1,5 +1,4 @@
-// context/ProjectContext.js
-"use client"; // if using App Router
+"use client";
 import { createContext, useState, useContext } from "react";
 
 const ProjectContext = createContext();
@@ -14,3 +13,4 @@ export const ProjectProvider = ({ children }) => {
 };
 
 export const useProjectContext = () => useContext(ProjectContext);
+
