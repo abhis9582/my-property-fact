@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import "./home.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FixedForm from "../fixedform";
 import { toast } from "react-toastify";
 import Link from "next/link";
@@ -67,26 +67,36 @@ export default function ClientSideHomePage({ projectTypeList, cityList }) {
     setEnquiryButtonName("Enquiry");
   };
 
-  //Handling filteration of projects
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}projects/search-by-type-city-budget`,
-        {
-          params: {
-            propertyType: propertType,
-            propertyLocation: propertyLocation,
-            budget: budget,
-          },
-        }
-      );
-      setProjectData(response.data);
-      router.push("/projects");
-    } catch (error) {
-      console.log(error);
-    }
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  let params_obj  = {
+    propertyType: propertType,        
+    propertyLocation: propertyLocation,
+    budget: budget,
   };
+
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}projects/search-by-type-city-budget`,
+      {
+        params: {
+          propertyType: propertType,
+          propertyLocation: propertyLocation,
+          budget: budget,
+        },
+      }
+    );
+    sessionStorage.setItem("mpf-querry", JSON.stringify(params_obj));
+    setProjectData(response.data);
+    router.push("/projects");
+  } catch (error) {
+    console.error("Error during project filtering:", error);
+  }
+};
+
+  // useEffect(()=>{
+  //   handleSubmit();
+  // }, []);
 
   return (
     <>

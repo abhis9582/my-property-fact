@@ -1,17 +1,20 @@
-import axios from "axios";
 import Featured from "./featured";
-export const dynamic = 'force-dynamic';
-//Fetching all projects
-const fetchAllProjects = async () => {
-  const allFeaturedProperties = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
-  );  
-  return allFeaturedProperties.data;
-};
-
-export default async function FeaturedPage() {
-  const projectsList = await fetchAllProjects();
+export default async function FeaturedPage({ type, url, autoPlay, allFeaturedProperties }) {
+  const projectsList = allFeaturedProperties;
+  console.log(projectsList.length);
+  
+  let newList = [];
+  if (type === 1 || type === 2) {
+    const filterData = Array.isArray(projectsList)
+      ? projectsList.filter((p) => p.propertyType === type)
+      : [];
+    newList = filterData;
+  } else {
+    newList = projectsList;
+  }
   return (
-    <Featured allFeaturedProperties={projectsList} />
-  )
+    <>
+      <Featured allFeaturedProperties={newList} url={url} allProjects = {projectsList} autoPlay={autoPlay}/>
+    </>
+  );
 }

@@ -21,8 +21,8 @@ export default function MpfTopPicks() {
               <div className="d-flex d-md-block d-lg-flex d-xl-flex align-items-center justify-centent-center">
                 <div className="rounded-3 project-logo-container">
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/oberoi-sky-city/2e17d502-6db2-47f7-82bc-57361ee83f27.png`}
-                    alt="Birla Arika"
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/bhutani-62-avenue/81e404b6-3a46-4a92-8eab-2b92ae502530.jpg`}
+                    alt="bhutani-62-avenue"
                     width={80}
                     height={80}
                     className="img-fluid"
@@ -30,45 +30,45 @@ export default function MpfTopPicks() {
                   />
                 </div>
                 <div className="ms-4">
-                  <h4 className="mpf-top-pic-project-name">Oberoi Realty</h4>
+                  <h4 className="mpf-top-pic-project-name">Bhutani</h4>
                   <Link
-                    href="/builder/oberoi-realty"
+                    href="/builder/bhutani"
                     className="fs-6 golden-text text-underline"
                     aria-label={`View details about oberoi-realty`}
                   >
-                    View Projects by Oberoi Realty
+                    View Projects by Bhutani
                   </Link>
                 </div>
               </div>
               <div className="mpf-top-pic-project-details">
                 <div className="my-4">
-                  <h2>Oberoi Sky City</h2>
+                  <h2>Bhutani 62 Avenue</h2>
                   <div className="d-flex align-items-center gap-2 mpf-top-pic-address-container">
                     <FontAwesomeIcon
                       icon={faLocationDot}
                       color="green"
                       fontSize={16}
                     />
-                    <p className="m-0 p-0">Borivali East, Mumbai</p>
+                    <p className="m-0 p-0">Sector 62, Noida</p>
                   </div>
                 </div>
                 <div className="my-4">
-                  <h4>3.9 Cr* Onwards</h4>
-                  <p>3BHK Apartments</p>
+                  <h4>35 Lakh*</h4>
+                  <p>Retail shops</p>
                 </div>
                 <Link
-                  href="/oberoi-sky-city"
+                  href="/bhutani-62-avenue"
                   className="btn-background rounded-pill border-0 px-3 py-2 fs-6 fw-bold text-white mb-3"
-                  aria-label={`View details about oberoi-sky-city`}
+                  aria-label={`View details about bhutani`}
                 >
-                  More About Oberoi Sky City
+                  More About Bhutani 62 Avenue
                 </Link>
               </div>
             </div>
           </div>
           <div className="col-12 col-md-12 col-xl-8 m-0 p-0 position-relative">
             <Image
-              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/oberoi-sky-city/4be6cf23-becc-473d-aad8-7dd5fb69b965.webp`}
+              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/bhutani-62-avenue/45aee5c0-cbfb-40b8-899b-88552029279f.jpg`}
               alt="top-picks"
               unoptimized
               layout="responsive"

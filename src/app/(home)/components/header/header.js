@@ -3,21 +3,57 @@ import Link from "next/link";
 import "./header.css";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { usePathname } from 'next/navigation';
-const Header = ({cityList, projectTypes, builderList}) => {
+import { usePathname } from "next/navigation";
+import { useProjectContext } from "@/app/_global_components/contexts/projectsContext";
+import axios from "axios";
+
+const Header = ({ cityList, projectTypes, builderList }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const pathname = usePathname();
-
+  const { setProjectData } = useProjectContext();
   // Check if the pathname starts with /city/
-  const isCityRoute = pathname.startsWith('/city');
-  const isBuilderRoute = pathname.startsWith('/builder');
-  const isProjectTypeRoute = pathname.startsWith('/projects');
-  const isBlogTypeRoute = pathname.startsWith('/blog');
+  const isCityRoute = pathname.startsWith("/city");
+  const isBuilderRoute = pathname.startsWith("/builder");
+  const isProjectTypeRoute = pathname.startsWith("/projects");
+  const isBlogTypeRoute = pathname.startsWith("/blog");
   //Defining scroll variable
   const [isScrolled, setIsScrolled] = useState(false);
   const openMenuMobile = (dropdown) => {
     setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
   };
+  const fetchParamsData = async (queryP) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}projects/search-by-type-city-budget`,
+        {
+          params: queryP,
+        }
+      );
+      setProjectData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const fetchAllProjects = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
+      );
+      const raw = await res.json();
+      setProjectData(raw);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    const searched_querry = JSON.parse(sessionStorage.getItem("mpf-querry"));
+    if (!searched_querry) {
+      fetchAllProjects();
+    } else {
+      fetchParamsData(searched_querry);
+    }
+  }, []);
+
   //Hadling header fixed
   useEffect(() => {
     const handleScroll = () => {
@@ -33,7 +69,7 @@ const Header = ({cityList, projectTypes, builderList}) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  
+
   const openMenu = () => {
     const menuButtons = document.getElementsByClassName("menuBtn");
     const menu = document.getElementById("mbdiv");
@@ -78,7 +114,11 @@ const Header = ({cityList, projectTypes, builderList}) => {
 
   return (
     <>
-      <div className={`d-flex justify-content-between align-items-center px-2 px-lg-4 header ${isScrolled ? "fixed-header" : ""}`}>
+      <div
+        className={`d-flex justify-content-between align-items-center px-2 px-lg-4 header ${
+          isScrolled ? "fixed-header" : ""
+        }`}
+      >
         <div className="mpf-logo">
           <Link href="/">
             <Image
@@ -93,14 +133,26 @@ const Header = ({cityList, projectTypes, builderList}) => {
           <div className="menu position-relative">
             <ul className="d-flex gap-5 m-0 fw-bold align-items-center">
               <li className="hasChild">
-                <Link href="#" className={`text-light text-uppercase py-3 ${isCityRoute ? "header-link-active" : ""}`}>
+                <Link
+                  href="#"
+                  className={`text-light text-uppercase py-3 ${
+                    isCityRoute ? "header-link-active" : ""
+                  }`}
+                >
                   City<sup>+</sup>
                 </Link>
                 <div className="dropdown dropdown-lg z-3">
                   <ul className="list-inline">
                     {cityList?.map((city) => (
                       <li key={city.id}>
-                        <Link href={`/city/${city.slugUrl}`} className={`text-light py-3 ${pathname === "/city/" + city.slugUrl ? "header-link-active" : ""}`}>
+                        <Link
+                          href={`/city/${city.slugUrl}`}
+                          className={`text-light py-3 ${
+                            pathname === "/city/" + city.slugUrl
+                              ? "header-link-active"
+                              : ""
+                          }`}
+                        >
                           {city.name}
                         </Link>
                       </li>
@@ -109,14 +161,26 @@ const Header = ({cityList, projectTypes, builderList}) => {
                 </div>
               </li>
               <li className="hasChild">
-                <Link href="#" className={`text-light py-3 text-uppercase ${isBuilderRoute ? "header-link-active" : ""}`}>
+                <Link
+                  href="#"
+                  className={`text-light py-3 text-uppercase ${
+                    isBuilderRoute ? "header-link-active" : ""
+                  }`}
+                >
                   Builder<sup>+</sup>
                 </Link>
                 <div className="dropdown dropdown-lg z-3">
                   <ul className="list-inline">
                     {builderList?.map((builder) => (
                       <li key={builder.id}>
-                        <Link href={`/builder/${builder.slugUrl}`} className={`text-light ${pathname === "/builder/" + builder.slugUrl ? "header-link-active" : ""}`}>
+                        <Link
+                          href={`/builder/${builder.slugUrl}`}
+                          className={`text-light ${
+                            pathname === "/builder/" + builder.slugUrl
+                              ? "header-link-active"
+                              : ""
+                          }`}
+                        >
                           {builder.builderName}
                         </Link>
                       </li>
@@ -125,14 +189,26 @@ const Header = ({cityList, projectTypes, builderList}) => {
                 </div>
               </li>
               <li className="hasChild">
-                <Link href="/projects" className={`text-light py-3 text-uppercase ${isProjectTypeRoute ? "header-link-active" : ""}`}>
+                <Link
+                  href="/projects"
+                  className={`text-light py-3 text-uppercase ${
+                    isProjectTypeRoute ? "header-link-active" : ""
+                  }`}
+                >
                   Projects<sup>+</sup>
                 </Link>
                 <div className="dropdown projects-dropdown z-3">
                   <ul className="list-inline">
                     {projectTypes?.map((project) => (
                       <li key={project.id}>
-                        <Link href={`/projects/${project.slugUrl}`} className={`text-light ${pathname === "/projects/" + project.slugUrl ? "header-link-active" : ""}`}>
+                        <Link
+                          href={`/projects/${project.slugUrl}`}
+                          className={`text-light ${
+                            pathname === "/projects/" + project.slugUrl
+                              ? "header-link-active"
+                              : ""
+                          }`}
+                        >
                           {project.projectTypeName}
                         </Link>
                       </li>
@@ -141,10 +217,22 @@ const Header = ({cityList, projectTypes, builderList}) => {
                 </div>
               </li>
               <li className="hasChild">
-                <Link href="/about-us" className={`text-light py-3 text-uppercase ${pathname === "/about-us" ? "header-link-active" : ""}`}>About Us</Link>
+                <Link
+                  href="/about-us"
+                  className={`text-light py-3 text-uppercase ${
+                    pathname === "/about-us" ? "header-link-active" : ""
+                  }`}
+                >
+                  About Us
+                </Link>
               </li>
               <li className="hasChild">
-                <Link href="/blog" className={`text-light py-3 text-uppercase ${isBlogTypeRoute ? "header-link-active" : ""}`}>
+                <Link
+                  href="/blog"
+                  className={`text-light py-3 text-uppercase ${
+                    isBlogTypeRoute ? "header-link-active" : ""
+                  }`}
+                >
                   Blog
                 </Link>
               </li>
@@ -152,10 +240,24 @@ const Header = ({cityList, projectTypes, builderList}) => {
                 <Link href="/clients-speak" className={`text-light text-uppercase ${pathname === "/clients-speak" ? "header-link-active" : ""}`}>Clients Speak</Link>
               </li> */}
               <li className="hasChild">
-                <Link href="/career" className={`text-light py-3 text-uppercase ${pathname === "/career" ? "header-link-active" : ""}`}>Career</Link>
+                <Link
+                  href="/career"
+                  className={`text-light py-3 text-uppercase ${
+                    pathname === "/career" ? "header-link-active" : ""
+                  }`}
+                >
+                  Career
+                </Link>
               </li>
               <li className="hasChild">
-                <Link href="/contact-us" className={`text-light py-3 text-uppercase ${pathname === "/contact-us" ? "header-link-active" : ""}`}>Contact us</Link>
+                <Link
+                  href="/contact-us"
+                  className={`text-light py-3 text-uppercase ${
+                    pathname === "/contact-us" ? "header-link-active" : ""
+                  }`}
+                >
+                  Contact us
+                </Link>
               </li>
             </ul>
           </div>
@@ -172,23 +274,30 @@ const Header = ({cityList, projectTypes, builderList}) => {
             <div className="bigMenuList">
               <ul className="list-inline active">
                 <li>
-                  <Link href="/" onClick={openMenu}>Home</Link>
+                  <Link href="/" onClick={openMenu}>
+                    Home
+                  </Link>
                 </li>
                 <li
-                  className={`mb-hasChild ${activeDropdown === "city" ? "active" : ""
-                    }`}
+                  className={`mb-hasChild ${
+                    activeDropdown === "city" ? "active" : ""
+                  }`}
                 >
                   <Link href="#" onClick={() => openMenuMobile("city")}>
                     City<sup>+</sup>
                   </Link>
                   <div
-                    className={`dropdown ${activeDropdown === "city" ? "activeHeader" : ""
-                      }`}
+                    className={`dropdown ${
+                      activeDropdown === "city" ? "activeHeader" : ""
+                    }`}
                   >
                     <ul className="list-inline">
                       {cityList?.map((city) => (
                         <li key={city.id}>
-                          <Link href={`/city/${city.slugUrl}`} onClick={openMenu}>
+                          <Link
+                            href={`/city/${city.slugUrl}`}
+                            onClick={openMenu}
+                          >
                             {city.name}
                           </Link>
                         </li>
@@ -197,20 +306,25 @@ const Header = ({cityList, projectTypes, builderList}) => {
                   </div>
                 </li>
                 <li
-                  className={`mb-hasChild ${activeDropdown === "builder" ? "active" : ""
-                    }`}
+                  className={`mb-hasChild ${
+                    activeDropdown === "builder" ? "active" : ""
+                  }`}
                 >
                   <Link href="#" onClick={() => openMenuMobile("builder")}>
                     Builder<sup>+</sup>
                   </Link>
                   <div
-                    className={`dropdown ${activeDropdown === "builder" ? "activeHeader" : ""
-                      }`}
+                    className={`dropdown ${
+                      activeDropdown === "builder" ? "activeHeader" : ""
+                    }`}
                   >
                     <ul className="list-inline">
                       {builderList?.map((builder) => (
                         <li key={builder.id}>
-                          <Link href={`/builder/${builder.slugUrl}`} onClick={openMenu}>
+                          <Link
+                            href={`/builder/${builder.slugUrl}`}
+                            onClick={openMenu}
+                          >
                             {builder.builderName}
                           </Link>
                         </li>
@@ -219,20 +333,25 @@ const Header = ({cityList, projectTypes, builderList}) => {
                   </div>
                 </li>
                 <li
-                  className={`mb-hasChild ${activeDropdown === "projects" ? "active" : ""
-                    }`}
+                  className={`mb-hasChild ${
+                    activeDropdown === "projects" ? "active" : ""
+                  }`}
                 >
                   <Link href="#" onClick={() => openMenuMobile("projects")}>
                     Projects<sup>+</sup>
                   </Link>
                   <div
-                    className={`dropdown ${activeDropdown === "projects" ? "activeHeader" : ""
-                      }`}
+                    className={`dropdown ${
+                      activeDropdown === "projects" ? "activeHeader" : ""
+                    }`}
                   >
                     <ul className="list-inline">
                       {projectTypes?.map((project) => (
                         <li key={project.id}>
-                          <Link href={`/projects/${project.slugUrl}`} onClick={openMenu}>
+                          <Link
+                            href={`/projects/${project.slugUrl}`}
+                            onClick={openMenu}
+                          >
                             {project.projectTypeName}
                           </Link>
                         </li>
@@ -245,22 +364,32 @@ const Header = ({cityList, projectTypes, builderList}) => {
             <div className="smallMenuList">
               <ul className="list-inline">
                 <li>
-                  <Link href="/blog" onClick={openMenu}>Blog</Link>
+                  <Link href="/blog" onClick={openMenu}>
+                    Blog
+                  </Link>
                 </li>
                 {/* <li>
                   <Link href="/web-stories" onClick={openMenu}>Web Stories</Link>
                 </li> */}
                 <li>
-                  <Link href="/about-us" onClick={openMenu}>About Us</Link>
+                  <Link href="/about-us" onClick={openMenu}>
+                    About Us
+                  </Link>
                 </li>
                 <li>
-                  <Link href="/clients-speak" onClick={openMenu}>Clients Speak</Link>
+                  <Link href="/clients-speak" onClick={openMenu}>
+                    Clients Speak
+                  </Link>
                 </li>
                 <li>
-                  <Link href="/career" onClick={openMenu}>Career</Link>
+                  <Link href="/career" onClick={openMenu}>
+                    Career
+                  </Link>
                 </li>
                 <li>
-                  <Link href="/contact-us" onClick={openMenu}>Contact us</Link>
+                  <Link href="/contact-us" onClick={openMenu}>
+                    Contact us
+                  </Link>
                 </li>
               </ul>
             </div>

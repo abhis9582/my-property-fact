@@ -2,7 +2,6 @@ import "../globals.css";
 import axios from "axios";
 import Header from "./components/header/header";
 import Footer from "./components/footer/page";
-import { ProjectProvider } from "../_global_components/contexts/projectsContext";
 export const dynamic = "force-dynamic";
 
 export const metadata = {

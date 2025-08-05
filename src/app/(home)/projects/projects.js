@@ -8,6 +8,7 @@ import CommonBreadCrum from "../components/common/breadcrum";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import YouTube from "@/app/_global_components/skeleton";
 import { useProjectContext } from "@/app/_global_components/contexts/projectsContext";
+import LoadingProperty from "@/app/[property]/loading";
 
 export default function Projects() {
   const [allProjectsList, setAllProjectsList] = useState([]);
@@ -22,6 +23,7 @@ export default function Projects() {
   const PAGE_LIMIT = 15;
 
   // Setup observer ONLY when enabled
+
   useEffect(() => {
     if (!observerEnabled || loading || !hasMore) return;
 
@@ -48,14 +50,17 @@ export default function Projects() {
       <CommonBreadCrum pageName={pageName} />
       <div className="container my-3">
         <div className="row g-3">
-          {projectData.map((item, index) => (
-            <div
-              key={item.id + "_" + index}
-              className="col-12 col-sm-6 col-md-4"
-            >
-              <PropertyContainer data={item} />
-            </div>
-          ))}
+          {
+            projectData.map((item, index) => (
+              <div
+                key={item.id + "_" + index}
+                className="col-12 col-sm-6 col-md-4"
+              >
+                <PropertyContainer data={item} />
+              </div>
+            )
+          ) }
+         {projectData.length < 1 && <LoadingProperty/>}
         </div>
 
         {/* Load more trigger */}
