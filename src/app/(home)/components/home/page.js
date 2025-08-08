@@ -1,31 +1,31 @@
-import ClientSideHomePage from "./homepage";
 import DreamProject from "./dream-project/page";
 import InsightNew from "./insight/page";
 import NewsViews from "./new-views/page";
 import SocialFeedPage from "./social-feed/page";
 import MpfTopPicks from "../mpfTopPick";
 import { Suspense } from "react";
-import FeaturedPage from "./featured/page";
+import HeroSection from "../_homecomponents/heroSection";
+import dynamic from "next/dynamic";
+import axios from "axios";
+const FeaturedPage = dynamic(() => import("./featured/page"), {
+  suspense: true,
+});
+
+const fetchProjectsList = async () => {
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}projects`
+  );
+  return response.data;
+};
 
 export default async function HomePage() {
+  const projectsList = await fetchProjectsList();
+  console.log(projectsList.length);
   try {
-    //calling apis
-    const [projectTypeListRes, cityListRes, projectsList] = await Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}city/all`),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`),
-    ]);
-
-    const projectTypeList = await projectTypeListRes.json();
-    const cityList = await cityListRes.json();
-    const list = await projectsList.json();
     return (
       <>
         {/* Pass props to client component if needed */}
-        <ClientSideHomePage
-          projectTypeList={projectTypeList}
-          cityList={cityList}
-        />
+        <HeroSection />
 
         {/* MPF-top pick section  */}
         <MpfTopPicks />
@@ -48,12 +48,7 @@ export default async function HomePage() {
               </div>
             }
           >
-            <FeaturedPage
-              allFeaturedProperties={list.filter(
-                (item) => item.status != false
-              )}
-              autoPlay={false}
-            />
+            <FeaturedPage autoPlay={false} projectsList={projectsList} />
           </Suspense>
           {/* dream cities section  */}
           <h2 className="fw-bold text-center pt-5">
@@ -66,10 +61,12 @@ export default async function HomePage() {
             Explore Our Premier Residential Projects
           </h2>
           <FeaturedPage
-            type={1}
+            type={"Residential"}
             url={"residential"}
-            allFeaturedProperties={list.filter((item) => item.status != false)}
             autoPlay={true}
+            projectsList={projectsList.filter(
+              (project) => project.propertyType === "Residential"
+            )}
           />
 
           {/* commertial projects section  */}
@@ -77,10 +74,12 @@ export default async function HomePage() {
             Explore Top Commercial Spaces for Growth
           </h2>
           <FeaturedPage
-            type={2}
+            type={"Commercial"}
             url={"commercial"}
-            allFeaturedProperties={list.filter((item) => item.status != false)}
             autoPlay={true}
+            projectsList={projectsList.filter(
+              (project) => project.propertyType === "Commercial"
+            )}
           />
 
           {/* web story section  */}

@@ -32,7 +32,7 @@ export default function MpfTopPicks() {
                 <div className="ms-4">
                   <h4 className="mpf-top-pic-project-name">Bhutani</h4>
                   <Link
-                    href="/builder/bhutani"
+                    href="/builder/bhutani-infra"
                     className="fs-6 golden-text text-underline"
                     aria-label={`View details about oberoi-realty`}
                   >
@@ -71,10 +71,9 @@ export default function MpfTopPicks() {
               src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/bhutani-62-avenue/45aee5c0-cbfb-40b8-899b-88552029279f.jpg`}
               alt="top-picks"
               unoptimized
-              layout="responsive"
               width={2225} // original image width
               height={1065} // original image height
-              className="rounded-3 position-relative mpf-top-pic-project-image"
+              className="rounded-3 position-relative mpf-top-pic-project-image img-fluid"
             />
           </div>
         </div>

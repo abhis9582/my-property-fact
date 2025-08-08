@@ -21,8 +21,38 @@ export default function Projects() {
   const observer = useRef(null);
   const loadMoreRef = useRef(null);
   const PAGE_LIMIT = 15;
-
+  const { setProjectData } = useProjectContext();
   // Setup observer ONLY when enabled
+  const fetchParamsData = async (queryP) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}projects/search-by-type-city-budget`,
+        {
+          params: queryP,
+        }
+      );
+      setProjectData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const fetchAllProjects = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}projects`);
+      const raw = await res.json();
+      setProjectData(raw);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    const searched_querry = JSON.parse(sessionStorage.getItem("mpf-querry"));
+    if (!searched_querry) {
+      fetchAllProjects();
+    } else {
+      fetchParamsData(searched_querry);
+    }
+  }, []);
 
   useEffect(() => {
     if (!observerEnabled || loading || !hasMore) return;
@@ -50,17 +80,15 @@ export default function Projects() {
       <CommonBreadCrum pageName={pageName} />
       <div className="container my-3">
         <div className="row g-3">
-          {
-            projectData.map((item, index) => (
-              <div
-                key={item.id + "_" + index}
-                className="col-12 col-sm-6 col-md-4"
-              >
-                <PropertyContainer data={item} />
-              </div>
-            )
-          ) }
-         {projectData.length < 1 && <LoadingProperty/>}
+          {projectData.map((item, index) => (
+            <div
+              key={item.id + "_" + index}
+              className="col-12 col-sm-6 col-md-4"
+            >
+              <PropertyContainer data={item} />
+            </div>
+          ))}
+          {projectData.length < 1 && <LoadingProperty />}
         </div>
 
         {/* Load more trigger */}

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import "./home.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import FixedForm from "../fixedform";
 import { toast } from "react-toastify";
 import Link from "next/link";
@@ -67,32 +67,32 @@ export default function ClientSideHomePage({ projectTypeList, cityList }) {
     setEnquiryButtonName("Enquiry");
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  let params_obj  = {
-    propertyType: propertType,        
-    propertyLocation: propertyLocation,
-    budget: budget,
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let params_obj = {
+      propertyType: propertType,
+      propertyLocation: propertyLocation,
+      budget: budget,
+    };
 
-  try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}projects/search-by-type-city-budget`,
-      {
-        params: {
-          propertyType: propertType,
-          propertyLocation: propertyLocation,
-          budget: budget,
-        },
-      }
-    );
-    sessionStorage.setItem("mpf-querry", JSON.stringify(params_obj));
-    setProjectData(response.data);
-    router.push("/projects");
-  } catch (error) {
-    console.error("Error during project filtering:", error);
-  }
-};
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}projects/search-by-type-city-budget`,
+        {
+          params: {
+            propertyType: propertType,
+            propertyLocation: propertyLocation,
+            budget: budget,
+          },
+        }
+      );
+      sessionStorage.setItem("mpf-querry", JSON.stringify(params_obj));
+      setProjectData(response.data);
+      router.push("/projects");
+    } catch (error) {
+      console.error("Error during project filtering:", error);
+    }
+  };
 
   // useEffect(()=>{
   //   handleSubmit();
@@ -104,69 +104,7 @@ const handleSubmit = async (e) => {
         <FixedForm resetTrigger={resetTrigger} onSuccess={handleSuccess} />
       </div>
       <div className="position-relative mb-5">
-        <div
-          className="overflow-hidden"
-          style={{ minHeight: "474px !important" }}
-        >
-          <div className="position-relative overflow-hidden">
-            <picture className="position-relative">
-              {/* Mobile Image */}
-              <source
-                srcSet="/mpf-tablet-banner.jpg"
-                media="(max-width: 767px)"
-              />
-
-              {/* Tablet Image */}
-              <source
-                srcSet="/mpf-tablet-banner.jpg"
-                media="(max-width: 1199px)"
-              />
-
-              {/* Default (Desktop) Image */}
-              <Image
-                src="/mpf-banner.jpg"
-                alt="My property fact"
-                fill
-                priority
-                style={{ objectFit: "cover" }}
-                className="banner-image position-relative"
-              />
-            </picture>
-          </div>
-          {/* <div className="overlay"></div> */}
-        </div>
-        <div className="bannercontainer">
-          <h1 className="text-center text-light fw-bold">
-            Find the best property
-          </h1>
-          <div className="d-flex flex-wrap align-item-center justify-content-center gap-4 my-4">
-            {projectTypeList.map((item, index) => (
-              <div key={`row-${index}`}>
-                <Link
-                  href={`projects/${item.slugUrl}`}
-                  className="link-btn rounded-5 py-2 px-3 text-white home-property-types font-gotham-light fw-bold"
-                >
-                  {item.projectTypeName}
-                </Link>
-              </div>
-            ))}
-          </div>
-          <div className="data-container">
-            {ourFacts.map((item, index) => (
-              <div
-                key={`${item.text}-${index}`}
-                className="data-container-child"
-              >
-                <section>
-                  <h3 className="m-0">
-                    <span>{item.numbers}</span>
-                  </h3>
-                  <p className="text-center ">{item.text}</p>
-                </section>
-              </div>
-            ))}
-          </div>
-        </div>
+        
         <div className="position-absolute bottom-25 start-50 translate-middle w-100 home-search-container">
           <div className="container bg-light border rounded-4 custom-shadow">
             <form>

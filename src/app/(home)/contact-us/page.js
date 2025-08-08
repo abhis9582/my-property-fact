@@ -6,17 +6,24 @@ import ContactUs from "./contactUs";
 export default function ContactUsPage() {
   return (
     <>
-      <CommonHeaderBanner image={"contact-banner.jpg"} headerText={"Contact Us"} />
+      <CommonHeaderBanner
+        image={"contact-banner.jpg"}
+        headerText={"Contact Us"}
+      />
       <CommonBreadCrum pageName={"Contact-us"} />
       <ContactUs />
     </>
   );
 }
 
-export function LoadingSpinner({ show }) {
+export function LoadingSpinner({ show, height }) {
   return show ? (
-    <Spinner animation="border" role="status">
-      <span className="visually-hidden">Loading...</span>
-    </Spinner>
-  ) : ""
+    <div style={{height: "200px"}}>
+      <Spinner animation="border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </Spinner>
+    </div>
+  ) : (
+    ""
+  );
 }
