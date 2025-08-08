@@ -204,20 +204,18 @@
 }
 
 .banner-form {
-    background-color: rgba(0, 0, 0, 0.312);
-    /* Black background with opacity */
-    width: 300px;
+    background-color: rgb(255 255 255 / 70%);
+    width: 360px;
     padding: 25px;
     position: absolute;
-    right: 0;
-    top: 0;
+    right: 30px;
+    top: 50%;
     z-index: 9;
     border-radius: 12px;
-    /* Rounded corners */
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    /* Blur effect */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-    /* Soft shadow */
+    box-shadow: 0 6px 15px rgb(191 188 188 / 30%);
+    transform: translatey(-50%);
 }
 
 .banner-form .form-control {
