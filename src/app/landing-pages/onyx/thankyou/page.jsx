@@ -21,25 +21,47 @@ export default function page() {
           Go back home
         </Link>
       </div>
-      {/* Google tag (gtag.js) */}
+
+      {/* Google Tag (gtag.js) */}
       <Script
         src="https://www.googletagmanager.com/gtag/js?id=AW-11480562062"
         strategy="afterInteractive"
       />
       <Script id="gtag-init" strategy="afterInteractive">
         {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'AW-11480562062');
-          `}
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'AW-11480562062');
+        `}
       </Script>
       <Script id="gtag-conversion" strategy="afterInteractive">
         {`
-            gtag('event', 'conversion', {
-              'send_to': 'AW-11480562062/39UhCKj1h_YaEI7zreIq'
-            });
-          `}
+          gtag('event', 'conversion', {
+            'send_to': 'AW-11480562062/39UhCKj1h_YaEI7zreIq'
+          });
+        `}
+      </Script>
+
+      {/* Taboola Pixel */}
+      <Script id="taboola-pixel" strategy="afterInteractive">
+        {`
+          window._tfa = window._tfa || [];
+          window._tfa.push({notify: 'event', name: 'page_view', id: 1861501});
+          !function (t, f, a, x) {
+            if (!document.getElementById(x)) {
+              t.async = 1;
+              t.src = a;
+              t.id = x;
+              f.parentNode.insertBefore(t, f);
+            }
+          }(
+            document.createElement('script'),
+            document.getElementsByTagName('script')[0],
+            '//cdn.taboola.com/libtrc/unip/1861501/tfa.js',
+            'tb_tfa_script'
+          );
+        `}
       </Script>
     </main>
   );
