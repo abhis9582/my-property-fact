@@ -5,6 +5,8 @@ import bgImage from "../assets/hero_bg.webp";
 import { useRouter } from "next/navigation";
 
 export default function Hero() {
+  const [buttonText, setButtonText] = useState("Submit");
+  const [isSubmiting, setIsSubmiting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -43,6 +45,8 @@ export default function Hero() {
     }
 
     try {
+      setIsSubmiting(true);
+      setButtonText("Submitting...");
       const res = await fetch(
         "https://script.google.com/macros/s/AKfycbwFUrsuEzkLUjc07z9MXmKwKSb1zGNo8gCJrmNLI0mCqkhopIjdHYqzvT2zcTKMpqL7Xg/exec",
         {
@@ -62,6 +66,9 @@ export default function Hero() {
     } catch (err) {
       console.error("Submission Error:", err);
       alert("Submission failed. Please try again.");
+    }finally {
+      setIsSubmiting(false);
+      setButtonText("Submit");
     }
   };
 
@@ -214,8 +221,9 @@ export default function Hero() {
                       "linear-gradient(to right, #324F43, #3AB24B, #324F43)",
                     transition: "0.3s ease",
                   }}
+                  disabled={isSubmiting}
                 >
-                  Submit
+                  {buttonText || "Submit"}
                 </button>
               </form>
             </div>

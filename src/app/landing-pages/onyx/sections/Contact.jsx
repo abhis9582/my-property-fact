@@ -1,13 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 export default function Contact() {
   const formRef = useRef(null);
   const nameInputRef = useRef(null);
   const sectionRef = useRef(null);
   const router = useRouter();
+  const [isSubmiting, setIsSubmiting] = useState(false);
+  const [buttonText, setButtonText] = useState("Enquire Now");
 
   const handleDownloadClick = (e) => {
     e.preventDefault();
@@ -67,6 +69,8 @@ export default function Contact() {
     }
 
     try {
+      setIsSubmiting(true);
+      setButtonText("Submitting...");
       const res = await fetch(
         "https://script.google.com/macros/s/AKfycbwFUrsuEzkLUjc07z9MXmKwKSb1zGNo8gCJrmNLI0mCqkhopIjdHYqzvT2zcTKMpqL7Xg/exec",
         {
@@ -86,6 +90,9 @@ export default function Contact() {
     } catch (error) {
       console.error("Submission error:", error);
       alert("Submission failed. Please try again.");
+    }finally {
+      setIsSubmiting(false);
+      setButtonText("Enquire Now");
     }
   };
 
@@ -199,8 +206,8 @@ export default function Contact() {
                 ></textarea>
               </div>
 
-              <button type="submit" className="btn btn-success w-100 fw-bold">
-                Enquire Now
+              <button type="submit" className="btn btn-success w-100 fw-bold" disabled={isSubmiting}>
+                {buttonText || "Enquire Now"}
               </button>
             </form>
           </div>
