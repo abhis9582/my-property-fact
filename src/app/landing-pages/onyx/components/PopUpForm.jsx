@@ -3,9 +3,12 @@
 import { useState, useEffect, useRef } from "react";
 import bg from "../assets/hero_bg.webp";
 import { useRouter } from "next/navigation";
+import { set } from "jodit/esm/core/helpers";
 
 export default function PopUpForm() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSubmiting, setIsSubmiting] = useState(false);
+  const [buttonText, setButtonText] = useState("Submit");
   const overlayRef = useRef(null);
   const containerRef = useRef(null);
   const formRef = useRef(null);
@@ -79,6 +82,8 @@ export default function PopUpForm() {
     }
 
     try {
+      setIsSubmiting(true);
+      setButtonText("Submitting...");
       const res = await fetch(
         "https://script.google.com/macros/s/AKfycbwFUrsuEzkLUjc07z9MXmKwKSb1zGNo8gCJrmNLI0mCqkhopIjdHYqzvT2zcTKMpqL7Xg/exec",
         {
@@ -99,6 +104,9 @@ export default function PopUpForm() {
     } catch (err) {
       console.error("Submission Error:", err);
       alert("Submission failed. Please try again.");
+    }finally {
+      setIsSubmiting(false);
+      setButtonText("Submit");
     }
   };
 
@@ -212,8 +220,9 @@ export default function PopUpForm() {
                   <button
                     type="submit"
                     className="btn btn-success w-100 fw-bold"
+                    disabled={isSubmiting}
                   >
-                    Submit
+                    {buttonText}
                   </button>
                 </form>
               </div>
