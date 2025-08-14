@@ -54,7 +54,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
       // Toggle className for .header
       const header = document.querySelector(".header");
       if (header) {
-        header.classList.remove("notfixed");
+        header.classList.remove("notfixed", "original-header-color");
       }
 
       // Toggle className for body to remove overflow-hidden
@@ -70,7 +70,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
       // Toggle className for .header
       const header = document.querySelector(".header");
       if (header) {
-        header.classList.add("notfixed");
+        header.classList.add("notfixed", "original-header-color");
       }
 
       // Toggle className for body to add overflow-hidden
@@ -98,7 +98,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
         </div>
         <nav className="d-none d-lg-flex">
           <div className="menu position-relative">
-            <ul className="d-flex gap-5 m-0 fw-bold align-items-center">
+            <ul className="d-flex gap-5 m-0 fw-bold align-items-center header-links">
               <li className="hasChild">
                 <Link
                   href="#"
@@ -118,14 +118,14 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                       {cityList?.map((city) => (
                         <li key={city.id}>
                           <Link
-                            href={`/city/${city.slugUrl}`}
+                            href={`/city/${city.slugURL}`}
                             className={`text-light py-3 ${
-                              pathname === "/city/" + city.slugUrl
+                              pathname === "/city/" + city.URL
                                 ? "header-link-active"
                                 : ""
                             }`}
                           >
-                            {city.name}
+                            {city.cityName}
                           </Link>
                         </li>
                       ))}
