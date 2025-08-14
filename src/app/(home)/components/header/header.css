@@ -1,23 +1,17 @@
-/* .header {
+.header {
   transition: all 0.3s ease-in-out;
   z-index: 9999;
-  background: var(--bg-with-gradient);
-} */
-.header {
+  /* background: var(--bg-with-gradient); */
+  background: radial-gradient(circle at -5% 0%, #ff8000 0%, #f9e5d1 55%, #138808 100%);
+  animation: smoothFlagMove 10s linear infinite;
+}
+/* .header {
   height: 80px;
-  /* Adjust as needed */
   background: radial-gradient(circle at -5% 0%, #ff8000 0%, #f9e5d1 55%, #138808 100%);
   background-size: 200% 100%;
   backdrop-filter: blur(8px) saturate(120%);
   animation: smoothFlagMove 10s linear infinite;
-  /* one direction forever */
-}
-
-.original-header-color{
-  position: relative;
-  z-index: 9999;
-  background: var(--bg-with-gradient) !important;
-}
+} */
 
 /* One-way smooth flow */
 @keyframes smoothFlagMove {

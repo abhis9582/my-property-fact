@@ -54,7 +54,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
       // Toggle className for .header
       const header = document.querySelector(".header");
       if (header) {
-        header.classList.remove("notfixed", "original-header-color");
+        header.classList.remove("notfixed");
       }
 
       // Toggle className for body to remove overflow-hidden
@@ -70,7 +70,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
       // Toggle className for .header
       const header = document.querySelector(".header");
       if (header) {
-        header.classList.add("notfixed", "original-header-color");
+        header.classList.add("notfixed");
       }
 
       // Toggle className for body to add overflow-hidden
