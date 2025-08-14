@@ -118,7 +118,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                       {cityList?.map((city) => (
                         <li key={city.id}>
                           <Link
-                            href={`/city/${city.slugURL}`}
+                            href={`/city/${city.slugUrl}`}
                             className={`text-light py-3 ${
                               pathname === "/city/" + city.URL
                                 ? "header-link-active"
