@@ -1,8 +1,29 @@
-/*header*/
-.header {
+/* .header {
   transition: all 0.3s ease-in-out;
   z-index: 9999;
   background: var(--bg-with-gradient);
+} */
+.header {
+  height: 80px;
+  /* Adjust as needed */
+  background: radial-gradient(circle at -5% 0%, #ff8000 0%, #f9e5d1 55%, #138808 100%);
+  background-size: 200% 100%;
+  backdrop-filter: blur(8px) saturate(120%);
+  animation: smoothFlagMove 10s linear infinite;
+  /* one direction forever */
+}
+
+.original-header-color{
+  position: relative;
+  z-index: 9999;
+  background: var(--bg-with-gradient) !important;
+}
+
+/* One-way smooth flow */
+@keyframes smoothFlagMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .fixed-header {
@@ -31,6 +52,7 @@
   border-bottom: 2px solid #ffffff !important;
   padding: 5px !important;
 }
+
 .menu ul li.hasChild a sup {
   font-size: 120%;
   top: -6px;
@@ -43,13 +65,13 @@
   color: #000 !important;
 }
 
-.menu ul li.hasChild:hover > a sup {
+.menu ul li.hasChild:hover>a sup {
   transform: rotate(45deg);
   color: #000;
 }
 
-.hasChild:hover > a,
-.hasChild .dropdown.dropdown-lg:hover ~ a {
+.hasChild:hover>a,
+.hasChild .dropdown.dropdown-lg:hover~a {
   color: #000 !important;
 }
 
@@ -208,8 +230,8 @@
   transition: all 300ms ease-in-out;
 }
 
-.bigMenuList ul li.active > a,
-.mbMenuContainer .mbMenu ul li:hover > a,
+.bigMenuList ul li.active>a,
+.mbMenuContainer .mbMenu ul li:hover>a,
 .mbMenuContainer .mbMenu ul li a:focus {
   color: var(--body-color);
 }
@@ -232,7 +254,7 @@
   transition: all 300ms ease-in-out;
 }
 
-.bigMenuList ul li.active > a sup {
+.bigMenuList ul li.active>a sup {
   transform: rotate(225deg);
 }
 
