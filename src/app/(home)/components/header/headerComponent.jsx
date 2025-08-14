@@ -125,7 +125,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                                 : ""
                             }`}
                           >
-                            {city.cityName}
+                            {city.name}
                           </Link>
                         </li>
                       ))}
