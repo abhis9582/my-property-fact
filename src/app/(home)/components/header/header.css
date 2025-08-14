@@ -1,22 +1,14 @@
 .header {
   transition: all 0.3s ease-in-out;
   z-index: 9999;
-  /* background: var(--bg-with-gradient); */
-  background: radial-gradient(circle at -5% 0%, #ff8000 0%, #f9e5d1 55%, #138808 100%);
+  background: linear-gradient(90deg, #ff8000 0%, #f9e5d1 50%, #138808 100%);
+  background-size: 200% 100%;
   animation: smoothFlagMove 10s linear infinite;
 }
-/* .header {
-  height: 80px;
-  background: radial-gradient(circle at -5% 0%, #ff8000 0%, #f9e5d1 55%, #138808 100%);
-  background-size: 200% 100%;
-  backdrop-filter: blur(8px) saturate(120%);
-  animation: smoothFlagMove 10s linear infinite;
-} */
 
-/* One-way smooth flow */
 @keyframes smoothFlagMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
