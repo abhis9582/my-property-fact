@@ -18,7 +18,7 @@ export default function BuilderPage({ builderDetail, projectsList}) {
       <div className="container">
         <div className="d-flex justify-content-center">
           <div className="w-80">
-            <p className="text-center">{builderDetail.builderDesc}</p>
+            <p className="text-center">{builderDetail.builderDescription}</p>
           </div>
         </div>
         <div className="text-center">
@@ -34,7 +34,7 @@ export default function BuilderPage({ builderDetail, projectsList}) {
         :
         <div className="container my-3">
           <div className="row g-3">
-            {builderDetail.projects.length > 0 ? builderDetail.projects.map((item, index) => (
+            {builderDetail.projectList.length > 0 ? builderDetail.projectList.map((item, index) => (
               <div key={index} className="col-12 col-sm-6 col-md-4">
                 <PropertyContainer data={item} />
               </div>

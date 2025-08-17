@@ -345,7 +345,7 @@ export default function ManageBlogs({ list, categoryList, cityList }) {
                     <option value="">Select city</option>
                     {cityList.map((item, index) => (
                       <option key={index} value={item.id}>
-                        {item.name}
+                        {item.cityName}
                       </option>
                     ))}
                   </Form.Select>

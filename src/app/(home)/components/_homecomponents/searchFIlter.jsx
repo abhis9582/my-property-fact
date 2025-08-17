@@ -85,8 +85,8 @@ export default function SearchFilter({ projectTypeList, cityList }) {
               >
                 <option value="">Select Location</option>
                 {cityList.map((item, index) => (
-                  <option key={`${item.name}-${index}`} value={item.id}>
-                    {item.name}
+                  <option key={`${item.cityName}-${index}`} value={item.id}>
+                    {item.cityName}
                   </option>
                 ))}
               </select>

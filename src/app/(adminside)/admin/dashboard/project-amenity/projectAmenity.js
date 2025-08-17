@@ -35,7 +35,8 @@ export default function ProjectsAmenity({ projectList, amenityList }) {
     };
     const openAddModel = () => {
         setIsDisabled(false);
-        setProjectListOptions(projectList.filter(item => item.amenities.length === 0));
+        setProjectListOptions(projectList.filter(item => item.projectAmenityList.length === 0)
+        .sort((a, b) => a.projectName.localeCompare(b.projectName)));
         setValidated(false);
         setShowAmenityError(false);
         setShowModal(true);
@@ -83,18 +84,13 @@ export default function ProjectsAmenity({ projectList, amenityList }) {
         setValidated(true);
     };
 
-    const openConfirmationBox = (id) => {
-        setConfirmBox(true);
-        setProjectId(id);
-    };
-
     const openEditPopUp = async (item) => {
         setProjectListOptions(projectList);
         setIsDisabled(true);
         setShowModal(true);
         setTitle("Update Project Amenity");
         setButtonName("Update");
-        setSelectedValue(item.amenities);
+        setSelectedValue(item.projectAmenityList);
         setProjectId(item.id);
     };
 
@@ -127,7 +123,7 @@ export default function ProjectsAmenity({ projectList, amenityList }) {
                 heading={"Manage Project & Amenity"}
             />
             <div className="table-container mt-5">
-                <DataTable columns={columns} list={projectList.filter(item => item.amenities.length > 0)} />
+                <DataTable columns={columns} list={projectList.filter(item => item.projectAmenityList.length > 0)} />
             </div>
             {/* Modal for adding a new city */}
             <Modal show={showModal} onHide={() => setShowModal(false)} centered>
@@ -137,7 +133,7 @@ export default function ProjectsAmenity({ projectList, amenityList }) {
                 <Modal.Body>
                     <Form noValidate validated={validated} onSubmit={handleSubmit}>
                         <Form.Group controlId="selectAmenityForProject">
-                            <Form.Label>Select Project</Form.Label>
+                            <Form.Label><b>Select Project</b></Form.Label>
                             <Form.Select
                                 aria-label="Default select example"
                                 onChange={(e) => setProjectId(e.target.value)}
@@ -148,7 +144,7 @@ export default function ProjectsAmenity({ projectList, amenityList }) {
                                 <option value="">Select Project</option>
                                 {projectListOptions.map((item) => (
                                     <option
-                                        className="text-uppercase"
+                                        className="text-capitalize"
                                         key={item.id}
                                         value={item.id}
                                     >
@@ -161,7 +157,7 @@ export default function ProjectsAmenity({ projectList, amenityList }) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mt-3">
-                            <Form.Label>Select Amenities</Form.Label>
+                            <Form.Label><b>Select Amenities</b></Form.Label>
                             <Multiselect
                                 options={amenityList}
                                 selectedValues={selectedValue}

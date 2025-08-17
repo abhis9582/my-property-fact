@@ -17,12 +17,12 @@ const fetchPrjectsAmenity = async () => {
 //Fetch all project list from api
 const fetchProjects = async () => {
   const projectResponse = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
+    `${process.env.NEXT_PUBLIC_API_URL}projects`
   );
   const res = projectResponse.data.map((item, index)=> ({
     ...item,
     index: index + 1,
-    amenitiesName: item.amenities.map((item)=> (item.title))
+    amenitiesName: item.projectAmenityList.map((item)=> (item.title)).join(", "),
   }))  
   return res;
 };

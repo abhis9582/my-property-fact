@@ -21,7 +21,7 @@ export default function PropertyPage({ projectTypeDetails }) {
         :
         <div className="container my-3">
           <div className="row g-3">
-            {projectTypeDetails.projects.length > 0 ? projectTypeDetails.projects.map((item, index) => (
+            {projectTypeDetails.projectList.length > 0 ? projectTypeDetails.projectList.map((item, index) => (
               <div key={index} className="col-12 col-sm-6 col-md-4">
                 <PropertyContainer data={item} />
               </div>

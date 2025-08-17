@@ -83,12 +83,12 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
                   <p className="text-white mx-4">Popular cities</p>
                   <ul className=" footer-cities d-flex flex-wrap">
                     {cityList.map((item, index) => (
-                      <li key={`${item.name}-${index}`}>
+                      <li key={`${item.cityName}-${index}`}>
                         <Link
                           className="footer-text"
-                          href={`/city/${item.slugUrl}`}
+                          href={`/city/${item.slugURL}`}
                         >
-                          {item.name}
+                          {item.cityName}
                         </Link>
                       </li>
                     ))}

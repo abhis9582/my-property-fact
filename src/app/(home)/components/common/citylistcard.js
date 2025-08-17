@@ -11,8 +11,8 @@ const CityList = ({ cityList, prefix }) => {
       <p className="text-golden">{prefix} India</p>
       {visibleCities.map((item, index) => (
         <li key={`${item.name}-${index}`}>
-          <Link className="footer-text" href={`/city/${item.slugUrl}`}>
-            {prefix}{item.name}
+          <Link className="footer-text" href={`/city/${item.slugURL}`}>
+            {prefix}{item.cityName}
           </Link>
         </li>
       ))}

@@ -38,9 +38,9 @@ export default function Projects() {
   };
   const fetchAllProjects = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}projects`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`);
       const raw = await res.json();
-      setProjectData(raw);
+      setProjectData(raw.filter((item) => item.status === true));
     } catch (error) {
       console.log(error);
     }

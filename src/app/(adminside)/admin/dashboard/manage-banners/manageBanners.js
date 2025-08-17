@@ -13,22 +13,23 @@ import DashboardHeader from "../common-model/dashboardHeader";
 import { useRouter } from "next/navigation";
 export default function ManageBanners({ list }) {
     const router = useRouter();
-
     const [showModal, setShowModal] = useState(false);
-    const [title, setTitle] = useState("");
-    const [buttonName, setButtonName] = useState("");
+    const [title, setTitle] = useState(null);
+    const [buttonName, setButtonName] = useState(null);
     const [validated, setValidated] = useState(false);
-    const [altTag, setAltTag] = useState("");
-    const [projectId, setProjectId] = useState("");
-    const [desktopBanner, setdesktopBanner] = useState(null);
-    const [mobileBanner, setMobileBanner] = useState(null);
+    const [altTag, setAltTag] = useState(null);
+    const [projectId, setProjectId] = useState(0);
     const [projectList, setProjectList] = useState([]);
-    const [inputTitle, setInputTitle] = useState("");
     const [bannerId, setBannerId] = useState(0);
-    const [previewMobileBanner, setPreviewMobileBanner] = useState("");
-    const [previewDesktopBanner, setPreviewDesktopBanner] = useState("");
     const [showLoading, setShowLoading] = useState(false);
     const [confirmBox, setConfirmBox] = useState(false);
+    const [mobileBannerImages, setMobileBannerImages] = useState([]);
+    const [desktopBannerImages, setDesktopBannerImages] = useState([]);
+    const [deletedMobileImageIds, setDeletedMobileImageIds] = useState([]);
+    const [deletedDesktopImageIds, setDeletedDesktopImageIds] = useState([]);
+    const [imagePopUp, setImagePopUp] = useState(false);
+    const [popUpImageSrc, setPopUpImageSrc] = useState(null);
+    const [isEditBanner, setIsEditBanner] = useState(false);
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData();
@@ -41,11 +42,24 @@ export default function ManageBanners({ list }) {
         if (form.checkValidity() === true) {
             setShowLoading(true);
             setButtonName("");
-            if (desktopBanner != null) formData.append("desktopBanner", desktopBanner);
-            if (mobileBanner != null) formData.append("mobileBanner", mobileBanner);
             formData.append("projectId", projectId);
             formData.append("altTag", altTag);
-            formData.append("id", bannerId);
+            formData.append("deletedMobileImageIds", deletedMobileImageIds);
+            formData.append("deletedDesktopImageIds", deletedDesktopImageIds);
+            mobileBannerImages
+                .filter(img => img.file)
+                .forEach(img => {
+                    if (img && typeof img.file.name === "string" && img.file.size && img.file.type) {
+                        formData.append("projectMobileBannerImageList", img.file);
+                    }
+                });
+            desktopBannerImages
+                .filter(img => img.file)
+                .forEach(img => {
+                    if (img && typeof img.file.name === "string" && img.file.size && img.file.type) {
+                        formData.append("projectDesktopBannerImageList", img.file);
+                    }
+                });
             try {
                 const response = await axios.post(
                     `${process.env.NEXT_PUBLIC_API_URL}project-banner/add-banner`,
@@ -65,7 +79,7 @@ export default function ManageBanners({ list }) {
                 }
             } catch (error) {
                 console.error("Error uploading file:", error);
-                toast.error("Error uploading file.");
+                toast.error(error.response?.data?.message || "An error occurred while uploading the banner.");
             } finally {
                 setShowLoading(false);
                 setButtonName("Add");
@@ -73,56 +87,65 @@ export default function ManageBanners({ list }) {
         }
     };
 
-    const openAddMobileBanner = () => {
+    const openAddBanner = () => {
         setValidated(false);
         setShowModal(true);
         setTitle("Add Banner");
-        setInputTitle("Select Mobile Banner");
         setAltTag("");
         setProjectId(0);
-        setdesktopBanner("");
-        setMobileBanner("");
         setButtonName("Add");
-        setPreviewDesktopBanner(null);
-        setPreviewMobileBanner(null);
+        setMobileBannerImages([]);
+        setDesktopBannerImages([]);
+        setDeletedMobileImageIds([]);
+        setDeletedDesktopImageIds([]);
+        setIsEditBanner(false);
+        setProjectList(list.filter(item => item.projectBannerList.length === 0));
     };
 
     const openEditModel = (item) => {
-        const desktopBannerImage = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.desktopBanner}`;
-        const mobileBannerImage = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.mobileBanner}`;
+        // Bind existing mobile images
+        const formattedMobileBanners = item.projectMobileBannerDtoList.map((img) => ({
+            id: img.id,
+            preview: `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${img.mobileImage}`,
+            isNew: false
+        }));
+        setMobileBannerImages(formattedMobileBanners);
+        // Bind existing desktop images
+        const formattedDesktopBanners = item.projectDesktopBannerDtoList.map((img) => ({
+            id: img.id,
+            preview: `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${img.desktopImage}`,
+            isNew: false
+        }));
+        setDesktopBannerImages(formattedDesktopBanners);
         setShowModal(true);
         setTitle("Edit Banner");
-        setInputTitle("Select Mobile Banner");
-        setAltTag(item.altTag);
-        setProjectId(item.projectId);
-        setPreviewDesktopBanner(desktopBannerImage);
-        setPreviewMobileBanner(mobileBannerImage);
-        setBannerId(item.id);
+        item.projectBannerList.map(image => {
+            setAltTag(image.altTag);
+        })
+        setProjectId(item.id);
         setButtonName("Update");
-        setdesktopBanner(null);
-        setMobileBanner(null);
+        setIsEditBanner(true);
+        setProjectList(list);
     };
-
-    const fetchProjects = async () => {
-        const projectResponse = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
-        );
-        if (projectResponse) {
-            setProjectList(projectResponse.data);
-        }
-    };
-    useEffect(() => {
-        fetchProjects();
-    }, []);
 
     // Handle file change
-    const handleFileChange = (e) => {
-        const selectedFile = e.target.files[0];
-        setMobileBanner(selectedFile);
+    const handleMobileBannerFileChange = (e) => {
+        const files = Array.from(e.target.files);
+        const newImages = files.map((file) => ({
+            file,
+            preview: URL.createObjectURL(file),
+        }));
+        setMobileBannerImages((prev) => [...prev, ...newImages]);
     };
-    const handleDesktopBannerChange = (e) => {
-        const selectedFile = e.target.files[0];
-        setdesktopBanner(selectedFile);
+
+    // Handle file change
+    const handleDesktopBannerFileChange = (e) => {
+        const files = Array.from(e.target.files);
+        const newImages = files.map((file) => ({
+            file,
+            preview: URL.createObjectURL(file),
+        }));
+        setDesktopBannerImages((prev) => [...prev, ...newImages]);
     };
 
     //Handling deletion of banner
@@ -133,38 +156,60 @@ export default function ManageBanners({ list }) {
     //Defining table columns
     const columns = [
         { field: "index", headerName: "S.no", width: 100 },
+        { field: "projectName", headerName: "Project Name", flex: 1 },
         {
             field: "mobileBanner",
             headerName: "Mobile Banner",
             flex: 1,
             renderCell: (params) => (
-                <Image
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${params.row.slugURL}/${params.row.mobileBanner}`}
-                    alt="Project"
-                    width={50}
-                    height={50}
-                    style={{ borderRadius: '5px' }}
-                    unoptimized
-                />
+                <>
+                    {
+                        params.row.projectMobileBannerDtoList.map((item, index) => (
+                            <Image
+                                key={index}
+                                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.mobileImage}`}
+                                alt={item.mobileAltTag || "Project Mobile Banner"}
+                                width={50}
+                                height={50}
+                                className="rounded-2 mx-1"
+                                unoptimized
+                            />
+                        ))
+                    }
+                </>
             ),
         },
         {
-            field: "deskktopBanner",
-            headerName: "Mobile Banner",
+            field: "desktopBanner",
+            headerName: "Desktop Banner",
             flex: 1,
             renderCell: (params) => (
-                <Image
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${params.row.slugURL}/${params.row.desktopBanner}`}
-                    alt="Project"
-                    width={150}
-                    height={50}
-                    unoptimized
-                    style={{ borderRadius: '5px' }}
-                />
+                <>
+                    {
+                        params.row.projectDesktopBannerDtoList.map((item, index) => (
+                            <Image
+                                key={index}
+                                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.desktopImage}`}
+                                alt={item.desktopAltTag || "Project Desktop Banner"}
+                                width={150}
+                                height={50}
+                                unoptimized
+                                className="rounded-2 mx-1"
+                            />
+                        ))}
+                </>
             ),
         },
-        { field: "projectName", headerName: "Project Name", flex: 1 },
-        { field: "altTag", headerName: "Alt Tag", flex: 1 },
+        {
+            field: "altTag", headerName: "Alt Tag", flex: 1,
+            renderCell: (params) => (
+                <div>
+                    {params.row.projectBannerList
+                        ?.map(image => image.altTag)
+                        .join(", ")}
+                </div>
+            )
+        },
         {
             field: "action",
             headerName: "Action",
@@ -187,97 +232,71 @@ export default function ManageBanners({ list }) {
             ),
         },
     ];
+
+    const removeImage = (index) => {
+        setMobileBannerImages((prev) => {
+            const updated = [...prev];
+            const removed = updated.splice(index, 1)[0];
+            if (removed.isNew === false) {
+                setDeletedMobileImageIds((prevIds) => {
+                    if (!prevIds.includes(removed.id)) {
+                        return [...prevIds, removed.id];
+                    }
+                    return prevIds;
+                });
+            }
+            return updated;
+        });
+    };
+
+    const removeDesktopImage = (index) => {
+        setDesktopBannerImages((prev) => {
+            const updated = [...prev];
+            const removed = updated.splice(index, 1)[0];
+            if (removed.isNew === false) {
+                setDeletedDesktopImageIds((prevIds) => {
+                    if (!prevIds.includes(removed.id)) {
+                        return [...prevIds, removed.id];
+                    }
+                    return prevIds;
+                });
+            }
+            return updated;
+        });
+    };
+
+    //Opening image popup to view image
+    const openImagePopUp = (src) => {
+        setPopUpImageSrc(src);
+        setImagePopUp(true);
+    };
     return (
         <div>
             <div className="conatiner">
                 <DashboardHeader
                     buttonName={"+ Add Project Banner"}
-                    functionName={openAddMobileBanner}
+                    functionName={openAddBanner}
                     heading={"Manage Project Banners"}
                 />
                 <div className="table-container mt-5">
-                    <DataTable columns={columns} list={list} />
+                    <DataTable columns={columns} list={list.filter(item => (item.projectDesktopBannerDtoList.length > 0) || (item.projectMobileBannerDtoList.length > 0))} />
                 </div>
             </div>
-            {/* <div className="conatiner border rounded-3 p-3 mt-4">
-                <div className="d-flex justify-content-between">
-                    <p>Manage HomePage Banner</p>
-                    <Button className="mb-2" onClick={openAddHomepageBanner}>
-                        + Add Home Banner
-                    </Button>
-                </div>
-                <Table striped bordered hover>
-                    <thead>
-                        <tr>
-                            <th>S no</th>
-                            <th>Home Banner</th>
-                            <th>Alt tag</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                        </tr>
-                    </tbody>
-                </Table>
-            </div> */}
             {/* form for adding banner for project  */}
-            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+            <Modal size="lg" show={showModal} onHide={() => setShowModal(false)} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                        {/* Image Preview for Mobile Banner */}
-                        {previewMobileBanner && (
-                            <div className="image-preview mb-3">
-                                <Image
-                                    src={previewMobileBanner}
-                                    alt="Mobile Banner Preview"
-                                    width={100}
-                                    height={100}
-                                />
-                            </div>
-                        )}
-                        <Form.Group controlId="projectMobileBanner" className="mb-3">
-                            <Form.Label>{inputTitle}</Form.Label>
-                            <Form.Control type="file" onChange={(e) => handleFileChange(e)} />
-                            <Form.Control.Feedback type="invalid">
-                                Project mobile banner is required !
-                            </Form.Control.Feedback>
-                        </Form.Group>
-                        {/* Image Preview for Desktop Banner */}
-                        {previewDesktopBanner && (
-                            <div className="image-preview mb-3">
-                                <Image
-                                    src={previewDesktopBanner}
-                                    alt="Desktop Banner Preview"
-                                    width={200}
-                                    height={100}
-                                />
-                            </div>
-                        )}
-                        <Form.Group controlId="projectDesktopBanner" className="mb-3">
-                            <Form.Label>Select Desktop banner</Form.Label>
-                            <Form.Control
-                                type="file"
-                                onChange={(e) => handleDesktopBannerChange(e)}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                                Project desktop banner is required !
-                            </Form.Control.Feedback>
-                        </Form.Group>
-                        <Form.Group md="4" controlId="selectProjectForBanner">
+                        <Form.Group className="fw-bold mb-3" md="4" controlId="selectProjectForBanner">
                             <Form.Label>Select Project</Form.Label>
                             <Form.Select
                                 aria-label="Default select example"
                                 onChange={(e) => setProjectId(e.target.value)}
                                 value={projectId}
                                 required
+                                disabled={isEditBanner}
                             >
                                 <option value="">Select Project</option>
                                 {projectList.map((item) => (
@@ -294,7 +313,132 @@ export default function ManageBanners({ list }) {
                                 Project is required !
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group md="4" controlId="projectBannerAltTag">
+                        <Form.Group className="mb-3">
+                            <Form.Label className="fw-bold">Select Mobile Banner</Form.Label>
+                            {/* Container */}
+                            <div className="p-3 border rounded" style={{ minHeight: "120px" }}>
+                                {mobileBannerImages.length > 0 ? (
+                                    <div className="d-flex flex-wrap gap-3">
+                                        {mobileBannerImages.map((img, index) => (
+                                            <div key={index} style={{ position: "relative" }}>
+                                                <Image
+                                                    className="rounded-2 d-block my-2"
+                                                    src={img.preview}
+                                                    alt="preview"
+                                                    width={100}
+                                                    height={100}
+                                                    unoptimized
+                                                    onClick={() => openImagePopUp(img.preview)}
+                                                />
+                                                <Button
+                                                    variant="danger"
+                                                    size="sm"
+                                                    style={{
+                                                        position: "absolute",
+                                                        top: "-8px",
+                                                        right: "-8px",
+                                                        borderRadius: "50%",
+                                                        padding: "0px 6px",
+                                                    }}
+                                                    onClick={() => removeImage(index)}
+                                                >
+                                                    ×
+                                                </Button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-muted">No images selected</p>
+                                )}
+                            </div>
+
+                            {/* Add More Button */}
+                            <div className="mt-2">
+                                <Form.Control
+                                    type="file"
+                                    multiple
+                                    onChange={handleMobileBannerFileChange}
+                                    style={{ display: "none" }}
+                                    id="mobileImageUploadInput"
+                                />
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    onClick={() =>
+                                        document.getElementById("mobileImageUploadInput").click()
+                                    }
+                                >
+                                    + Add More Images
+                                </Button>
+                            </div>
+                            <Form.Control.Feedback type="invalid">
+                                Project mobile banner is required !
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label className="fw-bold">Select Desktop banner</Form.Label>
+                            {/* Container */}
+                            <div className="p-3 border rounded" style={{ minHeight: "120px" }}>
+                                {desktopBannerImages.length > 0 ? (
+                                    <div className="d-flex flex-wrap gap-3">
+                                        {desktopBannerImages.map((img, index) => (
+                                            <div key={index} style={{ position: "relative" }}>
+                                                <Image
+                                                    className="rounded-2 d-block my-2"
+                                                    src={img.preview}
+                                                    alt="preview"
+                                                    width={200}
+                                                    height={100}
+                                                    unoptimized
+                                                    onClick={() => openImagePopUp(img.preview)}
+                                                />
+                                                <Button
+                                                    variant="danger"
+                                                    size="sm"
+                                                    style={{
+                                                        position: "absolute",
+                                                        top: "-8px",
+                                                        right: "-8px",
+                                                        borderRadius: "50%",
+                                                        padding: "0px 6px",
+                                                    }}
+                                                    onClick={() => removeDesktopImage(index)}
+                                                >
+                                                    ×
+                                                </Button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-muted">No images selected</p>
+                                )}
+                            </div>
+
+                            {/* Add More Button */}
+                            <div className="mt-2">
+                                <Form.Control
+                                    type="file"
+                                    multiple
+                                    onChange={handleDesktopBannerFileChange}
+                                    style={{ display: "none" }}
+                                    id="desktopImageUploadInput"
+                                />
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    onClick={() =>
+                                        document.getElementById("desktopImageUploadInput").click()
+                                    }
+                                >
+                                    + Add More Images
+                                </Button>
+                            </div>
+                            <Form.Control.Feedback type="invalid">
+                                Project desktop banner is required !
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group md="4" controlId="projectBannerAltTag"
+                            className="fw-bold">
                             <Form.Label>Alt Tag</Form.Label>
                             <FormControl
                                 placeholder="Alt Tag"
@@ -318,6 +462,32 @@ export default function ManageBanners({ list }) {
                 setConfirmBox={setConfirmBox}
                 api={`${process.env.NEXT_PUBLIC_API_URL}project-banner/delete/${bannerId}`}
             />
+            <Modal
+                size="lg"
+                show={imagePopUp}
+                onHide={() => setImagePopUp(false)}
+                centered
+            >
+                <Modal.Body>
+                    {popUpImageSrc && (
+                        <Image
+                            className="rounded-2"
+                            src={popUpImageSrc}
+                            alt="pop-up-image"
+                            width={0}
+                            height={0}
+                            sizes="100vw"
+                            style={{
+                                height: "auto",
+                                width: "auto",
+                                maxWidth: "100%",
+                                maxHeight: "80vh",
+                            }}
+                            unoptimized
+                        />
+                    )}
+                </Modal.Body>
+            </Modal>
         </div>
     );
 }

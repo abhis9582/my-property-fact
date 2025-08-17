@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { Button, Col, Form, Modal, Row, Table } from "react-bootstrap";
+import { useState } from "react";
+import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import CommonModal from "../common-model/common-model";
 import DataTable from "../common-model/data-table";
@@ -14,6 +14,7 @@ import DashboardHeader from "../common-model/dashboardHeader";
 import { useRouter } from "next/navigation";
 // Dynamically import JoditEditor with SSR disabled
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
+
 export default function ManageProjects({
   builderList,
   typeList,
@@ -21,58 +22,48 @@ export default function ManageProjects({
   projectDetailList,
   projectStatusList,
 }) {
-  const draftTimer = useRef(null);
   const router = useRouter();
-
   // Defining the initial state
   const initialFormData = {
-    amenities: [],
     id: 0,
-    metaTitle: "",
-    metaKeyword: "",
-    metaDescription: "",
-    projectName: "",
-    stateId: "",
-    cityId: "",
-    projectLocality: "",
-    projectConfiguration: "",
-    projectBy: 0,
-    projectPrice: "",
-    ivrNo: "",
-    reraQr: "",
-    projectStatus: "",
+    builderId: 0,
+    cityId: 0,
+    stateId: 0,
+    countryId: 0,
+    propertyTypeId: 0,
+    projectStatusId: 0,
+    projectPrice: null,
+    metaTitle: null,
+    metaKeyword: null,
+    metaDescription: null,
+    projectName: null,
+    slugURL: null,
+    projectLocality: null,
+    projectConfiguration: null,
+    ivrNo: null,
+    reraNo: null,
+    reraQr: null,
+    reraWebsite: null,
     locationMap: null,
-    reraNo: "",
-    reraWebsite: "",
     projectLogo: null,
     projectThumbnail: null,
-    propertyType: 0,
-    slugURL: "",
-    showFeaturedProperties: true,
+    floorPlanDescription: null,
+    locationDescription: null,
+    amenityDescription: null,
     status: false,
-    amenityDescription: "",
-    locationDescription: "",
-    floorPlanDescription: "",
-    countryId: "",
-    projectStatus: "",
+    projectLogoPreview: null,
+    projectThumbnailPreview: null,
+    locationMapPreview: null,
   };
 
   const [validated, setValidated] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [title, setTitle] = useState("");
-  const [amenityDesc, setAmenityDesc] = useState("");
-  const [floorPlanDesc, setFloorPlanDesc] = useState("");
-  const [locationDesc, setLocationDesc] = useState("");
+  const [title, setTitle] = useState(null);
   const [confirmBox, setConfirmBox] = useState(false);
-  const [buttonName, setButtonName] = useState("");
+  const [buttonName, setButtonName] = useState(null);
   const [projectId, setProjectId] = useState(0);
   const [showLoading, setShowLoading] = useState(false);
   const [formData, setFormData] = useState(initialFormData);
-  const [locationPreview, setLocationPreview] = useState(null);
-  const [projectThumbnailPreview, setProjectThumbnailPreview] = useState(null);
-  const [projectLogoPreview, setProjectLogoPreview] = useState(null);
-  const [selectedCountryId, setSelectedCountryId] = useState("");
-  const [selectedStateId, setSelectedStateId] = useState("");
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
 
@@ -80,12 +71,10 @@ export default function ManageProjects({
     const countryId = parseInt(e.target.value);
     setFormData((prev) => ({
       ...prev,
-      country: String(countryId),
+      countryId: countryId,
     }));
-    setSelectedCountryId(countryId);
-    const country = countryData?.find((c) => c.countryId === countryId);
-    setStates(country ? country?.states : []);
-    setSelectedStateId("");
+    const country = countryData?.find((c) => c.id === countryId);
+    setStates(country ? country?.stateList : []);
     setCities([]);
   };
 
@@ -93,11 +82,10 @@ export default function ManageProjects({
     const stateId = parseInt(e.target.value);
     setFormData((prev) => ({
       ...prev,
-      state: String(stateId),
+      stateId: stateId,
     }));
-    setSelectedStateId(stateId);
-    const state = states.find((s) => s.stateId === stateId);
-    setCities(state ? state.cities : []);
+    const state = states.find((s) => s.id === stateId);
+    setCities(state ? state.cityList : []);
   };
 
   //Handle opening model
@@ -106,34 +94,16 @@ export default function ManageProjects({
     setShowModal(true);
     setButtonName("Add Project");
     setFormData(initialFormData);
-    setAmenityDesc("");
-    setFloorPlanDesc("");
-    setLocationDesc("");
-    setProjectLogoPreview(null);
-    setProjectThumbnailPreview(null);
-    setLocationPreview(null);
     setValidated(false);
+    setCities([]);
+    setStates([]);
   };
 
   //Handling opening of edit model
   const openEditModel = (item) => {
-    console.log(item);
-
-    setTitle("Edit Project");
+    setTitle("Edit Project Details");
     setShowModal(true);
     setButtonName("Update Project");
-    setAmenityDesc(item.amenityDesc);
-    setFloorPlanDesc(item.floorPlanDesc);
-    setLocationDesc(item.locationDesc);
-    setLocationPreview(
-      `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.locationMap}`
-    );
-    setProjectThumbnailPreview(
-      `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.projectThumbnail}`
-    );
-    setProjectLogoPreview(
-      `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.projectLogo}`
-    );
     // Dynamically update the form data with the values from the item
     setFormData({
       ...initialFormData, // You can retain the initial values if needed
@@ -141,11 +111,14 @@ export default function ManageProjects({
       locationMap: null,
       projectLogo: null,
       projectThumbnail: null,
+      locationMapPreview: `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.locationMapImage}`,
+      projectLogoPreview: `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.projectLogoImage}`,
+      projectThumbnailPreview: `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.projectThumbnailImage}`,
     });
-    const country = countryData?.find((c) => c.countryId === item.country);
-    setStates(country ? country?.states : []);
-    const state = country?.states?.find((s) => s.stateId === item.state);
-    setCities(state ? state.cities : []);
+    const country = countryData?.find((c) => c.id === item.countryId);
+    setStates(country ? country?.stateList : []);
+    const state = country?.stateList?.find((s) => s.id === item.stateId);
+    setCities(state ? state.cityList : []);
   };
 
   //Opening delete confirmation box
@@ -185,7 +158,6 @@ export default function ManageProjects({
     event.preventDefault();
     event.stopPropagation();
     const form = event.currentTarget;
-
     if (form.checkValidity() === false) {
       const firstInvalid = form.querySelector(":invalid");
       if (firstInvalid) {
@@ -193,9 +165,7 @@ export default function ManageProjects({
         firstInvalid.focus();
       }
     }
-
     setValidated(true);
-
     if (form.checkValidity()) {
       await submitFormData();
     }
@@ -203,18 +173,35 @@ export default function ManageProjects({
 
   const submitFormData = async () => {
     const data = new FormData();
-    if (!formData.metaTitle) {
+    if (formData.metaTitle === null || formData.metaTitle === "") {
       return;
     }
-    for (let key in formData) {
-      if (key === "amenities") continue;
-      data.append(key, formData[key]);
+    // Append files (actual File objects, not file names)
+    if (formData.projectLogo instanceof File) {
+      data.append("projectLogo", formData.projectLogo);
     }
+    if (formData.locationMap instanceof File) {
+      data.append("locationMap", formData.locationMap);
+    }
+    if (formData.projectThumbnail instanceof File) {
+      data.append("projectThumbnail", formData.projectThumbnail);
+    }
+
+    // Append DTO as JSON
+    const dto = { ...formData };
+    delete dto.projectLogo;
+    delete dto.locationMap;
+    delete dto.projectThumbnail;
+
+    data.append(
+      "addUpdateProjectDto",
+      new Blob([JSON.stringify(dto)], { type: "application/json" })
+    );
 
     try {
       setShowLoading(true);
       const response = await axios.post(
-        process.env.NEXT_PUBLIC_API_URL + "projects/add-new",
+        `${process.env.NEXT_PUBLIC_API_URL}projects/add-new`,
         data,
         {
           headers: {
@@ -222,6 +209,7 @@ export default function ManageProjects({
           },
         }
       );
+
       if (response.data.isSuccess === 1) {
         router.refresh();
         toast.success(response.data.message);
@@ -229,11 +217,16 @@ export default function ManageProjects({
         setShowModal(false);
       }
     } catch (error) {
-      toast.error("Error saving Project");
+      console.log(error);
+
+      toast.error(
+        error.response?.data?.error || "An error occurred while submitting the form."
+      );
     } finally {
       setShowLoading(false);
     }
   };
+
 
   const formFields = [
     {
@@ -278,30 +271,30 @@ export default function ManageProjects({
     },
     {
       label: "Country",
-      name: "country",
+      name: "countryId",
       type: "select",
       required: true,
       colSize: 6,
       options: countryData,
-      valueKey: "countryId",
+      valueKey: "id",
       labelKey: "countryName",
       onChange: handleCountryChange,
     },
     {
       label: "State",
-      name: "state",
+      name: "stateId",
       type: "select",
       required: true,
       colSize: 6,
       options: states,
-      valueKey: "stateId",
+      valueKey: "id",
       labelKey: "stateName",
       onChange: handleStateChange,
       disabled: !states.length,
     },
     {
       label: "City",
-      name: "city",
+      name: "cityId",
       type: "select",
       required: true,
       colSize: 6,
@@ -320,7 +313,7 @@ export default function ManageProjects({
     },
     {
       label: "Project By",
-      name: "projectBy",
+      name: "builderId",
       type: "select",
       required: true,
       colSize: 6,
@@ -331,26 +324,32 @@ export default function ManageProjects({
     {
       label: "Location Map",
       name: "locationMap",
-      previousImage: locationPreview,
+      previousImage: formData.locationMapPreview,
       type: "file",
       required: false,
       colSize: 6,
+      width: 815,
+      height: 813
     },
     {
       label: "Project Logo",
       name: "projectLogo",
-      previousImage: projectLogoPreview,
+      previousImage: formData.projectLogoPreview,
       type: "file",
       required: false,
       colSize: 6,
+      width: 792,
+      height: 203
     },
     {
       label: "Project Thumbnail",
       name: "projectThumbnail",
-      previousImage: projectThumbnailPreview,
+      previousImage: formData.projectThumbnailPreview,
       type: "file",
       required: false,
       colSize: 6,
+      width: 600,
+      height: 600
     },
     {
       label: "Project price",
@@ -394,7 +393,7 @@ export default function ManageProjects({
     },
     {
       label: "Property type",
-      name: "propertyType",
+      name: "propertyTypeId",
       type: "select",
       required: true,
       colSize: 6,
@@ -404,7 +403,7 @@ export default function ManageProjects({
     },
     {
       label: "Project Status",
-      name: "projectStatus",
+      name: "projectStatusId",
       type: "select",
       required: true,
       colSize: 6,
@@ -414,25 +413,25 @@ export default function ManageProjects({
     },
     {
       label: "Amenity Description",
-      name: "amenityDesc",
+      name: "amenityDescription",
       type: "jodit",
-      value: amenityDesc,
+      // value: amenityDescription,
       required: true,
       colSize: 12, // full width
     },
     {
       label: "Location Description",
-      name: "locationDesc",
+      name: "locationDescription",
       type: "jodit",
-      value: locationDesc,
+      // value: locationDescription,
       required: true,
       colSize: 12, // full width
     },
     {
       label: "Floor Plan Description",
-      name: "floorPlanDesc",
+      name: "floorPlanDescription",
       type: "jodit",
-      value: floorPlanDesc,
+      // value: floorPlanDescription,
       required: true,
       colSize: 12, // full width
     },
@@ -443,7 +442,7 @@ export default function ManageProjects({
     {
       field: "index",
       headerName: "S.no",
-      width: 100,
+      width: 70,
       cellClassName: "centered-cell",
     },
     {
@@ -467,7 +466,7 @@ export default function ManageProjects({
       flex: 1,
     },
     {
-      field: "typeName",
+      field: "propertyTypeName",
       headerName: "Property Type",
       flex: 1,
     },
@@ -505,7 +504,7 @@ export default function ManageProjects({
   ];
 
   const handleClose = async () => {
-    setShowModal(false);
+    // setShowModal(false);
     await submitFormData(); // No need for handleSubmit since there's no event
     router.refresh();
   };
@@ -535,11 +534,11 @@ export default function ManageProjects({
                   controlId={`form-${field.name}`}
                   key={index}
                 >
-                  <Form.Label>{field.label}</Form.Label>
+                  <Form.Label className="fw-bold">{field.label}</Form.Label>
 
                   {field.type === "jodit" ? (
                     <JoditEditor
-                      value={field.value || ""}
+                      value={formData[field.name] ?? ""}
                       onBlur={(newContent) =>
                         setFormData((prev) => ({
                           ...prev,
@@ -558,7 +557,7 @@ export default function ManageProjects({
                       <option value="">Select {field.label}</option>
                       {field.options?.map((opt) => (
                         <option
-                          key={opt[field.valueKey]}
+                          key={`${opt[field.valueKey]}-${index}`}
                           value={opt[field.valueKey]}
                         >
                           {opt[field.labelKey]}
@@ -572,8 +571,9 @@ export default function ManageProjects({
                           <Image
                             src={field.previousImage}
                             alt="Current Project Logo"
-                            width={200}
-                            height={100}
+                            width={field.width || 200}
+                            height={field.height || 200}
+                            className="mb-3 img-fluid rounded"
                             unoptimized
                           />
                           <br />
@@ -614,13 +614,19 @@ export default function ManageProjects({
                 onChange={handleChange}
               />
             </Row>
-            <Button
-              className="mt-3 btn btn-success"
-              type="submit"
-              disabled={showLoading}
-            >
-              {buttonName} <LoadingSpinner show={showLoading} />
-            </Button>
+            {/* <Row> */}
+
+              <Button
+                className="mt-3 btn btn-success"
+                type="submit"
+                disabled={showLoading}
+              >
+                {buttonName} <LoadingSpinner show={showLoading} />
+              </Button>
+              <Button className="mt-3 ms-3 btn btn-secondary" onClick={() => setShowModal(false)}>
+                Cancel
+              </Button>
+            {/* </Row> */}
           </Form>
         </Modal.Body>
       </Modal>

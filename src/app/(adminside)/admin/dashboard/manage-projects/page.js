@@ -29,7 +29,7 @@ const fetchProjectTypes = async () => {
   const response = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`
   );
-  return response.data;
+  return response.data.filter(item => item.projectTypeName !== "New Launches");
 };
 
 //Fetching all types of projects
@@ -43,7 +43,7 @@ const fetchProjectStatusList = async () => {
 //Fetch all country with state and cities
 const fetchCountryData = async () => {
   const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}country/get-all`
+    `${process.env.NEXT_PUBLIC_API_URL}country/get-all-countries`
   );
   return response.data;
 }

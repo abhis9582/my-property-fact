@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic';
 //Fetching all cities from api
 const fetchCities = async () => {
   const cityList = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}city/get-all-cities`
+    `${process.env.NEXT_PUBLIC_API_URL}city/all`
   );
   const response = cityList.data.map((item, index) => ({
     ...item,

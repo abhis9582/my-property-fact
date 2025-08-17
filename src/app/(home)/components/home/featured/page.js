@@ -1,6 +1,6 @@
 import Featured from "./featured";
 
-export default async function FeaturedPage({ type, url, autoPlay, projectsList= [] }) {
+export default async function FeaturedPage({ url, autoPlay, projectsList= [] }) {  
   return (
     <>
       <Featured

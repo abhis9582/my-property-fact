@@ -5,6 +5,10 @@
     position: relative;
 }
 
+.blog-card {
+    min-height: 560px;
+}
+
 /* .top-banner-each-pages::before {
     content: "";
     position: absolute;
@@ -58,11 +62,19 @@
     .projects-heading {
         font-size: 2rem;
     }
+
+    .blog-card {
+        min-height: 500px;
+    }
 }
 
 @media (max-width: 426px) {
     .top-banner-each-pages {
         height: 100px;
+    }
+
+    .blog-card {
+        min-height: 450px;
     }
 }
 

@@ -22,8 +22,8 @@ export default function PropertyContainer(props) {
       return price;
     }
     return price < 1
-      ? Math.round(parseFloat(price) * 100) + " Lakh* Onwards"
-      : parseFloat(price) + " Cr* Onwards";
+      ? "₹ " + Math.round(parseFloat(price) * 100) + " Lakh* Onwards"
+      : "₹ " + parseFloat(price) + " Cr* Onwards";
   };
   return (
     <>
@@ -39,13 +39,12 @@ export default function PropertyContainer(props) {
               src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${
                 props.data.slugURL
               }/${
-                props.data.projectThumbnail || props.data.projectThumbnailImage
+                props.data.projectThumbnailImage
               }`}
               alt={props.data.projectName}
               className="img-fluid w-100 rounded-top-4 object-fit-cover"
               width={400}
               height={400}
-              unoptimized
             />
           </div>
           {props.data.projectStatusName && (
@@ -57,11 +56,11 @@ export default function PropertyContainer(props) {
           )}
           <div className="mt-3 ms-3">
             <h5 className="mb-2">{props.data.projectName}</h5>
-            <p>{props.data.typeName}</p>
+            <p>{props.data.propertyTypeName}</p>
             <h5 className="text-success d-flex gap-2 mb-0">
-              <span>
+              {/* <span>
                 <FontAwesomeIcon icon={faIndianRupee}/>
-              </span>
+              </span> */}
               <span className="fw-bold"> {generatePrice(props.data.projectPrice)}</span>
             </h5>
           </div>

@@ -13,14 +13,14 @@ export default function CityPage({ cityData }) {
         <div className="container-fluid p-0">
           <CommonHeaderBanner
             image={"realestate-bg.jpg"}
-            headerText={cityData.name}
+            headerText={cityData.cityName}
           />
         </div>
-        <CommonBreadCrum firstPage={"projects"} pageName={cityData.name} />
+        <CommonBreadCrum firstPage={"projects"} pageName={cityData.cityName} />
         <div className="container-fluid mt-4">
           {/* <p className="h1 text-center">Property in {cityData.name}</p> */}
           <div className="container d-flex justify-content-center">
-            <p className="text-center">{cityData.cityDesc}</p>
+            <p className="text-center">{cityData.cityDescription}</p>
           </div>
           <div className="text-center">
             <Link href="#" className="btn text-white btn-background">
@@ -35,7 +35,7 @@ export default function CityPage({ cityData }) {
           :
           <div className="container my-3">
             <div className="row g-3">
-              {cityData.projects.length > 0 ? cityData.projects.map((item, index) => (
+              {cityData.projectList.length > 0 ? cityData.projectList.map((item, index) => (
                 <div key={`${index}`} className="col-12 col-sm-6 col-md-4">
                   <PropertyContainer data={item} />
                 </div>

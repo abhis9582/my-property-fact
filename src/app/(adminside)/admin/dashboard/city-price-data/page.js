@@ -86,7 +86,7 @@ export default function CityPriceData() {
       }
     });
     cityList.map((i) => {
-      if (i.name === item.cityName) {
+      if (i.cityName === item.cityName) {
         cityId = i.id;
       }
     });
@@ -298,7 +298,7 @@ export default function CityPriceData() {
                         key={item.id}
                         value={item.id}
                       >
-                        {item.name}
+                        {item.cityName}
                       </option>
                     ))}
                   </Form.Select>

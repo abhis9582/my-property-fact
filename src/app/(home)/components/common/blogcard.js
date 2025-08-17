@@ -9,28 +9,34 @@ export default function BlogCard({ blog }) {
         return words.slice(0, wordLimit).join(" ") + " ...";
     };
 
+    const truncateTitle = (text, wordLimit) => {
+        const title = text.replace(/\u00A0/g, ' ');
+        const words = title.split(" ");
+        if (words.length <= wordLimit) return title;
+        return words.slice(0, wordLimit).join(" ") + "...";
+    }
+
     return (
         <>
             <Link href={`/blog/${blog.slugUrl}`}
-                className="card border-0 rounded-4 overflow-hidden custom-shadow"
-                style={{ maxWidth: '31rem', transition: 'transform 0.3s' }}
+                className="card border-0 rounded-3 overflow-hidden custom-shadow blog-card"
                 onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
                 onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
             >
                 <Image
-                    width={400}
-                    height={250}
+                    width={1200}
+                    height={628}
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}blog/${blog.blogImage}`}
                     alt={blog.blogTitle}
-                    className="card-img-top"
-                    unoptimized={true}
+                    className="img-fluid"
+                    unoptimized
                 />
                 <div className="card-body d-flex flex-column">
                     <p className="blog-date">{new Date(blog.createdAt).toLocaleString('en-US', {
                         dateStyle: 'medium',
                         // timeStyle: 'short'
                     })}</p>
-                    <h4 className="card-title fw-bold">{blog.blogTitle.replace(/\u00A0/g, ' ')}</h4>
+                    <h4 className="card-title fw-bold" title={blog.blogTitle}>{truncateTitle(blog.blogTitle, 8)}</h4>
 
                     <div className="flex-grow-1 mb-3">
                         <p className="card-text text-muted small">

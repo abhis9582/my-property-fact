@@ -13,14 +13,14 @@ const FeaturedPage = dynamic(() => import("./featured/page"), {
 
 const fetchProjectsList = async () => {
   const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}projects`
+    `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
   );
-  return response.data;
+  const projects = response.data.filter(item => item.status === true);
+  return projects || [];
 };
 
 export default async function HomePage() {
   const projectsList = await fetchProjectsList();
-  console.log(projectsList.length);
   try {
     return (
       <>
@@ -61,11 +61,10 @@ export default async function HomePage() {
             Explore Our Premier Residential Projects
           </h2>
           <FeaturedPage
-            type={"Residential"}
             url={"residential"}
             autoPlay={true}
             projectsList={projectsList.filter(
-              (project) => project.propertyType === "Residential"
+              (project) => project.propertyTypeName === "Residential"
             )}
           />
 
@@ -74,11 +73,10 @@ export default async function HomePage() {
             Explore Top Commercial Spaces for Growth
           </h2>
           <FeaturedPage
-            type={"Commercial"}
             url={"commercial"}
             autoPlay={true}
             projectsList={projectsList.filter(
-              (project) => project.propertyType === "Commercial"
+              (project) => project.propertyTypeName === "Commercial"
             )}
           />
 
