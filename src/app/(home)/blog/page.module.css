@@ -1,5 +1,5 @@
 .card {
-  width: 425px;
+  min-width: 425px;
   border-top-left-radius: 2rem;
   border-top-right-radius: 2rem;
   overflow: hidden;

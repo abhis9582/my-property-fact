@@ -28,5 +28,8 @@ export default async function ManageGalleryPage() {
     fetchGalleryImage(),
     fetchProjects()
   ]);
-  return <ManageGallery list={list} projectsList={projectsList} />
+  const newList = projectsList.filter(
+    project => !list.some(item => item.projectId === project.id)
+  );  
+  return <ManageGallery list={list} projectsList={projectsList} newList={newList}/>
 }

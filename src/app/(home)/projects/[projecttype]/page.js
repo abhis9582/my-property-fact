@@ -2,17 +2,17 @@ import PropertyPage from "./propertypage";
 import axios from "axios";
 export const dynamic = 'force-dynamic';
 //Fetching details of project type 
-const fetchProjectTypeDetail = async (slug) => {
-  const data = await axios.get(
+const fetchProjectTypeDetails = async (slug) => {
+  const response = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}project-types/get/${slug}`
   );
-  return data.data;
+  return response.data;
 }
 
 //Generating metatitle and meta description
 export async function generateMetadata({ params }) {
   const { projecttype } = await params;
-  const response = await fetchProjectTypeDetail(projecttype);
+  const response = await fetchProjectTypeDetails(projecttype);
   return {
     title: response.metaTitle,
     descritpion: response.metaDesc,
@@ -25,8 +25,7 @@ export async function generateMetadata({ params }) {
 export default async function ProjectType({ params }) {
   const { projecttype } = await params;
   const [projectTypeDetail] = await Promise.all([
-    fetchProjectTypeDetail(projecttype)
-  ]);
-
+    fetchProjectTypeDetails(projecttype)
+  ]);  
   return <PropertyPage projectTypeDetails={projectTypeDetail} />
 }

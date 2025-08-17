@@ -9,7 +9,7 @@ import GenerateForm from "../common-model/generateForm";
 export default function City({ list, stateList }) {
     const inputFields = [
         {
-            id: "name",
+            id: "cityName",
             label: "City Name",
             type: "text",
         },
@@ -25,7 +25,7 @@ export default function City({ list, stateList }) {
             type: "text",
         },
         {
-            id: "metaKeyWords",
+            id: "metaKeywords",
             label: "Meta Keywords",
             type: "text",
         },
@@ -35,7 +35,7 @@ export default function City({ list, stateList }) {
             type: "textarea",
         },
         {
-            id: "cityDisc",
+            id: "cityDescription",
             label: "City Description",
             type: "textarea",
         },
@@ -81,9 +81,9 @@ export default function City({ list, stateList }) {
     //Defining table columns
     const columns = [
         { field: "index", headerName: "S.no", width: 100, cellClassName: "centered-cell" },
-        { field: "name", headerName: "City Name", flex: 1 },
+        { field: "cityName", headerName: "City Name", flex: 1 },
         { field: "stateName", headerName: "State", flex: 1 },
-        { field: "cityDisc", headerName: "City Description", flex: 1},
+        { field: "cityDescription", headerName: "City Description", flex: 1},
         { field: "countryName", headerName: "Country", flex: 1 },
         {
             field: "metaTitle",
@@ -91,7 +91,7 @@ export default function City({ list, stateList }) {
             flex: 1
         },
         {
-            field: "metaKeyWords",
+            field: "metaKeywords",
             headerName: "Meta Keyword",
             flex: 1
         },

@@ -60,20 +60,21 @@ export default function Property({ projectDetail }) {
   //Setting for banner slider
   const settings = {
     dots: false,
-    infinite: false,
-    speed: 200,
+    infinite: projectDetail.projectDesktopBannerDtoList.length > 1,
+    speed: 300,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: false,
-    autoplaySpeed: 2000,
+    fade: projectDetail.projectDesktopBannerDtoList.length > 1,
+    autoplay: projectDetail.projectDesktopBannerDtoList.length > 1,
+    autoplaySpeed: 3000,
   };
 
   //Setting for gallery slider
   const settings1 = {
     dots: false,
-    infinite: true,
+    infinite: projectDetail.projectGalleryImageList.length > 1,
     speed: 500,
-    autoplay: true,
+    autoplay: projectDetail.projectGalleryImageList.length > 1,
     slidesToShow: 2, // Default for large screens
     slidesToScroll: 1,
     responsive: [
@@ -104,8 +105,8 @@ export default function Property({ projectDetail }) {
       return price;
     }
     return price < 1
-      ? Math.round(parseFloat(price) * 100) + " Lakh* Onwards"
-      : parseFloat(price) + " Cr* Onwards";
+      ? "₹ " + Math.round(parseFloat(price) * 100) + " Lakh* Onwards"
+      : "₹ " + parseFloat(price) + " Cr* Onwards";
   };
   //Handle form input data
   const handleChange = (event) => {
@@ -255,7 +256,7 @@ export default function Property({ projectDetail }) {
   };
 
   //Generating banner src
-  const imageSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.banners[0].desktopImage}`;
+  // const imageSrc = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.banners[0].desktopImage}`;
   // const imageSrc = `/properties/${projectDetail.slugURL}/${projectDetail.projectThumbnail}`;
 
   //Checking If project detail is not available then show not found page
@@ -267,34 +268,25 @@ export default function Property({ projectDetail }) {
     <>
       {/* Header for property detail page */}
       <header
-        className={`p-2 bg-root-color header ${
-          isScrolled ? "fixed-header" : ""
-        }`}
+        className={`project-detail-header bg-root-color px-4 ${isScrolled ? "fixed-header" : ""
+          }`}
       >
         <div className="main-header">
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex justify-content-center align-items-center">
               <Link href="/">
                 <Image
-                  width={180}
-                  height={50}
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.projectLogo}`}
+                  width={198}
+                  height={50.75}
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.projectLogoImage}`}
                   alt="logo"
-                  unoptimized
+                  className="img-fluid"
                 />
               </Link>
             </div>
             <nav className="navi d-none d-lg-flex">
               <div className="menu">
                 <ul className="list-inline d-flex text-decoration-none gap-5 m-0 align-items-center">
-                  <li>
-                    <Link
-                      className="text-decoration-none text-light fs-5 fw-bold"
-                      href="#"
-                    >
-                      Home
-                    </Link>
-                  </li>
                   <li>
                     <Link
                       className="text-decoration-none text-light fs-5 fw-bold"
@@ -421,24 +413,39 @@ export default function Property({ projectDetail }) {
 
       <div id="home" className="container-fluid p-0">
         {/* Banner container for property detail page  */}
-        <div className="slick-slider-container banner-container">
+        <div className="slick-slider-container">
           <Slider {...settings}>
-            <picture className="project-detail-banner">
-              <source
-                srcSet={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.banners[0].mobileImage}`}
-                media="(max-width: 640px)"
-              />
-              <source srcSet={imageSrc} media="(max-width: 1024px)" />
-              <Image
-                src={imageSrc}
-                alt="banner-image"
-                className="img-fluid shadow-sm mb-4"
-                width={1800}
-                height={700}
-                unoptimized
-              />
-            </picture>
+            {projectDetail.projectDesktopBannerDtoList.map((item, index) => {
+              const mobileItem = projectDetail.projectMobileBannerDtoList[index]; // pick same index mobile banner
+              return (
+                <picture className="image-con" key={`${item.id}-${index}`}>
+                  {/* Mobile first */}
+                  {mobileItem && (
+                    <source
+                      srcSet={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${mobileItem.slugURL}/${mobileItem.mobileImage}`}
+                      media="(max-width: 640px)" // mobile breakpoint
+                    />
+                  )}
+
+                  {/* Tablet/Laptop (falls back to desktopImage) */}
+                  <source
+                    srcSet={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.desktopImage}`}
+                    media="(min-width: 641px)" // tablet/laptop/desktop
+                  />
+
+                  {/* Default fallback */}
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.desktopImage}`}
+                    alt={item.altTag || "Property Banner"}
+                    className="img-fluid h-100"
+                    width={1920}
+                    height={600}
+                  />
+                </picture>
+              );
+            })}
           </Slider>
+
           {/* Defining form on banner container  */}
           <div className="banner-form d-none d-lg-block">
             <Form
@@ -561,7 +568,7 @@ export default function Property({ projectDetail }) {
                 <div
                   className="text-muted fs-6 lh-lg"
                   dangerouslySetInnerHTML={{
-                    __html: projectDetail.walkthroughDesc,
+                    __html: projectDetail.projectWalkthroughDescription,
                   }}
                 ></div>
               </div>
@@ -580,12 +587,12 @@ export default function Property({ projectDetail }) {
           {/* Description */}
           <div
             className="text-center text-muted mb-5 px-2 px-md-5"
-            dangerouslySetInnerHTML={{ __html: projectDetail.amenityDesc }}
+            dangerouslySetInnerHTML={{ __html: projectDetail.amenityDescription }}
           ></div>
 
           {/* Amenities Grid */}
           <div className="row justify-content-center g-3">
-            {projectDetail.amenities.map((item, index) => (
+            {projectDetail.projectAmenityList.map((item, index) => (
               <div key={index} className="col-6 col-sm-4 col-md-3 col-lg-2">
                 <div className="border rounded-4 bg-light h-100 d-flex align-items-center justify-content-around text-center custom-shadow amenity-box p-2">
                   <Image
@@ -619,10 +626,10 @@ export default function Property({ projectDetail }) {
         >
           <div className="p-2 p-md-4 p-lg-5">
             <h2 className="text-center">Floor Plans</h2>
-            {projectDetail.floorPlanDesc && (
+            {projectDetail.floorPlanDescription && (
               <div
                 dangerouslySetInnerHTML={{
-                  __html: projectDetail.floorPlanDesc,
+                  __html: projectDetail.floorPlanDescription,
                 }}
               ></div>
             )}
@@ -644,7 +651,7 @@ export default function Property({ projectDetail }) {
             modules={[Navigation]}
             className="mySwiper"
           >
-            {projectDetail.floorPlan?.map((item, index) => (
+            {projectDetail.projectFloorPlanList?.map((item, index) => (
               <SwiperSlide key={`${item.planType}-${index}`}>
                 <div className="card mt-3 custom-shadow">
                   <div className="p-3 rounded-sm">
@@ -700,9 +707,9 @@ export default function Property({ projectDetail }) {
             <div className="row justify-content-center">
               <div className="col-12">
                 <Slider {...settings1} className="gallery-slider">
-                  {projectDetail.projectGalleryImages.map((item) => (
+                  {projectDetail.projectGalleryImageList.map((item, index) => (
                     <div
-                      key={item.id}
+                      key={`${index}-${item.id}`}
                       className="project-detail-gallery-container "
                     >
                       <Image
@@ -729,14 +736,14 @@ export default function Property({ projectDetail }) {
           </div>
           <div className="text-center p-2 p-md-4 p-lg-5">
             <div
-              dangerouslySetInnerHTML={{ __html: projectDetail.locationDesc }}
+              dangerouslySetInnerHTML={{ __html: projectDetail.locationDescription }}
             ></div>
           </div>
           <div className="row">
             <div className="col-md-6">
               {/* Nearby Benefits Section */}
               <div className="row g-3">
-                {projectDetail.locationBenefits.map((item, index) => (
+                {projectDetail.projectLocationBenefitList.map((item, index) => (
                   <div key={index} className="col-6">
                     <div className="border rounded-4 p-3 h-100 d-flex align-items-center gap-3 bg-light shadow-sm">
                       <Image
@@ -822,7 +829,7 @@ export default function Property({ projectDetail }) {
         <div className="mx-auto" style={{ maxWidth: "800px" }}>
           <div
             className="text-center text-muted fs-6"
-            dangerouslySetInnerHTML={{ __html: projectDetail.projectShortDesc }}
+            dangerouslySetInnerHTML={{ __html: projectDetail.projectAboutShortDescription }}
           ></div>
         </div>
 
@@ -938,7 +945,7 @@ export default function Property({ projectDetail }) {
       <div className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3">
         <h2 className="text-center pt-5">FAQs</h2>
         <div className="container mt-3">
-          {projectDetail.projectFaqs.map((item, index) => (
+          {projectDetail.projectFaqList.map((item, index) => (
             <div key={`${item.id}-${index}`}>
               <div
                 className="container questions mt-3 d-flex"
@@ -952,9 +959,8 @@ export default function Property({ projectDetail }) {
                 </span>
               </div>
               <div
-                className={`container questions ${
-                  isAnswerVisible[item.id] ? "" : "d-none"
-                } bg-light`}
+                className={`container questions ${isAnswerVisible[item.id] ? "" : "d-none"
+                  } bg-light`}
                 id="answer1"
               >
                 <div className="m-0 text-success">

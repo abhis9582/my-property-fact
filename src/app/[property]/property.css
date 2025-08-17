@@ -2,12 +2,53 @@
     font-family: var(--heaing-font);
 }
 
+.image-con {
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+}
+
+.main-header img{
+    max-height: 60px;
+    border-radius: 0.2rem;
+}
+
+.slick-active .image-con {
+    opacity: 1;
+}
+
+/* Target all placeholders inside Bootstrap Form.Control */
+.banner-form input.form-control::placeholder,
+textarea.form-control::placeholder {
+  color: #333 !important;   /* Dark gray so it’s visible on white-gray */
+  opacity: 1 !important;    /* Ensure it doesn’t look faded */
+}
+
+.banner-form input{
+    color: #000 !important; /* Ensure input text is black */
+}
+
+/* .image-con {
+    height: calc(100vh - (54px + 60px));
+} */
+
+
+
 /* Loader css starts */
 .project-loader {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh;
+}
+
+.slick-slider-container .slick-arrow {
+    display: none !important;
+}
+
+.slick-slider-container .slick-slide img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .theme-bg {
@@ -41,6 +82,12 @@
     transition: all 0.6s cubic-bezier(0.785, 0.135, 0.15, 0.86);
 }
 
+/* .project-detail-header {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateY(0);
+    opacity: 1;
+} */
+
 .fixed-header {
     position: fixed;
     top: 0;
@@ -48,6 +95,19 @@
     width: 100%;
     z-index: 9999;
 }
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 
 .menuBtn.closeMenuBtn {
     flex-direction: column;
@@ -194,15 +254,6 @@
     border-radius: 10px;
 }
 
-.banner-container {
-    position: relative !important;
-}
-
-.banner-container img {
-    position: relative !important;
-    height: 600px;
-}
-
 .banner-form {
     background-color: rgb(255 255 255 / 70%);
     width: 360px;
@@ -216,6 +267,7 @@
     backdrop-filter: blur(10px);
     box-shadow: 0 6px 15px rgb(191 188 188 / 30%);
     transform: translatey(-50%);
+    color: black;
 }
 
 .banner-form .form-control {
@@ -349,12 +401,6 @@
     height: 400px;
 }
 
-.project-detail-banner {
-    width: 100%;
-    height: 600px;
-    object-fit: cover;
-}
-
 a {
     text-decoration: none !important;
 }
@@ -364,25 +410,15 @@ a {
         width: 100%;
     }
 
-    .banner-container img {
-        position: relative !important;
-        height: 400px;
-    }
-
     .project-detail-location-image-container {
         height: 300px;
     }
 
-    .project-detail-banner {
-        height: 500px;
+    .main-header{
+        padding: 10px 0px;
     }
 }
 
-@media (max-width: 426px) {
-    .project-detail-banner {
-        height: 400px;
-    }
-}
 
 .project-detail-gallery-container {
     position: relative;

@@ -56,7 +56,7 @@ export default async function HeroSection() {
           style={{ minHeight: "474px !important" }}
         >
           <div className="position-relative overflow-hidden">
-            <picture className="position-relative">
+            <picture className="position-relative home-banner">
               {/* Mobile Image */}
               <source
                 srcSet="/mpf-mobile-banner.jpg"

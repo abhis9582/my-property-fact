@@ -7,8 +7,11 @@ import { useState } from "react";
 import GenerateForm from "../common-model/generateForm";
 import CommonModal from "../common-model/common-model";
 import { useRouter } from "next/navigation";
+import { Modal } from "react-bootstrap";
 
 export default function ManageState({ countryList, stateList }) {
+    const [showCityList, setSetShowCityList] = useState(false);
+    const [cityList, setCityList] = useState([]);
     const inputFields = [
         {
             id: "stateName",
@@ -22,7 +25,7 @@ export default function ManageState({ countryList, stateList }) {
             list: countryList
         },
         {
-            id: "description",
+            id: "stateDescription",
             label: "Description",
             type: "textarea"
         },
@@ -70,18 +73,18 @@ export default function ManageState({ countryList, stateList }) {
     const columns = [
         { field: "index", headerName: "S.no", width: 100, cellClassName: "centered-cell" },
         { field: "stateName", headerName: "State Name", flex: 1 },
-        { field: "description", headerName: "State Description", flex: 2 },
+        { field: "stateDescription", headerName: "State Description", flex: 2 },
         { field: "countryName", headerName: "State Name", flex: 1 },
         {
             field: "noOfCities", headerName: "Total Cities", flex: 1,
             renderCell: (params) => (
                 <div className="d-flex align-items-center">
-                    <span className="p-0 fs-5">{params.row.noOfCities}</span>
+                    <span className="p-0 fs-5">{params.row.cityList.length}</span>
                     <FontAwesomeIcon
                         className="text-warning mx-4 fs-5"
                         style={{ cursor: "pointer" }}
                         icon={faEye}
-                        onClick={() => openFaqList(params.row)}
+                        onClick={() => openCityList(params.row)}
                         title="View States list"
                     />
                 </div>
@@ -107,6 +110,13 @@ export default function ManageState({ countryList, stateList }) {
             )
         },
     ];
+
+    const openCityList = (row) => {
+        if (row.cityList.length > 0) {
+            setSetShowCityList(true);
+        }
+        setCityList(row.cityList);
+    }
     return (
         <>
             <DashboardHeader
@@ -139,6 +149,42 @@ export default function ManageState({ countryList, stateList }) {
                 confirmBox={confirmBox}
                 setConfirmBox={setConfirmBox}
             />
+
+            <Modal show={showCityList} onHide={() => setSetShowCityList(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Cities List</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <table className="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>S.no</th>
+                                <th>City Name</th>
+                                <th>City Description</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {cityList.map((city, index) => (
+                                <tr key={city.id}>
+                                    <td>{index + 1}</td>
+                                    <td><b>{city.cityName}</b></td>
+                                    <td>{city.cityDescription}</td>
+                                    <td>
+                                        <div className="d-flex mt-3 justify-content-center">
+                                            <FontAwesomeIcon
+                                                className="text-danger"
+                                                style={{ cursor: "pointer" }}
+                                                icon={faTrash}
+                                            />
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </Modal.Body>
+            </Modal>
         </>
     )
 }

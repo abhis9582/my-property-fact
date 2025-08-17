@@ -23,7 +23,7 @@ export default function Blog() {
       );
       setBlogsList(response.data.content);
       setTotalPages(response.data.totalPages);
-      setLoading(false);      
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -44,9 +44,9 @@ export default function Blog() {
     <>
       <CommonHeaderBanner image={"blog-banner.jpg"} headerText={"Blog"} />
       <CommonBreadCrum pageName={"Blog"} />
-      <div className="container-fluid mb-3">
+      <div className="container-fluid mb-3 px-4">
         {/* <p className="text-center h2 mt-3">Blog</p> */}
-        <div className="container-fluid d-flex justify-content-center gap-4 flex-wrap">
+        <div className="row">
           {loading ? (
             <div
               className="d-flex justify-content-center align-items-center"
@@ -56,7 +56,9 @@ export default function Blog() {
             </div>
           ) : (
             blogsList.map((blog, index) => (
-              <BlogCard key={index} blog={blog} index={index} />
+              <div className="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4 mb-4 blog-card" key={index}>
+                <BlogCard key={index} blog={blog} index={index} />
+              </div>
             ))
           )}
         </div>
