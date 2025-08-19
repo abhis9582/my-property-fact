@@ -1,15 +1,14 @@
 /* adding font library  starts*/
 @font-face {
   font-family: "gotham-bold";
-  src: url("/fonts/Gotham-Bold.ttf") format("truetype");
-  font-weight: bold;
+  src: url("/fonts/plus_jakarta_sans/PlusJakartaSans-VariableFont_wght.ttf") format("truetype");
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
   font-family: "heading-pro";
-  src: url("/fonts/Heading-Pro-ExtraBold-trial.ttf") format("truetype");
+  src: url("/fonts/plus_jakarta_sans/PlusJakartaSans-VariableFont_wght.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -17,8 +16,7 @@
 
 @font-face {
   font-family: "gotham-light";
-  src: url("/fonts/Gotham-Light.ttf") format("truetype");
-  font-weight: bold;
+  src: url("/fonts/montserrat/Montserrat-VariableFont_wght.ttf") format("truetype");
   font-style: normal;
   font-display: swap;
 }
@@ -160,4 +158,13 @@ html {
 .blog-content td {
   border: 2px solid rgb(150, 150, 150);
   padding: 8px;
+}
+
+.job-description ul {
+  list-style-type: disc;
+  margin: 20px 0px;
+}
+
+.job-description ul li{
+  margin: 10px 0px;
 }

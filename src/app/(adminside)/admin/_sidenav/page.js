@@ -89,6 +89,11 @@ export default function SideNav() {
                 Manage budget options
               </Link>
             </li>
+            <li>
+              <Link href="/admin/dashboard/manage-career-applications">
+                Manage career applications
+              </Link>
+            </li>
           </ul>
         </li>
         <li className={activeDropdown === "dropdown1" ? "active" : ""}>
