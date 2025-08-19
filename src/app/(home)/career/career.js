@@ -188,7 +188,7 @@ export default function Career({ jobsArr }) {
       <section className="py-5 bg-light">
         <div className="container">
           <div className="row">
-            <div className="col-12 col-lg-6 col-xl-6 d-flex justify-content-center align-items-center">
+            <div className="col-12 col-lg-6 col-xl-6 d-flex justify-content-center align-items-center order-2">
               <div>
                 <div className="container ms-4">
                   <span className="fs-1">Interpretation & Outlook</span>
@@ -213,7 +213,7 @@ export default function Career({ jobsArr }) {
                 </div>
               </div>
             </div>
-            <div className="col-12 col-md-12 col-lg-6 col-xl-6 my-3">
+            <div className="col-12 col-md-12 col-lg-6 col-xl-6 my-3 order-1">
               <Image
                 src="/career.jpg"
                 alt="Career Opportunities"
@@ -225,7 +225,7 @@ export default function Career({ jobsArr }) {
           </div>
         </div>
       </section>
-      <section className="container position-relative py-5">
+      <section className="d-none d-md-block container position-relative py-5">
         <Image
           src="/career_bottom_image.jpg"
           alt="Career Opportunities"
@@ -234,7 +234,7 @@ export default function Career({ jobsArr }) {
           className="img-fluid rounded-3"
           style={{ width: "100%", height: "auto" }}
         />
-        <div className="d-none d-md-block position-absolute top-50 start-50 translate-middle text-center bg-white p-4 rounded-3 shadow">
+        <div className="position-absolute top-50 start-50 translate-middle text-center bg-white p-4 rounded-3 shadow">
           <h2 className="mb-3">Join Our Team</h2>
           <p className="mb-4">
             We are always looking for talented individuals to join our team. If
