@@ -194,32 +194,20 @@ export default function Career({ jobsArr }) {
                   <span className="fs-1">Interpretation & Outlook</span>
                   <div className="mt-4">
                     <span className="fs-5">
-                      <FontAwesomeIcon icon={faCheckCircle} fontSize={20} />
-                      <b>
-                        <span className="fw-bold mx-2">Key Strengths :</span>
-                      </b>{" "}
-                      Strong corporate presence, robust connectivity, favorable
-                      supply-demand dynamics, and rising price trends.
+                      <FontAwesomeIcon icon={faCheckCircle} fontSize={20} className="pe-2"/>
+                      Shape India’s property future by driving technology, creativity, and real estate expertise into one impactful career path.
                     </span>
                   </div>
                   <div className="mt-3">
                     <span className="fs-5">
-                      <FontAwesomeIcon icon={faCheckCircle} fontSize={20} />
-                      <b>
-                        <span className="fw-bold mx-2">Key Strengths :</span>
-                      </b>{" "}
-                      Strong corporate presence, robust connectivity, favorable
-                      supply-demand dynamics, and rising price trends.
+                      <FontAwesomeIcon icon={faCheckCircle} fontSize={20} className="pe-2"/>
+                      Grow in a culture that rewards ideas, innovation, and results while nurturing personal and professional development.
                     </span>
                   </div>
                   <div className="mt-3">
                     <span className="fs-5">
-                      <FontAwesomeIcon icon={faCheckCircle} fontSize={20} />
-                      <b>
-                        <span className="fw-bold mx-2">Key Strengths :</span>
-                      </b>{" "}
-                      Strong corporate presence, robust connectivity, favorable
-                      supply-demand dynamics, and rising price trends.
+                      <FontAwesomeIcon icon={faCheckCircle} fontSize={20} className="pe-2"/>
+                      Be part of a visionary brand transforming property decisions into smarter, transparent, and trustworthy experiences for all.
                     </span>
                   </div>
                 </div>
