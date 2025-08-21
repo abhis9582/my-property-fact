@@ -714,7 +714,7 @@ export default function Property({ projectDetail }) {
         </div>
 
         {/* Gallery section */}
-        <div className="container-fluid bg-light mb-5" id="gallery">
+        <div className="container-fluid bg-light py-3 mb-5" id="gallery">
           <h2 className="text-center mb-4 fw-bold">Gallery</h2>
           <div className="container-fluid mt-4">
             <div className="row justify-content-center">

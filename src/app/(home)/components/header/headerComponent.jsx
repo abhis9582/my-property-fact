@@ -283,7 +283,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                             href={`/city/${city.slugUrl}`}
                             onClick={openMenu}
                           >
-                            {city.name}
+                            {city.cityName}
                           </Link>
                         </li>
                       ))}
