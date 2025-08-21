@@ -280,7 +280,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                       {cityList?.map((city) => (
                         <li key={city.id}>
                           <Link
-                            href={`/city/${city.slugUrl}`}
+                            href={`/city/${city.slugURL}`}
                             onClick={openMenu}
                           >
                             {city.cityName}
