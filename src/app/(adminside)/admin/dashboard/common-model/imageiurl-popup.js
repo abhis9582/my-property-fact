@@ -111,7 +111,6 @@ export default function ImageUrlPopup({ confirmBox, setConfirmBox }) {
                     width={100}
                     height={50}
                     style={{ borderRadius: '5px' }}
-                    unoptimized
                 />
             ),
         },

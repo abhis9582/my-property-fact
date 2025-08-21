@@ -26,7 +26,7 @@ export default function MpfTopPicks() {
                     width={80}
                     height={80}
                     className="img-fluid"
-                    unoptimized
+                    
                   />
                 </div>
                 <div className="ms-4">
@@ -70,7 +70,7 @@ export default function MpfTopPicks() {
             <Image
               src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/bhutani-62-avenue/45aee5c0-cbfb-40b8-899b-88552029279f.jpg`}
               alt="top-picks"
-              unoptimized
+              
               width={2225} // original image width
               height={1065} // original image height
               className="rounded-3 position-relative mpf-top-pic-project-image img-fluid"

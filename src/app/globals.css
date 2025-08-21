@@ -117,7 +117,7 @@ html {
 }
 
 .custom-shadow {
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
 .modal-header .btn-close {
@@ -148,23 +148,37 @@ html {
   color: var(--text-color);
 }
 
-.blog-content table {
-  width: 100%;
-  border-collapse: collapse; /* Ensures no double borders */
+/* .blog-content h1 {
+  font-weight: 500;
 }
 
-.blog-content table,
-.blog-content th,
-.blog-content td {
-  border: 2px solid rgb(150, 150, 150);
-  padding: 8px;
+.blog-content h2 {
+  font-weight: 500;
+  color: #049833;
 }
+
+.blog-content p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+  font-weight: 100;
+}
+
+.blog-content a {
+  color: #0070f3;
+  text-decoration: underline;
+}
+
+.blog-content ul {
+  list-style: disc;
+  margin-left: 20px;
+} */
 
 .job-description ul {
   list-style-type: disc;
   margin: 20px 0px;
 }
 
-.job-description ul li{
+.job-description ul li {
   margin: 10px 0px;
 }

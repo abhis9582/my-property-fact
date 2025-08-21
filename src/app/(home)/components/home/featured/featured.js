@@ -59,7 +59,7 @@ export default function Featured({
         </div>
       ) : (
         allFeaturedProperties?.length > 0 && (
-          <>
+          <div className="featured-page-slider">
             <Slider {...settings}>
               {allFeaturedProperties.map((item) => (
                 <div key={item.id} className="px-2 pb-3">
@@ -67,7 +67,7 @@ export default function Featured({
                 </div>
               ))}
             </Slider>
-          </>
+          </div>
         )
       )}
 

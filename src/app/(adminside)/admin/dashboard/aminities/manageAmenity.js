@@ -146,7 +146,6 @@ export default function ManageAminity({ list }) {
                     alt={params.row.title || ""}
                     width={50}
                     height={50}
-                    unoptimized
                 />
             ),
         },

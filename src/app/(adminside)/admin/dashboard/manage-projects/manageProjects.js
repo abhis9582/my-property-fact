@@ -574,7 +574,7 @@ export default function ManageProjects({
                             width={field.width || 200}
                             height={field.height || 200}
                             className="mb-3 img-fluid rounded"
-                            unoptimized
+                            
                           />
                           <br />
                         </div>

@@ -8,6 +8,7 @@ import styles from "./../page.module.css";
 import { Button, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { LoadingSpinner } from "../../contact-us/page";
+import { sanitizeHtml } from "@/app/_global_components/sanitize";
 export default function BlogDetail({ blogDetail }) {
     const [showLoading, setShowLoading] = useState(false);
     const [buttonName, setButtonName] = useState("Submit Enquiry");
@@ -79,7 +80,7 @@ export default function BlogDetail({ blogDetail }) {
                             className="img-fluid rounded shadow-sm mb-4"
                             width={1200}
                             height={648}
-                            unoptimized
+                            
                         />}
 
                         <h1 className="fw-bold mb-3">{blogDetail.blogTitle.replace(/\u00A0/g, ' ')}</h1>
@@ -87,6 +88,7 @@ export default function BlogDetail({ blogDetail }) {
                         <div className="blog-content"
                             dangerouslySetInnerHTML={{
                                 __html: blogDetail.blogDescription,
+                                // __html: sanitizeHtml(blogDetail.blogDescription),
                             }}>
                         </div>
                         <div className="d-flex flex-wrap gap-2 mt-4">

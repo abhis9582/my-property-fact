@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faArrowDown,
   faBed,
   faChartArea,
   faLocationDot,
@@ -33,6 +34,8 @@ import NotFound from "../not-found";
 import CommonPopUpform from "../(home)/components/common/popupform";
 import { LoadingSpinner } from "../(home)/contact-us/page";
 import { toast } from "react-toastify";
+import { sanitizeHtml } from "../_global_components/sanitize";
+import { Col, Row } from "react-bootstrap";
 
 export default function Property({ projectDetail }) {
   const [isAnswerVisible, setIsAnswerVisible] = useState([false, false]);
@@ -76,6 +79,7 @@ export default function Property({ projectDetail }) {
     speed: 500,
     autoplay: projectDetail.projectGalleryImageList.length > 1,
     slidesToShow: 2, // Default for large screens
+    arrows: true,
     slidesToScroll: 1,
     responsive: [
       {
@@ -268,8 +272,9 @@ export default function Property({ projectDetail }) {
     <>
       {/* Header for property detail page */}
       <header
-        className={`project-detail-header bg-root-color px-4 ${isScrolled ? "fixed-header" : ""
-          }`}
+        className={`project-detail-header bg-root-color px-4 ${
+          isScrolled ? "fixed-header" : ""
+        }`}
       >
         <div className="main-header">
           <div className="d-flex justify-content-between align-items-center">
@@ -416,7 +421,8 @@ export default function Property({ projectDetail }) {
         <div className="slick-slider-container">
           <Slider {...settings}>
             {projectDetail.projectDesktopBannerDtoList.map((item, index) => {
-              const mobileItem = projectDetail.projectMobileBannerDtoList[index]; // pick same index mobile banner
+              const mobileItem =
+                projectDetail.projectMobileBannerDtoList[index]; // pick same index mobile banner
               return (
                 <picture className="image-con" key={`${item.id}-${index}`}>
                   {/* Mobile first */}
@@ -437,9 +443,8 @@ export default function Property({ projectDetail }) {
                   <Image
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.desktopImage}`}
                     alt={item.altTag || "Property Banner"}
-                    className="img-fluid h-100"
-                    width={1920}
-                    height={600}
+                    width={2225}
+                    height={1065}
                   />
                 </picture>
               );
@@ -506,14 +511,28 @@ export default function Property({ projectDetail }) {
                   Please provide a valid message.
                 </Form.Control.Feedback>
               </Form.Group>
-              <Button
-                className="btn btn-background border-0"
-                type="submit"
-                disabled={showLoading}
-              >
-                Submit <LoadingSpinner show={showLoading} />
-              </Button>
+              <div>
+                <Button
+                  className="btn btn-background border-0 w-50"
+                  type="submit"
+                  disabled={showLoading}
+                >
+                  Submit <LoadingSpinner show={showLoading} />
+                </Button>
+              </div>
             </Form>
+          </div>
+          <div
+            className="scroll-down-btn d-none d-md-flex"
+            onClick={() => window.scrollBy({ top: 600, behavior: "smooth" })}
+          >
+            <div className="d-flex flex-column align-items-center justify-content-center text-center fs-5">
+              <span>
+                <FontAwesomeIcon icon={faArrowDown} />
+              </span>
+              <span>Scroll Down</span>
+              <i className="fas fa-chevron-down"></i>
+            </div>
           </div>
         </div>
 
@@ -521,9 +540,9 @@ export default function Property({ projectDetail }) {
           <div className="row gy-5 align-items-stretch">
             {/* Project Info */}
             <div className="col-lg-4">
-              <div className="p-4 p-lg-5 rounded-4 bg-white h-100 d-flex flex-column justify-content-center align-items-center custom-shadow">
+              <div className="p-2 p-lg-5 rounded-4 bg-white h-100 d-flex flex-column justify-content-center align-items-center custom-shadow">
                 <div>
-                  <h1 className="mb-3 text-dark">
+                  <h1 className="mb-3 text-dark fw-bold">
                     {projectDetail.projectName}
                   </h1>
 
@@ -561,8 +580,8 @@ export default function Property({ projectDetail }) {
             {/* Walkthrough Description */}
             <div className="col-lg-8">
               <div className="bg-white p-4 p-md-5 rounded-4 custom-shadow h-100">
-                <h2 className="text-dark mb-4 text-center text-md-start">
-                  Walkthrough
+                <h2 className="text-dark fw-bold mb-4 text-center text-md-start">
+                  Project Overview
                 </h2>
 
                 <div
@@ -577,57 +596,54 @@ export default function Property({ projectDetail }) {
         </div>
 
         {/* Amenities section */}
-        <div
-          className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3"
-          id="amenities"
-        >
+        <div className="container-fluid py-5 text-white mb-5" id="amenities">
           {/* Title */}
-          <h2 className="text-center mb-3">Amenities</h2>
+          <h2 className="text-center fw-bold mb-5">Amenities</h2>
 
           {/* Description */}
           <div
-            className="text-center text-muted mb-5 px-2 px-md-5"
-            dangerouslySetInnerHTML={{ __html: projectDetail.amenityDescription }}
+            className="text-center container mb-5"
+            dangerouslySetInnerHTML={{
+              __html: projectDetail.amenityDescription,
+            }}
           ></div>
 
           {/* Amenities Grid */}
-          <div className="row justify-content-center g-3">
+          <div className="d-flex flex-wrap justify-content-center gap-5 mb-5">
             {projectDetail.projectAmenityList.map((item, index) => (
-              <div key={index} className="col-6 col-sm-4 col-md-3 col-lg-2">
-                <div className="border rounded-4 bg-light h-100 d-flex align-items-center justify-content-around text-center custom-shadow amenity-box p-2">
+              <div key={index} className="amenity-detail-container">
+                <div className="bg-white mb-3 p-3">
                   <Image
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}amenity/${item.image}`}
-                    height={20}
-                    width={20}
-                    alt={item.altTag || ""}
-                    unoptimized
+                    height={60}
+                    width={60}
+                    alt={item.mobileAltTag || item.desktopAltTag || ""}
+                    className="mb-3 d-flex mx-auto"
                   />
-                  <p className="m-0 fw-semibold text-dark fs-6">{item.title}</p>
                 </div>
+                <p className="text-white text-center fs-6">{item.title}</p>
               </div>
             ))}
           </div>
 
           {/* View All Button */}
-          <div className="mt-5 text-center">
-            <button
-              className="btn btn-background px-4 py-2 rounded-pill text-white"
+          <div className="text-center">
+            <Button
+              className="btn btn-background rounded-3 text-white border-0 px-5 py-3"
               onClick={() => setShowPopUp(true)}
             >
               VIEW ALL
-            </button>
+            </Button>
           </div>
         </div>
 
         {/* Floor plans section */}
-        <div
-          className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3"
-          id="floorplan"
-        >
-          <div className="p-2 p-md-4 p-lg-5">
-            <h2 className="text-center">Floor Plans</h2>
+        <div className="container mb-5" id="floorplan">
+          <div className="">
+            <h2 className="text-center fw-bold mb-4">Floor Plans</h2>
             {projectDetail.floorPlanDescription && (
               <div
+                className="text-center mb-4"
                 dangerouslySetInnerHTML={{
                   __html: projectDetail.floorPlanDescription,
                 }}
@@ -649,12 +665,12 @@ export default function Property({ projectDetail }) {
               1200: { slidesPerView: 4 },
             }}
             modules={[Navigation]}
-            className="mySwiper"
+            className="mySwiper p-2"
           >
             {projectDetail.projectFloorPlanList?.map((item, index) => (
               <SwiperSlide key={`${item.planType}-${index}`}>
-                <div className="card mt-3 custom-shadow">
-                  <div className="p-3 rounded-sm">
+                <div className="card">
+                  <div className="p-3 rounded-sm d-flex mx-auto">
                     <Image
                       width={300}
                       height={200}
@@ -698,12 +714,9 @@ export default function Property({ projectDetail }) {
         </div>
 
         {/* Gallery section */}
-        <div
-          className="container shadow-lg rounded-4 mt-3 py-5 mb-3"
-          id="gallery"
-        >
-          <h2 className="text-center">Gallery</h2>
-          <div className="container-fluid">
+        <div className="container-fluid bg-light mb-5" id="gallery">
+          <h2 className="text-center mb-4 fw-bold">Gallery</h2>
+          <div className="container-fluid mt-4">
             <div className="row justify-content-center">
               <div className="col-12">
                 <Slider {...settings1} className="gallery-slider">
@@ -716,7 +729,6 @@ export default function Property({ projectDetail }) {
                         src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.galleyImage}`}
                         alt="gallery_image"
                         fill
-                        unoptimized
                         className="img-fluid rounded-5 object-fit-cover px-2 "
                       />
                     </div>
@@ -727,16 +739,15 @@ export default function Property({ projectDetail }) {
           </div>
         </div>
         {/* Location section */}
-        <div
-          className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3"
-          id="location"
-        >
+        <div className="container mb-5" id="location">
           <div>
-            <h2 className="text-center">Location</h2>
+            <h2 className="text-center fw-bold">Location</h2>
           </div>
           <div className="text-center p-2 p-md-4 p-lg-5">
             <div
-              dangerouslySetInnerHTML={{ __html: projectDetail.locationDescription }}
+              dangerouslySetInnerHTML={{
+                __html: projectDetail.locationDescription,
+              }}
             ></div>
           </div>
           <div className="row">
@@ -764,7 +775,7 @@ export default function Property({ projectDetail }) {
               </div>
 
               {/* Address Section */}
-              <div className="border rounded-4 shadow-sm bg-white mt-4 p-4">
+              <div className="mt-4 p-4">
                 <div className="row">
                   <div className="col-sm-6 mb-3">
                     <p className="mb-1 text-success fw-semibold">Address</p>
@@ -803,7 +814,7 @@ export default function Property({ projectDetail }) {
                   src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.locationMapImage}`}
                   alt="Project Location Map"
                   fill
-                  unoptimized
+                  
                   className="object-fit-cover"
                 />
 
@@ -819,159 +830,206 @@ export default function Property({ projectDetail }) {
 
       {/* About the project */}
       <div
-        className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3"
+        className="container-fluid py-5 mb-5"
         id="overview"
+        style={{
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail?.projectDesktopBannerDtoList[0]?.desktopImage}`})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          height: "600px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
         {/* Section Heading */}
-        <h2 className="text-center mb-4">About The Project</h2>
+        <div>
+          <h2 className="text-center text-white fw-bold mb-5">
+            About The Builder {projectDetail.builderName || ""}
+          </h2>
 
-        {/* Description */}
-        <div className="mx-auto" style={{ maxWidth: "800px" }}>
-          <div
-            className="text-center text-muted fs-6"
-            dangerouslySetInnerHTML={{ __html: projectDetail.projectAboutShortDescription }}
-          ></div>
-        </div>
+          {/* Description */}
+          <div>
+            <div className="container mb-5">
+              <div
+                className="text-center project-about-container text-white"
+                dangerouslySetInnerHTML={{
+                  __html: sanitizeHtml(projectDetail.builderDescription),
+                }}
+              ></div>
+            </div>
 
-        {/* Action Buttons */}
-        <div className="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-4">
-          <button
-            className="btn btn-success px-4 py-2 rounded-pill shadow-sm"
-            onClick={() => setShowPopUp(true)}
-          >
-            READ MORE
-          </button>
-          <button
-            className="btn btn-outline-success px-4 py-2 rounded-pill shadow-sm"
-            onClick={() => setShowPopUp(true)}
-          >
-            DOWNLOAD BROCHURE
-          </button>
-          <button
-            className="btn btn-success px-4 py-2 rounded-pill shadow-sm"
-            onClick={() => setShowPopUp(true)}
-          >
-            SCHEDULE A SITE VISIT
-          </button>
+            {/* Action Buttons */}
+            <div className="text-center">
+              <Link
+                href={`/builder/${projectDetail.builderSlugURL}`}
+                className="btn btn-success px-4 py-2 rounded-pill shadow-sm"
+                onClick={() => setShowPopUp(true)}
+              >
+                LEARN MORE
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Contact us section */}
-      <div className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3">
+      <div className="container mb-5">
         <div>
-          <h2 className="text-center">Get in Touch</h2>
-          <div className="d-flex justify-content-center">
-            <div className="w-100 w-md-50 w-lg-50 text-center">
-              <p>
-                If you would like to know more details or something specific,
-                feel free to contact us. Our site representative will give you a
-                call back.
-              </p>
+          <h2 className="text-center fw-bold mb-4">Get in Touch</h2>
+          <div className="row">
+            <div
+              className="col-12 col-md-6 col-lg-6 col-xl-6 
+            d-flex justify-content-center align-items-center"
+            >
+              <div className="">
+                <div className="w-100 w-md-50 w-lg-50 mb-3 contactus-content">
+                  <p className="fs-5 mb-5">
+                    If you have any additional queries regarding the project or
+                    would like to take the next step in your investment journey,
+                    you can fill out this query form and our team will be happy
+                    to assist you with what you need.
+                  </p>
+                  <ul className="fs-5">
+                    <li className="my-3">Book a Site Visit</li>
+                    <li className="my-3">Ask For a Brochure</li>
+                    <li className="my-3">Speak to a Representative</li>
+                    <li className="my-3">Ask for a Quotation</li>
+                  </ul>
+                </div>
+              </div>
             </div>
-          </div>
-          <div>
-            <div className="container d-flex justify-content-center">
-              <Form
-                noValidate
-                validated={validated1}
-                className="w-100 border rounded-3 p-3"
-                onSubmit={(e) => handleSubmit(e, "bottom_form")}
-              >
-                <Form.Group className="mb-3" controlId="full_name">
-                  <Form.Control
-                    type="text"
-                    placeholder="Full name"
-                    value={formData.name || ""}
-                    onChange={(e) => handleChange(e)}
-                    name="name"
-                    required
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Please provide a valid name.
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="email_id">
-                  <Form.Control
-                    type="email"
-                    placeholder="Email id"
-                    value={formData.email || ""}
-                    onChange={(e) => handleChange(e)}
-                    name="email"
-                    required
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Please provide a valid email.
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="phone_number">
-                  <Form.Control
-                    type="number"
-                    placeholder="Phone Number"
-                    value={formData.phone || ""}
-                    onChange={(e) => handleChange(e)}
-                    name="phone"
-                    required
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Please provide a valid phone number.
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="message">
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    placeholder="Message"
-                    value={formData.message || ""}
-                    onChange={(e) => handleChange(e)}
-                    name="message"
-                    required
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Please provide a valid message.
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <Button
-                  className="btn btn-background text-white border-0"
-                  type="submit"
-                  disabled={showLoading}
+            <div className="col-12 col-md-6 col-lg-6 col-xl-6">
+              <div className="container d-flex justify-content-center project-detail-contact-form">
+                <Form
+                  noValidate
+                  validated={validated1}
+                  className="w-100 rounded-3 p-3"
+                  onSubmit={(e) => handleSubmit(e, "bottom_form")}
                 >
-                  Submit <LoadingSpinner show={showLoading} />
-                </Button>
-              </Form>
+                  <Row>
+                    <Col>
+                      <Form.Group className="mb-3" controlId="first_name">
+                        <Form.Control
+                          type="text"
+                          placeholder="First Name"
+                          value={formData.name || ""}
+                          onChange={(e) => handleChange(e)}
+                          name="name"
+                          required
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          Please provide a valid name.
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+                    <Col>
+                      <Form.Group className="mb-3" controlId="last_name">
+                        <Form.Control
+                          type="text"
+                          placeholder="Last Name"
+                          value={formData.name || ""}
+                          onChange={(e) => handleChange(e)}
+                          name="name"
+                          required
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          Please provide a valid name.
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Form.Group className="mb-3" controlId="email_id">
+                    <Form.Control
+                      type="email"
+                      placeholder="Email id"
+                      value={formData.email || ""}
+                      onChange={(e) => handleChange(e)}
+                      name="email"
+                      required
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid email.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.Group className="mb-3" controlId="phone_number">
+                    <Form.Control
+                      type="number"
+                      placeholder="Phone Number"
+                      value={formData.phone || ""}
+                      onChange={(e) => handleChange(e)}
+                      name="phone"
+                      required
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid phone number.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.Group className="mb-3" controlId="message">
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      placeholder="Message"
+                      value={formData.message || ""}
+                      onChange={(e) => handleChange(e)}
+                      name="message"
+                      required
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid message.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <div className="d-flex flex-wrap gap-3 justify-content-center">
+                    <Button
+                      className="btn btn-background text-white border-0 px-5 py-3 fs-5 text-uppercase"
+                      type="submit"
+                      disabled={showLoading}
+                    >
+                      Submit Enquiry
+                      <LoadingSpinner show={showLoading} />
+                    </Button>
+                  </div>
+                </Form>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3">
-        <h2 className="text-center pt-5">FAQs</h2>
-        <div className="container mt-3">
+      <div className="container-fluid bg-white mb-5">
+        <h2 className="text-center mb-4 fw-bold">FAQs</h2>
+
+        <div className="faq-container">
           {projectDetail.projectFaqList.map((item, index) => (
-            <div key={`${item.id}-${index}`}>
+            <div key={`${item.id}-${index}`} className="faq-item mb-3">
+              {/* Question */}
               <div
-                className="container questions mt-3 d-flex"
-                id="question1"
+                className="faq-question d-flex justify-content-between align-items-center p-3 rounded-3"
                 onClick={() => toggleAnswer(item.id)}
               >
-                <h4 className="m-0">Q {index + 1}: </h4>
-                <h4 className="ps-2 m-0">{item.question}</h4>
-                <span className="plus-icon">
-                  {isAnswerVisible[item.id] ? "-" : "+"}
+                <h5 className="m-0">
+                  Q{index + 1}: {item.question}
+                </h5>
+                <span className="faq-icon">
+                  {isAnswerVisible[item.id] ? "−" : "+"}
                 </span>
               </div>
+
+              {/* Answer */}
               <div
-                className={`container questions ${isAnswerVisible[item.id] ? "" : "d-none"
-                  } bg-light`}
-                id="answer1"
+                className={`faq-answer px-3 pb-3 ${
+                  isAnswerVisible[item.id] ? "show" : ""
+                }`}
               >
-                <div className="m-0 text-success">
-                  <h4>Ans: </h4>
-                </div>
-                <p className="ps-2 text-success">{item.answer}</p>
+                <p className="m-0">
+                  <strong className="text-success">Ans:</strong> {item.answer}
+                </p>
               </div>
             </div>
           ))}
         </div>
       </div>
+
       <CommonPopUpform show={showPopUp} handleClose={setShowPopUp} />
     </>
   );

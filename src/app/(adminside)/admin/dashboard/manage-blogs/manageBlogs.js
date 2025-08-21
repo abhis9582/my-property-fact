@@ -188,7 +188,7 @@ export default function ManageBlogs({ list, categoryList, cityList }) {
           width={100}
           height={50}
           style={{ borderRadius: "5px" }}
-          unoptimized
+          
         />
       ),
     },
@@ -319,7 +319,7 @@ export default function ManageBlogs({ list, categoryList, cityList }) {
                     className="img-fluid rounded shadow-sm mb-4"
                     width={300}
                     height={100}
-                    unoptimized
+                    
                   />
                 )}
                 <Form.Control
