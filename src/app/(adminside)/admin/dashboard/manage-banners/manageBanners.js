@@ -172,7 +172,6 @@ export default function ManageBanners({ list }) {
                                 width={50}
                                 height={50}
                                 className="rounded-2 mx-1"
-                                unoptimized
                             />
                         ))
                     }
@@ -193,7 +192,6 @@ export default function ManageBanners({ list }) {
                                 alt={item.desktopAltTag || "Project Desktop Banner"}
                                 width={150}
                                 height={50}
-                                unoptimized
                                 className="rounded-2 mx-1"
                             />
                         ))}
@@ -327,7 +325,7 @@ export default function ManageBanners({ list }) {
                                                     alt="preview"
                                                     width={100}
                                                     height={100}
-                                                    unoptimized
+                                                    
                                                     onClick={() => openImagePopUp(img.preview)}
                                                 />
                                                 <Button
@@ -389,7 +387,7 @@ export default function ManageBanners({ list }) {
                                                     alt="preview"
                                                     width={200}
                                                     height={100}
-                                                    unoptimized
+                                                    
                                                     onClick={() => openImagePopUp(img.preview)}
                                                 />
                                                 <Button
@@ -483,7 +481,7 @@ export default function ManageBanners({ list }) {
                                 maxWidth: "100%",
                                 maxHeight: "80vh",
                             }}
-                            unoptimized
+                            
                         />
                     )}
                 </Modal.Body>

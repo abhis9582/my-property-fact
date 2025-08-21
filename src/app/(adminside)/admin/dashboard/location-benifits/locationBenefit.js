@@ -119,7 +119,6 @@ export default function LocationBenefit({ list, projectList }) {
                                 alt="Project"
                                 width={50}
                                 height={50}
-                                unoptimized
                             />
                         ))
                     }

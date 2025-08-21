@@ -60,8 +60,8 @@ export default async function PropertyPage({ params }) {
   return (
     <>
       <Property projectDetail={projectDetail} />
-      <div className="container shadow-lg bg-white rounded-4 mt-3 py-5 mb-3">
-        <h2 className="text-center">Similar projects</h2>
+      <div className="container-fluid mb-3">
+        <h2 className="text-center mb-4 fw-bold">Similar projects</h2>
         <Featured allFeaturedProperties={featuredProjects} />
       </div>
       <Footer cityList={cityList} projectTypes={projectTypesList} />

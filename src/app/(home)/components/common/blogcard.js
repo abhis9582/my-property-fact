@@ -29,7 +29,7 @@ export default function BlogCard({ blog }) {
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}blog/${blog.blogImage}`}
                     alt={blog.blogTitle}
                     className="img-fluid"
-                    unoptimized
+                    
                 />
                 <div className="card-body d-flex flex-column">
                     <p className="blog-date">{new Date(blog.createdAt).toLocaleString('en-US', {

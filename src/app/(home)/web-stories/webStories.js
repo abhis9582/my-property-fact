@@ -32,7 +32,7 @@ export default function WebStories({ webStoryList }) {
                                             width={150}
                                             height={450}
                                             className="card-img-top"
-                                            unoptimized
+                                            
                                         />
                                     </div>
                                     <div className="card-body">

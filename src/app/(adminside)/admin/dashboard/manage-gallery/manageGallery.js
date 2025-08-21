@@ -147,7 +147,7 @@ export default function ManageGallery({ list, projectsList, newList }) {
               alt={`${params.row.pname}`}
               width={100}
               height={40}
-              unoptimized
+              
               onClick={() =>
                 openImagePopUp(
                   `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${params.row.slugURL}/${item.image}`
@@ -270,7 +270,7 @@ export default function ManageGallery({ list, projectsList, newList }) {
                           alt="preview"
                           width={200}
                           height={100}
-                          unoptimized
+                          
                           onClick={() => openImagePopUp(img.preview)}
                         />
                         <Button
@@ -357,7 +357,7 @@ export default function ManageGallery({ list, projectsList, newList }) {
                 maxWidth: "100%",
                 maxHeight: "80vh",
               }}
-              unoptimized
+              
             />
           )}
         </Modal.Body>
@@ -384,7 +384,7 @@ export default function ManageGallery({ list, projectsList, newList }) {
                 alt={projectSlug}
                 width={200}
                 height={100}
-                unoptimized
+                
               />
               <div>
                 <FontAwesomeIcon
