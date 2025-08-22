@@ -59,10 +59,11 @@ export default async function PropertyPage({ params }) {
     ]);
   return (
     <>
+    {/* cityName */}
       <Property projectDetail={projectDetail} />
       <div className="container-fluid mb-3">
         <h2 className="text-center mb-4 fw-bold">Similar projects</h2>
-        <Featured allFeaturedProperties={featuredProjects} />
+        <Featured allFeaturedProperties={featuredProjects.filter(item=> item.cityName === projectDetail.cityName && item.propertyTypeName === projectDetail.propertyTypeName)} />
       </div>
       <Footer cityList={cityList} projectTypes={projectTypesList} />
     </>

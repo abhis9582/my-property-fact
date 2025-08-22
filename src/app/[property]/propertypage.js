@@ -196,18 +196,14 @@ export default function Property({ projectDetail }) {
   };
 
   useEffect(() => {
-    //Handle header on scrolling page
+    const header = document.querySelector(".project-detail-header");
     const handleScroll = () => {
-      if (window.scrollY > 200) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      const scrollY = window.scrollY;
+      const opacity = Math.min(scrollY / 2000, 1);
+      header.style.background = `rgb(13, 88, 52, ${opacity})`;
     };
     window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   //Handle opening and closing of menu bar
@@ -272,14 +268,14 @@ export default function Property({ projectDetail }) {
     <>
       {/* Header for property detail page */}
       <header
-        className={`project-detail-header bg-root-color px-4 ${
+        className={`project-detail-header px-4 ${
           isScrolled ? "fixed-header" : ""
         }`}
       >
         <div className="main-header">
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex justify-content-center align-items-center">
-              <Link href="/">
+              <Link href="#">
                 <Image
                   width={198}
                   height={50.75}
@@ -536,7 +532,10 @@ export default function Property({ projectDetail }) {
           </div>
         </div>
 
-        <div className="container py-5 bg-white rounded-3 mt-3 mb-3">
+        <div
+          id="overview"
+          className="container py-5 bg-white rounded-3 mt-3 mb-3"
+        >
           <div className="row gy-5 align-items-stretch">
             {/* Project Info */}
             <div className="col-lg-4">
@@ -609,10 +608,10 @@ export default function Property({ projectDetail }) {
           ></div>
 
           {/* Amenities Grid */}
-          <div className="d-flex flex-wrap justify-content-center gap-5 mb-5">
+          <div className="d-flex flex-wrap justify-content-center gap-3 mb-5">
             {projectDetail.projectAmenityList.map((item, index) => (
               <div key={index} className="amenity-detail-container">
-                <div className="bg-white mb-3 p-3">
+                <div className="bg-white mb-3 p-3 rounded-2">
                   <Image
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}amenity/${item.image}`}
                     height={60}
@@ -714,7 +713,7 @@ export default function Property({ projectDetail }) {
         </div>
 
         {/* Gallery section */}
-        <div className="container-fluid bg-light py-3 mb-5" id="gallery">
+        <div className="container-fluid bg-light py-5 mb-5" id="gallery">
           <h2 className="text-center mb-4 fw-bold">Gallery</h2>
           <div className="container-fluid mt-4">
             <div className="row justify-content-center">
@@ -814,7 +813,6 @@ export default function Property({ projectDetail }) {
                   src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.locationMapImage}`}
                   alt="Project Location Map"
                   fill
-                  
                   className="object-fit-cover"
                 />
 
@@ -831,7 +829,6 @@ export default function Property({ projectDetail }) {
       {/* About the project */}
       <div
         className="container-fluid py-5 mb-5"
-        id="overview"
         style={{
           backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail?.projectDesktopBannerDtoList[0]?.desktopImage}`})`,
           backgroundSize: "cover",
