@@ -182,3 +182,14 @@ html {
 .job-description ul li {
   margin: 10px 0px;
 }
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

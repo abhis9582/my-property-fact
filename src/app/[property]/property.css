@@ -1,9 +1,8 @@
 .navi {
   font-family: var(--heaing-font);
 }
-
 .image-con {
-  height: calc(100vh - 50px);
+  height: calc(100vh);
   display: flex !important;
   opacity: 0;
   transition: opacity 0.8s ease-in-out;
@@ -38,6 +37,18 @@
   width: 100%;
   height: 100px;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  pointer-events: none;
+}
+
+.slick-slider-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  z-index: 2;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent);
   pointer-events: none;
 }
 
@@ -82,30 +93,13 @@
   transition: all 0.6s cubic-bezier(0.785, 0.135, 0.15, 0.86);
 }
 
-/* .project-detail-header {
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    transform: translateY(0);
-    opacity: 1;
-} */
-
-.fixed-header {
+.project-detail-header {
   position: fixed;
-  top: 0;
-  left: 0;
+  padding: 5px;
+  z-index: 3;
   width: 100%;
-  z-index: 9999;
-}
-
-@keyframes slideDown {
-  from {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  background: transparent;
+  transition: background 0.2s linear;
 }
 
 .menuBtn.closeMenuBtn {
@@ -289,7 +283,7 @@
   color: white;
   cursor: pointer;
   animation: bounce 2s infinite;
-  z-index: 10;
+  z-index: 1;
 }
 
 @keyframes bounce {
@@ -615,4 +609,11 @@ a {
 .contactus-content ul {
   list-style: disc !important;
   font-family: var(--text-font);
+}
+#overview,
+#amenities,
+#floorplan,
+#gallery,
+#location {
+  scroll-margin-top: 100px;
 }
