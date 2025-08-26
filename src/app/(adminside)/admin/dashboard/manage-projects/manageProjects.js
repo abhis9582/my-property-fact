@@ -12,6 +12,8 @@ import CommonModal from "../common-model/common-model";
 import DataTable from "../common-model/data-table";
 import DashboardHeader from "../common-model/dashboardHeader";
 import { useRouter } from "next/navigation";
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 // Dynamically import JoditEditor with SSR disabled
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
@@ -220,13 +222,13 @@ export default function ManageProjects({
       console.log(error);
 
       toast.error(
-        error.response?.data?.error || "An error occurred while submitting the form."
+        error.response?.data?.error ||
+          "An error occurred while submitting the form."
       );
     } finally {
       setShowLoading(false);
     }
   };
-
 
   const formFields = [
     {
@@ -329,7 +331,7 @@ export default function ManageProjects({
       required: false,
       colSize: 6,
       width: 815,
-      height: 813
+      height: 813,
     },
     {
       label: "Project Logo",
@@ -339,7 +341,7 @@ export default function ManageProjects({
       required: false,
       colSize: 6,
       width: 792,
-      height: 203
+      height: 203,
     },
     {
       label: "Project Thumbnail",
@@ -349,7 +351,7 @@ export default function ManageProjects({
       required: false,
       colSize: 6,
       width: 600,
-      height: 600
+      height: 600,
     },
     {
       label: "Project price",
@@ -508,12 +510,150 @@ export default function ManageProjects({
     await submitFormData(); // No need for handleSubmit since there's no event
     router.refresh();
   };
+
+  const exportAllProjectToExcel = async () => {
+  let projects = [...projectDetailList]; // clone to avoid mutation
+
+  if (!projects || projects.length === 0) {
+    return;
+  }
+
+  // 🔹 Remove keys ending with "_id"
+  let headers = Object.keys(projects[0]).filter(
+    (key) => !key.toLowerCase().endsWith("id") || key.toLowerCase() === "id"
+  );
+
+  // 🔹 Ensure "id" is first and "project_name" is second
+  headers = headers.sort((a, b) => {
+    if (a === "id") return -1;
+    if (b === "id") return 1;
+    if (a === "projectName") return headers.includes("id") ? -1 : 1;
+    if (b === "projectName") return headers.includes("id") ? 1 : -1;
+    return 0;
+  });
+
+  // 🔹 Sort projects by id
+  projects.sort((a, b) => (a.id || 0) - (b.id || 0));
+
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet("Projects");
+
+  // 🔹 Format headers (capitalize + replace underscores with spaces)
+  const formattedHeaders = headers.map((h) =>
+    h.replace(/_/g, " ").toUpperCase()
+  );
+
+  // 🔹 Add headers row
+  worksheet.addRow(formattedHeaders);
+
+  // 🔹 Style headers
+  const headerRow = worksheet.getRow(1);
+  headerRow.font = { bold: true, color: { argb: "FFFFFFFF" } };
+  headerRow.fill = {
+    type: "pattern",
+    pattern: "solid",
+    fgColor: { argb: "FF228B22" }, // green
+  };
+  headerRow.alignment = { vertical: "middle", horizontal: "center" };
+
+  // 🔹 Add filter on headers
+  worksheet.autoFilter = {
+    from: { row: 1, column: 1 },
+    to: { row: 1, column: headers.length },
+  };
+
+  // 🔹 Iterate over projects and add rows
+  for (let rowIndex = 0; rowIndex < projects.length; rowIndex++) {
+    const project = projects[rowIndex];
+    const rowValues = [];
+
+    headers.forEach((key) => {
+      if (
+        key === "project_image" ||
+        key === "project_logo" ||
+        key === "project_thumbnail"
+      ) {
+        rowValues.push(""); // placeholder for image
+      } else if (key === "projectPrice") {
+        const price = parseFloat(project[key]);
+        if (!isNaN(price)) {
+          if (price >= 1) {
+            rowValues.push(`${parseFloat(price.toFixed(2))} Cr`);
+          } else {
+            rowValues.push(`${parseFloat((price * 100).toFixed(2))} Lac`);
+          }
+        } else {
+          rowValues.push(project[key] || "");
+        }
+      } else {
+        rowValues.push(project[key] || "");
+      }
+    });
+
+    const row = worksheet.addRow(rowValues);
+
+    // 🔹 Insert images
+    headers.forEach((key, colIndex) => {
+      if (
+        key === "project_image" ||
+        key === "project_logo" ||
+        key === "project_thumbnail"
+      ) {
+        const imagePath = project[key]; // Can be public path or base64
+        if (imagePath) {
+          try {
+            const imageId = workbook.addImage({
+              filename: imagePath,
+              extension: imagePath.split(".").pop(),
+            });
+
+            worksheet.addImage(imageId, {
+              tl: { col: colIndex, row: rowIndex + 1 }, // 0-based
+              ext: { width: 80, height: 80 },
+            });
+
+            worksheet.getColumn(colIndex + 1).width = 20;
+            row.height = 80;
+          } catch (e) {
+            console.warn("Image error:", e);
+          }
+        }
+      }
+    });
+  }
+
+  // 🔹 Auto size all columns with max width cap (≈30 chars ~ 200px)
+  worksheet.columns.forEach((col) => {
+    let maxLength = 15; // min width
+    col.eachCell({ includeEmpty: true }, (cell) => {
+      const len = cell.value ? cell.value.toString().length : 0;
+      if (len > maxLength) maxLength = len;
+    });
+    col.width = Math.min(maxLength + 2, 30); // cap at 30
+  });
+
+  // 🔹 Unique file name with date-time
+  const now = new Date();
+  const timestamp = now
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace("T", "_")
+    .split(".")[0];
+  const fileName = `projects_list_${timestamp}.xlsx`;
+
+  // 🔹 Export as Excel
+  const buffer = await workbook.xlsx.writeBuffer();
+  saveAs(new Blob([buffer]), fileName);
+};
+
   return (
     <>
       <DashboardHeader
         buttonName={"+ Add new Project"}
         functionName={openAddModel}
         heading={"Manage Projects"}
+        exportExcel={"Export to excel"}
+        exportFunction={exportAllProjectToExcel}
       />
       <div className="table-container mt-5">
         <DataTable list={projectDetailList} columns={columns} />
@@ -574,7 +714,6 @@ export default function ManageProjects({
                             width={field.width || 200}
                             height={field.height || 200}
                             className="mb-3 img-fluid rounded"
-                            
                           />
                           <br />
                         </div>
@@ -616,16 +755,19 @@ export default function ManageProjects({
             </Row>
             {/* <Row> */}
 
-              <Button
-                className="mt-3 btn btn-success"
-                type="submit"
-                disabled={showLoading}
-              >
-                {buttonName} <LoadingSpinner show={showLoading} />
-              </Button>
-              <Button className="mt-3 ms-3 btn btn-secondary" onClick={() => setShowModal(false)}>
-                Cancel
-              </Button>
+            <Button
+              className="mt-3 btn btn-success"
+              type="submit"
+              disabled={showLoading}
+            >
+              {buttonName} <LoadingSpinner show={showLoading} />
+            </Button>
+            <Button
+              className="mt-3 ms-3 btn btn-secondary"
+              onClick={() => setShowModal(false)}
+            >
+              Cancel
+            </Button>
             {/* </Row> */}
           </Form>
         </Modal.Body>

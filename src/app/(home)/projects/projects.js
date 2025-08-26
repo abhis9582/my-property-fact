@@ -20,11 +20,14 @@ export default function Projects() {
   const { projectData } = useProjectContext();
   const observer = useRef(null);
   const loadMoreRef = useRef(null);
+  const [isActive, setIsActive] = useState("");
   const PAGE_LIMIT = 15;
   const { setProjectData } = useProjectContext();
+  const [fadeKey, setFadeKey] = useState(0);
   // Setup observer ONLY when enabled
   const fetchParamsData = async (queryP) => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}projects/search-by-type-city-budget`,
         {
@@ -34,15 +37,22 @@ export default function Projects() {
       setProjectData(response.data);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
   const fetchAllProjects = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`);
+      setLoading(true);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
+      );
       const raw = await res.json();
       setProjectData(raw.filter((item) => item.status === true));
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -53,6 +63,11 @@ export default function Projects() {
       fetchParamsData(searched_querry);
     }
   }, []);
+
+  useEffect(() => {
+    setAllProjectsList(projectData);
+    setIsActive("All");
+  }, [projectData]);
 
   useEffect(() => {
     if (!observerEnabled || loading || !hasMore) return;
@@ -74,23 +89,85 @@ export default function Projects() {
     };
   }, [observerEnabled, loading, hasMore]);
 
+  const filterSectionTab = (tabName) => {
+    setIsActive(tabName);
+    if (tabName === "All") {
+      setAllProjectsList(projectData);
+    } else if (tabName === "Commercial") {
+      setAllProjectsList(
+        projectData.filter((item) => item.propertyTypeName === "Commercial")
+      );
+    } else if (tabName === "Residential") {
+      setAllProjectsList(
+        projectData.filter((item) => item.propertyTypeName === "Residential")
+      );
+    } else if (tabName === "New Launch") {
+      setAllProjectsList(
+        projectData.filter((item) => item.projectStatusName === "New Launch")
+      );
+    }
+    setFadeKey((prev) => prev + 1);
+    window.scrollTo({ top: 260, behavior: "smooth" });
+  };
+
   return (
     <div className="containr-fluid">
       <CommonHeaderBanner image={"project-banner.jpg"} headerText={pageName} />
       <CommonBreadCrum pageName={pageName} />
-      <div className="container my-3">
-        <div className="row g-3">
-          {projectData.map((item, index) => (
-            <div
-              key={item.id + "_" + index}
-              className="col-12 col-sm-6 col-md-4"
+      <div className="container-fluid my-3">
+        <div className="row position-relative">
+          <div className="col-12 col-md-2 col-lg-2 col-xl-2 project-page-filter pt-3">
+            <p
+              className={`cursor-pointer px-3 py-1 ${
+                isActive === "All" ? "filter-active" : ""
+              }`}
+              onClick={() => filterSectionTab("All")}
             >
-              <PropertyContainer data={item} />
+              All
+            </p>
+            <p
+              className={`cursor-pointer px-3 py-1 ${
+                isActive === "Commercial" ? "filter-active" : ""
+              }`}
+              onClick={() => filterSectionTab("Commercial")}
+            >
+              Commercial
+            </p>
+            <p
+              className={`cursor-pointer px-3 py-1 ${
+                isActive === "Residential" ? "filter-active" : ""
+              }`}
+              onClick={() => filterSectionTab("Residential")}
+            >
+              Residential
+            </p>
+            <p
+              className={`cursor-pointer px-3 py-1 ${
+                isActive === "New Launch" ? "filter-active" : ""
+              }`}
+              onClick={() => filterSectionTab("New Launch")}
+            >
+              New Launch
+            </p>
+          </div>
+          <div key={fadeKey}  className="col-12 col-md-10 fade-list">
+            <div className="row g-3">
+              {allProjectsList.length > 0 ? (
+                allProjectsList.map((item, index) => (
+                  <div
+                    key={item.id + "_" + index}
+                    className="col-12 col-sm-6 col-md-4"
+                  >
+                    <PropertyContainer data={item} />
+                  </div>
+                ))
+              ) : (
+                <div>No projects found</div>
+              )}
+              {loading && <LoadingProperty />}
             </div>
-          ))}
-          {projectData.length < 1 && <LoadingProperty />}
+          </div>
         </div>
-
         {/* Load more trigger */}
         {hasMore && (
           <div ref={loadMoreRef} className="text-center my-3">
