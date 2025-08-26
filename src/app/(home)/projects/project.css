@@ -1,0 +1,29 @@
+.project-page-filter {
+  position: sticky;
+  top: 80px;
+  z-index: 20;
+  background: #fff;
+  padding: 1rem;
+  height: fit-content;
+}
+
+.filter-active {
+  background-color: rgb(0, 164, 0);
+  color: white;
+  border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+  .project-page-filter {
+    display: none;
+  }
+}
+
+.fade-list {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
