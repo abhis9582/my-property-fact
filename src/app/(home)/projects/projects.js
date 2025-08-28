@@ -152,7 +152,7 @@ export default function Projects() {
           </div>
           <div key={fadeKey}  className="col-12 col-md-10 fade-list">
             <div className="row g-3">
-              {allProjectsList.length > 0 ? (
+              {!loading && allProjectsList.length > 0 ? (
                 allProjectsList.map((item, index) => (
                   <div
                     key={item.id + "_" + index}
