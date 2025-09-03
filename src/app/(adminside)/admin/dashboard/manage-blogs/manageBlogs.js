@@ -44,7 +44,7 @@ export default function ManageBlogs({ list, categoryList, cityList }) {
     status: 1,
     blogCategory: "",
     id: 0,
-    cityId: 0
+    cityId: 0,
   };
 
   const [formData, setFormData] = useState(inputFields);
@@ -119,9 +119,10 @@ export default function ManageBlogs({ list, categoryList, cityList }) {
     setBlogId(item.id);
     setBlogDescription(item.blogDescription);
     setPreviousBlogImage(item.blogImage);
-    item.categoryId == 5 ? setIsShowCityDropDown(true) :
-        setIsShowCityDropDown(false);
-    
+    item.categoryId == 5
+      ? setIsShowCityDropDown(true)
+      : setIsShowCityDropDown(false);
+
     setFormData({
       blogTitle: item.blogTitle,
       blogKeywords: item.blogKeywords,
@@ -129,7 +130,7 @@ export default function ManageBlogs({ list, categoryList, cityList }) {
       slugUrl: item.slugUrl,
       blogCategory: item.categoryId,
       id: item.id,
-      cityId: item.cityId
+      cityId: item.cityId,
     });
   };
 
@@ -188,7 +189,6 @@ export default function ManageBlogs({ list, categoryList, cityList }) {
           width={100}
           height={50}
           style={{ borderRadius: "5px" }}
-          
         />
       ),
     },
@@ -319,7 +319,6 @@ export default function ManageBlogs({ list, categoryList, cityList }) {
                     className="img-fluid rounded shadow-sm mb-4"
                     width={300}
                     height={100}
-                    
                   />
                 )}
                 <Form.Control

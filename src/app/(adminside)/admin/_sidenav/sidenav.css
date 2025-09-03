@@ -2,17 +2,17 @@
 :root{
     --theme-volor: #68ac78;
 }
-p {
+/* p {
     font-family: 'Lexend', sans-serif;
     font-size: 1.1em;
     font-weight: 300;
     line-height: 1.7em;
     color: #999;
-}
+} */
 
-a,
-a:hover,
-a:focus {
+.sidebar-header a,
+.sidebar-header a:hover,
+.sidebar-header a:focus {
     color: inherit;
     text-decoration: none;
     transition: all 0.3s;
@@ -82,6 +82,8 @@ a:focus {
     padding: 10px;
     font-size: 1.1em;
     display: block;
+    color: #fff;
+    text-decoration: none;
 }
 
 #sidebar ul li a:hover {
@@ -107,17 +109,17 @@ a[data-toggle="collapse"] {
     transform: translateY(-50%);
 }
 
-ul ul a {
+.sidebar-header ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
     background: var(--theme-volor);
 }
 
-ul.CTAs {
+.sidebar-header ul.CTAs {
     padding: 20px;
 }
 
-ul.CTAs a {
+.sidebar-header ul.CTAs a {
     text-align: center;
     font-size: 0.9em !important;
     display: block;
@@ -125,13 +127,13 @@ ul.CTAs a {
     margin-bottom: 5px;
 }
 
-a.download {
+.sidebar-header a.download {
     background: #fff;
     color: var(--theme-volor);
 }
 
-a.article,
-a.article:hover {
+.sidebar-header a.article,
+.sidebar-header a.article:hover {
     background: var(--theme-volor) !important;
     color: #fff !important;
 }
