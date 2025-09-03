@@ -53,7 +53,7 @@ export default function SideNav() {
             Manage Options
           </Link>
           <ul
-            className={`collapse list-unstyled ${activeDropdown === "dropdown3" ? "show" : ""
+            className={`collapse list-unstyled ms-4 ${activeDropdown === "dropdown3" ? "show" : ""
               }`}
           >
             <li>
@@ -107,7 +107,7 @@ export default function SideNav() {
             Management
           </Link>
           <ul
-            className={`collapse list-unstyled ${activeDropdown === "dropdown1" ? "show" : ""
+            className={`collapse list-unstyled ms-4 ${activeDropdown === "dropdown1" ? "show" : ""
               }`}
           >
             <li>
@@ -160,7 +160,7 @@ export default function SideNav() {
             Insight Management
           </Link>
           <ul
-            className={`collapse list-unstyled ${activeDropdown === "dropdown2" ? "show" : ""
+            className={`collapse list-unstyled ms-4 ${activeDropdown === "dropdown2" ? "show" : ""
               }`}
           >
             <li>
@@ -204,7 +204,7 @@ export default function SideNav() {
             Blog management
           </Link>
           <ul
-            className={`collapse list-unstyled ${activeDropdown === "dropdown4" ? "show" : ""
+            className={`collapse list-unstyled ms-4 ${activeDropdown === "dropdown4" ? "show" : ""
               }`}
           >
             <li>
@@ -230,7 +230,7 @@ export default function SideNav() {
             Web story management
           </Link>
           <ul
-            className={`collapse list-unstyled ${activeDropdown === "dropdown5" ? "show" : ""
+            className={`collapse list-unstyled ms-4 ${activeDropdown === "dropdown5" ? "show" : ""
               }`}
           >
             <li>
