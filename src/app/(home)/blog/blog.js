@@ -7,6 +7,7 @@ import axios from "axios";
 import { LoadingSpinner } from "../contact-us/page";
 import { Pagination, Stack } from "@mui/material";
 import BlogCard from "../components/common/blogcard";
+import { fetchBlogs } from "@/app/_global_components/masterFunction";
 export default function Blog() {
   // defining state for list of blogs
   const [blogsList, setBlogsList] = useState([]);
@@ -16,17 +17,10 @@ export default function Blog() {
   const [totalPages, setTotalPages] = useState(0);
   //fetching all blogs list
   const getBlogsList = async () => {
-    // fetching blogs list from api
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}blog/get?page=${page}&size=${size}&from=${'blog'}`
-      );
-      setBlogsList(response.data.content);
-      setTotalPages(response.data.totalPages);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
+    const blogsList = await fetchBlogs(page, size);
+    setBlogsList(blogsList.content);
+    setTotalPages(blogsList.totalPages);
+    setLoading(false);
   };
   useEffect(() => {
     getBlogsList();
@@ -44,7 +38,7 @@ export default function Blog() {
     <>
       <CommonHeaderBanner image={"blog-banner.jpg"} headerText={"Blog"} />
       <CommonBreadCrum pageName={"Blog"} />
-      <div className="container-fluid mb-3 px-4">
+      <div className="container-fluid mb-3 px-5">
         {/* <p className="text-center h2 mt-3">Blog</p> */}
         <div className="row">
           {loading ? (
@@ -56,7 +50,10 @@ export default function Blog() {
             </div>
           ) : (
             blogsList.map((blog, index) => (
-              <div className="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4 mb-4 blog-card" key={index}>
+              <div
+                className="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4 mb-4 blog-card"
+                key={index}
+              >
                 <BlogCard key={index} blog={blog} index={index} />
               </div>
             ))

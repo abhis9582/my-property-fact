@@ -118,7 +118,7 @@ export default function SearchFilter({ projectTypeList, cityList }) {
                 {loading ? (
                   <Spinner animation="border" variant="light" />
                 ) : (
-                  <FontAwesomeIcon icon={faSearch} size="lg" />
+                  <FontAwesomeIcon icon={faSearch} fixedWidth />
                 )}
               </button>
             </div>

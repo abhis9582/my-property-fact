@@ -5,9 +5,11 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Spinner } from "react-bootstrap";
+import LoginSignupModal from "../_homecomponents/loginSignupModal";
 
 const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [showLoginModal, setShowModal] = useState(false);
   const pathname = usePathname();
   // Check if the pathname starts with /city/
   const isCityRoute = pathname.startsWith("/city");
@@ -78,6 +80,10 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
     }
   };
 
+  const openSignUpModal = () => {
+    setShowModal(true);
+  }
+
   return (
     <>
       <div
@@ -98,11 +104,11 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
         </div>
         <nav className="d-none d-lg-flex">
           <div className="menu position-relative">
-            <ul className="d-flex gap-5 m-0 fw-bold align-items-center header-links">
+            <ul className="d-flex gap-5 m-0 align-items-center header-links list-unstyled fw-bold">
               <li className="hasChild">
                 <Link
                   href="#"
-                  className={`text-light text-uppercase py-3 ${
+                  className={`text-light text-uppercase text-decoration-none py-3 ${
                     isCityRoute ? "header-link-active" : ""
                   }`}
                 >
@@ -119,7 +125,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                         <li key={city.id}>
                           <Link
                             href={`/city/${city.slugURL}`}
-                            className={`text-light py-3 ${
+                            className={`text-light py-3 text-decoration-none ${
                               pathname === "/city/" + city.URL
                                 ? "header-link-active"
                                 : ""
@@ -136,7 +142,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
               <li className="hasChild">
                 <Link
                   href="#"
-                  className={`text-light py-3 text-uppercase ${
+                  className={`text-light py-3 text-uppercase text-decoration-none ${
                     isBuilderRoute ? "header-link-active" : ""
                   }`}
                 >
@@ -153,7 +159,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                         <li key={builder.id}>
                           <Link
                             href={`/builder/${builder.slugUrl}`}
-                            className={`text-light ${
+                            className={`text-light text-decoration-none ${
                               pathname === "/builder/" + builder.slugUrl
                                 ? "header-link-active"
                                 : ""
@@ -170,7 +176,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
               <li className="hasChild">
                 <Link
                   href="/projects"
-                  className={`text-light py-3 text-uppercase ${
+                  className={`text-light py-3 text-uppercase text-decoration-none ${
                     isProjectTypeRoute ? "header-link-active" : ""
                   }`}
                 >
@@ -187,7 +193,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                         <li key={project.id}>
                           <Link
                             href={`/projects/${project.slugUrl}`}
-                            className={`text-light ${
+                            className={`text-light text-decoration-none ${
                               pathname === "/projects/" + project.slugUrl
                                 ? "header-link-active"
                                 : ""
@@ -204,7 +210,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
               <li className="hasChild">
                 <Link
                   href="/about-us"
-                  className={`text-light py-3 text-uppercase ${
+                  className={`text-light py-3 text-uppercase text-decoration-none ${
                     pathname === "/about-us" ? "header-link-active" : ""
                   }`}
                 >
@@ -214,7 +220,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
               <li className="hasChild">
                 <Link
                   href="/blog"
-                  className={`text-light py-3 text-uppercase ${
+                  className={`text-light py-3 text-uppercase text-decoration-none ${
                     isBlogTypeRoute ? "header-link-active" : ""
                   }`}
                 >
@@ -227,7 +233,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
               <li className="hasChild">
                 <Link
                   href="/career"
-                  className={`text-light py-3 text-uppercase ${
+                  className={`text-light py-3 text-uppercase text-decoration-none ${
                     pathname === "/career" ? "header-link-active" : ""
                   }`}
                 >
@@ -237,12 +243,18 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
               <li className="hasChild">
                 <Link
                   href="/contact-us"
-                  className={`text-light py-3 text-uppercase ${
+                  className={`text-light py-3 text-uppercase text-decoration-none ${
                     pathname === "/contact-us" ? "header-link-active" : ""
                   }`}
                 >
                   Contact us
                 </Link>
+              </li>
+              <li>
+                <div className="bg-white rounded rounded-3 p-2 cursor-pointer hover-effect"
+                onClick={openSignUpModal}>
+                  <p className="text-dark m-0 p-0">Post Property</p>
+                </div>
               </li>
             </ul>
           </div>
@@ -257,9 +269,9 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
         <div className="mbMenu">
           <div className="h-100 scroller">
             <div className="bigMenuList">
-              <ul className="list-inline active">
+              <ul className="list-inline active list-unstyled">
                 <li>
-                  <Link href="/" onClick={openMenu}>
+                  <Link className="text-decoration-none" href="/" onClick={openMenu}>
                     Home
                   </Link>
                 </li>
@@ -268,7 +280,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                     activeDropdown === "city" ? "active" : ""
                   }`}
                 >
-                  <Link href="#" onClick={() => openMenuMobile("city")}>
+                  <Link href="#" className="text-decoration-none" onClick={() => openMenuMobile("city")}>
                     City<sup>+</sup>
                   </Link>
                   <div
@@ -276,12 +288,13 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                       activeDropdown === "city" ? "activeHeader" : ""
                     }`}
                   >
-                    <ul className="list-inline">
+                    <ul className="list-inline list-unstyled">
                       {cityList?.map((city) => (
                         <li key={city.id}>
                           <Link
                             href={`/city/${city.slugURL}`}
                             onClick={openMenu}
+                            className="text-decoration-none"
                           >
                             {city.cityName}
                           </Link>
@@ -295,7 +308,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                     activeDropdown === "builder" ? "active" : ""
                   }`}
                 >
-                  <Link href="#" onClick={() => openMenuMobile("builder")}>
+                  <Link className="text-decoration-none" href="#" onClick={() => openMenuMobile("builder")}>
                     Builder<sup>+</sup>
                   </Link>
                   <div
@@ -303,10 +316,11 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                       activeDropdown === "builder" ? "activeHeader" : ""
                     }`}
                   >
-                    <ul className="list-inline">
+                    <ul className="list-inline list-unstyled">
                       {builderList?.map((builder) => (
                         <li key={builder.id}>
                           <Link
+                          className="text-decoration-none"
                             href={`/builder/${builder.slugUrl}`}
                             onClick={openMenu}
                           >
@@ -322,7 +336,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                     activeDropdown === "projects" ? "active" : ""
                   }`}
                 >
-                  <Link href="#" onClick={() => openMenuMobile("projects")}>
+                  <Link href="#" className="text-decoration-none" onClick={() => openMenuMobile("projects")}>
                     Projects<sup>+</sup>
                   </Link>
                   <div
@@ -330,12 +344,13 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                       activeDropdown === "projects" ? "activeHeader" : ""
                     }`}
                   >
-                    <ul className="list-inline">
+                    <ul className="list-inline list-unstyled">
                       {projectTypes?.map((project) => (
                         <li key={project.id}>
                           <Link
                             href={`/projects/${project.slugUrl}`}
                             onClick={openMenu}
+                            className="text-decoration-none"
                           >
                             {project.projectTypeName}
                           </Link>
@@ -347,9 +362,9 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
               </ul>
             </div>
             <div className="smallMenuList">
-              <ul className="list-inline">
+              <ul className="list-inline list-unstyled">
                 <li>
-                  <Link href="/blog" onClick={openMenu}>
+                  <Link className="text-decoration-none" href="/blog" onClick={openMenu}>
                     Blog
                   </Link>
                 </li>
@@ -357,31 +372,32 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                   <Link href="/web-stories" onClick={openMenu}>Web Stories</Link>
                 </li> */}
                 <li>
-                  <Link href="/about-us" onClick={openMenu}>
+                  <Link className="text-decoration-none" href="/about-us" onClick={openMenu}>
                     About Us
                   </Link>
                 </li>
                 <li>
-                  <Link href="/clients-speak" onClick={openMenu}>
+                  <Link className="text-decoration-none" href="/clients-speak" onClick={openMenu}>
                     Clients Speak
                   </Link>
                 </li>
                 <li>
-                  <Link href="/career" onClick={openMenu}>
+                  <Link className="text-decoration-none" href="/career" onClick={openMenu}>
                     Career
                   </Link>
                 </li>
                 <li>
-                  <Link href="/contact-us" onClick={openMenu}>
+                  <Link className="text-decoration-none" href="/contact-us" onClick={openMenu}>
                     Contact us
                   </Link>
                 </li>
               </ul>
             </div>
             <div className="socialMediaLink">
-              <ul className="list-inline">
+              <ul className="list-inline list-unstyled">
                 <li>
                   <Link
+                    className="text-decoration-none"
                     href="https://www.facebook.com/starestate.in"
                     target="_blank"
                   >
@@ -390,6 +406,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                 </li>
                 <li>
                   <Link
+                  className="text-decoration-none"
                     href="https://www.instagram.com/starestate_official/"
                     target="_blank"
                   >
@@ -398,6 +415,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                 </li>
                 <li>
                   <Link
+                  className="text-decoration-none"
                     href="https://www.linkedin.com/company/star-estate"
                     target="_blank"
                   >
@@ -406,6 +424,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                 </li>
                 <li>
                   <Link
+                  className="text-decoration-none"
                     href="https://www.youtube.com/channel/UCwfDf7Ut8jrkjiBeRnbZUPw"
                     target="_blank"
                   >
@@ -417,6 +436,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
           </div>
         </div>
       </div>
+      <LoginSignupModal show={showLoginModal} handleClose={setShowModal}/>
     </>
   );
 };

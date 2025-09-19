@@ -44,11 +44,10 @@
 /* Common banner heading text style starts */
 .projects-heading {
   position: absolute;
-  font-family: var(--headeing-bolded);
+  /* font-family: var(--headeing-bolded); */
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  font-weight: bold;
   color: #226401;
   font-size: 5rem;
   z-index: 1;

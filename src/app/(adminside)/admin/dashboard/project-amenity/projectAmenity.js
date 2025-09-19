@@ -42,8 +42,6 @@ export default function ProjectsAmenity({ projectList, amenityList }) {
         setShowModal(true);
         setTitle("Add New Amenity");
         setButtonName("Add");
-        setSelectedValue([]);
-        setProjectId(0);
     };
 
     //Handling submitting form

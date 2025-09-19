@@ -1,6 +1,6 @@
-.navi {
+/* .navi {
   font-family: var(--heaing-font);
-}
+} */
 .image-con {
   height: calc(100vh);
   display: flex !important;

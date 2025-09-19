@@ -81,11 +81,11 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
               <div className="col-md-12 col-sm-12 foot-menu">
                 <div className="insideBox">
                   <p className="text-white mx-4">Popular cities</p>
-                  <ul className=" footer-cities d-flex flex-wrap">
+                  <ul className=" footer-cities d-flex flex-wrap list-unstyled">
                     {cityList.map((item, index) => (
                       <li key={`${item.cityName}-${index}`}>
                         <Link
-                          className="footer-text"
+                          className="footer-text text-decoration-none"
                           href={`/city/${item.slugURL}`}
                         >
                           {item.cityName}
@@ -104,17 +104,17 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
           <div className="row">
             <div className="col-12 col-md-6 col-lg-3 col-xl-3">
               <ul>
-                <CityList prefix={"Apartments in "} cityList={cityList} />
+                <CityList prefix={"Apartments in "} cityList={cityList} cat={"apartments"}/>
               </ul>
             </div>
             <div className="col-12 col-md-6 col-lg-3 col-xl-3">
               <ul>
-                <CityList prefix={"New Projects in "} cityList={cityList} />
+                <CityList prefix={"New Projects in "} cityList={cityList} cat={"new-projects"}/>
               </ul>
             </div>
             <div className="col-12 col-md-6 col-lg-3 col-xl-3">
               <ul>
-                <CityList prefix={"Flats in "} cityList={cityList} />
+                <CityList prefix={"Flats in "} cityList={cityList} cat={"flats"}/>
               </ul>
             </div>
 
@@ -123,6 +123,7 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
                 <CityList
                   prefix={"Commercial Property in "}
                   cityList={cityList}
+                  cat={"commercial"}
                 />
               </ul>
             </div>
@@ -132,11 +133,11 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
           <div className="row">
             <div className="col-6 col-md-3 col-sm-6">
               <p className="text-golden">Projects</p>
-              <ul className="p-0">
+              <ul className="p-0 list-unstyled">
                 {projectTypes.map((item, index) => (
                   <li key={`${item.name}-${index}`}>
                     <Link
-                      className="footer-text"
+                      className="footer-text text-decoration-none"
                       href={`/projects/${item.slugUrl}`}
                     >
                       {item.projectTypeName}
@@ -147,11 +148,11 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
             </div>
             <div className="col-6 col-md-3 col-sm-6">
               <p className="text-golden">Company</p>
-              <ul className="p-0">
+              <ul className="p-0 list-unstyled">
                 {companyArr.map((item, index) => (
                   <li key={`${item.id}-${index}`}>
                     <Link
-                      className="footer-text"
+                      className="footer-text text-decoration-none"
                       href={item.slugUrl}
                       scroll={true}
                     >
@@ -163,10 +164,10 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
             </div>
             <div className="col-6 col-md-3 col-sm-6">
               <p className="text-golden">Media</p>
-              <ul className="p-0">
+              <ul className="p-0 list-unstyled">
                 {mediaArr.map((item, index) => (
                   <li key={`${item.id}-${index}`}>
-                    <Link className="footer-text" href={item.slugUrl}>
+                    <Link className="footer-text text-decoration-none" href={item.slugUrl}>
                       {item.name}
                     </Link>
                   </li>
@@ -176,10 +177,10 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
             <div className="col-6 col-md-3 col-sm-6">
               <div>
                 <p className="text-golden">Get Social</p>
-                <ul className="d-flex gap-3 p-0">
+                <ul className="d-flex gap-3 p-0 list-unstyled">
                   <li className="">
                     <Link
-                      className="fs-4 text-golden hover-green"
+                      className="fs-4 text-golden hover-green text-decoration-none"
                       href="https://www.facebook.com/mypropertyfact1/"
                       target="_blank"
                       title="facebook"

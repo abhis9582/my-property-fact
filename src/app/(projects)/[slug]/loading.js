@@ -1,4 +1,4 @@
-import { LoadingSpinner } from "../(home)/contact-us/page";
+import { LoadingSpinner } from "../../(home)/contact-us/page";
 
 export default function LoadingProperty() {
   return (
