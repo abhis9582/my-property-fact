@@ -15,6 +15,7 @@ import MasterBHKProjectList from "@/app/_global_components/bhk-components/master
 import MasterBHKProjectsPage from "@/app/_global_components/bhk-components/master-bhk-server-component";
 import ProjectListByFloorType from "@/app/_global_components/floor-type/projectListByFloorType";
 import NotFound from "@/app/not-found";
+import FeaturedPage from "@/app/(home)/components/home/featured/page";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
@@ -64,7 +65,7 @@ export default async function PropertyPage({ params, searchParams }) {
     return <MasterBHKProjectsPage slug={slug} />;
   } else if (isFloorTypeSlug) {
     {
-      return <ProjectListByFloorType slug={slug}/>;
+      return <ProjectListByFloorType slug={slug} />;
     }
   } else if (isProjectSlug) {
     return (
@@ -73,12 +74,21 @@ export default async function PropertyPage({ params, searchParams }) {
         <Property projectDetail={projectDetail} />
         <div className="container-fluid mb-3">
           <h2 className="text-center mb-4 fw-bold">Similar projects</h2>
-          <Featured
+          {/* <Featured
             allFeaturedProperties={featuredProjects.filter(
               (item) =>
                 item.cityName === projectDetail.cityName &&
                 item.propertyTypeName === projectDetail.propertyTypeName
             )}
+          /> */}
+          <FeaturedPage
+            autoPlay={true}
+            allFeaturedProperties={featuredProjects.filter(
+              (item) =>
+                item.cityName === projectDetail.cityName &&
+                item.propertyTypeName === projectDetail.propertyTypeName
+            )}
+            type={'Similar'}
           />
         </div>
         <Footer cityList={cityList} projectTypes={projectTypesList} />

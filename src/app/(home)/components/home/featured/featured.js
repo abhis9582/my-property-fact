@@ -13,6 +13,7 @@ export default function Featured({
   allFeaturedProperties = null,
   autoPlay,
   allProjects,
+  type
 }) {
   const { setProjectData } = useProjectContext();
   useEffect(() => {
@@ -60,7 +61,7 @@ export default function Featured({
         </div>
       )}
 
-      {autoPlay && (
+      {autoPlay && type !== 'Similar' && (
         <div className="text-center pt-3">
           <Link
             className="btn btn-success btn-background border-0"
