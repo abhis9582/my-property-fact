@@ -5,18 +5,41 @@ import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import GoogleAnalytics from "./_global_components/googleAnalytics";
 import { ProjectProvider } from "./_global_components/contexts/projectsContext";
+import localFont from "next/font/local";
+import "@fortawesome/fontawesome-svg-core/styles.css"; 
+import { config } from "@fortawesome/fontawesome-svg-core";
+config.autoAddCss = false;
 // app/layout.js
 export const metadata = {
   title: "Not found",
   description: "page is not found",
 };
 
+
+const gothamBold = localFont({
+  src: "../../public/fonts/plus_jakarta_sans/PlusJakartaSans-VariableFont_wght.ttf",
+  variable: "--heaing-font",
+  style: "normal",
+});
+
+const headingPro = localFont({
+  src: "../../public/fonts/plus_jakarta_sans/PlusJakartaSans-VariableFont_wght.ttf",
+  variable: "--headeing-bolded",
+  style: "normal",
+});
+
+const gothamLight = localFont({
+  src: "../../public/fonts/montserrat/Montserrat-VariableFont_wght.ttf",
+  variable: "--text-font",
+  style: "normal",
+});
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
         {/* Meta Pixel Script */}
-        <Script id="facebook-pixel" strategy="lazyOnload">
+        {/* <Script id="facebook-pixel" strategy="lazyOnload">
           {`
             !function(f,b,e,v,n,t,s)
             {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -49,23 +72,23 @@ export default function RootLayout({ children }) {
               ],
             }),
           }}
-        />
+        /> */}
       </head>
-      <body>
-        <GoogleAnalytics />
+      <body className={`${gothamBold.variable} ${headingPro.variable} ${gothamLight.variable}`}>
+        {/* <GoogleAnalytics /> */}
         <main>
           <ProjectProvider>{children}</ProjectProvider>
         </main>
         <ToastContainer />
         {/* Meta Pixel noscript fallback */}
-        <noscript>
+        {/* <noscript>
           <img
             height="1"
             width="1"
             style={{ display: "none" }}
             src="https://www.facebook.com/tr?id=994098169297958&ev=PageView&noscript=1"
           />
-        </noscript>
+        </noscript> */}
       </body>
     </html>
   );

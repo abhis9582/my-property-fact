@@ -1,6 +1,6 @@
 import "../globals.css";
-import Header from "./components/header/header";
 import Footer from "./components/footer/page";
+import Header from "./components/header/header";
 export const metadata = {
   title: "My Property Fact | Smarter Real Estate Decisions Start Here",
   description:
@@ -16,11 +16,11 @@ export const metadata = {
     "real estate guide India",
   ],
   alternates: {
-    canonical: "https://www.mypropertyfact.com", // Replace with your actual domain
+    canonical: "https://www.mypropertyfact.in", // Replace with your actual domain
   },
 };
 
-export default async function RootLayout({ children, params }) {
+export default function RootLayout({ children, params }) {
   return (
     <>
       {/* header for the user side  */}

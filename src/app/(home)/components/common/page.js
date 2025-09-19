@@ -43,24 +43,22 @@ export default function PropertyContainer(props) {
               }`}
               alt={props.data.projectName}
               className="img-fluid w-100 rounded-top-4 object-fit-cover"
+              priority
               width={400}
               height={400}
             />
           </div>
           {props.data.projectStatusName && (
             <div className="position-absolute top-0 end-0 m-2">
-              <h6 className="border p-2 d-inline-block rounded bg-light text-dark shadow-sm">
+              <h6 className="border p-2 d-inline-block rounded bg-light text-dark shadow-sm fw-bold">
                 {props.data.projectStatusName}
               </h6>
             </div>
           )}
           <div className="mt-3 ms-3">
-            <h5 className="mb-2">{props.data.projectName}</h5>
-            <p>{props.data.propertyTypeName}</p>
+            <h5 className="mb-2 fw-bold">{props.data.projectName}</h5>
+            <p className="mb-2">{props.data.propertyTypeName}</p>
             <h5 className="text-success d-flex gap-2 mb-0">
-              {/* <span>
-                <FontAwesomeIcon icon={faIndianRupee}/>
-              </span> */}
               <span className="fw-bold"> {generatePrice(props.data.projectPrice)}</span>
             </h5>
           </div>

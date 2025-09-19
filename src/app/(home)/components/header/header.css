@@ -266,7 +266,7 @@
 }
 
 /* mobile menu style ends */
-h1,
+/* h1,
 h2,
 h3,
 h4,
@@ -285,4 +285,11 @@ a {
 
 ul {
   list-style: none;
+} */
+
+.hover-effect:hover {
+  background-color: #f8f9fa; /* light gray */
+  color: #0d6efd; /* Bootstrap primary color */
+  transform: scale(1.02); /* small zoom effect */
+  transition: all 0.3s ease;
 }

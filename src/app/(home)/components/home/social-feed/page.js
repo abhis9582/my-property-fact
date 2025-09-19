@@ -1,21 +1,9 @@
-import axios from "axios";
+import { fetchBlogs } from "@/app/_global_components/masterFunction";
 import SocialFeed from "./socialfeed";
-export const dynamic = 'force-dynamic';
-// fetching blogs list from api
-const getBlogsList = async () => {
-  try{
-  const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}blog/get?page=${0}&size=${3}`);
-  return response.data.content;
-  }catch(error){
-    console.log(error);
-    
-  }
-}
-
+export const dynamic = "force-dynamic";
 export default async function SocialFeedPage() {
-  const list = await getBlogsList();
-  return (
-    <SocialFeed data={list}/>
-  )
+  const list = await fetchBlogs(0, 3);
+  console.log(list.content.length);
+  
+  return <SocialFeed data={list.content} />;
 }

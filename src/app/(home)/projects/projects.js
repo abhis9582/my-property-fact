@@ -8,7 +8,7 @@ import CommonBreadCrum from "../components/common/breadcrum";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import YouTube from "@/app/_global_components/skeleton";
 import { useProjectContext } from "@/app/_global_components/contexts/projectsContext";
-import LoadingProperty from "@/app/[property]/loading";
+import LoadingProperty from "@/app/(projects)/[slug]/loading";
 
 export default function Projects() {
   const [allProjectsList, setAllProjectsList] = useState([]);

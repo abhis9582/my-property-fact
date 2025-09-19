@@ -1,11 +1,23 @@
-import { Suspense } from "react";
-import HeaderClient from "./HeaderClient ";
+import {
+  fetchBuilderData,
+  fetchCityData,
+  fetchProjectTypes,
+} from "@/app/_global_components/masterFunction";
+import HeaderComponent from "./headerComponent";
 
-const Header = () => {
+const Header = async () => {
+  const [cities, projectTypes, builders] = await Promise.all([
+    fetchCityData(),
+    fetchProjectTypes(),
+    fetchBuilderData(),
+  ]);
+
   return (
-    <Suspense fallback={<div>Loading header...</div>}>
-      <HeaderClient />
-    </Suspense>
+    <HeaderComponent
+      cityList={cities}
+      projectTypes={projectTypes}
+      builderList={builders.builders}
+    />
   );
 };
 

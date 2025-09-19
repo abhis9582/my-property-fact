@@ -30,11 +30,11 @@ import {
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Image from "next/image";
-import NotFound from "../not-found";
-import CommonPopUpform from "../(home)/components/common/popupform";
-import { LoadingSpinner } from "../(home)/contact-us/page";
+import NotFound from "../../not-found";
+import CommonPopUpform from "../../(home)/components/common/popupform";
+import { LoadingSpinner } from "../../(home)/contact-us/page";
 import { toast } from "react-toastify";
-import { sanitizeHtml } from "../_global_components/sanitize";
+import { sanitizeHtml } from "../../_global_components/sanitize";
 import { Col, Row } from "react-bootstrap";
 
 export default function Property({ projectDetail }) {
@@ -42,6 +42,9 @@ export default function Property({ projectDetail }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
+  const [amenities, setAllAmenities] = useState([]);
+  const [amenityButtonName, setAmenityButtonName] = useState("VIEW MORE");
+  const [amenityButtonStatus, setAmenityButtonStatus] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -196,6 +199,8 @@ export default function Property({ projectDetail }) {
   };
 
   useEffect(() => {
+    setAllAmenities(projectDetail.projectAmenityList.slice(0, 18));
+
     const header = document.querySelector(".project-detail-header");
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -263,6 +268,21 @@ export default function Property({ projectDetail }) {
   if (!projectDetail) {
     return <NotFound />;
   }
+
+  const viewAllAmenities = () => {
+    setAmenityButtonStatus((prev) => {
+      if (prev === true) {
+        setAllAmenities(projectDetail.projectAmenityList.slice(0, 18));
+      } else {
+        setAllAmenities(projectDetail.projectAmenityList);
+      }
+      return !prev; // toggle status
+    });
+
+    setAmenityButtonName((prev) =>
+      prev === "VIEW MORE" ? "VIEW LESS" : "VIEW MORE"
+    );
+  };
 
   return (
     <>
@@ -608,8 +628,8 @@ export default function Property({ projectDetail }) {
           ></div>
 
           {/* Amenities Grid */}
-          <div className="d-flex flex-wrap justify-content-center gap-3 mb-5">
-            {projectDetail.projectAmenityList.map((item, index) => (
+          <div className="container d-flex flex-wrap justify-content-center gap-3 mb-5 amenity-container">
+            {amenities.map((item, index) => (
               <div key={index} className="amenity-detail-container">
                 <div className="bg-white mb-3 p-3 rounded-2">
                   <Image
@@ -629,9 +649,9 @@ export default function Property({ projectDetail }) {
           <div className="text-center">
             <Button
               className="btn btn-background rounded-3 text-white border-0 px-5 py-3"
-              onClick={() => setShowPopUp(true)}
+              onClick={() => viewAllAmenities(amenityButtonName)}
             >
-              VIEW ALL
+              {amenityButtonName}
             </Button>
           </div>
         </div>

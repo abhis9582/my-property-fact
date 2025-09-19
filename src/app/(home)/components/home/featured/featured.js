@@ -3,10 +3,9 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./featured.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import PropertyContainer from "../../common/page";
-import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import { useProjectContext } from "@/app/_global_components/contexts/projectsContext";
 
 export default function Featured({
@@ -16,10 +15,9 @@ export default function Featured({
   allProjects,
 }) {
   const { setProjectData } = useProjectContext();
-
   useEffect(() => {
     setProjectData(allProjects);
-  }, [allProjects]);
+  }, []);
 
   const settings = {
     dots: false,
@@ -50,25 +48,16 @@ export default function Featured({
 
   return (
     <div className="container">
-      {false ? (
-        <div
-          className="d-flex justify-content-center align-items-center"
-          style={{ height: "250px" }}
-        >
-          <LoadingSpinner show={true} />
+      {allProjects?.length > 0 && (
+        <div className="featured-page-slider">
+          <Slider {...settings}>
+            {allProjects.map((item) => (
+              <div key={item.id} className="px-2 pb-3">
+                <PropertyContainer data={item} />
+              </div>
+            ))}
+          </Slider>
         </div>
-      ) : (
-        allFeaturedProperties?.length > 0 && (
-          <div className="featured-page-slider">
-            <Slider {...settings}>
-              {allFeaturedProperties.map((item) => (
-                <div key={item.id} className="px-2 pb-3">
-                  <PropertyContainer data={item} />
-                </div>
-              ))}
-            </Slider>
-          </div>
-        )
       )}
 
       {autoPlay && (

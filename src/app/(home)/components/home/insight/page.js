@@ -75,18 +75,18 @@ export default function InsightNew() {
                     openPopup(i); // open popup
                   }
                 }}
-                className="text-dark d-flex justify-content-center"
+                className="text-dark d-flex justify-content-center text-decoration-none"
               >
                 <div className="text-dark bg-light rounded-4 overflow-hidden my-3 transition transform hover-scale custom-shadow insight-card">
                   <div className="p-3">
                     <h5 className="text-golden">{i.heading}</h5>
                     <p>{i.sub_heading}</p>
                     <div className="d-flex justify-content-center">
-                      <Image src={i.src} alt={i.alt} width={250} height={139} />
+                      <Image className="img-fluid" src={i.src} alt={i.alt} width={610} height={340} priority/>
                     </div>
                   </div>
                   <div className={`bg-light p-3 d-flex justify-content-center`}>
-                    <button className="fw-bold text-light btn-background d-flex align-items-center rounded-4 p-2 border-0">
+                    <button className="text-light btn-background d-flex align-items-center rounded-4 p-2 border-0">
                       <p className="text-white mx-5 p-0 m-0">Explore Now </p>
                       <FontAwesomeIcon
                         color="white"

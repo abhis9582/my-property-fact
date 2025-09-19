@@ -1,30 +1,56 @@
-import axios from "axios";
 import { NextResponse } from "next/server";
 
-const checkLogin = async () => {
-  try {
-    const response = null;
-    return response.data.token !== null;
-  } catch (error) {
-    console.error("Error checking login:", error);
-    return false;
-  }
-};
 const protectedRoutes = ["/admin", "/admin/dashboard", "/admin/settings"];
 
-export function middleware(req) {
-  const token = req.cookies.get("token")?.value; // Get JWT from cookies  
-  // If the user is not logged in and trying to access protected routes, redirect to login
-  if (
-    !token &&
-    protectedRoutes.some((route) => req.nextUrl.pathname.startsWith(route))
-  ) {
-    if (req.nextUrl.pathname != "/admin") {
+async function checkToken(token) {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}auth/verify`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await res.json();
+    console.log("Response JSON:", data);
+    if (data.error) {
+      return false;
+    }
+    return data.valid; // true if valid, false otherwise
+  } catch {
+    return false;
+  }
+}
+
+export async function middleware(req) {
+  const token = req.cookies.get("token")?.value;
+  const path = req.nextUrl.pathname;
+
+  // Special handling for login page (/admin)
+  if (path === "/admin") {
+    if (token) {
+      const isValid = await checkToken(token);
+      if (isValid) {
+        // Already logged in → redirect to dashboard
+        return NextResponse.redirect(new URL("/admin/dashboard", req.url));
+      }
+    }
+    return NextResponse.next(); // No token or invalid → allow login page
+  }
+
+  // All other protected routes
+  if (protectedRoutes.some((route) => path.startsWith(route))) {
+    if (!token) {
+      return NextResponse.redirect(new URL("/admin", req.url));
+    }
+
+    const isValid = await checkToken(token);
+    if (!isValid) {
       return NextResponse.redirect(new URL("/admin", req.url));
     }
   }
 
-  return NextResponse.next(); // Allow the request to continue
+  return NextResponse.next();
 }
 
 export const config = {

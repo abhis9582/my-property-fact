@@ -1,24 +1,11 @@
-import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import SearchFilter from "./searchFIlter";
 import "../home/home.css";
-//Fetching all projects type
-const projectTypes = async () => {
-  const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`
-  );
-  return response.data;
-};
-
-//Fetching all cities type
-const allCitis = async () => {
-  const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}city/all`
-  );
-  return response.data;
-};
-
+import {
+  fetchCityData,
+  fetchProjectTypes,
+} from "@/app/_global_components/masterFunction";
 export default async function HeroSection() {
   //Our facts
   const ourFacts = [
@@ -45,8 +32,8 @@ export default async function HeroSection() {
   ];
 
   const [cityList, projectTypeList] = await Promise.all([
-    allCitis(),
-    projectTypes(),
+    fetchCityData(),
+    fetchProjectTypes(),
   ]);
   return (
     <>
@@ -77,13 +64,16 @@ export default async function HeroSection() {
                 height={600}
                 className="img-fluid"
                 priority
+                fetchPriority="high"
+                loading="eager"
+                sizes="(max-width: 426px) 100vw, (max-width: 1199px) 100vw, 1920px"
               />
             </picture>
           </div>
           {/* <div className="overlay"></div> */}
         </div>
         <div className="bannercontainer">
-          <h1 className="text-center text-light fw-bold">
+          <h1 className="text-center text-light">
             Find the best property
           </h1>
           <div className="d-flex flex-wrap align-item-center justify-content-center gap-4 my-4">
@@ -91,7 +81,7 @@ export default async function HeroSection() {
               <div key={`row-${index}`}>
                 <Link
                   href={`projects/${item.slugUrl}`}
-                  className="link-btn rounded-5 py-2 px-3 text-white home-property-types font-gotham-light fw-bold"
+                  className="link-btn rounded-5 py-2 px-3 text-white text-decoration-none"
                 >
                   {item.projectTypeName}
                 </Link>

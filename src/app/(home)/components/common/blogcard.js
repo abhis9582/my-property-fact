@@ -19,7 +19,7 @@ export default function BlogCard({ blog }) {
     return (
         <>
             <Link href={`/blog/${blog.slugUrl}`}
-                className="card border-0 rounded-3 overflow-hidden custom-shadow blog-card"
+                className="card border-0 rounded-3 overflow-hidden custom-shadow blog-card text-decoration-none"
                 onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
                 onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
             >

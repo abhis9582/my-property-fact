@@ -11,7 +11,7 @@ export default function PropertyErrorPage({ error, reset }) {
   return (
     <>
       <div className="my-5 text-center">
-        <h4 className="text-danger">Incomplete project details, please add all details.</h4>
+        <h4 className="text-danger">Something went wrong, please try again.</h4>
         <p className="text-muted">{error?.message}</p>
 
         <button

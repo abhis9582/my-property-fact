@@ -23,10 +23,10 @@ export default function MpfTopPicks() {
                   <Image
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/bhutani-62-avenue/81e404b6-3a46-4a92-8eab-2b92ae502530.jpg`}
                     alt="bhutani-62-avenue"
-                    width={80}
-                    height={80}
+                    width={180}
+                    height={50}
                     className="img-fluid"
-                    
+                    priority
                   />
                 </div>
                 <div className="ms-4">
@@ -58,7 +58,7 @@ export default function MpfTopPicks() {
                 </div>
                 <Link
                   href="/bhutani-62-avenue"
-                  className="btn-background rounded-pill border-0 px-3 py-2 fs-6 fw-bold text-white mb-3"
+                  className="btn-background rounded-pill border-0 px-3 py-2 fs-6 text-white mb-3 text-decoration-none"
                   aria-label={`View details about bhutani`}
                 >
                   More About Bhutani 62 Avenue
@@ -69,11 +69,10 @@ export default function MpfTopPicks() {
           <div className="col-12 col-md-12 col-xl-8 m-0 p-0 position-relative">
             <Image
               src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/bhutani-62-avenue/45aee5c0-cbfb-40b8-899b-88552029279f.jpg`}
-              alt="top-picks"
-              
-              width={2225} // original image width
-              height={1065} // original image height
-              className="rounded-3 position-relative mpf-top-pic-project-image img-fluid"
+              alt="top-picks"              
+              width={1536}
+              height={1024}
+              className="rounded-3 position-relative img-fluid"
             />
           </div>
         </div>

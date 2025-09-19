@@ -3,24 +3,10 @@ import InsightNew from "./insight/page";
 import NewsViews from "./new-views/page";
 import SocialFeedPage from "./social-feed/page";
 import MpfTopPicks from "../mpfTopPick";
-import { Suspense } from "react";
 import HeroSection from "../_homecomponents/heroSection";
-import dynamic from "next/dynamic";
-import axios from "axios";
-const FeaturedPage = dynamic(() => import("./featured/page"), {
-  suspense: true,
-});
+import FeaturedPage from "./featured/page";
 
-const fetchProjectsList = async () => {
-  const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
-  );
-  const projects = response.data.filter(item => item.status === true);
-  return projects || [];
-};
-
-export default async function HomePage() {
-  const projectsList = await fetchProjectsList();
+export default function HomePage() {
   try {
     return (
       <>
@@ -33,12 +19,12 @@ export default async function HomePage() {
         {/* Static Sections */}
         <div className="position-relative mt-5">
           {/* insight section  */}
-          <h2 className="text-center fw-bold">Insights</h2>
+          <h2 className="text-center">Insights</h2>
           <InsightNew />
 
           {/* featured projects section  */}
-          <h2 className="fw-bold text-center pt-5 pb-3">Featured Projects</h2>
-          <Suspense
+          <h2 className="text-center pt-5 pb-3">Featured Projects</h2>
+          {/* <Suspense
             fallback={
               <div
                 className="d-flex justify-content-center align-items-center"
@@ -48,44 +34,33 @@ export default async function HomePage() {
               </div>
             }
           >
-            <FeaturedPage autoPlay={false} projectsList={projectsList} />
-          </Suspense>
+            <FeaturedPage autoPlay={false} />
+          </Suspense> */}
+          <FeaturedPage autoPlay={false}/>
           {/* dream cities section  */}
-          <h2 className="fw-bold text-center pt-5">
+          <h2 className="text-center pt-5">
             Find your dream property in the city you are searching in
           </h2>
           <DreamProject />
 
           {/* residential projects section  */}
-          <h2 className="fw-bold text-center pt-5 pb-3">
+          <h2 className="text-center pt-5 pb-3">
             Explore Our Premier Residential Projects
           </h2>
-          <FeaturedPage
-            url={"residential"}
-            autoPlay={true}
-            projectsList={projectsList.filter(
-              (project) => project.propertyTypeName === "Residential"
-            )}
-          />
+          <FeaturedPage autoPlay={true} category={'Residential'}/>
 
           {/* commertial projects section  */}
-          <h2 className="fw-bold text-center pt-5 pb-3">
+          <h2 className="text-center pt-5 pb-3">
             Explore Top Commercial Spaces for Growth
           </h2>
-          <FeaturedPage
-            url={"commercial"}
-            autoPlay={true}
-            projectsList={projectsList.filter(
-              (project) => project.propertyTypeName === "Commercial"
-            )}
-          />
+          <FeaturedPage autoPlay={true} category={'Commercial'}/>
 
           {/* web story section  */}
-          <h2 className="fw-bold text-center pt-5">Realty Updates</h2>
+          <h2 className="text-center pt-5">Realty Updates</h2>
           <NewsViews />
 
           {/* blogs section  */}
-          <h2 className="fw-bold text-center pt-5">Investor Education </h2>
+          <h2 className="text-center pt-5">Investor Education </h2>
           <SocialFeedPage />
         </div>
       </>
