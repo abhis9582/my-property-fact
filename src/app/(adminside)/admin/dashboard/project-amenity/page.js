@@ -17,7 +17,7 @@ const fetchPrjectsAmenity = async () => {
 //Fetch all project list from api
 const fetchProjects = async () => {
   const projectResponse = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}projects`
+    `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
   );
   const res = projectResponse.data.map((item, index)=> ({
     ...item,
