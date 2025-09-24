@@ -19,8 +19,8 @@ export default async function ProjectsPage() {
 
   return (
     <>
-      {/* <Projects projects={projects} /> */}
-      <NewProjectListPage projects={projects} />
+      <Projects projects={projects} />
+      {/* <NewProjectListPage projects={projects} /> */}
     </>
   );
 }
