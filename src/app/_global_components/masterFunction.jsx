@@ -80,7 +80,7 @@ export const isFloorTypeUrl = async (slug) => {
   const res = await fetch(`${apiUrl}floor-plans/get-all`, {
     next: { revalidate: 60 },
   });
-
+  
   if (!res.ok) throw new Error("Failed to fetch project details");
 
   const data = await res.json(); // array of projects
@@ -111,7 +111,8 @@ export const isCityTypeUrl = async (slug) => {
   const cities = await fetchCityData();
   const slugParts = slug.split("-in-");
   const isFloorUrl = await isFloorTypeUrl(slug);
-  const citySlug = slugParts[slugParts.length - 1].toLowerCase();
+  const citySlug = slugParts[slugParts.length - 1].replace('%20', '-').toLowerCase();
+  console.log(citySlug);
   const exists = cities.some(
     (item) =>
       item.cityName.toLowerCase().replace(/\s+/g, "-") === citySlug &&

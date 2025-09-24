@@ -39,7 +39,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         {/* Meta Pixel Script */}
-        {/* <Script id="facebook-pixel" strategy="lazyOnload">
+        <Script id="facebook-pixel" strategy="lazyOnload">
           {`
             !function(f,b,e,v,n,t,s)
             {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -72,7 +72,7 @@ export default function RootLayout({ children }) {
               ],
             }),
           }}
-        /> */}
+        />
       </head>
       <body className={`${gothamBold.variable} ${headingPro.variable} ${gothamLight.variable}`}>
         {/* <GoogleAnalytics /> */}
@@ -81,14 +81,14 @@ export default function RootLayout({ children }) {
         </main>
         <ToastContainer />
         {/* Meta Pixel noscript fallback */}
-        {/* <noscript>
+        <noscript>
           <img
             height="1"
             width="1"
             style={{ display: "none" }}
             src="https://www.facebook.com/tr?id=994098169297958&ev=PageView&noscript=1"
           />
-        </noscript> */}
+        </noscript>
       </body>
     </html>
   );

@@ -15,11 +15,11 @@ export default function ProjectListByFloorType({ slug }) {
       <div className="container-fluid">
         <CommonHeaderBanner
           image={"project-banner.jpg"}
-          headerText={title ? `${title}` : "All Projects"}
+          headerText={title ? `${title.replace('%20', ' ')}` : "All Projects"}
         />
         <CommonBreadCrum
           firstPage={"projects"}
-          pageName={title ? `${title}` : "All Projects"}
+          pageName={title ? `${title.replace('%20', ' ')}` : "All Projects"}
         />
       </div>
       <ProjectListByFloorTypeClient title={title}/>
