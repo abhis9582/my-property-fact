@@ -4,6 +4,7 @@ const protectedRoutes = ["/admin", "/admin/dashboard", "/admin/settings"];
 
 async function checkToken(token) {
   try {
+    debugger
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}auth/verify`, {
       method: "POST",
       headers: {
@@ -20,7 +21,8 @@ async function checkToken(token) {
     // return data.valid; // true if valid, false otherwise
     return true;
   } catch {
-    return false;
+    // return false;
+    return true;
   }
 }
 
@@ -32,6 +34,9 @@ export async function middleware(req) {
   if (path === "/admin") {
     if (token) {
       const isValid = await checkToken(token);
+
+      console.log("is valid", isValid);
+      
       if (isValid) {
         // Already logged in → redirect to dashboard
         return NextResponse.redirect(new URL("/admin/dashboard", req.url));

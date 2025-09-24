@@ -123,9 +123,25 @@ export const isCityTypeUrl = async (slug) => {
 // fetching blogs list from api
 export const fetchBlogs = cache(async (page, size) => {
   console.log("Fetching blogs from backend..."); // runs only once per cache
-  const res = await fetch(`${apiUrl}blog/get?page=${page}&size=${size}&from=${'blog'}`, {
-    next: { revalidate: 60 },
-  });
+  const res = await fetch(
+    `${apiUrl}blog/get?page=${page}&size=${size}&from=${"blog"}`,
+    {
+      next: { revalidate: 60 },
+    }
+  );
   if (!res.ok) throw new Error("Failed to fetch blogs");
   return res.json();
 });
+
+//Get projects in parts
+export const getProjectsInPart = async (page, size) => {
+  const project = await fetch(
+    `${apiUrl}projects/get-projects-in-parts?page=${page}&size=${size}`,
+    {
+      next: { revalidate: 60 },
+    }
+  );
+  console.log(project.length);
+  if (!project.ok) throw new Error("Failed to fetch blogs");
+  return project.json();
+};
