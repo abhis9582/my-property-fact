@@ -36,6 +36,7 @@ import { LoadingSpinner } from "../../(home)/contact-us/page";
 import { toast } from "react-toastify";
 import { sanitizeHtml } from "../../_global_components/sanitize";
 import { Col, Row } from "react-bootstrap";
+import { usePathname } from "next/navigation";
 
 export default function Property({ projectDetail }) {
   const [isAnswerVisible, setIsAnswerVisible] = useState([false, false]);
@@ -50,7 +51,11 @@ export default function Property({ projectDetail }) {
     email: "",
     phone: "",
     message: "",
+    enquiryFrom: "",
+    projectLink: "",
+    pageName: "",
   });
+  const pathname = usePathname();
   const [validated, setValidated] = useState(false);
   const [validated1, setValidated1] = useState(false);
   //Defining loading state
@@ -138,6 +143,9 @@ export default function Property({ projectDetail }) {
         try {
           setShowLoading(true);
           // Make API request
+          formData.enquiryFrom = projectDetail.projectName;
+          formData.projectLink = process.env.NEXT_PUBLIC_UI_URL + pathname;
+          formData.pageName = "Project Detail"
           const response = await axios.post(
             process.env.NEXT_PUBLIC_API_URL + "enquiry/post",
             formData
@@ -149,6 +157,8 @@ export default function Property({ projectDetail }) {
               email: "",
               phone: "",
               message: "",
+              enquiryFrom: "",
+              projectLink: "",
             });
             toast.success(response.data.message);
             setValidated(false);
@@ -172,6 +182,9 @@ export default function Property({ projectDetail }) {
         try {
           setShowLoading(true);
           // Make API request
+          formData.enquiryFrom = projectDetail.projectName;
+          formData.projectLink = process.env.NEXT_PUBLIC_UI_URL + pathname;
+          formData.pageName = "Project Detail"
           const response = await axios.post(
             process.env.NEXT_PUBLIC_API_URL + "enquiry/post",
             formData
@@ -183,6 +196,8 @@ export default function Property({ projectDetail }) {
               name: "",
               phone: "",
               message: "",
+              enquiryFrom: "",
+              projectLink: "",
             });
             setValidated(false);
             toast.success(response.data.message);
