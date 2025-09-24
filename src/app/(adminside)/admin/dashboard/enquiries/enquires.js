@@ -38,6 +38,21 @@ export default function Enquiries({ list }) {
             width: 370,
         },
         {
+            field: "enquiryFrom",
+            headerName: "Enquiry From",
+            width: 370,
+        },
+        {
+            field: "projectLink",
+            headerName: "Project Link",
+            width: 370,
+        },
+        {
+            field: "pageName",
+            headerName: "Page Name",
+            width: 370,
+        },
+        {
             field: "date",
             headerName: "Data & Time",
             width: 200,
