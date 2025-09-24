@@ -75,7 +75,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className={`${gothamBold.variable} ${headingPro.variable} ${gothamLight.variable}`}>
-        {/* <GoogleAnalytics /> */}
+        <GoogleAnalytics />
         <main>
           <ProjectProvider>{children}</ProjectProvider>
         </main>
