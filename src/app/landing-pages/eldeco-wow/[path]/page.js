@@ -261,7 +261,7 @@ export default function Home() {
             >
               <img
                 className="img-fluid"
-                src="/images/s2/girl.png"
+                src="/images/s2/Girl_with_House.jpg"
                 alt="Feature illustration"
                 style={{ display: "block", width: "100%", height: "auto" }}
               />
