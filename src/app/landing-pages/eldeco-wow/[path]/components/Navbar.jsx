@@ -7,7 +7,7 @@ export default function Navbar({ setFormPopup }) {
 
   return (
     <>
-      <nav className="navbar-custom position-fixed top-0 start-0 w-100 d-flex align-items-center justify-content-between py-3 px-3 px-md-5">
+      <nav className="navbar-custom position-fixed top-0 start-0 w-100 d-flex align-items-center justify-content-between py-3 px-3 px-lg-5">
         {/* Logo */}
         <div className="logo">
           <img
@@ -19,9 +19,9 @@ export default function Navbar({ setFormPopup }) {
         </div>
 
         {/* Menu for Desktop */}
-        <div className="d-none d-md-flex">
+        <div className="d-none d-lg-flex">
           <ul
-            className="d-flex  align-items-center mb-0"
+            className="d-flex align-items-center mb-0"
             style={{
               fontFamily: "moster_regular",
               fontWeight: "400",
@@ -64,14 +64,14 @@ export default function Navbar({ setFormPopup }) {
         </div>
 
         {/* CTA Button */}
-        <div className="d-none d-md-block">
+        <div className="d-none d-lg-block">
           <button className="cta-button" onClick={() => setFormPopup(true)}>
             Enquiry Now
           </button>
         </div>
 
         {/* Mobile Hamburger */}
-        <div className="d-md-none">
+        <div className="d-lg-none">
           <button
             className="btn p-0 border-0"
             onClick={() => setIsMobileMenuOpen(true)}
