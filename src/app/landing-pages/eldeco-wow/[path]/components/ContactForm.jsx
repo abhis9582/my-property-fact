@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-export default function ContactForm() {
+export default function ContactForm({frmName}) {
   const [isLoading, setIsLoading] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
   const [showPopup, setShowPopup] = useState(false);
@@ -27,7 +27,7 @@ export default function ContactForm() {
     params.append("Phone", form.Phone.value);
     params.append("Message", form.Message?.value || "No Message");
     params.append("Date", date.toLocaleDateString("en-US"));
-    params.append("sheetName", "TOI-CPM");
+    params.append("sheetName", frmName);
     params.append(
       "Time",
       date.toLocaleTimeString("en-US", {

@@ -4,8 +4,9 @@ import { gsap } from "gsap";
 import Navbar from "./components/Navbar";
 import Slider from "./components/Slider";
 import ContactForm from "./components/ContactForm";
-import ContactFormModal from "./components/FormPopup";
 import FormPopup from "./components/FormPopup";
+import { usePathname, useRouter } from "next/navigation";
+import NotFound from "@/app/not-found";
 export default function Home() {
   useEffect(() => {
     // Animate hero content on load
@@ -35,7 +36,10 @@ export default function Home() {
     { icon: "/images/s5/Conference_Room.png", title: "Conference Room" },
     { icon: "/images/s5/Creche_Day_Care.png", title: "Creche Day Care" },
     { icon: "/images/s5/Cricket_Pitch.png", title: "Cricket Pitch " },
-    { icon: "/images/s5/Earthquake_Resistant.png", title: "Earthquake Resistant" },
+    {
+      icon: "/images/s5/Earthquake_Resistant.png",
+      title: "Earthquake Resistant",
+    },
     { icon: "/images/s5/24x7_Security.png", title: "24x7 Security" },
     { icon: "/images/s5/Aerobics_Centre.png", title: "Aerobic _Centre" },
     { icon: "/images/s5/Banquet_Hall.png", title: "Banquet Hall" },
@@ -59,10 +63,73 @@ export default function Home() {
     setFormPopup(false);
   }, []);
 
+  const pathArr = [
+    {
+      num: 1,
+      frmName: "Google PPC",
+    },
+    {
+      num: 2,
+      frmName: "Google Display 2",
+    },
+    {
+      num: 3,
+      frmName: "Google Display",
+    },
+    {
+      num: 4,
+      frmName: "Google P Max",
+    },
+    {
+      num: 5,
+      frmName: "Google Gemand Gen",
+    },
+    {
+      num: 6,
+      frmName: "Taboola",
+    },
+    {
+      num: 7,
+      frmName: "TOI",
+    },
+    {
+      num: 8,
+      frmName: "TOI-CPM",
+    },
+    {
+      num: 9,
+      frmName: "HTTDS",
+    },
+  ];
+  const path = usePathname();
+  const [frmName, setFrmName] = useState([]);
+  const router = useRouter();
+  useEffect(() => {
+    function getPath() {
+      const segment = path.split("/")[3];
+      if (segment) {
+        const filtered = pathArr.filter((obj) => obj.num == segment);
+        console.log(filtered);
+
+        if (filtered.length === 0) {
+          return router.push(`/landing-pages/eldeco-wow/1`);
+        }
+        setFrmName(filtered);
+      }
+    }
+
+    getPath();
+  }, [path]); // include path if it can change
+
   return (
     <div className="overflow-x-hidden">
       <Navbar setFormPopup={setFormPopup} />
-      {frmModal && <FormPopup setFormPopup={setFormPopup} />}
+      {frmModal && (
+        <FormPopup
+          setFormPopup={setFormPopup}
+          frmName={frmName.length > 0 ? frmName[0].frmName : "Google PPC"}
+        />
+      )}
 
       <main className="mt-4">
         {/* Section 1 - Hero */}
@@ -76,7 +143,7 @@ export default function Home() {
 
         {/* Section 2 - Key Highlights */}
         <section
-   id="floor-plans"
+          id="floor-plans"
           className="sec2 pt-14 w-100 min-vh-10 d-flex flex-column align-items-center gap-14 gap-md-24 px-3 px-md-0"
           style={{
             paddingTop: "50px",
@@ -121,7 +188,7 @@ export default function Home() {
         </section>
 
         {/* Section 3 - Features List */}
-        <section  className="s3 w-100 py-16 px-3 px-md-0 d-flex align-items-end">
+        <section className="s3 w-100 py-16 px-3 px-md-0 d-flex align-items-end">
           <div
             className="contentDiv d-flex flex-column flex-md-row justify-content-between align-items-center gap-4 gap-md-0 w-100"
             style={{ minHeight: "546px" }}
@@ -229,7 +296,8 @@ export default function Home() {
         </section>
 
         {/* Section 5 - Amenities */}
-        <section  id="amenities"
+        <section
+          id="amenities"
           className="sec5 w-100 d-flex flex-column  align-items-center justify-content-center py-20 px-3 px-md-4"
           style={{
             backgroundImage: "url(/images/s5/s5Banner.png)",
@@ -290,6 +358,10 @@ export default function Home() {
             <div className="d-flex flex-wrap justify-content-center justify-content-md-between gap-3 w-100">
               {amenities.slice(6).map((amenity, index) => (
                 <div
+                  style={{
+                    width: "167px",
+                    height: "167px",
+                  }}
                   key={index}
                   className="amenity-card bg-white d-flex flex-column justify-content-center gap-3 align-items-center text-black"
                 >
@@ -315,7 +387,8 @@ export default function Home() {
         </section>
 
         {/* Section 6 - Location */}
-        <section  id="location"
+        <section
+          id="location"
           className="sec6 w-100 d-flex justify-content-center align-items-center py-20 px-3 px-md-0"
           style={{
             paddingTop: "40px",
@@ -416,7 +489,8 @@ export default function Home() {
         </section>
 
         {/* Section 7 - Gallery */}
-        <section  id="gallery"
+        <section
+          id="gallery"
           className="s7 w-100 min-vh-10 d-flex flex-column align-items-center px-3 py-10 bg-light"
           style={{
             paddingTop: "40px",
@@ -494,7 +568,8 @@ export default function Home() {
         </section>
 
         {/* Section 8 - Stats */}
-        <section id="about"
+        <section
+          id="about"
           className="sec8 w-100 text-white d-flex flex-column gap-10 gap-sm-43 align-items-center justify-content-center  px-3 py-5 py-md-0"
           style={{
             background: "linear-gradient(to right,  #114D72 ,#0B2954)",
@@ -601,7 +676,9 @@ export default function Home() {
                 paddingBottom: "30px",
               }}
             >
-              <ContactForm />
+              <ContactForm
+                frmName={frmName.length > 0 ?  frmName[0].frmName : "Google PPC"}
+              />
             </div>
           </div>
         </section>
