@@ -131,7 +131,11 @@ export default function Home() {
         />
       )}
 
-      <main className="mt-4">
+      <main
+        style={{
+          marginTop: "65px",
+        }}
+      >
         {/* Section 1 - Hero */}
         <section id="home" className="sec1">
           <img
@@ -274,9 +278,9 @@ export default function Home() {
           style={{
             background: "linear-gradient(to right,  #5A9FC9, #114D72)",
             paddingTop: "50px",
-            paddingBottom: "50px",
+            paddingBottom: "20px",
           }}
-          className={`s4  w-100 min-vh-20 bg-gradient-to-r from-[#5A9FC9] to-[#114D72] d-flex flex-column align-items-center justify-content-center py-16`}
+          className={`s4  w-100 min-vh-20 bg-gradient-to-r from-[#5A9FC9] to-[#114D72] d-flex flex-column align-items-center justify-content-center`}
         >
           <div className="w-100 text-center">
             <h2
@@ -306,6 +310,8 @@ export default function Home() {
             backgroundSize: "cover",
             minHeight: "90vh",
             gap: "50px",
+            paddingTop: "20px",
+            paddingBottom: "20px",
           }}
         >
           <div className="text-center w-100">
@@ -630,7 +636,7 @@ export default function Home() {
           }}
         >
           <div
-            className="w-100 d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center gap-4 gap-lg-0"
+            className="w-100 d-flex flex-column flex-xl-row justify-content-between align-items-start align-items-lg-center gap-4 gap-lg-4"
             style={{ maxWidth: "1307px" }}
           >
             <div
@@ -677,7 +683,7 @@ export default function Home() {
               }}
             >
               <ContactForm
-                frmName={frmName.length > 0 ?  frmName[0].frmName : "Google PPC"}
+                frmName={frmName.length > 0 ? frmName[0].frmName : "Google PPC"}
               />
             </div>
           </div>
@@ -695,7 +701,7 @@ export default function Home() {
           className="disclaimer-box d-flex flex-column justify-content-center text-center align-items-center w-100 px-2"
           style={{ maxWidth: "579px" }}
         >
-          UP RERA REG NO. UPRERAPRJ752382/09/2025 WEBSITE: WWW.UP-RERA.IN
+          UP RERA REG NO. UPRERAPRJ752382/09/2025 <br /> WEBSITE: WWW.UP-RERA.IN
         </div>
 
         <h2
