@@ -32,18 +32,18 @@ export default function Home() {
   }, []);
 
   const amenities = [
-    { icon: "/images/s5/icn1.png", title: "Club & Wellness" },
-    { icon: "/images/s5/icn2.png", title: "Sports & Outdoor" },
-    { icon: "/images/s5/icn3.png", title: "Community " },
-    { icon: "/images/s5/icn4.png", title: "Safety & Services" },
-    { icon: "/images/s5/icn1.png", title: "Lifestyle" },
-    { icon: "/images/s5/icn1.png", title: "Power Backup" },
-    { icon: "/images/s5/icn1.png", title: "Safety & Services" },
-    { icon: "/images/s5/icn1.png", title: "Swimming" },
-    { icon: "/images/s5/icn1.png", title: "Power backup" },
-    { icon: "/images/s5/icn1.png", title: "Club & Wellness" },
-    { icon: "/images/s5/icn1.png", title: "Club & Wellness" },
-    { icon: "/images/s5/icn1.png", title: "Club & Wellness" },
+    { icon: "/images/s5/Conference_Room.png", title: "Conference Room" },
+    { icon: "/images/s5/Creche_Day_Care.png", title: "Creche Day Care" },
+    { icon: "/images/s5/Cricket_Pitch.png", title: "Cricket Pitch " },
+    { icon: "/images/s5/Earthquake_Resistant.png", title: "Earthquake Resistant" },
+    { icon: "/images/s5/24x7_Security.png", title: "24x7 Security" },
+    { icon: "/images/s5/Aerobics_Centre.png", title: "Aerobic _Centre" },
+    { icon: "/images/s5/Banquet_Hall.png", title: "Banquet Hall" },
+    { icon: "/images/s5/Basketball_Court.png", title: "Basketball Court" },
+    { icon: "/images/s5/Business_Lounge.png", title: "Business Lounge" },
+    { icon: "/images/s5/Car_Parking.png", title: "Car Parking" },
+    { icon: "/images/s5/Cigar_Lounge.png", title: "Cigar Lounge" },
+    { icon: "/images/s5/Community_Hall.png", title: "Community Hall" },
   ];
 
   const stats = [
