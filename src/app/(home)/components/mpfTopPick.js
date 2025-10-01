@@ -11,11 +11,11 @@ export default function MpfTopPicks() {
       <div className="container pt-5 top-space">
         <div className="d-flex flex-wrap justify-content-between mb-3">
           <div>
-            <h2 className="fs-1 pt-2">My Property Fact&#39;s Top Picks</h2>
+            <h2 className="fs-1 pt-2 fw-bold">My Property Fact&#39;s Top Picks</h2>
             <p className="fs-3">Explore top living options with us</p>
           </div>
         </div>
-        <div className="row mb-5 border rounded-3 p-2 mpf-top-picks">
+        <div className="row border rounded-3 p-2 mpf-top-picks">
           <div className="col-12 col-md-12 col-xl-4 mb-3 d-flex justify-content-center align-items-center">
             <div className="d-block d-md-flex gap-5 d-lg-block d-xl-block">
               <div className="d-flex d-md-block d-lg-flex d-xl-flex align-items-center justify-centent-center">
@@ -42,7 +42,7 @@ export default function MpfTopPicks() {
               </div>
               <div className="mpf-top-pic-project-details">
                 <div className="my-4">
-                  <h2>Bhutani 62 Avenue</h2>
+                  <h2 className="fw-bold">Bhutani 62 Avenue</h2>
                   <div className="d-flex align-items-center gap-2 mpf-top-pic-address-container">
                     <FontAwesomeIcon
                       icon={faLocationDot}

@@ -3,6 +3,8 @@ import {
   faFacebook,
   faInstagram,
   faLinkedin,
+  faTwitter,
+  faXTwitter,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -216,6 +218,16 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
                       title="youtube"
                     >
                       <FontAwesomeIcon icon={faYoutube} />
+                    </Link>
+                  </li>
+                  <li className="">
+                    <Link
+                      className="fs-4 text-golden"
+                      href="https://x.com/my_propertyfact/"
+                      target="_blank"
+                      title="youtube"
+                    >
+                      <FontAwesomeIcon icon={faXTwitter} />
                     </Link>
                   </li>
                 </ul>

@@ -60,7 +60,7 @@ export default function DreamProject() {
       <div className="container">
         <div className="row justify-content-center">
           {cities.map((city, index) => (
-            <div key={index} className="col-12 col-sm-6 col-md-4 col-lg-3 my-3 d-flex justify-content-center">
+            <div key={index} className="col-12 col-sm-6 col-md-4 col-lg-3 py-3 d-flex justify-content-center">
               <div className="city-flip-container">
                 <div className="city-flip-inner">
                   <div className="city-flip-front">

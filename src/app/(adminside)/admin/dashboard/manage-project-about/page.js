@@ -1,11 +1,18 @@
 import axios from "axios";
 import ManageProjectAbout from "./manageProjectAbout";
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 //Fetching all projects list
 const fetchProjects = async () => {
   const projectResponse = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
   );
+  const projects = projectResponse.data;
+  const projectAbout = await fetchProjectsAbout();
+  const aboutProjectIds = projectAbout.map((item) => item.projectId);
+  const projectsWithoutAbout = projects.filter(
+    (project) => !aboutProjectIds.includes(project.id)
+  );
+
   return projectResponse.data;
 };
 
@@ -21,10 +28,12 @@ const fetchProjectsAbout = async () => {
   }));
   return list;
 };
+
 export default async function ManageProjectAboutPage() {
   const [list, projectsList] = await Promise.all([
     fetchProjectsAbout(),
-    fetchProjects()
+    fetchProjects(),
   ]);
-  return <ManageProjectAbout list={list} projectsList={projectsList} />
+  const projectIdsWithAbout = list.map(about => about.projectId);
+  return <ManageProjectAbout list={list} projectsList={projectsList} projectIdsWithAbout= {projectIdsWithAbout}/>;
 }

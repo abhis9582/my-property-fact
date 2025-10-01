@@ -897,7 +897,6 @@ export default function Property({ projectDetail }) {
               <Link
                 href={`/builder/${projectDetail.builderSlugURL}`}
                 className="btn btn-success px-4 py-2 rounded-pill shadow-sm"
-                onClick={() => setShowPopUp(true)}
               >
                 LEARN MORE
               </Link>
@@ -1062,7 +1061,7 @@ export default function Property({ projectDetail }) {
         </div>
       </div>
 
-      <CommonPopUpform show={showPopUp} handleClose={setShowPopUp} />
+      <CommonPopUpform show={showPopUp} handleClose={setShowPopUp} from={"Project Detail"} data={projectDetail} />
     </>
   );
 }

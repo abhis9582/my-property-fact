@@ -16,5 +16,6 @@ const fetchProjects = async () => {
 };
 export default async function ManageProjectWalkthroughPage() {
   const [list, projectsList] = await fetchProjects();
-  return <ManageProjectWalkthrough list={list} projectList={projectsList} />
+  const projectWithWalkthrough = list.map(item => item.projectId);
+  return <ManageProjectWalkthrough list={list} projectList={projectsList} projectWithWalkthrough={projectWithWalkthrough}/>
 }

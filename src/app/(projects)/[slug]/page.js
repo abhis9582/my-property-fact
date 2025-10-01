@@ -1,7 +1,5 @@
-import axios from "axios";
 import Property from "./propertypage";
 import Footer from "../../(home)/components/footer/page";
-import Featured from "../../(home)/components/home/featured/featured";
 import {
   checkIfProjectSlug,
   fetchAllProjects,
@@ -11,7 +9,6 @@ import {
   isCityTypeUrl,
   isFloorTypeUrl,
 } from "@/app/_global_components/masterFunction";
-import MasterBHKProjectList from "@/app/_global_components/bhk-components/master-bhk-project-list";
 import MasterBHKProjectsPage from "@/app/_global_components/bhk-components/master-bhk-server-component";
 import ProjectListByFloorType from "@/app/_global_components/floor-type/projectListByFloorType";
 import NotFound from "@/app/not-found";
@@ -61,6 +58,13 @@ export default async function PropertyPage({ params, searchParams }) {
   console.log("project type", isProjectSlug);
   const isCitySlug = await isCityTypeUrl(slug);
   console.log("city type", isCitySlug);
+
+  const similarProject = featuredProjects.filter(
+              (item) =>
+                item.cityName === projectDetail.cityName &&
+                item.propertyTypeName === projectDetail.propertyTypeName
+                && item.id !== projectDetail.id                
+            );
   if (isCitySlug) {
     return <MasterBHKProjectsPage slug={slug} />;
   } else if (isFloorTypeSlug) {
@@ -70,24 +74,12 @@ export default async function PropertyPage({ params, searchParams }) {
   } else if (isProjectSlug) {
     return (
       <>
-        {/* cityName */}
         <Property projectDetail={projectDetail} />
         <div className="container-fluid mb-3">
-          <h2 className="text-center mb-4 fw-bold">Similar projects</h2>
-          {/* <Featured
-            allFeaturedProperties={featuredProjects.filter(
-              (item) =>
-                item.cityName === projectDetail.cityName &&
-                item.propertyTypeName === projectDetail.propertyTypeName
-            )}
-          /> */}
+          {similarProject.length > 0 && <h2 className="text-center mb-4 fw-bold">Similar Projects</h2> }
           <FeaturedPage
             autoPlay={true}
-            allFeaturedProperties={featuredProjects.filter(
-              (item) =>
-                item.cityName === projectDetail.cityName &&
-                item.propertyTypeName === projectDetail.propertyTypeName
-            )}
+            allFeaturedProperties={similarProject}
             type={'Similar'}
           />
         </div>

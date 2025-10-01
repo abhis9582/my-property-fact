@@ -16,7 +16,7 @@ export default async function FeaturedPage({
     projects.filter((item) => item.propertyTypeName === category).length,
     "featured projects length"
   );
-  if (allFeaturedProperties.length > 0) {
+  if (type === "Similar") {
     return (
       <Featured
         url={url}

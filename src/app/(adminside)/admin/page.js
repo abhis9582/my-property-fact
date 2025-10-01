@@ -35,15 +35,24 @@ export default function AdminPage() {
         formData,
         { withCredentials: true } // Ensure cookies are included in the request
       );
-
       if (response.status === 200) {
-        const token = response.data.token; // Get token from response
-        // Store the token in a cookie
+        const { token, refreshToken } = response.data;
+        console.log(response);
+        
+        // Store token (24 hours)
         Cookies.set("token", token, {
-          expires: 7, // Token expires in 7 days
-          secure: process.env.NODE_ENV === "production", // Secure in production
-          sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", // Prevent CSRF issues
-          path: "/", // Available across the site
+          expires: 1, // 1 day = 24 hours
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "Strict",
+          path: "/",
+        });
+
+        // Store refresh token (7 days)
+        Cookies.set("refreshToken", refreshToken, {
+          expires: 7, // 7 days
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "Strict",
+          path: "/",
         });
 
         // Redirect to admin dashboard
@@ -112,15 +121,23 @@ export default function AdminPage() {
               <div className="invalid-feedback">Enter a valid password!</div>
             </div>
             <div className="text-center">
-              <button type="submit" className="btn btn-success" disabled={showLoading}>
+              <button
+                type="submit"
+                className="btn btn-success"
+                disabled={showLoading}
+              >
                 {buttonName} <LoadingSpinner show={showLoading} />
               </button>
             </div>
             <div className="text-center mt-2">
-              <Link className="text-dark text-decoration-none" href="#">Forget Password?</Link>
+              <Link className="text-dark text-decoration-none" href="#">
+                Forget Password?
+              </Link>
             </div>
             <div className="text-center mt-2">
-              <Link className="text-dark text-decoration-none" href="#">Register?</Link>
+              <Link className="text-dark text-decoration-none" href="#">
+                Register?
+              </Link>
             </div>
           </form>
         </div>
