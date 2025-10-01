@@ -19,16 +19,17 @@ export const fetchAllProjects = async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}projects`, {
     next: { revalidate: 60 },
   });
+  console.log(`Called fetchAllProjects and length is ${res.length}`);
   if (!res.ok) throw new Error("Failed to fetch projects");
   return res.json();
 };
 
 //Fetch all projects with cached
 export const getAllProjects = cache(async () => {
-  console.log("Fetching projects from backend..."); // runs only once per cache
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}projects`, {
     next: { revalidate: 60 }, // ISR: refresh every 60s
   });
+  console.log(`Called getAllProjects and length is ${res.length}`);
   if (!res.ok) throw new Error("Failed to fetch projects");
   return res.json();
 });
@@ -38,6 +39,7 @@ export async function fetchCityData() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}city/all`, {
     next: { revalidate: 60 }, // revalidate every 60 seconds
   });
+  console.log(`Called fetchCityData and length is ${res.length}`);
   if (!res.ok) throw new Error("Failed to fetch cities");
   return res.json();
 }
@@ -71,6 +73,7 @@ export const fetchProjectDetailsBySlug = async (slug) => {
       next: { revalidate: 60 },
     }
   );
+  console.log(`Called fetchProjectDetailsBySlug`);
   if (!projectBySlug.ok) throw new Error("Failed to fetch project details");
   return projectBySlug.json();
 };
@@ -80,23 +83,17 @@ export const isFloorTypeUrl = async (slug) => {
   const res = await fetch(`${apiUrl}floor-plans/get-all`, {
     next: { revalidate: 60 },
   });
-  
   if (!res.ok) throw new Error("Failed to fetch project details");
-
   const data = await res.json(); // array of projects
-
   const uniqueUrls = new Set();
-
   data.forEach((project) => {
     if (Array.isArray(project.plans)) {
       project.plans.forEach((plan) => {
         if (plan.planType) {
-          // convert planType to slug
           const slugified = plan.planType
             .trim()
             .toLowerCase()
-            .replace(/\s+/g, "-"); // spaces → hyphens
-
+            .replace(/\s+/g, "-");
           uniqueUrls.add(slugified);
         }
       });
@@ -111,7 +108,9 @@ export const isCityTypeUrl = async (slug) => {
   const cities = await fetchCityData();
   const slugParts = slug.split("-in-");
   const isFloorUrl = await isFloorTypeUrl(slug);
-  const citySlug = slugParts[slugParts.length - 1].replace('%20', '-').toLowerCase();
+  const citySlug = slugParts[slugParts.length - 1]
+    .replace("%20", "-")
+    .toLowerCase();
   console.log(citySlug);
   const exists = cities.some(
     (item) =>
@@ -142,7 +141,32 @@ export const getProjectsInPart = async (page, size) => {
       next: { revalidate: 60 },
     }
   );
-  console.log(project.length);
   if (!project.ok) throw new Error("Failed to fetch blogs");
+  console.log(
+    `Fetched project through pagination of page ${page} and size ${size}`
+  );
   return project.json();
+};
+
+//Fetch all benefits from server
+export const fetchAllBenefits = async () => {
+  const benefits = await fetch(`${process.env.NEXT_PUBLIC_API_URL}benefit`, {
+    method: "Get",
+  });
+  if (!benefits.ok) throw new Error("Failed to fetch benefits");
+  console.log("Fetched all benefits", benefits.length);
+  return benefits.json();
+};
+
+//Fetch all webstories from server
+export const fetchAllStories = async () => {
+  const stories = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}web-story-category/get-all`,
+    {
+      next: { revalidate: 60 },
+    }
+  );
+  if (!stories.ok) throw new Error("Failed to fetch stories");
+  console.log("Fetched all stories", stories.length);
+  return stories.json();
 };

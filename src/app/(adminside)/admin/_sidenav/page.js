@@ -16,12 +16,8 @@ export default function SideNav() {
 
   const handleLogout = async () => {
     try {
-      Cookies.set("token", "", {
-        secure: process.env.NODE_ENV === "production", // Secure in production
-        sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", // Prevent CSRF issues
-        path: "/", // Available across the site
-        expires: new Date(0), // Token expires in 7 days
-      });
+      Cookies.set("token", "", { expires: new Date(0), path: "/" });
+      Cookies.set("refreshToken", "", { expires: new Date(0), path: "/" });
       toast.success("Logout successfull...");
     } catch (error) {
       console.error("Logout failed", error);
@@ -31,12 +27,7 @@ export default function SideNav() {
     // Sidebar
     <nav id="sidebar">
       <div className="sidebar-header">
-        <Image
-          src={"/logo.png"}
-          alt="mpf-logo"
-          width={100}
-          height={100}
-        />
+        <Image src={"/logo.png"} alt="mpf-logo" width={100} height={100} />
       </div>
       <ul className="list-unstyled components">
         <li>
@@ -53,11 +44,14 @@ export default function SideNav() {
             Manage Options
           </Link>
           <ul
-            className={`collapse list-unstyled ms-4 ${activeDropdown === "dropdown3" ? "show" : ""
-              }`}
+            className={`collapse list-unstyled ms-4 ${
+              activeDropdown === "dropdown3" ? "show" : ""
+            }`}
           >
             <li>
-              <Link href="/admin/dashboard/manage-countries">Manage Countries</Link>
+              <Link href="/admin/dashboard/manage-countries">
+                Manage Countries
+              </Link>
             </li>
             <li>
               <Link href="/admin/dashboard/manage-states">Manage States</Link>
@@ -66,10 +60,14 @@ export default function SideNav() {
               <Link href="/admin/dashboard/manage-cities">Manage Cities</Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/manage-localities">Manage Localities</Link>
+              <Link href="/admin/dashboard/manage-localities">
+                Manage Localities
+              </Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/manage-score-evalution">Manage Score Evalution</Link>
+              <Link href="/admin/dashboard/manage-score-evalution">
+                Manage Score Evalution
+              </Link>
             </li>
             <li>
               <Link href="/admin/dashboard/project-types">
@@ -94,6 +92,11 @@ export default function SideNav() {
                 Manage career applications
               </Link>
             </li>
+            <li>
+              <Link href="/admin/dashboard/manage-location-benefits">
+                Manage location benefits
+              </Link>
+            </li>
           </ul>
         </li>
         <li className={activeDropdown === "dropdown1" ? "active" : ""}>
@@ -107,8 +110,9 @@ export default function SideNav() {
             Management
           </Link>
           <ul
-            className={`collapse list-unstyled ms-4 ${activeDropdown === "dropdown1" ? "show" : ""
-              }`}
+            className={`collapse list-unstyled ms-4 ${
+              activeDropdown === "dropdown1" ? "show" : ""
+            }`}
           >
             <li>
               <Link href="/admin/dashboard/project-amenity">
@@ -160,8 +164,9 @@ export default function SideNav() {
             Insight Management
           </Link>
           <ul
-            className={`collapse list-unstyled ms-4 ${activeDropdown === "dropdown2" ? "show" : ""
-              }`}
+            className={`collapse list-unstyled ms-4 ${
+              activeDropdown === "dropdown2" ? "show" : ""
+            }`}
           >
             <li>
               <Link href="/admin/dashboard/city-price-data">
@@ -189,9 +194,7 @@ export default function SideNav() {
           <Link href="/admin/dashboard/aminities">Amenities</Link>
         </li>
         <li>
-          <Link href="/admin/dashboard/enquiries">
-            Manage Enquiries
-          </Link>
+          <Link href="/admin/dashboard/enquiries">Manage Enquiries</Link>
         </li>
         <li className={activeDropdown === "dropdown4" ? "active" : ""}>
           <Link
@@ -204,13 +207,12 @@ export default function SideNav() {
             Blog management
           </Link>
           <ul
-            className={`collapse list-unstyled ms-4 ${activeDropdown === "dropdown4" ? "show" : ""
-              }`}
+            className={`collapse list-unstyled ms-4 ${
+              activeDropdown === "dropdown4" ? "show" : ""
+            }`}
           >
             <li>
-              <Link href="/admin/dashboard/manage-blogs">
-                Manage Blogs
-              </Link>
+              <Link href="/admin/dashboard/manage-blogs">Manage Blogs</Link>
             </li>
             <li>
               <Link href="/admin/dashboard/manage-categories">
@@ -230,8 +232,9 @@ export default function SideNav() {
             Web story management
           </Link>
           <ul
-            className={`collapse list-unstyled ms-4 ${activeDropdown === "dropdown5" ? "show" : ""
-              }`}
+            className={`collapse list-unstyled ms-4 ${
+              activeDropdown === "dropdown5" ? "show" : ""
+            }`}
           >
             <li>
               <Link href="/admin/dashboard/web-story-category">
@@ -239,9 +242,7 @@ export default function SideNav() {
               </Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/web-story">
-                Web Story
-              </Link>
+              <Link href="/admin/dashboard/web-story">Web Story</Link>
             </li>
           </ul>
         </li>

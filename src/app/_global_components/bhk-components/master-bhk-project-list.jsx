@@ -16,7 +16,16 @@ export default function MasterBHKProjectList() {
   const [floorTypeList, setFloorTypeList] = useState([]);
   const getListOfProjectFromBkType = async () => {
     const bkType = searchParams.get("type");
-    const cat = sessionStorage.getItem("cat");
+    let cat = "";
+    if(pathName.includes("commercial")) {
+      cat = "commercial";
+    }else if(pathName.includes("flats")) {
+      cat = "flats";
+    }else if(pathName.includes("new-projects")){
+      cat = "new-projects";
+    }else {
+      cat = "apartments";
+    }
     if (projects.length > 0) {
       let filteredData = projects;
       if (bkType) {

@@ -17,50 +17,38 @@ export default function HomePage() {
         <MpfTopPicks />
 
         {/* Static Sections */}
-        <div className="position-relative mt-5">
+        <div className="position-relative">
           {/* insight section  */}
-          <h2 className="text-center">Insights</h2>
+          <h2 className="text-center fw-bold my-4">Insights</h2>
           <InsightNew />
 
           {/* featured projects section  */}
-          <h2 className="text-center pt-5 pb-3">Featured Projects</h2>
-          {/* <Suspense
-            fallback={
-              <div
-                className="d-flex justify-content-center align-items-center"
-                style={{ height: "400px" }}
-              >
-                Loading Featured...
-              </div>
-            }
-          >
-            <FeaturedPage autoPlay={false} />
-          </Suspense> */}
+          <h2 className="text-center my-4 fw-bold">Featured Projects</h2>
           <FeaturedPage autoPlay={false}/>
           {/* dream cities section  */}
-          <h2 className="text-center pt-5">
+          <h2 className="text-center my-4 fw-bold">
             Find your dream property in the city you are searching in
           </h2>
           <DreamProject />
 
           {/* residential projects section  */}
-          <h2 className="text-center pt-5 pb-3">
+          <h2 className="text-center my-1 mb-4 fw-bold">
             Explore Our Premier Residential Projects
           </h2>
           <FeaturedPage autoPlay={true} category={'Residential'}/>
 
           {/* commertial projects section  */}
-          <h2 className="text-center pt-5 pb-3">
+          <h2 className="text-center my-4 fw-bold">
             Explore Top Commercial Spaces for Growth
           </h2>
           <FeaturedPage autoPlay={true} category={'Commercial'}/>
 
           {/* web story section  */}
-          <h2 className="text-center pt-5">Realty Updates</h2>
+          <h2 className="text-center my-4 fw-bold">Realty Updates</h2>
           <NewsViews />
 
           {/* blogs section  */}
-          <h2 className="text-center pt-5">Investor Education </h2>
+          <h2 className="text-center my-4 fw-bold">Investor Education </h2>
           <SocialFeedPage />
         </div>
       </>

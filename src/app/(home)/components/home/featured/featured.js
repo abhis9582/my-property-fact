@@ -22,9 +22,9 @@ export default function Featured({
 
   const settings = {
     dots: false,
-    infinite: true,
+    infinite: allProjects.length > 1,
     speed: 500,
-    autoplay: autoPlay,
+    autoplay: allProjects.length > 1,
     autoplaySpeed: 5000,
     arrows: autoPlay,
     slidesToShow: 3,

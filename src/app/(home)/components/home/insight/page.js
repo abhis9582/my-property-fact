@@ -77,7 +77,7 @@ export default function InsightNew() {
                 }}
                 className="text-dark d-flex justify-content-center text-decoration-none"
               >
-                <div className="text-dark bg-light rounded-4 overflow-hidden my-3 transition transform hover-scale custom-shadow insight-card">
+                <div className="text-dark bg-light rounded-4 overflow-hidden transition transform hover-scale custom-shadow insight-card">
                   <div className="p-3">
                     <h5 className="text-golden">{i.heading}</h5>
                     <p>{i.sub_heading}</p>

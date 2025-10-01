@@ -5,10 +5,6 @@ import Link from "next/link";
 const CityList = ({ cityList, prefix, cat }) => {
   const [showAll, setShowAll] = useState(false);
   const visibleCities = showAll ? cityList : cityList.slice(0, 5);
-  const handleClick = () => {
-    // Save category in sessionStorage
-    sessionStorage.setItem("cat", cat);
-  };
   return (
     <ul className="list-unstyled">
       <p className="text-golden">{prefix} India</p>
@@ -19,7 +15,6 @@ const CityList = ({ cityList, prefix, cat }) => {
             href={`/${prefix.replace(/ /g, "-").toLowerCase().trim()}${
               item.slugURL
             }`}
-            onClick={handleClick}
           >
             {prefix}
             {item.cityName}

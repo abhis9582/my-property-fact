@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 // Dynamically import JoditEditor with SSR disabled
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
-export default function ManageProjectWalkthrough({ list, projectList }) {
+export default function ManageProjectWalkthrough({ list, projectList, projectWithWalkthrough }) {
     const editor = useRef(null);
     const router = useRouter();
     const [walkthroughDesc, setWalkthroughDesc] = useState("");
@@ -27,6 +27,8 @@ export default function ManageProjectWalkthrough({ list, projectList }) {
     const [validated, setValidated] = useState(false);
     const [showLoading, setShowLoading] = useState(false);
     const [walkthroughId, setWalkthroughId] = useState(0);
+    const [projectListOptions, setProjectListOptions] = useState([]);
+    const [isDisabled, setIsDisabled] = useState(false);
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
     //Handling submition of from
@@ -77,6 +79,8 @@ export default function ManageProjectWalkthrough({ list, projectList }) {
         setButtonName("Add");
         setWalkthroughDesc(null);
         setProjectId(0);
+        setProjectListOptions(projectList.filter((project) => !projectWithWalkthrough.includes(project.id)));
+        setIsDisabled(false);
     };
 
     //Handle deleting walkthrough
@@ -92,6 +96,8 @@ export default function ManageProjectWalkthrough({ list, projectList }) {
         setWalkthroughDesc(item.walkthroughDesc);
         setProjectId(item.projectId);
         setWalkthroughId(item.id);
+        setProjectListOptions(projectList.filter((project) => projectWithWalkthrough.includes(project.id)));
+        setIsDisabled(true);
     };
     //Defining table columns
     const columns = [
@@ -135,9 +141,10 @@ export default function ManageProjectWalkthrough({ list, projectList }) {
                                 value={projectId}
                                 onChange={(e) => setProjectId(e.target.value)}
                                 required
+                                disabled={isDisabled}
                             >
                                 <option value="">Select Project</option>
-                                {projectList.map((item) => (
+                                {projectListOptions.map((item) => (
                                     <option
                                         className="text-uppercase"
                                         key={item.id}
