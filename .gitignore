@@ -30,7 +30,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # env files (can opt-in for committing if needed)
-.env*
 
 # vercel
 .vercel
@@ -44,3 +43,9 @@ public/amenity
 public/web-story
 # public/icon
 # /public/**
+public/location-benefit
+# Ignore generated sitemap and robots files
+/public/sitemap-0.xml
+/public/sitemap.xml
+/public/robots.txt
+.env
