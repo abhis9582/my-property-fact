@@ -1,9 +1,0 @@
-# *
-User-agent: *
-Allow: /
-
-# Host
-Host: https://mypropertyfact.in
-
-# Sitemaps
-Sitemap: https://mypropertyfact.in/sitemap.xml
