@@ -228,7 +228,7 @@ export default function MasterBHKProjectList() {
                 href={`${type
                   .toLowerCase()
                   .split(" ")
-                  .join("-")}-in-${city.toLowerCase()}`}
+                  .join("-")}-in-${city.trim().replace(' ', '-').toLowerCase()}`}
               >
                 {type} in {city}
               </Link>

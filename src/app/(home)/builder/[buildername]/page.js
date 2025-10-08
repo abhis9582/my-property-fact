@@ -15,7 +15,8 @@ export async function generateMetadata({ params }) {
   const response = await fetchBuilderDetail(buildername);
   return {
     title: response.metaTitle,
-    descritpion: response.metaDescription
+    descritpion: response.metaDescription,
+    keywords: response.metaKeywords
   };
 }
 

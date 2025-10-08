@@ -21,11 +21,11 @@ export default function BuilderPage({ builderDetail, projectsList}) {
             <p className="text-center">{builderDetail.builderDescription}</p>
           </div>
         </div>
-        <div className="text-center">
+        {/* <div className="text-center">
           <Link href="#" className="btn btn-background text-white">
             Read More
           </Link>
-        </div>
+        </div> */}
       </div>
       {false ?
         <div className="d-flex justify-content-center align-items-center" style={{minHeight: "250px"}}>

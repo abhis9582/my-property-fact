@@ -5,8 +5,18 @@ import SocialFeedPage from "./social-feed/page";
 import MpfTopPicks from "../mpfTopPick";
 import HeroSection from "../_homecomponents/heroSection";
 import FeaturedPage from "./featured/page";
+import { getAllProjects, getWeeklyProject } from "@/app/_global_components/masterFunction";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const projects = await getAllProjects();
+  const featuredProjects = projects.reverse().slice(0, 3);
+  const residentalProjects = projects.filter(project => project.propertyTypeName === 'Residential').slice(0, 9);
+  const commercialProjects = projects.filter(project => project.propertyTypeName === 'Commercial').slice(0, 9);
+  const mpfTopPicProject = await getWeeklyProject(projects);
+  console.log(`Featured projects length for home page ${featuredProjects.length}`);
+  console.log(`Residential projects length for home page ${residentalProjects.length}`);
+  console.log(`Commertial projects length for home page ${commercialProjects.length}`);
+  console.log(`My property fact top project name is ${mpfTopPicProject.projectName}`);
   try {
     return (
       <>
@@ -14,7 +24,7 @@ export default function HomePage() {
         <HeroSection />
 
         {/* MPF-top pick section  */}
-        <MpfTopPicks />
+        <MpfTopPicks topProject={mpfTopPicProject}/>
 
         {/* Static Sections */}
         <div className="position-relative">
@@ -24,7 +34,7 @@ export default function HomePage() {
 
           {/* featured projects section  */}
           <h2 className="text-center my-4 fw-bold">Featured Projects</h2>
-          <FeaturedPage autoPlay={false}/>
+          <FeaturedPage autoPlay={false} allFeaturedProperties={featuredProjects}/>
           {/* dream cities section  */}
           <h2 className="text-center my-4 fw-bold">
             Find your dream property in the city you are searching in
@@ -35,13 +45,13 @@ export default function HomePage() {
           <h2 className="text-center my-1 mb-4 fw-bold">
             Explore Our Premier Residential Projects
           </h2>
-          <FeaturedPage autoPlay={true} category={'Residential'}/>
+          <FeaturedPage autoPlay={true} allFeaturedProperties={residentalProjects}/>
 
           {/* commertial projects section  */}
           <h2 className="text-center my-4 fw-bold">
             Explore Top Commercial Spaces for Growth
           </h2>
-          <FeaturedPage autoPlay={true} category={'Commercial'}/>
+          <FeaturedPage autoPlay={true} allFeaturedProperties={commercialProjects}/>
 
           {/* web story section  */}
           <h2 className="text-center my-4 fw-bold">Realty Updates</h2>

@@ -15,14 +15,14 @@ export async function checkIfProjectSlug(slug) {
 }
 
 //Fetching all projects
-export const fetchAllProjects = async () => {
+export const fetchAllProjects = cache(async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}projects`, {
     next: { revalidate: 60 },
   });
   console.log(`Called fetchAllProjects and length is ${res.length}`);
   if (!res.ok) throw new Error("Failed to fetch projects");
   return res.json();
-};
+});
 
 //Fetch all projects with cached
 export const getAllProjects = cache(async () => {
@@ -35,17 +35,17 @@ export const getAllProjects = cache(async () => {
 });
 
 //Fetching all cities
-export async function fetchCityData() {
+export const fetchCityData = cache(async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}city/all`, {
     next: { revalidate: 60 }, // revalidate every 60 seconds
   });
   console.log(`Called fetchCityData and length is ${res.length}`);
   if (!res.ok) throw new Error("Failed to fetch cities");
   return res.json();
-}
+});
 
 // Fetching project types
-export async function fetchProjectTypes() {
+export const fetchProjectTypes = cache(async () => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`,
     {
@@ -54,19 +54,19 @@ export async function fetchProjectTypes() {
   );
   if (!res.ok) throw new Error("Failed to fetch project types");
   return res.json();
-}
+});
 
 // Fetching builder data
-export async function fetchBuilderData() {
+export const fetchBuilderData = cache(async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}builder/get-all`, {
     next: { revalidate: 60 },
   });
   if (!res.ok) throw new Error("Failed to fetch builders");
   return res.json();
-}
+});
 
 // Fetching project details by slug
-export const fetchProjectDetailsBySlug = async (slug) => {
+export const fetchProjectDetailsBySlug = cache(async (slug) => {
   const projectBySlug = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}projects/get/${slug}`,
     {
@@ -76,7 +76,7 @@ export const fetchProjectDetailsBySlug = async (slug) => {
   console.log(`Called fetchProjectDetailsBySlug`);
   if (!projectBySlug.ok) throw new Error("Failed to fetch project details");
   return projectBySlug.json();
-};
+});
 
 //Fetch all floor plans
 export const isFloorTypeUrl = async (slug) => {
@@ -111,7 +111,6 @@ export const isCityTypeUrl = async (slug) => {
   const citySlug = slugParts[slugParts.length - 1]
     .replace("%20", "-")
     .toLowerCase();
-  console.log(citySlug);
   const exists = cities.some(
     (item) =>
       item.cityName.toLowerCase().replace(/\s+/g, "-") === citySlug &&
@@ -122,19 +121,20 @@ export const isCityTypeUrl = async (slug) => {
 
 // fetching blogs list from api
 export const fetchBlogs = cache(async (page, size) => {
-  console.log("Fetching blogs from backend..."); // runs only once per cache
   const res = await fetch(
     `${apiUrl}blog/get?page=${page}&size=${size}&from=${"blog"}`,
     {
       next: { revalidate: 60 },
     }
   );
+  const blogsData = await res.json();
   if (!res.ok) throw new Error("Failed to fetch blogs");
-  return res.json();
+  console.log(`Fetched blogs and total is ${blogsData.length}`); // runs only once per cache
+  return blogsData;
 });
 
 //Get projects in parts
-export const getProjectsInPart = async (page, size) => {
+export const getProjectsInPart = cache(async (page, size, category = "All") => {
   const project = await fetch(
     `${apiUrl}projects/get-projects-in-parts?page=${page}&size=${size}`,
     {
@@ -142,24 +142,40 @@ export const getProjectsInPart = async (page, size) => {
     }
   );
   if (!project.ok) throw new Error("Failed to fetch blogs");
+  const projectPartData = await project.json();
   console.log(
-    `Fetched project through pagination of page ${page} and size ${size}`
+    `Fetched project through pagination of page ${page} and size ${size} and length is ${projectPartData.length}`
   );
-  return project.json();
-};
+  switch (category) {
+    case "Commercial":
+      projectPartData.filter((item) => item.propertyTypeName === category);
+      break;
+    case "Residential":
+      projectPartData.filter((item) => item.propertyTypeName === category);
+      break;
+    case "New Launch":
+      projectPartData.filter((item) => item.propertyTypeName === category);
+      break;
+    default:
+      projectPartData;
+      break;
+  }
+  return projectPartData;
+});
 
 //Fetch all benefits from server
-export const fetchAllBenefits = async () => {
+export const fetchAllBenefits = cache(async () => {
   const benefits = await fetch(`${process.env.NEXT_PUBLIC_API_URL}benefit`, {
     method: "Get",
   });
   if (!benefits.ok) throw new Error("Failed to fetch benefits");
-  console.log("Fetched all benefits", benefits.length);
-  return benefits.json();
-};
+  const benefitData = await benefits.json();
+  console.log("Fetched all benefits", benefitData.length);
+  return benefitData;
+});
 
 //Fetch all webstories from server
-export const fetchAllStories = async () => {
+export const fetchAllStories = cache(async () => {
   const stories = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}web-story-category/get-all`,
     {
@@ -167,6 +183,15 @@ export const fetchAllStories = async () => {
     }
   );
   if (!stories.ok) throw new Error("Failed to fetch stories");
-  console.log("Fetched all stories", stories.length);
-  return stories.json();
+  const storiesData = await stories.json();
+  console.log("Fetched all stories", storiesData.length);
+  return storiesData.reverse();
+});
+
+// Getting top project
+export const getWeeklyProject = async (projects) => {
+  const now = new Date();
+  const weekNumber = Math.floor(now.getTime() / (7 * 24 * 60 * 60 * 1000));
+  const index = weekNumber % projects.length;
+  return projects[index];
 };

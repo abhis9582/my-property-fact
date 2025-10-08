@@ -96,7 +96,7 @@
 .project-detail-header {
   position: fixed;
   padding: 5px;
-  z-index: 3;
+  z-index: 9999;
   width: 100%;
   background: transparent;
   transition: background 0.2s linear;

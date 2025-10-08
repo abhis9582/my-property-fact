@@ -944,22 +944,7 @@ export default function Property({ projectDetail }) {
                       <Form.Group className="mb-3" controlId="first_name">
                         <Form.Control
                           type="text"
-                          placeholder="First Name"
-                          value={formData.name || ""}
-                          onChange={(e) => handleChange(e)}
-                          name="name"
-                          required
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          Please provide a valid name.
-                        </Form.Control.Feedback>
-                      </Form.Group>
-                    </Col>
-                    <Col>
-                      <Form.Group className="mb-3" controlId="last_name">
-                        <Form.Control
-                          type="text"
-                          placeholder="Last Name"
+                          placeholder="Full Name"
                           value={formData.name || ""}
                           onChange={(e) => handleChange(e)}
                           name="name"
@@ -974,7 +959,7 @@ export default function Property({ projectDetail }) {
                   <Form.Group className="mb-3" controlId="email_id">
                     <Form.Control
                       type="email"
-                      placeholder="Email id"
+                      placeholder="Email Id"
                       value={formData.email || ""}
                       onChange={(e) => handleChange(e)}
                       name="email"

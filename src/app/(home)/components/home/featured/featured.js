@@ -10,13 +10,12 @@ import { useProjectContext } from "@/app/_global_components/contexts/projectsCon
 
 export default function Featured({
   url = "",
-  allFeaturedProperties = null,
   autoPlay,
   allProjects,
   type
 }) {
   const { setProjectData } = useProjectContext();
-  useEffect(() => {
+  useEffect(() => {    
     setProjectData(allProjects);
   }, []);
 
@@ -24,7 +23,7 @@ export default function Featured({
     dots: false,
     infinite: allProjects.length > 1,
     speed: 500,
-    autoplay: allProjects.length > 1,
+    autoplay: autoPlay,
     autoplaySpeed: 5000,
     arrows: autoPlay,
     slidesToShow: 3,
