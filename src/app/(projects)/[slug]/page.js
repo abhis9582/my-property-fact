@@ -26,6 +26,13 @@ export async function generateMetadata({ params }) {
         " Flats in India",
       description:
         "Browse apartments, villas, and plots categorized by BHK type. Get detailed price lists, floor plans, and location maps.",
+        keywords: [
+        slug.replace(/-/g, " ") + " flats",
+        "apartments",
+        "villas",
+        "plots",
+        "BHK flats in India",
+      ],
     };
   }
 
@@ -40,6 +47,7 @@ export async function generateMetadata({ params }) {
       response.projectAddress +
       " | Price List & Brochure, Floor Plan, Location Map & Reviews",
     description: response.metaDescription,
+    keywords: response.metaKeyword
   };
 }
 

@@ -179,7 +179,7 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
             <div className="col-6 col-md-3 col-sm-6">
               <div>
                 <p className="text-golden">Get Social</p>
-                <ul className="d-flex gap-3 p-0 list-unstyled">
+                <ul className="d-flex gap-3 p-0 list-unstyled flex-wrap">
                   <li className="">
                     <Link
                       className="fs-4 text-golden hover-green text-decoration-none"

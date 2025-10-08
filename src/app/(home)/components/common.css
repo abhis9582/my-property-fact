@@ -52,3 +52,9 @@
     top: 0;
   }
 }
+
+.mpf-top-pic-image {
+  height: 100%;
+  object-fit: cover;
+  max-height: 500px;
+}

@@ -12,10 +12,12 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { LoadingSpinner } from "./page";
+import { usePathname } from "next/navigation";
 export default function ContactUs() {
   const [validated, setValidated] = useState(false);
   const [buttonName, setButtonName] = useState("Get a free service");
   const [showLoading, setShowLoading] = useState(false);
+  const pathName = usePathname();
   //Defining form fields
   const [formData, setFormData] = useState({
     name: "",
@@ -45,6 +47,8 @@ export default function ContactUs() {
       e.preventDefault();
       try {
         formData.pageName = "Contact us";
+        formData.projectLink = `${process.env.NEXT_PUBLIC_ROOT_URL}${pathName}`
+        formData.enquiryFrom = `Contact us page`
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}enquiry/post`,
           formData
