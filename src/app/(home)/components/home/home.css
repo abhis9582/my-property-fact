@@ -1,4 +1,4 @@
-.home-banner img{
+.home-banner img {
   width: 100%;
 }
 
@@ -127,6 +127,9 @@
   .home-search-container {
     bottom: -333px;
   }
+  .diwali-gif {
+    width: 100% !important;
+  }
 }
 @media (max-width: 375px) {
   .data-container {
@@ -141,3 +144,24 @@
   }
 }
 /*bannercontainer ends*/
+
+@media (max-width: 768px) {
+  .diwali-gif {
+    width: 100% !important;
+  }
+}
+
+.diwali-gif {
+  position: absolute;
+  z-index: 99;
+  max-height: 100%;
+  /* top: -5px; */
+  width: 50%;
+  right: 0px;
+}
+
+.diwali-gif img {
+  height: 100%;
+  /* width: 137%; */
+  max-width: 100%;
+}

@@ -91,7 +91,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
           isScrolled ? "fixed-header" : ""
         }`}
       >
-        <div className="mpf-logo">
+        <div className="mpf-logo d-flex align-items-center gap-4">
           <Link href="/">
             <Image
               src="/logo.png"
@@ -101,6 +101,15 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
               priority
             />
           </Link>
+          <div className="ms-5">
+            <Image
+              src="/diwali/diwali-text.png"
+              width={150}
+              height={50}
+              alt="diwali-text"
+              className="img-fluid"
+            />
+          </div>
         </div>
         <nav className="d-none d-lg-flex">
           <div className="menu position-relative">
@@ -250,12 +259,12 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                   Contact us
                 </Link>
               </li>
-              {/* <li>
+              <li>
                 <div className="bg-white rounded rounded-3 p-2 cursor-pointer hover-effect"
                 onClick={openSignUpModal}>
                   <p className="text-dark m-0 p-0">Post Property</p>
                 </div>
-              </li> */}
+              </li>
             </ul>
           </div>
         </nav>
@@ -390,6 +399,12 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                   <Link className="text-decoration-none" href="/contact-us" onClick={openMenu}>
                     Contact us
                   </Link>
+                </li>
+                <li>
+                  <div className="bg-white rounded rounded-3 p-2 cursor-pointer hover-effect"
+                  onClick={openSignUpModal}>
+                    <p className="text-dark m-0 p-0">Post Property</p>
+                  </div>
                 </li>
               </ul>
             </div>
