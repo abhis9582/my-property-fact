@@ -43,6 +43,9 @@ export default async function HeroSection() {
           style={{ minHeight: "474px !important" }}
         >
           <div className="position-relative overflow-hidden">
+            <div className="diwali-gif">
+              <img src="./diwali/diwali.gif" alt="diwali" />
+            </div>
             <picture className="position-relative home-banner">
               {/* Mobile Image */}
               <source
@@ -73,9 +76,7 @@ export default async function HeroSection() {
           {/* <div className="overlay"></div> */}
         </div>
         <div className="bannercontainer">
-          <h1 className="text-center text-light">
-            Find the best property
-          </h1>
+          <h1 className="text-center text-light">Find the best property</h1>
           <div className="d-flex flex-wrap align-item-center justify-content-center gap-4 my-4">
             {projectTypeList.map((item, index) => (
               <div key={`row-${index}`}>
