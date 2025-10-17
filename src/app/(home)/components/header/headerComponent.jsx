@@ -259,12 +259,12 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                   Contact us
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <div className="bg-white rounded rounded-3 p-2 cursor-pointer hover-effect"
                 onClick={openSignUpModal}>
                   <p className="text-dark m-0 p-0">Post Property</p>
                 </div>
-              </li>
+              </li> */}
             </ul>
           </div>
         </nav>
