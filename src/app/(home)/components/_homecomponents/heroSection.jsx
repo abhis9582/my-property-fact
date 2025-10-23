@@ -43,9 +43,6 @@ export default async function HeroSection() {
           style={{ minHeight: "474px !important" }}
         >
           <div className="position-relative overflow-hidden">
-            <div className="diwali-gif">
-              <img src="./diwali/diwali.gif" alt="diwali" />
-            </div>
             <picture className="position-relative home-banner">
               {/* Mobile Image */}
               <source

@@ -101,15 +101,6 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
               priority
             />
           </Link>
-          <div className="ms-5">
-            <Image
-              src="/diwali/diwali-text.png"
-              width={150}
-              height={50}
-              alt="diwali-text"
-              className="img-fluid"
-            />
-          </div>
         </div>
         <nav className="d-none d-lg-flex">
           <div className="menu position-relative">
