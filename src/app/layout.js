@@ -9,6 +9,7 @@ import localFont from "next/font/local";
 import "@fortawesome/fontawesome-svg-core/styles.css"; 
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
+
 // app/layout.js
 export const metadata = {
   title: "Not found",
@@ -38,6 +39,20 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        {/* Suppress React DevTools warning */}
+        <Script id="suppress-react-devtools" strategy="beforeInteractive">
+          {`
+            if (typeof window !== 'undefined') {
+              window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {
+                isDisabled: true,
+                supportsFiber: true,
+                inject: () => {},
+                onCommitFiberRoot: () => {},
+                onCommitFiberUnmount: () => {},
+              };
+            }
+          `}
+        </Script>
         {/* Meta Pixel Script */}
         <Script id="facebook-pixel" strategy="lazyOnload">
           {`
