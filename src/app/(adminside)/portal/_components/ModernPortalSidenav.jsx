@@ -19,14 +19,16 @@ import "@coreui/coreui/dist/css/coreui.min.css";
 import Image from "next/image";
 import { useState } from "react";
 import sidenavConfig from "./sidenav-config.json";
+import { useUser } from "../_contexts/UserContext";
 
 export default function ModernPortalSidenav() {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const router = useRouter();
+  const { userData, logout } = useUser();
 
   const handleLogout = () => {
-    // Clear auth tokens/cookies here
-    console.log("Logging out...");
+    logout();
+    router.push('/');
   };
 
   const handleNavigation = (href) => {
@@ -125,8 +127,8 @@ export default function ModernPortalSidenav() {
                   className="user-avatar"
                 />
                 <div className="user-info">
-                  <div className="user-name">John Agent</div>
-                  <div className="user-role">Real Estate Agent</div>
+                  <div className="user-name">{userData?.fullName || 'User'}</div>
+                  <div className="user-role">{userData?.role || 'Agent'}</div>
                 </div>
               </div>
             </CDropdownToggle>

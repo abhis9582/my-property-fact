@@ -9,7 +9,7 @@ import {
   cilCalendar,
   cilPlus,
   cilSettings,
-  cilView,
+  cilViewModule,
   cilPencil,
   cilPhone,
   cilLocationPin,
@@ -18,10 +18,11 @@ import {
 import CIcon from "@coreui/icons-react";
 import Image from "next/image";
 import Link from "next/link";
-import Cookies from "js-cookie";
+import { useUser } from "../_contexts/UserContext";
+import { setDemoUserData } from "../_utils/setUserData";
 
 export default function ModernDashboard() {
-  const [userData, setUserData] = useState(null);
+  const { userData, loading } = useUser();
   const [stats, setStats] = useState({
     totalListings: 24,
     activeListings: 18,
@@ -33,14 +34,11 @@ export default function ModernDashboard() {
     revenue: 125000,
   });
 
-  useEffect(() => {
-    const cookieData = Cookies.get("userData");
-    
-    if (cookieData) {
-      const parsedData = JSON.parse(cookieData);
-      setUserData(parsedData);
-    }
-  }, []);
+  const handleSetDemoData = () => {
+    setDemoUserData();
+    // Reload the page to refresh user data
+    window.location.reload();
+  };
 
   const [recentActivities] = useState([
     {
@@ -197,7 +195,7 @@ export default function ModernDashboard() {
         <div className="property-price">{property.price}</div>
         <div className="property-stats">
           <div className="stat-item">
-            <CIcon icon={cilView} className="me-1" />
+            <CIcon icon={cilViewModule} className="me-1" />
             {property.views} views
           </div>
           <div className="stat-item">
@@ -207,7 +205,7 @@ export default function ModernDashboard() {
         </div>
         <div className="property-actions mt-3">
           <Button variant="outline-primary" size="sm" className="me-2">
-            <CIcon icon={cilView} className="me-1" />
+            <CIcon icon={cilViewModule} className="me-1" />
             View
           </Button>
           <Button variant="outline-secondary" size="sm">
@@ -249,7 +247,7 @@ export default function ModernDashboard() {
         <div className="header-content">
           <div className="header-title">
             <h2>Welcome back, {userData != null ? userData.fullName : ''}</h2>
-            <p>Here's what's happening with your properties today.</p>
+            <p>Here&apos;s what&apos;s happening with your properties today.</p>
           </div>
           <div className="header-actions">
             <Link href="/portal/dashboard/listings?action=add">
@@ -258,10 +256,16 @@ export default function ModernDashboard() {
                 Add Property
               </Button>
             </Link>
-            <Button variant="outline-secondary">
+            <Button variant="outline-secondary" className="me-2">
               <CIcon icon={cilBell} className="me-1" />
               Notifications
             </Button>
+            {!userData && (
+              <Button variant="outline-info" onClick={handleSetDemoData}>
+                <CIcon icon={cilUser} className="me-1" />
+                Set Demo User
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -292,7 +296,7 @@ export default function ModernDashboard() {
           <StatCard
             title="Total Views"
             value={stats.totalViews.toLocaleString()}
-            icon={cilView}
+            icon={cilViewModule}
             color="info"
             change="+25%"
             changeType="success"
@@ -407,7 +411,7 @@ export default function ModernDashboard() {
           {/* Upcoming Tasks */}
           <Card className="dashboard-card mt-4">
             <Card.Header className="d-flex justify-content-between align-items-center">
-              <h5 className="mb-0">Today's Tasks</h5>
+              <h5 className="mb-0">Today&apos;s Tasks</h5>
               <Link href="/portal/dashboard/tasks">
                 <Button variant="link" size="sm">
                   View All

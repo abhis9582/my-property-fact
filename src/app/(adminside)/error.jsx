@@ -1,5 +1,6 @@
 "use client";
 import ErrorPage from "./portal/_components/ErrorPage";
+import Link from "next/link";
 
 export default function GlobalError({ error, reset }) {
   console.error('Global error:', error);
@@ -26,12 +27,12 @@ export default function GlobalError({ error, reset }) {
       >
         🔄 Try Again
       </button>
-      <a 
+      <Link 
         href="/portal/dashboard"
         className="btn btn-primary"
       >
         🏠 Go to Portal
-      </a>
+      </Link>
     </div>
   );
 

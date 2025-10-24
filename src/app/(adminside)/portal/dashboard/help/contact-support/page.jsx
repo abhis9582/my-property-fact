@@ -12,7 +12,7 @@ import {
 import { 
   cilEnvelopeOpen, 
   cilPhone, 
-  cilChat,
+  cilChatBubbleBubble,
   cilClock,
   cilUser,
   cilStar
@@ -65,7 +65,7 @@ export default function ContactSupportPage() {
       action: "+91 98765 43210"
     },
     {
-      icon: cilChat,
+      icon: cilChatBubble,
       title: "Live Chat",
       description: "Chat with our support team in real-time",
       responseTime: "Immediate",
@@ -116,7 +116,7 @@ export default function ContactSupportPage() {
                       </div>
                       <div className="method-action">
                         <Button 
-                          variant={method.icon === cilChat ? "primary" : "outline-primary"}
+                          variant={method.icon === cilChatBubble ? "primary" : "outline-primary"}
                           size="sm"
                         >
                           {method.action}
@@ -156,7 +156,7 @@ export default function ContactSupportPage() {
               {submitted ? (
                 <Alert variant="success">
                   <CIcon icon={cilStar} className="me-2" />
-                  <strong>Message Sent!</strong> We'll get back to you within 24 hours.
+                  <strong>Message Sent!</strong> We&apos;ll get back to you within 24 hours.
                 </Alert>
               ) : (
                 <Form onSubmit={handleSubmit}>

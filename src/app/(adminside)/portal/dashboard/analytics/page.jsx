@@ -11,12 +11,12 @@ import {
 } from "react-bootstrap";
 import { 
   cilChart, 
-  cilEye, 
+  cilViewModule, 
   cilPhone, 
   cilHome, 
   cilStar,
-  cilTrendingUp,
-  cilTrendingDown,
+  cilArrowCircleTop,
+  cilArrowCircleBottom,
   cilCalendar,
   cilFilter
 } from "@coreui/icons";
@@ -101,7 +101,7 @@ export default function Analytics() {
             <CIcon icon={icon} className={`stat-icon text-${color}`} />
           </div>
           <div className={`stat-change text-${trend === 'up' ? 'success' : 'danger'}`}>
-            {trend === 'up' ? <CIcon icon={cilTrendingUp} /> : <CIcon icon={cilTrendingDown} />}
+            {trend === 'up' ? <CIcon icon={cilArrowCircleTop} /> : <CIcon icon={cilArrowCircleBottom} />}
             <span className="ms-1">{Math.abs(change)}%</span>
           </div>
         </div>
@@ -120,7 +120,7 @@ export default function Analytics() {
             <h4 className="metric-value">{metric.value}</h4>
           </div>
           <div className={`metric-change text-${metric.trend === 'up' ? 'success' : 'danger'}`}>
-            {metric.trend === 'up' ? <CIcon icon={cilTrendingUp} /> : <CIcon icon={cilTrendingDown} />}
+            {metric.trend === 'up' ? <CIcon icon={cilArrowCircleTop} /> : <CIcon icon={cilArrowCircleBottom} />}
             <span className="ms-1">{Math.abs(metric.change)}%</span>
           </div>
         </div>
@@ -165,7 +165,7 @@ export default function Analytics() {
             value={analyticsData.overview.totalViews.toLocaleString()}
             change={analyticsData.overview.viewsChange}
             trend="up"
-            icon={cilEye}
+            icon={cilViewModule}
             color="primary"
           />
         </Col>
@@ -275,7 +275,7 @@ export default function Analytics() {
               <div className="insights-list">
                 <div className="insight-item">
                   <div className="insight-icon">
-                    <CIcon icon={cilTrendingUp} className="text-success" />
+                    <CIcon icon={cilArrowCircleTop} className="text-success" />
                   </div>
                   <div className="insight-content">
                     <h6>Views Increased</h6>

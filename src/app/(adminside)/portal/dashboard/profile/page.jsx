@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   Card, 
   Row, 
@@ -16,31 +16,33 @@ import {
   cilUser, 
   cilLocationPin, 
   cilPhone, 
-  cilEnvelope, 
+  cilEnvelopeOpen, 
   cilCalendar,
   cilShieldAlt,
   cilSettings,
   cilStar,
   cilCheck,
-  cilEdit
+  cilPencil
 } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import Image from "next/image";
+import { useUser } from "../../_contexts/UserContext";
 
 export default function Profile() {
+  const { userData, updateUserData, loading } = useUser();
   const [profile, setProfile] = useState({
-    name: "John Agent",
-    email: "john.agent@example.com",
-    phone: "+91 98765 43210",
-    role: "Real Estate Agent",
-    experience: "5 years",
-    location: "Gurgaon, Haryana",
-    bio: "Experienced real estate agent specializing in residential properties in Gurgaon. Committed to helping clients find their dream homes.",
+    name: "",
+    email: "",
+    phone: "",
+    role: "",
+    experience: "",
+    location: "",
+    bio: "",
     avatar: "/logo.png",
-    verified: true,
-    rating: 4.8,
-    totalDeals: 127,
-    joinDate: "2019-03-15"
+    verified: false,
+    rating: 0,
+    totalDeals: 0,
+    joinDate: ""
   });
 
   const [stats, setStats] = useState({
@@ -74,6 +76,26 @@ export default function Profile() {
     }
   ]);
 
+  // Sync profile with userData when userData changes
+  useEffect(() => {
+    if (userData) {
+      setProfile({
+        name: userData.fullName || "",
+        email: userData.email || "",
+        phone: userData.phone || "",
+        role: userData.role || "",
+        experience: userData.experience || "",
+        location: userData.location || "",
+        bio: userData.bio || "",
+        avatar: userData.avatar || "/logo.png",
+        verified: userData.verified || false,
+        rating: userData.rating || 0,
+        totalDeals: userData.totalDeals || 0,
+        joinDate: userData.joinDate || ""
+      });
+    }
+  }, [userData]);
+
   const handleInputChange = (field, value) => {
     setProfile(prev => ({
       ...prev,
@@ -82,15 +104,41 @@ export default function Profile() {
   };
 
   const handleSave = () => {
-    // Save profile logic here
+    // Update user data in context
+    updateUserData({
+      fullName: profile.name,
+      email: profile.email,
+      phone: profile.phone,
+      role: profile.role,
+      experience: profile.experience,
+      location: profile.location,
+      bio: profile.bio,
+      avatar: profile.avatar,
+      verified: profile.verified,
+      rating: profile.rating,
+      totalDeals: profile.totalDeals,
+      joinDate: profile.joinDate
+    });
+    
     alert("Profile updated successfully!");
   };
+
+  if (loading) {
+    return (
+      <div className="profile-page">
+        <div className="profile-header">
+          <h2>Loading Profile...</h2>
+          <p>Please wait while we load your profile data</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="profile-page">
       <div className="profile-header">
         <h2>My Profile</h2>
-        <p>Manage your account settings and preferences</p>
+        <p>Welcome back, {profile.name || 'User'}! Manage your account settings and preferences</p>
       </div>
 
       <Row className="g-4">
@@ -129,7 +177,7 @@ export default function Profile() {
                 </div>
               </div>
               <Button variant="primary" className="w-100 mt-3">
-                <CIcon icon={cilEdit} className="me-1" />
+                <CIcon icon={cilPencil} className="me-1" />
                 Edit Profile
               </Button>
             </Card.Body>

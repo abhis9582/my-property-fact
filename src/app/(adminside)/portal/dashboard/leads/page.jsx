@@ -18,11 +18,11 @@ import {
   cilSearch, 
   cilFilter, 
   cilPlus, 
-  cilEye, 
-  cilEdit, 
+  cilViewModule, 
+  cilPencil, 
   cilTrash,
   cilPhone,
-  cilEnvelope,
+  cilEnvelopeOpenOpen,
   cilLocationPin,
   cilCalendar,
   cilStar,
@@ -283,7 +283,7 @@ export default function LeadsPage() {
                     <td>
                       <div>
                         <div className="d-flex align-items-center mb-1">
-                          <CIcon icon={cilEnvelope} className="me-1 text-muted" />
+                          <CIcon icon={cilEnvelopeOpen} className="me-1 text-muted" />
                           <small>{lead.email}</small>
                         </div>
                         <div className="d-flex align-items-center">
@@ -332,10 +332,10 @@ export default function LeadsPage() {
                           className="me-1"
                           onClick={() => handleViewLead(lead)}
                         >
-                          <CIcon icon={cilEye} />
+                          <CIcon icon={cilViewModule} />
                         </Button>
                         <Button variant="outline-secondary" size="sm" className="me-1">
-                          <CIcon icon={cilEdit} />
+                          <CIcon icon={cilPencil} />
                         </Button>
                         <Button variant="outline-danger" size="sm">
                           <CIcon icon={cilTrash} />
@@ -362,7 +362,7 @@ export default function LeadsPage() {
                 <h6>Contact Information</h6>
                 <div className="contact-info">
                   <div className="contact-item">
-                    <CIcon icon={cilEnvelope} className="me-2" />
+                    <CIcon icon={cilEnvelopeOpen} className="me-2" />
                     {selectedLead.email}
                   </div>
                   <div className="contact-item">
@@ -431,7 +431,7 @@ export default function LeadsPage() {
             Close
           </Button>
           <Button variant="primary">
-            <CIcon icon={cilEdit} className="me-1" />
+            <CIcon icon={cilPencil} className="me-1" />
             Edit Lead
           </Button>
         </Modal.Footer>

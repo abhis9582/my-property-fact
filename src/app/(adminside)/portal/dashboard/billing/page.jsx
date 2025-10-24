@@ -18,8 +18,8 @@ import {
   cilCheck,
   cilWarning,
   cilInfo,
-  cilDownload,
-  cilEye,
+  cilCloudDownload,
+  cilViewModule,
   cilSettings
 } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
@@ -249,10 +249,10 @@ export default function BillingPage() {
                         <td>
                           <div className="invoice-actions">
                             <Button variant="outline-primary" size="sm" className="me-1">
-                              <CIcon icon={cilEye} />
+                              <CIcon icon={cilViewModule} />
                             </Button>
                             <Button variant="outline-secondary" size="sm">
-                              <CIcon icon={cilDownload} />
+                              <CIcon icon={cilCloudDownload} />
                             </Button>
                           </div>
                         </td>
@@ -341,7 +341,7 @@ export default function BillingPage() {
             <Card.Body>
               <div className="quick-actions">
                 <Button variant="outline-primary" className="w-100 mb-2">
-                  <CIcon icon={cilDownload} className="me-1" />
+                  <CIcon icon={cilCloudDownload} className="me-1" />
                   Download Invoice
                 </Button>
                 <Button variant="outline-secondary" className="w-100 mb-2">

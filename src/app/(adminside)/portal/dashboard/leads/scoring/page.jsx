@@ -16,7 +16,7 @@ import {
   cilCheck, 
   cilSettings, 
   cilChart,
-  cilRefresh,
+  cilReload,
   cilSave,
   cilInfo
 } from "@coreui/icons";
@@ -173,7 +173,7 @@ export default function LeadScoringPage() {
           </div>
           <div className="header-actions">
             <Button variant="outline-light" className="me-2">
-              <CIcon icon={cilRefresh} className="me-1" />
+              <CIcon icon={cilReload} className="me-1" />
               Recalculate All
             </Button>
             <Button variant="light">

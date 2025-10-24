@@ -1,13 +1,15 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import ModernPortalSidenav from "../_components/ModernPortalSidenav";
 import ErrorBoundary from "../_components/ErrorBoundary";
+import CSSLoader from "../_components/CSSLoader";
 import { Button } from "react-bootstrap";
 import { cilMenu } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 
 export default function PortalDashboardLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const toggleSidebar = () => {
     console.log('Toggle sidebar clicked, current state:', sidebarOpen);
@@ -17,6 +19,19 @@ export default function PortalDashboardLayout({ children }) {
   const closeSidebar = () => {
     setSidebarOpen(false);
   };
+
+  // Simulate loading completion
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 100); // Very short delay to ensure CSS is loaded
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <CSSLoader />;
+  }
 
   return (
     <ErrorBoundary>

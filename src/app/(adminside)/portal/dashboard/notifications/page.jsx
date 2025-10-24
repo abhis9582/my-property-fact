@@ -21,9 +21,9 @@ import {
   cilCheck, 
   cilX,
   cilTrash,
-  cilEye,
+  cilViewModule,
   cilStar,
-  cilMail,
+  cilEnvelopeOpen,
   cilPhone,
   cilCalendar,
   cilWarning,
@@ -125,7 +125,7 @@ export default function NotificationsPage() {
 
   const getNotificationIcon = (type) => {
     const icons = {
-      "email": cilMail,
+      "email": cilEnvelopeOpen,
       "system": cilBell,
       "payment": cilCheckCircle,
       "alert": cilWarning,
@@ -252,7 +252,7 @@ export default function NotificationsPage() {
             <Card.Body>
               <div className="stat-content">
                 <div className="stat-icon unread">
-                  <CIcon icon={cilEye} />
+                  <CIcon icon={cilViewModule} />
                 </div>
                 <div className="stat-info">
                   <h6 className="stat-title">Unread</h6>
@@ -395,7 +395,7 @@ export default function NotificationsPage() {
                         size="sm"
                         onClick={() => handleViewNotification(notification)}
                       >
-                        <CIcon icon={cilEye} className="me-1" />
+                        <CIcon icon={cilViewModule} className="me-1" />
                         View
                       </Button>
                       

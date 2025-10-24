@@ -20,8 +20,8 @@ import {
   cilLocationPin, 
   cilClock,
   cilUser,
-  cilEye,
-  cilEdit,
+  cilViewModule,
+  cilPencil,
   cilTrash,
   cilCheck,
   cilX,
@@ -443,11 +443,11 @@ export default function CalendarPage() {
                               className="me-1"
                               onClick={() => handleViewEvent(event)}
                             >
-                              <CIcon icon={cilEye} />
+                              <CIcon icon={cilViewModule} />
                             </Button>
                             <Dropdown>
                               <Dropdown.Toggle variant="outline-secondary" size="sm">
-                                <CIcon icon={cilEdit} />
+                                <CIcon icon={cilPencil} />
                               </Dropdown.Toggle>
                               <Dropdown.Menu>
                                 <Dropdown.Item onClick={() => handleUpdateStatus(event.id, "confirmed")}>
@@ -464,7 +464,7 @@ export default function CalendarPage() {
                                 </Dropdown.Item>
                                 <Dropdown.Divider />
                                 <Dropdown.Item>
-                                  <CIcon icon={cilEdit} className="me-2" />
+                                  <CIcon icon={cilPencil} className="me-2" />
                                   Edit
                                 </Dropdown.Item>
                                 <Dropdown.Item 
@@ -494,7 +494,7 @@ export default function CalendarPage() {
             <Card.Header>
               <h5 className="mb-0">
                 <CIcon icon={cilClock} className="me-2" />
-                Today's Events ({todayEvents.length})
+                Today&apos;s Events ({todayEvents.length})
               </h5>
             </Card.Header>
             <Card.Body>
@@ -634,7 +634,7 @@ export default function CalendarPage() {
             Close
           </Button>
           <Button variant="primary">
-            <CIcon icon={cilEdit} className="me-1" />
+            <CIcon icon={cilPencil} className="me-1" />
             Edit Event
           </Button>
         </Modal.Footer>
