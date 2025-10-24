@@ -15,6 +15,10 @@ const nextConfig = {
       },
     ],
   },
+  // Enable CSS optimization without experimental features
+  compiler: {
+    styledComponents: true,
+  },
 };
 
 module.exports = nextConfig;

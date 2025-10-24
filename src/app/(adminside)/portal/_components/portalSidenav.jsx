@@ -15,16 +15,6 @@ import {
   CDropdownItem,
 } from "@coreui/react";
 import "@coreui/coreui/dist/css/coreui.min.css";
-import CIcon from "@coreui/icons-react";
-import {
-  cilAccountLogout,
-  cilCloudDownload,
-  cilLayers,
-  cilPuzzle,
-  cilSettings,
-  cilSpeedometer,
-  cilUser,
-} from "@coreui/icons";
 import Image from "next/image";
 
 export default function PortalSideNav() {
@@ -52,18 +42,15 @@ export default function PortalSideNav() {
           <CSidebarNav>
             <CNavTitle>Dashboard</CNavTitle>
             <CNavItem href="/portal/dashboard">
-              <CIcon customClassName="nav-icon" icon={cilSpeedometer} />
               Dashboard
             </CNavItem>
             <CNavItem href="/portal/dashboard/listings">
-              <CIcon customClassName="nav-icon" icon={cilSpeedometer} />
               Listings
               <CBadge color="primary ms-auto">NEW</CBadge>
             </CNavItem>
             <CNavGroup
               toggler={
                 <>
-                  <CIcon customClassName="nav-icon" icon={cilPuzzle} />
                   Leads
                 </>
               }
@@ -82,12 +69,10 @@ export default function PortalSideNav() {
               </CNavItem>
             </CNavGroup>
             <CNavItem href="https://coreui.io">
-              <CIcon customClassName="nav-icon" icon={cilCloudDownload} />{" "}
               Download CoreUI
             </CNavItem>
             <CNavItem href="https://coreui.io/pro/">
-              <CIcon customClassName="nav-icon" icon={cilLayers} /> Try CoreUI
-              PRO
+              Try CoreUI PRO
             </CNavItem>
           </CSidebarNav>
           <CSidebarHeader className="border-top">
@@ -108,15 +93,12 @@ export default function PortalSideNav() {
               </CDropdownToggle>
               <CDropdownMenu className="pt-0" placement="bottom-end">
                 <CDropdownItem href="#">
-                  <CIcon icon={cilUser} className="me-2" />
                   Profile
                 </CDropdownItem>
                 <CDropdownItem href="#">
-                  <CIcon icon={cilSettings} className="me-2" />
                   Settings
                 </CDropdownItem>
                 <CDropdownItem href="#" onClick={handleLogout}>
-                  <CIcon icon={cilAccountLogout} className="me-2" />
                   Logout
                 </CDropdownItem>
               </CDropdownMenu>

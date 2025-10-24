@@ -1,0 +1,262 @@
+{
+  "navigation": [
+    {
+      "id": "dashboard",
+      "label": "Dashboard",
+      "icon": "cilSpeedometer",
+      "href": "/portal/dashboard",
+      "active": true,
+      "access": "ALL"
+    },
+    {
+      "id": "properties",
+      "label": "Properties",
+      "icon": "cilHome",
+      "href": "/portal/dashboard/listings",
+      "badge": "NEW",
+      "access": "ALL",
+      "children": [
+        {
+          "id": "my-listings",
+          "label": "My Listings",
+          "href": "/portal/dashboard/listings",
+          "access": "ALL"
+        },
+        {
+          "id": "add-property",
+          "label": "Add Property",
+          "href": "/portal/dashboard/listings?action=add",
+          "access": "ALL"
+        },
+        {
+          "id": "property-analytics",
+          "label": "Property Analytics",
+          "href": "/portal/dashboard/analytics",
+          "access": "ALL"
+        }
+      ]
+    },
+    {
+      "id": "leads",
+      "label": "Leads",
+      "icon": "cilPeople",
+      "href": "/portal/dashboard/leads",
+      "access": "ALL",
+      "children": [
+        {
+          "id": "lead-management",
+          "label": "Lead Management",
+          "href": "/portal/dashboard/leads",
+          "access": "ALL"
+        },
+        {
+          "id": "lead-scoring",
+          "label": "Lead Scoring",
+          "href": "/portal/dashboard/leads/scoring",
+          "access": "ALL"
+        },
+        {
+          "id": "lead-assignment",
+          "label": "Assignment & Routing",
+          "href": "/portal/dashboard/leads/assignment",
+          "access": "ALL"
+        }
+      ]
+    },
+    {
+      "id": "communication",
+      "label": "Communication",
+      "icon": "cilCommentSquare",
+      "href": "/portal/dashboard/communication",
+      "access": "ALL",
+      "children": [
+        {
+          "id": "inbox",
+          "label": "Inbox",
+          "href": "/portal/dashboard/communication/inbox",
+          "access": "ALL"
+        },
+        {
+          "id": "templates",
+          "label": "Templates",
+          "href": "/portal/dashboard/communication/templates",
+          "access": "ALL"
+        },
+        {
+          "id": "outbox-history",
+          "label": "Outbox & History",
+          "href": "/portal/dashboard/communication/outbox",
+          "access": "ALL"
+        }
+      ]
+    },
+    {
+      "id": "calendar",
+      "label": "Calendar",
+      "icon": "cilCalendar",
+      "href": "/portal/dashboard/calendar",
+      "access": "ALL",
+      "children": [
+        {
+          "id": "site-visits",
+          "label": "Site Visits",
+          "href": "/portal/dashboard/calendar/site-visits",
+          "access": "ALL"
+        },
+        {
+          "id": "callbacks-tasks",
+          "label": "Callbacks & Tasks",
+          "href": "/portal/dashboard/calendar/callbacks",
+          "access": "ALL"
+        },
+        {
+          "id": "integrations",
+          "label": "Integrations (Google/Outlook)",
+          "href": "/portal/dashboard/calendar/integrations",
+          "access": "ALL",
+          "badge": "P2"
+        }
+      ]
+    },
+    {
+      "id": "reports",
+      "label": "Analytics",
+      "icon": "cilChart",
+      "href": "/portal/dashboard/analytics",
+      "access": "ALL",
+      "children": [
+        {
+          "id": "listing-performance",
+          "label": "Listing Performance",
+          "href": "/portal/dashboard/analytics/performance",
+          "access": "ALL"
+        },
+        {
+          "id": "funnel-conversion",
+          "label": "Funnel & Conversion",
+          "href": "/portal/dashboard/analytics/conversion",
+          "access": "ALL"
+        },
+        {
+          "id": "lead-quality",
+          "label": "Lead Quality & TTFC",
+          "href": "/portal/dashboard/analytics/leads",
+          "access": "ALL"
+        },
+        {
+          "id": "price-locality",
+          "label": "Price vs Locality Median",
+          "href": "/portal/dashboard/analytics/pricing",
+          "access": "ALL"
+        }
+      ]
+    },
+    {
+      "id": "compliance",
+      "label": "Compliance",
+      "icon": "cilShieldAlt",
+      "href": "/portal/dashboard/compliance",
+      "access": "ALL",
+      "children": [
+        {
+          "id": "rera-credentials",
+          "label": "RERA Credentials",
+          "href": "/portal/dashboard/compliance/rera",
+          "access": "ALL"
+        },
+        {
+          "id": "document-vault",
+          "label": "Document Vault",
+          "href": "/portal/dashboard/compliance/documents",
+          "access": "ALL"
+        },
+        {
+          "id": "consent-logs",
+          "label": "Consent & Logs",
+          "href": "/portal/dashboard/compliance/consent",
+          "access": "ALL"
+        }
+      ]
+    },
+    {
+      "id": "billing",
+      "label": "Billing",
+      "icon": "cilCreditCard",
+      "href": "/portal/dashboard/billing",
+      "access": "ALL",
+      "children": [
+        {
+          "id": "plan-usage",
+          "label": "Plan & Usage",
+          "href": "/portal/dashboard/billing/plan",
+          "access": "ALL"
+        },
+        {
+          "id": "invoices-payments",
+          "label": "Invoices & Payments",
+          "href": "/portal/dashboard/billing/invoices",
+          "access": "ALL"
+        }
+      ]
+    },
+    {
+      "id": "settings",
+      "label": "Settings",
+      "icon": "cilSettings",
+      "href": "/portal/dashboard/settings",
+      "access": "ALL",
+      "children": [
+        {
+          "id": "profile",
+          "label": "Profile",
+          "href": "/portal/dashboard/profile",
+          "access": "ALL"
+        },
+        {
+          "id": "notifications",
+          "label": "Notifications",
+          "href": "/portal/dashboard/notifications",
+          "access": "ALL"
+        },
+        {
+          "id": "security",
+          "label": "Security",
+          "href": "/portal/dashboard/security",
+          "access": "ALL"
+        }
+      ]
+    },
+    {
+      "id": "help",
+      "label": "Help",
+      "icon": "cilQuestion",
+      "href": "/portal/dashboard/help",
+      "access": "ALL",
+      "children": [
+        {
+          "id": "knowledge-base",
+          "label": "Knowledge Base",
+          "href": "/portal/dashboard/help/knowledge-base",
+          "access": "ALL"
+        },
+        {
+          "id": "contact-support",
+          "label": "Contact Support",
+          "href": "/portal/dashboard/help/contact-support",
+          "access": "ALL"
+        }
+      ]
+    }
+  ],
+  "accessLevels": {
+    "ALL": "All users",
+    "B": "Broker only",
+    "O": "Owner only", 
+    "BA": "Broker and Admin only"
+  },
+  "badges": {
+    "NEW": "New feature",
+    "P2": "Phase 2",
+    "Future": "Future release"
+  }
+}

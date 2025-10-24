@@ -1,9 +1,6 @@
-import PortalDashboard from "./dashboard/portalDashboard";
+import { redirect } from 'next/navigation';
 
-export default function PortalDashboardPage() {
-  return (
-    <>
-      <PortalDashboard />
-    </>
-  );
+export default function PortalPage() {
+  // Redirect to dashboard by default
+  redirect('/portal/dashboard');
 }
