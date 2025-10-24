@@ -12,8 +12,8 @@ import {
 } from "react-bootstrap";
 import { 
   cilCommentSquare, 
-  cilEnvelope, 
-  cilFileText, 
+  cilEnvelopeOpen, 
+  cilFile, 
   cilSend,
   cilInbox,
   cilCheck,
@@ -74,14 +74,14 @@ export default function CommunicationPage() {
     {
       title: "Send Email",
       description: "Compose and send email to leads",
-      icon: cilEnvelope,
+      icon: cilEnvelopeOpen,
       href: "/portal/dashboard/communication/inbox",
       color: "primary"
     },
     {
       title: "Use Template",
       description: "Send pre-built message templates",
-      icon: cilFileText,
+      icon: cilFile,
       href: "/portal/dashboard/communication/templates",
       color: "success"
     },
@@ -107,7 +107,7 @@ export default function CommunicationPage() {
 
   const getTypeIcon = (type) => {
     const icons = {
-      "email": cilEnvelope,
+      "email": cilEnvelopeOpen,
       "sms": cilCommentSquare,
       "call": cilInbox
     };
@@ -125,7 +125,7 @@ export default function CommunicationPage() {
           </div>
           <div className="header-actions">
             <Button variant="light">
-              <CIcon icon={cilEnvelope} className="me-1" />
+              <CIcon icon={cilEnvelopeOpen} className="me-1" />
               Quick Compose
             </Button>
           </div>
@@ -155,7 +155,7 @@ export default function CommunicationPage() {
             <Card.Body>
               <div className="stat-content">
                 <div className="stat-icon unread">
-                  <CIcon icon={cilEnvelope} />
+                  <CIcon icon={cilEnvelopeOpen} />
                 </div>
                 <div className="stat-info">
                   <h6 className="stat-title">Unread</h6>

@@ -12,13 +12,12 @@ import {
   Alert
 } from "react-bootstrap";
 import { 
-  cilQuestion, 
+  cilInfo, 
   cilSearch, 
   cilBook, 
   cilEnvelopeOpen,
   cilPhone,
-  cilChat,
-  cilInfo,
+  cilChatBubble,
   cilStar,
   cilClock,
   cilUser
@@ -30,7 +29,7 @@ export default function HelpPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   const categories = [
-    { id: "All", name: "All Categories", count: 45, icon: cilQuestion },
+    { id: "All", name: "All Categories", count: 45, icon: cilInfo },
     { id: "Getting Started", name: "Getting Started", count: 8, icon: cilInfo },
     { id: "Properties", name: "Properties & Listings", count: 12, icon: cilBook },
     { id: "Leads", name: "Lead Management", count: 10, icon: cilUser },
@@ -338,12 +337,12 @@ export default function HelpPage() {
             <Col md={4}>
               <div className="contact-method">
                 <div className="contact-icon">
-                  <CIcon icon={cilChat} />
+                  <CIcon icon={cilChatBubble} />
                 </div>
                 <h6>Live Chat</h6>
                 <p>Chat with our support team in real-time</p>
                 <Button variant="primary">
-                  <CIcon icon={cilChat} className="me-1" />
+                  <CIcon icon={cilChatBubble} className="me-1" />
                   Start Chat
                 </Button>
               </div>

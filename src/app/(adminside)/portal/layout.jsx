@@ -1,9 +1,23 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
 import './portal-global.css';
+import '@coreui/coreui/dist/css/coreui.min.css';
+import { UserProvider } from './_contexts/UserContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  colorScheme: 'light',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#667eea' },
+    { media: '(prefers-color-scheme: dark)', color: '#667eea' },
+  ],
+};
+
+// Preload critical CSS
 export const metadata = {
   metadataBase: new URL('http://localhost:3000'),
   title: {
@@ -89,23 +103,14 @@ export const metadata = {
   },
 };
 
-export const viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 1,
-  colorScheme: 'light',
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#667eea' },
-    { media: '(prefers-color-scheme: dark)', color: '#667eea' },
-  ],
-};
-
 export default function PortalLayout({ children }) {
   return (
-    <div className="portal-body">
-      <div id="portal-root">
-        {children}
+    <UserProvider>
+      <div className="portal-body">
+        <div id="portal-root">
+          {children}
+        </div>
       </div>
-    </div>
+    </UserProvider>
   );
 }

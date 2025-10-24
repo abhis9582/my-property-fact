@@ -18,7 +18,7 @@ import {
   cilStar,
   cilClock,
   cilUser,
-  cilEye
+  cilViewModule
 } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 
@@ -374,7 +374,7 @@ Track these metrics:
                   <h1 className="article-title">{selectedArticle.title}</h1>
                   <div className="article-stats mb-4">
                     <small className="text-muted me-3">
-                      <CIcon icon={cilEye} className="me-1" />
+                      <CIcon icon={cilViewModule} className="me-1" />
                       {selectedArticle.views} views
                     </small>
                     <small className="text-muted me-3">
@@ -432,7 +432,7 @@ Track these metrics:
                             </div>
                             <div className="article-stats">
                               <small className="text-muted">
-                                <CIcon icon={cilEye} className="me-1" />
+                                <CIcon icon={cilViewModule} className="me-1" />
                                 {article.views} views
                               </small>
                               <small className="text-muted ms-3">

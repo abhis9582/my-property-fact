@@ -19,9 +19,9 @@ import {
 import { 
   cilInbox, 
   cilSend, 
-  cilEye, 
+  cilViewModule, 
   cilTrash,
-  cilRefresh,
+  cilReload,
   cilSearch,
   cilFilter,
   cilClock,
@@ -198,7 +198,7 @@ export default function OutboxPage() {
           </div>
           <div className="header-actions">
             <Button variant="outline-light" className="me-2">
-              <CIcon icon={cilRefresh} className="me-1" />
+              <CIcon icon={cilReload} className="me-1" />
               Refresh
             </Button>
             <Button variant="light">
@@ -410,7 +410,7 @@ export default function OutboxPage() {
                           className="me-1"
                           onClick={() => handleViewMessage(message)}
                         >
-                          <CIcon icon={cilEye} />
+                          <CIcon icon={cilViewModule} />
                         </Button>
                         
                         {message.status === "failed" && (
@@ -420,7 +420,7 @@ export default function OutboxPage() {
                             className="me-1"
                             onClick={() => handleRetryMessage(message.id)}
                           >
-                            <CIcon icon={cilRefresh} />
+                            <CIcon icon={cilReload} />
                           </Button>
                         )}
                         
@@ -430,12 +430,12 @@ export default function OutboxPage() {
                           </Dropdown.Toggle>
                           <Dropdown.Menu>
                             <Dropdown.Item onClick={() => handleViewMessage(message)}>
-                              <CIcon icon={cilEye} className="me-2" />
+                              <CIcon icon={cilViewModule} className="me-2" />
                               View Details
                             </Dropdown.Item>
                             {message.status === "failed" && (
                               <Dropdown.Item onClick={() => handleRetryMessage(message.id)}>
-                                <CIcon icon={cilRefresh} className="me-2" />
+                                <CIcon icon={cilReload} className="me-2" />
                                 Retry
                               </Dropdown.Item>
                             )}
@@ -550,7 +550,7 @@ export default function OutboxPage() {
           </Button>
           {selectedMessage?.status === "failed" && (
             <Button variant="warning" onClick={() => handleRetryMessage(selectedMessage.id)}>
-              <CIcon icon={cilRefresh} className="me-1" />
+              <CIcon icon={cilReload} className="me-1" />
               Retry
             </Button>
           )}

@@ -20,7 +20,7 @@ import {
   cilCheck,
   cilX,
   cilSettings,
-  cilRefresh,
+  cilReload,
   cilArrowRight,
   cilClock,
   cilStar
@@ -219,7 +219,7 @@ export default function LeadAssignmentPage() {
           </div>
           <div className="header-actions">
             <Button variant="outline-light" className="me-2" onClick={autoAssignAll}>
-              <CIcon icon={cilRefresh} className="me-1" />
+              <CIcon icon={cilReload} className="me-1" />
               Auto Assign All
             </Button>
             <Button variant="light">

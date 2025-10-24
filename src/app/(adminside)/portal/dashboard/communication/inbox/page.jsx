@@ -14,20 +14,20 @@ import {
   Dropdown
 } from "react-bootstrap";
 import { 
-  cilEnvelope, 
+  cilEnvelopeOpen, 
   cilSearch, 
   cilFilter, 
   cilPlus, 
-  cilEye, 
-  cilEdit, 
+  cilViewModule, 
+  cilPencil, 
   cilTrash,
-  cilReply,
-  cilForward,
+  cilSend,
+  cilMediaSkipForward,
   cilStar,
   cilCheck,
   cilClock,
   cilUser,
-  cilAttachment
+  cilPaperclip
 } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 
@@ -170,7 +170,7 @@ export default function InboxPage() {
             <Card.Body>
               <div className="stat-content">
                 <div className="stat-icon">
-                  <CIcon icon={cilEnvelope} />
+                  <CIcon icon={cilEnvelopeOpen} />
                 </div>
                 <div className="stat-info">
                   <h6 className="stat-title">Total Messages</h6>
@@ -326,7 +326,7 @@ export default function InboxPage() {
                       <div className="message-indicators">
                         {!message.isRead && <div className="unread-dot"></div>}
                         {message.attachments > 0 && (
-                          <CIcon icon={cilAttachment} className="attachment-icon" />
+                          <CIcon icon={cilPaperclip} className="attachment-icon" />
                         )}
                       </div>
                     </td>
@@ -373,7 +373,7 @@ export default function InboxPage() {
                           className="me-1"
                           onClick={() => handleReadMessage(message)}
                         >
-                          <CIcon icon={cilEye} />
+                          <CIcon icon={cilViewModule} />
                         </Button>
                         <Button 
                           variant="outline-success" 
@@ -381,15 +381,15 @@ export default function InboxPage() {
                           className="me-1"
                           onClick={() => handleReply(message)}
                         >
-                          <CIcon icon={cilReply} />
+                          <CIcon icon={cilSend} />
                         </Button>
                         <Dropdown>
                           <Dropdown.Toggle variant="outline-secondary" size="sm">
-                            <CIcon icon={cilEdit} />
+                            <CIcon icon={cilPencil} />
                           </Dropdown.Toggle>
                           <Dropdown.Menu>
                             <Dropdown.Item>
-                              <CIcon icon={cilForward} className="me-2" />
+                              <CIcon icon={cilMediaSkipForward} className="me-2" />
                               Forward
                             </Dropdown.Item>
                             <Dropdown.Item>
@@ -458,11 +458,11 @@ export default function InboxPage() {
                   <h6>Attachments ({selectedMessage.attachments})</h6>
                   <div className="attachment-list">
                     <div className="attachment-item">
-                      <CIcon icon={cilAttachment} className="me-2" />
+                      <CIcon icon={cilPaperclip} className="me-2" />
                       property-details.pdf
                     </div>
                     <div className="attachment-item">
-                      <CIcon icon={cilAttachment} className="me-2" />
+                      <CIcon icon={cilPaperclip} className="me-2" />
                       floor-plan.jpg
                     </div>
                   </div>
@@ -476,11 +476,11 @@ export default function InboxPage() {
             Close
           </Button>
           <Button variant="success" onClick={() => handleReply(selectedMessage)}>
-            <CIcon icon={cilReply} className="me-1" />
+            <CIcon icon={cilSend} className="me-1" />
             Reply
           </Button>
           <Button variant="info">
-            <CIcon icon={cilForward} className="me-1" />
+            <CIcon icon={cilMediaSkipForward} className="me-1" />
             Forward
           </Button>
         </Modal.Footer>

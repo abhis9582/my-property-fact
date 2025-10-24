@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import ErrorPage from "./ErrorPage";
 
 class ErrorBoundary extends React.Component {
@@ -63,12 +64,12 @@ class ErrorBoundary extends React.Component {
           >
             🔄 Try Again
           </button>
-          <a 
+          <Link 
             href="/portal/dashboard"
             className="btn btn-primary"
           >
             🏠 Go to Dashboard
-          </a>
+          </Link>
         </div>
       );
 
