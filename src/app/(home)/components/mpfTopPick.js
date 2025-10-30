@@ -43,7 +43,7 @@ export default function MpfTopPicks({ topProject }) {
                     {topProject.builderName}
                   </h4>
                   <Link
-                    href={`/builder/${topProject.builderSlug}}`}
+                    href={`/builder/${topProject.builderSlug}`}
                     className="fs-6 golden-text text-underline"
                     aria-label={`View details about oberoi-realty`}
                   >
