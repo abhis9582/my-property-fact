@@ -15,7 +15,8 @@ export async function generateMetadata({params}) {
     const res = await fetchBlogDetail(blogpage);    
     return {
         title: res.blogTitle,
-        descritpion: res.blogMetaDescription
+        description: res.blogMetaDescription,
+        keywords: res.blogKeywords
     }
 }
 
