@@ -4,13 +4,14 @@
 }
 
 .project-logo-container {
-  width: 125px;
+  width: 150px;
   height: 125px;
   border-radius: 50% !important;
   background-color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .mpf-top-pic-project-name {

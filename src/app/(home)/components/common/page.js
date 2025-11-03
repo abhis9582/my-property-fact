@@ -20,7 +20,7 @@ export default function PropertyContainer(props) {
   }
 
   // Default image path - use generic floorplan or realestate background as fallback
-  const DEFAULT_IMAGE = "/static/generic-floorplan.jpg";
+  const DEFAULT_IMAGE = "/static/no_image.png";
   
   // Get image URL - use default if thumbnail is missing or image failed to load
   const getImageSrc = () => {

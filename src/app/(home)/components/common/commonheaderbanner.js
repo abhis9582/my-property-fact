@@ -12,7 +12,8 @@ export default function CommonHeaderBanner({ image, headerText }) {
           alt={headerText || ""}
         />
       </div>
-      <h1 className="projects-heading fw-bold">{headerText}</h1>
+      {headerText === 'Blog-Detail' ? <p className="projects-heading fw-bold">{headerText}</p>
+      : <h1 className="projects-heading fw-bold">{headerText}</h1>}
     </div>
   );
 }
