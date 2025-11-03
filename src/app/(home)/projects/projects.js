@@ -8,10 +8,19 @@ import CommonBreadCrum from "../components/common/breadcrum";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import { LoadingSpinner } from "../contact-us/page";
 import { useProjectContext } from "@/app/_global_components/contexts/projectsContext";
-import { fetchCityData, fetchProjectTypes, fetchProjectStatus } from "@/app/_global_components/masterFunction";
+import {
+  fetchCityData,
+  fetchProjectTypes,
+  fetchProjectStatus,
+} from "@/app/_global_components/masterFunction";
 import { Form, Badge } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilter, faTimes, faSlidersH, faHome, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFilter,
+  faTimes,
+  faSlidersH,
+  faHome,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function Projects() {
   const [allProjectsList, setAllProjectsList] = useState([]);
@@ -29,7 +38,7 @@ export default function Projects() {
   const { setProjectData } = useProjectContext();
   const [fadeKey, setFadeKey] = useState(0);
   const [filteredProjectData, setFilteredProjectData] = useState([]);
-  
+
   // Filter states
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [cities, setCities] = useState([]);
@@ -46,54 +55,57 @@ export default function Projects() {
     occupancy: "",
     facing: "",
   });
-  
+
   // Extract unique BHK types from projects
   const [bhkTypes, setBhkTypes] = useState([]);
-  
+
   // UI states
   const [showFilters, setShowFilters] = useState(false);
-  
+
   // Fetch projects with pagination
-  const fetchProjects = useCallback(async (pageNum = 0, append = false) => {
-    try {
-      if (!append) {
-        setLoading(true);
-        setInitialLoad(true);
-      } else {
-        setLoadingMore(true);
-      }
-
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}projects/get-projects-in-parts`,
-        {
-          params: {
-            page: pageNum,
-            size: PAGE_SIZE,
-          },
+  const fetchProjects = useCallback(
+    async (pageNum = 0, append = false) => {
+      try {
+        if (!append) {
+          setLoading(true);
+          setInitialLoad(true);
+        } else {
+          setLoadingMore(true);
         }
-      );
 
-      const newProjects = response.data || [];
-      
-      if (append) {
-        setAllProjectsList((prev) => {
-          return [...prev, ...newProjects];
-        });
-        setHasMore(newProjects.length === PAGE_SIZE);
-      } else {
-        setAllProjectsList(newProjects);
-        setHasMore(newProjects.length === PAGE_SIZE);
-        setIsActive("All"); // Always set to "All" after initial load
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}projects/get-projects-in-parts`,
+          {
+            params: {
+              page: pageNum,
+              size: PAGE_SIZE,
+            },
+          }
+        );
+
+        const newProjects = response.data || [];
+
+        if (append) {
+          setAllProjectsList((prev) => {
+            return [...prev, ...newProjects];
+          });
+          setHasMore(newProjects.length === PAGE_SIZE);
+        } else {
+          setAllProjectsList(newProjects);
+          setHasMore(newProjects.length === PAGE_SIZE);
+          setIsActive("All"); // Always set to "All" after initial load
+        }
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+        setHasMore(false);
+      } finally {
+        setLoading(false);
+        setLoadingMore(false);
+        setInitialLoad(false);
       }
-    } catch (error) {
-      console.error("Error fetching projects:", error);
-      setHasMore(false);
-    } finally {
-      setLoading(false);
-      setLoadingMore(false);
-      setInitialLoad(false);
-    }
-  }, [setProjectData, PAGE_SIZE]);
+    },
+    [setProjectData, PAGE_SIZE]
+  );
 
   // Fetch filtered projects
   const fetchParamsData = async (queryP) => {
@@ -143,13 +155,16 @@ export default function Projects() {
   useEffect(() => {
     const loadFilterData = async () => {
       try {
-        const [typesData, citiesData, statusData, buildersData] = await Promise.all([
-          fetchProjectTypes(),
-          fetchCityData(),
-          fetchProjectStatus(),
-          axios.get(`${process.env.NEXT_PUBLIC_API_URL}builder/get-all`).catch(() => ({ data: [] })),
-        ]);
-        
+        const [typesData, citiesData, statusData, buildersData] =
+          await Promise.all([
+            fetchProjectTypes(),
+            fetchCityData(),
+            fetchProjectStatus(),
+            axios
+              .get(`${process.env.NEXT_PUBLIC_API_URL}builder/get-all`)
+              .catch(() => ({ data: [] })),
+          ]);
+
         setPropertyTypes(typesData?.data || typesData || []);
         setCities(citiesData?.data || citiesData || []);
         setProjectStatuses(statusData?.data || statusData || []);
@@ -173,7 +188,7 @@ export default function Projects() {
       try {
         const queryP = JSON.parse(searched_query);
         fetchParamsData(queryP);
-    setIsActive("All");
+        setIsActive("All");
       } catch (error) {
         fetchProjects(0, false);
       }
@@ -193,7 +208,13 @@ export default function Projects() {
   // Setup scroll observer for load more
   useEffect(() => {
     // Disable observer if conditions aren't met
-    if (!hasMore || loading || initialLoad || loadingMore || isActive !== "All") {
+    if (
+      !hasMore ||
+      loading ||
+      initialLoad ||
+      loadingMore ||
+      isActive !== "All"
+    ) {
       if (observer.current) {
         observer.current.disconnect();
       }
@@ -212,7 +233,13 @@ export default function Projects() {
       }
 
       const handleIntersection = (entries) => {
-        if (entries[0].isIntersecting && hasMore && !loadingMore && !loading && isActive === "All") {
+        if (
+          entries[0].isIntersecting &&
+          hasMore &&
+          !loadingMore &&
+          !loading &&
+          isActive === "All"
+        ) {
           loadMore();
         }
       };
@@ -234,29 +261,50 @@ export default function Projects() {
   }, [hasMore, loading, loadingMore, initialLoad, isActive, loadMore]);
 
   // Apply filters
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
+    if (allProjectsList.length === 0) {
+      setFilteredProjectData([]);
+      return;
+    }
+
     let filtered = [...allProjectsList];
-    
-    if (filters.propertyType) {
-      const selectedType = propertyTypes.find(pt => pt.id === parseInt(filters.propertyType));
+
+    if (filters.propertyType && propertyTypes.length > 0) {
+      const selectedType = propertyTypes.find(
+        (pt) => pt.id === parseInt(filters.propertyType)
+      );
       if (selectedType) {
-        filtered = filtered.filter((item) => item.propertyTypeName === selectedType.projectTypeName);
+        filtered = filtered.filter(
+          (item) => item.propertyTypeName === selectedType.projectTypeName
+        );
+      } else {
+        // If type not found, filter by ID directly
+        filtered = filtered.filter(
+          (item) => item.propertyTypeId === parseInt(filters.propertyType)
+        );
       }
     }
-    
-    if (filters.city) {
-      const selectedCity = cities.find(c => c.id === parseInt(filters.city));
+
+    if (filters.city && cities.length > 0) {
+      const selectedCity = cities.find((c) => c.id === parseInt(filters.city));
       if (selectedCity) {
-        filtered = filtered.filter((item) => item.cityName === selectedCity.cityName);
+        filtered = filtered.filter(
+          (item) => item.cityName === selectedCity.cityName
+        );
+      } else {
+        // If city not found, filter by ID directly
+        filtered = filtered.filter(
+          (item) => item.cityId === parseInt(filters.city)
+        );
       }
     }
-    
+
     if (filters.budget) {
       const budgetFilter = filters.budget;
       filtered = filtered.filter((item) => {
         const price = parseFloat(item.projectPrice);
         if (isNaN(price)) return false;
-        
+
         switch (budgetFilter) {
           case "Up to 1Cr*":
             return price <= 1;
@@ -271,18 +319,38 @@ export default function Projects() {
         }
       });
     }
-    
-    if (filters.projectStatus) {
-      const selectedStatus = projectStatuses.find(ps => ps.id === parseInt(filters.projectStatus));
+
+    if (filters.projectStatus && projectStatuses.length > 0) {
+      const selectedStatus = projectStatuses.find(
+        (ps) => ps.id === parseInt(filters.projectStatus)
+      );
       if (selectedStatus) {
-        filtered = filtered.filter((item) => item.projectStatusName === selectedStatus.statusName);
+        filtered = filtered.filter(
+          (item) => item.projectStatusName === selectedStatus.statusName
+        );
+      } else {
+        // If status not found, filter by ID directly
+        filtered = filtered.filter(
+          (item) => item.projectStatusId === parseInt(filters.projectStatus)
+        );
       }
     }
-    
-    if (filters.builder) {
-      filtered = filtered.filter((item) => item.builderName === filters.builder);
+
+    if (filters.builder && builders.length > 0) {
+      const selectedBuilder = builders.find(
+        (b) =>
+          b.id === parseInt(filters.builder) ||
+          b.builderName === filters.builder
+      );
+      if (selectedBuilder) {
+        filtered = filtered.filter(
+          (item) =>
+            item.builderName === selectedBuilder.builderName ||
+            item.builderId === selectedBuilder.id
+        );
+      }
     }
-    
+
     // BHK Type filter
     if (filters.bhkType) {
       filtered = filtered.filter((item) => {
@@ -293,26 +361,32 @@ export default function Projects() {
         return configs.includes(filters.bhkType);
       });
     }
-    
+
     // Possession filter (if available)
     if (filters.possession) {
       filtered = filtered.filter((item) => {
         if (!item.possession) return false;
         const possessionLower = item.possession.toLowerCase();
         const filterLower = filters.possession.toLowerCase();
-        
+
         // Handle different possession filter types
         if (filterLower === "ready") {
-          return possessionLower.includes("ready") || possessionLower.includes("ready to move");
+          return (
+            possessionLower.includes("ready") ||
+            possessionLower.includes("ready to move")
+          );
         } else if (filterLower === "under-construction") {
-          return possessionLower.includes("under") || possessionLower.includes("construction");
+          return (
+            possessionLower.includes("under") ||
+            possessionLower.includes("construction")
+          );
         } else if (filterLower.startsWith("q")) {
           return possessionLower.includes(filterLower);
         }
         return possessionLower.includes(filterLower);
       });
     }
-    
+
     // Occupancy filter (if available)
     if (filters.occupancy) {
       filtered = filtered.filter((item) => {
@@ -320,7 +394,7 @@ export default function Projects() {
         return item.occupancy.toLowerCase() === filters.occupancy.toLowerCase();
       });
     }
-    
+
     // Facing filter (if available)
     if (filters.facing) {
       filtered = filtered.filter((item) => {
@@ -328,12 +402,19 @@ export default function Projects() {
         return item.facing.toLowerCase() === filters.facing.toLowerCase();
       });
     }
-    
+
     setFilteredProjectData(filtered);
     setHasMore(false); // Filters don't support pagination
     setFadeKey((prev) => prev + 1);
     window.scrollTo({ top: 260, behavior: "smooth" });
-  };
+  }, [
+    allProjectsList,
+    filters,
+    propertyTypes,
+    cities,
+    projectStatuses,
+    builders,
+  ]);
 
   // Clear all filters
   const clearFilters = () => {
@@ -358,79 +439,124 @@ export default function Projects() {
 
   // Handle filter change
   const handleFilterChange = (filterName, value) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
-      [filterName]: value
+      [filterName]: value,
     }));
   };
 
-  // Apply filters when filter values change
+  // Apply filters when filter values change (only for advanced filters)
   useEffect(() => {
-    const hasActiveFilters = Object.values(filters).some(value => value !== "");
-    if (hasActiveFilters && allProjectsList.length > 0) {
+    const hasActiveFilters = Object.values(filters).some(
+      (value) => value !== ""
+    );
+    const hasQuickFilter = isActive !== "" && isActive !== "All";
+
+    // Only handle advanced filters, not quick filter tabs
+    if (hasActiveFilters) {
+      // Apply filters when there are active filters
       applyFilters();
-    } else if (!hasActiveFilters) {
+    } else if (!hasQuickFilter && isActive !== "All") {
+      // Only clear filtered data if no quick filter is active and not "All" tab
+      // (quick filters handle their own filteredProjectData)
       setFilteredProjectData([]);
-      setIsActive("All");
       const totalLoaded = allProjectsList.length;
       setHasMore(totalLoaded >= PAGE_SIZE && totalLoaded % PAGE_SIZE === 0);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters.propertyType, filters.city, filters.budget, filters.projectStatus, filters.builder, filters.bhkType, filters.possession, filters.occupancy, filters.facing, allProjectsList]);
+  }, [filters, allProjectsList, applyFilters, isActive]);
 
   const filterSectionTab = (tabName) => {
     setIsActive(tabName);
     setPage(0);
-    clearFilters(); // Clear advanced filters when using tabs
-    
-    let filtered = [];
-    if (tabName === "All") {
-      filtered = allProjectsList;
-      const totalLoaded = allProjectsList.length;
-      setHasMore(totalLoaded >= PAGE_SIZE && totalLoaded % PAGE_SIZE === 0);
-    } else if (tabName === "Commercial") {
-      filtered = allProjectsList.filter((item) => item.propertyTypeName === "Commercial");
-      setHasMore(false);
-    } else if (tabName === "Residential") {
-      filtered = allProjectsList.filter((item) => item.propertyTypeName === "Residential");
-      setHasMore(false);
-    } else if (tabName === "New Launch") {
-      filtered = allProjectsList.filter((item) => item.projectStatusName === "New Launch");
-      setHasMore(false);
-    }
-    
-    setFilteredProjectData(filtered);
-    setFadeKey((prev) => prev + 1);
+
+    // Clear advanced filters
+    setFilters({
+      propertyType: "",
+      city: "",
+      budget: "",
+      projectStatus: "",
+      builder: "",
+      bhkType: "",
+      possession: "",
+      occupancy: "",
+      facing: "",
+    });
+
+    // Use setTimeout to ensure state updates don't conflict
+    setTimeout(() => {
+      let filtered = [];
+      if (tabName === "All") {
+        filtered = allProjectsList;
+        const totalLoaded = allProjectsList.length;
+        setHasMore(totalLoaded >= PAGE_SIZE && totalLoaded % PAGE_SIZE === 0);
+      } else if (tabName === "Commercial") {
+        filtered = allProjectsList.filter(
+          (item) => item.propertyTypeName === "Commercial"
+        );
+        setHasMore(false);
+      } else if (tabName === "Residential") {
+        filtered = allProjectsList.filter(
+          (item) => item.propertyTypeName === "Residential"
+        );
+        setHasMore(false);
+      } else if (tabName === "New Launch") {
+        filtered = allProjectsList.filter(
+          (item) => item.projectStatusName === "New Launch"
+        );
+        setHasMore(false);
+      }
+
+      // Set filtered data
+      setFilteredProjectData(filtered);
+      setFadeKey((prev) => prev + 1);
+    }, 0);
+
     window.scrollTo({ top: 260, behavior: "smooth" });
   };
 
   // Use filtered data if filter is active or advanced filters are applied
-  const hasActiveFilters = Object.values(filters).some(value => value !== "");
-  const displayProjects = (isActive !== "All" && isActive !== "" && filteredProjectData.length > 0) || (hasActiveFilters && filteredProjectData.length > 0)
-    ? filteredProjectData 
-    : isActive !== "All" && isActive !== "" && filteredProjectData.length === 0
-    ? []
-    : allProjectsList;
+  const hasActiveFilters = Object.values(filters).some((value) => value !== "");
+  const hasQuickFilterActive = isActive !== "" && isActive !== "All";
 
-  const activeFiltersCount = Object.values(filters).filter(v => v !== "").length;
+  // Determine which projects to display
+  let displayProjects = [];
+
+  if (isActive === "All") {
+    // Show all projects when "All" is selected and no advanced filters
+    displayProjects = hasActiveFilters ? filteredProjectData : allProjectsList;
+  } else if (hasQuickFilterActive) {
+    // Show filtered results for quick filter tabs (Commercial, Residential, New Launch)
+    displayProjects = filteredProjectData;
+  } else if (hasActiveFilters) {
+    // Show filtered results for advanced filters
+    displayProjects = filteredProjectData.length > 0 ? filteredProjectData : [];
+  } else {
+    // No filters active, show all projects
+    displayProjects = allProjectsList;
+  }
+
+  const activeFiltersCount = Object.values(filters).filter(
+    (v) => v !== ""
+  ).length;
   const hasQuickFilter = isActive !== "" && isActive !== "All";
 
   return (
     <div className="projects-page-wrapper">
       <CommonHeaderBanner image={"project-banner.jpg"} headerText={pageName} />
       <CommonBreadCrum pageName={pageName} />
-      
+
       <div className="container py-4">
         {/* Page Header with Quick Filters */}
         <div className="page-header-section mb-4">
           <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
             <div>
-              <h1 className="page-main-title">
+              {/* <h1 className="page-main-title">
                 <FontAwesomeIcon icon={faHome} className="me-2 text-success" />
                 {pageName}
-              </h1>
+              </h1> */}
               <p className="page-subtitle mb-0">
-                Showing <strong>{displayProjects.length}</strong> {displayProjects.length === 1 ? "project" : "projects"}
+                Showing <strong>{displayProjects.length}</strong>{" "}
+                {displayProjects.length === 1 ? "project" : "projects"}
                 {(hasQuickFilter || activeFiltersCount > 0) && (
                   <span className="ms-2">
                     <Badge bg="success" className="ms-1">
@@ -448,7 +574,9 @@ export default function Projects() {
                 <FontAwesomeIcon icon={faSlidersH} className="me-2" />
                 {showFilters ? "Hide" : "Show"} Filters
                 {activeFiltersCount > 0 && (
-                  <Badge bg="danger" className="ms-2">{activeFiltersCount}</Badge>
+                  <Badge bg="danger" className="ms-2">
+                    {activeFiltersCount}
+                  </Badge>
                 )}
               </button>
               {(hasQuickFilter || activeFiltersCount > 0) && (
@@ -467,25 +595,33 @@ export default function Projects() {
           <div className="quick-filters-row">
             <div className="filter-pills-container">
               <button
-                className={`filter-pill-btn ${isActive === "All" ? "active" : ""}`}
+                className={`filter-pill-btn ${
+                  isActive === "All" ? "active" : ""
+                }`}
                 onClick={() => filterSectionTab("All")}
               >
                 All Projects
               </button>
               <button
-                className={`filter-pill-btn ${isActive === "Commercial" ? "active" : ""}`}
+                className={`filter-pill-btn ${
+                  isActive === "Commercial" ? "active" : ""
+                }`}
                 onClick={() => filterSectionTab("Commercial")}
               >
                 Commercial
               </button>
               <button
-                className={`filter-pill-btn ${isActive === "Residential" ? "active" : ""}`}
+                className={`filter-pill-btn ${
+                  isActive === "Residential" ? "active" : ""
+                }`}
                 onClick={() => filterSectionTab("Residential")}
               >
                 Residential
               </button>
               <button
-                className={`filter-pill-btn ${isActive === "New Launch" ? "active" : ""}`}
+                className={`filter-pill-btn ${
+                  isActive === "New Launch" ? "active" : ""
+                }`}
                 onClick={() => filterSectionTab("New Launch")}
               >
                 New Launch
@@ -501,7 +637,10 @@ export default function Projects() {
               <div className="filter-sidebar-card">
                 <div className="filter-card-header">
                   <h5 className="mb-0">
-                    <FontAwesomeIcon icon={faFilter} className="me-2 text-success" />
+                    <FontAwesomeIcon
+                      icon={faFilter}
+                      className="me-2 text-success"
+                    />
                     Refine Search
                   </h5>
                   <button
@@ -512,86 +651,102 @@ export default function Projects() {
                 </div>
                 <div className="filter-card-body">
                   <Form className="filter-form">
-                <Form.Group className="filter-group">
-                  <Form.Label className="filter-label">Property Type</Form.Label>
-                <Form.Select
-                  size="sm"
-                  value={filters.propertyType}
-                  onChange={(e) => handleFilterChange("propertyType", e.target.value)}
-                >
-                  <option value="">All Types</option>
-                  {propertyTypes.map((type) => (
-                    <option key={type.id} value={type.id}>
-                      {type.projectTypeName}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
+                    <Form.Group className="filter-group">
+                      <Form.Label className="filter-label">
+                        Property Type
+                      </Form.Label>
+                      <Form.Select
+                        size="sm"
+                        value={filters.propertyType}
+                        onChange={(e) =>
+                          handleFilterChange("propertyType", e.target.value)
+                        }
+                      >
+                        <option value="">All Types</option>
+                        {propertyTypes.map((type) => (
+                          <option key={type.id} value={type.id}>
+                            {type.projectTypeName}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
 
-                <Form.Group className="filter-group">
-                  <Form.Label className="filter-label">Location</Form.Label>
-                <Form.Select
-                  size="sm"
-                  value={filters.city}
-                  onChange={(e) => handleFilterChange("city", e.target.value)}
-                >
-                  <option value="">All Cities</option>
-                  {cities.map((city) => (
-                    <option key={city.id} value={city.id}>
-                      {city.cityName}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
+                    <Form.Group className="filter-group">
+                      <Form.Label className="filter-label">Location</Form.Label>
+                      <Form.Select
+                        size="sm"
+                        value={filters.city}
+                        onChange={(e) =>
+                          handleFilterChange("cityName", e.target.value)
+                        }
+                      >
+                        <option value="">All Cities</option>
+                        {cities.map((city) => (
+                          <option key={city.id} value={city.id}>
+                            {city.cityName}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
 
-                <Form.Group className="filter-group">
-                  <Form.Label className="filter-label">Budget Range</Form.Label>
-                <Form.Select
-                  size="sm"
-                  value={filters.budget}
-                  onChange={(e) => handleFilterChange("budget", e.target.value)}
-                >
-                  <option value="">All Budgets</option>
-                  <option value="Up to 1Cr*">Up to 1Cr*</option>
-                  <option value="1-3 Cr*">1-3 Cr*</option>
-                  <option value="3-5 Cr*">3-5 Cr*</option>
-                  <option value="Above 5 Cr*">Above 5 Cr*</option>
-                </Form.Select>
-              </Form.Group>
+                    <Form.Group className="filter-group">
+                      <Form.Label className="filter-label">
+                        Budget Range
+                      </Form.Label>
+                      <Form.Select
+                        size="sm"
+                        value={filters.budget}
+                        onChange={(e) =>
+                          handleFilterChange("budget", e.target.value)
+                        }
+                      >
+                        <option value="">All Budgets</option>
+                        <option value="Up to 1Cr*">Up to 1Cr*</option>
+                        <option value="1-3 Cr*">1-3 Cr*</option>
+                        <option value="3-5 Cr*">3-5 Cr*</option>
+                        <option value="Above 5 Cr*">Above 5 Cr*</option>
+                      </Form.Select>
+                    </Form.Group>
 
-                <Form.Group className="filter-group">
-                  <Form.Label className="filter-label">Project Status</Form.Label>
-                <Form.Select
-                  size="sm"
-                  value={filters.projectStatus}
-                  onChange={(e) => handleFilterChange("projectStatus", e.target.value)}
-                >
-                  <option value="">All Status</option>
-                  {projectStatuses.map((status) => (
-                    <option key={status.id} value={status.id}>
-                      {status.statusName}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
+                    <Form.Group className="filter-group">
+                      <Form.Label className="filter-label">
+                        Project Status
+                      </Form.Label>
+                      <Form.Select
+                        size="sm"
+                        value={filters.projectStatus}
+                        onChange={(e) =>
+                          handleFilterChange("projectStatus", e.target.value)
+                        }
+                      >
+                        <option value="">All Status</option>
+                        {projectStatuses.map((status) => (
+                          <option key={status.id} value={status.id}>
+                            {status.statusName}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
 
-                <Form.Group className="filter-group">
-                  <Form.Label className="filter-label">BHK Type</Form.Label>
-                <Form.Select
-                  size="sm"
-                  value={filters.bhkType}
-                  onChange={(e) => handleFilterChange("bhkType", e.target.value)}
-                >
-                  <option value="">All BHK Types</option>
-                  {bhkTypes.map((bhk, index) => (
-                    <option key={`${bhk}-${index}`} value={bhk}>
-                      {bhk}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
+                    <Form.Group className="filter-group">
+                      <Form.Label className="filter-label">BHK Type</Form.Label>
+                      <Form.Select
+                        size="sm"
+                        value={filters.bhkType}
+                        onChange={(e) =>
+                          handleFilterChange("bhkType", e.target.value)
+                        }
+                      >
+                        <option value="">All BHK Types</option>
+                        {bhkTypes.map((bhk, index) => (
+                          <option key={`${bhk}-${index}`} value={bhk}>
+                            {bhk}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
 
-                <Form.Group className="filter-group">
+                    {/* <Form.Group className="filter-group">
                   <Form.Label className="filter-label">Possession</Form.Label>
                 <Form.Select
                   size="sm"
@@ -606,41 +761,46 @@ export default function Projects() {
                   <option value="q3">Q3</option>
                   <option value="q4">Q4</option>
                 </Form.Select>
-              </Form.Group>
+              </Form.Group> */}
 
-                <Form.Group className="filter-group">
-                  <Form.Label className="filter-label">Occupancy</Form.Label>
-                <Form.Select
-                  size="sm"
-                  value={filters.occupancy}
-                  onChange={(e) => handleFilterChange("occupancy", e.target.value)}
-                >
-                  <option value="">All</option>
-                  <option value="vacant">Vacant</option>
-                  <option value="self-occupied">Self-occupied</option>
-                  <option value="tenanted">Tenanted</option>
-                </Form.Select>
-              </Form.Group>
+                    {/* <Form.Group className="filter-group">
+                      <Form.Label className="filter-label">
+                        Occupancy
+                      </Form.Label>
+                      <Form.Select
+                        size="sm"
+                        value={filters.occupancy}
+                        onChange={(e) =>
+                          handleFilterChange("occupancy", e.target.value)
+                        }
+                      >
+                        <option value="">All</option>
+                        <option value="vacant">Vacant</option>
+                        <option value="self-occupied">Self-occupied</option>
+                        <option value="tenanted">Tenanted</option>
+                      </Form.Select>
+                    </Form.Group>
 
-                <Form.Group className="filter-group">
-                  <Form.Label className="filter-label">Facing</Form.Label>
-                <Form.Select
-                  size="sm"
-                  value={filters.facing}
-                  onChange={(e) => handleFilterChange("facing", e.target.value)}
-                >
-                  <option value="">All Directions</option>
-                  <option value="north">North</option>
-                  <option value="south">South</option>
-                  <option value="east">East</option>
-                  <option value="west">West</option>
-                  <option value="north-east">North-East</option>
-                  <option value="north-west">North-West</option>
-                  <option value="south-east">South-East</option>
-                  <option value="south-west">South-West</option>
-                </Form.Select>
-              </Form.Group>
-
+                    <Form.Group className="filter-group">
+                      <Form.Label className="filter-label">Facing</Form.Label>
+                      <Form.Select
+                        size="sm"
+                        value={filters.facing}
+                        onChange={(e) =>
+                          handleFilterChange("facing", e.target.value)
+                        }
+                      >
+                        <option value="">All Directions</option>
+                        <option value="north">North</option>
+                        <option value="south">South</option>
+                        <option value="east">East</option>
+                        <option value="west">West</option>
+                        <option value="north-east">North-East</option>
+                        <option value="north-west">North-West</option>
+                        <option value="south-east">South-East</option>
+                        <option value="south-west">South-West</option>
+                      </Form.Select>
+                    </Form.Group> */}
                   </Form>
                 </div>
               </div>
@@ -648,7 +808,12 @@ export default function Projects() {
           )}
 
           {/* Projects Grid */}
-          <div key={fadeKey} className={`col-12 ${showFilters ? 'col-lg-9' : 'col-lg-12'} projects-content-wrapper`}>
+          <div
+            key={fadeKey}
+            className={`col-12 ${
+              showFilters ? "col-lg-9" : "col-lg-12"
+            } projects-content-wrapper`}
+          >
             {initialLoad && loading ? (
               <div className="projects-loading-state">
                 <LoadingSpinner show={true} height="auto" />
@@ -667,23 +832,31 @@ export default function Projects() {
                   ))}
                 </div>
                 {/* Load More Section */}
-                {hasMore && isActive === "All" && !initialLoad && displayProjects.length > 0 && (
-                  <div ref={loadMoreRef} className="load-more-section">
-                    {loadingMore && (
-                      <div className="load-more-spinner">
-                        <LoadingSpinner show={true} height="auto" />
-                        <span className="ms-3">Loading more projects...</span>
-                      </div>
-                    )}
-                  </div>
-                )}
-                {!hasMore && !initialLoad && allProjectsList.length >= PAGE_SIZE && isActive === "All" && (
-                  <div className="load-complete">
-                    <div className="divider-line"></div>
-                    <p className="text-muted mb-0">You've viewed all projects</p>
-                    <div className="divider-line"></div>
-                  </div>
-                )}
+                {hasMore &&
+                  isActive === "All" &&
+                  !initialLoad &&
+                  displayProjects.length > 0 && (
+                    <div ref={loadMoreRef} className="load-more-section">
+                      {loadingMore && (
+                        <div className="load-more-spinner">
+                          <LoadingSpinner show={true} height="auto" />
+                          <span className="ms-3">Loading more projects...</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                {!hasMore &&
+                  !initialLoad &&
+                  allProjectsList.length >= PAGE_SIZE &&
+                  isActive === "All" && (
+                    <div className="load-complete">
+                      <div className="divider-line"></div>
+                      <p className="text-muted mb-0">
+                        You've viewed all projects
+                      </p>
+                      <div className="divider-line"></div>
+                    </div>
+                  )}
               </>
             ) : !loading ? (
               <div className="no-projects-state">
@@ -697,7 +870,10 @@ export default function Projects() {
                     : "No projects are currently available"}
                 </p>
                 {(hasActiveFilters || hasQuickFilter) && (
-                  <button className="btn btn-success mt-3" onClick={clearFilters}>
+                  <button
+                    className="btn btn-success mt-3"
+                    onClick={clearFilters}
+                  >
                     <FontAwesomeIcon icon={faTimes} className="me-2" />
                     Clear All Filters
                   </button>
@@ -710,4 +886,3 @@ export default function Projects() {
     </div>
   );
 }
-
