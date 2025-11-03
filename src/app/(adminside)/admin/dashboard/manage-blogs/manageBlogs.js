@@ -96,7 +96,31 @@ export default function ManageBlogs({ list, categoryList, cityList }) {
           toast.error(response.data.message);
         }
       } catch (error) {
-        toast.error(error);
+        // Handle error response from backend
+        if (error.response && error.response.data) {
+          const errorData = error.response.data;
+          
+          // Check if it's a validation error with multiple fields
+          if (errorData.errors && typeof errorData.errors === 'object') {
+            // Multiple validation errors
+            const errorMessages = Object.values(errorData.errors).join(', ');
+            toast.error(errorMessages);
+          } else if (errorData.message) {
+            // Single error message
+            toast.error(errorData.message);
+          } else if (errorData.error) {
+            // Error object with 'error' field
+            toast.error(errorData.error);
+          } else {
+            // Fallback to status text or generic message
+            toast.error(error.response.statusText || "An error occurred");
+          }
+        } else if (error.message) {
+          // Network or other axios errors
+          toast.error(error.message);
+        } else {
+          toast.error("An unexpected error occurred");
+        }
       } finally {
         setShowLoading(false);
         setButtonName("Add Blog");
@@ -395,7 +419,7 @@ export default function ManageBlogs({ list, categoryList, cityList }) {
       <CommonModal
         confirmBox={confirmBox}
         setConfirmBox={setConfirmBox}
-        api={`${process.env.NEXT_PUBLIC_API_URL}blog/delete/${blogId}`}
+        api={`${process.env.NEXT_PUBLIC_API_URL}blog/${blogId}`}
       />
       <ImageUrlPopup confirmBox={urlPopUp} setConfirmBox={setUrlPopUp} />
     </>

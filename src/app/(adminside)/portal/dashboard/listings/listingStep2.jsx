@@ -2,7 +2,7 @@
 // Step 2: Location & Area
 
 import { Col, Form, InputGroup, Row } from "react-bootstrap";
-import { NumberInput, Section, TextInput } from "./commonFunction";
+import { NumberInput, Section, SelectInput, TextInput } from "./commonFunction";
 
 // -------------------------------
 export default function ListingStep2({ data, setField, errors }) {
@@ -19,11 +19,18 @@ export default function ListingStep2({ data, setField, errors }) {
             />
           </Col>
           <Col md={6}>
-            <TextInput
+            {/* <TextInput
               label="Builder/Developer Name"
               name="builderName"
               value={data.builderName}
               onChange={setField}
+            /> */}
+            <SelectInput 
+              label="Builder/Developer Name"
+              name="builderName"
+              value={data.builderName}
+              onChange={setField}
+              options={[]}
             />
           </Col>
         </Row>

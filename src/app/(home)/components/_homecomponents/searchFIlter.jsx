@@ -41,7 +41,7 @@ export default function SearchFilter({ projectTypeList, cityList }) {
       setProjectData(response.data);
       router.push(`/projects`);
     } catch (error) {
-      console.error("Error during project filtering:", error);
+      // Error handled - user will see notification or empty results
     } finally {
       setLoading(false);
     }
@@ -52,10 +52,10 @@ export default function SearchFilter({ projectTypeList, cityList }) {
     }
   }, []);
   return (
-    <div className="position-absolute bottom-25 start-50 translate-middle w-100 home-search-container">
+    <div className="w-100 home-search-container">
       <div className="container bg-light border rounded-4 custom-shadow">
         <form method="Get" action="projects">
-          <div className="d-flex flex-wrap flex-md-row flex-column p-4 gap-3 font-gotham-light">
+          <div className="d-flex flex-wrap flex-md-row flex-column p-3 p-md-4 gap-2 gap-md-3 font-gotham-light">
             <div className="col">
               <select
                 name="category"

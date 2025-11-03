@@ -110,7 +110,6 @@ export default function HelpPage() {
   const handleSearch = (e) => {
     e.preventDefault();
     // Handle search logic here
-    console.log("Searching for:", searchTerm);
   };
 
   return (

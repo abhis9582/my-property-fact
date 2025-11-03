@@ -13,9 +13,6 @@ export const metadata = {
 };
 export default async function ProjectsPage() {
   const projects = await getAllProjects();
-  console.log(
-    `Projects loaded by /projects page and count is ${projects.length}.`
-  );
 
   return (
     <>

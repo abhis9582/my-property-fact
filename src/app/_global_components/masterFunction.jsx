@@ -46,14 +46,23 @@ export const fetchCityData = cache(async () => {
 
 // Fetching project types
 export const fetchProjectTypes = cache(async () => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`,
-    {
-      next: { revalidate: 60 },
-    }
-  );
-  if (!res.ok) throw new Error("Failed to fetch project types");
-  return res.json();
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`,
+      {
+        next: { revalidate: 60 },
+      }
+    );
+    if (!res.ok) throw new Error("Failed to fetch project types");
+    return res.json();
+  } catch (error) {
+    console.error("Error fetching project types:", error);
+    return {
+      success: false,
+      message: "Error fetching project types",
+      data: [],
+    };
+  }
 });
 
 // Fetching builder data
@@ -195,3 +204,28 @@ export const getWeeklyProject = async (projects) => {
   const index = weekNumber % projects.length;
   return projects[index];
 };
+
+// Getting top project
+export const fetchProjectStatus = cache(async () => {
+  try {
+    const res = await fetch(
+      `${apiUrl}project-status`,
+      {
+        method: "GET",
+      },
+      {
+        next: { revalidate: 60 },
+      }
+    );
+    if (!res.ok) throw new Error("Failed to fetch project status");
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching project status:", error);
+    return {
+      success: false,
+      message: "Error fetching project status",
+      data: [],
+    };
+  }
+});

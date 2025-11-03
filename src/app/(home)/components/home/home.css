@@ -1,5 +1,119 @@
-.home-banner img {
+.home-banner {
   width: 100%;
+  display: block;
+  line-height: 0; /* Remove default spacing */
+}
+
+.home-banner img,
+.home-banner picture {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Ensure img-fluid class doesn't override our styles */
+.home-banner img.img-fluid {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100%;
+}
+
+.mpf-hero-banner {
+  position: relative;
+  overflow: visible; /* Changed to visible so search filter can overflow */
+  width: 100%;
+}
+
+/* Mobile styles - maintain natural image height */
+@media (max-width: 426px) {
+  .mpf-hero-banner {
+    height: auto !important;
+    max-height: none !important;
+    min-height: auto !important;
+  }
+  
+  .home-banner {
+    height: auto;
+  }
+  
+  .home-banner img {
+    width: 100%;
+    height: auto;
+    max-height: none;
+  }
+}
+
+/* Tablet styles - maintain natural image height */
+@media (min-width: 427px) and (max-width: 1199px) {
+  .mpf-hero-banner {
+    height: auto !important;
+    max-height: none !important;
+    min-height: auto !important;
+  }
+  
+  .home-banner {
+    height: auto;
+  }
+  
+  .home-banner img {
+    width: 100%;
+    height: auto;
+    max-height: none;
+  }
+}
+
+/* Desktop styles - maintain aspect ratio, prevent cutoff */
+@media (min-width: 1200px) {
+  .mpf-hero-banner {
+    height: auto !important;
+    max-height: none !important;
+    min-height: auto !important;
+  }
+  
+  .home-banner {
+    height: auto;
+  }
+  
+  .home-banner img {
+    width: 100%;
+    height: auto;
+    max-height: none;
+  }
+}
+
+/* Large desktop screens - ensure no cutoff */
+@media (min-width: 1500px) {
+  .mpf-hero-banner {
+    height: auto !important;
+    max-height: none !important;
+    min-height: auto !important;
+  }
+  
+  .home-banner {
+    height: auto;
+  }
+  
+  .home-banner img {
+    width: 100%;
+    height: auto;
+    max-height: none;
+  }
+}
+
+.home-search-container {
+  position: absolute !important;
+  bottom: -50px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 10;
+  width: 100%;
+}
+
+/* Ensure search filter is positioned correctly at bottom of banner on large screens */
+@media (min-width: 1500px) {
+  .home-search-container {
+    bottom: -50px !important;
+  }
 }
 
 /* enquiry-sticky-btn starts*/
@@ -113,6 +227,10 @@
 }
 
 @media (max-width: 426px) {
+  .mpf-hero-banner {
+    height: auto !important;
+    max-height: none !important;
+  }
   .data-container {
     display: flex;
     color: #fff;
@@ -125,7 +243,7 @@
     margin-top: 12rem !important;
   }
   .home-search-container {
-    bottom: -333px;
+    bottom: -202px !important;
   }
   .diwali-gif {
     width: 100% !important;
@@ -145,7 +263,11 @@
 }
 /*bannercontainer ends*/
 
-@media (max-width: 768px) {
+@media (min-width: 427px) and (max-width: 768px) {
+  .mpf-hero-banner {
+    height: auto !important;
+    max-height: none !important;
+  }
   .diwali-gif {
     width: 100% !important;
   }

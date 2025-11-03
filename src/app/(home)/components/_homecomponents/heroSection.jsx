@@ -39,10 +39,9 @@ export default async function HeroSection() {
     <>
       <div className="position-relative mb-5">
         <div
-          className="overflow-hidden"
-          style={{ minHeight: "474px !important" }}
+          className="mpf-hero-banner position-relative"
         >
-          <div className="position-relative overflow-hidden">
+          <div className="position-relative">
             <picture className="position-relative home-banner">
               {/* Mobile Image */}
               <source
@@ -71,38 +70,36 @@ export default async function HeroSection() {
             </picture>
           </div>
           {/* <div className="overlay"></div> */}
-        </div>
-        <div className="bannercontainer">
-          <h1 className="text-center text-light">Find the best property</h1>
-          <div className="d-flex flex-wrap align-item-center justify-content-center gap-4 my-4">
-            {projectTypeList.map((item, index) => (
-              <div key={`row-${index}`}>
-                <Link
-                  href={`projects/${item.slugUrl}`}
-                  className="link-btn rounded-5 py-2 px-3 text-white text-decoration-none"
+          <div className="bannercontainer">
+            <h1 className="text-center text-light">Find the best property</h1>
+            <div className="d-flex flex-wrap align-item-center justify-content-center gap-4 my-4">
+              {projectTypeList.map((item, index) => (
+                <div key={`row-${index}`}>
+                  <Link
+                    href={`projects/${item.slugUrl}`}
+                    className="link-btn rounded-5 py-2 px-3 text-white text-decoration-none"
+                  >
+                    {item.projectTypeName}
+                  </Link>
+                </div>
+              ))}
+            </div>
+            <div className="data-container">
+              {ourFacts.map((item, index) => (
+                <div
+                  key={`${item.text}-${index}`}
+                  className="data-container-child"
                 >
-                  {item.projectTypeName}
-                </Link>
-              </div>
-            ))}
+                  <section>
+                    <h3 className="m-0">
+                      <span>{item.numbers}</span>
+                    </h3>
+                    <p className="text-center ">{item.text}</p>
+                  </section>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="data-container">
-            {ourFacts.map((item, index) => (
-              <div
-                key={`${item.text}-${index}`}
-                className="data-container-child"
-              >
-                <section>
-                  <h3 className="m-0">
-                    <span>{item.numbers}</span>
-                  </h3>
-                  <p className="text-center ">{item.text}</p>
-                </section>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="position-relative">
           <SearchFilter projectTypeList={projectTypeList} cityList={cityList} />
         </div>
       </div>

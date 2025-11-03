@@ -1,17 +1,34 @@
+"use client";
+import { useState, useEffect } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import {
   Section,
   SelectInput,
   TextInput,
-  TextSelectableInput,
 } from "./commonFunction";
-import MpfMultiSelectDropdown from "@/app/_global_components/multiSelectDropdown";
+import { fetchProjectStatus, fetchProjectTypes } from "@/app/_global_components/masterFunction";
 
 export default function ListingStep1({ data, setField, errors }) {
+  const [propertyType, setPropertyType] = useState([]);
+  const [propertyStauts, setPropertyStauts] = useState([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const propertyTypes = await fetchProjectTypes();
+        setPropertyType(propertyTypes.data || propertyTypes || []);
+        const propertyStatus = await fetchProjectStatus();
+        setPropertyStauts(propertyStatus.data || propertyStatus || []);
+      } catch (error) {
+        console.error("Error loading property data:", error);
+      }
+    };
+    loadData();
+  }, []);
+  
   return (
     <>
       <Section title="Listing Basics">
-        {/* <MpfMultiSelectDropdown /> */}
         <Row>
           <Col md={6}>
             <SelectInput
@@ -19,7 +36,7 @@ export default function ListingStep1({ data, setField, errors }) {
               name="listingType"
               value={data.listingType}
               onChange={setField}
-              options={["Residential", "Commercial"]}
+              options={propertyType.map(type => type.projectTypeName)}
             />
           </Col>
           <Col md={6}>
@@ -67,15 +84,6 @@ export default function ListingStep1({ data, setField, errors }) {
               }
             />
           </Col>
-          {/* <Col md={6}>
-            <TextInput
-              label="Listing Title"
-              name="title"
-              value={data.title}
-              onChange={setField}
-              placeholder="Plain, factual title"
-            />
-          </Col> */}
         </Row>
         <Form.Group className="mb-3">
           <Form.Label>Description</Form.Label>
@@ -97,7 +105,7 @@ export default function ListingStep1({ data, setField, errors }) {
               name="status"
               value={data.status}
               onChange={setField}
-              options={["Ready", "Under-Construction"]}
+              options={propertyStauts.map(status => status.statusName)}
             />
           </Col>
           {data.status === "Under-Construction" && (

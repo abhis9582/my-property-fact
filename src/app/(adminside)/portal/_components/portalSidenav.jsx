@@ -21,7 +21,6 @@ export default function PortalSideNav() {
   //Function to handle user logout
   const handleLogout = () => {
     // Clear your auth token / cookies here
-    console.log("Logging out...");
   };
 
   return (

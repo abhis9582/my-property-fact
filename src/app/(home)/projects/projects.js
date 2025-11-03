@@ -2,190 +2,712 @@
 
 import PropertyContainer from "../components/common/page";
 import "./project.css";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 import CommonBreadCrum from "../components/common/breadcrum";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
-import YouTube from "@/app/_global_components/skeleton";
+import { LoadingSpinner } from "../contact-us/page";
 import { useProjectContext } from "@/app/_global_components/contexts/projectsContext";
-import LoadingProperty from "@/app/(projects)/[slug]/loading";
+import { fetchCityData, fetchProjectTypes, fetchProjectStatus } from "@/app/_global_components/masterFunction";
+import { Form, Badge } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilter, faTimes, faSlidersH, faHome, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
 export default function Projects() {
   const [allProjectsList, setAllProjectsList] = useState([]);
   const [pageName, setPageName] = useState("Projects");
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [observerEnabled, setObserverEnabled] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
   const { projectData } = useProjectContext();
   const observer = useRef(null);
   const loadMoreRef = useRef(null);
   const [isActive, setIsActive] = useState("");
-  const PAGE_LIMIT = 15;
+  const PAGE_SIZE = 15;
   const { setProjectData } = useProjectContext();
   const [fadeKey, setFadeKey] = useState(0);
-  // Setup observer ONLY when enabled
+  const [filteredProjectData, setFilteredProjectData] = useState([]);
+  
+  // Filter states
+  const [propertyTypes, setPropertyTypes] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [projectStatuses, setProjectStatuses] = useState([]);
+  const [builders, setBuilders] = useState([]);
+  const [filters, setFilters] = useState({
+    propertyType: "",
+    city: "",
+    budget: "",
+    projectStatus: "",
+    builder: "",
+    bhkType: "",
+    possession: "",
+    occupancy: "",
+    facing: "",
+  });
+  
+  // Extract unique BHK types from projects
+  const [bhkTypes, setBhkTypes] = useState([]);
+  
+  // UI states
+  const [showFilters, setShowFilters] = useState(false);
+  
+  // Fetch projects with pagination
+  const fetchProjects = useCallback(async (pageNum = 0, append = false) => {
+    try {
+      if (!append) {
+        setLoading(true);
+        setInitialLoad(true);
+      } else {
+        setLoadingMore(true);
+      }
+
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}projects/get-projects-in-parts`,
+        {
+          params: {
+            page: pageNum,
+            size: PAGE_SIZE,
+          },
+        }
+      );
+
+      const newProjects = response.data || [];
+      
+      if (append) {
+        setAllProjectsList((prev) => {
+          return [...prev, ...newProjects];
+        });
+        setHasMore(newProjects.length === PAGE_SIZE);
+      } else {
+        setAllProjectsList(newProjects);
+        setHasMore(newProjects.length === PAGE_SIZE);
+        setIsActive("All"); // Always set to "All" after initial load
+      }
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+      setHasMore(false);
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+      setInitialLoad(false);
+    }
+  }, [setProjectData, PAGE_SIZE]);
+
+  // Fetch filtered projects
   const fetchParamsData = async (queryP) => {
     try {
       setLoading(true);
+      setInitialLoad(true);
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}projects/search-by-type-city-budget`,
         {
           params: queryP,
         }
       );
-      setProjectData(response.data);
+      const filtered = response.data || [];
+      setAllProjectsList(filtered);
+      setHasMore(false); // Search results are not paginated
     } catch (error) {
-      console.log(error);
+      // Error handled silently - user will see empty results
     } finally {
       setLoading(false);
+      setInitialLoad(false);
     }
   };
-  const fetchAllProjects = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
-      );
-      const raw = await res.json();
-      setProjectData(raw.filter((item) => item.status === true));
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+
+  // Extract BHK types from projects
   useEffect(() => {
-    const searched_querry = JSON.parse(sessionStorage.getItem("mpf-querry"));
-    if (!searched_querry) {
-      fetchAllProjects();
-    } else {
-      fetchParamsData(searched_querry);
+    if (allProjectsList.length > 0) {
+      const uniqueBHKTypes = new Set();
+      allProjectsList.forEach((project) => {
+        if (project.projectConfiguration) {
+          const configs = project.projectConfiguration
+            .split(",")
+            .map((config) => config.trim())
+            .filter((config) => /BHK/i.test(config));
+          configs.forEach((bhk) => uniqueBHKTypes.add(bhk));
+        }
+      });
+      const sortedBHKTypes = Array.from(uniqueBHKTypes).sort((a, b) => {
+        const aNum = parseInt(a.match(/\d+/)?.[0] || "0");
+        const bNum = parseInt(b.match(/\d+/)?.[0] || "0");
+        return aNum - bNum;
+      });
+      setBhkTypes(sortedBHKTypes);
     }
+  }, [allProjectsList]);
+
+  // Fetch filter data
+  useEffect(() => {
+    const loadFilterData = async () => {
+      try {
+        const [typesData, citiesData, statusData, buildersData] = await Promise.all([
+          fetchProjectTypes(),
+          fetchCityData(),
+          fetchProjectStatus(),
+          axios.get(`${process.env.NEXT_PUBLIC_API_URL}builder/get-all`).catch(() => ({ data: [] })),
+        ]);
+        
+        setPropertyTypes(typesData?.data || typesData || []);
+        setCities(citiesData?.data || citiesData || []);
+        setProjectStatuses(statusData?.data || statusData || []);
+        setBuilders(buildersData?.data || []);
+      } catch (error) {
+        console.error("Error loading filter data:", error);
+      }
+    };
+    loadFilterData();
   }, []);
 
+  // Sync context with allProjectsList state
   useEffect(() => {
-    setAllProjectsList(projectData);
+    setProjectData(allProjectsList);
+  }, [allProjectsList, setProjectData]);
+
+  // Initial load - only run once on mount
+  useEffect(() => {
+    const searched_query = sessionStorage.getItem("mpf-querry");
+    if (searched_query) {
+      try {
+        const queryP = JSON.parse(searched_query);
+        fetchParamsData(queryP);
     setIsActive("All");
-  }, [projectData]);
-
-  useEffect(() => {
-    if (!observerEnabled || loading || !hasMore) return;
-
-    if (observer.current) observer.current.disconnect();
-
-    observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        setPage((prev) => prev + 1);
+      } catch (error) {
+        fetchProjects(0, false);
       }
+    } else {
+      fetchProjects(0, false);
+    }
+  }, [fetchProjects]);
+
+  // Load more handler
+  const loadMore = useCallback(() => {
+    if (loadingMore || !hasMore || loading || isActive !== "All") return;
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchProjects(nextPage, true);
+  }, [page, hasMore, loading, loadingMore, isActive, fetchProjects]);
+
+  // Setup scroll observer for load more
+  useEffect(() => {
+    // Disable observer if conditions aren't met
+    if (!hasMore || loading || initialLoad || loadingMore || isActive !== "All") {
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+      return;
+    }
+
+    // Use requestAnimationFrame to ensure DOM is ready
+    const rafId = requestAnimationFrame(() => {
+      // Don't set up observer if loadMoreRef doesn't exist yet
+      if (!loadMoreRef.current) {
+        return;
+      }
+
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+
+      const handleIntersection = (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loadingMore && !loading && isActive === "All") {
+          loadMore();
+        }
+      };
+
+      observer.current = new IntersectionObserver(handleIntersection, {
+        rootMargin: "300px", // Start loading 300px before reaching the bottom
+        threshold: 0.01, // Trigger when element is visible
+      });
+
+      observer.current.observe(loadMoreRef.current);
     });
 
-    if (loadMoreRef.current) {
-      observer.current.observe(loadMoreRef.current);
-    }
-
     return () => {
-      if (observer.current) observer.current.disconnect();
+      cancelAnimationFrame(rafId);
+      if (observer.current) {
+        observer.current.disconnect();
+      }
     };
-  }, [observerEnabled, loading, hasMore]);
+  }, [hasMore, loading, loadingMore, initialLoad, isActive, loadMore]);
 
-  const filterSectionTab = (tabName) => {
-    setIsActive(tabName);
-    if (tabName === "All") {
-      setAllProjectsList(projectData);
-    } else if (tabName === "Commercial") {
-      setAllProjectsList(
-        projectData.filter((item) => item.propertyTypeName === "Commercial")
-      );
-    } else if (tabName === "Residential") {
-      setAllProjectsList(
-        projectData.filter((item) => item.propertyTypeName === "Residential")
-      );
-    } else if (tabName === "New Launch") {
-      setAllProjectsList(
-        projectData.filter((item) => item.projectStatusName === "New Launch")
-      );
+  // Apply filters
+  const applyFilters = () => {
+    let filtered = [...allProjectsList];
+    
+    if (filters.propertyType) {
+      const selectedType = propertyTypes.find(pt => pt.id === parseInt(filters.propertyType));
+      if (selectedType) {
+        filtered = filtered.filter((item) => item.propertyTypeName === selectedType.projectTypeName);
+      }
     }
+    
+    if (filters.city) {
+      const selectedCity = cities.find(c => c.id === parseInt(filters.city));
+      if (selectedCity) {
+        filtered = filtered.filter((item) => item.cityName === selectedCity.cityName);
+      }
+    }
+    
+    if (filters.budget) {
+      const budgetFilter = filters.budget;
+      filtered = filtered.filter((item) => {
+        const price = parseFloat(item.projectPrice);
+        if (isNaN(price)) return false;
+        
+        switch (budgetFilter) {
+          case "Up to 1Cr*":
+            return price <= 1;
+          case "1-3 Cr*":
+            return price >= 1 && price < 3;
+          case "3-5 Cr*":
+            return price >= 3 && price < 5;
+          case "Above 5 Cr*":
+            return price >= 5;
+          default:
+            return true;
+        }
+      });
+    }
+    
+    if (filters.projectStatus) {
+      const selectedStatus = projectStatuses.find(ps => ps.id === parseInt(filters.projectStatus));
+      if (selectedStatus) {
+        filtered = filtered.filter((item) => item.projectStatusName === selectedStatus.statusName);
+      }
+    }
+    
+    if (filters.builder) {
+      filtered = filtered.filter((item) => item.builderName === filters.builder);
+    }
+    
+    // BHK Type filter
+    if (filters.bhkType) {
+      filtered = filtered.filter((item) => {
+        if (!item.projectConfiguration) return false;
+        const configs = item.projectConfiguration
+          .split(",")
+          .map((config) => config.trim());
+        return configs.includes(filters.bhkType);
+      });
+    }
+    
+    // Possession filter (if available)
+    if (filters.possession) {
+      filtered = filtered.filter((item) => {
+        if (!item.possession) return false;
+        const possessionLower = item.possession.toLowerCase();
+        const filterLower = filters.possession.toLowerCase();
+        
+        // Handle different possession filter types
+        if (filterLower === "ready") {
+          return possessionLower.includes("ready") || possessionLower.includes("ready to move");
+        } else if (filterLower === "under-construction") {
+          return possessionLower.includes("under") || possessionLower.includes("construction");
+        } else if (filterLower.startsWith("q")) {
+          return possessionLower.includes(filterLower);
+        }
+        return possessionLower.includes(filterLower);
+      });
+    }
+    
+    // Occupancy filter (if available)
+    if (filters.occupancy) {
+      filtered = filtered.filter((item) => {
+        if (!item.occupancy) return false;
+        return item.occupancy.toLowerCase() === filters.occupancy.toLowerCase();
+      });
+    }
+    
+    // Facing filter (if available)
+    if (filters.facing) {
+      filtered = filtered.filter((item) => {
+        if (!item.facing) return false;
+        return item.facing.toLowerCase() === filters.facing.toLowerCase();
+      });
+    }
+    
+    setFilteredProjectData(filtered);
+    setHasMore(false); // Filters don't support pagination
     setFadeKey((prev) => prev + 1);
     window.scrollTo({ top: 260, behavior: "smooth" });
   };
 
+  // Clear all filters
+  const clearFilters = () => {
+    setFilters({
+      propertyType: "",
+      city: "",
+      budget: "",
+      projectStatus: "",
+      builder: "",
+      bhkType: "",
+      possession: "",
+      occupancy: "",
+      facing: "",
+    });
+    setFilteredProjectData([]);
+    setHasMore(true);
+    setIsActive("All");
+    const totalLoaded = allProjectsList.length;
+    setHasMore(totalLoaded >= PAGE_SIZE && totalLoaded % PAGE_SIZE === 0);
+    setFadeKey((prev) => prev + 1);
+  };
+
+  // Handle filter change
+  const handleFilterChange = (filterName, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [filterName]: value
+    }));
+  };
+
+  // Apply filters when filter values change
+  useEffect(() => {
+    const hasActiveFilters = Object.values(filters).some(value => value !== "");
+    if (hasActiveFilters && allProjectsList.length > 0) {
+      applyFilters();
+    } else if (!hasActiveFilters) {
+      setFilteredProjectData([]);
+      setIsActive("All");
+      const totalLoaded = allProjectsList.length;
+      setHasMore(totalLoaded >= PAGE_SIZE && totalLoaded % PAGE_SIZE === 0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters.propertyType, filters.city, filters.budget, filters.projectStatus, filters.builder, filters.bhkType, filters.possession, filters.occupancy, filters.facing, allProjectsList]);
+
+  const filterSectionTab = (tabName) => {
+    setIsActive(tabName);
+    setPage(0);
+    clearFilters(); // Clear advanced filters when using tabs
+    
+    let filtered = [];
+    if (tabName === "All") {
+      filtered = allProjectsList;
+      const totalLoaded = allProjectsList.length;
+      setHasMore(totalLoaded >= PAGE_SIZE && totalLoaded % PAGE_SIZE === 0);
+    } else if (tabName === "Commercial") {
+      filtered = allProjectsList.filter((item) => item.propertyTypeName === "Commercial");
+      setHasMore(false);
+    } else if (tabName === "Residential") {
+      filtered = allProjectsList.filter((item) => item.propertyTypeName === "Residential");
+      setHasMore(false);
+    } else if (tabName === "New Launch") {
+      filtered = allProjectsList.filter((item) => item.projectStatusName === "New Launch");
+      setHasMore(false);
+    }
+    
+    setFilteredProjectData(filtered);
+    setFadeKey((prev) => prev + 1);
+    window.scrollTo({ top: 260, behavior: "smooth" });
+  };
+
+  // Use filtered data if filter is active or advanced filters are applied
+  const hasActiveFilters = Object.values(filters).some(value => value !== "");
+  const displayProjects = (isActive !== "All" && isActive !== "" && filteredProjectData.length > 0) || (hasActiveFilters && filteredProjectData.length > 0)
+    ? filteredProjectData 
+    : isActive !== "All" && isActive !== "" && filteredProjectData.length === 0
+    ? []
+    : allProjectsList;
+
+  const activeFiltersCount = Object.values(filters).filter(v => v !== "").length;
+  const hasQuickFilter = isActive !== "" && isActive !== "All";
+
   return (
-    <div className="containr-fluid">
+    <div className="projects-page-wrapper">
       <CommonHeaderBanner image={"project-banner.jpg"} headerText={pageName} />
       <CommonBreadCrum pageName={pageName} />
-      <div className="container-fluid my-3">
-        <div className="row position-relative">
-          <div className="col-12 col-md-2 col-lg-2 col-xl-2 project-page-filter pt-3">
-            <p
-              className={`cursor-pointer px-3 py-1 ${
-                isActive === "All" ? "filter-active" : ""
-              }`}
-              onClick={() => filterSectionTab("All")}
-            >
-              All
-            </p>
-            <p
-              className={`cursor-pointer px-3 py-1 ${
-                isActive === "Commercial" ? "filter-active" : ""
-              }`}
-              onClick={() => filterSectionTab("Commercial")}
-            >
-              Commercial
-            </p>
-            <p
-              className={`cursor-pointer px-3 py-1 ${
-                isActive === "Residential" ? "filter-active" : ""
-              }`}
-              onClick={() => filterSectionTab("Residential")}
-            >
-              Residential
-            </p>
-            <p
-              className={`cursor-pointer px-3 py-1 ${
-                isActive === "New Launch" ? "filter-active" : ""
-              }`}
-              onClick={() => filterSectionTab("New Launch")}
-            >
-              New Launch
-            </p>
-          </div>
-          <div key={fadeKey}  className="col-12 col-md-10 fade-list">
-            <div className="row g-3">
-              {!loading && allProjectsList.length > 0 ? (
-                allProjectsList.map((item, index) => (
-                  <div
-                    key={item.id + "_" + index}
-                    className="col-12 col-sm-6 col-md-4"
-                  >
-                    <PropertyContainer data={item} />
-                  </div>
-                ))
-              ) : (
-                <div>No projects found</div>
+      
+      <div className="container py-4">
+        {/* Page Header with Quick Filters */}
+        <div className="page-header-section mb-4">
+          <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+            <div>
+              <h1 className="page-main-title">
+                <FontAwesomeIcon icon={faHome} className="me-2 text-success" />
+                {pageName}
+              </h1>
+              <p className="page-subtitle mb-0">
+                Showing <strong>{displayProjects.length}</strong> {displayProjects.length === 1 ? "project" : "projects"}
+                {(hasQuickFilter || activeFiltersCount > 0) && (
+                  <span className="ms-2">
+                    <Badge bg="success" className="ms-1">
+                      {activeFiltersCount + (hasQuickFilter ? 1 : 0)} active
+                    </Badge>
+                  </span>
+                )}
+              </p>
+            </div>
+            <div className="d-flex gap-2">
+              <button
+                className="btn btn-outline-primary btn-sm"
+                onClick={() => setShowFilters(!showFilters)}
+              >
+                <FontAwesomeIcon icon={faSlidersH} className="me-2" />
+                {showFilters ? "Hide" : "Show"} Filters
+                {activeFiltersCount > 0 && (
+                  <Badge bg="danger" className="ms-2">{activeFiltersCount}</Badge>
+                )}
+              </button>
+              {(hasQuickFilter || activeFiltersCount > 0) && (
+                <button
+                  className="btn btn-outline-danger btn-sm"
+                  onClick={clearFilters}
+                >
+                  <FontAwesomeIcon icon={faTimes} className="me-2" />
+                  Clear
+                </button>
               )}
-              {loading && <LoadingProperty />}
+            </div>
+          </div>
+
+          {/* Quick Filter Pills */}
+          <div className="quick-filters-row">
+            <div className="filter-pills-container">
+              <button
+                className={`filter-pill-btn ${isActive === "All" ? "active" : ""}`}
+                onClick={() => filterSectionTab("All")}
+              >
+                All Projects
+              </button>
+              <button
+                className={`filter-pill-btn ${isActive === "Commercial" ? "active" : ""}`}
+                onClick={() => filterSectionTab("Commercial")}
+              >
+                Commercial
+              </button>
+              <button
+                className={`filter-pill-btn ${isActive === "Residential" ? "active" : ""}`}
+                onClick={() => filterSectionTab("Residential")}
+              >
+                Residential
+              </button>
+              <button
+                className={`filter-pill-btn ${isActive === "New Launch" ? "active" : ""}`}
+                onClick={() => filterSectionTab("New Launch")}
+              >
+                New Launch
+              </button>
             </div>
           </div>
         </div>
-        {/* Load more trigger */}
-        {hasMore && (
-          <div ref={loadMoreRef} className="text-center my-3">
-            {loading && (
-              <div
-                style={{
-                  height: "400px",
-                  alignItems: "center",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <YouTube show={loading} />
+
+        <div className="row g-4">
+          {/* Collapsible Filter Sidebar */}
+          {showFilters && (
+            <div className="col-12 col-lg-3">
+              <div className="filter-sidebar-card">
+                <div className="filter-card-header">
+                  <h5 className="mb-0">
+                    <FontAwesomeIcon icon={faFilter} className="me-2 text-success" />
+                    Refine Search
+                  </h5>
+                  <button
+                    className="btn-close"
+                    onClick={() => setShowFilters(false)}
+                    aria-label="Close filters"
+                  ></button>
+                </div>
+                <div className="filter-card-body">
+                  <Form className="filter-form">
+                <Form.Group className="filter-group">
+                  <Form.Label className="filter-label">Property Type</Form.Label>
+                <Form.Select
+                  size="sm"
+                  value={filters.propertyType}
+                  onChange={(e) => handleFilterChange("propertyType", e.target.value)}
+                >
+                  <option value="">All Types</option>
+                  {propertyTypes.map((type) => (
+                    <option key={type.id} value={type.id}>
+                      {type.projectTypeName}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+
+                <Form.Group className="filter-group">
+                  <Form.Label className="filter-label">Location</Form.Label>
+                <Form.Select
+                  size="sm"
+                  value={filters.city}
+                  onChange={(e) => handleFilterChange("city", e.target.value)}
+                >
+                  <option value="">All Cities</option>
+                  {cities.map((city) => (
+                    <option key={city.id} value={city.id}>
+                      {city.cityName}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+
+                <Form.Group className="filter-group">
+                  <Form.Label className="filter-label">Budget Range</Form.Label>
+                <Form.Select
+                  size="sm"
+                  value={filters.budget}
+                  onChange={(e) => handleFilterChange("budget", e.target.value)}
+                >
+                  <option value="">All Budgets</option>
+                  <option value="Up to 1Cr*">Up to 1Cr*</option>
+                  <option value="1-3 Cr*">1-3 Cr*</option>
+                  <option value="3-5 Cr*">3-5 Cr*</option>
+                  <option value="Above 5 Cr*">Above 5 Cr*</option>
+                </Form.Select>
+              </Form.Group>
+
+                <Form.Group className="filter-group">
+                  <Form.Label className="filter-label">Project Status</Form.Label>
+                <Form.Select
+                  size="sm"
+                  value={filters.projectStatus}
+                  onChange={(e) => handleFilterChange("projectStatus", e.target.value)}
+                >
+                  <option value="">All Status</option>
+                  {projectStatuses.map((status) => (
+                    <option key={status.id} value={status.id}>
+                      {status.statusName}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+
+                <Form.Group className="filter-group">
+                  <Form.Label className="filter-label">BHK Type</Form.Label>
+                <Form.Select
+                  size="sm"
+                  value={filters.bhkType}
+                  onChange={(e) => handleFilterChange("bhkType", e.target.value)}
+                >
+                  <option value="">All BHK Types</option>
+                  {bhkTypes.map((bhk, index) => (
+                    <option key={`${bhk}-${index}`} value={bhk}>
+                      {bhk}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+
+                <Form.Group className="filter-group">
+                  <Form.Label className="filter-label">Possession</Form.Label>
+                <Form.Select
+                  size="sm"
+                  value={filters.possession}
+                  onChange={(e) => handleFilterChange("possession", e.target.value)}
+                >
+                  <option value="">All</option>
+                  <option value="ready">Ready to Move</option>
+                  <option value="under-construction">Under Construction</option>
+                  <option value="q1">Q1</option>
+                  <option value="q2">Q2</option>
+                  <option value="q3">Q3</option>
+                  <option value="q4">Q4</option>
+                </Form.Select>
+              </Form.Group>
+
+                <Form.Group className="filter-group">
+                  <Form.Label className="filter-label">Occupancy</Form.Label>
+                <Form.Select
+                  size="sm"
+                  value={filters.occupancy}
+                  onChange={(e) => handleFilterChange("occupancy", e.target.value)}
+                >
+                  <option value="">All</option>
+                  <option value="vacant">Vacant</option>
+                  <option value="self-occupied">Self-occupied</option>
+                  <option value="tenanted">Tenanted</option>
+                </Form.Select>
+              </Form.Group>
+
+                <Form.Group className="filter-group">
+                  <Form.Label className="filter-label">Facing</Form.Label>
+                <Form.Select
+                  size="sm"
+                  value={filters.facing}
+                  onChange={(e) => handleFilterChange("facing", e.target.value)}
+                >
+                  <option value="">All Directions</option>
+                  <option value="north">North</option>
+                  <option value="south">South</option>
+                  <option value="east">East</option>
+                  <option value="west">West</option>
+                  <option value="north-east">North-East</option>
+                  <option value="north-west">North-West</option>
+                  <option value="south-east">South-East</option>
+                  <option value="south-west">South-West</option>
+                </Form.Select>
+              </Form.Group>
+
+                  </Form>
+                </div>
               </div>
-            )}
+            </div>
+          )}
+
+          {/* Projects Grid */}
+          <div key={fadeKey} className={`col-12 ${showFilters ? 'col-lg-9' : 'col-lg-12'} projects-content-wrapper`}>
+            {initialLoad && loading ? (
+              <div className="projects-loading-state">
+                <LoadingSpinner show={true} height="auto" />
+                <p className="text-muted mt-3">Loading projects...</p>
+              </div>
+            ) : displayProjects.length > 0 ? (
+              <>
+                <div className="projects-grid-layout">
+                  {displayProjects.map((item, index) => (
+                    <div
+                      key={item.id + "_" + index}
+                      className="project-card-wrapper"
+                    >
+                      <PropertyContainer data={item} />
+                    </div>
+                  ))}
+                </div>
+                {/* Load More Section */}
+                {hasMore && isActive === "All" && !initialLoad && displayProjects.length > 0 && (
+                  <div ref={loadMoreRef} className="load-more-section">
+                    {loadingMore && (
+                      <div className="load-more-spinner">
+                        <LoadingSpinner show={true} height="auto" />
+                        <span className="ms-3">Loading more projects...</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+                {!hasMore && !initialLoad && allProjectsList.length >= PAGE_SIZE && isActive === "All" && (
+                  <div className="load-complete">
+                    <div className="divider-line"></div>
+                    <p className="text-muted mb-0">You've viewed all projects</p>
+                    <div className="divider-line"></div>
+                  </div>
+                )}
+              </>
+            ) : !loading ? (
+              <div className="no-projects-state">
+                <div className="no-projects-icon">
+                  <FontAwesomeIcon icon={faHome} />
+                </div>
+                <h3>No Projects Found</h3>
+                <p>
+                  {hasActiveFilters || hasQuickFilter
+                    ? "Try adjusting your filters or clear them to see all projects"
+                    : "No projects are currently available"}
+                </p>
+                {(hasActiveFilters || hasQuickFilter) && (
+                  <button className="btn btn-success mt-3" onClick={clearFilters}>
+                    <FontAwesomeIcon icon={faTimes} className="me-2" />
+                    Clear All Filters
+                  </button>
+                )}
+              </div>
+            ) : null}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
 }
+
