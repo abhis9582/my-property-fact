@@ -676,9 +676,9 @@ export default function Projects() {
                       <Form.Select
                         size="sm"
                         value={filters.city}
-                        onChange={(e) =>
-                          handleFilterChange("cityName", e.target.value)
-                        }
+                         onChange={(e) =>
+                           handleFilterChange("city", e.target.value)
+                         }
                       >
                         <option value="">All Cities</option>
                         {cities.map((city) => (
