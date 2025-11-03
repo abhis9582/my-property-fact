@@ -71,6 +71,13 @@
   border-radius: 16px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   overflow: hidden;
+  position: sticky;
+  top: 100px; /* Account for fixed header height */
+  align-self: flex-start;
+  z-index: 10;
+  max-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
 }
 
 .filter-card-header {
@@ -93,8 +100,9 @@
 
 .filter-card-body {
   padding: 1.5rem;
-  max-height: calc(100vh - 250px);
+  max-height: calc(100vh - 280px);
   overflow-y: auto;
+  flex: 1;
 }
 
 .filter-card-body::-webkit-scrollbar {
@@ -274,6 +282,12 @@
 
 /* Responsive Design */
 @media (max-width: 992px) {
+  .filter-sidebar-card {
+    position: relative;
+    top: 0;
+    max-height: none;
+  }
+
   .filter-card-body {
     max-height: none;
   }
