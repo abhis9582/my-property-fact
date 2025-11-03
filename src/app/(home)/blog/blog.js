@@ -3,7 +3,6 @@ import "./page.module.css";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import CommonBreadCrum from "../components/common/breadcrum";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { LoadingSpinner } from "../contact-us/page";
 import { Pagination, Stack } from "@mui/material";
 import BlogCard from "../components/common/blogcard";
