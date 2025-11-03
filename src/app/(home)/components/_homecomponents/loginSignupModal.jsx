@@ -17,9 +17,12 @@ export default function LoginSignupModal({ show, handleClose }) {
   const [formData, setFormData] = useState({
     phoneNumber: "",
     otp: "",
+    fullName: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
+  const [receivedOTP, setReceivedOTP] = useState("");
+
   const handleSuccess = async (credentialResponse) => {
     const token = credentialResponse.credential;
 
@@ -47,11 +50,10 @@ export default function LoginSignupModal({ show, handleClose }) {
       router.push("/portal/dashboard");
       handleClose(false);
     }
-    console.log("Backend response:", response.data);
   };
 
   const handleError = () => {
-    console.log("Login Failed");
+    // Google login failed - handled silently
   };
 
   // Handle manual phone number login/signup
@@ -61,25 +63,32 @@ export default function LoginSignupModal({ show, handleClose }) {
       return;
     }
 
+    // For signup, also require name
+    if (isSignup && !formData.fullName) {
+      alert("Please enter your full name");
+      return;
+    }
+
     setIsLoading(true);
     try {
-      const endpoint = isSignup ? "auth/signup" : "auth/send-otp";
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}${endpoint}`,
+        `${process.env.NEXT_PUBLIC_API_URL}auth/send-otp`,
         { phoneNumber: formData.phoneNumber }
       );
 
       if (response.data.success) {
         setShowOTP(true);
-        alert(
-          isSignup
-            ? "OTP sent! Please verify your number."
-            : "OTP sent! Please enter the verification code."
-        );
+        // Store the OTP for development (will be removed in production)
+        if (response.data.otp) {
+          setReceivedOTP(response.data.otp);
+          alert(`OTP sent! Your OTP is: ${response.data.otp} (Development only)`);
+        } else {
+          alert("OTP sent! Please check your phone.");
+        }
       }
     } catch (error) {
       alert(
-        "Error: " + (error.response?.data?.message || "Something went wrong")
+        "Error: " + (error.response?.data?.error || error.response?.data?.message || "Something went wrong")
       );
     } finally {
       setIsLoading(false);
@@ -87,7 +96,7 @@ export default function LoginSignupModal({ show, handleClose }) {
   };
 
   // Handle OTP verification
-  const handleOTPVerify = async () => {
+  const handleOTPVerify = async (isSignup = false) => {
     if (!formData.otp) {
       alert("Please enter the OTP");
       return;
@@ -95,23 +104,54 @@ export default function LoginSignupModal({ show, handleClose }) {
 
     setIsLoading(true);
     try {
+      const requestData = {
+        phoneNumber: formData.phoneNumber,
+        otp: formData.otp,
+      };
+
+      // Add fullName for signup
+      if (isSignup && formData.fullName) {
+        requestData.fullName = formData.fullName;
+      }
+
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}auth/verify-otp`,
-        {
-          phoneNumber: formData.phoneNumber,
-          otp: formData.otp,
-        }
+        requestData
       );
 
       if (response.data.token) {
+        // Store token
         Cookies.set("token", response.data.token, {
           expires: 7,
           secure: process.env.NODE_ENV === "production",
           sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
           path: "/",
         });
-        router.push("/portal/dashboard");
+
+        // Store refreshtoken
+        Cookies.set("refreshToken", response.data.refreshToken, {
+          expires: 7,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+          path: "/",
+        });
+
+        // Store user data
+        if (response.data.user) {
+          Cookies.set("userData", JSON.stringify(response.data.user), {
+            expires: 7,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+            path: "/",
+          });
+        }
+
+        // Reset form and close modal
+        setFormData({ phoneNumber: "", otp: "", fullName: "" });
+        setShowOTP(false);
+        setReceivedOTP("");
         handleClose(false);
+        router.push("/portal/dashboard");
       }
     } catch (error) {
       alert("Invalid OTP. Please try again.");
@@ -155,6 +195,20 @@ export default function LoginSignupModal({ show, handleClose }) {
               </GoogleOAuthProvider>
             </div>
             <span>or use your phone for registration</span>
+            
+            {/* Full Name field - only shown before OTP */}
+            {!showOTP && (
+              <input
+                className="mb-3"
+                type="text"
+                placeholder="Full Name"
+                name="fullName"
+                value={formData.fullName}
+                onChange={handleInputChange}
+                disabled={isLoading}
+              />
+            )}
+            
             <input
               className="mb-3"
               type="tel"
@@ -162,23 +216,31 @@ export default function LoginSignupModal({ show, handleClose }) {
               name="phoneNumber"
               value={formData.phoneNumber}
               onChange={handleInputChange}
-              disabled={isLoading}
+              disabled={isLoading || showOTP}
             />
             {showOTP && (
-              <input
-                className="mb-3"
-                type="text"
-                placeholder="Enter OTP"
-                name="otp"
-                value={formData.otp}
-                onChange={handleInputChange}
-                disabled={isLoading}
-              />
+              <>
+                <input
+                  className="mb-3"
+                  type="text"
+                  placeholder="Enter OTP"
+                  name="otp"
+                  value={formData.otp}
+                  onChange={handleInputChange}
+                  disabled={isLoading}
+                  maxLength={6}
+                />
+                {receivedOTP && (
+                  <div style={{ fontSize: '12px', color: '#888', marginBottom: '10px', textAlign: 'center' }}>
+                    OTP: <strong>{receivedOTP}</strong> (Development Mode Only)
+                  </div>
+                )}
+              </>
             )}
             <button
               type="button"
               onClick={() =>
-                showOTP ? handleOTPVerify() : handlePhoneAuth(true)
+                showOTP ? handleOTPVerify(true) : handlePhoneAuth(true)
               }
               disabled={isLoading}
             >
@@ -206,23 +268,31 @@ export default function LoginSignupModal({ show, handleClose }) {
               name="phoneNumber"
               value={formData.phoneNumber}
               onChange={handleInputChange}
-              disabled={isLoading}
+              disabled={isLoading || showOTP}
             />
             {showOTP && (
-              <input
-                className="mb-3"
-                type="text"
-                placeholder="Enter OTP"
-                name="otp"
-                value={formData.otp}
-                onChange={handleInputChange}
-                disabled={isLoading}
-              />
+              <>
+                <input
+                  className="mb-3"
+                  type="text"
+                  placeholder="Enter OTP"
+                  name="otp"
+                  value={formData.otp}
+                  onChange={handleInputChange}
+                  disabled={isLoading}
+                  maxLength={6}
+                />
+                {receivedOTP && (
+                  <div style={{ fontSize: '12px', color: '#888', marginBottom: '10px', textAlign: 'center' }}>
+                    OTP: <strong>{receivedOTP}</strong> (Development Mode Only)
+                  </div>
+                )}
+              </>
             )}
             <button
               type="button"
               onClick={() =>
-                showOTP ? handleOTPVerify() : handlePhoneAuth(false)
+                showOTP ? handleOTPVerify(false) : handlePhoneAuth(false)
               }
               disabled={isLoading}
             >

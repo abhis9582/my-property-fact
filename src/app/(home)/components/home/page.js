@@ -13,10 +13,6 @@ export default async function HomePage() {
   const residentalProjects = projects.filter(project => project.propertyTypeName === 'Residential').slice(0, 9);
   const commercialProjects = projects.filter(project => project.propertyTypeName === 'Commercial').slice(0, 9);
   const mpfTopPicProject = await getWeeklyProject(projects);
-  console.log(`Featured projects length for home page ${featuredProjects.length}`);
-  console.log(`Residential projects length for home page ${residentalProjects.length}`);
-  console.log(`Commertial projects length for home page ${commercialProjects.length}`);
-  console.log(`My property fact top project name is ${mpfTopPicProject.projectName}`);
   try {
     return (
       <>

@@ -27,8 +27,10 @@ export default function ModernPortalSidenav() {
   const { userData, logout } = useUser();
 
   const handleLogout = () => {
-    logout();
-    router.push('/');
+    if (window.confirm("Are you sure you want to logout?")) {
+      logout();
+      router.push('/');
+    }
   };
 
   const handleNavigation = (href) => {
@@ -332,21 +334,21 @@ export default function ModernPortalSidenav() {
         }
 
         @media (max-width: 992px) {
-          .sidebar-container {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            z-index: 1050 !important;
-            transform: translateX(-100%) !important;
-            transition: transform 0.3s ease !important;
-            width: 280px !important;
-            height: 100vh !important;
-            overflow-y: auto !important;
-          }
+          // .sidebar-container {
+          //   position: fixed !important;
+          //   top: 0 !important;
+          //   left: 0 !important;
+          //   z-index: 1050 !important;
+          //   transform: translateX(-100%) !important;
+          //   transition: transform 0.3s ease !important;
+          //   width: 280px !important;
+          //   height: 100vh !important;
+          //   overflow-y: auto !important;
+          // }
 
-          .sidebar-container.mobile-open {
-            transform: translateX(0) !important;
-          }
+          // .sidebar-container.mobile-open {
+          //   transform: translateX(0) !important;
+          // }
 
           .brand-text {
             display: none;

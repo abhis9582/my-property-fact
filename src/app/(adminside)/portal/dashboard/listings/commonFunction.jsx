@@ -376,27 +376,6 @@ export function ResidentialFields({ data, setField }) {
           onRemove={(selectedList) => setField("amenities", selectedList)}
           displayValue="title"
         />
-        {/* {console.log(amenities)}
-        <TextSelectableInput
-          label="Society features"
-          name="societyFeatures"
-          value={data.societyFeatures}
-          onChange={setField}
-          options={amenities?.map((item) => item.title) || []}
-        /> */}
-        {/* <TextInput
-          label="Security"
-          name="security"
-          value={data.security}
-          onChange={setField}
-          placeholder="Access control / CCTV / Gated / Intercom"
-        /> */}
-        {/* <TextInput
-          label="Pet policy (if RWA)"
-          name="petPolicy"
-          value={data.petPolicy}
-          onChange={setField}
-        /> */}
       </Section>
 
       {data.transaction === "Rent/Lease" && (

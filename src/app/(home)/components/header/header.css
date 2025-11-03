@@ -189,7 +189,8 @@
 .mbMenuContainer .mbMenu {
   position: relative;
   height: 100%;
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
   padding: 70px 30px;
   margin-right: 0;
   margin-left: auto;
@@ -197,6 +198,13 @@
   overflow: auto;
   opacity: 0;
   transition: all 0.5s linear;
+}
+
+@media (max-width: 426px) {
+  .mbMenuContainer .mbMenu {
+    max-width: 100%;
+    padding: 50px 20px;
+  }
 }
 
 .mbMenuContainer.active .mbMenu {
@@ -225,9 +233,10 @@
 }
 
 .bigMenuList ul li a {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 5vw, 2rem);
   font-family: "Benton300", sans-serif;
-  line-height: 1;
+  line-height: 1.2;
+  word-wrap: break-word;
 }
 
 .bigMenuList ul li a sup {
@@ -240,10 +249,26 @@
 }
 
 .bigMenuList .dropdown li a {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 3vw, 1.2rem);
   font-family: "Benton500", sans-serif;
   position: relative;
   padding-left: 30px;
+  word-wrap: break-word;
+}
+
+@media (max-width: 426px) {
+  .bigMenuList ul li a {
+    font-size: 1.5rem;
+  }
+  
+  .bigMenuList .dropdown li a {
+    font-size: 1rem;
+    padding-left: 20px;
+  }
+  
+  .smallMenuList ul li a {
+    font-size: 1rem;
+  }
 }
 
 .bigMenuList .dropdown {

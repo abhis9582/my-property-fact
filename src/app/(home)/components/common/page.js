@@ -8,13 +8,27 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import "./common.css";
 
 export default function PropertyContainer(props) {
+  const [imageError, setImageError] = useState(false);
+  
   // Ensure props.data is defined before accessing its properties
   if (!props.data) {
     return <div>Loading...</div>; // or any fallback content
   }
+
+  // Default image path - use generic floorplan or realestate background as fallback
+  const DEFAULT_IMAGE = "/static/generic-floorplan.jpg";
+  
+  // Get image URL - use default if thumbnail is missing or image failed to load
+  const getImageSrc = () => {
+    if (imageError || !props.data.projectThumbnailImage) {
+      return DEFAULT_IMAGE;
+    }
+    return `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${props.data.slugURL}/${props.data.projectThumbnailImage}`;
+  };
 
   //Generating price in lakh & cr
   const generatePrice = (price) => {
@@ -36,16 +50,14 @@ export default function PropertyContainer(props) {
         >
           <div className="w-100 project-image-container">
             <Image
-              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${
-                props.data.slugURL
-              }/${
-                props.data.projectThumbnailImage
-              }`}
-              alt={props.data.projectName}
+              src={getImageSrc()}
+              alt={props.data.projectName || "Project image"}
               className="img-fluid w-100 rounded-top-4 object-fit-cover"
               priority
               width={400}
               height={400}
+              onError={() => setImageError(true)}
+              unoptimized={imageError || !props.data.projectThumbnailImage}
             />
           </div>
           {props.data.projectStatusName && (

@@ -1,29 +1,330 @@
-.project-page-filter {
-  position: sticky;
-  top: 80px;
-  z-index: 20;
-  background: #fff;
-  padding: 1rem;
-  height: fit-content;
+/* Projects Page Wrapper */
+.projects-page-wrapper {
+  background-color: #f5f7fa;
+  min-height: 100vh;
 }
 
-.filter-active {
-  background-color: rgb(0, 164, 0);
+/* Page Header Section */
+.page-header-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.page-main-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.page-subtitle {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* Quick Filters Row */
+.quick-filters-row {
+  padding-top: 1rem;
+  border-top: 1px solid #e8eaed;
+}
+
+.filter-pills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.filter-pill-btn {
+  padding: 0.625rem 1.5rem;
+  border: 2px solid #e0e0e0;
+  background: white;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.filter-pill-btn:hover {
+  border-color: rgb(0, 164, 0);
+  background: rgba(0, 164, 0, 0.05);
+  color: rgb(0, 164, 0);
+  transform: translateY(-1px);
+}
+
+.filter-pill-btn.active {
+  background: rgb(0, 164, 0);
+  border-color: rgb(0, 164, 0);
   color: white;
-  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0, 164, 0, 0.3);
 }
 
-@media (max-width: 768px) {
-  .project-page-filter {
-    display: none;
+/* Filter Sidebar Card */
+.filter-sidebar-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.filter-card-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e8eaed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fafbfc;
+}
+
+.filter-card-header h5 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.filter-card-body {
+  padding: 1.5rem;
+  max-height: calc(100vh - 250px);
+  overflow-y: auto;
+}
+
+.filter-card-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.filter-card-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.filter-card-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+.filter-card-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Filter Form */
+.filter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.filter-group {
+  margin-bottom: 0;
+}
+
+.filter-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.625rem;
+  display: block;
+}
+
+.filter-form .form-select {
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
+  font-size: 0.9rem;
+  padding: 0.75rem 1rem;
+  transition: all 0.2s ease;
+  background-color: white;
+  color: #333;
+}
+
+.filter-form .form-select:hover {
+  border-color: #d0d0d0;
+}
+
+.filter-form .form-select:focus {
+  border-color: rgb(0, 164, 0);
+  box-shadow: 0 0 0 3px rgba(0, 164, 0, 0.1);
+  outline: none;
+}
+
+/* Projects Content Wrapper */
+.projects-content-wrapper {
+  min-height: 500px;
+}
+
+.projects-grid-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.project-card-wrapper {
+  transition: all 0.3s ease;
+}
+
+.project-card-wrapper:hover {
+  transform: translateY(-6px);
+}
+
+/* Loading State */
+.projects-loading-state {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 600px;
+  background: white;
+  border-radius: 16px;
+  padding: 4rem;
+}
+
+/* No Projects State */
+.no-projects-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 500px;
+  background: white;
+  border-radius: 16px;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.no-projects-icon {
+  font-size: 4.5rem;
+  color: #d0d0d0;
+  margin-bottom: 1.5rem;
+}
+
+.no-projects-state h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+}
+
+.no-projects-state p {
+  font-size: 1rem;
+  color: #666;
+  max-width: 450px;
+  margin-bottom: 0;
+}
+
+/* Load More Section */
+.load-more-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 120px;
+  margin: 3rem 0;
+}
+
+.load-more-spinner {
+  display: flex;
+  align-items: center;
+  color: #666;
+}
+
+/* Load Complete */
+.load-complete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 3rem 0;
+  padding: 2rem;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #d0d0d0, transparent);
+}
+
+.load-complete p {
+  font-size: 0.9rem;
+  color: #888;
+  white-space: nowrap;
+  margin: 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
 .fade-list {
-  animation: fadeIn 0.4s ease-in-out;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* Responsive Design */
+@media (max-width: 992px) {
+  .filter-card-body {
+    max-height: none;
+  }
+
+  .projects-grid-layout {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header-section {
+    padding: 1.5rem;
+  }
+
+  .page-main-title {
+    font-size: 1.5rem;
+  }
+
+  .filter-card-header,
+  .filter-card-body {
+    padding: 1.25rem;
+  }
+
+  .projects-grid-layout {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .filter-pills-container {
+    gap: 0.5rem;
+  }
+
+  .filter-pill-btn {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .projects-grid-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .filter-pill-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+  }
+
+  .page-main-title {
+    font-size: 1.375rem;
+  }
 }

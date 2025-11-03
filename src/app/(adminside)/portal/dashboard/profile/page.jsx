@@ -22,14 +22,24 @@ import {
   cilSettings,
   cilStar,
   cilCheck,
-  cilPencil
+  cilPencil,
+  cilAccountLogout
 } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import Image from "next/image";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 import { useUser } from "../../_contexts/UserContext";
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005/";
+
 export default function Profile() {
-  const { userData, updateUserData, loading } = useUser();
+  const router = useRouter();
+  const { logout } = useUser();
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [profile, setProfile] = useState({
     name: "",
     email: "",
@@ -76,25 +86,52 @@ export default function Profile() {
     }
   ]);
 
-  // Sync profile with userData when userData changes
+  // Fetch user profile from API
   useEffect(() => {
-    if (userData) {
-      setProfile({
-        name: userData.fullName || "",
-        email: userData.email || "",
-        phone: userData.phone || "",
-        role: userData.role || "",
-        experience: userData.experience || "",
-        location: userData.location || "",
-        bio: userData.bio || "",
-        avatar: userData.avatar || "/logo.png",
-        verified: userData.verified || false,
-        rating: userData.rating || 0,
-        totalDeals: userData.totalDeals || 0,
-        joinDate: userData.joinDate || ""
-      });
-    }
-  }, [userData]);
+    const fetchUserProfile = async () => {
+      try {
+        const token = Cookies.get("authToken") || Cookies.get("token");
+        if (!token) {
+          console.error("No auth token found");
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch(`${API_BASE_URL}users/me`, {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+          setProfile({
+            name: userData.fullName || "",
+            email: userData.email || "",
+            phone: userData.phone || "",
+            role: userData.role || "",
+            experience: userData.experience || "",
+            location: userData.location || "",
+            bio: userData.bio || "",
+            avatar: userData.avatar || "/logo.png",
+            verified: userData.verified || false,
+            rating: userData.rating || 0,
+            totalDeals: userData.totalDeals || 0,
+            joinDate: userData.createdAt ? new Date(userData.createdAt).toISOString().split('T')[0] : ""
+          });
+        } else {
+          console.error("Failed to fetch user profile:", response.status);
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
 
   const handleInputChange = (field, value) => {
     setProfile(prev => ({
@@ -103,24 +140,70 @@ export default function Profile() {
     }));
   };
 
-  const handleSave = () => {
-    // Update user data in context
-    updateUserData({
-      fullName: profile.name,
-      email: profile.email,
-      phone: profile.phone,
-      role: profile.role,
-      experience: profile.experience,
-      location: profile.location,
-      bio: profile.bio,
-      avatar: profile.avatar,
-      verified: profile.verified,
-      rating: profile.rating,
-      totalDeals: profile.totalDeals,
-      joinDate: profile.joinDate
-    });
-    
-    alert("Profile updated successfully!");
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const token = Cookies.get("authToken") || Cookies.get("token");
+      if (!token) {
+        alert("No auth token found. Please login again.");
+        return;
+      }
+
+      const updateData = {
+        fullName: profile.name,
+        phone: profile.phone,
+        location: profile.location,
+        bio: profile.bio,
+        avatar: profile.avatar,
+        experience: profile.experience,
+        verified: profile.verified,
+        rating: profile.rating,
+        totalDeals: profile.totalDeals
+      };
+
+      const response = await fetch(`${API_BASE_URL}users/me`, {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(updateData)
+      });
+
+      if (response.ok) {
+        const updatedUser = await response.json();
+        setProfile({
+          name: updatedUser.fullName || profile.name,
+          email: updatedUser.email || profile.email,
+          phone: updatedUser.phone || profile.phone,
+          role: updatedUser.role || profile.role,
+          experience: updatedUser.experience || profile.experience,
+          location: updatedUser.location || profile.location,
+          bio: updatedUser.bio || profile.bio,
+          avatar: updatedUser.avatar || profile.avatar,
+          verified: updatedUser.verified !== undefined ? updatedUser.verified : profile.verified,
+          rating: updatedUser.rating !== undefined ? updatedUser.rating : profile.rating,
+          totalDeals: updatedUser.totalDeals !== undefined ? updatedUser.totalDeals : profile.totalDeals,
+          joinDate: profile.joinDate
+        });
+        alert("Profile updated successfully!");
+      } else {
+        const error = await response.json();
+        alert(`Failed to update profile: ${error.message || "Unknown error"}`);
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Failed to update profile. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleLogout = () => {
+    if (window.confirm("Are you sure you want to logout?")) {
+      logout();
+      router.push("/");
+    }
   };
 
   if (loading) {
@@ -176,9 +259,13 @@ export default function Profile() {
                   <span className="stat-label">Experience</span>
                 </div>
               </div>
-              <Button variant="primary" className="w-100 mt-3">
+              <Button variant="primary" className="w-100 mt-3 mb-2">
                 <CIcon icon={cilPencil} className="me-1" />
                 Edit Profile
+              </Button>
+              <Button variant="outline-danger" className="w-100" onClick={handleLogout}>
+                <CIcon icon={cilAccountLogout} className="me-1" />
+                Logout
               </Button>
             </Card.Body>
           </Card>
@@ -308,8 +395,8 @@ export default function Profile() {
                       </Col>
                     </Row>
                     <div className="d-flex justify-content-end mt-3">
-                      <Button variant="primary" onClick={handleSave}>
-                        Save Changes
+                      <Button variant="primary" onClick={handleSave} disabled={saving}>
+                        {saving ? "Saving..." : "Save Changes"}
                       </Button>
                     </div>
                   </Form>
@@ -359,8 +446,8 @@ export default function Profile() {
                       </Col>
                     </Row>
                     <div className="d-flex justify-content-end mt-3">
-                      <Button variant="primary" onClick={handleSave}>
-                        Update Professional Info
+                      <Button variant="primary" onClick={handleSave} disabled={saving}>
+                        {saving ? "Saving..." : "Update Professional Info"}
                       </Button>
                     </div>
                   </Form>
@@ -410,9 +497,13 @@ export default function Profile() {
                         </Form.Group>
                       </Col>
                     </Row>
-                    <div className="d-flex justify-content-end mt-3">
-                      <Button variant="primary" onClick={handleSave}>
-                        Update Security Settings
+                    <div className="d-flex justify-content-between mt-3">
+                      <Button variant="outline-danger" onClick={handleLogout}>
+                        <CIcon icon={cilAccountLogout} className="me-1" />
+                        Logout
+                      </Button>
+                      <Button variant="primary" disabled>
+                        Update Security Settings (Coming Soon)
                       </Button>
                     </div>
                   </Form>

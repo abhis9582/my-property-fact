@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const protectedRoutes = ["/admin", "/admin/dashboard", "/admin/settings"];
+const protectedRoutes = ["/admin", "/admin/dashboard", "/admin/settings", "/portal", "/portal/dashboard"];
 
 async function checkToken(token, refreshToken) {
   try {
@@ -87,10 +87,46 @@ export async function middleware(req) {
     return NextResponse.next();
   }
 
+  // Special case: portal root (acts like a login/landing page for portal)
+  if (path === "/portal") {
+    if (token) {
+      const result = await checkToken(token, refreshToken);
+
+      if (result.valid) {
+        const res = NextResponse.redirect(new URL("/portal/dashboard", req.url));
+
+        // Refresh cookies if new tokens
+        if (result.token !== token) {
+          res.cookies.set("token", result.token, {
+            path: "/",
+            secure: true,
+            sameSite: "Strict",
+          });
+          res.cookies.set("refreshToken", result.refreshToken, {
+            path: "/",
+            secure: true,
+            sameSite: "Strict",
+          });
+        }
+        return res;
+      } else {
+        // remove expired cookies
+        const res = NextResponse.next();
+        res.cookies.delete("token");
+        res.cookies.delete("refreshToken");
+        return res;
+      }
+    }
+    // Not logged in → go home
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
   // Protect admin routes
   if (protectedRoutes.some((route) => path.startsWith(route))) {
     if (!token) {
-      return NextResponse.redirect(new URL("/admin", req.url));
+      // If accessing portal routes, send to home; admin stays to /admin
+      const redirectTo = path.startsWith("/portal") ? "/" : "/admin";
+      return NextResponse.redirect(new URL(redirectTo, req.url));
     }
 
     const result = await checkToken(token, refreshToken);
@@ -124,5 +160,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: "/admin/:path*",
+  matcher: ["/admin/:path*", "/portal/:path*"],
 };

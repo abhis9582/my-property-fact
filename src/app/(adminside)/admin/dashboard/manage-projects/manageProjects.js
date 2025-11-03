@@ -219,8 +219,6 @@ export default function ManageProjects({
         setShowModal(false);
       }
     } catch (error) {
-      console.log(error);
-
       toast.error(
         error.response?.data?.error ||
           "An error occurred while submitting the form."
@@ -615,7 +613,7 @@ export default function ManageProjects({
             worksheet.getColumn(colIndex + 1).width = 20;
             row.height = 80;
           } catch (e) {
-            console.warn("Image error:", e);
+            // Image loading error - skip this image
           }
         }
       }

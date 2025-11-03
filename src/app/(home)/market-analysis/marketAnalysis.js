@@ -27,7 +27,7 @@ export default function MarketAnalysis() {
       setTotalPages(response.data.totalPages);
       setLoading(false);
     } catch (error) {
-      console.log(error);
+      // Error handled silently - user will see empty results
     }
   };
   useEffect(() => {

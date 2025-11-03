@@ -81,7 +81,6 @@ export default function ManageGallery({ list, projectsList, newList }) {
         }
       } catch (error) {
         toast.error(error.response?.data?.message || "Something went wrong!");
-        console.log("Error Occured", error);
       } finally {
         setShowLoading(false);
         setButtonName("Add");

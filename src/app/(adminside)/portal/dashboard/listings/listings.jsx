@@ -37,7 +37,6 @@ export default function Listing() {
     const errs = {};
     if (!data.listingType) errs.listingType = "Select listing type";
     if (!data.transaction) errs.transaction = "Select transaction";
-    // if (!data.title) errs.title = "Title required";
     if (!data.description || data.description.length < 50)
       errs.description = "Add 50–1200 chars";
     if (!data.carpetArea || Number(data.carpetArea) < 50)
@@ -55,8 +54,7 @@ export default function Listing() {
       return;
     }
 
-    console.log("SUBMIT PAYLOAD", data);
-    alert("Form submitted! Check console for the payload.");
+    alert("Form submitted successfully!");
   };
 
   const ActiveComp = steps.find((s) => s.key === active)?.Component;
