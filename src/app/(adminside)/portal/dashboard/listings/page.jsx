@@ -273,7 +273,7 @@ export default function ListingPage({ searchParams }) {
               </Alert>
             ) : listings.length === 0 ? (
               <div className="text-center py-5">
-                <p className="text-muted mb-3">You haven't posted any properties yet.</p>
+                <p className="text-muted mb-3">You haven&apos;t posted any properties yet.</p>
                 <Button 
                   variant="primary"
                   onClick={() => window.location.href = '/portal/dashboard/listings?action=add'}

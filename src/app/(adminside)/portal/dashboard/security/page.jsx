@@ -15,7 +15,6 @@ import {
 import { 
   cilShieldAlt, 
   cilLockLocked, 
-  cilKey, 
   cilUser,
   cilCheck,
   cilX,
@@ -149,12 +148,12 @@ export default function SecurityPage() {
                 </div>
               </div>
               
-              <Button 
+                            <Button
                 variant="primary" 
                 className="mt-3"
                 onClick={() => setShowPasswordModal(true)}
               >
-                <CIcon icon={cilKey} className="me-1" />
+                <CIcon icon={cilLockLocked} className="me-1" />
                 Change Password
               </Button>
             </Card.Body>

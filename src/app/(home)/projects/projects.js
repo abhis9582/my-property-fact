@@ -274,13 +274,21 @@ export default function Projects() {
         (pt) => pt.id === parseInt(filters.propertyType)
       );
       if (selectedType) {
-        filtered = filtered.filter(
-          (item) => item.propertyTypeName === selectedType.projectTypeName
-        );
+        if (selectedType.projectTypeName === 'New Launches') {
+          // "New Launches" is a special case - filter by project status instead of property type
+          filtered = filtered.filter(
+            (item) => item.projectStatusName === 'New Launch'
+          );
+        } else {
+          // For other property types, filter by propertyTypeName or propertyTypeId
+          filtered = filtered.filter(
+            (item) => item.propertyTypeName === selectedType.projectTypeName || item.propertyTypeId === selectedType.id
+          );
+        }
       } else {
         // If type not found, filter by ID directly
         filtered = filtered.filter(
-          (item) => item.propertyTypeId === parseInt(filters.propertyType)
+          (item) => item.propertyTypeId === parseInt(filters.propertyType)      
         );
       }
     }
@@ -852,7 +860,7 @@ export default function Projects() {
                     <div className="load-complete">
                       <div className="divider-line"></div>
                       <p className="text-muted mb-0">
-                        You've viewed all projects
+                        You&apos;ve viewed all projects
                       </p>
                       <div className="divider-line"></div>
                     </div>
