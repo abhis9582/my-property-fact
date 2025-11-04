@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect, useCallback } from "react";
 import ModernPropertyListing from "../../_components/ModernPropertyListing";
 import { Card, Row, Col, Button, Badge, Spinner, Alert } from "react-bootstrap";
 import Cookies from "js-cookie";
@@ -18,13 +18,7 @@ export default function ListingPage({ searchParams }) {
     setAction(urlParams.get('action'));
   }, []);
 
-  useEffect(() => {
-    if (action !== 'add') {
-      fetchUserProperties();
-    }
-  }, [action]);
-
-  const fetchUserProperties = async () => {
+  const fetchUserProperties = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -71,13 +65,19 @@ export default function ListingPage({ searchParams }) {
       } else {
         setError(result.message || "Failed to fetch properties");
       }
-    } catch (err) {
+        } catch (err) {
       console.error("Error fetching properties:", err);
-      setError(err.message || "Failed to load properties. Please try again.");
+      setError(err.message || "Failed to load properties. Please try again.");  
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (action !== 'add') {
+      fetchUserProperties();
+    }
+  }, [action, fetchUserProperties]);
 
   const formatPrice = (price) => {
     if (!price && price !== 0) return "Price not set";
