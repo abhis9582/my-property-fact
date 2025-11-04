@@ -22,7 +22,7 @@ import {
   cilPencil, 
   cilTrash,
   cilPhone,
-  cilEnvelopeOpenOpen,
+  cilEnvelopeOpen,
   cilLocationPin,
   cilCalendar,
   cilStar,
