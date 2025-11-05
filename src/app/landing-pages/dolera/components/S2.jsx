@@ -113,7 +113,7 @@ function S2() {
               justifyContent: "space-between",
               alignItems: "center",
               rotate: "45deg",
-              gap:"20px"
+              gap: "20px",
             }}
           >
             {/* Square Part 1  */}
@@ -489,6 +489,7 @@ function S2() {
           .s2-squares-grid {
             height: 70% !important;
             width: 70% !important;
+            gap: 0px !important;
           }
 
           .s2-square {
@@ -554,6 +555,7 @@ function S2() {
           .s2-squares-grid {
             height: 70% !important;
             width: 70% !important;
+            gap: 0px !important;
           }
 
           .s2-square {
@@ -629,6 +631,7 @@ function S2() {
           .s2-squares-grid {
             height: 70% !important;
             width: 70% !important;
+            gap: 0px !important;
           }
 
           .s2-square {
