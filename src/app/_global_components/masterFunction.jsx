@@ -16,7 +16,11 @@ export async function checkIfProjectSlug(slug) {
 
 //Fetching all projects
 export const fetchAllProjects = cache(async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}projects`, {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (!apiUrl) {
+    throw new Error("NEXT_PUBLIC_API_URL is not defined");
+  }
+  const res = await fetch(`${apiUrl}projects`, {
     next: { revalidate: 60 },
   });
   console.log(`Called fetchAllProjects and length is ${res.length}`);
@@ -26,7 +30,11 @@ export const fetchAllProjects = cache(async () => {
 
 //Fetch all projects with cached
 export const getAllProjects = cache(async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}projects`, {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (!apiUrl) {
+    throw new Error("NEXT_PUBLIC_API_URL is not defined");
+  }
+  const res = await fetch(`${apiUrl}projects`, {
     next: { revalidate: 60 }, // ISR: refresh every 60s
   });
   console.log(`Called getAllProjects and length is ${res.length}`);
@@ -36,7 +44,11 @@ export const getAllProjects = cache(async () => {
 
 //Fetching all cities
 export const fetchCityData = cache(async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}city/all`, {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (!apiUrl) {
+    throw new Error("NEXT_PUBLIC_API_URL is not defined");
+  }
+  const res = await fetch(`${apiUrl}city/all`, {
     next: { revalidate: 60 }, // revalidate every 60 seconds
   });
   console.log(`Called fetchCityData and length is ${res.length}`);
