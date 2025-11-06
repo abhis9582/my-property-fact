@@ -131,7 +131,7 @@ function S8() {
             className="s8-right-box"
             style={{
               width: "539px",
-              height: "333px",
+              minHeight: "333px !important",
               backgroundColor: "rgba(220, 237, 255, 1)",
               display: "flex",
               justifyContent: "center",

@@ -546,7 +546,7 @@
 /* Footer Responsive Styles */
 @media (max-width: 1024px) {
   footer {
-    padding: 40px 20px !important;
+    padding: 0px !important;
   }
 
   footer > div:first-child {
@@ -578,7 +578,7 @@
 
 @media (max-width: 768px) {
   footer {
-    padding: 30px 16px !important;
+    padding: 0px !important;
   }
 
   footer > div:nth-child(2) p {
@@ -657,3 +657,4 @@ section p,
 p {
   font-family: "Open Sans Regular", sans-serif !important;
 }
+
