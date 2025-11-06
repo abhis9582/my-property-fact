@@ -62,14 +62,17 @@
   right: 20px;
 }
 
-@media (min-width: 1025px)  {
+@media (min-width: 1025px) {
   .swiper-nav-button-right {
     left: 68%;
   }
 }
 @media (max-width: 768px) {
-  
-.swiper-nav-button-left {
-  left: 20px;
-}
+  .swiper-nav-button-left {
+    left: 20px;
+  }
+  .swiper-nav-button {
+    height: 45px !important;
+    width: 45px !important;
+  }
 }
