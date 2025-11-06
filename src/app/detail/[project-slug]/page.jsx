@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { 
@@ -44,16 +44,7 @@ export default function ProjectDetailPage() {
   const [error, setError] = useState(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  useEffect(() => {
-    if (slug) {
-      fetchProjectDetails();
-    } else {
-      setLoading(false);
-      setError("No project slug provided");
-    }
-  }, [slug]);
-
-  const fetchProjectDetails = async () => {
+  const fetchProjectDetails = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -131,7 +122,16 @@ export default function ProjectDetailPage() {
       // Always stop loading, even if there's an error
       setLoading(false);
     }
-  };
+  }, [slug]);
+
+  useEffect(() => {
+    if (slug) {
+      fetchProjectDetails();
+    } else {
+      setLoading(false);
+      setError("No project slug provided");
+    }
+  }, [slug, fetchProjectDetails]);
 
   const formatPrice = (price) => {
     if (!price && price !== 0) return "Price on Request";
