@@ -579,6 +579,7 @@ function S9() {
             max-width: 100% !important;
             min-height: auto !important;
             gap: 40px !important;
+            padding-top: 48px !important;
           }
 
           .s9-top-content {
@@ -647,7 +648,7 @@ function S9() {
         @media (min-width: 769px) and (max-width: 1023px) {
           .dolera-s9-section {
             padding: 40px 30px !important;
-            padding-top: 10px !important;
+            padding-top: 40px !important;
             padding-bottom: 0px !important;
           }
 

@@ -744,7 +744,7 @@ function S2() {
         @media (min-width: 1440px) {
           .dolera-s2-section {
             padding-left: 80px !important;
-            padding-top: 80px !important;
+            padding-top: 0px !important;
           }
         }
       `}</style>
