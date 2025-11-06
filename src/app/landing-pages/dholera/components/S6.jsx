@@ -50,6 +50,7 @@ function S6() {
   return (
     <section
       ref={sectionRef}
+      id="floor-plans"
       className="dolera-s6-section"
       style={{
         width: "100vw",

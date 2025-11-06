@@ -50,6 +50,7 @@ function S8() {
   }, []);
   return (
     <section
+    id="location"
       ref={sectionRef}
       className="dolera-s8-section"
       style={{

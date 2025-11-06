@@ -169,6 +169,7 @@ function S9() {
   return (
     <section
       ref={sectionRef}
+      id="contact"
       className="dolera-s9-section"
       style={{
         width: "100vw",

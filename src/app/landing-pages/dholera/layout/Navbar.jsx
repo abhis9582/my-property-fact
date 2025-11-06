@@ -145,6 +145,7 @@ function Navbar() {
               padding: "8px",
               flexShrink: 0,
               color: "white",
+              borderRadius: "4px",
             }}
             aria-label="Toggle menu"
           >

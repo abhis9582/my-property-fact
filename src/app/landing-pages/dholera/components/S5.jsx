@@ -65,6 +65,7 @@ function S5() {
   return (
     <section
       ref={sectionRef}
+      id="amenities"
       className="dolera-s5-section"
       style={{
         width: "100vw",

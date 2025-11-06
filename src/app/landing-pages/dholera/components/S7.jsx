@@ -52,6 +52,7 @@ function S7() {
   }, []);
   return (
     <section
+    id="gallery"
       ref={sectionRef}
       className="dolera-s7-section"
       style={{
