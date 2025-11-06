@@ -417,9 +417,9 @@ function S8() {
         /* Large screens - Exactly lg (1024px) */
         @media (min-width: 1024px) and (max-width: 1024px) {
           .dolera-s8-section {
-            padding: 40px 20px !important;
-            padding-top: 90px !important;
-            padding-bottom: 60px !important;
+            padding: 0px !important;
+            padding-top: 0px !important;
+            padding-bottom: 00px !important;
           }
 
           .s8-main-container {
@@ -444,8 +444,8 @@ function S8() {
           }
 
           .s8-red-circle {
-            width: 200px !important;
-            height: 200px !important;
+            width: auto !important;
+            height: auto !important;
           }
 
           .s8-location-title {
@@ -502,9 +502,9 @@ function S8() {
         /* Tablet - Between md and lg (769px to 1023px) */
         @media (min-width: 769px) and (max-width: 1024px) {
           .dolera-s8-section {
-            padding: 40px 30px !important;
-            padding-top: 90px !important;
-            padding-bottom: 60px !important;
+            padding:0px !important;
+            padding-top: 0px !important;
+            padding-bottom: 00px !important;
           }
           .s8-red-circle elips {
             display: none !important;
@@ -531,8 +531,8 @@ function S8() {
           }
 
           .s8-red-circle {
-            width: 200px !important;
-            height: 200px !important;
+            width: auto !important;
+            height: auto !important;
           }
 
           .s8-location-title {
