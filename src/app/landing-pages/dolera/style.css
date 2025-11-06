@@ -1,8 +1,16 @@
-
-
 .swiper {
   width: 100%;
   height: 100%;
+  margin-right: -36px !important;
+}
+
+@media (max-width: 768px) {
+  .swiper {
+    margin-right: 0px !important;
+  }
+  .swiper-slide {
+    border: 0px !important;
+  }
 }
 
 .swiper-slide {
@@ -47,29 +55,26 @@
 }
 
 .elips {
+  animation: morph 8s ease-in-out infinite;
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
 
- animation: morph 8s ease-in-out infinite;
- border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  transition: all 1s ease-in-out;
 
- transition: all 1s ease-in-out;
-
- z-index: 5;
+  z-index: 5;
 }
 
 @keyframes morph {
- 0% {
-     border-radius:  60% 40% 30% 70% / 60% 30% 70% 40%;
-   
- } 
- 
- 50% {
-     border-radius:  30% 60% 70% 40% / 50% 60% 30% 60%;
- }
- 
- 100% {
-   border-radius:  60% 40% 30% 70% / 60% 30% 70% 40%;
- 
- } 
+  0% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+
+  50% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  }
+
+  100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
 }
 
 /* ============================================
@@ -80,29 +85,8 @@
 /* Section 1 (S1) - Hero Section */
 @media (max-width: 1024px) {
   .dolera-hero-section {
-    padding-left: 20px !important;
-    padding-right: 20px !important;
-    padding-top: 100px !important;
-    justify-content: center !important;
-    min-height: auto !important;
-  }
-
-  .dolera-hero-section > div:last-child {
-    display: none !important; /* Hide absolute positioned div on tablet/mobile */
-  }
-
-  .form-card-outer {
-    min-height: auto !important;
-    padding: 24px !important;
-  }
-
-  .form-card-inner {
-    min-height: auto !important;
-    gap: 20px !important;
-  }
-
-  .enquire-btn {
-    width: 100% !important;
+    display: flex !important;
+    justify-content: space-between !important;
   }
 }
 
@@ -122,78 +106,6 @@
   }
 }
 
-/* Section 2 (S2) - Land Parcel */
-@media (max-width: 1024px) {
-  section:nth-of-type(2) {
-    flex-direction: column !important;
-    height: auto !important;
-    min-height: 100vh !important;
-    padding: 40px 20px !important;
-  }
-
-  section:nth-of-type(2) > div:first-child {
-    padding: 20px !important;
-    padding-left: 20px !important;
-    width: 100% !important;
-  }
-
-  section:nth-of-type(2) > div:first-child > div {
-    width: 100% !important;
-    max-width: 500px !important;
-    height: auto !important;
-    aspect-ratio: 1 !important;
-  }
-
-  section:nth-of-type(2) > div:first-child > div > div {
-    width: 100% !important;
-    height: 100% !important;
-  }
-
-  section:nth-of-type(2) > div:first-child > div > div > div {
-    width: calc(50% - 10px) !important;
-    height: calc(50% - 10px) !important;
-  }
-
-  section:nth-of-type(2) > div:last-child {
-    width: 100% !important;
-    margin-top: 30px !important;
-  }
-
-  section:nth-of-type(2) > div:last-child > div:first-child {
-    width: 100% !important;
-    padding: 30px !important;
-    padding-right: 20px !important;
-  }
-
-  section:nth-of-type(2) > div:last-child > div:last-child {
-    width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-    aspect-ratio: 710/537 !important;
-  }
-}
-
-@media (max-width: 768px) {
-  section:nth-of-type(2) > div:first-child > div > div > div {
-    width: calc(50% - 5px) !important;
-    height: calc(50% - 5px) !important;
-  }
-
-  section:nth-of-type(2) > div:first-child > div > div > div p {
-    font-size: 14px !important;
-  }
-
-  section:nth-of-type(2) > div:first-child > div > div > div svg {
-    width: 36px !important;
-    height: 36px !important;
-  }
-
-  section:nth-of-type(2) > div:last-child > div:first-child button {
-    width: 100% !important;
-    max-width: 300px !important;
-  }
-}
-
 /* Section 3 (S3) - Overview */
 @media (max-width: 1024px) {
   section:nth-of-type(3) > div {
@@ -208,14 +120,7 @@
 
   section:nth-of-type(3) p {
     font-size: 14px !important;
-    padding: 20px !important;
-  }
-
-  section:nth-of-type(3) > div > div:last-child {
-    width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-    aspect-ratio: 945/541 !important;
+    /* padding: 20px !important; */
   }
 }
 
@@ -452,19 +357,25 @@
     min-height: 200px !important;
   }
 
-  section:nth-of-type(8) > div:first-child > div:first-child > div:first-child > div {
-    width: 200px !important;
-    height: 200px !important;
+  section:nth-of-type(8)
+    > div:first-child
+    > div:first-child
+    > div:first-child
+    > div {
+    display: none !important;
   }
 
-  section:nth-of-type(8) > div:first-child > div:first-child > div:first-child h1 {
+  section:nth-of-type(8)
+    > div:first-child
+    > div:first-child
+    > div:first-child
+    h1 {
     font-size: 32px !important;
   }
 
   section:nth-of-type(8) > div:first-child > div:first-child > div:last-child {
     width: 100% !important;
     max-width: 100% !important;
-    height: 250px !important;
   }
 
   section:nth-of-type(8) > div:first-child > div:last-child {
@@ -503,7 +414,11 @@
 }
 
 @media (max-width: 768px) {
-  section:nth-of-type(8) > div:first-child > div:first-child > div:first-child h1 {
+  section:nth-of-type(8)
+    > div:first-child
+    > div:first-child
+    > div:first-child
+    h1 {
     font-size: 24px !important;
   }
 
@@ -681,8 +596,7 @@
   -webkit-backdrop-filter: blur(48px);
   /* border-radius: 20px; */
   border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1),
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.5),
     inset 0 -1px 0 rgba(255, 255, 255, 0.1),
     inset 0 0 0px 0px rgba(255, 255, 255, 0);
@@ -691,7 +605,7 @@
 }
 
 .glass-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -706,7 +620,7 @@
 }
 
 .glass-card::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -721,12 +635,12 @@
 }
 
 @font-face {
-  font-family: 'Open Sans Regular';
-  src: url('/Open_Sans/static/OpenSans-Regular.ttf');
+  font-family: "Open Sans Regular";
+  src: url("/Open_Sans/static/OpenSans-Regular.ttf");
 }
 @font-face {
-  font-family: 'Open Sans SemiBold';
-  src: url('/Open_Sans/static/OpenSans-SemiBold.ttf');
+  font-family: "Open Sans SemiBold";
+  src: url("/Open_Sans/static/OpenSans-SemiBold.ttf");
 }
 
 /* Apply Open Sans fonts to dolera landing page */
@@ -736,10 +650,10 @@ section h3,
 h1,
 h2,
 h3 {
-  font-family: 'Open Sans SemiBold', sans-serif !important;
+  font-family: "Open Sans SemiBold", sans-serif !important;
 }
 
 section p,
 p {
-  font-family: 'Open Sans Regular', sans-serif !important;
+  font-family: "Open Sans Regular", sans-serif !important;
 }

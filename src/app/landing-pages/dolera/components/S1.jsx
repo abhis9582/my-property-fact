@@ -1,8 +1,11 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useModal } from "../layout";
-import "../style.css";
+// import "../style.css";
+
+gsap.registerPlugin(ScrollTrigger);
 
 function S1() {
   const { openModal } = useModal();
@@ -24,10 +27,8 @@ function S1() {
   const sectionRef = useRef(null);
 
   useEffect(() => {
-    // Only animate on desktop/tablet (not mobile for better performance)
     const isMobile = window.innerWidth <= 768;
-
-    if (isMobile) return;
+    if (isMobile || !sectionRef.current) return;
 
     // Wait for elements to be rendered
     if (
@@ -37,12 +38,8 @@ function S1() {
     )
       return;
 
-    // Set initial states - animate form card
-    gsap.set(formCardRef.current, {
-      opacity: 0,
-      x: -100,
-      y: 50,
-    });
+    // Set initial states - form card animation (matching S9 style)
+    gsap.set(formCardRef.current, { opacity: 1, y: 40 });
 
     // Animate inner wrapper instead of the positioned div to preserve transform: translateY(-50%)
     gsap.set(absoluteInfoInnerRef.current, {
@@ -51,23 +48,38 @@ function S1() {
       scale: 0.8,
     });
 
-    // Filter out null refs
-    const validInputs = formInputsRef.current.filter((ref) => ref !== null);
+    // Get form inputs and set initial state
+    const formElement = formCardRef.current?.querySelector("form");
+    const inputs = formElement?.querySelectorAll("input, textarea");
+    if (inputs && inputs.length > 0) {
+      gsap.set(inputs, { opacity: 0, y: 20 });
+    }
 
-    if (validInputs.length > 0) {
-      gsap.set(validInputs, {
-        opacity: 0,
-        y: 20,
+    // Create separate immediate animation for form inputs (runs on mount, not scroll)
+    // This ensures form inputs appear right away when form card is visible
+    const formInputsTl = gsap.timeline({ delay: 0.2 });
+    if (inputs && inputs.length > 0) {
+      formInputsTl.to(inputs, {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: "power2.out",
       });
     }
 
-    // Create timeline for coordinated animations
-    const tl = gsap.timeline({ delay: 0.3 });
+    // Create timeline with ScrollTrigger (matching S9 pattern)
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 80%",
+        toggleActions: "play none none reverse",
+      },
+    });
 
-    // Animate form card with smooth entrance
+    // Animate form card (matching S9 form animation)
     tl.to(formCardRef.current, {
       opacity: 1,
-      x: 0,
       y: 0,
       duration: 1.2,
       ease: "power3.out",
@@ -82,23 +94,8 @@ function S1() {
           duration: 1.2,
           ease: "elastic.out(1, 0.5)",
         },
-        "-=0.8"
+        "-=0.5"
       );
-
-    // Animate form inputs with stagger if they exist
-    if (validInputs.length > 0) {
-      tl.to(
-        validInputs,
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          stagger: 0.15,
-          ease: "power2.out",
-        },
-        "-=0.6"
-      );
-    }
 
     // Animate images inside absolute info div
     const images = absoluteInfoInnerRef.current?.querySelectorAll("img");
@@ -136,7 +133,8 @@ function S1() {
 
     // Cleanup
     return () => {
-      tl.kill();
+      formInputsTl.kill();
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, []);
 
@@ -602,146 +600,71 @@ function S1() {
             padding-right: 60px !important;
             justify-content: flex-start !important;
           }
-
-          .absolute-info-div {
-            display: flex !important;
-          }
         }
 
         /* Large screens - Exactly lg (1024px) */
-        @media (min-width: 1024px) and (max-width: 1024px) {
-          .dolera-hero-section {
-            justify-content: flex-end !important;
-            padding-left: 40px !important;
-            padding-right: 40px !important;
-          }
-
-          .form-card-container {
-            margin-left: auto !important;
-            margin-right: 0 !important;
-          }
-
-          .absolute-info-div {
-            display: none !important;
-          }
-        }
-
-        /* Large screens range (1024px to 1024px) - Center-right alignment */
-        @media (width: 1024px) {
-          .dolera-hero-section {
-            justify-content: flex-end !important;
-            padding-right: 40px !important;
-          }
-
-          .form-card-container {
-            margin-left: auto !important;
-            margin-right: 0 !important;
-            margin-bottom: 50px !important;
-          }
-        }
 
         /* Tablet - Between md and lg (769px to 1023px) */
         @media (min-width: 769px) and (max-width: 1023px) {
-          .dolera-hero-section {
-            padding-left: 40px !important;
-            padding-right: 40px !important;
-            justify-content: center !important;
-          }
-
           .form-card-container {
-            max-width: 100% !important;
-            width: 100% !important;
-            max-width: 500px !important;
-            margin-bottom: 50px !important;
-          }
-
-          .absolute-info-div {
             display: none !important;
           }
-
-          .form-card-outer {
-            min-height: auto !important;
-            padding: 28px !important;
+          .dolera-hero-section {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
           }
-
-          .form-card-inner {
-            min-height: auto !important;
-            gap: 22px !important;
+          .absolute-info-div {
+            position: relative !important;
+            margin: auto !important;
+            height: 100% !important;
+            width: 100% !important;
+            inset: 0 !important;
+            transform: translateY(0) !important;
           }
         }
 
         /* Small tablets and large phones (481px to 768px) */
         @media (min-width: 481px) and (max-width: 768px) {
-          .dolera-hero-section {
-            padding-left: 24px !important;
-            padding-right: 24px !important;
-            padding-top: 100px !important;
-            justify-content: center !important;
-            background-attachment: scroll !important;
-            min-height: auto !important;
-            padding-bottom: 60px !important;
-          }
-
           .form-card-container {
-            max-width: 100% !important;
-            width: 100% !important;
-          }
-
-          .absolute-info-div {
             display: none !important;
           }
-
-          .form-card-outer {
-            min-height: auto !important;
-            padding: 24px !important;
+          .dolera-hero-section {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
           }
-
-          .form-card-inner {
-            min-height: auto !important;
-            gap: 20px !important;
-          }
-
-          .enquire-btn {
+          .absolute-info-div {
+            position: relative !important;
+            margin: auto !important;
+            height: 100% !important;
             width: 100% !important;
+            inset: 0 !important;
+            transform: translateY(0) !important;
           }
         }
 
         /* Mobile phones (up to 480px) */
         @media (max-width: 480px) {
-          .dolera-hero-section {
-            padding-left: 16px !important;
-            padding-right: 16px !important;
-            padding-top: 90px !important;
-            padding-bottom: 50px !important;
-            justify-content: center !important;
-            min-height: auto !important;
-          }
-
           .form-card-container {
-            max-width: 100% !important;
-            width: 100% !important;
-          }
-
-          .absolute-info-div {
             display: none !important;
           }
-
-          .form-card-outer {
-            padding: 20px !important;
-            min-height: auto !important;
+          .dolera-hero-section {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
           }
-
-          .form-card-inner {
-            gap: 16px !important;
-            min-height: auto !important;
-          }
-
-          .enquire-btn {
+          .absolute-info-div {
+            position: relative !important;
+            margin: auto !important;
+            height: 500px !important;
             width: 100% !important;
+            inset: 0 !important;
+            transform: translateY(0) !important;
           }
-
-          .dolera-hero-section h1 {
-            font-size: 20px !important;
+          .absolute-info-div div {
+            height: 95% !important;
+            width: 95% !important;
           }
         }
 
@@ -779,12 +702,11 @@ function S1() {
           }
 
           .absolute-info-div > div {
-            width: 430px !important;
+            width: auto !important;
             height: 405px !important;
           }
 
           .absolute-info-div > div > div {
-            width: 380px !important;
             height: 320px !important;
           }
 
@@ -793,32 +715,32 @@ function S1() {
           }
         }
 
-        @media (max-width: 1100px) {
-          .absolute-info-div {
-            width: 400px !important;
-            height: 380px !important;
-            right: 20px !important;
-          }
+        // @media (max-width: 1100px) {
+        //   .absolute-info-div {
+        //     width: 400px !important;
+        //     height: 380px !important;
+        //     right: 20px !important;
+        //   }
 
-          .absolute-info-div > div {
-            width: 380px !important;
-            height: 365px !important;
-          }
+        //   .absolute-info-div > div {
+        //     width: 380px !important;
+        //     height: 365px !important;
+        //   }
 
-          .absolute-info-div > div > div {
-            width: 340px !important;
-            height: 280px !important;
-          }
+        //   .absolute-info-div > div > div {
+        //     width: 340px !important;
+        //     height: 280px !important;
+        //   }
 
-          .absolute-info-div ul {
-            font-size: 16px !important;
-          }
+        //   .absolute-info-div ul {
+        //     font-size: 16px !important;
+        //   }
 
-          .absolute-info-div img {
-            max-width: 100% !important;
-            height: auto !important;
-          }
-        }
+        //   .absolute-info-div img {
+        //     max-width: 100% !important;
+        //     height: auto !important;
+        //   }
+        // }
       `}</style>
     </section>
   );

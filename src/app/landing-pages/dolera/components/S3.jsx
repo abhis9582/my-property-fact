@@ -212,9 +212,9 @@ function S3() {
             src="/dolera/s3/dol-s3-i1.png"
             className="s3-main-image"
             style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
+              width: "100% !important",
+              height: "100% !important",
+              objectFit: "cover !important",
             }}
             alt="Dholera Overview"
           />
@@ -285,9 +285,9 @@ function S3() {
         @media (min-width: 769px) and (max-width: 1023px) {
           .dolera-s3-section {
             min-height: auto !important;
-            padding: 40px 30px !important;
-            padding-top: 90px !important;
-            padding-bottom: 60px !important;
+            // padding: 40px 30px !important;
+            // padding-top: 90px !important;
+            // padding-bottom: 60px !important;
           }
 
           .s3-content-container {
@@ -327,9 +327,8 @@ function S3() {
         @media (min-width: 481px) and (max-width: 768px) {
           .dolera-s3-section {
             min-height: auto !important;
-            padding: 30px 20px !important;
-            padding-top: 90px !important;
-            padding-bottom: 50px !important;
+            //  padding: 10px !important;
+            // padding-bottom: 10px !important;
           }
 
           .s3-content-container {
@@ -362,8 +361,7 @@ function S3() {
           .s3-image-wrapper {
             width: 100% !important;
             max-width: 100% !important;
-            height: auto !important;
-            aspect-ratio: 945/541 !important;
+            height: 541px !important;
           }
         }
 
@@ -371,9 +369,8 @@ function S3() {
         @media (max-width: 480px) {
           .dolera-s3-section {
             min-height: auto !important;
-            padding: 20px 16px !important;
-            padding-top: 90px !important;
-            padding-bottom: 40px !important;
+            padding: 10px !important;
+            padding-bottom: 10px !important;
           }
 
           .s3-content-container {
@@ -406,8 +403,7 @@ function S3() {
           .s3-image-wrapper {
             width: 100% !important;
             max-width: 100% !important;
-            height: auto !important;
-            aspect-ratio: 945/541 !important;
+            height: 541px !important;
           }
         }
 

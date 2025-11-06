@@ -55,7 +55,7 @@
 }
 
 .swiper-nav-button-left {
-  left: 20px;
+  left: 50px;
 }
 
 .swiper-nav-button-right {
@@ -66,4 +66,10 @@
   .swiper-nav-button-right {
     left: 68%;
   }
+}
+@media (max-width: 768px) {
+  
+.swiper-nav-button-left {
+  left: 20px;
+}
 }

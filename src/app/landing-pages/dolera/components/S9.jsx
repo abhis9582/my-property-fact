@@ -724,7 +724,7 @@ function S9() {
         @media (min-width: 481px) and (max-width: 768px) {
           .dolera-s9-section {
             padding: 30px 20px !important;
-            padding-top: 90px !important;
+           
             padding-bottom: 50px !important;
           }
 
@@ -803,8 +803,7 @@ function S9() {
         @media (max-width: 480px) {
           .dolera-s9-section {
             padding: 20px 16px !important;
-            padding-top: 90px !important;
-            padding-bottom: 40px !important;
+           
           }
 
           .s9-main-container {
