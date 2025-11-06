@@ -10,6 +10,38 @@ import S8 from './components/S8'
 import S9 from './components/S9'
 import ResForm from './components/ResForm'
 
+// Metadata for SEO
+export const metadata = {
+  title: "Dholera Smart City - Premium Real Estate Investment | My Property Fact",
+  description: "Explore Dholera Smart City - India's first greenfield smart city. Discover premium residential and commercial properties, investment opportunities, and future-ready infrastructure in Dholera. Get expert insights, price lists, and property details.",
+  keywords: [
+    "Dholera Smart City",
+    "Dholera properties",
+    "Dholera real estate",
+    "Dholera investment",
+    "smart city Dholera",
+    "Dholera residential projects",
+    "Dholera commercial properties",
+    "Dholera plots",
+    "Dholera flats",
+    "Dholera villas"
+  ],
+  openGraph: {
+    title: "Dholera Smart City - Premium Real Estate Investment",
+    description: "Explore Dholera Smart City - India's first greenfield smart city. Discover premium residential and commercial properties.",
+    type: "website",
+    locale: "en_IN",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Dholera Smart City - Premium Real Estate Investment",
+    description: "Explore Dholera Smart City - India's first greenfield smart city.",
+  },
+  alternates: {
+    canonical: `${process.env.NEXT_PUBLIC_ROOT_URL || 'https://www.mypropertyfact.in'}/landing-pages/dholera`,
+  },
+}
+
 function page() {
   return (
     <>
