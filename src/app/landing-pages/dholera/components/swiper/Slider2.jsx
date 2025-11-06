@@ -29,268 +29,269 @@ export default function App() {
           loop
           className="mySwiper"
         >
-        <SwiperSlide //dol-s3-i1.png
-          style={{
-            backgroundImage: "url(/dolera/s5/dol-s5-i1.png)",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-          }}
-        >
-          <p
+          <SwiperSlide //dol-s3-i1.png
             style={{
-              width: "166px",
-              height: "50px",
-              backgroundColor: "rgba(231, 73, 52, 1)",
-              color: "white",
-              fontWeight: 600,
-              fontSize: "20px",
-              position: "absolute",
-              top: "20px",
-              left: "20px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              backgroundImage: "url(/dolera/s5/dol-s5-i1.png)",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
             }}
           >
-            Car Parking
-          </p>
-        </SwiperSlide>
-        <SwiperSlide
-          style={{
-            backgroundImage: "url(/dolera/s3/dol-s3-i1.png)",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-          }}
-        >
-          <p
+            <p
+              style={{
+                width: "166px",
+                height: "50px",
+                backgroundColor: "rgba(231, 73, 52, 1)",
+                color: "white",
+                fontWeight: 600,
+                fontSize: "20px",
+                position: "absolute",
+                top: "20px",
+                left: "20px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              Car Parking
+            </p>
+          </SwiperSlide>
+          <SwiperSlide
             style={{
-              width: "166px",
-              height: "50px",
-              backgroundColor: "rgba(231, 73, 52, 1)",
-              color: "white",
-              fontWeight: 600,
-              fontSize: "20px",
-              position: "absolute",
-              top: "20px",
-              left: "20px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              backgroundImage: "url(/dolera/s3/dol-s3-i1.png)",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
             }}
           >
-            Club House
-          </p>
-        </SwiperSlide>
-        <SwiperSlide
-          style={{
-            backgroundImage: "url(/dolera/s5/dol-s5-i1.png)",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-          }}
-        >
-          <p
+            <p
+              style={{
+                width: "166px",
+                height: "50px",
+                backgroundColor: "rgba(231, 73, 52, 1)",
+                color: "white",
+                fontWeight: 600,
+                fontSize: "20px",
+                position: "absolute",
+                top: "20px",
+                left: "20px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              Gated Township
+            </p>
+          </SwiperSlide>
+          <SwiperSlide
             style={{
-              width: "166px",
-              height: "50px",
-              backgroundColor: "rgba(231, 73, 52, 1)",
-              color: "white",
-              fontWeight: 600,
-              fontSize: "20px",
-              position: "absolute",
-              top: "20px",
-              left: "20px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              backgroundImage: "url(/dolera/dol-play.jpg)",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
             }}
           >
-            Car Parking
-          </p>
-        </SwiperSlide>
-        <SwiperSlide
-          style={{
-            backgroundImage: "url(/dolera/s3/dol-s3-i1.png)",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-          }}
-        >
-          <p
-            style={{
-              width: "166px",
-              height: "50px",
-              backgroundColor: "rgba(231, 73, 52, 1)",
-              color: "white",
-              fontWeight: 600,
-              fontSize: "20px",
-              position: "absolute",
-              top: "20px",
-              left: "20px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            Club House
-          </p>
-        </SwiperSlide>
-        <SwiperSlide
-          style={{
-            backgroundImage: "url(/dolera/s5/dol-s5-i1.png)",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-          }}
-        >
-          <p
-            style={{
-              width: "166px",
-              height: "50px",
-              backgroundColor: "rgba(231, 73, 52, 1)",
-              color: "white",
-              fontWeight: 600,
-              fontSize: "20px",
-              position: "absolute",
-              top: "20px",
-              left: "20px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            Car Parking
-          </p>
-        </SwiperSlide>
-        <SwiperSlide
-          style={{
-            backgroundImage: "url(/dolera/s3/dol-s3-i1.png)",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-          }}
-        >
-          <p
-            style={{
-              width: "166px",
-              height: "50px",
-              backgroundColor: "rgba(231, 73, 52, 1)",
-              color: "white",
-              fontWeight: 600,
-              fontSize: "20px",
-              position: "absolute",
-              top: "20px",
-              left: "20px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            Club House
-          </p>
-        </SwiperSlide>
-        <SwiperSlide
-          style={{
-            backgroundImage: "url(/dolera/s5/dol-s5-i1.png)",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-          }}
-        >
-          <p
-            style={{
-              width: "166px",
-              height: "50px",
-              backgroundColor: "rgba(231, 73, 52, 1)",
-              color: "white",
-              fontWeight: 600,
-              fontSize: "20px",
-              position: "absolute",
-              top: "20px",
-              left: "20px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            Car Parking
-          </p>
-        </SwiperSlide>
-        <SwiperSlide
-          style={{
-            backgroundImage: "url(/dolera/s3/dol-s3-i1.png)",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-          }}
-        >
-          <p
-            style={{
-              width: "166px",
-              height: "50px",
-              backgroundColor: "rgba(231, 73, 52, 1)",
-              color: "white",
-              fontWeight: 600,
-              fontSize: "20px",
-              position: "absolute",
-              top: "20px",
-              left: "20px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            Car Parking
-          </p>
-        </SwiperSlide>
-        <SwiperSlide
-          style={{
-            backgroundImage: "url(/dolera/s5/dol-s5-i1.png)",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-          }}
-        >
-          <p
-            style={{
-              width: "166px",
-              height: "50px",
-              backgroundColor: "rgba(231, 73, 52, 1)",
-              color: "white",
-              fontWeight: 600,
-              fontSize: "20px",
-              position: "absolute",
-              top: "20px",
-              left: "20px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            Club House
-          </p>
-        </SwiperSlide>
-      </Swiper>
+            <p
+              style={{
+                width: "166px",
+                height: "50px",
+                backgroundColor: "rgba(231, 73, 52, 1)",
+                color: "white",
+                fontWeight: 600,
+                fontSize: "20px",
+                position: "absolute",
+                top: "20px",
+                left: "20px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+             Kids Play Area
+            </p>
+          </SwiperSlide>
 
-      {/* Left Navigation Button */}
-      <button
-        className="swiper-nav-button swiper-nav-button-left"
-        onClick={() => swiperRef.current?.slideNext()} 
-        aria-label="Previous slide"
-      >
-        <FaChevronLeft />
-      </button>
+          <SwiperSlide //dol-s3-i1.png
+            style={{
+              backgroundImage: "url(/dolera/s5/dol-s5-i1.png)",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+            }}
+          >
+            <p
+              style={{
+                width: "166px",
+                height: "50px",
+                backgroundColor: "rgba(231, 73, 52, 1)",
+                color: "white",
+                fontWeight: 600,
+                fontSize: "20px",
+                position: "absolute",
+                top: "20px",
+                left: "20px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              Car Parking
+            </p>
+          </SwiperSlide>
+          <SwiperSlide
+            style={{
+              backgroundImage: "url(/dolera/s3/dol-s3-i1.png)",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+            }}
+          >
+            <p
+              style={{
+                width: "166px",
+                height: "50px",
+                backgroundColor: "rgba(231, 73, 52, 1)",
+                color: "white",
+                fontWeight: 600,
+                fontSize: "20px",
+                position: "absolute",
+                top: "20px",
+                left: "20px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              Gated Township
+            </p>
+          </SwiperSlide>
+          <SwiperSlide
+            style={{
+              backgroundImage: "url(/dolera/dol-play.jpg)",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+            }}
+          >
+            <p
+              style={{
+                width: "166px",
+                height: "50px",
+                backgroundColor: "rgba(231, 73, 52, 1)",
+                color: "white",
+                fontWeight: 600,
+                fontSize: "20px",
+                position: "absolute",
+                top: "20px",
+                left: "20px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+             Kids Play Area
+            </p>
+          </SwiperSlide>
+          <SwiperSlide //dol-s3-i1.png
+            style={{
+              backgroundImage: "url(/dolera/s5/dol-s5-i1.png)",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+            }}
+          >
+            <p
+              style={{
+                width: "166px",
+                height: "50px",
+                backgroundColor: "rgba(231, 73, 52, 1)",
+                color: "white",
+                fontWeight: 600,
+                fontSize: "20px",
+                position: "absolute",
+                top: "20px",
+                left: "20px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              Car Parking
+            </p>
+          </SwiperSlide>
+          <SwiperSlide
+            style={{
+              backgroundImage: "url(/dolera/s3/dol-s3-i1.png)",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+            }}
+          >
+            <p
+              style={{
+                width: "166px",
+                height: "50px",
+                backgroundColor: "rgba(231, 73, 52, 1)",
+                color: "white",
+                fontWeight: 600,
+                fontSize: "20px",
+                position: "absolute",
+                top: "20px",
+                left: "20px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              Gated Township
+            </p>
+          </SwiperSlide>
+          <SwiperSlide
+            style={{
+              backgroundImage: "url(/dolera/dol-play.jpg)",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+            }}
+          >
+            <p
+              style={{
+                width: "166px",
+                height: "50px",
+                backgroundColor: "rgba(231, 73, 52, 1)",
+                color: "white",
+                fontWeight: 600,
+                fontSize: "20px",
+                position: "absolute",
+                top: "20px",
+                left: "20px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+             Kids Play Area
+            </p>
+          </SwiperSlide>
+        </Swiper>
 
-      {/* Right Navigation Button */}
-      <button
-        className="swiper-nav-button swiper-nav-button-right"
-        onClick={() => swiperRef.current?.slidePrev()}
-        aria-label="Next slide"
-      >
-        <FaChevronRight />
-      </button>
+        {/* Left Navigation Button */}
+        <button
+          className="swiper-nav-button swiper-nav-button-left"
+          onClick={() => swiperRef.current?.slideNext()}
+          aria-label="Previous slide"
+        >
+          <FaChevronLeft />
+        </button>
+
+        {/* Right Navigation Button */}
+        <button
+          className="swiper-nav-button swiper-nav-button-right"
+          onClick={() => swiperRef.current?.slidePrev()}
+          aria-label="Next slide"
+        >
+          <FaChevronRight />
+        </button>
       </div>
     </>
   );

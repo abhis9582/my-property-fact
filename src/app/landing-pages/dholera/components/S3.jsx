@@ -62,6 +62,7 @@ function S3() {
   }, []);
   return (
     <section
+    id="about"
       ref={sectionRef}
       className="dolera-s3-section"
       style={{
