@@ -147,7 +147,7 @@ html {
 /* Section 3 (S3) - Overview */
 @media (max-width: 1024px) {
   section:nth-of-type(3) > div {
-    width: 100% !important;
+    /* width: 100% !important; */
     max-width: 100% !important;
     padding: 20px !important;
   }
