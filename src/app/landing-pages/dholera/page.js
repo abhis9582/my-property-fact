@@ -40,6 +40,13 @@ export const metadata = {
   alternates: {
     canonical: `${process.env.NEXT_PUBLIC_ROOT_URL || 'https://www.mypropertyfact.in'}/landing-pages/dholera`,
   },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+    viewportFit: "cover",
+  },
 }
 
 function page() {
