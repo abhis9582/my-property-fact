@@ -61,6 +61,7 @@ function S7() {
         justifyContent: "center",
         alignItems: "center",
         paddingTop: "40px",
+        overflowX: "hidden",
       }}
     >
       <div
@@ -211,27 +212,46 @@ function S7() {
           .dolera-s7-section {
             min-height: 100vh !important;
             padding-top: 40px !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            padding-bottom: 40px !important;
+            overflow-x: hidden !important;
           }
 
           .s7-main-container {
             width: 1240px !important;
+            max-width: 1240px !important;
             gap: 50px !important;
+          }
+
+          .s7-title {
+            font-size: 48px !important;
+          }
+
+          .s7-gallery-grid {
+            width: 100% !important;
           }
 
           .s7-row-1 {
             flex-direction: row !important;
             gap: 20px !important;
+            display: flex !important;
+            width: 100% !important;
           }
 
           .s7-big-image-1,
           .s7-big-image-2 {
             width: 610px !important;
             height: 533px !important;
+            flex-shrink: 0 !important;
           }
 
           .s7-row-2 {
             flex-direction: row !important;
             gap: 20px !important;
+            display: flex !important;
+            width: 100% !important;
+            margin-top: 20px !important;
           }
 
           .s7-sm-image-1,
@@ -239,16 +259,17 @@ function S7() {
           .s7-sm-image-3 {
             width: 399px !important;
             height: 347px !important;
+            flex-shrink: 0 !important;
           }
         }
 
-        /* Large screens - Exactly lg (1024px) */
+        /* Large screens - Exactly lg (1024px) - Use Grid Layout */
         @media (min-width: 1024px) and (max-width: 1024px) {
           .dolera-s7-section {
             min-height: auto !important;
             padding: 40px 20px !important;
-            padding-top: 90px !important;
             padding-bottom: 60px !important;
+            overflow-x: hidden !important;
           }
 
           .s7-main-container {
@@ -261,9 +282,17 @@ function S7() {
             font-size: 42px !important;
           }
 
-          .s7-row-1 {
-            flex-direction: column !important;
+          .s7-gallery-grid {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
             gap: 20px !important;
+          }
+
+          .s7-row-1 {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 20px !important;
+            margin-top: 0 !important;
           }
 
           .s7-big-image-1,
@@ -274,7 +303,8 @@ function S7() {
           }
 
           .s7-row-2 {
-            flex-direction: column !important;
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
             gap: 20px !important;
             margin-top: 20px !important;
           }
@@ -288,13 +318,14 @@ function S7() {
           }
         }
 
-        /* Tablet - Between md and lg (769px to 1023px) */
+        /* Tablet - Between md and lg (769px to 1023px) - Use Grid Layout */
         @media (min-width: 769px) and (max-width: 1023px) {
           .dolera-s7-section {
             min-height: auto !important;
             padding: 40px 30px !important;
             padding-top: 90px !important;
             padding-bottom: 60px !important;
+            overflow-x: hidden !important;
           }
 
           .s7-main-container {
@@ -307,9 +338,17 @@ function S7() {
             font-size: 40px !important;
           }
 
-          .s7-row-1 {
-            flex-direction: column !important;
+          .s7-gallery-grid {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
             gap: 20px !important;
+          }
+
+          .s7-row-1 {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 20px !important;
+            margin-top: 0 !important;
           }
 
           .s7-big-image-1,
@@ -320,7 +359,8 @@ function S7() {
           }
 
           .s7-row-2 {
-            flex-direction: column !important;
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
             gap: 20px !important;
             margin-top: 20px !important;
           }
@@ -334,27 +374,42 @@ function S7() {
           }
         }
 
-        /* Small tablets and large phones (481px to 768px) */
-        @media (min-width: 481px) and (max-width: 768px) {
+        /* Small tablets and large phones (481px to 768px) - Use Grid Layout */
+      
+
+        /* Mobile phones (up to 480px) - Use Grid Layout */
+        @media (max-width: 769px) {
           .dolera-s7-section {
             min-height: auto !important;
-            padding: 30px 20px !important;
+            padding: 20px 16px !important;
             padding-top: 90px !important;
-            padding-bottom: 50px !important;
+            padding-bottom: 40px !important;
+            overflow-x: hidden !important;
           }
 
           .s7-main-container {
             width: 100% !important;
-            gap: 30px !important;
+            max-width: 100% !important;
+            gap: 25px !important;
           }
 
           .s7-title {
-            font-size: 32px !important;
+            font-size: 28px !important;
+          }
+
+          .s7-gallery-grid {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+            width: 100% !important;
           }
 
           .s7-row-1 {
-            flex-direction: column !important;
-            gap: 15px !important;
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+            margin-top: 0 !important;
+            width: 100% !important;
           }
 
           .s7-big-image-1,
@@ -365,9 +420,11 @@ function S7() {
           }
 
           .s7-row-2 {
-            flex-direction: column !important;
-            gap: 15px !important;
-            margin-top: 15px !important;
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+            margin-top: 12px !important;
+            width: 100% !important;
           }
 
           .s7-sm-image-1,
@@ -379,48 +436,30 @@ function S7() {
           }
         }
 
-        /* Mobile phones (up to 480px) */
-        @media (max-width: 480px) {
+        /* Very small screens (up to 360px) */
+        @media (max-width: 360px) {
           .dolera-s7-section {
-            min-height: auto !important;
-            padding: 20px 16px !important;
+            padding: 16px 12px !important;
             padding-top: 90px !important;
-            padding-bottom: 40px !important;
+            padding-bottom: 30px !important;
+            overflow-x: hidden !important;
           }
 
           .s7-main-container {
-            width: 100% !important;
-            gap: 25px !important;
+            gap: 20px !important;
           }
 
           .s7-title {
-            font-size: 28px !important;
+            font-size: 24px !important;
           }
 
-          .s7-row-1 {
-            flex-direction: column !important;
-            gap: 12px !important;
+          .s7-gallery-grid {
+            gap: 10px !important;
           }
 
-          .s7-big-image-1,
-          .s7-big-image-2 {
-            width: 100% !important;
-            height: auto !important;
-            aspect-ratio: 610/533 !important;
-          }
-
+          .s7-row-1,
           .s7-row-2 {
-            flex-direction: column !important;
-            gap: 12px !important;
-            margin-top: 12px !important;
-          }
-
-          .s7-sm-image-1,
-          .s7-sm-image-2,
-          .s7-sm-image-3 {
-            width: 100% !important;
-            height: auto !important;
-            aspect-ratio: 399/347 !important;
+            gap: 10px !important;
           }
         }
 
@@ -429,6 +468,14 @@ function S7() {
           .dolera-s7-section {
             padding-left: 60px !important;
             padding-right: 60px !important;
+            padding-top: 40px !important;
+            padding-bottom: 40px !important;
+            overflow-x: hidden !important;
+          }
+
+          .s7-main-container {
+            width: 1240px !important;
+            max-width: 1240px !important;
           }
         }
       `}</style>

@@ -177,20 +177,6 @@ function S5() {
               height: "100%",
             }}
           >
-            {/* Top Div  */}
-            <div>
-              <h2
-                className="s5-price-title"
-                style={{
-                  fontWeight: 600,
-                  fontSize: "48px",
-                  color: "white",
-                }}
-              >
-                Price List
-              </h2>
-            </div>
-
             {/* Bottom Div  */}
             <div
               className="s5-price-details"
@@ -198,7 +184,6 @@ function S5() {
                 width: "100%",
                 display: "flex",
                 justifyContent: "space-between",
-                alignItems: "end",
               }}
             >
               <div>
@@ -210,7 +195,7 @@ function S5() {
                     color: "#ffffff",
                   }}
                 >
-                  Plots type
+                  Plots Types
                 </p>
                 <div
                   className="s5-size-info"
@@ -245,7 +230,18 @@ function S5() {
               </div>
 
               <div>
-                <h2
+              <h2
+                className="s5-price-title"
+                style={{
+                  fontWeight: 600,
+                  fontSize: "48px",
+                  color: "white",
+                }}
+              >
+                Price List
+              </h2>
+
+                <p
                   className="s5-starting-price-label"
                   style={{
                     fontWeight: 400,
@@ -254,7 +250,7 @@ function S5() {
                   }}
                 >
                   Starting Price
-                </h2>
+                </p>
 
                 <h2
                   className="s5-starting-price-value"
@@ -285,6 +281,7 @@ function S5() {
                 fontSize: "16px",
                 cursor: "pointer",
               }}
+              
             >
               Enquire Now
             </button>
@@ -321,7 +318,7 @@ function S5() {
           .dolera-s5-section {
             min-height: auto !important;
             padding: 40px 20px !important;
-            padding-top: 150px !important;
+            // padding-top: 150px !important;
             padding-bottom: 60px !important;
             display: block !important;
           }
@@ -402,8 +399,8 @@ function S5() {
         @media (min-width: 769px) and (max-width: 1023px) {
           .dolera-s5-section {
             min-height: auto !important;
-            padding: 40px 30px !important;
-            padding-top: 150px !important;
+            // padding: 40px 30px !important;
+            // padding-top: 150px !important;
             padding-bottom: 60px !important;
             justify-content: center !important;
             align-items: center !important;
@@ -491,7 +488,7 @@ function S5() {
           .dolera-s5-section {
             min-height: auto !important;
             padding: 30px 20px !important;
-            padding-top: 150px !important;
+            // padding-top: 150px !important;
             padding-bottom: 50px !important;
             display: block !important;
           }
@@ -584,7 +581,7 @@ function S5() {
           .dolera-s5-section {
             min-height: auto !important;
             padding: 20px 16px !important;
-            padding-top: 150px !important;
+            // padding-top: 150px !important;
             padding-bottom: 40px !important;
             display: block !important;
           }

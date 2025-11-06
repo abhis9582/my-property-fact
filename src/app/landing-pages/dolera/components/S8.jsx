@@ -100,7 +100,7 @@ function S8() {
           >
             {/* Red Circle Div  */}
             <div
-              className="s8-red-circle"
+              className="s8-red-circle elips"
               style={{
                 position: "absolute",
                 left: "0",
@@ -231,15 +231,15 @@ function S8() {
               cursor: "pointer",
             }}
             onMouseEnter={(e) => {
-                e.target.style.backgroundColor = "rgba(14, 76, 144, 0.9)";
-                e.target.style.transform = "translateY(-2px)";
-                e.target.style.boxShadow = "0 4px 12px rgba(14, 76, 144, 0.3)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = "rgb(271, 73, 52, 1)";
-                e.target.style.transform = "translateY(0)";
-                e.target.style.boxShadow = "none";
-              }}
+              e.target.style.backgroundColor = "rgba(14, 76, 144, 0.9)";
+              e.target.style.transform = "translateY(-2px)";
+              e.target.style.boxShadow = "0 4px 12px rgba(14, 76, 144, 0.3)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = "rgb(271, 73, 52, 1)";
+              e.target.style.transform = "translateY(0)";
+              e.target.style.boxShadow = "none";
+            }}
           >
             Request A Call Back
           </button>
@@ -279,36 +279,48 @@ function S8() {
 
         {/* Absolute Elips 1  */}
         <div
-          className="elips s8-elips-1"
+          className="s8-elips-1"
           style={{
             width: "248px",
             height: "248px",
             position: "absolute",
-            backgroundColor: "rgba(231, 73, 52, 1)",
-            left: "-50px",
-            bottom: "-50px",
+
+            left: "-10px",
+            bottom: "-10px",
           }}
-        ></div>
+        >
+          <img
+            src="/dolera/lft-elips.png"
+            style={{ width: "100%", height: "100%" }}
+            alt=""
+          />
+        </div>
 
         {/* Absolute Elips 2  */}
         <div
-          className="elips s8-elips-2"
+          className="s8-elips-2"
           style={{
             width: "248px",
             height: "248px",
             position: "absolute",
-            backgroundColor: "rgba(231, 73, 52, 1)",
-            right: "-50px",
-            top: "-50px",
+
+            right: "-10px",
+            top: "-10px",
           }}
-        ></div>
+        >
+          {" "}
+          <img
+            src="/dolera/rght-elips.png"
+            style={{ width: "100%", height: "100%" }}
+            alt=""
+          />
+        </div>
 
         {/* Center Align Div  */}
         <div
           className="s8-cta-content"
           style={{
             width: "585px",
-            height: "135px",
             display: "flex",
             flexDirection: "column",
             gap: "35px",
@@ -333,7 +345,7 @@ function S8() {
             onClick={() => openModal("Enquiry")}
             style={{
               width: "164px",
-              height: "68px",
+              height: "48px !important",
               border: "none",
               color: "white",
               backgroundColor: "rgba(14, 76, 144, 1)",
@@ -343,15 +355,15 @@ function S8() {
               cursor: "pointer",
             }}
             onMouseEnter={(e) => {
-                e.target.style.backgroundColor = "rgb(271, 73, 52, 0.9)";
-                e.target.style.transform = "translateY(-2px)";
-                e.target.style.boxShadow = "0 4px 12px rgba(14, 76, 144, 0.3)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = "rgba(14, 76, 144, 0.9)";
-                e.target.style.transform = "translateY(0)";
-                e.target.style.boxShadow = "none";
-              }}
+              e.target.style.backgroundColor = "rgb(271, 73, 52, 0.9)";
+              e.target.style.transform = "translateY(-2px)";
+              e.target.style.boxShadow = "0 4px 12px rgba(14, 76, 144, 0.3)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = "rgba(14, 76, 144, 0.9)";
+              e.target.style.transform = "translateY(0)";
+              e.target.style.boxShadow = "none";
+            }}
           >
             Enquire Now
           </button>
@@ -443,7 +455,7 @@ function S8() {
           .s8-right-box {
             width: 100% !important;
             max-width: 500px !important;
-            height: 250px !important;
+            min-height: 250px !important;
           }
 
           .s8-center-section {
@@ -488,13 +500,15 @@ function S8() {
         }
 
         /* Tablet - Between md and lg (769px to 1023px) */
-        @media (min-width: 769px) and (max-width: 1023px) {
+        @media (min-width: 769px) and (max-width: 1024px) {
           .dolera-s8-section {
             padding: 40px 30px !important;
             padding-top: 90px !important;
             padding-bottom: 60px !important;
           }
-
+          .s8-red-circle elips {
+            display: none !important;
+          }
           .s8-main-container {
             min-height: auto !important;
             padding: 20px !important;
@@ -528,7 +542,7 @@ function S8() {
           .s8-right-box {
             width: 100% !important;
             max-width: 500px !important;
-            height: 250px !important;
+            min-height: 250px !important;
           }
 
           .s8-center-section {
@@ -576,7 +590,7 @@ function S8() {
         @media (min-width: 481px) and (max-width: 768px) {
           .dolera-s8-section {
             padding: 30px 20px !important;
-            padding-top: 90px !important;
+            // padding-top: 90px !important;
             padding-bottom: 50px !important;
           }
 
@@ -611,7 +625,6 @@ function S8() {
 
           .s8-right-box {
             width: 100% !important;
-            height: 220px !important;
           }
 
           .s8-center-section {
@@ -666,7 +679,7 @@ function S8() {
         @media (max-width: 480px) {
           .dolera-s8-section {
             padding: 20px 16px !important;
-            padding-top: 90px !important;
+            // padding-top: 90px !important;
             padding-bottom: 40px !important;
           }
 
@@ -703,7 +716,6 @@ function S8() {
 
           .s8-right-box {
             width: 100% !important;
-            height: 180px !important;
           }
 
           .s8-center-section {

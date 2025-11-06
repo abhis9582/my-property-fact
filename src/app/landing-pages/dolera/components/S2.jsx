@@ -80,6 +80,7 @@ function S2() {
         justifyContent: "space-between",
         alignItems: "center",
         marginBottom: "80px",
+        overflow: "hidden",
       }}
     >
       {/* Left Side Div  */}
@@ -182,6 +183,8 @@ function S2() {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
+                  textAlign: "center",
+                  justifyContent: "center",
                 }}
               >
                 <TiHome
@@ -198,7 +201,7 @@ function S2() {
                     color: "black",
                   }}
                 >
-                  Land Parcel
+                  Amenities
                 </p>
                 <p
                   style={{
@@ -207,7 +210,7 @@ function S2() {
                     color: "black",
                   }}
                 >
-                  130 Sq.Yd.
+                  Infrastructure & Connectivity
                 </p>
               </div>
             </div>
@@ -246,7 +249,7 @@ function S2() {
                     color: "black",
                   }}
                 >
-                  Land Parcel
+                  Price
                 </p>
                 <p
                   style={{
@@ -255,7 +258,7 @@ function S2() {
                     color: "black",
                   }}
                 >
-                  130 Sq.Yd.
+                  ₹ 10 Lacs*
                 </p>
               </div>
             </div>
@@ -294,7 +297,7 @@ function S2() {
                     color: "black",
                   }}
                 >
-                  Land Parcel
+                  Type
                 </p>
                 <p
                   style={{
@@ -303,7 +306,7 @@ function S2() {
                     color: "black",
                   }}
                 >
-                  130 Sq.Yd.
+                  Plots
                 </p>
               </div>
             </div>
@@ -389,8 +392,8 @@ function S2() {
             alt=""
             className="s2-main-image"
             style={{
-              width: "100%",
-              height: "100%",
+              width: "100% !important",
+              height: "100% !important",
               objectFit: "cover",
             }}
           />
@@ -463,7 +466,7 @@ function S2() {
         }
 
         /* Tablet - Between md and lg (769px to 1023px) */
-        @media (min-width: 769px) and (max-width: 1023px) {
+        @media (min-width: 769px) and (max-width: 1024px) {
           .dolera-s2-section {
             height: auto !important;
             min-height: auto !important;
@@ -471,6 +474,7 @@ function S2() {
             padding: 40px 30px !important;
             gap: 40px !important;
             padding-top: 90px !important;
+              margin-bottom:0px !important;
           }
 
           .s2-left-side {
@@ -487,9 +491,10 @@ function S2() {
           }
 
           .s2-squares-grid {
-            height: 70% !important;
-            width: 70% !important;
-            gap: 0px !important;
+            height: 90% !important;
+            width: 90% !important;
+            display: flex !important;
+            flex-wrap: wrap !important;
           }
 
           .s2-square {
@@ -528,6 +533,40 @@ function S2() {
           }
         }
 
+        /* Mobile screens (up to 768px) */
+        @media (max-width: 768px) {
+          .s2-squares-grid {
+            width: auto !important;
+            height: auto !important;
+            rotate: 0deg !important;
+            gap: 20px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            flex-wrap: nowrap !important;
+            justify-content: center !important;
+            align-items: center !important;
+          }
+
+          .s2-square {
+            width: 209px !important;
+            height: 209px !important;
+            margin-bottom: 50px !important;
+          }
+
+          .s2-square svg {
+            width: 46px !important;
+            height: 46px !important;
+          }
+
+          .s2-square p {
+            font-size: 16px !important;
+          }
+
+          .s2-square p:last-child {
+            font-size: 22px !important;
+          }
+        }
+
         /* Small tablets and large phones (481px to 768px) */
         @media (min-width: 481px) and (max-width: 768px) {
           .dolera-s2-section {
@@ -537,6 +576,7 @@ function S2() {
             padding: 30px 20px !important;
             gap: 30px !important;
             padding-top: 90px !important;
+            margin-bottom:0px !important;
           }
 
           .s2-left-side {
@@ -553,32 +593,42 @@ function S2() {
           }
 
           .s2-squares-grid {
-            height: 70% !important;
-            width: 70% !important;
-            gap: 0px !important;
+            width: auto !important;
+            height: auto !important;
+            rotate: 0deg !important;
+            gap: 20px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            flex-wrap: nowrap !important;
+            justify-content: center !important;
+            align-items: center !important;
+            margin-bottom: 0 !important;
           }
 
           .s2-square {
-            width: calc(50% - 8px) !important;
-            height: calc(50% - 8px) !important;
+            width: 209px !important;
+            height: 209px !important;
+            margin-bottom: 90px !important;
+            rotate: 45deg !important;
           }
 
           .s2-square svg {
-            width: 36px !important;
-            height: 36px !important;
+            width: 46px !important;
+            height: 46px !important;
           }
 
           .s2-square p {
-            font-size: 14px !important;
+            font-size: 16px !important;
           }
 
           .s2-square p:last-child {
-            font-size: 18px !important;
+            font-size: 22px !important;
           }
 
           .s2-right-side {
             width: 100% !important;
             align-items: center !important;
+            flex-direction: column-reverse !important;
           }
 
           .s2-button-container {
@@ -599,8 +649,7 @@ function S2() {
 
           .s2-image-container {
             width: 100% !important;
-            height: auto !important;
-            aspect-ratio: 710/537 !important;
+            height: 764px !important;
           }
         }
 
@@ -613,6 +662,7 @@ function S2() {
             padding: 20px 16px !important;
             gap: 30px !important;
             padding-top: 90px !important;
+              margin-bottom:0px !important;
           }
 
           .s2-left-side {
@@ -629,33 +679,42 @@ function S2() {
           }
 
           .s2-squares-grid {
-            height: 70% !important;
-            width: 70% !important;
-            gap: 0px !important;
+            width: auto !important;
+            height: auto !important;
+            rotate: 0deg !important;
+            gap: 20px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            flex-wrap: nowrap !important;
+            justify-content: center !important;
+            align-items: center !important;
           }
 
           .s2-square {
-            width: calc(50% - 5px) !important;
-            height: calc(50% - 5px) !important;
+            width: 209px !important;
+            height: 209px !important;
+            margin-bottom: 90px !important;
+            rotate: 45deg !important;
           }
 
           .s2-square svg {
-            width: 32px !important;
-            height: 32px !important;
+            width: 46px !important;
+            height: 46px !important;
           }
 
           .s2-square p {
-            font-size: 12px !important;
+            font-size: 16px !important;
             margin: 4px 0 !important;
           }
 
           .s2-square p:last-child {
-            font-size: 16px !important;
+            font-size: 22px !important;
           }
 
           .s2-right-side {
             width: 100% !important;
             align-items: center !important;
+            flex-direction: column-reverse !important;
           }
 
           .s2-button-container {
@@ -677,8 +736,7 @@ function S2() {
 
           .s2-image-container {
             width: 100% !important;
-            height: auto !important;
-            aspect-ratio: 710/537 !important;
+            height: 764px !important;
           }
         }
 

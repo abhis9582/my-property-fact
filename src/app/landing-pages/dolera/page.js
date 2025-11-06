@@ -8,11 +8,13 @@ import S6 from './components/S6'
 import S7 from './components/S7'
 import S8 from './components/S8'
 import S9 from './components/S9'
+import ResForm from './components/ResForm'
 
 function page() {
   return (
     <>
         <S1 />
+        <ResForm />
         <S2 />
         <S3 />
         <S4 />

@@ -330,7 +330,7 @@ function S6() {
           .dolera-s6-section {
             min-height: auto !important;
             padding: 30px 20px !important;
-            padding-top: 90px !important;
+            // padding-top: 90px !important;
             padding-bottom: 50px !important;
           }
 
@@ -369,9 +369,10 @@ function S6() {
           }
 
           .s6-download-btn-right {
-            width: 100% !important;
-            max-width: 280px !important;
-            font-size: 15px !important;
+            // width: 100% !important;
+            // max-width: 280px !important;
+            // font-size: 15px !important;
+            display:none !important;
           }
         }
 
@@ -380,7 +381,7 @@ function S6() {
           .dolera-s6-section {
             min-height: auto !important;
             padding: 20px 16px !important;
-            padding-top: 90px !important;
+            // padding-top: 90px !important;
             padding-bottom: 40px !important;
           }
 
@@ -417,9 +418,10 @@ function S6() {
           }
 
           .s6-download-btn-right {
-            width: 100% !important;
-            max-width: 100% !important;
-            font-size: 14px !important;
+            // width: 100% !important;
+            // max-width: 100% !important;
+            // font-size: 14px !important;
+             display:none !important;
           }
         }
 
