@@ -139,11 +139,12 @@ function Navbar() {
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             style={{
               display: "none",
-              background: "none",
+              backgroundColor: "rgba(14, 76, 144, 1)",
               border: "none",
               cursor: "pointer",
               padding: "8px",
               flexShrink: 0,
+              color: "white",
             }}
             aria-label="Toggle menu"
           >
