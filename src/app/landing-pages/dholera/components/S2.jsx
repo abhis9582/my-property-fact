@@ -81,6 +81,8 @@ function S2() {
         alignItems: "center",
         marginBottom: "80px",
         overflow: "hidden",
+        WebkitOverflowScrolling: "touch",
+        touchAction: "pan-y",
       }}
     >
       {/* Left Side Div  */}
@@ -402,10 +404,26 @@ function S2() {
 
       {/* Responsive Styles */}
       <style jsx>{`
+        /* iOS Safari Fixes */
+        @supports (-webkit-touch-callout: none) {
+          .dolera-s2-section {
+            min-height: -webkit-fill-available !important;
+          }
+        }
+
         .s2-main-image:hover {
           width: 110%;
           height: 110%;
         }
+
+        /* Prevent text size adjustment on iOS */
+        * {
+          -webkit-text-size-adjust: 100%;
+          -moz-text-size-adjust: 100%;
+          -ms-text-size-adjust: 100%;
+          text-size-adjust: 100%;
+        }
+
         /* Desktop - Above lg (1025px+) - Keep original design */
         @media (min-width: 1025px) {
           .dolera-s2-section {
@@ -474,7 +492,7 @@ function S2() {
             padding: 40px 30px !important;
             gap: 40px !important;
             padding-top: 90px !important;
-              margin-bottom:0px !important;
+            margin-bottom: 0px !important;
           }
 
           .s2-left-side {
@@ -535,6 +553,12 @@ function S2() {
 
         /* Mobile screens (up to 768px) */
         @media (max-width: 768px) {
+          .dolera-s2-section {
+            min-height: -webkit-fill-available !important;
+            padding-left: env(safe-area-inset-left) !important;
+            padding-right: env(safe-area-inset-right) !important;
+          }
+
           .s2-squares-grid {
             width: auto !important;
             height: auto !important;
@@ -545,12 +569,17 @@ function S2() {
             flex-wrap: nowrap !important;
             justify-content: center !important;
             align-items: center !important;
+            -webkit-transform: translateZ(0) !important;
+            transform: translateZ(0) !important;
           }
 
           .s2-square {
             width: 209px !important;
             height: 209px !important;
             margin-bottom: 50px !important;
+            -webkit-transform: translateZ(0) !important;
+            transform: translateZ(0) !important;
+            -webkit-tap-highlight-color: transparent !important;
           }
 
           .s2-square svg {
@@ -560,6 +589,8 @@ function S2() {
 
           .s2-square p {
             font-size: 16px !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
           }
 
           .s2-square p:last-child {
@@ -571,12 +602,13 @@ function S2() {
         @media (min-width: 481px) and (max-width: 768px) {
           .dolera-s2-section {
             height: auto !important;
-            min-height: auto !important;
+            min-height: -webkit-fill-available !important;
             flex-direction: column !important;
-            padding: 30px 20px !important;
+            padding: calc(90px + env(safe-area-inset-top))
+              calc(20px + env(safe-area-inset-right)) 30px
+              calc(20px + env(safe-area-inset-left)) !important;
             gap: 30px !important;
-            padding-top: 90px !important;
-            margin-bottom:0px !important;
+            margin-bottom: 0px !important;
           }
 
           .s2-left-side {
@@ -609,9 +641,16 @@ function S2() {
             width: 209px !important;
             height: 209px !important;
             margin-bottom: 90px !important;
-            rotate: 45deg !important;
+            rotate: 90deg !important;
+            -webkit-transform: translateZ(0) rotate(45deg) !important;
+            transform: translateZ(0) rotate(45deg) !important;
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-backface-visibility: hidden !important;
+            backface-visibility: hidden !important;
           }
-
+ .s2-square div {
+            rotate: 226deg !important;
+          }
           .s2-square svg {
             width: 46px !important;
             height: 46px !important;
@@ -619,6 +658,8 @@ function S2() {
 
           .s2-square p {
             font-size: 16px !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
           }
 
           .s2-square p:last-child {
@@ -657,12 +698,13 @@ function S2() {
         @media (max-width: 480px) {
           .dolera-s2-section {
             height: auto !important;
-            min-height: auto !important;
+            min-height: -webkit-fill-available !important;
             flex-direction: column !important;
-            padding: 20px 16px !important;
+            padding: calc(90px + env(safe-area-inset-top))
+              calc(16px + env(safe-area-inset-right)) 20px
+              calc(16px + env(safe-area-inset-left)) !important;
             gap: 30px !important;
-            padding-top: 90px !important;
-              margin-bottom:0px !important;
+            margin-bottom: 0px !important;
           }
 
           .s2-left-side {
@@ -694,9 +736,16 @@ function S2() {
             width: 209px !important;
             height: 209px !important;
             margin-bottom: 90px !important;
-            rotate: 45deg !important;
+            rotate: 90deg !important;
+            -webkit-transform: translateZ(0) rotate(45deg) !important;
+            transform: translateZ(0) rotate(45deg) !important;
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-backface-visibility: hidden !important;
+            backface-visibility: hidden !important;
           }
-
+          .s2-square div {
+            rotate: 226deg !important;
+          }
           .s2-square svg {
             width: 46px !important;
             height: 46px !important;
@@ -705,6 +754,8 @@ function S2() {
           .s2-square p {
             font-size: 16px !important;
             margin: 4px 0 !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
           }
 
           .s2-square p:last-child {
