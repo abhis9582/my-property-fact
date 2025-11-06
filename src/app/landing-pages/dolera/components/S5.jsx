@@ -317,9 +317,9 @@ function S5() {
         @media (min-width: 1024px) and (max-width: 1024px) {
           .dolera-s5-section {
             min-height: auto !important;
-            padding: 40px 20px !important;
+            // padding: 40px 20px !important;
             // padding-top: 150px !important;
-            padding-bottom: 60px !important;
+            // padding-bottom: 60px !important;
             display: block !important;
           }
 
@@ -401,7 +401,7 @@ function S5() {
             min-height: auto !important;
             // padding: 40px 30px !important;
             // padding-top: 150px !important;
-            padding-bottom: 60px !important;
+            // padding-bottom: 60px !important;
             justify-content: center !important;
             align-items: center !important;
             display: block !important;

@@ -244,9 +244,9 @@ function S3() {
         @media (min-width: 1024px) and (max-width: 1024px) {
           .dolera-s3-section {
             min-height: auto !important;
-            padding: 40px 20px !important;
-            padding-top: 90px !important;
-            padding-bottom: 60px !important;
+            // padding: 40px 20px !important;
+            // padding-top: 90px !important;
+            // padding-bottom: 60px !important;
           }
 
           .s3-content-container {
