@@ -97,7 +97,7 @@ export default function App() {
                 color: "white",
               }}
             >
-              World-class infrastructure & connectivity: within & outside
+              Capable to cater to both the International & Domestic Markets
             </p>
           </div>
         </SwiperSlide>
@@ -128,196 +128,12 @@ export default function App() {
                 color: "white",
               }}
             >
-              World-class infrastructure & connectivity: within & outside
+            Benefit of the sea coast, nature park, and golf course.
             </p>
           </div>
         </SwiperSlide>
-        <SwiperSlide>
-          {" "}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-                padding: "30px",
-                gap:"20px",
-            }}
-          >
-            <img
-              style={{
-                width: "100px",
-                height: "100px",
-              }}
-              src="/dolera/s4/dol-s4-i1.png"
-              alt=""
-            />
-            <p
-              style={{
-                fontWeight: 400,
-                fontSize: "16px",
-                color: "white",
-              }}
-            >
-              World-class infrastructure & connectivity: within & outside
-            </p>
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          {" "}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-                padding: "30px",
-                gap:"20px",
-            }}
-          >
-            <img
-              style={{
-                width: "100px",
-                height: "100px",
-              }}
-              src="/dolera/s4/dol-s4-i2.png"
-              alt=""
-            />
-            <p
-              style={{
-                fontWeight: 400,
-                fontSize: "16px",
-                color: "white",
-              }}
-            >
-              World-class infrastructure & connectivity: within & outside
-            </p>
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          {" "}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-                padding: "30px",
-                gap:"20px",
-            }}
-          >
-            <img
-              style={{
-                width: "100px",
-                height: "100px",
-              }}
-              src="/dolera/s4/dol-s4-i3.png"
-              alt=""
-            />
-            <p
-              style={{
-                fontWeight: 400,
-                fontSize: "16px",
-                color: "white",
-              }}
-            >
-              World-class infrastructure & connectivity: within & outside
-            </p>
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          {" "}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-                padding: "30px",
-                gap:"20px",
-            }}
-          >
-            <img
-              style={{
-                width: "100px",
-                height: "100px",
-              }}
-              src="/dolera/s4/dol-s4-i1.png"
-              alt=""
-            />
-            <p
-              style={{
-                fontWeight: 400,
-                fontSize: "16px",
-                color: "white",
-              }}
-            >
-              World-class infrastructure & connectivity: within & outside
-            </p>
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          {" "}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-                padding: "30px",
-                gap:"20px",
-            }}
-          >
-            <img
-              style={{
-                width: "100px",
-                height: "100px",
-              }}
-              src="/dolera/s4/dol-s4-i2.png"
-              alt=""
-            />
-            <p
-              style={{
-                fontWeight: 400,
-                fontSize: "16px",
-                color: "white",
-              }}
-            >
-              World-class infrastructure & connectivity: within & outside
-            </p>
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          {" "}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-                padding: "30px",
-                gap:"20px",
-            }}
-          >
-            <img
-              style={{
-                width: "100px",
-                height: "100px",
-              }}
-              src="/dolera/s4/dol-s4-i3.png"
-              alt=""
-            />
-            <p
-              style={{
-                fontWeight: 400,
-                fontSize: "16px",
-                color: "white",
-              }}
-            >
-              World-class infrastructure & connectivity: within & outside
-            </p>
-          </div>
-        </SwiperSlide>
+
+       
       </Swiper>
     </>
   );
