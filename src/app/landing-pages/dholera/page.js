@@ -9,6 +9,7 @@ import S7 from './components/S7'
 import S8 from './components/S8'
 import S9 from './components/S9'
 import ResForm from './components/ResForm'
+import NewS2 from './components/NewS2'
 
 // Metadata for SEO
 export const metadata = {
@@ -54,7 +55,8 @@ function page() {
     <>
         <S1 />
         <ResForm />
-        <S2 />
+        {/* <S2 /> */}
+        <NewS2 />
         <S3 />
         <S4 />
         <S5 />
