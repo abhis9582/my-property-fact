@@ -3,10 +3,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useModal } from "../layout";
+import { useRouter } from "next/navigation";
 
 gsap.registerPlugin(ScrollTrigger);
 
 function S9() {
+  const router = useRouter();
   const { openModal } = useModal();
   const sectionRef = useRef(null);
   const topContentRef = useRef(null);
@@ -154,13 +156,18 @@ function S9() {
       
       if (result.result === "success") {
         setFormData({ Name: "", Email: "", Phone: "", Message: "" });
-        setSubmitMessage("✅ Thank you! We'll get back to you soon.");
+        // setSubmitMessage("✅ Thank you! We'll get back to you soon.");
+        
+        // Redirect to thank you page after 1.5 seconds
+        setTimeout(() => {
+          router.push("/landing-pages/dholera/thankyou");
+        }, 1500);
       } else {
         throw new Error(result.error?.message || "Submission failed");
       }
     } catch (error) {
       console.error("Form submission error:", error);
-      setSubmitMessage("❌ Something went wrong. Please try again.");
+      // setSubmitMessage("❌ Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -267,7 +274,7 @@ function S9() {
             className="s9-form-card"
             style={{
               width: "649px",
-              height: "557px",
+              minHeight: "557px",
               backgroundColor: "rgba(14, 76, 144, 1)",
               zIndex: 10,
               position: "absolute",

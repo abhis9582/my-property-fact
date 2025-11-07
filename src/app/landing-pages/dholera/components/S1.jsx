@@ -3,11 +3,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useModal } from "../layout";
+import { useRouter } from "next/navigation";
 // import "../style.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
 function S1() {
+  const router = useRouter();
   const { openModal } = useModal();
   const [formData, setFormData] = useState({
     Name: "",
@@ -218,6 +220,11 @@ function S1() {
       if (result.result === "success") {
         setFormData({ Name: "", Email: "", Phone: "", Message: "" });
         setSubmitMessage("✅ Thank you! We'll get back to you soon.");
+        
+        // Redirect to thank you page after 1.5 seconds
+        setTimeout(() => {
+          router.push("/landing-pages/dholera/thankyou");
+        }, 1500);
       } else {
         throw new Error(result.error?.message || "Submission failed");
       }

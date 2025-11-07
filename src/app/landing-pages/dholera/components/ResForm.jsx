@@ -1,7 +1,9 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 function ResForm() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     Name: "",
     Email: "",
@@ -92,6 +94,11 @@ function ResForm() {
       if (result.result === "success") {
         setFormData({ Name: "", Email: "", Phone: "", Message: "" });
         setSubmitMessage("✅ Thank you! We'll get back to you soon.");
+        
+        // Redirect to thank you page after 1.5 seconds
+        setTimeout(() => {
+          router.push("/landing-pages/dholera/thankyou");
+        }, 1500);
       } else {
         throw new Error(result.error?.message || "Submission failed");
       }
