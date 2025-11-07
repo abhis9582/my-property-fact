@@ -15,6 +15,36 @@
     transform: scale(1.03);
 }
 
+.home-featured-status-badge {
+    position: absolute;
+    top: 1rem;
+    /* left: 1rem; */
+    padding: 0.5rem 1.4rem 0.5rem 1rem;
+    font-size: 0.875rem;
+    /* font-weight: 700; */
+    background-color: var(--badge-color, #16a34a);
+    color: var(--badge-text-color, #ffffff);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.2;
+    clip-path: polygon(0 0, 100% 0, 100% calc(50% - 16px), calc(100% - 12px) 50%, 100% calc(50% + 16px), 100% 100%, 0 100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    text-transform: capitalize;
+    letter-spacing: 0.3px;
+    z-index: 2;
+    white-space: nowrap;
+}
+
+@media (max-width: 576px) {
+    .home-featured-status-badge {
+        font-size: 0.75rem;
+        padding: 0.4rem 2rem 0.4rem 0.85rem;
+        top: 0.75rem;
+        left: 0.75rem;
+        clip-path: polygon(0 0, 100% 0, 100% calc(50% - 10px), calc(100% - 20px) 50%, 100% calc(50% + 10px), 100% 100%, 0 100%);
+    }
+}
 
 /* Wrapper for arrows to position them at the bottom */
 .slick-slider {

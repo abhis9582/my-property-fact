@@ -12,7 +12,8 @@ export default function Featured({
   url = "",
   autoPlay,
   allProjects,
-  type
+  type,
+  badgeVariant = "default",
 }) {
   const { setProjectData } = useProjectContext();
   useEffect(() => {    
@@ -53,7 +54,7 @@ export default function Featured({
           <Slider {...settings}>
             {allProjects.map((item) => (
               <div key={item.id} className="px-2 pb-3">
-                <PropertyContainer data={item} />
+                <PropertyContainer data={item} badgeVariant={badgeVariant} />
               </div>
             ))}
           </Slider>
