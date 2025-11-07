@@ -339,7 +339,7 @@ function S8() {
               color: "white",
             }}
           >
-            Are You Ready For Move?
+            Are You Ready For Investment?
           </h2>
           <button
             className="s8-enquire-btn"
