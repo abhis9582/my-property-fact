@@ -1,4 +1,5 @@
 import React from 'react'
+import Script from 'next/script'
 import S1 from './components/S1'
 import S2 from './components/S2'
 import S3 from './components/S3'
@@ -64,6 +65,19 @@ function page() {
         <S7 />
         <S8 />
         <S9 />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17708520580"
+          strategy="afterInteractive"
+        />
+        <Script id="gtag-dholera" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'AW-17708520580');
+          `}
+        </Script>
     </>
   )
 }
