@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import SearchFilter from "./searchFIlter";
+import AnimatedCounter from "./AnimatedCounter";
 import "../home/home.css";
 import {
   fetchCityData,
@@ -11,22 +12,22 @@ export default async function HeroSection() {
   const ourFacts = [
     {
       id: 1,
-      numbers: "50+",
+      numbers: "49+",
       text: "Cities",
     },
     {
       id: 2,
-      numbers: "80+",
+      numbers: "88+",
       text: "Builders",
     },
     {
       id: 3,
-      numbers: "500+",
+      numbers: "520+",
       text: "Projects",
     },
     {
       id: 4,
-      numbers: "10,000+",
+      numbers: "10,030+",
       text: "Units",
     },
   ];
@@ -92,7 +93,9 @@ export default async function HeroSection() {
                 >
                   <section>
                     <h3 className="m-0">
-                      <span>{item.numbers}</span>
+                      <span>
+                        <AnimatedCounter targetValue={item.numbers} suffix="+" />
+                      </span>
                     </h3>
                     <p className="text-center ">{item.text}</p>
                   </section>
