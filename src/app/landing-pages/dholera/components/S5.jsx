@@ -225,7 +225,7 @@ function S5() {
                       color: "white",
                     }}
                   >
-                    130 Sq.Yd.
+                    130 Sq.Yd*
                   </p>
                 </div>
               </div>
@@ -397,7 +397,7 @@ function S5() {
         }
 
         /* Tablet - Between md and lg (769px to 1023px) */
-        @media (min-width: 769px) and (max-width: 1023px) {
+        @media (min-width: 769px) and (max-width: 1492px) {
           .dolera-s5-section {
             min-height: auto !important;
             // padding: 40px 30px !important;
