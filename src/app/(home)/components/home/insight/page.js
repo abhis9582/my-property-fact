@@ -37,7 +37,7 @@ export default function InsightNew() {
       alt: "price-trends-img",
       heading: "Market Analysis",
       sub_heading:
-        "We deliver price trends, policy updates, infrastructure news, enabling investors, developers, and lenders to recalibrate market strategies regularly.",
+        "We deliver price trends, policy updates, infrastructure news, enabling investors, developers, and lenders to recalibrate the market strategies regularly.",
       color: "light-yellow",
       button_color: "dark-yellow",
       // href: "/market-analysis",
