@@ -9,7 +9,15 @@ import { getAllProjects, getWeeklyProject } from "@/app/_global_components/maste
 
 export default async function HomePage() {
   const projects = await getAllProjects();
-  const featuredProjects = projects.reverse().slice(0, 3);
+  const allowedSlugs = [
+    "m3m-jacob-and-co-residences",
+    "eldeco-whispers-of-wonder",
+    "ace-edit"
+  ];
+  const featuredProjects = projects.filter(project => {
+    if (!project.slugURL) return false;
+    return allowedSlugs.includes(project.slugURL);
+  });
   const residentalProjects = projects.filter(project => project.propertyTypeName === 'Residential').slice(0, 9);
   const commercialProjects = projects.filter(project => project.propertyTypeName === 'Commercial').slice(0, 9);
   const mpfTopPicProject = await getWeeklyProject(projects);

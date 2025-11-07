@@ -13,6 +13,7 @@ export default async function FeaturedPage({
         allProjects={allFeaturedProperties}
         autoPlay={autoPlay}
         type={type}
+        badgeVariant={type === "Similar" ? "default" : "home-featured"}
       />
     );
   } else {
@@ -22,6 +23,7 @@ export default async function FeaturedPage({
           url={url}
           allProjects={allFeaturedProperties}
           autoPlay={autoPlay}
+          badgeVariant="home-featured"
         />
       </>
     );
