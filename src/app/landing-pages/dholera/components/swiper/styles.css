@@ -62,7 +62,7 @@
   right: 20px;
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 1495px) {
   .swiper-nav-button-right {
     left: 68%;
   }
