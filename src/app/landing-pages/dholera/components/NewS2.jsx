@@ -13,7 +13,7 @@ function NewS2() {
           <div className="s2-square s2-blue">
             <div className="s2-square-content">
               <TiHome className="s2-icon white" />
-              <p className="s2-label white">Starting Size's</p>
+              <p className="s2-label white">Starting Size&apos;s</p>
               <p className="s2-value white">130 Sq.Yd.</p>
             </div>
           </div>
