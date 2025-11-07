@@ -2,8 +2,10 @@
 import React, { useState, useEffect } from "react";
 import { gsap } from "gsap";
 import { FaTimes } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 export default function EnquiryModal({ isOpen, onClose, formType = "Enquiry" }) {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     Name: "",
     Email: "",
@@ -141,10 +143,11 @@ export default function EnquiryModal({ isOpen, onClose, formType = "Enquiry" }) 
         setFormData({ Name: "", Email: "", Phone: "", Message: "" });
         setSubmitMessage("✅ Thank you! We'll get back to you soon.");
         
-        // Close modal after 2 seconds
+        // Close modal and redirect to thank you page after 1.5 seconds
         setTimeout(() => {
           onClose();
-        }, 2000);
+          router.push("/landing-pages/dholera/thankyou");
+        }, 1500);
       } else {
         throw new Error(result.error?.message || "Submission failed");
       }
