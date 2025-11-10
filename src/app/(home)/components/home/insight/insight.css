@@ -78,5 +78,6 @@
 @media (max-width: 691px) {
   .insight-card {
     max-width: 20rem !important;
+    margin-bottom: 20px;
   }
 }
