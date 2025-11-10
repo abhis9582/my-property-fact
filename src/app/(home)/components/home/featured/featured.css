@@ -41,8 +41,8 @@
         font-size: 0.75rem;
         padding: 0.4rem 2rem 0.4rem 0.85rem;
         top: 0.75rem;
-        left: 0.75rem;
-        clip-path: polygon(0 0, 100% 0, 100% calc(50% - 10px), calc(100% - 20px) 50%, 100% calc(50% + 10px), 100% 100%, 0 100%);
+        /* left: 0.75rem; */
+        /* clip-path: polygon(0 0, 100% 0, 100% calc(50% - 10px), calc(100% - 20px) 50%, 100% calc(50% + 10px), 100% 100%, 0 100%); */
     }
 }
 

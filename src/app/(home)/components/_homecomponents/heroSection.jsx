@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import SearchFilter from "./searchFIlter";
 import AnimatedCounter from "./AnimatedCounter";
+import HeroBannerSlider from "./HeroBannerSlider";
 import "../home/home.css";
 import {
   fetchCityData,
@@ -32,6 +32,38 @@ export default async function HeroSection() {
     },
   ];
 
+  const heroSlides = [
+    {
+      id: "hero-primary",
+      desktop: "/static/banners/desktop_banner1.jpeg",
+      tablet: "/static/banners/tablet_banner1.jpg",
+      mobile: "/static/banners/mobile_banner1.jpg",
+      alt: "Find the best property with My Property Fact",
+      priority: true,
+    },
+    {
+      id: "hero-secondary",
+      desktop: "/static/banners/desktop_banner2.jpg",
+      tablet: "/static/banners/tablet_banner2.jpg",
+      mobile: "/static/banners/mobile_banner2.jpg",
+      alt: "Discover top real estate projects across India",
+    },
+    // {
+    //   id: "hero-secondary",
+    //   desktop: "/static/banners/desktop_banner3.jpg",
+    //   tablet: "/static/banners/tablet_banner2.jpg",
+    //   mobile: "/static/banners/mobile_banner2.jpg",
+    //   alt: "Discover top real estate projects across India",
+    // },
+    // {
+    //   id: "hero-secondary",
+    //   desktop: "/static/banners/desktop_banner4.jpg",
+    //   tablet: "/static/banners/tablet_banner4.jpg",
+    //   mobile: "/static/banners/mobile_banner4.jpg",
+    //   alt: "Discover top real estate projects across India",
+    // },
+  ];
+
   const [cityList, projectTypeList] = await Promise.all([
     fetchCityData(),
     fetchProjectTypes(),
@@ -43,32 +75,7 @@ export default async function HeroSection() {
           className="mpf-hero-banner position-relative"
         >
           <div className="position-relative">
-            <picture className="position-relative home-banner">
-              {/* Mobile Image */}
-              <source
-                srcSet="/mpf-mobile-banner.jpg"
-                media="(max-width: 426px)"
-              />
-
-              {/* Tablet Image */}
-              <source
-                srcSet="/mpf-tablet-banner.jpg"
-                media="(max-width: 1199px)"
-              />
-
-              {/* Default (Desktop) Image */}
-              <Image
-                src="/mpf-banner.jpg"
-                alt="My property fact"
-                width={1920}
-                height={600}
-                className="img-fluid"
-                priority
-                fetchPriority="high"
-                loading="eager"
-                sizes="(max-width: 426px) 100vw, (max-width: 1199px) 100vw, 1920px"
-              />
-            </picture>
+            <HeroBannerSlider slides={heroSlides} />
           </div>
           {/* <div className="overlay"></div> */}
           <div className="bannercontainer">

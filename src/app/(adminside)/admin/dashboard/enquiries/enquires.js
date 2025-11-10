@@ -62,6 +62,8 @@ export default function Enquiries({ list }) {
       New: "#e8f5e8", // Light green
       Pending: "#fff8e1", // Light yellow
       Rejected: "#ffebee", // Light red
+      Duplicate: "#f5f5f5", // Light gray
+      Irrelevant: "#f3e5f5", // Light purple
     };
     return colors[status] || "#f8f9fa";
   };
@@ -74,9 +76,14 @@ export default function Enquiries({ list }) {
       New: "#2e7d32", // Darker green for better contrast
       Pending: "#f57f17", // Darker yellow for better contrast
       Rejected: "#c62828", // Darker red for better contrast
+      Duplicate: "#616161", // Medium gray for better contrast
+      Irrelevant: "#7b1fa2", // Darker purple for better contrast
     };
     return colors[status] || "#424242";
   };
+
+  //Status options array
+  const statusOptions = ["New", "Shared", "Test", "Pending", "Rejected", "Duplicate", "Irrelevant"];
 
   //Defining table columns
   const columns = [
@@ -224,76 +231,23 @@ export default function Enquiries({ list }) {
               textTransform: "uppercase",
             }}
           >
-            <option
-              value="New"
-              style={{
-                backgroundColor: "#e8f5e8",
-                color: "#2e7d32",
-                fontWeight: "600",
-                padding: "8px",
-                fontSize: "14px",
-                textTransform: "uppercase",
-                letterSpacing: "0.5px",
-              }}
-            >
-              New
-            </option>
-            <option
-              value="Shared"
-              style={{
-                backgroundColor: "#e3f2fd",
-                color: "#1565c0",
-                fontWeight: "600",
-                padding: "8px",
-                fontSize: "14px",
-                textTransform: "uppercase",
-                letterSpacing: "0.5px",
-              }}
-            >
-              Shared
-            </option>
-            <option
-              value="Test"
-              style={{
-                backgroundColor: "#fff3e0",
-                color: "#ef6c00",
-                fontWeight: "600",
-                padding: "8px",
-                fontSize: "14px",
-                textTransform: "uppercase",
-                letterSpacing: "0.5px",
-              }}
-            >
-              Test
-            </option>
-            <option
-              value="Pending"
-              style={{
-                backgroundColor: "#fff8e1",
-                color: "#f57f17",
-                fontWeight: "600",
-                padding: "8px",
-                fontSize: "14px",
-                textTransform: "uppercase",
-                letterSpacing: "0.5px",
-              }}
-            >
-              Pending
-            </option>
-            <option
-              value="Rejected"
-              style={{
-                backgroundColor: "#ffebee",
-                color: "#c62828",
-                fontWeight: "600",
-                padding: "8px",
-                fontSize: "14px",
-                textTransform: "uppercase",
-                letterSpacing: "0.5px",
-              }}
-            >
-              Rejected
-            </option>
+            {statusOptions.map((status) => (
+              <option
+                key={status}
+                value={status}
+                style={{
+                  backgroundColor: getStatusColor(status),
+                  color: getStatusTextColor(status),
+                  fontWeight: "600",
+                  padding: "8px",
+                  fontSize: "14px",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.5px",
+                }}
+              >
+                {status}
+              </option>
+            ))}
           </FormControl>
         </div>
       ),
