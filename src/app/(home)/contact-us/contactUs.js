@@ -101,7 +101,7 @@ export default function ContactUs() {
         </div>
         <div className="info-container-child">
           <p>Office Address</p>
-          <p>6th Floor Tower 1, Corporate Park</p>
+          <p>6th Floor Tower A1, Corporate Park</p>
           <p>Noida-142, India</p>
         </div>
       </div>
