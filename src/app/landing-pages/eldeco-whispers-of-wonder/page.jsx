@@ -276,7 +276,7 @@ gsap.ticker.lagSmoothing(0);
                 closePopup();
               }
               window.setTimeout(() => {
-                window.location.href = "/landing-pages/eldecoWow/thankyou";
+                window.location.href = "/landing-pages/eldeco-whispers-of-wonder/thankyou";
               }, 800);
             } else {
               throw new Error(result.error?.message || "Form submission failed.");
