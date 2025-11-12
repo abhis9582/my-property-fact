@@ -82,7 +82,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
 
   const openSignUpModal = () => {
     setShowModal(true);
-  }
+  };
 
   return (
     <>
@@ -217,6 +217,16 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                   )}
                 </div>
               </li>
+              {/* <li className="hasChild">
+                <Link
+                  href="/properties"
+                  className={`text-light py-3 text-uppercase text-decoration-none ${
+                    pathname === "/properties" ? "header-link-active" : ""
+                  }`}
+                >
+                  Properties
+                </Link>
+              </li> */}
               <li className="hasChild">
                 <Link
                   href="/about-us"
@@ -240,17 +250,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
               {/* <li className="hasChild">
                 <Link href="/clients-speak" className={`text-light text-uppercase ${pathname === "/clients-speak" ? "header-link-active" : ""}`}>Clients Speak</Link>
               </li> */}
-              <li className="hasChild">
-                <Link
-                  href="/career"
-                  className={`text-light py-3 text-uppercase text-decoration-none ${
-                    pathname === "/career" ? "header-link-active" : ""
-                  }`}
-                >
-                  Career
-                </Link>
-              </li>
-              <li className="hasChild">
+              {/* <li className="hasChild">
                 <Link
                   href="/contact-us"
                   className={`text-light py-3 text-uppercase text-decoration-none ${
@@ -259,7 +259,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                 >
                   Contact us
                 </Link>
-              </li>
+              </li> */}
               {/* <li>
                 <div className="bg-white rounded rounded-3 p-2 cursor-pointer hover-effect"
                 onClick={openSignUpModal}>
@@ -281,7 +281,11 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
             <div className="bigMenuList">
               <ul className="list-inline active list-unstyled">
                 <li>
-                  <Link className="text-decoration-none" href="/" onClick={openMenu}>
+                  <Link
+                    className="text-decoration-none"
+                    href="/"
+                    onClick={openMenu}
+                  >
                     Home
                   </Link>
                 </li>
@@ -290,7 +294,11 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                     activeDropdown === "city" ? "active" : ""
                   }`}
                 >
-                  <Link href="#" className="text-decoration-none" onClick={() => openMenuMobile("city")}>
+                  <Link
+                    href="#"
+                    className="text-decoration-none"
+                    onClick={() => openMenuMobile("city")}
+                  >
                     City<sup>+</sup>
                   </Link>
                   <div
@@ -318,7 +326,11 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                     activeDropdown === "builder" ? "active" : ""
                   }`}
                 >
-                  <Link className="text-decoration-none" href="#" onClick={() => openMenuMobile("builder")}>
+                  <Link
+                    className="text-decoration-none"
+                    href="#"
+                    onClick={() => openMenuMobile("builder")}
+                  >
                     Builder<sup>+</sup>
                   </Link>
                   <div
@@ -330,7 +342,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                       {builderList?.map((builder) => (
                         <li key={builder.id}>
                           <Link
-                          className="text-decoration-none"
+                            className="text-decoration-none"
                             href={`/builder/${builder.slugUrl}`}
                             onClick={openMenu}
                           >
@@ -346,7 +358,11 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                     activeDropdown === "projects" ? "active" : ""
                   }`}
                 >
-                  <Link href="#" className="text-decoration-none" onClick={() => openMenuMobile("projects")}>
+                  <Link
+                    href="#"
+                    className="text-decoration-none"
+                    onClick={() => openMenuMobile("projects")}
+                  >
                     Projects<sup>+</sup>
                   </Link>
                   <div
@@ -374,7 +390,11 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
             <div className="smallMenuList">
               <ul className="list-inline list-unstyled">
                 <li>
-                  <Link className="text-decoration-none" href="/blog" onClick={openMenu}>
+                  <Link
+                    className="text-decoration-none"
+                    href="/blog"
+                    onClick={openMenu}
+                  >
                     Blog
                   </Link>
                 </li>
@@ -382,22 +402,38 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                   <Link href="/web-stories" onClick={openMenu}>Web Stories</Link>
                 </li> */}
                 <li>
-                  <Link className="text-decoration-none" href="/about-us" onClick={openMenu}>
+                  <Link
+                    className="text-decoration-none"
+                    href="/about-us"
+                    onClick={openMenu}
+                  >
                     About Us
                   </Link>
                 </li>
                 <li>
-                  <Link className="text-decoration-none" href="/clients-speak" onClick={openMenu}>
+                  <Link
+                    className="text-decoration-none"
+                    href="/clients-speak"
+                    onClick={openMenu}
+                  >
                     Clients Speak
                   </Link>
                 </li>
                 <li>
-                  <Link className="text-decoration-none" href="/career" onClick={openMenu}>
+                  <Link
+                    className="text-decoration-none"
+                    href="/career"
+                    onClick={openMenu}
+                  >
                     Career
                   </Link>
                 </li>
                 <li>
-                  <Link className="text-decoration-none" href="/contact-us" onClick={openMenu}>
+                  <Link
+                    className="text-decoration-none"
+                    href="/contact-us"
+                    onClick={openMenu}
+                  >
                     Contact us
                   </Link>
                 </li>
@@ -422,7 +458,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                 </li>
                 <li>
                   <Link
-                  className="text-decoration-none"
+                    className="text-decoration-none"
                     href="https://www.instagram.com/starestate_official/"
                     target="_blank"
                   >
@@ -431,7 +467,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                 </li>
                 <li>
                   <Link
-                  className="text-decoration-none"
+                    className="text-decoration-none"
                     href="https://www.linkedin.com/company/star-estate"
                     target="_blank"
                   >
@@ -440,7 +476,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                 </li>
                 <li>
                   <Link
-                  className="text-decoration-none"
+                    className="text-decoration-none"
                     href="https://www.youtube.com/channel/UCwfDf7Ut8jrkjiBeRnbZUPw"
                     target="_blank"
                   >
@@ -452,7 +488,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
           </div>
         </div>
       </div>
-      <LoginSignupModal show={showLoginModal} handleClose={setShowModal}/>
+      <LoginSignupModal show={showLoginModal} handleClose={setShowModal} />
     </>
   );
 };
