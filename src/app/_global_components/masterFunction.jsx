@@ -127,7 +127,6 @@ export const isFloorTypeUrl = async (slug) => {
     }
   });
   const floorType = slug.split("-in-")[0];
-  console.log("is floor type", data);
   return uniqueUrls.has(floorType.toLowerCase());
 };
 

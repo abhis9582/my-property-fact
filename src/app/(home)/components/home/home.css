@@ -330,6 +330,7 @@
   .home-search-container {
     bottom: 0px !important;
     position: relative !important;
+    padding: 10px;
   }
 }
 
