@@ -4,25 +4,30 @@ import AnimatedCounter from "./AnimatedCounter";
 import HeroBannerSlider from "./HeroBannerSlider";
 import "../home/home.css";
 import {
+  fetchAllProjects,
+  fetchBuilderData,
   fetchCityData,
   fetchProjectTypes,
 } from "@/app/_global_components/masterFunction";
 export default async function HeroSection() {
+  const totalProjects = await fetchAllProjects();
+  const cities = await fetchCityData();
+  const builders = await fetchBuilderData();
   //Our facts
   const ourFacts = [
     {
       id: 1,
-      numbers: "49+",
+      numbers: `${cities.length}+`,
       text: "Cities",
     },
     {
       id: 2,
-      numbers: "88+",
+      numbers: `${builders.builders.length}+`,
       text: "Builders",
     },
     {
       id: 3,
-      numbers: "530+",
+      numbers: `${totalProjects.length}+`,
       text: "Projects",
     },
     {
