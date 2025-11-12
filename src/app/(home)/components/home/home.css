@@ -4,6 +4,39 @@
   line-height: 0; /* Remove default spacing */
 }
 
+.hero-banner-slider {
+  width: 100%;
+  overflow: hidden;
+}
+
+.hero-banner-slide {
+  position: relative;
+}
+
+.hero-banner-slider .slick-slide {
+  display: flex !important;
+  align-items: stretch;
+}
+
+.hero-banner-slider .slick-slide > div {
+  width: 100%;
+}
+
+.hero-banner-slider .slick-dots {
+  bottom: 20px;
+}
+
+.hero-banner-slider .slick-dots li button:before {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.hero-banner-slider .slick-dots li.slick-active button:before {
+  color: #ffffff;
+  opacity: 1;
+}
+
 .home-banner img,
 .home-banner picture {
   width: 100%;
@@ -285,4 +318,12 @@
   height: 100%;
   /* width: 137%; */
   max-width: 100%;
+}
+
+.eapps-instagram-feed-posts-item {
+  border-radius: 10px !important;
+}
+
+.eapps-instagram-feed-header{
+  display: none !important;
 }
