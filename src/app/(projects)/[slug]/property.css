@@ -10,7 +10,7 @@
 
 .back-to-home-floating {
   position: fixed;
-  left: 1.25rem;
+  left: 0.25rem;
   top: 50%;
   transform: translateY(-50%);
   display: inline-flex;
