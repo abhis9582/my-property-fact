@@ -2,9 +2,25 @@ import Image from "next/image";
 import Link from "next/link";
 import "./common.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { faBuilding, faHouse, faLocationDot } from "@fortawesome/free-solid-svg-icons";
 
 export default function MpfTopPicks({ topProject }) {
+  if (!topProject) {
+    return null;
+  }
+
+  const {
+    builderName,
+    builderSlug,
+    projectName,
+    projectAddress,
+    projectConfiguration,
+    projectPrice,
+    projectLogo,
+    projectBannerImage,
+    slugURL,
+  } = topProject;
+
   const generatePrice = (price) => {
     if (/[a-zA-Z]/.test(price)) {
       return price;
@@ -13,77 +29,134 @@ export default function MpfTopPicks({ topProject }) {
       ? "₹ " + Math.round(parseFloat(price) * 100) + " Lakh* Onwards"
       : "₹ " + parseFloat(price) + " Cr* Onwards";
   };
+
+  const bannerImageSrc = projectBannerImage
+    ? `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${slugURL}/${projectBannerImage}`
+    : "/static/no_image.png";
+
+  const logoSrc = projectLogo
+    ? `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${slugURL}/${projectLogo}`
+    : "/logo.png";
+
   return (
     <>
-      <div className="container pt-5 top-space">
-        <div className="d-flex flex-wrap justify-content-between mb-3">
-          <div>
-            <h2 className="fs-1 fs-md-3 pt-2 fw-bold">
-              My Property Fact&#39;s Top Picks
-            </h2>
-            <p className="fs-4 fs-md-3">Explore top living options with us</p>
-          </div>
-        </div>
-        <div className="row border rounded-3 p-2 p-md-3 mpf-top-picks">
-          <div className="col-12 col-md-12 col-xl-4 mb-3 mb-md-0 d-flex justify-content-center align-items-center">
-            <div className="d-block d-md-flex gap-5 d-lg-block d-xl-block w-100">
-              <div className="d-flex d-md-block d-lg-flex d-xl-flex align-items-center justify-content-center gap-3 gap-md-5">
-                <div className="rounded-3 project-logo-container">
-                  <Image
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${topProject.slugURL}/${topProject.projectLogo}`}
-                    alt={topProject.slugURL}
-                    width={180}
-                    height={50}
-                    className="img-fluid"
-                    priority
-                  />
-                </div>
-                <div className="ms-md-4 ms-0">
-                  <h4 className="mpf-top-pic-project-name fs-4 fs-md-3">
-                    {topProject.builderName}
-                  </h4>
-                  <Link
-                    href={`/builder/${topProject.builderSlug}`}
-                    className="fs-6 fs-md-5 golden-text text-underline"
-                    aria-label={`View details about ${topProject.builderName}`}
-                  >
-                    View Projects by {topProject.builderName}
-                  </Link>
-                </div>
+      <div className="container-fluid position-relative mpf-top-picks-section-container">
+        <section className="container pt-5 top-space">
+          <div className="mpf-top-picks-section">
+            <div className="mpf-top-picks-header">
+              <div>
+                <h2 className="mpf-top-picks-title">
+                  My Property Fact&apos;s Top Picks
+                </h2>
+                <p className="mpf-top-picks-eyebrow">
+                  Explore Top Living Options With Us
+                </p>
               </div>
-              <div className="mpf-top-pic-project-details mt-3 mt-md-0">
-                <div className="my-3 my-md-4">
-                  <h2 className="fw-bold fs-3 fs-md-2">{topProject.projectName}</h2>
-                  <div className="d-flex align-items-center gap-2 mpf-top-pic-address-container">
-                    <FontAwesomeIcon
-                      icon={faLocationDot}
-                      color="green"
-                      fontSize={16}
+            </div>
+
+            <div className="mpf-top-picks-card">
+              <div className="mpf-top-picks-card__info">
+                <div className="mpf-top-picks-card__builder">
+                  <div className="project-logo-container">
+                    <Image
+                      src={logoSrc}
+                      alt={builderName || "Builder logo"}
+                      width={56}
+                      height={56}
+                      className="img-fluid"
+                      priority
                     />
-                    <p className="m-0 p-0">{topProject.projectAddress}</p>
+                  </div>
+                  <div className="mpf-top-picks-card__builder-info">
+                    <h4 className="mpf-top-pic-project-name">{builderName}</h4>
+                    {builderSlug && (
+                      <Link
+                        href={`/builder/${builderSlug}`}
+                        className="mpf-top-picks-card__link"
+                        aria-label={`View projects by ${builderName}`}
+                      >
+                        View Projects by {builderName} &gt;
+                      </Link>
+                    )}
                   </div>
                 </div>
-                <div className="my-3 my-md-4">
-                  <h4 className="fs-4 fs-md-3">{generatePrice(topProject.projectPrice)}</h4>
-                  <p className="fs-5 fs-md-6">{topProject.projectConfiguration}</p>
+
+                <div className="mpf-top-picks-card__project">
+                  <h3 className="mpf-top-picks-card__project-name">{projectName}</h3>
+                  <div className="mpf-top-pic-address-container">
+                    <FontAwesomeIcon icon={faLocationDot} />
+                    <span>{projectAddress}</span>
+                  </div>
                 </div>
+
+                <div className="mpf-top-picks-card__meta">
+                  <div className="mpf-top-picks-card__meta-block1">
+                    <span className="mpf-top-picks-card__meta-label1 d-flex gap-2 align-items-center">
+                      <Image src="/static/icon/arrow.png" alt="Starting From" width={16} height={16} />
+                      Starting From
+                    </span>
+                    <p className="mpf-top-picks-card__meta-value1">
+                      {generatePrice(projectPrice)}
+                    </p>
+                  </div>
+                  <div className="mpf-top-picks-card__meta-block2">
+                    <p className="mpf-top-picks-card__meta-value2 text-uppercase d-flex gap-2 align-items-center">
+                    <Image src="/static/icon/home.png" alt="Starting From" width={20} height={20} />
+                      {projectConfiguration}
+                    </p>
+                  </div>
+                </div>
+
                 <Link
-                  href={`/${topProject.slugURL}`}
-                  className="btn-background rounded-pill border-0 px-3 px-md-4 py-2 fs-6 text-white mb-3 text-decoration-none d-inline-block"
-                  aria-label={`View details about ${topProject.projectName}`}
+                  href={`/${slugURL}`}
+                  className="mpf-top-picks-card__cta"
+                  aria-label={`More about ${projectName}`}
                 >
-                  More About {topProject.projectName}
+                  More About {projectName}
                 </Link>
+              </div>
+
+              <div className="mpf-top-picks-card__media">
+                <Image
+                  src={bannerImageSrc}
+                  alt={projectName || "Project banner"}
+                  fill
+                  sizes="(max-width: 992px) 100vw, 50vw"
+                  priority
+                  className="mpf-top-picks-card__media-img"
+                />
+                <div className="mpf-top-picks-card__tag">
+                  <span className="mpf-top-picks-card__tag-eyebrow">
+                    Premium Living Spaces
+                  </span>
+                  <span className="mpf-top-picks-card__tag-title">
+                    Ready to Move In
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-          <div className="col-12 col-md-12 col-xl-8 m-0 p-0 position-relative">
+        </section>
+        <div className="mpf-top-picks-banner">
+          <div className="mpf-top-picks-banner__content">
+            <span className="mpf-top-picks-banner__eyebrow">
+              For post your property resigter on mypropertyfact
+            </span>
+            <Link
+              href="/contact-us"
+              className="mpf-top-picks-banner__cta"
+              aria-label="Explore more about posting your property on MyPropertyFact"
+            >
+              Explore More
+            </Link>
+          </div>
+          <div>
             <Image
-              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${topProject.slugURL}/${topProject.projectBannerImage}`}
-              alt={topProject.projectName}
-              width={1536}
-              height={1024}
-              className="rounded-3 position-relative img-fluid mpf-top-pic-image"
+              src="/static/home_emplore_image.png"
+              alt="MPF Top Picks Banner"
+              width={173.68}
+              height={180.78}
+              className="img-fluid"
             />
           </div>
         </div>
