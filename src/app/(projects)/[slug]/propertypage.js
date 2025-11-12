@@ -23,6 +23,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowDown,
+  faArrowLeft,
   faBed,
   faChartArea,
   faLocationDot,
@@ -301,6 +302,18 @@ export default function Property({ projectDetail }) {
 
   return (
     <>
+      <Link
+        href="/"
+        className="back-to-home-floating"
+        aria-label="Back to MyPropertyFact home page"
+      >
+        <span className="back-to-home-floating__text">
+          Back To Mypropertyfact
+        </span>
+        <span className="back-to-home-floating__icon">
+          <FontAwesomeIcon icon={faArrowLeft} />
+        </span>
+      </Link>
       {/* Header for property detail page */}
       <header
         className={`project-detail-header px-4 ${

@@ -31,7 +31,7 @@ export default function ListingPage({ searchParams }) {
       }
 
       const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      const response = await fetch(`${apiUrl}/api/user/properties`, {
+      const response = await fetch(`${apiUrl}/api/user/master-properties/my-properties`, {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
@@ -44,22 +44,33 @@ export default function ListingPage({ searchParams }) {
 
       const result = await response.json();
       
-      if (result.success && result.data) {
-        // Transform backend Project objects to frontend listing format
-        const transformedListings = result.data.map(project => ({
-          id: project.id,
-          title: project.projectName || 'Untitled Property',
-          location: `${project.projectLocality || ''}${project.city?.name ? ', ' + project.city.name : ''}`.trim() || 'Location not specified',
-          price: formatPrice(project.projectPrice || project.totalPrice),
-          area: formatArea(project.carpetAreaSqft || project.builtUpAreaSqft),
-          status: getStatusDisplay(project.approvalStatus),
-          statusBadge: getStatusBadge(project.approvalStatus),
-          views: 0, // Not available in backend
-          inquiries: 0, // Not available in backend
-          created: project.createdAt || project.submittedAt,
-          approvalStatus: project.approvalStatus,
-          projectData: project // Store full project data for future use
-        }));
+      if (result.success && Array.isArray(result.properties)) {
+        const transformedListings = result.properties.map(property => {
+          const locationParts = [];
+          if (property.address) locationParts.push(property.address);
+          if (property.city?.name) locationParts.push(property.city.name);
+          if (property.state) locationParts.push(property.state);
+
+          const approvalStatus = property.isApproved ? "APPROVED" : "PENDING";
+
+          return {
+            id: property.id,
+            title:
+              property.projectName ||
+              `${property.listingType || ""} ${property.subType || "Property"}`.trim(),
+            location: locationParts.filter(Boolean).join(", ") || "Location not specified",
+            price: formatPrice(property.totalPrice),
+            area: formatArea(property.carpetArea || property.builtUpArea || property.plotArea),
+            status: getStatusDisplay(approvalStatus),
+            statusBadge: getStatusBadge(approvalStatus),
+            views: 0,
+            inquiries: 0,
+            created: property.createdAt,
+            approvalStatus,
+            isApproved: !!property.isApproved,
+            raw: property
+          };
+        });
         
         setListings(transformedListings);
       } else {
@@ -121,8 +132,10 @@ export default function ListingPage({ searchParams }) {
   };
 
   const formatArea = (area) => {
-    if (!area) return "Area not specified";
-    return `${area} sq ft`;
+    if (area === null || area === undefined || area === "") return "Area not specified";
+    const numericArea = typeof area === 'string' ? parseFloat(area) : area;
+    if (Number.isNaN(numericArea)) return "Area not specified";
+    return `${numericArea.toLocaleString('en-IN')} sq ft`;
   };
 
   const getStatusDisplay = (approvalStatus) => {
@@ -161,8 +174,8 @@ export default function ListingPage({ searchParams }) {
     return <ModernPropertyListing />;
   }
 
-  const activeListings = listings.filter(l => l.approvalStatus === 'APPROVED').length;
-  const pendingListings = listings.filter(l => l.approvalStatus === 'PENDING').length;
+  const activeListings = listings.filter(l => l.isApproved).length;
+  const pendingListings = listings.filter(l => !l.isApproved).length;
   const draftListings = listings.filter(l => l.approvalStatus === 'DRAFT').length;
 
   return (
@@ -302,7 +315,7 @@ export default function ListingPage({ searchParams }) {
                       <tr key={listing.id}>
                         <td>
                           <div>
-                            <h6 className="mb-1">{listing.projectName}</h6>
+                            <h6 className="mb-1">{listing.title}</h6>
                             <small className="text-muted">ID: #{listing.id}</small>
                           </div>
                         </td>
