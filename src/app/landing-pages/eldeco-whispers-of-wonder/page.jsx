@@ -888,7 +888,6 @@ gsap.ticker.lagSmoothing(0);
 
         <div className={styles.amenitiesGrid}>
           <div className={`${styles.amenityCard} amenity-card`}>
-            <img src="" alt="" />
             <h3 className={styles.amenityTitle}>Luxury Amenities</h3>
             <p className={styles.amenityText}>
               Clubhouse, Half Olympic-size Swimming Pool, Spa, Party Hall, Pet Park

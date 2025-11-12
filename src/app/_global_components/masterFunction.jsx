@@ -23,9 +23,14 @@ export const fetchAllProjects = cache(async () => {
   const res = await fetch(`${apiUrl}projects`, {
     next: { revalidate: 60 },
   });
-  console.log(`Called fetchAllProjects and length is ${res.length}`);
   if (!res.ok) throw new Error("Failed to fetch projects");
-  return res.json();
+  const data = await res.json();
+  console.log(
+    `Called fetchAllProjects and length is ${
+      Array.isArray(data) ? data.length : "unknown"
+    }`,
+  );
+  return data;
 });
 
 //Fetch all projects with cached
@@ -105,7 +110,8 @@ export const isFloorTypeUrl = async (slug) => {
     next: { revalidate: 60 },
   });
   if (!res.ok) throw new Error("Failed to fetch project details");
-  const data = await res.json(); // array of projects
+  const data = await res.json(); // array of projects'
+  debugger
   const uniqueUrls = new Set();
   data.forEach((project) => {
     if (Array.isArray(project.plans)) {
@@ -121,6 +127,7 @@ export const isFloorTypeUrl = async (slug) => {
     }
   });
   const floorType = slug.split("-in-")[0];
+  console.log("is floor type", data);
   return uniqueUrls.has(floorType.toLowerCase());
 };
 
