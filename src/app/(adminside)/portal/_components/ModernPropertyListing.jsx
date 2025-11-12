@@ -37,17 +37,17 @@ import {
   fetchProjectStatus,
   fetchProjectTypes,
 } from "@/app/_global_components/masterFunction";
-import axios from "axios";
 
 export default function ModernPropertyListing() {
   const [currentStep, setCurrentStep] = useState(2);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [createdProperty, setCreatedProperty] = useState(null);
   const [propertyStatus, setPropertyStatus] = useState([]);
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [builders, setBuilders] = useState([]);
-  const [formData, setFormData] = useState({
+  const getInitialFormState = () => ({
     // Step 1: Basic Information
     listingType: "",
     transaction: "",
@@ -66,6 +66,7 @@ export default function ModernPropertyListing() {
     locality: "",
     city: "",
     state: "",
+    country: "India",
     pincode: "",
     carpetArea: "",
     builtUpArea: "",
@@ -96,12 +97,20 @@ export default function ModernPropertyListing() {
     imagePreviews: [],
     videos: [],
     virtualTour: "",
+    ownershipType: "",
+    reraId: "",
+    reraState: "",
     contactName: "",
     contactPhone: "",
     contactEmail: "",
+    contactPreference: "Phone",
     preferredTime: "",
     additionalNotes: "",
+    truthfulDeclaration: true,
+    dpdpConsent: true,
   });
+
+  const [formData, setFormData] = useState(getInitialFormState);
 
   const steps = [
     {
@@ -393,10 +402,11 @@ export default function ModernPropertyListing() {
 
     try {
       // Get authentication token
-      const token = Cookies.get("token");
+      const token = Cookies.get("authToken") || Cookies.get("token");
 
       if (!token) {
         alert("You must be logged in to submit a property");
+        setIsSubmitting(false);
         return;
       }
 
@@ -406,102 +416,130 @@ export default function ModernPropertyListing() {
       // Add images to form data
       formData.imagePreviews.forEach((imagePreview) => {
         if (imagePreview.file) {
-          formDataObj.append("images", imagePreview.file);
+          formDataObj.append("photos", imagePreview.file);
         }
       });
+
+      const toNumber = (value, parser = parseFloat) => {
+        if (value === undefined || value === null || value === "") {
+          return null;
+        }
+        const num = parser(value);
+        return Number.isNaN(num) ? null : num;
+      };
+
+      const toInteger = (value) => toNumber(value, (val) => parseInt(val, 10));
+      const emptyToNull = (value) =>
+        value === undefined || value === null || value === "" ? null : value;
+
+      const extractParkingSlots = (value) => {
+        if (!value) return null;
+        const match = value.match(/(\d+)/);
+        return match ? parseInt(match[0], 10) : null;
+      };
 
       // Create property data object matching backend DTO
       const propertyData = {
         // Basic Information
-        listingType: formData.listingType,
-        transaction: formData.transaction,
-        subType: formData.subType,
-        title:
-          formData.title ||
-          `${formData.bedrooms} BHK ${formData.subType} in ${formData.locality}`,
-        description: formData.description,
-        status: formData.status,
-        possession: formData.possession,
-        occupancy: formData.occupancy,
-        noticePeriod: formData.noticePeriod
-          ? parseInt(formData.noticePeriod)
-          : null,
+        listingType: emptyToNull(formData.listingType),
+        transaction: emptyToNull(formData.transaction),
+        subType: emptyToNull(formData.subType),
+        description: emptyToNull(formData.description),
+        status: emptyToNull(formData.status),
+        possession: emptyToNull(formData.possession),
+        occupancy: emptyToNull(formData.occupancy),
+        noticePeriod: toInteger(formData.noticePeriod),
 
         // Location
-        projectName: formData.projectName,
-        builderName: formData.builderName,
-        address: formData.address,
-        locality: formData.locality,
-        city: formData.city,
-        state: formData.state,
-        pincode: formData.pincode,
+        projectName: emptyToNull(formData.projectName),
+        builderName: emptyToNull(formData.builderName),
+        address: emptyToNull(formData.address),
+        locality: emptyToNull(formData.locality),
+        city: emptyToNull(formData.city),
+        state: emptyToNull(formData.state),
+        country: emptyToNull(formData.country) || "India",
+        pinCode: emptyToNull(formData.pincode),
+        latitude: toNumber(formData.latitude),
+        longitude: toNumber(formData.longitude),
 
         // Area
-        carpetArea: formData.carpetArea
-          ? parseFloat(formData.carpetArea)
-          : null,
-        builtUpArea: formData.builtUpArea
-          ? parseFloat(formData.builtUpArea)
-          : null,
-        superBuiltUpArea: formData.superBuiltUpArea
-          ? parseFloat(formData.superBuiltUpArea)
-          : null,
-        plotArea: formData.plotArea ? parseFloat(formData.plotArea) : null,
+        carpetArea: toNumber(formData.carpetArea),
+        builtUpArea: toNumber(formData.builtUpArea),
+        superBuiltUpArea: toNumber(formData.superBuiltUpArea),
+        plotArea: toNumber(formData.plotArea),
 
         // Pricing
-        totalPrice: formData.totalPrice
-          ? parseFloat(formData.totalPrice)
-          : null,
-        pricePerSqFt: formData.pricePerSqFt
-          ? parseFloat(formData.pricePerSqFt)
-          : null,
-        maintenanceCharges: formData.maintenanceCharges
-          ? parseFloat(formData.maintenanceCharges)
-          : null,
-        bookingAmount: formData.bookingAmount
-          ? parseFloat(formData.bookingAmount)
-          : null,
+        totalPrice: toNumber(formData.totalPrice),
+        pricePerSqft: toNumber(formData.pricePerSqFt),
+        maintenanceCam: toNumber(formData.maintenanceCharges),
+        bookingAmount: toNumber(formData.bookingAmount),
+        waterSupply: emptyToNull(formData.waterSupply),
+        towerBlock: emptyToNull(formData.towerBlock),
 
         // Property Details
-        floor: formData.floor ? parseInt(formData.floor) : null,
-        totalFloors: formData.totalFloors
-          ? parseInt(formData.totalFloors)
-          : null,
-        facing: formData.facing,
-        ageOfConstruction: formData.ageOfConstruction
-          ? parseInt(formData.ageOfConstruction)
-          : null,
+        floorNo: toInteger(formData.floor),
+        totalFloors: toInteger(formData.totalFloors),
+        facing: emptyToNull(formData.facing),
+        unitFacing: emptyToNull(formData.facing),
+        ageOfConstruction: toInteger(formData.ageOfConstruction),
+        ageOfProperty: toInteger(formData.ageOfConstruction),
+        carParkingSlots: extractParkingSlots(formData.parking),
+        parkingType: emptyToNull(formData.parking),
+        powerBackup: emptyToNull(formData.powerBackup),
 
         // Configuration
-        bedrooms: formData.bedrooms ? parseInt(formData.bedrooms) : null,
-        bathrooms: formData.bathrooms ? parseInt(formData.bathrooms) : null,
-        balconies: formData.balconies ? parseInt(formData.balconies) : null,
-        parking: formData.parking,
-        furnished: formData.furnished,
+        bedrooms: toInteger(formData.bedrooms),
+        bathrooms: toInteger(formData.bathrooms),
+        balconies: toInteger(formData.balconies),
+        furnishingLevel: emptyToNull(formData.furnished),
+        additionalRooms:
+          formData.features && formData.features.length
+            ? formData.features.join(", ")
+            : null,
+        includedItems: formData.features || [],
+        societyFeatures: formData.amenities || [],
+        pointsOfInterest: formData.pointsOfInterest || [],
+        taxesCharges: formData.taxesCharges || [],
+        restrictions: emptyToNull(formData.restrictions),
+        renovationHistory: emptyToNull(formData.additionalNotes),
 
         // Amenities (assuming array of IDs)
-        amenities: formData.amenities || [],
+        amenityIds: formData.amenityIds || [],
 
         // Contact Information
-        contactName: formData.contactName,
-        contactPhone: formData.contactPhone,
-        contactEmail: formData.contactEmail,
-        preferredTime: formData.preferredTime,
-        additionalNotes: formData.additionalNotes,
+        videoUrl: emptyToNull(formData.virtualTour),
+        ownershipType: emptyToNull(formData.ownershipType),
+        reraId: emptyToNull(formData.reraId),
+        reraState: emptyToNull(formData.reraState),
+        contactPreference:
+          emptyToNull(formData.contactPreference) || "Phone",
+        primaryContact: emptyToNull(formData.contactPhone),
+        primaryEmail: emptyToNull(formData.contactEmail),
+        truthfulDeclaration:
+          formData.truthfulDeclaration !== undefined
+            ? formData.truthfulDeclaration
+            : true,
+        dpdpConsent:
+          formData.dpdpConsent !== undefined ? formData.dpdpConsent : true,
+
+        // Legacy/contact
+        additionalNotes: emptyToNull(formData.additionalNotes),
+
+        // Relationship placeholders
+        cityId: formData.cityId || null,
+        countryId: formData.countryId || null,
+        localityId: formData.localityId || null,
+        builderId: formData.builderId || null,
       };
 
       // Add property data as JSON string (backend will parse it)
       formDataObj.append("property", JSON.stringify(propertyData));
+      const baseUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005"
+      ).replace(/\/$/, "");
 
-      console.log(
-        "Submitting property with",
-        formData.imagePreviews.length,
-        "images"
-      );
-
-      // Call backend API
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/user/properties`,
+        `${baseUrl}/api/user/master-properties`,
         {
           method: "POST",
           headers: {
@@ -512,119 +550,38 @@ export default function ModernPropertyListing() {
         }
       );
 
-      const result = await response.json();
-
-      if (result.success) {
-        console.log("Property submitted successfully:", result);
-        setShowSuccessModal(true);
-      } else {
-        alert("Error: " + result.message);
+      const responseText = await response.text();
+      let result = null;
+      if (responseText) {
+        try {
+          result = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error("Failed to parse response JSON", parseError);
+        }
       }
+
+      if (!response.ok || !(result && result.success)) {
+        const message =
+          result?.message || `Failed to create property (status ${response.status})`;
+        throw new Error(message);
+      }
+
+      setCreatedProperty(result.property || null);
+      setFormData(getInitialFormState());
+      setErrors({});
+      setCurrentStep(1);
+      setShowSuccessModal(true);
     } catch (error) {
       console.error("Error submitting property:", error);
-      alert("Error submitting property. Please try again.");
+      alert(error.message || "Error submitting property. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const createPayload = () => {
-    return {
-      // Basic Information
-      listingType: formData.listingType,
-      transaction: formData.transaction,
-      subType: formData.subType,
-      title:
-        formData.title ||
-        `${formData.bedrooms} BHK ${formData.subType} in ${formData.locality}`,
-      description: formData.description,
-      status: formData.status,
-      possession: formData.possession,
-      occupancy: formData.occupancy,
-      noticePeriod: formData.noticePeriod
-        ? parseInt(formData.noticePeriod)
-        : null,
-
-      // Location
-      location: {
-        projectName: formData.projectName,
-        builderName: formData.builderName,
-        address: formData.address,
-        locality: formData.locality,
-        city: formData.city,
-        state: formData.state,
-        pincode: formData.pincode,
-      },
-
-      // Area
-      area: {
-        carpetArea: parseInt(formData.carpetArea),
-        builtUpArea: formData.builtUpArea
-          ? parseInt(formData.builtUpArea)
-          : null,
-        superBuiltUpArea: formData.superBuiltUpArea
-          ? parseInt(formData.superBuiltUpArea)
-          : null,
-        plotArea: formData.plotArea ? parseInt(formData.plotArea) : null,
-      },
-
-      // Pricing
-      pricing: {
-        totalPrice: parseInt(formData.totalPrice),
-        pricePerSqFt: formData.pricePerSqFt
-          ? parseInt(formData.pricePerSqFt)
-          : null,
-        maintenanceCharges: formData.maintenanceCharges
-          ? parseInt(formData.maintenanceCharges)
-          : null,
-        bookingAmount: formData.bookingAmount
-          ? parseInt(formData.bookingAmount)
-          : null,
-      },
-
-      // Property Details
-      propertyDetails: {
-        floor: parseInt(formData.floor),
-        totalFloors: parseInt(formData.totalFloors),
-        facing: formData.facing,
-        ageOfConstruction: formData.ageOfConstruction
-          ? parseInt(formData.ageOfConstruction)
-          : null,
-      },
-
-      // Features
-      features: {
-        bedrooms: parseInt(formData.bedrooms),
-        bathrooms: parseInt(formData.bathrooms),
-        balconies: formData.balconies ? parseInt(formData.balconies) : null,
-        parking: formData.parking,
-        furnished: formData.furnished,
-        amenities: formData.amenities,
-        features: formData.features,
-      },
-
-      // Media & Contact
-      media: {
-        images: formData.images,
-        videos: formData.videos,
-        virtualTour: formData.virtualTour,
-      },
-
-      contact: {
-        name: formData.contactName,
-        phone: formData.contactPhone,
-        email: formData.contactEmail,
-        preferredTime: formData.preferredTime,
-        additionalNotes: formData.additionalNotes,
-      },
-
-      // Metadata
-      metadata: {
-        createdAt: new Date().toISOString(),
-        status: "draft", // or "published" based on your workflow
-        version: "1.0",
-      },
-    };
+  const handleCloseSuccessModal = () => {
+    setShowSuccessModal(false);
+    setCreatedProperty(null);
   };
 
   const renderStepContent = () => {
@@ -799,7 +756,7 @@ export default function ModernPropertyListing() {
       {/* Success Modal */}
       <Modal
         show={showSuccessModal}
-        onHide={() => setShowSuccessModal(false)}
+        onHide={handleCloseSuccessModal}
         centered
       >
         <Modal.Header closeButton>
@@ -810,9 +767,15 @@ export default function ModernPropertyListing() {
         </Modal.Header>
         <Modal.Body>
           <p>
-            Your property has been successfully listed and is now live on the
-            portal.
+            Your property has been submitted successfully and is pending
+            approval. Our team will review the details and notify you once
+            it&apos;s published.
           </p>
+          {createdProperty && (
+            <div className="mb-3">
+              <strong>Reference ID:</strong> #{createdProperty.id}
+            </div>
+          )}
           <div className="d-flex gap-2">
             <Button
               variant="primary"
@@ -824,7 +787,7 @@ export default function ModernPropertyListing() {
             </Button>
             <Button
               variant="outline-secondary"
-              onClick={() => setShowSuccessModal(false)}
+              onClick={handleCloseSuccessModal}
             >
               Close
             </Button>
@@ -1593,6 +1556,22 @@ function LocationAreaStep({ data, onChange, errors, builderList = [] }) {
         <Col md={6}>
           <div className="form-group-enhanced">
             <label className="form-label-enhanced">
+              <CIcon icon={cilFlagAlt} className="label-icon" />
+              Country
+            </label>
+            <Form.Control
+              type="text"
+              value={data.country}
+              onChange={(e) => onChange("country", e.target.value)}
+              placeholder="e.g., India"
+              className="form-control-enhanced"
+            />
+          </div>
+        </Col>
+
+        <Col md={6}>
+          <div className="form-group-enhanced">
+            <label className="form-label-enhanced">
               <CIcon icon={cilEnvelopeOpen} className="label-icon" />
               PIN Code
               <span className="required-indicator">*</span>
@@ -2211,6 +2190,20 @@ function MediaContactStep({
 
         <Col md={6}>
           <Form.Group>
+            <Form.Label>Preferred Contact Method</Form.Label>
+            <Form.Select
+              value={data.contactPreference}
+              onChange={(e) => onChange("contactPreference", e.target.value)}
+            >
+              <option value="Phone">Phone</option>
+              <option value="Email">Email</option>
+              <option value="Any">Any</option>
+            </Form.Select>
+          </Form.Group>
+        </Col>
+
+        <Col md={6}>
+          <Form.Group>
             <Form.Label>Preferred Contact Time</Form.Label>
             <Form.Select
               value={data.preferredTime}
@@ -2231,6 +2224,42 @@ function MediaContactStep({
           </Form.Group>
         </Col>
 
+        <Col md={6}>
+          <Form.Group>
+            <Form.Label>Ownership Type</Form.Label>
+            <Form.Control
+              type="text"
+              value={data.ownershipType}
+              onChange={(e) => onChange("ownershipType", e.target.value)}
+              placeholder="e.g., Freehold, Leasehold"
+            />
+          </Form.Group>
+        </Col>
+
+        <Col md={6}>
+          <Form.Group>
+            <Form.Label>RERA ID</Form.Label>
+            <Form.Control
+              type="text"
+              value={data.reraId}
+              onChange={(e) => onChange("reraId", e.target.value)}
+              placeholder="Enter RERA registration number"
+            />
+          </Form.Group>
+        </Col>
+
+        <Col md={6}>
+          <Form.Group>
+            <Form.Label>RERA State</Form.Label>
+            <Form.Control
+              type="text"
+              value={data.reraState}
+              onChange={(e) => onChange("reraState", e.target.value)}
+              placeholder="State where RERA is registered"
+            />
+          </Form.Group>
+        </Col>
+
         <Col md={12}>
           <Form.Group>
             <Form.Label>Additional Notes</Form.Label>
@@ -2242,6 +2271,25 @@ function MediaContactStep({
               placeholder="Any additional information for potential buyers/tenants"
             />
           </Form.Group>
+        </Col>
+
+        <Col md={12}>
+          <div className="d-flex flex-column gap-2 mt-2">
+            <Form.Check
+              type="checkbox"
+              id="truthfulDeclaration"
+              label="I confirm that the information provided is true and accurate"
+              checked={!!data.truthfulDeclaration}
+              onChange={(e) => onChange("truthfulDeclaration", e.target.checked)}
+            />
+            <Form.Check
+              type="checkbox"
+              id="dpdpConsent"
+              label="I consent to MyPropertyFact storing and processing my data"
+              checked={!!data.dpdpConsent}
+              onChange={(e) => onChange("dpdpConsent", e.target.checked)}
+            />
+          </div>
         </Col>
       </Row>
     </div>

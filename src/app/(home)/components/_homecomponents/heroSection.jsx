@@ -37,7 +37,7 @@ export default async function HeroSection() {
       id: "hero-primary",
       desktop: "/static/banners/desktop_banner1.jpeg",
       tablet: "/static/banners/tablet_banner1.jpg",
-      mobile: "/static/banners/mobile_banner1.jpg",
+      mobile: "/static/banners/new_mobile_banner.jpg",
       alt: "Find the best property with My Property Fact",
       priority: true,
     },
@@ -71,45 +71,46 @@ export default async function HeroSection() {
   return (
     <>
       <div className="position-relative mb-5">
-        <div
-          className="mpf-hero-banner position-relative"
-        >
+        <div className="mpf-hero-banner position-relative">
           <div className="position-relative">
             <HeroBannerSlider slides={heroSlides} />
+            <div className="bannercontainer">
+              <h1 className="text-center text-light">Find the best property</h1>
+              <div className="d-flex flex-wrap align-item-center justify-content-center gap-4 my-4">
+                {projectTypeList.map((item, index) => (
+                  <div key={`row-${index}`}>
+                    <Link
+                      href={`projects/${item.slugUrl}`}
+                      className="link-btn rounded-5 py-2 px-3 text-white text-decoration-none"
+                    >
+                      {item.projectTypeName}
+                    </Link>
+                  </div>
+                ))}
+              </div>
+              <div className="data-container">
+                {ourFacts.map((item, index) => (
+                  <div
+                    key={`${item.text}-${index}`}
+                    className="data-container-child"
+                  >
+                    <section>
+                      <h3 className="m-0">
+                        <span>
+                          <AnimatedCounter
+                            targetValue={item.numbers}
+                            suffix="+"
+                          />
+                        </span>
+                      </h3>
+                      <p className="text-center ">{item.text}</p>
+                    </section>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
           {/* <div className="overlay"></div> */}
-          <div className="bannercontainer">
-            <h1 className="text-center text-light">Find the best property</h1>
-            <div className="d-flex flex-wrap align-item-center justify-content-center gap-4 my-4">
-              {projectTypeList.map((item, index) => (
-                <div key={`row-${index}`}>
-                  <Link
-                    href={`projects/${item.slugUrl}`}
-                    className="link-btn rounded-5 py-2 px-3 text-white text-decoration-none"
-                  >
-                    {item.projectTypeName}
-                  </Link>
-                </div>
-              ))}
-            </div>
-            <div className="data-container">
-              {ourFacts.map((item, index) => (
-                <div
-                  key={`${item.text}-${index}`}
-                  className="data-container-child"
-                >
-                  <section>
-                    <h3 className="m-0">
-                      <span>
-                        <AnimatedCounter targetValue={item.numbers} suffix="+" />
-                      </span>
-                    </h3>
-                    <p className="text-center ">{item.text}</p>
-                  </section>
-                </div>
-              ))}
-            </div>
-          </div>
           <SearchFilter projectTypeList={projectTypeList} cityList={cityList} />
         </div>
       </div>

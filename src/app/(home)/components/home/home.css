@@ -23,6 +23,7 @@
 }
 
 .hero-banner-slider .slick-dots {
+  display: none !important;
   bottom: 20px;
 }
 
@@ -58,7 +59,7 @@
 }
 
 /* Mobile styles - maintain natural image height */
-@media (max-width: 426px) {
+/* @media (max-width: 426px) {
   .mpf-hero-banner {
     height: auto !important;
     max-height: none !important;
@@ -74,10 +75,10 @@
     height: auto;
     max-height: none;
   }
-}
+} */
 
 /* Tablet styles - maintain natural image height */
-@media (min-width: 427px) and (max-width: 1199px) {
+/* @media (min-width: 427px) and (max-width: 1199px) {
   .mpf-hero-banner {
     height: auto !important;
     max-height: none !important;
@@ -93,10 +94,10 @@
     height: auto;
     max-height: none;
   }
-}
+} */
 
 /* Desktop styles - maintain aspect ratio, prevent cutoff */
-@media (min-width: 1200px) {
+/* @media (min-width: 1200px) {
   .mpf-hero-banner {
     height: auto !important;
     max-height: none !important;
@@ -112,7 +113,7 @@
     height: auto;
     max-height: none;
   }
-}
+} */
 
 /* Large desktop screens - ensure no cutoff */
 @media (min-width: 1500px) {
@@ -131,6 +132,9 @@
     height: auto;
     max-height: none;
   }
+  .home-search-container {
+    bottom: -50px !important;
+  }
 }
 
 .home-search-container {
@@ -139,13 +143,6 @@
   left: 50% !important;
   transform: translateX(-50%) !important;
   width: 100%;
-}
-
-/* Ensure search filter is positioned correctly at bottom of banner on large screens */
-@media (min-width: 1500px) {
-  .home-search-container {
-    bottom: -50px !important;
-  }
 }
 
 /* enquiry-sticky-btn starts*/
@@ -258,7 +255,7 @@
   gap: 4rem;
 }
 
-@media (max-width: 426px) {
+/* @media (max-width: 426px) {
   .mpf-hero-banner {
     height: auto !important;
     max-height: none !important;
@@ -275,13 +272,14 @@
     margin-top: 12rem !important;
   }
   .home-search-container {
-    bottom: -202px !important;
+    bottom: 0px !important;
+    position: relative !important;
   }
   .diwali-gif {
     width: 100% !important;
   }
-}
-@media (max-width: 375px) {
+} */
+/* @media (max-width: 375px) {
   .data-container {
     display: flex;
     color: #fff;
@@ -292,10 +290,10 @@
   .data-container-child section p {
     font-size: 14px;
   }
-}
+} */
 /*bannercontainer ends*/
 
-@media (min-width: 427px) and (max-width: 768px) {
+/* @media (min-width: 427px) and (max-width: 768px) {
   .mpf-hero-banner {
     height: auto !important;
     max-height: none !important;
@@ -303,7 +301,7 @@
   .diwali-gif {
     width: 100% !important;
   }
-}
+} */
 
 .diwali-gif {
   position: absolute;
@@ -326,4 +324,36 @@
 
 .eapps-instagram-feed-header{
   display: none !important;
+}
+
+@media (max-width: 768px) {
+  .home-search-container {
+    bottom: 0px !important;
+    position: relative !important;
+  }
+}
+
+@media (max-width: 426px) {
+  .data-container {
+    display: flex;
+    color: #fff;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .data-container {
+    display: flex;
+    color: #fff;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 319px) {
+  .data-container {
+    display: flex;
+    color: #fff;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
 }
