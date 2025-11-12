@@ -18,12 +18,12 @@ export default function ThankYouPage() {
 
   useEffect(() => {
     if (countdown === 0) {
-      router.push("/landing-pages/eldecoWow");
+      router.push("/landing-pages/eldeco-whispers-of-wonder");
     }
   }, [countdown, router]);
 
   const handleBackNow = () => {
-    router.push("/landing-pages/eldecoWow");
+    router.push("/landing-pages/eldeco-whispers-of-wonder");
   };
 
   return (

@@ -6,6 +6,7 @@ import MpfTopPicks from "../mpfTopPick";
 import HeroSection from "../_homecomponents/heroSection";
 import FeaturedPage from "./featured/page";
 import InstagramFeed from "./instagram-feed";
+import ScrollToTop from "../_homecomponents/ScrollToTop";
 import {
   getAllProjects,
   getWeeklyProject,
@@ -85,6 +86,8 @@ export default async function HomePage() {
             <InstagramFeed />
           </div>
         </div>
+        {/* Scroll to top button */}
+        <ScrollToTop />
       </>
     );
   } catch (error) {
