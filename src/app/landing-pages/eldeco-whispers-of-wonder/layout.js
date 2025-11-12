@@ -9,11 +9,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/images/favicon.ico" />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <Script
           id="gtag-init"
           strategy="afterInteractive"
