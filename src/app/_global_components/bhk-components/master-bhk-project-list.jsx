@@ -64,7 +64,7 @@ export default function MasterBHKProjectList() {
         case "new-projects":
           filteredData = projects.filter(
             (item) =>
-              item.projectStatusName === "New Launch" &&
+              item.projectStatusName === "New Launched" &&
               item.cityName.toLowerCase() === cityName.toLowerCase()
           );
           setFloorTypeList(
