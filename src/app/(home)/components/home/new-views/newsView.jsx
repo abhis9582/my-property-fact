@@ -10,7 +10,7 @@ export default function NewsAndViews({ webStoryList }) {
         {webStoryList
           .filter((item) => item.webStories.length > 0)
           .map((item, index) => (
-            <div key={index} className="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div key={index} className="col-12 col-md-6 col-lg-3">
               <Link
                 className="h-100 text-decoration-none text-dark shadow-sm"
                 href={`${process.env.NEXT_PUBLIC_API_URL}web-story/${item.categoryName}`}
