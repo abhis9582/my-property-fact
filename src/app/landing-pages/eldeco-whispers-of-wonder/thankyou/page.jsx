@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Script from "next/script";
 import styles from "./page.module.css";
 
 export default function ThankYouPage() {
@@ -22,38 +23,57 @@ export default function ThankYouPage() {
     }
   }, [countdown, router]);
 
+
   const handleBackNow = () => {
     router.push("/landing-pages/eldeco-whispers-of-wonder");
   };
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.card}>
-        <img
-          src="/images/eldecoLogo-removebg-preview.png"
-          alt="Eldeco Wow Logo"
-          className={styles.logo}
-        />
+    <>
+      <Script
+        id="google-tag-init"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-16457709652');
+          `,
+        }}
+      />
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=AW-16457709652"
+        strategy="afterInteractive"
+      />
+      <div className={styles.wrapper}>
+        <div className={styles.card}>
+          <img
+            src="/images/eldecoLogo-removebg-preview.png"
+            alt="Eldeco Wow Logo"
+            className={styles.logo}
+          />
 
-        <div className={styles.icon}>✓</div>
+          <div className={styles.icon}>✓</div>
 
-        <h1 className={styles.title}>Thank You!</h1>
-        <p className={styles.message}>
-          Your enquiry has been submitted successfully. Our team will reach out to you very soon.
-        </p>
+          <h1 className={styles.title}>Thank You!</h1>
+          <p className={styles.message}>
+            Your enquiry has been submitted successfully. Our team will reach out to you very soon.
+          </p>
 
-        <div className={styles.timerBox}>
-          <div className={styles.timerLabel}>Redirecting you back to Eldeco Wow in</div>
-          <div className={styles.timerValue}>{countdown} second{countdown === 1 ? "" : "s"}</div>
-        </div>
+          <div className={styles.timerBox}>
+            <div className={styles.timerLabel}>Redirecting you back to Eldeco Wow in</div>
+            <div className={styles.timerValue}>{countdown} second{countdown === 1 ? "" : "s"}</div>
+          </div>
 
-        <div className={styles.actions}>
-          <button type="button" className={styles.primary} onClick={handleBackNow}>
-            Back to Homepage
-          </button>
+          <div className={styles.actions}>
+            <button type="button" className={styles.primary} onClick={handleBackNow}>
+              Back to Homepage
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
