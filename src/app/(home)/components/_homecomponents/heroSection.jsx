@@ -22,7 +22,7 @@ export default async function HeroSection() {
     },
     {
       id: 3,
-      numbers: "520+",
+      numbers: "530+",
       text: "Projects",
     },
     {
