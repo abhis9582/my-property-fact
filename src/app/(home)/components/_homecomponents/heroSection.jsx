@@ -37,7 +37,7 @@ export default async function HeroSection() {
       id: "hero-primary",
       desktop: "/static/banners/desktop_banner1.jpeg",
       tablet: "/static/banners/tablet_banner1.jpg",
-      mobile: "/static/banners/new_mobile_banner.jpg",
+      mobile: "/static/banners/mobile_banner1.jpg",
       alt: "Find the best property with My Property Fact",
       priority: true,
     },
