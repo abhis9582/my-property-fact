@@ -276,7 +276,7 @@ gsap.ticker.lagSmoothing(0);
                 closePopup();
               }
               window.setTimeout(() => {
-                window.location.href = "/landing-pages/eldecoWow/thankyou";
+                window.location.href = "/landing-pages/eldeco-whispers-of-wonder/thankyou";
               }, 800);
             } else {
               throw new Error(result.error?.message || "Form submission failed.");
@@ -888,6 +888,7 @@ gsap.ticker.lagSmoothing(0);
 
         <div className={styles.amenitiesGrid}>
           <div className={`${styles.amenityCard} amenity-card`}>
+          <div className="text-4xl">💎</div>
             <h3 className={styles.amenityTitle}>Luxury Amenities</h3>
             <p className={styles.amenityText}>
               Clubhouse, Half Olympic-size Swimming Pool, Spa, Party Hall, Pet Park
