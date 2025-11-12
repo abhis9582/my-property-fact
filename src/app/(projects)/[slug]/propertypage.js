@@ -308,7 +308,7 @@ export default function Property({ projectDetail }) {
         aria-label="Back to MyPropertyFact home page"
       >
         <span className="back-to-home-floating__text">
-          Back To Mypropertyfact
+          Back To Home
         </span>
         <span className="back-to-home-floating__icon">
           <FontAwesomeIcon icon={faArrowLeft} />
