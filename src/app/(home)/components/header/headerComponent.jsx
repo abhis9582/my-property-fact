@@ -107,6 +107,16 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
             <ul className="d-flex gap-5 m-0 align-items-center header-links list-unstyled fw-bold">
               <li className="hasChild">
                 <Link
+                  href="/"
+                  className={`text-light py-3 text-uppercase text-decoration-none ${
+                    pathname === "/" ? "header-link-active" : ""
+                  }`}
+                >
+                  Home
+                </Link>
+              </li>
+              <li className="hasChild">
+                <Link
                   href="#"
                   className={`text-light text-uppercase text-decoration-none py-3 ${
                     isCityRoute ? "header-link-active" : ""
