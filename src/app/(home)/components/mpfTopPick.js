@@ -140,14 +140,14 @@ export default function MpfTopPicks({ topProject }) {
         <div className="mpf-top-picks-banner">
           <div className="mpf-top-picks-banner__content">
             <span className="mpf-top-picks-banner__eyebrow">
-              For post your property resigter on mypropertyfact
+              For post your property register on mypropertyfact
             </span>
             <Link
               href="/contact-us"
               className="mpf-top-picks-banner__cta"
               aria-label="Explore more about posting your property on MyPropertyFact"
             >
-              Explore More
+              Contact us
             </Link>
           </div>
           <div>

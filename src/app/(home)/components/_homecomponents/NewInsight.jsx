@@ -7,56 +7,62 @@ import "swiper/css/scrollbar";
 import "./newinsight.css";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import Image from "next/image";
+import { faBarsProgress, faCalculator, faChartLine } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function NewInsight() {
   const insights = [
     {
-        id: 1,
-        src: "/static/Insight_MPF_1.png",
-        alt: "price-trends-img",
-        heading: "Property Growth Tracker",
-        sub_heading:
-          "Monitor property value, rental yields, neighbourhood upgrades; visual graphs track appreciation, send alerts, suggest reinvestment or exit timing decisions smartly.",
-        color: "light-green",
-        button_color: "dark-green",
-        href: "/property-rate-and-trend",
-      },
-      {
-        id: 2,
-        src: "/static/Insight_MPF_2.png",
-        alt: "property-rates-heatmap-img",
-        heading: "EMI Calculator",
-        sub_heading:
-          "Compute monthly EMI, total interest, lifetime cost instantly; adjust loan amount, tenure, rate to secure stress‑free financing decisions for buyers.",
-        color: "light-pink",
-        button_color: "dark-pink",
-        href: "/emi-calculator",
-      },
-      {
-        id: 3,
-        src: "/static/Insight_MPF_3.png",
-        alt: "price-trends-img",
-        heading: "Market Analysis",
-        sub_heading:
-          "We deliver price trends, policy updates, infrastructure news, enabling investors, developers, and lenders to recalibrate the market strategies regularly.",
-        color: "light-yellow",
-        button_color: "dark-yellow",
-        // href: "/market-analysis",
-        href: "/market-analysis",
-      },
-      {
-        id: 4,
-        src: "/static/Insight_MPF_4.png",
-        alt: "price-trends-img",
-        heading: "LOCATE Score",
-        sub_heading:
-          "This converts economy, projects, connectivity, amenities, trends, supply data into one 1000‑point LOCATE rating guiding smart investments with clarity.",
-        color: "light-blue",
-        button_color: "dark-blue",
-        href: "/locate-score",
-      },
+      id: 1,
+      src: "/static/icon/Growth_Tracker.jpg",
+      alt: "price-trends-img",
+      heading: "Property Growth Tracker",
+      sub_heading:
+        "Monitor property value, rental yields, neighbourhood upgrades; visual graphs track appreciation, send alerts, suggest reinvestment or exit timing decisions smartly.",
+      color: "light-green",
+      button_color: "dark-green",
+      href: "/property-rate-and-trend",
+      icon: faChartLine,
+    },
+    {
+      id: 2,
+      src: "/static/icon/Loan_Calculator.jpg",
+      alt: "property-rates-heatmap-img",
+      heading: "EMI Calculator",
+      sub_heading:
+        "Compute monthly EMI, total interest, lifetime cost instantly; adjust loan amount, tenure, rate to secure stress‑free financing decisions for buyers.",
+      color: "light-pink",
+      button_color: "dark-pink",
+      href: "/emi-calculator",
+      icon: faCalculator,
+    },
+    {
+      id: 3,
+      src: "/static/icon/Market_Analysis.jpg",
+      alt: "price-trends-img",
+      heading: "Market Analysis",
+      sub_heading:
+        "We deliver price trends, policy updates, infrastructure news, enabling investors, developers, and lenders to recalibrate the market strategies regularly.",
+      color: "light-yellow",
+      button_color: "dark-yellow",
+      // href: "/market-analysis",
+      href: "/market-analysis",
+      icon: faBarsProgress,
+    },
+    {
+      id: 4,
+      src: "/static/icon/LOCATE_Score.jpg",
+      alt: "price-trends-img",
+      heading: "LOCATE Score",
+      sub_heading:
+        "This converts economy, projects, connectivity, amenities, trends, supply data into one 1000‑point LOCATE rating guiding smart investments with clarity.",
+      color: "light-blue",
+      button_color: "dark-blue",
+      href: "/locate-score",
+      icon: faChartLine,
+    },
   ];
-  
+
   return (
     <div className="container-fluid bg-white new-insight-container">
       <div className="container insight-content-wrapper">
@@ -101,29 +107,51 @@ export default function NewInsight() {
               <SwiperSlide key={`${index}-${insight.id}`}>
                 <div className="insight-card-new">
                   <div className="insight-card-left">
-                    <div className="insight-icon-wrapper">
-                      <Image
-                        src="/static/icon/home_icon.png"
-                        alt="chart"
-                        width={55}
-                        height={55}
-                        className="img-fluid"
-                      />
+                    <div>
+                      <div className="insight-icon-wrapper">
+                        {/* <Image
+                          src="/static/icon/home_icon.png"
+                          alt="chart"
+                          width={55}
+                          height={55}
+                          className="img-fluid"
+                        /> */}
+                        <FontAwesomeIcon 
+                          icon={insight.icon} 
+                          className="insight-icon"
+                          style={{ color: '#9b8755' }}
+                        />
+                      </div>
                     </div>
                     <div className="insight-content">
                       <h3 className="insight-title">{insight.heading}</h3>
                       <p className="insight-description">
                         {insight.sub_heading}
                       </p>
+                      <div className="d-flex align-items-center gap-2 insight-button-wrapper">
+                        <div className="d-flex align-items-center gap-2 insight-button">
+                          <p className="p-0 m-0">Explore Now</p>
+                          <div className="icon-container">
+                            <Image
+                              src="/static/icon/explore_arrow.png"
+                              alt="Previous slide"
+                              width={13.2}
+                              height={13.2}
+                            />
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div className="insight-card-right">
                     <Image
-                      src="/static/icon/insight2.png"
+                      src={insight.src}
                       alt="chart"
-                      width={633}
-                      height={292}
-                      className="img-fluid"
+                      width={496}
+                      height={228}
+                      quality={100}
+                      className="insight-card-image"
+                      style={{ width: '100%', height: 'auto' }}
                     />
                   </div>
                 </div>

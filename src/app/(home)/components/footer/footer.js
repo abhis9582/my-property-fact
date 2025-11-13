@@ -111,7 +111,7 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
             </div>
             <div className="col-12 col-md-6 col-lg-3 col-xl-3">
               <ul>
-                <CityList prefix={"New Projects in "} cityList={cityList} cat={"new-projects"}/>
+                <CityList prefix={"New Projects in "} cityList={cityList.filter(item => !["Agra"].includes(item.cityName))} cat={"new-projects"}/>
               </ul>
             </div>
             <div className="col-12 col-md-6 col-lg-3 col-xl-3">
@@ -124,7 +124,7 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
               <ul>
                 <CityList
                   prefix={"Commercial Property in "}
-                  cityList={cityList}
+                  cityList={cityList.filter(item => !["Agra", "Bareilly", "Chennai", "Dehradun", "Kochi", "Thiruvananthapuram", "Vrindavan"].includes(item.cityName))}
                   cat={"commercial"}
                 />
               </ul>
