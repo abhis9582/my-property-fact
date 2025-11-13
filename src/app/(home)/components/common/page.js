@@ -42,7 +42,7 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
 
   const getFeaturedBadgeStyle = (status) => {
     const defaultStyle = {
-      backgroundColor: "#16a34a",
+      backgroundColor: "linear-gradient(90deg, #349C1C 0%, #192F14 100%)",
       textColor: "#ffffff",
     };
 
@@ -50,10 +50,11 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
       return defaultStyle;
     }
 
+
     const colorMap = {
-      "new launched": { backgroundColor: "#ffeb3b", textColor: "#1f2937" },
-      "new launch": { backgroundColor: "#ffeb3b", textColor: "#1f2937" },
-      "ultra luxury": { backgroundColor: "#e53935", textColor: "#ffffff" },
+      "new launched": { backgroundColor: "linear-gradient(90deg, #C78D11 0%, #FE891B 100%)", textColor: "#fff" },
+      "new launch": { backgroundColor: "linear-gradient(90deg, #EC191C 0%, #CCEC2A 100%)", textColor: "#1f2937" },
+      "ultra luxury": { backgroundColor: "linear-gradient(90deg, #EC191C 0%, #CCEC2A 100%)", textColor: "#ffffff" },
       luxury: { backgroundColor: "#d32f2f", textColor: "#ffffff" },
       "ready to move": { backgroundColor: "#0f766e", textColor: "#ffffff" },
       "under construction": { backgroundColor: "#f97316", textColor: "#ffffff" },
