@@ -11,6 +11,7 @@ import {
   getAllProjects,
   getWeeklyProject,
 } from "@/app/_global_components/masterFunction";
+import NewInsight from "../_homecomponents/NewInsight";
 
 export default async function HomePage() {
   const projects = await getAllProjects();
@@ -42,8 +43,9 @@ export default async function HomePage() {
         {/* Static Sections */}
         <div className="position-relative">
           {/* insight section  */}
-          <h2 className="text-center fw-bold my-5">Insights</h2>
-          <InsightNew />
+          {/* <h2 className="text-center fw-bold my-5">Insights</h2> */}
+          {/* <InsightNew /> */}
+          <NewInsight />
 
           {/* featured projects section  */}
           <h2 className="text-center my-5 fw-bold">Featured Projects</h2>
@@ -82,9 +84,9 @@ export default async function HomePage() {
           {/* blogs section  */}
           <h2 className="text-center my-5 fw-bold">Investor Education </h2>
           <SocialFeedPage />
-          <div className="mb-5">
+          {/* <div className="mb-5">
             <InstagramFeed />
-          </div>
+          </div> */}
         </div>
         {/* Scroll to top button */}
         <ScrollToTop />
