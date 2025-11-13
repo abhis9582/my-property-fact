@@ -28,7 +28,7 @@ export default function AboutUs({ whatWeOffer, ourCommitment, whyMyPropertyFact 
                     </div>
                 </div>
                 <div>
-                    <h1 className="text-center mt-5">What We Offer</h1>
+                    <h1 className="text-center mt-5">We curate listings from all corners of the real estate spectrum</h1>
                     <Swiper
                         autoplay={{ delay: 3000 }}
                         spaceBetween={30}
@@ -68,7 +68,7 @@ export default function AboutUs({ whatWeOffer, ourCommitment, whyMyPropertyFact 
                     <p>{ourCommitment.text}</p>
                     <hr />
                     <p>
-                        Join us at www.mypropertyfact.com and discover a new way to explore real estate. Whether you are buying, renting, or investing, My Property Fact is here to help you make your next move with confidence.
+                        Join us at www.mypropertyfact.in and discover a new way to explore real estate. Whether you are buying, renting, or investing, My Property Fact is here to help you make your next move with confidence.
                     </p>
                 </div>
             </div >
