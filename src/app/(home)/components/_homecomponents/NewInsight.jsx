@@ -7,8 +7,13 @@ import "swiper/css/scrollbar";
 import "./newinsight.css";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import Image from "next/image";
-import { faBarsProgress, faCalculator, faChartLine } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBarsProgress,
+  faCalculator,
+  faChartLine,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
 
 export default function NewInsight() {
   const insights = [
@@ -116,10 +121,10 @@ export default function NewInsight() {
                           height={55}
                           className="img-fluid"
                         /> */}
-                        <FontAwesomeIcon 
-                          icon={insight.icon} 
+                        <FontAwesomeIcon
+                          icon={insight.icon}
                           className="insight-icon"
-                          style={{ color: '#9b8755' }}
+                          style={{ color: "#9b8755" }}
                         />
                       </div>
                     </div>
@@ -130,7 +135,9 @@ export default function NewInsight() {
                       </p>
                       <div className="d-flex align-items-center gap-2 insight-button-wrapper">
                         <div className="d-flex align-items-center gap-2 insight-button">
-                          <p className="p-0 m-0">Explore Now</p>
+                          <Link className="text-decoration-none" href={insight.href}>
+                            <p className="p-0 m-0">Explore Now</p>
+                          </Link>
                           <div className="icon-container">
                             <Image
                               src="/static/icon/explore_arrow.png"
@@ -151,7 +158,7 @@ export default function NewInsight() {
                       height={228}
                       quality={100}
                       className="insight-card-image"
-                      style={{ width: '100%', height: 'auto' }}
+                      style={{ width: "100%", height: "auto" }}
                     />
                   </div>
                 </div>
