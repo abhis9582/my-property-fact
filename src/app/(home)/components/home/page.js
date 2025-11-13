@@ -84,9 +84,9 @@ export default async function HomePage() {
           {/* blogs section  */}
           <h2 className="text-center my-5 fw-bold">Investor Education </h2>
           <SocialFeedPage />
-          {/* <div className="mb-5">
+          <div className="mb-5">
             <InstagramFeed />
-          </div> */}
+          </div>
         </div>
         {/* Scroll to top button */}
         <ScrollToTop />
