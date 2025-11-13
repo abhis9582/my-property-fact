@@ -351,10 +351,6 @@
   background-color: #fff;
 }
 
-.insight-button:hover .icon-container img {
-  filter: brightness(0) invert(0);
-}
-
 .insight-title {
   font-weight: 600;
   font-size: 20px;

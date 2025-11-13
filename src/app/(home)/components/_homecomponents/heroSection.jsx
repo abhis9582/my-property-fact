@@ -45,6 +45,7 @@ export default async function HeroSection() {
       mobile: "/static/banners/mobile_banner1.jpg",
       alt: "Find the best property with My Property Fact",
       priority: true,
+      href: "/m3m-jacob-and-co-residences",
     },
     {
       id: "hero-secondary",
@@ -52,6 +53,7 @@ export default async function HeroSection() {
       tablet: "/static/banners/tablet_banner2.jpg",
       mobile: "/static/banners/mobile_banner2.jpg",
       alt: "Discover top real estate projects across India",
+      href: "#",
     },
     // {
     //   id: "hero-secondary",
