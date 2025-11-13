@@ -250,7 +250,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
               {/* <li className="hasChild">
                 <Link href="/clients-speak" className={`text-light text-uppercase ${pathname === "/clients-speak" ? "header-link-active" : ""}`}>Clients Speak</Link>
               </li> */}
-              {/* <li className="hasChild">
+              <li className="hasChild">
                 <Link
                   href="/contact-us"
                   className={`text-light py-3 text-uppercase text-decoration-none ${
@@ -259,7 +259,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                 >
                   Contact us
                 </Link>
-              </li> */}
+              </li>
               {/* <li>
                 <div className="bg-white rounded rounded-3 p-2 cursor-pointer hover-effect"
                 onClick={openSignUpModal}>
