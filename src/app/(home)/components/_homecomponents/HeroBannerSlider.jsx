@@ -2,6 +2,7 @@
 
 import Slider from "react-slick";
 import Image from "next/image";
+import Link from "next/link";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -35,29 +36,42 @@ const HeroBannerSlider = ({ slides = [] }) => {
             alt = "Hero banner",
             priority = index === 0,
             height = 600,
+            link,
+            href,
           } = slide;
 
           const desktopSrc = desktop || "/mpf-banner.jpg";
           const tabletSrc = tablet || desktopSrc;
           const mobileSrc = mobile || tabletSrc;
+          const navigationLink = link || href;
+
+          const imageContent = (
+            <picture className="position-relative home-banner">
+              <source srcSet={mobileSrc} media="(max-width: 426px)" />
+              <source srcSet={tabletSrc} media="(max-width: 1199px)" />
+              <Image
+                src={desktopSrc}
+                alt={alt}
+                width={1920}
+                height={height}
+                className="img-fluid w-100"
+                priority={priority}
+                loading={priority ? "eager" : "lazy"}
+                fetchPriority={priority ? "high" : "auto"}
+                sizes="(max-width: 426px) 100vw, (max-width: 1199px) 100vw, 1920px"
+              />
+            </picture>
+          );
 
           return (
             <div key={id || `hero-slide-${index}`} className="hero-banner-slide">
-              <picture className="position-relative home-banner">
-                <source srcSet={mobileSrc} media="(max-width: 426px)" />
-                <source srcSet={tabletSrc} media="(max-width: 1199px)" />
-                <Image
-                  src={desktopSrc}
-                  alt={alt}
-                  width={1920}
-                  height={height}
-                  className="img-fluid w-100"
-                  priority={priority}
-                  loading={priority ? "eager" : "lazy"}
-                  fetchPriority={priority ? "high" : "auto"}
-                  sizes="(max-width: 426px) 100vw, (max-width: 1199px) 100vw, 1920px"
-                />
-              </picture>
+              {navigationLink ? (
+                <Link href={navigationLink} className="d-block">
+                  {imageContent}
+                </Link>
+              ) : (
+                imageContent
+              )}
             </div>
           );
         })}
