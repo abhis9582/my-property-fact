@@ -31,7 +31,7 @@ export default function NewInsight() {
     },
     {
       id: 2,
-      src: "/static/icon/Loan_Calculator.jpg",
+      src: "/static/icon/Loan_calculator.jpg",
       alt: "property-rates-heatmap-img",
       heading: "EMI Calculator",
       sub_heading:
@@ -135,7 +135,10 @@ export default function NewInsight() {
                       </p>
                       <div className="d-flex align-items-center gap-2 insight-button-wrapper">
                         <div className="d-flex align-items-center gap-2 insight-button">
-                          <Link className="text-decoration-none" href={insight.href}>
+                          <Link
+                            className="text-decoration-none"
+                            href={insight.href}
+                          >
                             <p className="p-0 m-0">Explore Now</p>
                           </Link>
                           <div className="icon-container">
