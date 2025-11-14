@@ -9,6 +9,10 @@
     border-radius: 1em;
 }
 
+.about-slider-container {
+    min-height: 360px;
+}
+
 @media (max-width: 426px) {
     .why-mpf-card{
         width: 100%;
