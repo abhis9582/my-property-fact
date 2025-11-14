@@ -39,7 +39,7 @@ export default function InstagramFeed() {
       </h2>
       <Script src="https://elfsightcdn.com/platform.js" strategy="lazyOnload" />
       <div
-        className="elfsight-app-f0906f8a-29a5-4d38-b76b-000317821522"
+        className="elfsight-app-bf06e2ee-f031-4a2d-b8e0-ab9461964392"
         data-elfsight-app-lazy
       ></div>
     </div>

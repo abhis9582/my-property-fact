@@ -12,28 +12,28 @@ export default function AboutUsPage() {
   const whatWeOffer = [
     {
       id: 1,
-      heading: "Diverse Property Listings",
-      text: "We curate listings from all corners of the real estate spectrum. Residential apartments, commercial showrooms, industrial plots, farmhouses, and everything in between."
+      heading: "Verified Project Insights",
+      text: "We provide verified project details backed by data, on-ground checks, and expert validation. From RERA updates to construction progress, we ensure every buyer gets trustworthy, current information."
     },
     {
       id: 2,
-      heading: "Powerful Search & Shortlisting",
-      text: "We curate listings from all corners of the real estate spectrum. Residential apartments, commercial showrooms, industrial plots, farmhouses, and everything in between."
+      heading: "Smart Financial Tools",
+      text: "From EMI calculators to affordability scores, our financial tools help buyers plan confidently. Understand budgets, compare loan options, and make informed investment decisions in minutes."
     },
     {
       id: 3,
-      heading: "Side-by-Side Comparisons",
-      text: "We curate listings from all corners of the real estate spectrum. Residential apartments, commercial showrooms, industrial plots, farmhouses, and everything in between."
+      heading: "Neighbourhood Intelligence",
+      text: "We break down every micro-market with clarity, schools, hospitals, connectivity, safety, and future growth corridors, so you know exactly what living there feels like before you decide."
     },
     {
       id: 4,
-      heading: "Direct Connection to Builders & Brokers",
-      text: "We curate listings from all corners of the real estate spectrum. Residential apartments, commercial showrooms, industrial plots, farmhouses, and everything in between."
+      heading: "Transparent Developer Ratings",
+      text: "A builder’s track record matters. We compile delivery history, customer satisfaction, legal compliance, and past performance into clean, easy-to-read ratings that empower better choices."
     },
     {
       id: 5,
-      heading: "Insights for Every Stakeholder",
-      text: "We curate listings from all corners of the real estate spectrum. Residential apartments, commercial showrooms, industrial plots, farmhouses, and everything in between."
+      heading: "Personalised Recommendations",
+      text: "Our system studies your needs, budget, location, lifestyle, investment goals, and suggests properties that fit you perfectly. No noise. Only what matters."
     },
   ];
 

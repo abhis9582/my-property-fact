@@ -76,14 +76,14 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
 
   return (
     <footer className="font-gotham-light footer-bg">
-      <div className="pt-5 pb-3 container-fluid">
+      <div className="pt-5 pb-3 container">
         <div className="container-fluid">
           <div className="inner">
             <div className="row gap-row">
-              <div className="col-md-12 col-sm-12 foot-menu">
+              <div className="col-md-12 col-sm-12 p-0 foot-menu">
                 <div className="insideBox">
-                  <p className="text-white mx-4">Popular cities</p>
-                  <ul className=" footer-cities d-flex flex-wrap list-unstyled">
+                  <p className="text-white">Popular cities</p>
+                  <ul className="d-flex flex-wrap list-unstyled gap-2">
                     {cityList.map((item, index) => (
                       <li key={`${item.cityName}-${index}`}>
                         <Link
@@ -102,32 +102,32 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
         </div>
       </div>
       <div className="container-fluid py-3">
-        <div className="padding border-bottom footer-keywords">
+        <div className="container padding border-bottom footer-keywords">
           <div className="row">
             <div className="col-12 col-md-6 col-lg-3 col-xl-3">
-              <ul>
+              {/* <ul> */}
                 <CityList prefix={"Apartments in "} cityList={cityList} cat={"apartments"}/>
-              </ul>
+              {/* </ul> */}
             </div>
             <div className="col-12 col-md-6 col-lg-3 col-xl-3">
-              <ul>
+              {/* <ul> */}
                 <CityList prefix={"New Projects in "} cityList={cityList.filter(item => !["Agra"].includes(item.cityName))} cat={"new-projects"}/>
-              </ul>
+              {/* </ul> */}
             </div>
             <div className="col-12 col-md-6 col-lg-3 col-xl-3">
-              <ul>
+              {/* <ul> */}
                 <CityList prefix={"Flats in "} cityList={cityList} cat={"flats"}/>
-              </ul>
+              {/* </ul> */}
             </div>
 
             <div className="col-12 col-md-6 col-lg-3 col-xl-3">
-              <ul>
+              {/* <ul> */}
                 <CityList
                   prefix={"Commercial Property in "}
                   cityList={cityList.filter(item => !["Agra", "Bareilly", "Chennai", "Dehradun", "Kochi", "Thiruvananthapuram", "Vrindavan"].includes(item.cityName))}
                   cat={"commercial"}
                 />
-              </ul>
+              {/* </ul> */}
             </div>
           </div>
         </div>

@@ -90,7 +90,7 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
     }
 
     return (
-      <div className="position-absolute top-0 end-0 m-2">
+      <div className="position-absolute top-0 end-0 m-2 status-badge-container">
         <h6 className="border p-2 d-inline-block rounded bg-light text-dark shadow-sm fw-bold">
           {data.projectStatusName}
         </h6>
