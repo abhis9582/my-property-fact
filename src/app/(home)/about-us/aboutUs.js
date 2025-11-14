@@ -45,7 +45,7 @@ export default function AboutUs({ whatWeOffer, ourCommitment, whyMyPropertyFact 
                         className="mySwiper"
                     >
                         {whatWeOffer.map((item, index) => (
-                            <SwiperSlide className="border border-2 p-5 rounded-3 my-5 custom-shadow" key={`${item.id}-${index}`}>
+                            <SwiperSlide className="border border-2 p-5 rounded-3 my-5 custom-shadow about-slider-container" key={`${item.id}-${index}`}>
                                 <h2 className="text-center my-4">{item.heading}</h2>
                                 <p>{item.text}</p>
                             </SwiperSlide>

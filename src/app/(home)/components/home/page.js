@@ -78,11 +78,11 @@ export default async function HomePage() {
           />
 
           {/* web story section  */}
-          <h2 className="text-center my-5 fw-bold">Realty Updates</h2>
+          <h2 className="text-center my-5 fw-bold">Realty Updates Web Stories</h2>
           <NewsViews />
 
           {/* blogs section  */}
-          <h2 className="text-center my-5 fw-bold">Investor Education </h2>
+          <h2 className="text-center my-5 fw-bold">Investor Education Blog</h2>
           <SocialFeedPage />
           <div className="mb-5">
             <InstagramFeed />
