@@ -5,8 +5,12 @@
   position: relative;
 }
 
+.status-badge-container{
+  z-index: 3;
+}
+
 .blog-card {
-  min-height: 560px;
+  min-height: 475px;
 }
 
 /* .top-banner-each-pages::before {

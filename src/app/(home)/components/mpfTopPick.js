@@ -41,7 +41,7 @@ export default function MpfTopPicks({ topProject }) {
   return (
     <>
       <div className="container-fluid position-relative mpf-top-picks-section-container">
-        <section className="container pt-5 top-space">
+        <section className="container pt-0 pt-lg-5 top-space">
           <div className="mpf-top-picks-section">
             <div className="mpf-top-picks-header">
               <div>
@@ -140,7 +140,7 @@ export default function MpfTopPicks({ topProject }) {
         <div className="mpf-top-picks-banner">
           <div className="mpf-top-picks-banner__content">
             <span className="mpf-top-picks-banner__eyebrow">
-              For post your property register on mypropertyfact
+            Get Verified Leads, Register for FREE on My Property Fact !
             </span>
             <Link
               href="/contact-us"
