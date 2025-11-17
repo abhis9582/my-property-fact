@@ -6,6 +6,7 @@ import PropertyContainer from "@/app/(home)/components/common/page";
 import CommonHeaderBanner from "../../components/common/commonheaderbanner";
 import CommonBreadCrum from "../../components/common/breadcrum";
 import { LoadingSpinner } from "../../contact-us/page";
+import Image from "next/image";
 export default function CityPage({ cityData }) {
   return (
     <>
@@ -14,11 +15,11 @@ export default function CityPage({ cityData }) {
           <CommonHeaderBanner
             image={"realestate-bg.jpg"}
             headerText={cityData.cityName}
+            firstPage={"projects"}
+            pageName={cityData.cityName}
           />
         </div>
-        <CommonBreadCrum firstPage={"projects"} pageName={cityData.cityName} />
-        <div className="container-fluid mt-4">
-          {/* <p className="h1 text-center">Property in {cityData.name}</p> */}
+        {/* <div className="container-fluid mt-4">
           <div className="container d-flex justify-content-center">
             <p className="text-center">{cityData.cityDescription}</p>
           </div>
@@ -27,22 +28,55 @@ export default function CityPage({ cityData }) {
               Read More
             </Link>
           </div>
-        </div>
-        {false ?
-          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "250px" }}>
-            <LoadingSpinner show={loading} />
+        </div> */}
+        <div className="about-us-container">
+          <div>
+            <Image
+              src={"/static/about-us-bg-left.png"}
+              alt={cityData.cityName}
+              width={161}
+              height={353}
+            />
           </div>
-          :
-          <div className="container my-3">
-            <div className="row g-3">
-              {cityData.projectList.length > 0 ? cityData.projectList.map((item, index) => (
-                <div key={`${index}`} className="col-12 col-sm-6 col-md-4">
-                  <PropertyContainer data={item} />
-                </div>
-              )) : (<p className="text-center fs-4 fw-bold">No projects found</p>)}
+          <div>
+            <p>{cityData.cityDescription}</p>
+            <div className="text-center">
+              <Link href="#" className="btn text-white btn-background about-us-read-more">
+                Read More
+              </Link>
             </div>
           </div>
-        }
+          <div>
+            <Image
+              src={"/static/about-us-bg-right.png"}
+              alt={cityData.cityName}
+              width={161}
+              height={353}
+            />
+          </div>
+        </div>
+        {false ? (
+          <div
+            className="d-flex justify-content-center align-items-center"
+            style={{ minHeight: "250px" }}
+          >
+            <LoadingSpinner show={loading} />
+          </div>
+        ) : (
+          <div className="container my-3">
+            <div className="row g-3">
+              {cityData.projectList.length > 0 ? (
+                cityData.projectList.map((item, index) => (
+                  <div key={`${index}`} className="col-12 col-sm-6 col-md-4">
+                    <PropertyContainer data={item} />
+                  </div>
+                ))
+              ) : (
+                <p className="text-center fs-4 fw-bold">No projects found</p>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

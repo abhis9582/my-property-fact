@@ -2137,6 +2137,162 @@
       "holdingHorizon": "Ideal holding horizon: 5\u201310 years to benefit from redevelopment cycles and infrastructure modernisation."
     },
     "verdictText": "Delhi scores ~905/1000 on the LOCATE framework \u2014 a structurally strong, supply-constrained capital market where disciplined buying ensures stable, long-term wealth creation."
+  },
+  {
+    "cityId": "chennai",
+    "cityName": "Chennai",
+    "altName": null,
+    "state": "Tamil Nadu",
+    "focus": "IT \u2022 Industrial \u2022 Port City \u2014 Residential + Commercial",
+    "evaluationDate": "2025-11-01",
+    "categories": [
+      {
+        "code": "L",
+        "name": "Local Economy & Indicators",
+        "maxScore": 200,
+        "score": 175,
+        "sections": [
+          {
+            "title": "Overview",
+            "body": "Chennai is a diversified metro powered by IT/ITES, auto manufacturing, electronics, logistics, healthcare, finance, and education."
+          },
+          {
+            "title": "Jobs & Diversification",
+            "body": "Key hubs include OMR IT Corridor, Sholinganallur, Siruseri SIPCOT, and Oragadam\u2013Sriperumbudur industrial belt."
+          },
+          {
+            "title": "Population & Urbanisation",
+            "body": "Strong inflow of skilled workforce fuels consistent mid-income housing demand."
+          }
+        ]
+      },
+      {
+        "code": "O",
+        "name": "Ongoing / Future Projects",
+        "maxScore": 150,
+        "score": 135,
+        "sections": [
+          {
+            "title": "Catalysts",
+            "body": "Metro Phase II, Peripheral Ring Road, OMR Phase II, ECR upgrades, port modernisation, and new industrial hubs drive future growth."
+          }
+        ]
+      },
+      {
+        "code": "C",
+        "name": "Connectivity & Commute",
+        "maxScore": 150,
+        "score": 140,
+        "sections": [
+          {
+            "title": "Roads",
+            "body": "Strong arterial network: OMR, GST, ECR, Mount Road, ORR."
+          },
+          {
+            "title": "Transit",
+            "body": "Metro (Phase I & II), suburban rail, MRTS, and extensive bus network ensure multimodal connectivity."
+          },
+          {
+            "title": "Commute",
+            "body": "Peak congestion on OMR/GST; metro expansion expected to ease pressures."
+          }
+        ]
+      },
+      {
+        "code": "A",
+        "name": "Amenities & Gentrification",
+        "maxScore": 150,
+        "score": 140,
+        "sections": [
+          {
+            "title": "Lifestyle",
+            "body": "Rich F&B, entertainment, cultural venues, malls, beaches, and emerging caf\u00e9 districts."
+          },
+          {
+            "title": "Social Infrastructure",
+            "body": "Top hospitals, schools, universities, and established neighbourhoods."
+          },
+          {
+            "title": "Gentrification",
+            "body": "Rapid across OMR, ECR, Velachery, Pallikaranai, Thoraipakkam, Perungudi, GST Road."
+          }
+        ]
+      },
+      {
+        "code": "T",
+        "name": "Trends & Historical Data",
+        "maxScore": 150,
+        "score": 130,
+        "sections": [
+          {
+            "title": "Prices & Yields",
+            "body": "Strong long-term appreciation; residential yields ~2.7\u20133.3%; higher commercial yields in IT corridors."
+          },
+          {
+            "title": "Absorption",
+            "body": "Stable, end-user\u2013led, low volatility with consistent absorption."
+          }
+        ]
+      },
+      {
+        "code": "E",
+        "name": "Existing Supply vs Demand",
+        "maxScore": 200,
+        "score": 165,
+        "sections": [
+          {
+            "title": "Supply",
+            "body": "Large supply of mid-income apartments, IT parks, townships across OMR and GST."
+          },
+          {
+            "title": "Demand",
+            "body": "Demand led by IT, manufacturing, healthcare/education sectors, and NRIs."
+          },
+          {
+            "title": "Absorption",
+            "body": "Excellent in OMR\u2013Sholinganallur\u2013Perungudi\u2013Siruseri; steady in GST and city-central pockets."
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "totalScore": 885,
+      "maxTotalScore": 1000,
+      "grade": "A",
+      "gradeLabel": "Excellent",
+      "headlineVerdict": "A diversified, future-ready metro with strong IT + manufacturing fundamentals and stable long-term performance."
+    },
+    "interpretation": {
+      "strengths": [
+        "Strong economic diversification across IT, auto, electronics, logistics, and services.",
+        "Robust multimodal connectivity through metro, suburban rail, and arterial corridors.",
+        "High-quality education and healthcare infrastructure.",
+        "Consistent end-user demand ensures market stability."
+      ],
+      "watchOuts": [
+        "Peak congestion across OMR/GST stretches.",
+        "Flood-prone pockets require drainage due diligence.",
+        "Dependence on industrial-corridor performance in certain belts."
+      ]
+    },
+    "recommendations": {
+      "microMarketStrategy": [
+        "Target OMR (Perungudi\u2013Sholinganallur\u2013Siruseri), Velachery, ECR, and GST Road corridors.",
+        "For commercial: Guindy, Mount Road, OMR IT parks, Siruseri clusters.",
+        "Avoid flood-prone belts lacking proven stormwater systems."
+      ],
+      "developerAndInfra": [
+        "Prefer reputed developers with township and infra delivery track record.",
+        "Focus on metro Phase II\u2013connected micro-markets."
+      ],
+      "assetType": [
+        "Mid-to-premium apartments along OMR/ECR.",
+        "Commercial strata in IT corridors for yield plays.",
+        "Villas/plots in ECR/GST for lifestyle-driven long-term returns."
+      ],
+      "holdingHorizon": "5\u201310 years for full benefit from metro expansion and township corridor growth."
+    },
+    "verdictText": "Chennai scores ~885/1000 on the LOCATE framework \u2014 one of India\u2019s most stable, future-ready metros."
   }
   
 ]
