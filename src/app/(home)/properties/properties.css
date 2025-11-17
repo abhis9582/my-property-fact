@@ -38,11 +38,11 @@ html {
   font-weight: 500;
 }
 
-.breadcrumb-item + .breadcrumb-item::before {
+/* .breadcrumb-item + .breadcrumb-item::before {
   content: ">";
   color: #adb5bd;
   padding: 0 0.5rem;
-}
+} */
 
 /* Tabs - Enhanced with Theme Colors */
 .tabs-container {
