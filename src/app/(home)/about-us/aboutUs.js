@@ -12,7 +12,7 @@ import { Pagination, Navigation } from 'swiper/modules';
 export default function AboutUs({ whatWeOffer, ourCommitment, whyMyPropertyFact }) {
     return (
         <>
-            <div className="container">
+            <div className="container my-5">
                 <div className="row gap-5 justify-content-center">
                     <div className="col-md-5 about-us-container custom-shadow">
                         <h1 className="text-center my-5">About Us</h1>

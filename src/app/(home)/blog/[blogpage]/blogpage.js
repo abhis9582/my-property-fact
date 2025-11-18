@@ -72,13 +72,17 @@ export default function BlogDetail({ blogDetail }) {
       [name]: value,
     });
   };
+
+  const blogTitle = blogDetail.blogTitle.replace(/\u00A0/g, " ");
   return (
     <div>
       <CommonHeaderBanner
         image={"builder-banner.jp"}
         headerText={"Blog-Detail"}
+        pageName={blogTitle}
+        firstPage={"Blog"}
       />
-      <CommonBreadCrum pageName={blogDetail.slugUrl} firstPage={"Blog"} />
+      {/* <CommonBreadCrum pageName={blogDetail.slugUrl} firstPage={"Blog"} /> */}
       <div className="container py-5">
         <div className="row g-5">
           {/* Blog Content */}

@@ -550,8 +550,12 @@ export default function Projects() {
 
   return (
     <div className="projects-page-wrapper">
-      <CommonHeaderBanner image={"project-banner.jpg"} headerText={pageName} />
-      <CommonBreadCrum pageName={pageName} />
+      <CommonHeaderBanner 
+      headerText={pageName} 
+      image={"realestate-bg.jpg"}
+      firstPage={"projects"}
+      />
+      {/* <CommonBreadCrum pageName={pageName} /> */}
 
       <div className="container py-4">
         {/* Page Header with Quick Filters */}

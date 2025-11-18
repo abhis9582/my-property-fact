@@ -12,6 +12,7 @@ import {
   getWeeklyProject,
 } from "@/app/_global_components/masterFunction";
 import NewInsight from "../_homecomponents/NewInsight";
+import DreamPropertySection from "./dream-project/DreamPropertySection";
 
 export default async function HomePage() {
   const projects = await getAllProjects();
@@ -48,16 +49,18 @@ export default async function HomePage() {
           <NewInsight />
 
           {/* featured projects section  */}
-          <h2 className="text-center my-5 fw-bold">Featured Projects</h2>
+          <h2 className="text-center mb-5 fw-bold">Featured Projects</h2>
           <FeaturedPage
             autoPlay={false}
             allFeaturedProperties={featuredProjects}
           />
           {/* dream cities section  */}
-          <h2 className="text-center my-5 fw-bold">
+          {/* <h2 className="text-center my-5 fw-bold">
             Find your dream property in the city you are searching in
           </h2>
-          <DreamProject />
+          <DreamProject /> */}
+
+          <DreamPropertySection />
 
           {/* residential projects section  */}
           <h2 className="text-center mt-4 mb-5 fw-bold">
@@ -84,9 +87,9 @@ export default async function HomePage() {
           {/* blogs section  */}
           <h2 className="text-center my-5 fw-bold">Investor Education Blog</h2>
           <SocialFeedPage />
-          <div className="mb-5">
+          {/* <div className="mb-5">
             <InstagramFeed />
-          </div>
+          </div> */}
         </div>
         {/* Scroll to top button */}
         <ScrollToTop />

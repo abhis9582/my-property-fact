@@ -74,8 +74,13 @@ export default function AboutUsPage() {
 
   return (
     <>
-      <CommonHeaderBanner image={"about-us.jpg"} headerText={"About Us"} />
-      <CommonBreadCrum pageName={"About Us"} />
+      <CommonHeaderBanner 
+      // image={"about-us.jpg"} 
+      headerText={"About Us"} 
+      // firstPage={"About Us"}
+      pageName={"About Us"}
+      />
+      {/* <CommonBreadCrum pageName={"About Us"} /> */}
       <AboutUs
         whyMyPropertyFact={whyMyPropertyFact}
         whatWeOffer={whatWeOffer}
