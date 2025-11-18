@@ -13,7 +13,13 @@ module.exports = {
       "/blog/[blogpage]",
     ];
 
+    // Exclude dynamic patterns
     if (dynamicPatterns.some((pattern) => path.includes(pattern))) {
+      return null;
+    }
+
+    // Exclude portal and dashboard URLs
+    if (path.includes("/portal") || path.includes("/dashboard")) {
       return null;
     }
 

@@ -7,19 +7,21 @@ export default function PropertyPage({ projectTypeDetails }) {
   return (
     <>
       <CommonHeaderBanner
-        image={"project-banner.jpg"}
-        headerText={projectTypeDetails.projectTypeName}
-      />
-      <CommonBreadCrum
+        // headerText={projectTypeDetails.projectTypeName}
+        image={"realestate-bg.jpg"}
         firstPage={"projects"}
         pageName={projectTypeDetails.projectTypeName}
       />
+      {/* <CommonBreadCrum
+        firstPage={"projects"}
+        pageName={projectTypeDetails.projectTypeName}
+      /> */}
       {false ?
         <div className="d-flex justify-content-center align-items-center" style={{minHeight: "250px"}}>
           <LoadingSpinner show={false} />
         </div>
         :
-        <div className="container my-3">
+        <div className="container my-5">
           <div className="row g-3">
             {projectTypeDetails.projectList.length > 0 ? projectTypeDetails.projectList.map((item, index) => (
               <div key={index} className="col-12 col-sm-6 col-md-4">

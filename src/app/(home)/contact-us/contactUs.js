@@ -87,7 +87,7 @@ export default function ContactUs() {
   };
 
   return (
-    <div className="">
+    <div className="my-5">
       <div className="container d-flex justify-content-center gap-4 flex-wrap">
         <div className="info-container-child">
           <p>Email Address</p>
