@@ -35,9 +35,11 @@ export default function Blog() {
 
   return (
     <>
-      <CommonHeaderBanner image={"blog-banner.jpg"} headerText={"Blog"} />
-      <CommonBreadCrum pageName={"Blog"} />
-      <div className="container-fluid mb-3 px-5">
+      <CommonHeaderBanner image={"blog-banner.jpg"} headerText={"Blog"} 
+      pageName={"Blog"}
+      />
+      {/* <CommonBreadCrum pageName={"Blog"} /> */}
+      <div className="container-fluid my-5 px-5">
         {/* <p className="text-center h2 mt-3">Blog</p> */}
         <div className="row">
           {loading ? (
