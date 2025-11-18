@@ -9,8 +9,9 @@ export default function ContactUsPage() {
       <CommonHeaderBanner
         image={"contact-banner.jpg"}
         headerText={"Contact Us"}
+        pageName={"Contact Us"}
       />
-      <CommonBreadCrum pageName={"Contact-us"} />
+      {/* <CommonBreadCrum pageName={"Contact-us"} /> */}
       <ContactUs />
     </>
   );
