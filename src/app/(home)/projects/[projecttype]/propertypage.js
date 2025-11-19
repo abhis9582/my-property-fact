@@ -7,7 +7,7 @@ export default function PropertyPage({ projectTypeDetails }) {
   return (
     <>
       <CommonHeaderBanner
-        // headerText={projectTypeDetails.projectTypeName}
+        headerText={projectTypeDetails.projectTypeName}
         image={"realestate-bg.jpg"}
         firstPage={"projects"}
         pageName={projectTypeDetails.projectTypeName}
