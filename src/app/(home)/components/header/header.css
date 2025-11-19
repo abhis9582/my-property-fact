@@ -28,8 +28,8 @@
 }
 
 .header-link-active {
-  color: #ffffff !important;
-  border-bottom: 2px solid #ffffff !important;
+  color: #b6b6b6 !important;
+  border-bottom: 2px solid #b6b6b6 !important;
   padding: 5px !important;
 }
 
@@ -42,17 +42,17 @@
 }
 
 .menu ul li.hasChild .dropdown ul li a:hover {
-  color: #000 !important;
+  color: #b6b6b6 !important;
 }
 
 .menu ul li.hasChild:hover>a sup {
   transform: rotate(45deg);
-  color: #000;
+  color: #b6b6b6;
 }
 
 .hasChild:hover>a,
 .hasChild .dropdown.dropdown-lg:hover~a {
-  color: #000 !important;
+  color: #b6b6b6 !important;
 }
 
 .projects-dropdown li a {
