@@ -58,6 +58,9 @@
     transition: all 0.3s;
     height: 100vh;
     overflow-y: auto;
+    width: 100%;
+    position: relative;
+    z-index: 1;
 }
 
 #sidebar.active {
@@ -155,12 +158,63 @@ a[data-toggle="collapse"] {
 
 @media (max-width: 768px) {
     #sidebar {
-        margin-left: -250px;
+        margin-left: 0;
+        width: 100%;
+        height: 100%;
     }
     #sidebar.active {
         margin-left: 0;
     }
     #sidebarCollapse span {
         display: none;
+    }
+    
+    /* Ensure nav items are visible on mobile */
+    #sidebar ul.components {
+        padding: 10px 0;
+        display: block !important;
+        visibility: visible !important;
+    }
+    
+    #sidebar ul.components li {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    #sidebar ul li a {
+        padding: 12px 20px;
+        font-size: 1em;
+        display: block !important;
+        visibility: visible !important;
+        color: #fff !important;
+        opacity: 1 !important;
+    }
+    
+    #sidebar ul li ul {
+        display: block !important;
+        visibility: visible !important;
+    }
+    
+    #sidebar ul li ul li {
+        display: block !important;
+        visibility: visible !important;
+    }
+    
+    #sidebar ul li ul li a {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    #sidebar .sidebar-header {
+        padding: 15px 20px;
+        display: block !important;
+        visibility: visible !important;
+    }
+    
+    #sidebar .dropdown-toggle::after {
+        display: block !important;
+        visibility: visible !important;
     }
 }

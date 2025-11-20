@@ -70,7 +70,7 @@ export default function ProjectDetailPage() {
     <div className="project-detail-page">
       {/* Header with Back Button */}
       <div className="container-fluid bg-white border-bottom sticky-top" style={{ zIndex: 1000 }}>
-        <div className="container py-3">
+        <div className="container py-1">
           <div className="d-flex align-items-center gap-3">
             <button
               onClick={() => router.back()}
@@ -116,10 +116,10 @@ export default function ProjectDetailPage() {
             {/* Property Title and Developer */}
             <div className="property-header mb-4">
               <h2 className="property-title-main">{property.title}</h2>
-              <p className="property-developer-main text-muted mb-3">
+              {/* <p className="property-developer-main text-muted mb-3">
                 <FontAwesomeIcon icon={faMapMarkerAlt} className="me-2" />
                 {property.developer}
-              </p>
+              </p> */}
             </div>
 
             {/* Key Details Grid */}

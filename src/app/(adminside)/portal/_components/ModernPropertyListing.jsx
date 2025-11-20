@@ -37,9 +37,11 @@ import {
   fetchProjectStatus,
   fetchProjectTypes,
 } from "@/app/_global_components/masterFunction";
+import axios from "axios";
+import NextImage from "next/image";
 
-export default function ModernPropertyListing() {
-  const [currentStep, setCurrentStep] = useState(2);
+export default function ModernPropertyListing({ listingId }) {
+  const [currentStep, setCurrentStep] = useState(1);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -47,6 +49,9 @@ export default function ModernPropertyListing() {
   const [propertyStatus, setPropertyStatus] = useState([]);
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [builders, setBuilders] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [loadingCities, setLoadingCities] = useState(false);
+  const [loadingBuilders, setLoadingBuilders] = useState(false);
   const getInitialFormState = () => ({
     // Step 1: Basic Information
     listingType: "",
@@ -62,11 +67,11 @@ export default function ModernPropertyListing() {
     // Step 2: Location & Area
     projectName: "",
     builderName: "",
+    builderId: null,
     address: "",
     locality: "",
     city: "",
-    state: "",
-    country: "India",
+    cityId: null,
     pincode: "",
     carpetArea: "",
     builtUpArea: "",
@@ -154,15 +159,15 @@ export default function ModernPropertyListing() {
       required: true,
       minLength: 50,
       maxLength: 1200,
-      message: "Description must be 50-1200 characters",
+      message: "Description must be between 50 and 1200 characters",
     },
     status: { required: true, message: "Please select property status" },
 
     // Step 2 validations
+    projectName: { required: true, message: "Project/Building name is required" },
     address: { required: true, message: "Address is required" },
     locality: { required: true, message: "Locality is required" },
     city: { required: true, message: "City is required" },
-    state: { required: true, message: "State is required" },
     pincode: {
       required: true,
       pattern: /^\d{6}$/,
@@ -183,9 +188,17 @@ export default function ModernPropertyListing() {
     floor: { required: true, message: "Floor number is required" },
     totalFloors: { required: true, message: "Total floors is required" },
 
-    // Step 4 validations
-    bedrooms: { required: true, message: "Number of bedrooms is required" },
-    bathrooms: { required: true, message: "Number of bathrooms is required" },
+    // Step 4 validations (conditional based on listing type)
+    bedrooms: { 
+      required: true, 
+      message: "Number of bedrooms is required",
+      conditional: (data) => data.listingType === "Residential"
+    },
+    bathrooms: { 
+      required: true, 
+      message: "Number of bathrooms is required",
+      conditional: (data) => data.listingType === "Residential" || data.listingType === "Commercial"
+    },
 
     // Step 5 validations
     contactName: { required: true, message: "Contact name is required" },
@@ -199,38 +212,104 @@ export default function ModernPropertyListing() {
       pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
       message: "Valid email address required",
     },
+    truthfulDeclaration: {
+      required: true,
+      message: "You must confirm the information is truthful",
+    },
+    dpdpConsent: {
+      required: true,
+      message: "You must consent to data processing",
+    },
+    images: {
+      required: true,
+      minCount: 1,
+      message: "At least one property image is required",
+    },
   };
 
   const validateStep = (step) => {
     const stepErrors = {};
 
-    // Define which fields belong to which step
+    // Define which fields belong to which step (with conditional logic)
     const stepFields = {
       1: ["listingType", "transaction", "subType", "description", "status"],
-      2: ["address", "locality", "city", "state", "pincode", "carpetArea"],
+      2: ["projectName", "address", "locality", "city", "pincode", "carpetArea"],
       3: ["totalPrice", "floor", "totalFloors"],
-      4: ["bedrooms", "bathrooms"],
-      5: ["contactName", "contactPhone", "contactEmail"],
+      4: [], // Will be populated conditionally
+      5: ["contactName", "contactPhone", "contactEmail", "truthfulDeclaration", "dpdpConsent", "images"],
     };
+
+    // Conditionally add Step 4 fields based on listing type
+    if (step === 4) {
+      if (formData.listingType === "Residential") {
+        stepFields[4] = ["bedrooms", "bathrooms"];
+      } else if (formData.listingType === "Commercial") {
+        stepFields[4] = ["bathrooms"]; // Only bathrooms required for commercial
+      }
+    }
 
     const fieldsToValidate = stepFields[step] || [];
 
     fieldsToValidate.forEach((field) => {
       const rule = validationRules[field];
+      if (!rule) return; // Skip if rule doesn't exist
+      
+      // Check conditional requirement
+      if (rule.conditional && !rule.conditional(formData)) {
+        return; // Skip validation if condition not met
+      }
+
       const value = formData[field];
 
-      if (rule.required && (!value || value.toString().trim() === "")) {
-        stepErrors[field] = rule.message;
-      } else if (rule.minLength && value.length < rule.minLength) {
-        stepErrors[field] = rule.message;
-      } else if (rule.maxLength && value.length > rule.maxLength) {
-        stepErrors[field] = rule.message;
-      } else if (rule.min && Number(value) < rule.min) {
-        stepErrors[field] = rule.message;
-      } else if (rule.pattern && !rule.pattern.test(value)) {
-        stepErrors[field] = rule.message;
+      if (rule.required) {
+        // Handle checkbox fields
+        if (field === "truthfulDeclaration" || field === "dpdpConsent") {
+          if (!value || value === false) {
+            stepErrors[field] = rule.message;
+          }
+        }
+        // Handle image array
+        else if (field === "images") {
+          if (!formData.imagePreviews || formData.imagePreviews.length < (rule.minCount || 1)) {
+            stepErrors[field] = rule.message;
+          }
+        }
+        // Handle string/number fields
+        else if (!value || value.toString().trim() === "") {
+          stepErrors[field] = rule.message;
+        }
+      }
+
+      // Additional validations for non-empty values
+      if (value && value.toString().trim() !== "") {
+        if (rule.minLength && value.length < rule.minLength) {
+          stepErrors[field] = rule.message;
+        } else if (rule.maxLength && value.length > rule.maxLength) {
+          stepErrors[field] = rule.message;
+        } else if (rule.min && Number(value) < rule.min) {
+          stepErrors[field] = rule.message;
+        } else if (rule.pattern && !rule.pattern.test(value)) {
+          stepErrors[field] = rule.message;
+        }
       }
     });
+
+    // Cross-field validation for Step 3
+    if (step === 3) {
+      const floor = Number(formData.floor);
+      const totalFloors = Number(formData.totalFloors);
+      if (floor && totalFloors && floor > totalFloors) {
+        stepErrors.floor = `Floor number cannot be greater than total floors (${totalFloors})`;
+      }
+    }
+
+    // Virtual tour URL validation (if provided)
+    if (step === 5 && formData.virtualTour && formData.virtualTour.trim() !== "") {
+      const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+      if (!urlPattern.test(formData.virtualTour)) {
+        stepErrors.virtualTour = "Please enter a valid URL (e.g., https://example.com)";
+      }
+    }
 
     setErrors(stepErrors);
     return Object.keys(stepErrors).length === 0;
@@ -242,6 +321,21 @@ export default function ModernPropertyListing() {
         ...prev,
         [field]: value,
       };
+
+      // Reset dependent fields when listing type changes
+      if (field === "listingType") {
+        // Reset subType when listing type changes
+        newData.subType = "";
+        // Reset residential-specific fields if switching to commercial
+        if (value === "Commercial") {
+          newData.bedrooms = "";
+          newData.balconies = "";
+        }
+        // Reset commercial-specific fields if switching to residential
+        if (value === "Residential") {
+          // Keep bathrooms as it's common
+        }
+      }
 
       // Auto-calculate pricing when carpet area changes
       if (field === "carpetArea" && value && prev.totalPrice) {
@@ -289,19 +383,90 @@ export default function ModernPropertyListing() {
     }
   };
 
+  // Validate image aspect ratio (must be rectangular, not square or extreme)
+  const validateImageRatio = (file) => {
+    return new Promise((resolve) => {
+      // Use window.Image to explicitly use browser's native Image constructor
+      const img = new window.Image();
+      const url = URL.createObjectURL(file);
+      
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const width = img.naturalWidth || img.width;
+        const height = img.naturalHeight || img.height;
+        const aspectRatio = width / height;
+        
+        // Check if image is square (aspect ratio close to 1:1)
+        const isSquare = Math.abs(aspectRatio - 1) < 0.1;
+        
+        // Check if image is too extreme (more than 3:1 or less than 1:3)
+        const isTooExtreme = aspectRatio > 3 || aspectRatio < 1/3;
+        
+        // Valid rectangular ratio: not square and not too extreme
+        const isValid = !isSquare && !isTooExtreme;
+        
+        resolve({
+          isValid,
+          width,
+          height,
+          aspectRatio,
+          error: isSquare 
+            ? "Image must be rectangular, not square" 
+            : isTooExtreme 
+            ? "Image aspect ratio is too extreme. Please use rectangular images (between 3:1 and 1:3)" 
+            : null
+        });
+      };
+      
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        resolve({ 
+          isValid: false, 
+          error: "Failed to load image. Please ensure the file is a valid image." 
+        });
+      };
+      
+      img.src = url;
+    });
+  };
+
   // Handle image selection
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const files = Array.from(e.target.files);
-    const validFiles = files.filter((file) => {
+    const validFiles = [];
+    const invalidFiles = [];
+
+    // First filter by type and size
+    const typeAndSizeValidFiles = files.filter((file) => {
       const isValidType = file.type.startsWith("image/");
       const isValidSize = file.size <= 5 * 1024 * 1024; // 5MB limit
       return isValidType && isValidSize;
     });
 
-    if (validFiles.length !== files.length) {
+    if (typeAndSizeValidFiles.length !== files.length) {
       alert(
         "Some files were skipped. Please select only image files under 5MB."
       );
+    }
+
+    // Validate aspect ratio for each file
+    for (const file of typeAndSizeValidFiles) {
+      const validation = await validateImageRatio(file);
+      if (validation.isValid) {
+        validFiles.push(file);
+      } else {
+        invalidFiles.push({ file, error: validation.error });
+      }
+    }
+
+    // Show error for invalid aspect ratio files
+    if (invalidFiles.length > 0) {
+      const errorMessages = invalidFiles.map(({ error }) => error).join("\n");
+      alert(`Some images were rejected due to invalid aspect ratio:\n${errorMessages}`);
+    }
+
+    if (validFiles.length === 0) {
+      return;
     }
 
     setFormData((prev) => {
@@ -359,26 +524,72 @@ export default function ModernPropertyListing() {
     };
   }, [formData.imagePreviews]);
 
-  // Load project status and types on component mount
+  // Load project status, types, cities, builders, and states on component mount
   useEffect(() => {
+    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005").replace(/\/$/, "");
+
     const loadProjectStatus = async () => {
+      try {
         const response = await fetchProjectStatus();
-        setPropertyStatus(response.data);
+        setPropertyStatus(response.data || []);
+      } catch (error) {
+        console.error("Error loading project status:", error);
+        setPropertyStatus([]);
+      }
     };
 
     const loadProjectTypes = async () => {
+      try {
         const response = await fetchProjectTypes();
-        setPropertyTypes(response.data);
+        setPropertyTypes(response.data || []);
+      } catch (error) {
+        console.error("Error loading project types:", error);
+        setPropertyTypes([]);
+      }
     };
 
-    const loadbuilderList = async () => {
-      const builderData = await fetchBuilderData();
-      setBuilders(builderData.data);
-    }
+    const loadCities = async () => {
+      setLoadingCities(true);
+      try {
+        const response = await axios.get(`${baseUrl}/city/all`);
+        // Handle different response formats
+        const cityData = response.data?.data || response.data || [];
+        setCities(Array.isArray(cityData) ? cityData : []);
+      } catch (error) {
+        console.error("Error loading cities:", error);
+        setCities([]);
+      } finally {
+        setLoadingCities(false);
+      }
+    };
 
+    const loadBuilders = async () => {
+      setLoadingBuilders(true);
+      try {
+        const response = await axios.get(`${baseUrl}/builder/get-all-builders`);
+        // Handle different response formats
+        const builderData = response.data?.data || response.data || [];
+        setBuilders(Array.isArray(builderData) ? builderData : []);
+      } catch (error) {
+        console.error("Error loading builders:", error);
+        // Fallback to existing function
+        try {
+          const builderData = await fetchBuilderData();
+          setBuilders(builderData?.data || builderData?.builders || []);
+        } catch (fallbackError) {
+          console.error("Error loading builders (fallback):", fallbackError);
+          setBuilders([]);
+        }
+      } finally {
+        setLoadingBuilders(false);
+      }
+    };
+
+    // Load all data in parallel
     loadProjectStatus();
     loadProjectTypes();
-    loadbuilderList();
+    loadCities();
+    loadBuilders();
   }, []);
 
   const handleNext = () => {
@@ -416,7 +627,7 @@ export default function ModernPropertyListing() {
       // Add images to form data
       formData.imagePreviews.forEach((imagePreview) => {
         if (imagePreview.file) {
-          formDataObj.append("photos", imagePreview.file);
+          formDataObj.append("images", imagePreview.file);
         }
       });
 
@@ -438,12 +649,23 @@ export default function ModernPropertyListing() {
         return match ? parseInt(match[0], 10) : null;
       };
 
+      // Generate title from property details if not provided
+      const generateTitle = () => {
+        const parts = [];
+        if (formData.bedrooms) parts.push(`${formData.bedrooms} BHK`);
+        if (formData.subType) parts.push(formData.subType);
+        if (formData.locality) parts.push(`in ${formData.locality}`);
+        if (formData.city) parts.push(formData.city);
+        return parts.length > 0 ? parts.join(" ") : "Property Listing";
+      };
+
       // Create property data object matching backend DTO
       const propertyData = {
         // Basic Information
         listingType: emptyToNull(formData.listingType),
         transaction: emptyToNull(formData.transaction),
         subType: emptyToNull(formData.subType),
+        title: generateTitle(), // Auto-generate title
         description: emptyToNull(formData.description),
         status: emptyToNull(formData.status),
         possession: emptyToNull(formData.possession),
@@ -456,8 +678,6 @@ export default function ModernPropertyListing() {
         address: emptyToNull(formData.address),
         locality: emptyToNull(formData.locality),
         city: emptyToNull(formData.city),
-        state: emptyToNull(formData.state),
-        country: emptyToNull(formData.country) || "India",
         pinCode: emptyToNull(formData.pincode),
         latitude: toNumber(formData.latitude),
         longitude: toNumber(formData.longitude),
@@ -513,8 +733,12 @@ export default function ModernPropertyListing() {
         reraState: emptyToNull(formData.reraState),
         contactPreference:
           emptyToNull(formData.contactPreference) || "Phone",
+        contactName: emptyToNull(formData.contactName),
+        contactPhone: emptyToNull(formData.contactPhone),
+        contactEmail: emptyToNull(formData.contactEmail),
         primaryContact: emptyToNull(formData.contactPhone),
         primaryEmail: emptyToNull(formData.contactEmail),
+        preferredTime: emptyToNull(formData.preferredTime),
         truthfulDeclaration:
           formData.truthfulDeclaration !== undefined
             ? formData.truthfulDeclaration
@@ -527,7 +751,6 @@ export default function ModernPropertyListing() {
 
         // Relationship placeholders
         cityId: formData.cityId || null,
-        countryId: formData.countryId || null,
         localityId: formData.localityId || null,
         builderId: formData.builderId || null,
       };
@@ -539,7 +762,7 @@ export default function ModernPropertyListing() {
       ).replace(/\/$/, "");
 
       const response = await fetch(
-        `${baseUrl}/api/user/master-properties`,
+        `${baseUrl}/api/user/property-listings`,
         {
           method: "POST",
           headers: {
@@ -601,6 +824,9 @@ export default function ModernPropertyListing() {
           <LocationAreaStep
             data={formData}
             builderList={builders}
+            cities={cities}
+            loadingCities={loadingCities}
+            loadingBuilders={loadingBuilders}
             onChange={handleInputChange}
             errors={errors}
           />
@@ -967,9 +1193,14 @@ export default function ModernPropertyListing() {
           margin-top: 1.5rem;
           background: #ffffff;
           border: 1px solid #e9ecef;
-          border-radius: 12px;
+          border-radius: 16px;
           overflow: hidden;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+          transition: box-shadow 0.3s ease;
+        }
+
+        .image-gallery-container:hover {
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12), 0 4px 6px rgba(0, 0, 0, 0.08);
         }
 
         .gallery-header {
@@ -993,46 +1224,61 @@ export default function ModernPropertyListing() {
         }
 
         .image-gallery {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          display: flex;
+          flex-wrap: wrap;
           gap: 1.5rem;
           padding: 1.5rem;
-          max-height: 500px;
+          max-height: 600px;
           overflow-y: auto;
+          justify-content: flex-start;
+          align-items: flex-start;
         }
 
         .gallery-item {
           background: #ffffff;
-          border-radius: 8px;
+          border-radius: 12px;
           overflow: hidden;
-          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-          transition: all 0.3s ease;
-          border: 1px solid #f1f3f4;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          border: 2px solid #e9ecef;
+          width: 300px;
+          flex-shrink: 0;
+          display: flex;
+          flex-direction: column;
         }
 
         .gallery-item:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+          transform: translateY(-6px) scale(1.02);
+          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1);
           border-color: #667eea;
         }
 
         .image-container {
           position: relative;
           width: 100%;
-          height: 150px;
+          height: 200px;
+          min-height: 200px;
+          max-height: 200px;
           overflow: hidden;
-          background: #f8f9fa;
+          background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .gallery-image {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: transform 0.3s ease;
+          object-position: center;
+          transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          display: block;
+          max-width: 100%;
+          max-height: 100%;
         }
 
         .gallery-item:hover .gallery-image {
-          transform: scale(1.05);
+          transform: scale(1.08);
         }
 
         .image-overlay {
@@ -1041,12 +1287,13 @@ export default function ModernPropertyListing() {
           left: 0;
           right: 0;
           bottom: 0;
-          background: rgba(0, 0, 0, 0.3);
+          background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
           display: flex;
           align-items: center;
           justify-content: center;
           opacity: 0;
-          transition: opacity 0.3s ease;
+          transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          backdrop-filter: blur(2px);
         }
 
         .gallery-item:hover .image-overlay {
@@ -1054,75 +1301,99 @@ export default function ModernPropertyListing() {
         }
 
         .remove-btn {
-          background: #dc3545;
+          background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
           border: none;
           border-radius: 50%;
-          width: 40px;
-          height: 40px;
+          width: 44px;
+          height: 44px;
           color: white;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          transition: all 0.2s ease;
-          font-size: 16px;
-          box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          font-size: 18px;
+          box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+          z-index: 10;
         }
 
         .remove-btn:hover {
-          background: #c82333;
-          transform: scale(1.1);
-          box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+          background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+          transform: scale(1.15) rotate(90deg);
+          box-shadow: 0 6px 16px rgba(220, 53, 69, 0.5);
+        }
+
+        .remove-btn:active {
+          transform: scale(1.05) rotate(90deg);
         }
 
         .image-number {
           position: absolute;
-          top: 8px;
-          left: 8px;
-          background: rgba(0, 0, 0, 0.7);
+          top: 10px;
+          left: 10px;
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
           color: white;
           border-radius: 50%;
-          width: 24px;
-          height: 24px;
+          width: 28px;
+          height: 28px;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 0.75rem;
-          font-weight: 600;
+          font-size: 0.8rem;
+          font-weight: 700;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+          z-index: 5;
+          border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
         .image-details {
-          padding: 1rem;
+          padding: 1rem 1.25rem;
           background: #ffffff;
+          border-top: 1px solid #f1f3f4;
+          flex-grow: 1;
         }
 
         .file-name {
-          font-size: 0.9rem;
-          font-weight: 500;
-          color: #495057;
-          margin-bottom: 0.25rem;
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: #212529;
+          margin-bottom: 0.375rem;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          line-height: 1.3;
+          line-height: 1.4;
         }
 
         .file-size {
-          font-size: 0.8rem;
+          font-size: 0.75rem;
           color: #6c757d;
-          font-weight: 400;
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+        }
+
+        .file-size::before {
+          content: "📦";
+          font-size: 0.7rem;
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
           .image-gallery {
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 1rem;
             padding: 1rem;
+            justify-content: center;
+          }
+
+          .gallery-item {
+            width: 100%;
+            max-width: 300px;
+            min-width: 280px;
           }
 
           .image-container {
-            height: 120px;
+            height: 200px;
           }
 
           .gallery-header {
@@ -1134,31 +1405,43 @@ export default function ModernPropertyListing() {
           }
 
           .image-details {
-            padding: 0.75rem;
+            padding: 0.875rem 1rem;
           }
         }
 
         @media (max-width: 480px) {
           .image-gallery {
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 0.75rem;
             padding: 0.75rem;
+            justify-content: center;
+          }
+
+          .gallery-item {
+            width: 100%;
+            max-width: 100%;
+            min-width: auto;
           }
 
           .image-container {
-            height: 100px;
+            height: 200px;
           }
 
           .remove-btn {
-            width: 32px;
-            height: 32px;
-            font-size: 14px;
+            width: 38px;
+            height: 38px;
+            font-size: 16px;
           }
 
           .image-number {
-            width: 20px;
-            height: 20px;
-            font-size: 0.7rem;
+            width: 24px;
+            height: 24px;
+            font-size: 0.75rem;
+            top: 8px;
+            left: 8px;
+          }
+
+          .image-details {
+            padding: 0.75rem;
           }
         }
       `}</style>
@@ -1388,7 +1671,161 @@ function BasicInformationStep({ data, onChange, errors, propertyTypes = [], prop
   );
 }
 
-function LocationAreaStep({ data, onChange, errors, builderList = [] }) {
+function LocationAreaStep({ 
+  data, 
+  onChange, 
+  errors, 
+  builderList = [], 
+  cities = [], 
+  loadingCities = false,
+  loadingBuilders = false
+}) {
+  const [builderSearchTerm, setBuilderSearchTerm] = useState("");
+  const [showBuilderDropdown, setShowBuilderDropdown] = useState(false);
+  const [builderInputFocused, setBuilderInputFocused] = useState(false);
+  const [builderHighlightedIndex, setBuilderHighlightedIndex] = useState(-1);
+
+  const [citySearchTerm, setCitySearchTerm] = useState("");
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
+  const [cityInputFocused, setCityInputFocused] = useState(false);
+  const [cityHighlightedIndex, setCityHighlightedIndex] = useState(-1);
+
+  // Filter builders based on search term
+  const filteredBuilders = builderList.filter((builder) => {
+    if (!builderSearchTerm.trim()) return false; // Don't show all when empty
+    const builderName = (builder.builderName || builder.name || "").toLowerCase();
+    const searchLower = builderSearchTerm.toLowerCase();
+    return builderName.includes(searchLower);
+  }).slice(0, 10); // Limit to 10 results for better UX
+
+  // Filter cities based on search term
+  const filteredCities = cities.filter((city) => {
+    if (!citySearchTerm.trim()) return false; // Don't show all when empty
+    const cityName = (city.cityName || city.name || city).toLowerCase();
+    const searchLower = citySearchTerm.toLowerCase();
+    return cityName.includes(searchLower);
+  }).slice(0, 10); // Limit to 10 results for better UX
+
+  // Handle builder input change
+  const handleBuilderInputChange = (value) => {
+    setBuilderSearchTerm(value);
+    onChange("builderName", value);
+    onChange("builderId", null); // Clear ID when typing custom text
+    setShowBuilderDropdown(true);
+    setBuilderHighlightedIndex(-1);
+  };
+
+  // Handle city input change
+  const handleCityInputChange = (value) => {
+    setCitySearchTerm(value);
+    onChange("city", value);
+    onChange("cityId", null); // Clear ID when typing
+    setShowCityDropdown(true);
+    setCityHighlightedIndex(-1);
+  };
+
+  // Handle keyboard navigation for builder
+  const handleBuilderKeyDown = (e) => {
+    if (!showBuilderDropdown || filteredBuilders.length === 0) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setBuilderHighlightedIndex((prev) => 
+        prev < filteredBuilders.length - 1 ? prev + 1 : prev
+      );
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setBuilderHighlightedIndex((prev) => (prev > 0 ? prev - 1 : -1));
+    } else if (e.key === "Enter" && builderHighlightedIndex >= 0) {
+      e.preventDefault();
+      handleBuilderSelect(filteredBuilders[builderHighlightedIndex]);
+    } else if (e.key === "Escape") {
+      setShowBuilderDropdown(false);
+      setBuilderInputFocused(false);
+    }
+  };
+
+  // Handle keyboard navigation for city
+  const handleCityKeyDown = (e) => {
+    if (!showCityDropdown || filteredCities.length === 0) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setCityHighlightedIndex((prev) => 
+        prev < filteredCities.length - 1 ? prev + 1 : prev
+      );
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setCityHighlightedIndex((prev) => (prev > 0 ? prev - 1 : -1));
+    } else if (e.key === "Enter" && cityHighlightedIndex >= 0) {
+      e.preventDefault();
+      handleCitySelect(filteredCities[cityHighlightedIndex]);
+    } else if (e.key === "Escape") {
+      setShowCityDropdown(false);
+      setCityInputFocused(false);
+    }
+  };
+
+  // Handle builder selection from dropdown
+  const handleBuilderSelect = (builder) => {
+    const builderName = builder.builderName || builder.name;
+    setBuilderSearchTerm(builderName);
+    onChange("builderName", builderName);
+    if (builder.id) {
+      onChange("builderId", builder.id);
+    }
+    setShowBuilderDropdown(false);
+    setBuilderInputFocused(false);
+  };
+
+  // Handle city selection from dropdown
+  const handleCitySelect = (city) => {
+    const cityName = city.cityName || city.name || city;
+    setCitySearchTerm(cityName);
+    onChange("city", cityName);
+    if (city.id) {
+      onChange("cityId", city.id);
+    }
+    setShowCityDropdown(false);
+    setCityInputFocused(false);
+  };
+
+  // Handle input focus
+  const handleBuilderFocus = () => {
+    setBuilderInputFocused(true);
+    setShowBuilderDropdown(true);
+  };
+
+  const handleCityFocus = () => {
+    setCityInputFocused(true);
+    setShowCityDropdown(true);
+  };
+
+  // Handle input blur (with delay to allow click on dropdown)
+  const handleBuilderBlur = () => {
+    setTimeout(() => {
+      setShowBuilderDropdown(false);
+      setBuilderInputFocused(false);
+    }, 200);
+  };
+
+  const handleCityBlur = () => {
+    setTimeout(() => {
+      setShowCityDropdown(false);
+      setCityInputFocused(false);
+    }, 200);
+  };
+
+  // Initialize search term from data
+  useEffect(() => {
+    if (data.builderName && !builderSearchTerm) {
+      setBuilderSearchTerm(data.builderName);
+    }
+    if (data.city && !citySearchTerm) {
+      setCitySearchTerm(data.city);
+    }
+  }, [data.builderName, data.city]);
+
   return (
     <div className="step-content">
       <div className="step-header">
@@ -1404,7 +1841,7 @@ function LocationAreaStep({ data, onChange, errors, builderList = [] }) {
             <label className="form-label-enhanced">
               <CIcon icon={cilBuilding} className="label-icon" />
               Project/Building Name
-              <span className="optional-indicator">(Optional)</span>
+              <span className="required-indicator">*</span>
             </label>
             <Form.Control
               type="text"
@@ -1412,7 +1849,14 @@ function LocationAreaStep({ data, onChange, errors, builderList = [] }) {
               onChange={(e) => onChange("projectName", e.target.value)}
               placeholder="Enter project or building name"
               className="form-control-enhanced"
+              isInvalid={!!errors.projectName}
             />
+            {errors.projectName && (
+              <div className="error-message">
+                <CIcon icon={cilWarning} className="error-icon" />
+                {errors.projectName}
+              </div>
+            )}
           </div>
         </Col>
 
@@ -1423,13 +1867,95 @@ function LocationAreaStep({ data, onChange, errors, builderList = [] }) {
               Builder/Developer Name
               <span className="optional-indicator">(Optional)</span>
             </label>
-            <Form.Control
-              type="select"
-              value={data.builderName}
-              onChange={(e) => onChange("builderName", e.target.value)}
-              options={builderList.map((builder) => builder.builderName)}
-              className="form-control-enhanced"
-            />
+            <div className="searchable-select-wrapper" style={{ position: "relative" }}>
+              <Form.Control
+                type="text"
+                value={builderSearchTerm}
+                onChange={(e) => handleBuilderInputChange(e.target.value)}
+                onFocus={handleBuilderFocus}
+                onBlur={handleBuilderBlur}
+                onKeyDown={handleBuilderKeyDown}
+                placeholder={loadingBuilders ? "Loading builders..." : "Type to search or enter custom builder name"}
+                className="form-control-enhanced"
+                disabled={loadingBuilders}
+                autoComplete="off"
+              />
+              {loadingBuilders && (
+                <div className="position-absolute" style={{ right: "15px", top: "50%", transform: "translateY(-50%)" }}>
+                  <div className="spinner-border spinner-border-sm text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              )}
+              
+              {/* Dropdown with filtered results */}
+              {showBuilderDropdown && builderInputFocused && (
+                <div 
+                  className="builder-dropdown"
+                  style={{
+                    position: "absolute",
+                    top: "100%",
+                    left: 0,
+                    right: 0,
+                    backgroundColor: "white",
+                    border: "1px solid #e9ecef",
+                    borderRadius: "0 0 10px 10px",
+                    maxHeight: "200px",
+                    overflowY: "auto",
+                    zIndex: 1000,
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    marginTop: "2px",
+                  }}
+                >
+                  {filteredBuilders.length > 0 ? (
+                    filteredBuilders.map((builder, index) => {
+                      const builderName = builder.builderName || builder.name;
+                      const isHighlighted = index === builderHighlightedIndex;
+                      return (
+                        <div
+                          key={builder.id || builderName}
+                          onClick={() => handleBuilderSelect(builder)}
+                          onMouseEnter={() => setBuilderHighlightedIndex(index)}
+                          style={{
+                            padding: "0.75rem 1rem",
+                            cursor: "pointer",
+                            borderBottom: "1px solid #f1f3f4",
+                            transition: "background-color 0.2s",
+                            backgroundColor: isHighlighted ? "#f8f9fa" : "white",
+                          }}
+                          onMouseLeave={() => setBuilderHighlightedIndex(-1)}
+                        >
+                          {builderName}
+                        </div>
+                      );
+                    })
+                  ) : builderSearchTerm ? (
+                    <div
+                      style={{
+                        padding: "0.75rem 1rem",
+                        color: "#28a745",
+                        fontWeight: "500",
+                      }}
+                    >
+                      ✓ Custom builder: "{builderSearchTerm}" will be saved
+                    </div>
+                  ) : (
+                    <div
+                      style={{
+                        padding: "0.75rem 1rem",
+                        color: "#6c757d",
+                      }}
+                    >
+                      {loadingBuilders ? "Loading..." : "Start typing to search or enter a custom builder name"}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+            <Form.Text className="text-muted" style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>
+              <CIcon icon={cilCheck} className="me-1" />
+              Type to search from list or enter a custom builder name
+            </Form.Text>
           </div>
         </Col>
 
@@ -1489,25 +2015,96 @@ function LocationAreaStep({ data, onChange, errors, builderList = [] }) {
               City
               <span className="required-indicator">*</span>
             </label>
-            <div className="select-wrapper">
-              <Form.Select
-                value={data.city}
-                onChange={(e) => onChange("city", e.target.value)}
-                isInvalid={!!errors.city}
+            <div className="searchable-select-wrapper" style={{ position: "relative" }}>
+              <Form.Control
+                type="text"
+                value={citySearchTerm}
+                onChange={(e) => handleCityInputChange(e.target.value)}
+                onFocus={handleCityFocus}
+                onBlur={handleCityBlur}
+                onKeyDown={handleCityKeyDown}
+                placeholder={loadingCities ? "Loading cities..." : "Type to search city"}
                 className="form-control-enhanced"
-              >
-                <option value="">Choose your city</option>
-                <option value="Mumbai">🏙️ Mumbai</option>
-                <option value="Delhi">🏛️ Delhi</option>
-                <option value="Bangalore">🌆 Bangalore</option>
-                <option value="Hyderabad">🏢 Hyderabad</option>
-                <option value="Chennai">🏘️ Chennai</option>
-                <option value="Pune">🌳 Pune</option>
-                <option value="Gurgaon">🏗️ Gurgaon</option>
-                <option value="Noida">🏘️ Noida</option>
-                <option value="Kolkata">🌉 Kolkata</option>
-              </Form.Select>
-              <div className="select-arrow"></div>
+                disabled={loadingCities}
+                isInvalid={!!errors.city}
+                autoComplete="off"
+              />
+              {loadingCities && (
+                <div className="position-absolute" style={{ right: "15px", top: "50%", transform: "translateY(-50%)" }}>
+                  <div className="spinner-border spinner-border-sm text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              )}
+              
+              {/* Dropdown with filtered results */}
+              {showCityDropdown && cityInputFocused && (
+                <div 
+                  className="city-dropdown"
+                  style={{
+                    position: "absolute",
+                    top: "100%",
+                    left: 0,
+                    right: 0,
+                    backgroundColor: "white",
+                    border: "1px solid #e9ecef",
+                    borderRadius: "0 0 10px 10px",
+                    maxHeight: "200px",
+                    overflowY: "auto",
+                    zIndex: 1000,
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    marginTop: "2px",
+                  }}
+                >
+                  {filteredCities.length > 0 ? (
+                    filteredCities.map((city, index) => {
+                      const cityName = city.cityName || city.name || city;
+                      const isHighlighted = index === cityHighlightedIndex;
+                      return (
+                        <div
+                          key={city.id || cityName}
+                          onClick={() => handleCitySelect(city)}
+                          onMouseEnter={() => setCityHighlightedIndex(index)}
+                          style={{
+                            padding: "0.75rem 1rem",
+                            cursor: "pointer",
+                            borderBottom: "1px solid #f1f3f4",
+                            transition: "background-color 0.2s",
+                            backgroundColor: isHighlighted ? "#f8f9fa" : "white",
+                          }}
+                          onMouseLeave={() => setCityHighlightedIndex(-1)}
+                        >
+                          {cityName}
+                          {city.state && (
+                            <span style={{ color: "#6c757d", fontSize: "0.85rem", marginLeft: "0.5rem" }}>
+                              ({city.state})
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })
+                  ) : citySearchTerm ? (
+                    <div
+                      style={{
+                        padding: "0.75rem 1rem",
+                        color: "#6c757d",
+                        fontStyle: "italic",
+                      }}
+                    >
+                      No matching cities found. Please select from the list.
+                    </div>
+                  ) : (
+                    <div
+                      style={{
+                        padding: "0.75rem 1rem",
+                        color: "#6c757d",
+                      }}
+                    >
+                      {loadingCities ? "Loading..." : "Start typing to search cities"}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
             {errors.city && (
               <div className="error-message">
@@ -1515,57 +2112,10 @@ function LocationAreaStep({ data, onChange, errors, builderList = [] }) {
                 {errors.city}
               </div>
             )}
-          </div>
-        </Col>
-
-        <Col md={6}>
-          <div className="form-group-enhanced">
-            <label className="form-label-enhanced">
-              <CIcon icon={cilFlagAlt} className="label-icon" />
-              State
-              <span className="required-indicator">*</span>
-            </label>
-            <div className="select-wrapper">
-              <Form.Select
-                value={data.state}
-                onChange={(e) => onChange("state", e.target.value)}
-                isInvalid={!!errors.state}
-                className="form-control-enhanced"
-              >
-                <option value="">Choose your state</option>
-                <option value="Delhi">🏛️ Delhi</option>
-                <option value="Maharashtra">🏙️ Maharashtra</option>
-                <option value="Karnataka">🌆 Karnataka</option>
-                <option value="Telangana">🏢 Telangana</option>
-                <option value="Tamil Nadu">🏘️ Tamil Nadu</option>
-                <option value="Haryana">🏗️ Haryana</option>
-                <option value="Uttar Pradesh">🏘️ Uttar Pradesh</option>
-                <option value="West Bengal">🌉 West Bengal</option>
-              </Form.Select>
-              <div className="select-arrow"></div>
-            </div>
-            {errors.state && (
-              <div className="error-message">
-                <CIcon icon={cilWarning} className="error-icon" />
-                {errors.state}
-              </div>
-            )}
-          </div>
-        </Col>
-
-        <Col md={6}>
-          <div className="form-group-enhanced">
-            <label className="form-label-enhanced">
-              <CIcon icon={cilFlagAlt} className="label-icon" />
-              Country
-            </label>
-            <Form.Control
-              type="text"
-              value={data.country}
-              onChange={(e) => onChange("country", e.target.value)}
-              placeholder="e.g., India"
-              className="form-control-enhanced"
-            />
+            <Form.Text className="text-muted" style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>
+              <CIcon icon={cilCheck} className="me-1" />
+              Type to search from available cities
+            </Form.Text>
           </div>
         </Col>
 
@@ -1579,7 +2129,10 @@ function LocationAreaStep({ data, onChange, errors, builderList = [] }) {
             <Form.Control
               type="text"
               value={data.pincode}
-              onChange={(e) => onChange("pincode", e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, ""); // Only allow digits
+                onChange("pincode", value.slice(0, 6)); // Limit to 6 digits
+              }}
               placeholder="6-digit PIN code"
               maxLength={6}
               isInvalid={!!errors.pincode}
@@ -1808,25 +2361,28 @@ function PricingDetailsStep({ data, onChange, errors }) {
           </Form.Group>
         </Col>
 
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Facing</Form.Label>
-            <Form.Select
-              value={data.facing}
-              onChange={(e) => onChange("facing", e.target.value)}
-            >
-              <option value="">Select Facing</option>
-              <option value="North">North</option>
-              <option value="South">South</option>
-              <option value="East">East</option>
-              <option value="West">West</option>
-              <option value="North-East">North-East</option>
-              <option value="North-West">North-West</option>
-              <option value="South-East">South-East</option>
-              <option value="South-West">South-West</option>
-            </Form.Select>
-          </Form.Group>
-        </Col>
+        {/* Facing - More relevant for residential properties */}
+        {data.listingType === "Residential" && (
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Facing</Form.Label>
+              <Form.Select
+                value={data.facing}
+                onChange={(e) => onChange("facing", e.target.value)}
+              >
+                <option value="">Select Facing</option>
+                <option value="North">North</option>
+                <option value="South">South</option>
+                <option value="East">East</option>
+                <option value="West">West</option>
+                <option value="North-East">North-East</option>
+                <option value="North-West">North-West</option>
+                <option value="South-East">South-East</option>
+                <option value="South-West">South-West</option>
+              </Form.Select>
+            </Form.Group>
+          </Col>
+        )}
 
         <Col md={6}>
           <Form.Group>
@@ -1846,24 +2402,52 @@ function PricingDetailsStep({ data, onChange, errors }) {
 }
 
 function FeaturesAmenitiesStep({ data, onChange, errors }) {
-  const amenities = [
-    "Swimming Pool",
-    "Gym",
+  const isResidential = data.listingType === "Residential";
+  const isCommercial = data.listingType === "Commercial";
+
+  // Common amenities for both types
+  const commonAmenities = [
     "Parking",
     "Security",
     "Lift",
     "Power Backup",
     "Water Supply",
-    "Garden",
-    "Club House",
-    "Children's Play Area",
     "Shopping Center",
     "Hospital",
-    "School",
     "Metro Station",
   ];
 
-  const features = [
+  // Residential-specific amenities
+  const residentialAmenities = [
+    "Swimming Pool",
+    "Gym",
+    "Garden",
+    "Club House",
+    "Children's Play Area",
+    "School",
+  ];
+
+  // Commercial-specific amenities
+  const commercialAmenities = [
+    "Conference Room",
+    "Reception Area",
+    "Cafeteria",
+    "Fire Safety",
+    "Air Conditioning",
+    "High-Speed Elevator",
+    "Banking Facility",
+    "ATM",
+  ];
+
+  // Combine amenities based on listing type
+  const amenities = isResidential
+    ? [...commonAmenities, ...residentialAmenities]
+    : isCommercial
+    ? [...commonAmenities, ...commercialAmenities]
+    : commonAmenities;
+
+  // Residential-specific features
+  const residentialFeatures = [
     "Fully Furnished",
     "Semi Furnished",
     "Unfurnished",
@@ -1877,6 +2461,24 @@ function FeaturesAmenitiesStep({ data, onChange, errors }) {
     "Store Room",
     "Servant Room",
   ];
+
+  // Commercial-specific features
+  const commercialFeatures = [
+    "Fully Furnished",
+    "Semi Furnished",
+    "Unfurnished",
+    "Air Conditioning",
+    "False Ceiling",
+    "Carpeted Flooring",
+    "Modular Workstations",
+    "Conference Room",
+    "Pantry",
+    "Reception Area",
+    "Storage Space",
+    "Parking Space",
+  ];
+
+  const features = isResidential ? residentialFeatures : isCommercial ? commercialFeatures : [];
 
   const handleAmenityChange = (amenity) => {
     const currentAmenities = data.amenities || [];
@@ -1896,66 +2498,119 @@ function FeaturesAmenitiesStep({ data, onChange, errors }) {
 
   return (
     <div className="step-content">
-      <h4 className="step-title mb-4">Property Features & Amenities</h4>
+      <h4 className="step-title mb-4">
+        {isResidential ? "Residential" : isCommercial ? "Commercial" : "Property"} Features & Amenities
+      </h4>
+
+      {!data.listingType && (
+        <Alert variant="warning" className="mb-4">
+          <CIcon icon={cilWarning} className="me-2" />
+          Please select a listing type in Step 1 to see relevant fields.
+        </Alert>
+      )}
 
       <Row className="g-3">
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Number of Bedrooms *</Form.Label>
-            <Form.Select
-              value={data.bedrooms}
-              onChange={(e) => onChange("bedrooms", e.target.value)}
-              isInvalid={!!errors.bedrooms}
-            >
-              <option value="">Select Bedrooms</option>
-              <option value="1">1 BHK</option>
-              <option value="2">2 BHK</option>
-              <option value="3">3 BHK</option>
-              <option value="4">4 BHK</option>
-              <option value="5">5+ BHK</option>
-            </Form.Select>
-            <Form.Control.Feedback type="invalid">
-              {errors.bedrooms}
-            </Form.Control.Feedback>
-          </Form.Group>
-        </Col>
+        {/* Residential-specific fields */}
+        {isResidential && (
+          <>
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>Number of Bedrooms (BHK) *</Form.Label>
+                <Form.Select
+                  value={data.bedrooms}
+                  onChange={(e) => onChange("bedrooms", e.target.value)}
+                  isInvalid={!!errors.bedrooms}
+                >
+                  <option value="">Select Bedrooms</option>
+                  <option value="1">1 BHK</option>
+                  <option value="2">2 BHK</option>
+                  <option value="3">3 BHK</option>
+                  <option value="4">4 BHK</option>
+                  <option value="5">5+ BHK</option>
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  {errors.bedrooms}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Col>
 
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Number of Bathrooms *</Form.Label>
-            <Form.Select
-              value={data.bathrooms}
-              onChange={(e) => onChange("bathrooms", e.target.value)}
-              isInvalid={!!errors.bathrooms}
-            >
-              <option value="">Select Bathrooms</option>
-              <option value="1">1 Bathroom</option>
-              <option value="2">2 Bathrooms</option>
-              <option value="3">3 Bathrooms</option>
-              <option value="4">4+ Bathrooms</option>
-            </Form.Select>
-            <Form.Control.Feedback type="invalid">
-              {errors.bathrooms}
-            </Form.Control.Feedback>
-          </Form.Group>
-        </Col>
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>Number of Bathrooms *</Form.Label>
+                <Form.Select
+                  value={data.bathrooms}
+                  onChange={(e) => onChange("bathrooms", e.target.value)}
+                  isInvalid={!!errors.bathrooms}
+                >
+                  <option value="">Select Bathrooms</option>
+                  <option value="1">1 Bathroom</option>
+                  <option value="2">2 Bathrooms</option>
+                  <option value="3">3 Bathrooms</option>
+                  <option value="4">4+ Bathrooms</option>
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  {errors.bathrooms}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Col>
 
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Number of Balconies</Form.Label>
-            <Form.Select
-              value={data.balconies}
-              onChange={(e) => onChange("balconies", e.target.value)}
-            >
-              <option value="">Select Balconies</option>
-              <option value="0">No Balcony</option>
-              <option value="1">1 Balcony</option>
-              <option value="2">2 Balconies</option>
-              <option value="3">3+ Balconies</option>
-            </Form.Select>
-          </Form.Group>
-        </Col>
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>Number of Balconies</Form.Label>
+                <Form.Select
+                  value={data.balconies}
+                  onChange={(e) => onChange("balconies", e.target.value)}
+                >
+                  <option value="">Select Balconies</option>
+                  <option value="0">No Balcony</option>
+                  <option value="1">1 Balcony</option>
+                  <option value="2">2 Balconies</option>
+                  <option value="3">3+ Balconies</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
+          </>
+        )}
 
+        {/* Commercial-specific fields */}
+        {isCommercial && (
+          <>
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>Number of Floors/Levels</Form.Label>
+                <Form.Select
+                  value={data.bedrooms}
+                  onChange={(e) => onChange("bedrooms", e.target.value)}
+                >
+                  <option value="">Select Levels</option>
+                  <option value="1">Ground Floor</option>
+                  <option value="2">1st Floor</option>
+                  <option value="3">2nd Floor</option>
+                  <option value="4">3rd Floor</option>
+                  <option value="5">4+ Floors</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
+
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>Number of Washrooms</Form.Label>
+                <Form.Select
+                  value={data.bathrooms}
+                  onChange={(e) => onChange("bathrooms", e.target.value)}
+                >
+                  <option value="">Select Washrooms</option>
+                  <option value="1">1 Washroom</option>
+                  <option value="2">2 Washrooms</option>
+                  <option value="3">3 Washrooms</option>
+                  <option value="4">4+ Washrooms</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
+          </>
+        )}
+
+        {/* Common fields for both */}
         <Col md={6}>
           <Form.Group>
             <Form.Label>Parking</Form.Label>
@@ -1974,20 +2629,23 @@ function FeaturesAmenitiesStep({ data, onChange, errors }) {
           </Form.Group>
         </Col>
 
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Furnishing Status</Form.Label>
-            <Form.Select
-              value={data.furnished}
-              onChange={(e) => onChange("furnished", e.target.value)}
-            >
-              <option value="">Select Furnishing</option>
-              <option value="Fully Furnished">Fully Furnished</option>
-              <option value="Semi Furnished">Semi Furnished</option>
-              <option value="Unfurnished">Unfurnished</option>
-            </Form.Select>
-          </Form.Group>
-        </Col>
+        {/* Furnishing - more relevant for residential but available for commercial too */}
+        {(isResidential || isCommercial) && (
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Furnishing Status</Form.Label>
+              <Form.Select
+                value={data.furnished}
+                onChange={(e) => onChange("furnished", e.target.value)}
+              >
+                <option value="">Select Furnishing</option>
+                <option value="Fully Furnished">Fully Furnished</option>
+                <option value="Semi Furnished">Semi Furnished</option>
+                <option value="Unfurnished">Unfurnished</option>
+              </Form.Select>
+            </Form.Group>
+          </Col>
+        )}
       </Row>
 
       <Row className="mt-4">
@@ -2009,24 +2667,26 @@ function FeaturesAmenitiesStep({ data, onChange, errors }) {
         </Col>
       </Row>
 
-      <Row className="mt-4">
-        <Col md={12}>
-          <h5>Features</h5>
-          <div className="features-grid">
-            {features.map((feature) => (
-              <div key={feature} className="feature-item">
-                <Form.Check
-                  type="checkbox"
-                  id={`feature-${feature}`}
-                  label={feature}
-                  checked={(data.features || []).includes(feature)}
-                  onChange={() => handleFeatureChange(feature)}
-                />
-              </div>
-            ))}
-          </div>
-        </Col>
-      </Row>
+      {features.length > 0 && (
+        <Row className="mt-4">
+          <Col md={12}>
+            <h5>{isResidential ? "Residential" : "Commercial"} Features</h5>
+            <div className="features-grid">
+              {features.map((feature) => (
+                <div key={feature} className="feature-item">
+                  <Form.Check
+                    type="checkbox"
+                    id={`feature-${feature}`}
+                    label={feature}
+                    checked={(data.features || []).includes(feature)}
+                    onChange={() => handleFeatureChange(feature)}
+                  />
+                </div>
+              ))}
+            </div>
+          </Col>
+        </Row>
+      )}
 
       <style jsx>{`
         .amenities-grid,
@@ -2063,15 +2723,30 @@ function MediaContactStep({
       <Row className="g-3">
         <Col md={12}>
           <Form.Group>
-            <Form.Label>Property Images</Form.Label>
+            <Form.Label className="d-flex align-items-center gap-2 mb-2">
+              Property Images
+              <span className="required-indicator">*</span>
+              {data.imagePreviews && data.imagePreviews.length > 0 && (
+                <Badge bg="primary" className="ms-2">
+                  {data.imagePreviews.length} {data.imagePreviews.length === 1 ? 'file' : 'files'}
+                </Badge>
+              )}
+            </Form.Label>
             <Form.Control
               type="file"
               multiple
               accept="image/*"
               onChange={onImageChange}
+              isInvalid={!!errors.images}
+              className="form-control-enhanced"
             />
+            {errors.images && (
+              <Form.Control.Feedback type="invalid">
+                {errors.images}
+              </Form.Control.Feedback>
+            )}
             <Form.Text className="text-muted">
-              Upload multiple images of your property (JPG, PNG, max 5MB each)
+              Upload at least one image of your property (JPG, PNG, max 5MB each). Images must be rectangular (not square).
             </Form.Text>
 
             {/* Image Previews */}
@@ -2094,10 +2769,12 @@ function MediaContactStep({
                   {data.imagePreviews.map((imageData, index) => (
                     <div key={imageData.id} className="gallery-item">
                       <div className="image-container">
-                        <img
+                        <NextImage
                           src={imageData.preview}
                           alt={`Property image ${index + 1}`}
                           className="gallery-image"
+                          height={200}
+                          width={300}
                         />
                         <div className="image-overlay">
                           <button
@@ -2135,7 +2812,16 @@ function MediaContactStep({
               value={data.virtualTour}
               onChange={(e) => onChange("virtualTour", e.target.value)}
               placeholder="https://example.com/virtual-tour"
+              isInvalid={!!errors.virtualTour}
             />
+            {errors.virtualTour && (
+              <Form.Control.Feedback type="invalid">
+                {errors.virtualTour}
+              </Form.Control.Feedback>
+            )}
+            <Form.Text className="text-muted">
+              Optional: Enter a valid URL for virtual tour (e.g., YouTube, Matterport)
+            </Form.Text>
           </Form.Group>
         </Col>
 
@@ -2281,14 +2967,28 @@ function MediaContactStep({
               label="I confirm that the information provided is true and accurate"
               checked={!!data.truthfulDeclaration}
               onChange={(e) => onChange("truthfulDeclaration", e.target.checked)}
+              isInvalid={!!errors.truthfulDeclaration}
             />
+            {errors.truthfulDeclaration && (
+              <div className="error-message">
+                <CIcon icon={cilWarning} className="error-icon" />
+                {errors.truthfulDeclaration}
+              </div>
+            )}
             <Form.Check
               type="checkbox"
               id="dpdpConsent"
               label="I consent to MyPropertyFact storing and processing my data"
               checked={!!data.dpdpConsent}
               onChange={(e) => onChange("dpdpConsent", e.target.checked)}
+              isInvalid={!!errors.dpdpConsent}
             />
+            {errors.dpdpConsent && (
+              <div className="error-message">
+                <CIcon icon={cilWarning} className="error-icon" />
+                {errors.dpdpConsent}
+              </div>
+            )}
           </div>
         </Col>
       </Row>

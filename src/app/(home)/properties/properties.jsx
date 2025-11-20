@@ -1,7 +1,12 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHeart,
@@ -13,8 +18,11 @@ import {
   faXmark,
   faArrowUpDown,
 } from "@fortawesome/free-solid-svg-icons";
-import { allPropertiesData } from "./propertyData";
+import { Spinner } from "react-bootstrap";
+import axios from "axios";
 import "./properties.css";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005";
 
 export default function Properties() {
   const [activeTab, setActiveTab] = useState("Properties");
@@ -23,8 +31,8 @@ export default function Properties() {
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const [budgetMin, setBudgetMin] = useState("No min");
   const [budgetMax, setBudgetMax] = useState("No max");
-  const [selectedPropertyTypes, setSelectedPropertyTypes] = useState(["Residential Apartment"]);
-  const [selectedBedrooms, setSelectedBedrooms] = useState(["3 BHK"]);
+  const [selectedPropertyTypes, setSelectedPropertyTypes] = useState([]);
+  const [selectedBedrooms, setSelectedBedrooms] = useState([]);
   const [selectedConstructionStatuses, setSelectedConstructionStatuses] = useState([]);
   const [expandedSections, setExpandedSections] = useState({
     budget: true,
@@ -32,6 +40,9 @@ export default function Properties() {
     bedrooms: true,
     constructionStatus: true,
   });
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const toggleSection = (section) => {
     setExpandedSections((prev) => ({
@@ -40,14 +51,115 @@ export default function Properties() {
     }));
   };
 
+  // Fetch properties from API
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+        const response = await axios.get(`${apiUrl}/api/public/properties`);
+        
+        if (response.data.success && Array.isArray(response.data.properties)) {
+          const transformedProperties = response.data.properties.map((property) => {
+            const locationParts = [];
+            if (property.address) locationParts.push(property.address);
+            if (property.locality) locationParts.push(property.locality);
+            if (property.city) locationParts.push(property.city);
+            
+            const formatPrice = (price) => {
+              if (!price && price !== 0) return "Price on request";
+              const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+              if (isNaN(numPrice)) return "Price on request";
+              if (numPrice >= 10000000) {
+                return `₹${(numPrice / 10000000).toFixed(2)} Cr`;
+              } else if (numPrice >= 100000) {
+                return `₹${(numPrice / 100000).toFixed(2)} L`;
+              }
+              return `₹${Math.round(numPrice).toLocaleString('en-IN')}`;
+            };
+
+            const formatPricePerSqft = (price) => {
+              if (!price) return null;
+              return `₹${Math.round(price).toLocaleString('en-IN')} per sqft`;
+            };
+
+            const getBedroomLabel = (bedrooms) => {
+              if (!bedrooms) return null;
+              if (bedrooms === 1) return "1 RK/1 BHK";
+              return `${bedrooms} BHK`;
+            };
+
+            const mapStatus = (status) => {
+              if (!status) return null;
+              if (status.toLowerCase().includes("ready")) return "Ready to move";
+              if (status.toLowerCase().includes("construction")) return "Under Construction";
+              return "New Launch";
+            };
+
+            // Generate slug from title and ID
+            const generateSlug = (title, id) => {
+              if (!title) return id.toString();
+              return title
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/(^-|-$)/g, '') + '-' + id;
+            };
+
+            const propertyTitle = property.title || `${getBedroomLabel(property.bedrooms) || ''} ${property.subType || 'Property'}`.trim();
+
+            return {
+              id: property.id,
+              slug: generateSlug(propertyTitle, property.id),
+              title: propertyTitle,
+              location: locationParts.filter(Boolean).join(", ") || "Location not specified",
+              price: formatPrice(property.totalPrice),
+              pricePerSqft: formatPricePerSqft(property.pricePerSqft),
+              area: property.carpetArea || property.builtUpArea || property.superBuiltUpArea || property.plotArea,
+              areaLabel: property.carpetArea ? "Carpet Area" : property.builtUpArea ? "Built-up Area" : property.superBuiltUpArea ? "Super Built-up Area" : "Plot Area",
+              bedrooms: property.bedrooms,
+              bedroom: getBedroomLabel(property.bedrooms),
+              bathrooms: property.bathrooms,
+              balconies: property.balconies,
+              facing: property.facing,
+              status: property.status,
+              constructionStatus: mapStatus(property.status),
+              transaction: property.transaction,
+              listingType: property.listingType,
+              subType: property.subType,
+              propertyTypeCategory: property.subType === "Apartment" || property.subType === "Flat" ? "Residential Apartment" : property.subType || "Residential Apartment",
+              furnished: property.furnished,
+              image: property.imageUrls && property.imageUrls.length > 0 ? property.imageUrls[0] : null,
+              imageCount: property.imageUrls ? property.imageUrls.length : 0,
+              postedDate: property.createdAt ? new Date(property.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : null,
+              verified: property.approvalStatus === "APPROVED",
+              numericPrice: property.totalPrice || 0,
+              raw: property
+            };
+          });
+          setProperties(transformedProperties);
+        } else {
+          setError("Failed to load properties");
+        }
+      } catch (err) {
+        console.error("Error fetching properties:", err);
+        setError(err.message || "Failed to load properties");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperties();
+  }, []);
+
   // Helper function to parse price string to numeric value (in lakhs)
   const parsePrice = (priceStr) => {
     if (!priceStr) return 0;
     const str = priceStr.replace(/[₹,]/g, "").trim();
     if (str.includes("Cr")) {
       return parseFloat(str.replace("Cr", "").trim()) * 100; // Convert Cr to lakhs
-    } else if (str.includes("Lakh")) {
-      return parseFloat(str.replace("Lakh", "").trim());
+    } else if (str.includes("L")) {
+      return parseFloat(str.replace("L", "").trim());
     }
     return 0;
   };
@@ -58,37 +170,74 @@ export default function Properties() {
     return parsePrice(budgetStr);
   };
 
-  // Helper function to extract bedroom count from title
-  const extractBedroom = (title) => {
-    const match = title.match(/(\d+)\s*(RK|BHK)/i);
-    if (match) {
-      const count = parseInt(match[1]);
-      const type = match[2].toUpperCase();
-      if (type === "RK") return "1 RK/1 BHK";
-      return `${count} BHK`;
+  // Helper function to get image URL
+  const getImageUrl = (imageUrl) => {
+    if (!imageUrl) return null;
+    
+    // If already a full URL, return as is
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
     }
-    return "3 BHK"; // Default
+    
+    const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+    
+    // Handle absolute Windows paths (e.g., D:\path\to\file or D:/path/to/file)
+    let cleanImageUrl = imageUrl;
+    if (cleanImageUrl.match(/^[A-Za-z]:[\/\\]/)) {
+      // Extract relative path from absolute path
+      const propertyListingsIndex = cleanImageUrl.toLowerCase().indexOf("property-listings");
+      if (propertyListingsIndex !== -1) {
+        cleanImageUrl = cleanImageUrl.substring(propertyListingsIndex);
+      } else {
+        console.warn('Could not find property-listings in absolute path:', imageUrl);
+        return null;
+      }
+    }
+    
+    // Normalize path separators
+    cleanImageUrl = cleanImageUrl.replace(/\\/g, '/');
+    
+    // Remove leading slash if present
+    if (cleanImageUrl.startsWith('/')) {
+      cleanImageUrl = cleanImageUrl.slice(1);
+    }
+    
+    // Remove "uploads/" prefix if present
+    if (cleanImageUrl.startsWith('uploads/')) {
+      cleanImageUrl = cleanImageUrl.replace('uploads/', '');
+    }
+    
+    // Split the path: property-listings/{id}/{filename}
+    const pathParts = cleanImageUrl.split('/');
+    if (pathParts.length >= 3 && pathParts[0] === 'property-listings') {
+      const listingId = pathParts[1];
+      const filename = pathParts.slice(2).join('/');
+      const finalUrl = `${apiUrl}/get/images/property-listings/${listingId}/${filename}`;
+      console.log('Constructed image URL:', finalUrl);
+      return finalUrl;
+    } else if (pathParts.length === 2) {
+      return `${apiUrl}/get/images/${pathParts[0]}/${pathParts[1]}`;
+    }
+    
+    console.warn('Could not parse image URL:', imageUrl);
+    return null;
   };
-
-  // Helper function to map construction status
-  const mapConstructionStatus = (status) => {
-    if (!status) return null;
-    if (status === "Ready to Move" || status === "Ready to move") return "Ready to move";
-    if (status === "Under Construction") return "Under Construction";
-    return "New Launch";
-  };
-
-  // Sample property data - replace with actual API data
-  const allProperties = allPropertiesData;
 
   // Enhanced properties with computed fields
   const enhancedProperties = useMemo(() => 
-    allProperties.map((property) => ({
-      ...property,
-      numericPrice: parsePrice(property.price),
-      bedroom: extractBedroom(property.title),
-      constructionStatus: mapConstructionStatus(property.status),
-    })), [allProperties]
+    properties.map((property) => {
+      // Get all image URLs for the slider
+      const allImageUrls = property.raw?.imageUrls && property.raw.imageUrls.length > 0
+        ? property.raw.imageUrls.map(img => getImageUrl(img)).filter(Boolean)
+        : [];
+      
+      return {
+        ...property,
+        numericPrice: property.numericPrice || parsePrice(property.price),
+        imageUrl: property.image ? getImageUrl(property.image) : null,
+        allImageUrls: allImageUrls.length > 0 ? allImageUrls : (property.image ? [getImageUrl(property.image)].filter(Boolean) : []),
+      };
+    }), [properties]
   );
 
   // Filter handlers
@@ -208,13 +357,13 @@ export default function Properties() {
   // Compute applied filters for display
   const appliedFilters = useMemo(() => {
     const filters = [];
-    if (hideSeen) filters.push("Hide Seen");
-    if (verifiedOnly) filters.push("Verified Only");
+    selectedBedrooms.forEach((bedroom) => filters.push(bedroom));
+    selectedPropertyTypes.forEach((type) => filters.push(type));
+    selectedConstructionStatuses.forEach((status) => filters.push(status));
     if (budgetMin !== "No min") filters.push(`Min: ${budgetMin}`);
     if (budgetMax !== "No max") filters.push(`Max: ${budgetMax}`);
-    selectedPropertyTypes.forEach((type) => filters.push(type));
-    selectedBedrooms.forEach((bedroom) => filters.push(bedroom));
-    selectedConstructionStatuses.forEach((status) => filters.push(status));
+    if (hideSeen) filters.push("Hide Seen");
+    if (verifiedOnly) filters.push("Verified Only");
     return filters;
   }, [
     hideSeen,
@@ -272,18 +421,15 @@ export default function Properties() {
   return (
     <div className="properties-page">
       {/* Breadcrumbs */}
-      <div className="container-fluid py-2 bg-light">
+      <div className="container-fluid bg-light">
         <div className="container">
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb mb-0">
               <li className="breadcrumb-item">
                 <Link href="/">Home</Link>
               </li>
-              <li className="breadcrumb-item">
-                <Link href="/properties">Flats for Sale in Noida</Link>
-              </li>
               <li className="breadcrumb-item active" aria-current="page">
-                3 BHK Flats for Sale in Noida
+                Properties
               </li>
             </ol>
           </nav>
@@ -292,7 +438,7 @@ export default function Properties() {
 
       {/* Main Tabs and Sort */}
       <div className="container-fluid border-bottom bg-white sticky-top" style={{ zIndex: 100 }}>
-        <div className="container py-3">
+        <div className="container">
           <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div className="d-flex gap-4 tabs-container">
               <button
@@ -337,7 +483,7 @@ export default function Properties() {
 
       {/* Page Title */}
       <div className="container-fluid bg-white border-bottom">
-        <div className="container py-4">
+        <div className="container py-2">
           <h2 className="mb-0 fw-bold" style={{ 
             fontSize: "1.5rem",
             color: "#212529",
@@ -600,7 +746,21 @@ export default function Properties() {
             {/* Main Content - Property Listings */}
             <div className="col-lg-9">
               <div className="properties-list">
-                {filteredAndSortedProperties.length === 0 ? (
+                {loading ? (
+                  <div className="text-center py-5">
+                    <Spinner animation="border" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </Spinner>
+                    <p className="mt-3 text-muted">Loading properties...</p>
+                  </div>
+                ) : error ? (
+                  <div className="text-center py-5">
+                    <p className="text-danger">{error}</p>
+                    <button className="btn btn-primary mt-3" onClick={() => window.location.reload()}>
+                      Retry
+                    </button>
+                  </div>
+                ) : filteredAndSortedProperties.length === 0 ? (
                   <div className="text-center py-5">
                     <p className="text-muted">No properties found matching your filters.</p>
                     <button className="btn btn-primary mt-3" onClick={clearAllFilters}>
@@ -611,24 +771,81 @@ export default function Properties() {
                   filteredAndSortedProperties.map((property) => (
                   <Link 
                     key={property.id} 
-                    href={`/detail/${property.id}`}
+                    href={`/properties/${property.slug || property.id}`}
                     className="property-card text-decoration-none"
                     style={{ color: 'inherit', display: 'block' }}
                   >
                     <div className="row g-0 h-100">
-                      {/* Property Image */}
+                      {/* Property Image Slider */}
                       <div className="col-md-4 p-0 d-flex">
                         <div className="property-image-container position-relative w-100">
-                          <Image
-                            src={property.image}
-                            alt={property.title}
-                            width={400}
-                            height={220}
-                            className="property-image"
-                            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-                          />
-                          {property.imageLabel && (
-                            <div className="image-label">{property.imageLabel}</div>
+                          {property.allImageUrls && property.allImageUrls.length > 0 ? (
+                            <Swiper
+                              modules={[Navigation, Pagination, Autoplay]}
+                              spaceBetween={0}
+                              slidesPerView={1}
+                              navigation={false}
+                              pagination={{ 
+                                clickable: true,
+                                bulletClass: 'swiper-pagination-bullet property-slider-bullet',
+                                bulletActiveClass: 'swiper-pagination-bullet-active property-slider-bullet-active'
+                              }}
+                              autoplay={{
+                                delay: 3000,
+                                disableOnInteraction: false,
+                                pauseOnMouseEnter: true
+                              }}
+                              loop={property.allImageUrls.length > 1}
+                              className="property-image-swiper h-100"
+                              style={{ height: '100%' }}
+                            >
+                              {property.allImageUrls.map((imageUrl, index) => (
+                                <SwiperSlide key={index}>
+                                  <div className="position-relative w-100 h-100">
+                                    <Image
+                                      src={imageUrl}
+                                      alt={`${property.title} - Image ${index + 1}`}
+                                      fill
+                                      className="property-image"
+                                      style={{ objectFit: 'cover' }}
+                                      unoptimized
+                                      onError={(e) => {
+                                        console.error('Image load error:', imageUrl);
+                                        e.target.style.display = 'none';
+                                      }}
+                                    />
+                                  </div>
+                                </SwiperSlide>
+                              ))}
+                            </Swiper>
+                          ) : (
+                            <div 
+                              className="placeholder-image" 
+                              style={{ 
+                                display: 'flex',
+                                width: '100%',
+                                height: '100%',
+                                background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: '#6c757d',
+                                fontSize: '0.875rem'
+                              }}
+                            >
+                              No Image
+                            </div>
+                          )}
+                          {property.verified && (
+                            <div 
+                              className="verified-badge"
+                              title="This property has been e-verified by our team."
+                            >
+                              <FontAwesomeIcon icon={faCheck} className="me-1" />
+                              Verified
+                            </div>
+                          )}
+                          {property.imageCount > 0 && (
+                            <div className="image-label">{property.imageCount}+ Photos</div>
                           )}
                           {property.postedDate && (
                             <div className="posted-date">Posted: {property.postedDate}</div>
@@ -637,12 +854,12 @@ export default function Properties() {
                       </div>
 
                       {/* Property Details */}
-                      <div className="col-md-8 d-flex">
+                      <div className="col-md-8 d-flex align-items-center">
                         <div className="property-details w-100">
                           <div className="d-flex justify-content-between align-items-start">
                             <div className="flex-grow-1">
                               <h5 className="property-title">{property.title}</h5>
-                              <p className="property-developer">{property.developer}</p>
+                              {/* <p className="property-developer">{property.location}</p> */}
                             </div>
                             <div className="property-actions">
                               <button 
@@ -671,85 +888,79 @@ export default function Properties() {
 
                           {/* Details Grid */}
                           <div className="property-details-grid">
-                            {property.superArea && (
+                            {property.area && (
                               <div>
-                                <strong>SUPER AREA:</strong> {property.superArea}
+                                <strong>{property.areaLabel?.toUpperCase() || 'AREA'}:</strong> {property.area.toLocaleString('en-IN')} sq ft
                               </div>
                             )}
-                            {/* {property.possession ? (
-                              <div>
-                                <strong>UNDER CONSTRUCTION:</strong> {property.possession}
-                              </div>
-                            ) : property.status ? (
+                            {property.status && (
                               <div>
                                 <strong>STATUS:</strong> {property.status}
                               </div>
-                            ) : null} */}
-                            {/* {property.furnishing && (
-                              <div>
-                                <strong>FURNISHING:</strong> {property.furnishing}
-                              </div>
-                            )} */}
-                            {/* {property.bathroom && (
-                              <div>
-                                <strong>BATHROOM:</strong> {property.bathroom}
-                              </div>
-                            )} */}
+                            )}
                             {property.transaction && (
                               <div>
                                 <strong>TRANSACTION:</strong> {property.transaction}
                               </div>
                             )}
-                            {property.balcony && (
+                            {property.furnished && (
                               <div>
-                                <strong>BALCONY:</strong> {property.balcony}
+                                <strong>TYPE:</strong> {property.furnished}
                               </div>
                             )}
+                            {property.bathrooms && (
+                              <div>
+                                <strong>BATHROOMS:</strong> {property.bathrooms}
+                              </div>
+                            )}
+                            {/* {property.balconies && (
+                              <div>
+                                <strong>BALCONIES:</strong> {property.balconies}
+                              </div>
+                            )} */}
+                            {/* {property.facing && ( */}
+                              <div>
+                                <strong>FACING:</strong> {property.facing}
+                              </div>
+                            {/* )} */}
                           </div>
 
                           {/* Description */}
-                          <p className="property-description mb-0">{property.description}</p>
+                          {/* {property.raw?.description && (
+                            <p className="property-description mb-0">{property.raw.description.substring(0, 150)}{property.raw.description.length > 150 ? '...' : ''}</p>
+                          )} */}
 
                           {/* Price and Actions */}
                           <div className="d-flex justify-content-between align-items-end mt-0">
-                            <div>
-                              <h4 className="property-price mb-1">{generatePrice(property.price)}</h4>
-                              <p className="property-price-per-sqft mb-0">
-                                {property.pricePerSqft}
-                              </p>
+                            <div className="d-flex gap-2">
+                              <h4 className="property-price mb-1">{property.price}</h4>
+                              {property.pricePerSqft && (
+                                <p className="property-price-per-sqft mb-0">
+                                  / {property.pricePerSqft}
+                                </p>
+                              )}
                             </div>
                             <div className="property-action-buttons">
-                              {property.buttonType === "phone" ? (
-                                <>
-                                  <button 
-                                    className="btn btn-outline-secondary me-2"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    Get Phone No.
-                                  </button>
-                                  <button 
-                                    className="btn btn-danger"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    Contact Agent
-                                  </button>
-                                </>
-                              ) : (
-                                <>
-                                  <button 
-                                    className="btn btn-danger me-2"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    Contact Agent
-                                  </button>
-                                  <button 
-                                    className="btn btn-outline-secondary"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    Enquire Now
-                                  </button>
-                                </>
-                              )}
+                              <button 
+                                className="btn btn-danger me-2"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  // Handle contact agent
+                                }}
+                              >
+                                Contact Agent
+                              </button>
+                              <button 
+                                className="btn btn-outline-secondary"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  // Handle enquire now
+                                }}
+                              >
+                                Enquire Now
+                              </button>
                             </div>
                           </div>
                         </div>
