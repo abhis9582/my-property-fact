@@ -217,7 +217,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                   )}
                 </div>
               </li>
-              {/* <li className="hasChild">
+              <li className="hasChild">
                 <Link
                   href="/properties"
                   className={`text-light py-3 text-uppercase text-decoration-none ${
@@ -226,8 +226,8 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                 >
                   Properties
                 </Link>
-              </li> */}
-              <li className="hasChild">
+              </li>
+              {/* <li className="hasChild">
                 <Link
                   href="/about-us"
                   className={`text-light py-3 text-uppercase text-decoration-none ${
@@ -236,8 +236,8 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                 >
                   About Us
                 </Link>
-              </li>
-              <li className="hasChild">
+              </li> */}
+              {/* <li className="hasChild">
                 <Link
                   href="/blog"
                   className={`text-light py-3 text-uppercase text-decoration-none ${
@@ -246,11 +246,11 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                 >
                   Blog
                 </Link>
-              </li>
+              </li> */}
               {/* <li className="hasChild">
                 <Link href="/clients-speak" className={`text-light text-uppercase ${pathname === "/clients-speak" ? "header-link-active" : ""}`}>Clients Speak</Link>
               </li> */}
-              <li className="hasChild">
+              {/* <li className="hasChild">
                 <Link
                   href="/contact-us"
                   className={`text-light py-3 text-uppercase text-decoration-none ${
@@ -259,13 +259,13 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                 >
                   Contact us
                 </Link>
-              </li>
-              {/* <li>
+              </li> */}
+              <li>
                 <div className="bg-white rounded rounded-3 p-2 cursor-pointer hover-effect"
                 onClick={openSignUpModal}>
                   <p className="text-dark m-0 p-0">Post Property</p>
                 </div>
-              </li> */}
+              </li>
             </ul>
           </div>
         </nav>
@@ -392,16 +392,25 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                 <li>
                   <Link
                     className="text-decoration-none"
+                    href="/properties"
+                    onClick={openMenu}
+                  >
+                    Properties
+                  </Link>
+                </li>
+                {/* <li>
+                  <Link
+                    className="text-decoration-none"
                     href="/blog"
                     onClick={openMenu}
                   >
                     Blog
                   </Link>
                 </li>
-                {/* <li>
+                <li>
                   <Link href="/web-stories" onClick={openMenu}>Web Stories</Link>
                 </li> */}
-                <li>
+                {/* <li>
                   <Link
                     className="text-decoration-none"
                     href="/about-us"
@@ -436,13 +445,13 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                   >
                     Contact us
                   </Link>
-                </li>
-                {/* <li>
+                </li> */}
+                <li>
                   <div className="bg-white rounded rounded-3 p-2 cursor-pointer hover-effect"
                   onClick={openSignUpModal}>
                     <p className="text-dark m-0 p-0">Post Property</p>
                   </div>
-                </li> */}
+                </li>
               </ul>
             </div>
             <div className="socialMediaLink">
