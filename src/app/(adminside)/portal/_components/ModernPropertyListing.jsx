@@ -44,8 +44,10 @@ export default function ModernPropertyListing({ listingId }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSavingDraft, setIsSavingDraft] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [createdProperty, setCreatedProperty] = useState(null);
+  const [draftSaved, setDraftSaved] = useState(false);
   const [propertyStatus, setPropertyStatus] = useState([]);
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [builders, setBuilders] = useState([]);
@@ -631,129 +633,8 @@ export default function ModernPropertyListing({ listingId }) {
         }
       });
 
-      const toNumber = (value, parser = parseFloat) => {
-        if (value === undefined || value === null || value === "") {
-          return null;
-        }
-        const num = parser(value);
-        return Number.isNaN(num) ? null : num;
-      };
-
-      const toInteger = (value) => toNumber(value, (val) => parseInt(val, 10));
-      const emptyToNull = (value) =>
-        value === undefined || value === null || value === "" ? null : value;
-
-      const extractParkingSlots = (value) => {
-        if (!value) return null;
-        const match = value.match(/(\d+)/);
-        return match ? parseInt(match[0], 10) : null;
-      };
-
-      // Generate title from property details if not provided
-      const generateTitle = () => {
-        const parts = [];
-        if (formData.bedrooms) parts.push(`${formData.bedrooms} BHK`);
-        if (formData.subType) parts.push(formData.subType);
-        if (formData.locality) parts.push(`in ${formData.locality}`);
-        if (formData.city) parts.push(formData.city);
-        return parts.length > 0 ? parts.join(" ") : "Property Listing";
-      };
-
-      // Create property data object matching backend DTO
-      const propertyData = {
-        // Basic Information
-        listingType: emptyToNull(formData.listingType),
-        transaction: emptyToNull(formData.transaction),
-        subType: emptyToNull(formData.subType),
-        title: generateTitle(), // Auto-generate title
-        description: emptyToNull(formData.description),
-        status: emptyToNull(formData.status),
-        possession: emptyToNull(formData.possession),
-        occupancy: emptyToNull(formData.occupancy),
-        noticePeriod: toInteger(formData.noticePeriod),
-
-        // Location
-        projectName: emptyToNull(formData.projectName),
-        builderName: emptyToNull(formData.builderName),
-        address: emptyToNull(formData.address),
-        locality: emptyToNull(formData.locality),
-        city: emptyToNull(formData.city),
-        pinCode: emptyToNull(formData.pincode),
-        latitude: toNumber(formData.latitude),
-        longitude: toNumber(formData.longitude),
-
-        // Area
-        carpetArea: toNumber(formData.carpetArea),
-        builtUpArea: toNumber(formData.builtUpArea),
-        superBuiltUpArea: toNumber(formData.superBuiltUpArea),
-        plotArea: toNumber(formData.plotArea),
-
-        // Pricing
-        totalPrice: toNumber(formData.totalPrice),
-        pricePerSqft: toNumber(formData.pricePerSqFt),
-        maintenanceCam: toNumber(formData.maintenanceCharges),
-        bookingAmount: toNumber(formData.bookingAmount),
-        waterSupply: emptyToNull(formData.waterSupply),
-        towerBlock: emptyToNull(formData.towerBlock),
-
-        // Property Details
-        floorNo: toInteger(formData.floor),
-        totalFloors: toInteger(formData.totalFloors),
-        facing: emptyToNull(formData.facing),
-        unitFacing: emptyToNull(formData.facing),
-        ageOfConstruction: toInteger(formData.ageOfConstruction),
-        ageOfProperty: toInteger(formData.ageOfConstruction),
-        carParkingSlots: extractParkingSlots(formData.parking),
-        parkingType: emptyToNull(formData.parking),
-        powerBackup: emptyToNull(formData.powerBackup),
-
-        // Configuration
-        bedrooms: toInteger(formData.bedrooms),
-        bathrooms: toInteger(formData.bathrooms),
-        balconies: toInteger(formData.balconies),
-        furnishingLevel: emptyToNull(formData.furnished),
-        additionalRooms:
-          formData.features && formData.features.length
-            ? formData.features.join(", ")
-            : null,
-        includedItems: formData.features || [],
-        societyFeatures: formData.amenities || [],
-        pointsOfInterest: formData.pointsOfInterest || [],
-        taxesCharges: formData.taxesCharges || [],
-        restrictions: emptyToNull(formData.restrictions),
-        renovationHistory: emptyToNull(formData.additionalNotes),
-
-        // Amenities (assuming array of IDs)
-        amenityIds: formData.amenityIds || [],
-
-        // Contact Information
-        videoUrl: emptyToNull(formData.virtualTour),
-        ownershipType: emptyToNull(formData.ownershipType),
-        reraId: emptyToNull(formData.reraId),
-        reraState: emptyToNull(formData.reraState),
-        contactPreference:
-          emptyToNull(formData.contactPreference) || "Phone",
-        contactName: emptyToNull(formData.contactName),
-        contactPhone: emptyToNull(formData.contactPhone),
-        contactEmail: emptyToNull(formData.contactEmail),
-        primaryContact: emptyToNull(formData.contactPhone),
-        primaryEmail: emptyToNull(formData.contactEmail),
-        preferredTime: emptyToNull(formData.preferredTime),
-        truthfulDeclaration:
-          formData.truthfulDeclaration !== undefined
-            ? formData.truthfulDeclaration
-            : true,
-        dpdpConsent:
-          formData.dpdpConsent !== undefined ? formData.dpdpConsent : true,
-
-        // Legacy/contact
-        additionalNotes: emptyToNull(formData.additionalNotes),
-
-        // Relationship placeholders
-        cityId: formData.cityId || null,
-        localityId: formData.localityId || null,
-        builderId: formData.builderId || null,
-      };
+      // Prepare property data using shared function
+      const propertyData = preparePropertyData();
 
       // Add property data as JSON string (backend will parse it)
       formDataObj.append("property", JSON.stringify(propertyData));
@@ -805,6 +686,208 @@ export default function ModernPropertyListing({ listingId }) {
   const handleCloseSuccessModal = () => {
     setShowSuccessModal(false);
     setCreatedProperty(null);
+  };
+
+  // Helper function to prepare property data (shared between draft and submit)
+  const preparePropertyData = () => {
+    const toNumber = (value, parser = parseFloat) => {
+      if (value === undefined || value === null || value === "") {
+        return null;
+      }
+      const num = parser(value);
+      return Number.isNaN(num) ? null : num;
+    };
+
+    const toInteger = (value) => toNumber(value, (val) => parseInt(val, 10));
+    const emptyToNull = (value) =>
+      value === undefined || value === null || value === "" ? null : value;
+
+    const extractParkingSlots = (value) => {
+      if (!value) return null;
+      const match = value.match(/(\d+)/);
+      return match ? parseInt(match[0], 10) : null;
+    };
+
+    // Generate title from property details if not provided
+    const generateTitle = () => {
+      const parts = [];
+      if (formData.bedrooms) parts.push(`${formData.bedrooms} BHK`);
+      if (formData.subType) parts.push(formData.subType);
+      if (formData.locality) parts.push(`in ${formData.locality}`);
+      if (formData.city) parts.push(formData.city);
+      return parts.length > 0 ? parts.join(" ") : "Property Listing";
+    };
+
+    return {
+      // Basic Information
+      listingType: emptyToNull(formData.listingType),
+      transaction: emptyToNull(formData.transaction),
+      subType: emptyToNull(formData.subType),
+      title: generateTitle(),
+      description: emptyToNull(formData.description),
+      status: emptyToNull(formData.status),
+      possession: emptyToNull(formData.possession),
+      occupancy: emptyToNull(formData.occupancy),
+      noticePeriod: toInteger(formData.noticePeriod),
+
+      // Location
+      projectName: emptyToNull(formData.projectName),
+      builderName: emptyToNull(formData.builderName),
+      address: emptyToNull(formData.address),
+      locality: emptyToNull(formData.locality),
+      city: emptyToNull(formData.city),
+      pinCode: emptyToNull(formData.pincode),
+      latitude: toNumber(formData.latitude),
+      longitude: toNumber(formData.longitude),
+
+      // Area
+      carpetArea: toNumber(formData.carpetArea),
+      builtUpArea: toNumber(formData.builtUpArea),
+      superBuiltUpArea: toNumber(formData.superBuiltUpArea),
+      plotArea: toNumber(formData.plotArea),
+
+      // Pricing
+      totalPrice: toNumber(formData.totalPrice),
+      pricePerSqft: toNumber(formData.pricePerSqFt),
+      maintenanceCam: toNumber(formData.maintenanceCharges),
+      bookingAmount: toNumber(formData.bookingAmount),
+      waterSupply: emptyToNull(formData.waterSupply),
+      towerBlock: emptyToNull(formData.towerBlock),
+
+      // Property Details
+      floorNo: toInteger(formData.floor),
+      totalFloors: toInteger(formData.totalFloors),
+      facing: emptyToNull(formData.facing),
+      unitFacing: emptyToNull(formData.facing),
+      ageOfConstruction: toInteger(formData.ageOfConstruction),
+      ageOfProperty: toInteger(formData.ageOfConstruction),
+      carParkingSlots: extractParkingSlots(formData.parking),
+      parkingType: emptyToNull(formData.parking),
+      powerBackup: emptyToNull(formData.powerBackup),
+
+      // Configuration
+      bedrooms: toInteger(formData.bedrooms),
+      bathrooms: toInteger(formData.bathrooms),
+      balconies: toInteger(formData.balconies),
+      furnishingLevel: emptyToNull(formData.furnished),
+      additionalRooms:
+        formData.features && formData.features.length
+          ? formData.features.join(", ")
+          : null,
+      includedItems: formData.features || [],
+      societyFeatures: formData.amenities || [],
+      pointsOfInterest: formData.pointsOfInterest || [],
+      taxesCharges: formData.taxesCharges || [],
+      restrictions: emptyToNull(formData.restrictions),
+      renovationHistory: emptyToNull(formData.additionalNotes),
+
+      // Amenities
+      amenityIds: formData.amenityIds || [],
+
+      // Contact Information
+      videoUrl: emptyToNull(formData.virtualTour),
+      ownershipType: emptyToNull(formData.ownershipType),
+      reraId: emptyToNull(formData.reraId),
+      reraState: emptyToNull(formData.reraState),
+      contactPreference:
+        emptyToNull(formData.contactPreference) || "Phone",
+      contactName: emptyToNull(formData.contactName),
+      contactPhone: emptyToNull(formData.contactPhone),
+      contactEmail: emptyToNull(formData.contactEmail),
+      primaryContact: emptyToNull(formData.contactPhone),
+      primaryEmail: emptyToNull(formData.contactEmail),
+      preferredTime: emptyToNull(formData.preferredTime),
+      truthfulDeclaration:
+        formData.truthfulDeclaration !== undefined
+          ? formData.truthfulDeclaration
+          : true,
+      dpdpConsent:
+        formData.dpdpConsent !== undefined ? formData.dpdpConsent : true,
+
+      // Legacy/contact
+      additionalNotes: emptyToNull(formData.additionalNotes),
+
+      // Relationship placeholders
+      cityId: formData.cityId || null,
+      localityId: formData.localityId || null,
+      builderId: formData.builderId || null,
+    };
+  };
+
+  // Handle save draft (saves without validation)
+  const handleSaveDraft = async () => {
+    setIsSavingDraft(true);
+    setDraftSaved(false);
+
+    try {
+      const token = Cookies.get("authToken") || Cookies.get("token");
+
+      if (!token) {
+        alert("You must be logged in to save a draft");
+        setIsSavingDraft(false);
+        return;
+      }
+
+      // Create FormData for file upload
+      const formDataObj = new FormData();
+
+      // Add images to form data (optional for draft)
+      formData.imagePreviews.forEach((imagePreview) => {
+        if (imagePreview.file) {
+          formDataObj.append("images", imagePreview.file);
+        }
+      });
+
+      // Prepare property data
+      const propertyData = preparePropertyData();
+
+      // Add property data as JSON string
+      formDataObj.append("property", JSON.stringify(propertyData));
+      const baseUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005"
+      ).replace(/\/$/, "");
+
+      const response = await fetch(
+        `${baseUrl}/api/user/property-listings`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formDataObj,
+        }
+      );
+
+      const responseText = await response.text();
+      let result = null;
+      if (responseText) {
+        try {
+          result = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error("Failed to parse response JSON", parseError);
+        }
+      }
+
+      if (!response.ok || !(result && result.success)) {
+        const message =
+          result?.message || `Failed to save draft (status ${response.status})`;
+        throw new Error(message);
+      }
+
+      // Show success message
+      setDraftSaved(true);
+      setTimeout(() => setDraftSaved(false), 3000);
+
+      // If property was created, we could optionally redirect or update state
+      if (result.property) {
+        console.log("Draft saved with ID:", result.property.id);
+      }
+    } catch (error) {
+      console.error("Error saving draft:", error);
+      alert(error.message || "Error saving draft. Please try again.");
+    } finally {
+      setIsSavingDraft(false);
+    }
   };
 
   const renderStepContent = () => {
@@ -874,9 +957,14 @@ export default function ModernPropertyListing({ listingId }) {
             <p>Create a comprehensive property listing in 5 simple steps</p>
           </div>
           <div className="header-actions">
-            <Button variant="outline-secondary" className="me-2">
+            <Button 
+              variant="outline-secondary" 
+              className="me-2"
+              onClick={handleSaveDraft}
+              disabled={isSavingDraft}
+            >
               <CIcon icon={cilSave} className="me-1" />
-              Save Draft
+              {isSavingDraft ? "Saving..." : "Save Draft"}
             </Button>
           </div>
         </div>
@@ -927,6 +1015,13 @@ export default function ModernPropertyListing({ listingId }) {
       {/* Form Content */}
       <Card className="form-card">
         <Card.Body>
+          {draftSaved && (
+            <Alert variant="success" className="mb-4" dismissible onClose={() => setDraftSaved(false)}>
+              <CIcon icon={cilCheck} className="me-2" />
+              <strong>Draft saved successfully!</strong> You can continue editing and submit when ready.
+            </Alert>
+          )}
+
           {Object.keys(errors).length > 0 && (
             <Alert variant="danger" className="mb-4">
               <CIcon icon={cilWarning} className="me-2" />

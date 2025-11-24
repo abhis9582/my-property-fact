@@ -1,6 +1,7 @@
 import CommonBreadCrum from "../components/common/breadcrum";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import AboutUs from "./aboutUs";
+import NewAboutUs from "./NewAboutUs";
 
 export const metadata = {
   title: "About Us | MyPropertyFact – Real Estate Price Trends & Insights",
@@ -81,11 +82,12 @@ export default function AboutUsPage() {
       pageName={"About Us"}
       />
       {/* <CommonBreadCrum pageName={"About Us"} /> */}
-      <AboutUs
+      {/* <AboutUs
         whyMyPropertyFact={whyMyPropertyFact}
         whatWeOffer={whatWeOffer}
         ourCommitment={ourCommitment}
-      />
+      /> */}
+      <NewAboutUs />
     </>
   );
 }

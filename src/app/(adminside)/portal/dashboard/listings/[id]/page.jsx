@@ -232,6 +232,18 @@ export default function ListingDetailPage() {
         </div>
 
         <div className="portal-card-body">
+          {/* Rejection Reason Alert */}
+          {listing.approvalStatus && listing.approvalStatus.toUpperCase() === 'REJECTED' && listing.rejectionReason && (
+            <Alert variant="danger" className="mb-4">
+              <Alert.Heading>
+                <strong>Property Rejected</strong>
+              </Alert.Heading>
+              <p className="mb-0">
+                <strong>Rejection Reason:</strong> {listing.rejectionReason}
+              </p>
+            </Alert>
+          )}
+
           {/* Image Gallery */}
           {listing.imageUrls && listing.imageUrls.length > 0 && (
             <Card className="mb-4">
@@ -296,6 +308,16 @@ export default function ListingDetailPage() {
                       </Badge>
                     </Col>
                   </Row>
+                  {listing.approvalStatus && listing.approvalStatus.toUpperCase() === 'REJECTED' && listing.rejectionReason && (
+                    <Row className="mb-3">
+                      <Col sm={4}><strong>Rejection Reason:</strong></Col>
+                      <Col sm={8}>
+                        <div className="text-danger">
+                          <strong>{listing.rejectionReason}</strong>
+                        </div>
+                      </Col>
+                    </Row>
+                  )}
                   {listing.description && (
                     <Row className="mb-3">
                       <Col sm={4}><strong>Description:</strong></Col>

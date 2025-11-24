@@ -51,26 +51,32 @@ export default function ListingPage({ searchParams }) {
         const transformedListings = result.properties.map(property => {
           const locationParts = [];
           if (property.address) locationParts.push(property.address);
-          if (property.city?.name) locationParts.push(property.city.name);
-          if (property.state) locationParts.push(property.state);
+          if (property.locality) locationParts.push(property.locality);
+          if (property.city) locationParts.push(property.city);
+          if (property.pincode) locationParts.push(property.pincode);
 
-          const approvalStatus = property.isApproved ? "APPROVED" : "PENDING";
+          // Use approvalStatus directly from API, default to PENDING if not present
+          const approvalStatus = property.approvalStatus || "PENDING";
+          const approvalStatusUpper = typeof approvalStatus === 'string' 
+            ? approvalStatus.toUpperCase() 
+            : approvalStatus;
 
           return {
             id: property.id,
             title:
+              property.title ||
               property.projectName ||
               `${property.listingType || ""} ${property.subType || "Property"}`.trim(),
             location: locationParts.filter(Boolean).join(", ") || "Location not specified",
             price: formatPrice(property.totalPrice),
-            area: formatArea(property.carpetArea || property.builtUpArea || property.plotArea),
-            status: getStatusDisplay(approvalStatus),
-            statusBadge: getStatusBadge(approvalStatus),
+            area: formatArea(property.carpetArea || property.builtUpArea || property.superBuiltUpArea || property.plotArea),
+            status: getStatusDisplay(approvalStatusUpper),
+            statusBadge: getStatusBadge(approvalStatusUpper),
             views: 0,
             inquiries: 0,
             created: property.createdAt,
-            approvalStatus,
-            isApproved: !!property.isApproved,
+            approvalStatus: approvalStatusUpper,
+            isApproved: approvalStatusUpper === "APPROVED",
             raw: property
           };
         });
@@ -225,9 +231,10 @@ export default function ListingPage({ searchParams }) {
     return <ModernPropertyListing />;
   }
 
-  const activeListings = listings.filter(l => l.isApproved).length;
-  const pendingListings = listings.filter(l => !l.isApproved).length;
+  const activeListings = listings.filter(l => l.approvalStatus === 'APPROVED').length;
+  const pendingListings = listings.filter(l => l.approvalStatus === 'PENDING').length;
   const draftListings = listings.filter(l => l.approvalStatus === 'DRAFT').length;
+  const rejectedListings = listings.filter(l => l.approvalStatus === 'REJECTED').length;
 
   return (
     <div className="portal-content">

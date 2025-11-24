@@ -1,8 +1,8 @@
 "use client";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import "./dashboard/dashboard.css";
 import Image from "next/image";
 import Cookies from "js-cookie";
@@ -10,6 +10,7 @@ import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import { toast } from "react-toastify";
 export default function AdminPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -17,6 +18,16 @@ export default function AdminPage() {
   });
   const [showLoading, setShowLoading] = useState(false);
   const [buttonName, setButtonName] = useState("Go to dashboard");
+
+  // Check for access denied query parameter and show toast
+  useEffect(() => {
+    const accessDenied = searchParams.get("accessDenied");
+    if (accessDenied === "true") {
+      toast.error("You don't have authority to access this page. Super Admin access required.");
+      // Clean up the URL by removing the query parameter
+      router.replace("/admin", { scroll: false });
+    }
+  }, [searchParams, router]);
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();

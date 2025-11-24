@@ -93,12 +93,13 @@
 .menu ul li.hasChild .dropdown.dropdown-lg {
   width: 100%;
   max-width: 100%;
-  left: -215px;
+  right: -0px;
   padding: 10px;
   max-height: 500px;
   overflow: auto;
   min-width: 960px;
   position: absolute;
+  top: 40px;
 }
 
 .menu ul li.hasChild .dropdown.dropdown-lg ul {
