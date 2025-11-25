@@ -43,7 +43,7 @@ export default async function HomePage() {
         <MpfTopPicks topProject={mpfTopPicProject} />
 
         {/* Static Sections */}
-        <div className="position-relative">
+        <div className="position-relative mb-3">
           {/* insight section  */}
           {/* <h2 className="text-center fw-bold my-5">Insights</h2> */}
           {/* <InsightNew /> */}
@@ -90,8 +90,7 @@ export default async function HomePage() {
           <SocialFeedPage />
           
           {/* video slider section  */}
-          <h2 className="text-center my-5 fw-bold">Social Feeds from MPF on Instagram</h2>
-          <VideoSliderPage />
+          {/* <VideoSliderPage /> */}
           {/* <div className="mb-5">
             <InstagramFeed />
           </div> */}

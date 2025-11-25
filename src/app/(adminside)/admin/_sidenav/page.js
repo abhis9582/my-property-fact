@@ -40,6 +40,9 @@ export default function SideNav({ onLinkClick }) {
         <li>
           <Link href="/admin/dashboard/property-approvals" onClick={handleLinkClick}>Property Approvals</Link>
         </li>
+        <li>
+          <Link href="/admin/dashboard/manage-users" onClick={handleLinkClick}>Manage Users</Link>
+        </li>
         <li className={activeDropdown === "dropdown3" ? "active" : ""}>
           <Link
             href="#"
