@@ -2,6 +2,7 @@ import DreamProject from "./dream-project/page";
 import InsightNew from "./insight/page";
 import NewsViews from "./new-views/page";
 import SocialFeedPage from "./social-feed/page";
+import VideoSliderPage from "./video-slider/page";
 import MpfTopPicks from "../mpfTopPick";
 import HeroSection from "../_homecomponents/heroSection";
 import FeaturedPage from "./featured/page";
@@ -87,6 +88,10 @@ export default async function HomePage() {
           {/* blogs section  */}
           <h2 className="text-center my-5 fw-bold">Investor Education Blog</h2>
           <SocialFeedPage />
+          
+          {/* video slider section  */}
+          <h2 className="text-center my-5 fw-bold">Social Feeds from MPF on Instagram</h2>
+          <VideoSliderPage />
           {/* <div className="mb-5">
             <InstagramFeed />
           </div> */}
