@@ -20,7 +20,7 @@ export default function WhyMyPropertyFact() {
                 We work for the buyer, not commissions or inventory pressure. Our frameworks reward clarity, not hype, so your shortlist is cleaner, your negotiation stronger, and your decision anchored to facts you can verify and trust.
                 </p>
               </div>
-              <div className="vertical-divs d-flex flex-column gap-5 align-items-center justify-content-center">
+              <div className="vertical-divs d-flex flex-column align-items-center justify-content-center" style={{ gap: "4rem" }}>
                 <div className="why-mpf-card">
                   <h3 className="why-mpf-card-title">Transparent Price Normalisation</h3>
                   <p className="why-mpf-card-text">
@@ -93,8 +93,8 @@ export default function WhyMyPropertyFact() {
                   Help You Make Your Next Move With Confidence.
                 </p>
               </div>
-              <div className="our-commitment-button-container">
-                <button className="our-commitment-button">Read More</button>
+              <div className="new-about-us-container-content-button mx-auto">
+                <p className="text-white m-0">Read More</p>
               </div>
             </div>
           </div>
