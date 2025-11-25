@@ -97,6 +97,7 @@ export default function VideoSlider() {
   return (
     <>
       <div className="container video-slider-container">
+      <h2 className="text-center my-5 fw-bold">Social Feeds from MPF on Instagram</h2>
         <div className="video-slider-wrapper">
           <Slider {...settings}>
             {videos.map((video) => (

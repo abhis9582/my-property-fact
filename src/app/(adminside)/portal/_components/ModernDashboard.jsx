@@ -66,18 +66,16 @@ export default function ModernDashboard() {
         setLoading(false);
         return;
       }
-
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}api/user/properties`,
+        `${process.env.NEXT_PUBLIC_API_URL}api/user/property-listings`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-
-      if (response.data.success && response.data.data) {
-        const propertiesData = response.data.data;
+      if (response.data.success && response.data.properties) {
+        const propertiesData = response.data.properties;
         setProperties(propertiesData);
 
         // Calculate statistics
@@ -159,16 +157,39 @@ export default function ModernDashboard() {
           .filter((p) => p.approvalStatus === "APPROVED")
           .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))
           .slice(0, 3)
-          .map((property) => ({
-            id: property.id,
-            title: property.projectName || "Untitled Property",
-            location: property.projectLocality || "Location not specified",
-            price: property.projectPrice || "Price not available",
-            views: 0, // Would need analytics data
-            inquiries: 0, // Would need enquiry data
-            status: "active",
-            image: property.projectThumbnail || property.projectLogo || "/static/generic-floorplan.jpg",
-          }));
+          .map((property) => {
+            // Get the first image from imageUrls array if available
+            let imageUrl = "/static/generic-floorplan.jpg";
+            
+            if (property.imageUrls && property.imageUrls.length > 0) {
+              // imageUrls contains relative paths like "property-listings/{id}/{filename}"
+              // Construct full URL using the API endpoint
+              const relativePath = property.imageUrls[0];
+              // Replace backslashes with forward slashes for URL
+              const normalizedPath = relativePath.replace(/\\/g, '/');
+              // Construct full URL: API_URL + get/images/ + normalized path
+              imageUrl = `${process.env.NEXT_PUBLIC_API_URL || ''}get/images/${normalizedPath}`;
+            } else if (property.projectThumbnail) {
+              // Fallback to projectThumbnail if available (for legacy data)
+              const slugURL = property.slugURL || property.projectName?.toLowerCase().replace(/\s+/g, '-');
+              imageUrl = `${process.env.NEXT_PUBLIC_IMAGE_URL || ''}properties/${slugURL}/${property.projectThumbnail}`;
+            } else if (property.projectLogo) {
+              // Fallback to projectLogo if available
+              const slugURL = property.slugURL || property.projectName?.toLowerCase().replace(/\s+/g, '-');
+              imageUrl = `${process.env.NEXT_PUBLIC_IMAGE_URL || ''}properties/${slugURL}/${property.projectLogo}`;
+            }
+            
+            return {
+              id: property.id,
+              title: property.projectName || property.title || "Untitled Property",
+              location: property.projectLocality || property.locality || property.address || "Location not specified",
+              price: property.projectPrice || (property.totalPrice ? `₹${property.totalPrice.toLocaleString()}` : "Price not available"),
+              views: 0, // Would need analytics data
+              inquiries: 0, // Would need enquiry data
+              status: "active",
+              image: imageUrl,
+            };
+          });
         setTopProperties(topProps);
 
         // Generate tasks from pending properties
@@ -281,9 +302,10 @@ export default function ModernDashboard() {
         <Image
           src={property.image}
           alt={property.title}
-          width={300}
-          height={200}
-          className="property-image img-fluid"
+          fill
+          className="property-image"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          style={{ objectFit: 'cover' }}
         />
         <Badge
           bg={
@@ -775,60 +797,85 @@ export default function ModernDashboard() {
         }
 
         .property-card {
-          border: none;
+          border: 1px solid #e9ecef;
           border-radius: 12px;
           overflow: hidden;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
           transition: all 0.3s ease;
+          background: #ffffff;
         }
 
         .property-card:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+          transform: translateY(-4px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          border-color: #dee2e6;
         }
 
         .property-image-container {
           position: relative;
-          height: 150px;
+          height: 200px;
           overflow: hidden;
+          background: #f8f9fa;
         }
 
         .property-image {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          transition: transform 0.4s ease;
+        }
+
+        .property-card:hover .property-image {
+          transform: scale(1.05);
         }
 
         .property-status {
           position: absolute;
-          top: 0.5rem;
-          right: 0.5rem;
+          top: 0.75rem;
+          right: 0.75rem;
+          padding: 0.375rem 0.75rem;
+          border-radius: 6px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: capitalize;
+          z-index: 2;
         }
 
         .property-title {
           font-weight: 600;
           margin-bottom: 0.5rem;
           color: #212529;
+          font-size: 1.1rem;
         }
 
         .property-location {
           color: #6c757d;
           font-size: 0.875rem;
-          margin-bottom: 0.5rem;
+          margin-bottom: 0.75rem;
+          display: flex;
+          align-items: center;
         }
 
         .property-price {
           font-weight: 700;
-          color: #28a745;
-          font-size: 1.1rem;
+          color: #0d5834;
+          font-size: 1.25rem;
           margin-bottom: 1rem;
         }
 
         .property-stats {
           display: flex;
-          gap: 1rem;
+          gap: 1.25rem;
           font-size: 0.8rem;
           color: #6c757d;
+          margin-bottom: 1rem;
+          padding-bottom: 1rem;
+          border-bottom: 1px solid #f1f3f4;
+        }
+
+        .stat-item {
+          display: flex;
+          align-items: center;
         }
 
         .property-actions {

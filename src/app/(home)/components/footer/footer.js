@@ -76,11 +76,11 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
 
   return (
     <footer className="font-gotham-light footer-bg">
-      <div className="pt-5 pb-3 container">
-        <div className="container-fluid">
+      <div className="container">
+        <div className="container-fluid pt-5">
           <div className="inner">
             <div className="row gap-row">
-              <div className="col-md-12 col-sm-12 p-3 foot-menu">
+              <div className="col-md-12 col-sm-12 p-3 px-3 px-md-0 foot-menu">
                 <div className="insideBox">
                   <p className="text-white">Popular cities</p>
                   <ul className="d-flex flex-wrap list-unstyled gap-2">
@@ -131,7 +131,7 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
             </div>
           </div>
         </div>
-        <div className="container pt-5">
+        <div className="container px-3 px-md-0 pt-5">
           <div className="row">
             <div className="col-6 col-md-3 col-sm-6">
               <p className="text-golden">Projects</p>

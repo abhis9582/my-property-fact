@@ -79,8 +79,8 @@ export default function WhyMyPropertyFact() {
                 <p className="text-center">
                   We&apos;re Committed To Transparency, Innovation, And Reliability.
                   By Harnessing The Power Of Technology And A Dedicated Support
-                  Team, We Aim To Make The Entire Real Estate Journey&mdash;From
-                  Initial Search To Final Closing&mdash;As Smooth And Rewarding As
+                  Team, We Aim To Make The Entire Real Estate Journey From
+                  Initial Search To Final Closing As Smooth And Rewarding As
                   Possible.
                 </p>
                 <p className="text-center">
