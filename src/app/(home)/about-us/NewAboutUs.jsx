@@ -285,13 +285,13 @@ export default function NewAboutUs() {
             viewport={{ once: true, amount: 0.3 }}
             variants={scaleIn}
           >
-            <motion.div 
+            {/* <motion.div 
               className="new-about-us-section-2-orange-banner"
               initial={{ opacity: 0, y: -20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.4 }}
-            ></motion.div>
+            ></motion.div> */}
             {/* <Image
               src="/static/about-us/vision_and_mission.png"
               alt="Vision and Mission"
