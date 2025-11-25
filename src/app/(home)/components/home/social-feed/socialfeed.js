@@ -4,7 +4,7 @@ import BlogCard from "../../common/blogcard";
 
 export default function SocialFeed({ data }) {
   return (
-    <div className="container pb-4">
+    <div className="container">
       {data?.length < 0 ? (
         <div
           className="d-flex justify-content-center align-items-center"
