@@ -80,7 +80,7 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
         <div className="container-fluid">
           <div className="inner">
             <div className="row gap-row">
-              <div className="col-md-12 col-sm-12 p-0 foot-menu">
+              <div className="col-md-12 col-sm-12 p-3 foot-menu">
                 <div className="insideBox">
                   <p className="text-white">Popular cities</p>
                   <ul className="d-flex flex-wrap list-unstyled gap-2">

@@ -7,7 +7,7 @@ export default function WhyMyPropertyFact() {
       <div className="container-fluid position-relative why-mpf-section">
         <div className="why-mpf-section-top-imgae"></div>
         <div>
-          <h2 className="text-center plus-jakarta-sans-bold pt-5">
+          <h2 className="text-center fw-bold plus-jakarta-sans-bold pt-5">
             Why My Property Fact?
           </h2>
         </div>
@@ -15,33 +15,29 @@ export default function WhyMyPropertyFact() {
           <div className="why-mpf-cards-section-container-inner">
             <div className="d-flex gap-5 align-items-center justify-content-between py-5">
               <div className="why-mpf-card">
-                <h3 className="why-mpf-card-title">Holistic Platform</h3>
+                <h3 className="why-mpf-card-title">Buyer-First, Not Brokered</h3>
                 <p className="why-mpf-card-text">
-                  Find everything from residential rentals to large-scale
-                  commercial investments in one place.
+                We work for the buyer, not commissions or inventory pressure. Our frameworks reward clarity, not hype, so your shortlist is cleaner, your negotiation stronger, and your decision anchored to facts you can verify and trust.
                 </p>
               </div>
               <div className="vertical-divs d-flex flex-column gap-5 align-items-center justify-content-center">
                 <div className="why-mpf-card">
-                  <h3 className="why-mpf-card-title">Holistic Platform</h3>
+                  <h3 className="why-mpf-card-title">Transparent Price Normalisation</h3>
                   <p className="why-mpf-card-text">
-                    Find everything from residential rentals to large-scale
-                    commercial investments in one place.
+                  Every option is reduced to an effective price per carpet area with all charges included. Like-for-like comparisons expose hidden costs and inflated super built-up claims, so you pay for genuine value, not marketing theatrics.
                   </p>
                 </div>
                 <div className="why-mpf-card">
-                  <h3 className="why-mpf-card-title">Holistic Platform</h3>
+                  <h3 className="why-mpf-card-title">Milestone-Based Decisions</h3>
                   <p className="why-mpf-card-text">
-                    Find everything from residential rentals to large-scale
-                    commercial investments in one place.
+                  We price infrastructure and construction by dated milestones, not slides or promises. That discipline helps you avoid pre-paying tomorrow&apos;s premium today and improves your risk-adjusted returns across ready and under-construction choices.
                   </p>
                 </div>
               </div>
               <div className="why-mpf-card">
-                <h3 className="why-mpf-card-title">Holistic Platform</h3>
+                <h3 className="why-mpf-card-title">Citywide, Micro-Market Depth</h3>
                 <p className="why-mpf-card-text">
-                  Find everything from residential rentals to large-scale
-                  commercial investments in one place.
+                From Tier-1 hubs to rising Tier-2 corridors, our research shows tenant depth, rent achieved, days-on-market, and livability drivers. You see beyond headlines to the micro-factors that actually move prices, yields, and exit liquidity.
                 </p>
               </div>
             </div>
@@ -56,13 +52,12 @@ export default function WhyMyPropertyFact() {
               </div>
               <div className="d-flex flex-column gap-5 align-items-center image-contant-bottom-container">
                 <div className="why-mpf-card">
-                  <div>
-                    <h3 className="why-mpf-card-title">Holistic Platform</h3>
+                  {/* <div> */}
+                    <h3 className="why-mpf-card-title">Tools You&apos;ll Use</h3>
                     <p className="why-mpf-card-text">
-                      Find everything from residential rentals to large-scale
-                      commercial investments in one place.
+                    Scores, checklists, and calculators designed for busy families and first-time buyers. Save time, avoid paperwork traps, and buy once, buy right, with a practical system that fits real budgets, real commutes, and real life.
                     </p>
-                  </div>
+                  {/* </div> */}
                 </div>
                 <div className="image-bottom-container">
                   <Image
@@ -82,10 +77,10 @@ export default function WhyMyPropertyFact() {
               </h2>
               <div className="our-commitment-text-container">
                 <p className="text-center">
-                  We're Committed To Transparency, Innovation, And Reliability.
+                  We&apos;re Committed To Transparency, Innovation, And Reliability.
                   By Harnessing The Power Of Technology And A Dedicated Support
-                  Team, We Aim To Make The Entire Real Estate Journey—From
-                  Initial Search To Final Closing—As Smooth And Rewarding As
+                  Team, We Aim To Make The Entire Real Estate Journey&mdash;From
+                  Initial Search To Final Closing&mdash;As Smooth And Rewarding As
                   Possible.
                 </p>
                 <p className="text-center">

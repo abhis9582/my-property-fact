@@ -53,11 +53,10 @@ export default function PropertyApprovalsPage() {
       }
 
       const user = await response.json();
-      
       // Check if user has SUPERADMIN role
-      const hasSuperAdminRole = user.roles?.some(role => 
-        role.roleName === "SUPERADMIN" && role.isActive
-      ) || user.role === "ROLE_SUPERADMIN" || user.role === "SUPERADMIN";
+      const hasSuperAdminRole = user.authorities?.some(role => 
+        role.authority === "ROLE_SUPERADMIN"
+      );
 
       if (!hasSuperAdminRole) {
         setError("Access Denied: You do not have permission to access this page. Only Super Administrators can access the admin dashboard.");

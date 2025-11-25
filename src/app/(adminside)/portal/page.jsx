@@ -23,6 +23,7 @@ export default function PortalSignInPage() {
   const [showOTP, setShowOTP] = useState(false);
   const [receivedOTP, setReceivedOTP] = useState("");
   const [error, setError] = useState("");
+  const [googleLoginEnabled, setGoogleLoginEnabled] = useState(true);
 
   // Check if user is already logged in
   useEffect(() => {
@@ -93,12 +94,21 @@ export default function PortalSignInPage() {
 
   const handleError = () => {
     setError("Google login failed. Please try again.");
+    // Silently disable Google login if there's a configuration error
+    setGoogleLoginEnabled(false);
   };
 
   // Handle manual phone number login/signup
   const handlePhoneAuth = async (isSignup = false) => {
     if (!formData.phoneNumber) {
       setError("Please enter your phone number");
+      return;
+    }
+
+    // Validate phone number is exactly 10 digits
+    const phoneDigits = formData.phoneNumber.replace(/\D/g, "");
+    if (phoneDigits.length !== 10) {
+      setError("Phone number must be exactly 10 digits");
       return;
     }
 
@@ -125,11 +135,11 @@ export default function PortalSignInPage() {
         }
       }
     } catch (error) {
-      setError(
-        error.response?.data?.error || 
-        error.response?.data?.message || 
-        "Failed to send OTP. Please try again."
-      );
+      // Show user-friendly error messages
+      const errorMessage = error.response?.data?.message || 
+                          error.response?.data?.error || 
+                          "Failed to send OTP. Please check your phone number and try again.";
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -206,10 +216,11 @@ export default function PortalSignInPage() {
         router.push("/portal/dashboard");
       }
     } catch (error) {
-      setError(
-        error.response?.data?.message || 
-        "Invalid OTP. Please try again."
-      );
+      // Show user-friendly error messages
+      const errorMessage = error.response?.data?.message || 
+                          error.response?.data?.error || 
+                          "Invalid OTP. Please check the code and try again.";
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -218,10 +229,24 @@ export default function PortalSignInPage() {
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    
+    // Validate phone number input - only allow digits, max 10 digits
+    if (name === "phoneNumber") {
+      // Remove all non-digit characters
+      const digitsOnly = value.replace(/\D/g, "");
+      // Limit to 10 digits
+      const limitedValue = digitsOnly.slice(0, 10);
+      
+      setFormData((prev) => ({
+        ...prev,
+        [name]: limitedValue,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
     setError("");
   };
 
@@ -233,6 +258,27 @@ export default function PortalSignInPage() {
   };
 
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
+
+  // Suppress Google Sign-In console errors
+  useEffect(() => {
+    const originalError = console.error;
+    console.error = (...args) => {
+      if (
+        args[0]?.includes?.("GSI_LOGGER") ||
+        args[0]?.includes?.("origin is not allowed") ||
+        args[0]?.includes?.("client ID")
+      ) {
+        // Silently ignore Google Sign-In configuration errors
+        setGoogleLoginEnabled(false);
+        return;
+      }
+      originalError.apply(console, args);
+    };
+
+    return () => {
+      console.error = originalError;
+    };
+  }, []);
 
   return (
     <GoogleOAuthProvider clientId={googleClientId}>
@@ -259,9 +305,14 @@ export default function PortalSignInPage() {
                       name="phoneNumber"
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
-                      placeholder="Enter your phone number"
+                      placeholder="Enter 10-digit phone number"
+                      maxLength={10}
+                      pattern="[0-9]{10}"
                       disabled={isLoading}
                     />
+                    <Form.Text className="text-muted">
+                      Enter 10 digits only (e.g., 9876543210)
+                    </Form.Text>
                   </Form.Group>
 
                   <Button
@@ -331,20 +382,24 @@ export default function PortalSignInPage() {
                 </>
               )}
 
-              <div className="portal-divider">
-                <span>OR</span>
-              </div>
+              {googleClientId && googleLoginEnabled && (
+                <>
+                  <div className="portal-divider">
+                    <span>OR</span>
+                  </div>
 
-              <div className="portal-social-login">
-                <GoogleLogin
-                  onSuccess={handleSuccess}
-                  onError={handleError}
-                  useOneTap
-                  theme="outline"
-                  size="large"
-                  text="signin_with"
-                />
-              </div>
+                  <div className="portal-social-login">
+                    <GoogleLogin
+                      onSuccess={handleSuccess}
+                      onError={handleError}
+                      useOneTap={false}
+                      theme="outline"
+                      size="large"
+                      text="signin_with"
+                    />
+                  </div>
+                </>
+              )}
 
               <p className="portal-signup-link">
                 Don&apos;t have an account?{" "}
@@ -392,9 +447,14 @@ export default function PortalSignInPage() {
                       name="phoneNumber"
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
-                      placeholder="Enter your phone number"
+                      placeholder="Enter 10-digit phone number"
+                      maxLength={10}
+                      pattern="[0-9]{10}"
                       disabled={isLoading}
                     />
+                    <Form.Text className="text-muted">
+                      Enter 10 digits only (e.g., 9876543210)
+                    </Form.Text>
                   </Form.Group>
 
                   <Button
@@ -464,20 +524,24 @@ export default function PortalSignInPage() {
                 </>
               )}
 
-              <div className="portal-divider">
-                <span>OR</span>
-              </div>
+              {googleClientId && googleLoginEnabled && (
+                <>
+                  <div className="portal-divider">
+                    <span>OR</span>
+                  </div>
 
-              <div className="portal-social-login">
-                <GoogleLogin
-                  onSuccess={handleSuccess}
-                  onError={handleError}
-                  useOneTap
-                  theme="outline"
-                  size="large"
-                  text="signup_with"
-                />
-              </div>
+                  <div className="portal-social-login">
+                    <GoogleLogin
+                      onSuccess={handleSuccess}
+                      onError={handleError}
+                      useOneTap={false}
+                      theme="outline"
+                      size="large"
+                      text="signup_with"
+                    />
+                  </div>
+                </>
+              )}
 
               <p className="portal-signup-link">
                 Already have an account?{" "}

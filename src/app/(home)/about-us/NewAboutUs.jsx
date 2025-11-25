@@ -9,28 +9,28 @@ import WhyMyPropertyFact from "./WhyMyPropertyFact";
 const slidesData = [
   {
     id: 1,
-    title: "DIVERSE PROPERTY LISTINGS",
-    text: "We curate listings from all corners of the real estate spectrum. Residential apartments, commercial showrooms, industrial plots, farmhouses, and everything in between.",
+    title: "Neighbourhood LOCATE Scores",
+    text: "Compare local economy, ongoing projects, connectivity, amenities, market trends, and supply–demand in one simple score. Drill into commute times, schools, hospitals, and transaction benchmarks to shortlist micro-markets that fit your lifestyle, budget, and future plans.",
   },
   {
     id: 2,
-    title: "ADVANCED SEARCH FILTERS",
-    text: "Find exactly what you're looking for with our comprehensive search filters. Filter by price, location, property type, size, amenities, and more to narrow down your perfect match.",
+    title: "Verified, Carpet-First Listings",
+    text: "See transparent carpet area, effective ₹/carpet sq ft, floor plans, approvals, OC/RERA status, and society health indicators. We prioritise usable space and paperwork quality, so you don’t overpay for super built-up numbers or vague promises.",
   },
   {
     id: 3,
-    title: "TRANSPARENT DATA & INSIGHTS",
-    text: "Access detailed property information, market trends, pricing history, and neighborhood insights. Make informed decisions with data-driven transparency at every step.",
+    title: "Deal Math Calculators",
+    text: "Estimate all-in cost in minutes, base price, parking, PLC, GST, stamp, registration, maintenance, and fit-outs. Stress-test EMIs, rental yields, vacancy, and exit costs to compare ready versus under-construction on true cash flows, not wishful thinking.",
   },
   {
     id: 4,
-    title: "EXPERT CONSULTATION SERVICES",
-    text: "Connect with our team of real estate experts who can guide you through every stage of your property journey, from initial search to final closing.",
+    title: "Due-Diligence Checklists",
+    text: "Download step-by-step checklists for title, encumbrance, sanctioned plans, RERA, OC/CC, mutation, and society NOCs. Use our templates to organise documents, ask the right questions, and avoid expensive surprises at registration or during resale.",
   },
   {
     id: 5,
-    title: "VIRTUAL TOURS & MEDIA",
-    text: "Explore properties from anywhere with our high-quality photos, virtual tours, 360-degree views, and detailed floor plans. Get a complete picture before visiting in person.",
+    title: "Expert Insights & Guides",
+    text: "Plain-English explainers on GST, stamp duty, area metrics, and market cycles, plus city primers and hotspot maps. Learn to buy on milestones, price time saved and choose assets that rent quickly and exit cleanly.",
   },
   {
     id: 6,
@@ -227,14 +227,11 @@ export default function NewAboutUs() {
             <motion.p 
               className="new-about-us-container-content-text1"
               variants={textFadeIn}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
             >
-              Welcome to My Property Fact, your go-to platform for discovering
-              the perfect real estate opportunities. Whether you're an investor
-              hunting for the next big project, a business owner scouting
-              commercial space, or a family looking for a new home to call your
-              own. We bring together all types of properties, from high-end
-              apartments and cozy farmhouses to strategic commercial plots and
-              premium office spaces for both buying and renting.
+              My Property Fact (MPF) is India&apos;s buyer-first real estate guide. We combine data, on-ground verification, and plain-English advice to help you choose confidently. Our proprietary LOCATE Score compares neighbourhoods on economy, projects, connectivity, amenities, trends, and supply and demand. We demystify carpet area, approvals, GST, and stamp duty, and normalise every home to an effective price per usable square foot. Whether you&apos;re shortlisting your first 2-BHK or benchmarking a portfolio, MPF gives you clear checklists, calculators, and market insights you can actually use. No hype, just transparent comparisons, verified documentation support, and milestone-based decision frameworks so you can buy once, buy right, and sleep well.
             </motion.p>
             <motion.p 
               className="new-about-us-container-content-text2"
@@ -275,14 +272,11 @@ export default function NewAboutUs() {
           <motion.p 
             className="new-about-us-section-2-text"
             variants={textFadeIn}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
           >
-            At My Property Fact, we believe in simplifying real estate decisions
-            for everyone. Navigating the property market can be overwhelming, so
-            we created a comprehensive portal that puts all the critical
-            information right at your fingertips. Our mission is to empower you
-            with transparent, data-driven insights and user-friendly tools so
-            you can explore, compare, and choose the best real estate option for
-            your unique needs.
+            MPF began as a simple spreadsheet that an investor built to compare homes fairly. Friends shared it, then clients, then developers seeking honest feedback. We still work the same way: evidence over slogans, carpet-area math over brochure gloss. Our vision is to be India&apos;s most trusted property decision system, where every buyer, in every city and budget, can see risks, costs, and upside clearly, and use data, not noise, to make life&apos;s biggest purchase with confidence.
           </motion.p>
           <motion.div
             className="new-about-us-section-2-image-container"
@@ -366,7 +360,7 @@ export default function NewAboutUs() {
               {slidesData.map((slide, index) => (
                 <motion.div
                   key={slide.id}
-                  className="new-about-us-section-3-card"
+                  className="new-about-us-section-3-card text-center"
                   custom={index}
                   initial="hidden"
                   whileInView="visible"
@@ -379,7 +373,7 @@ export default function NewAboutUs() {
                     maxWidth: `calc((100% - ${(cardsPerView - 1) * 24}px) / ${cardsPerView})`,
                   }}
                 >
-                  <h3 className="new-about-us-section-3-card-title text-center plus-jakarta-sans-bold pt-5">
+                  <h3 className="new-about-us-section-3-card-title plus-jakarta-sans-bold">
                     {slide.title}
                   </h3>
                   <p className="new-about-us-section-3-card-text">
