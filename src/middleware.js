@@ -72,14 +72,19 @@ export async function middleware(req) {
   const path = req.nextUrl.pathname;
 
   // Helper function to check if user has required role
+  // Handles both "SUPERADMIN" and "ROLE_SUPERADMIN" formats
   function hasRole(roles, requiredRole) {
     if (!roles || !Array.isArray(roles)) return false;
-    return roles.some(role => 
-      role === requiredRole || 
-      role === `ROLE_${requiredRole}` ||
-      role === requiredRole.toUpperCase() ||
-      role === `ROLE_${requiredRole.toUpperCase()}`
-    );
+    const normalizedRequired = requiredRole.toUpperCase();
+    return roles.some(role => {
+      if (!role) return false;
+      const normalizedRole = role.toUpperCase();
+      // Check for exact match or ROLE_ prefix match
+      return (
+        normalizedRole === normalizedRequired ||
+        normalizedRole === `ROLE_${normalizedRequired}`
+      );
+    });
   }
 
   // Special case: login page

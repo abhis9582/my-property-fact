@@ -18,16 +18,24 @@ export default function AdminPage() {
   });
   const [showLoading, setShowLoading] = useState(false);
   const [buttonName, setButtonName] = useState("Go to dashboard");
+  const [mounted, setMounted] = useState(false);
 
-  // Check for access denied query parameter and show toast
+  // Set mounted to true after component mounts (client-side only)
   useEffect(() => {
-    const accessDenied = searchParams.get("accessDenied");
+    setMounted(true);
+  }, []);
+
+  // Check for access denied query parameter and show toast (only after mount)
+  useEffect(() => {
+    if (!mounted) return;
+    
+    const accessDenied = searchParams?.get("accessDenied");
     if (accessDenied === "true") {
       toast.error("You don't have authority to access this page. Super Admin access required.");
       // Clean up the URL by removing the query parameter
       router.replace("/admin", { scroll: false });
     }
-  }, [searchParams, router]);
+  }, [mounted, searchParams, router]);
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -103,6 +111,7 @@ export default function AdminPage() {
             noValidate
             className={validated ? "was-validated" : ""}
             onSubmit={handleSubmit}
+            suppressHydrationWarning
           >
             <div className="form-group mb-4">
               <input
@@ -115,6 +124,8 @@ export default function AdminPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
+                suppressHydrationWarning
+                autoComplete="email"
               />
               <div className="invalid-feedback">Enter a valid username!</div>
             </div>
@@ -128,6 +139,8 @@ export default function AdminPage() {
                 value={formData.password}
                 onChange={handleChange}
                 required
+                suppressHydrationWarning
+                autoComplete="current-password"
               />
               <div className="invalid-feedback">Enter a valid password!</div>
             </div>
@@ -136,6 +149,7 @@ export default function AdminPage() {
                 type="submit"
                 className="btn btn-success"
                 disabled={showLoading}
+                suppressHydrationWarning
               >
                 {buttonName} <LoadingSpinner show={showLoading} />
               </button>
