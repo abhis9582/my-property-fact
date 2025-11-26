@@ -5,13 +5,17 @@ import { useState } from "react";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import Image from "next/image";
-export default function SideNav() {
+
+export default function SideNav({ onLinkClick }) {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const toggleDropdown = (id) => {
     setActiveDropdown(activeDropdown === id ? null : id);
   };
-  const toggleSidebar = () => {
-    setIsActive(!isActive);
+  
+  const handleLinkClick = () => {
+    if (onLinkClick) {
+      onLinkClick();
+    }
   };
 
   const handleLogout = async () => {
@@ -31,7 +35,13 @@ export default function SideNav() {
       </div>
       <ul className="list-unstyled components">
         <li>
-          <Link href="/admin/dashboard">Dashboard</Link>
+          <Link href="/admin/dashboard" onClick={handleLinkClick}>Dashboard</Link>
+        </li>
+        <li>
+          <Link href="/admin/dashboard/property-approvals" onClick={handleLinkClick}>Property Approvals</Link>
+        </li>
+        <li>
+          <Link href="/admin/dashboard/manage-users" onClick={handleLinkClick}>Manage Users</Link>
         </li>
         <li className={activeDropdown === "dropdown3" ? "active" : ""}>
           <Link
@@ -49,51 +59,51 @@ export default function SideNav() {
             }`}
           >
             <li>
-              <Link href="/admin/dashboard/manage-countries">
+              <Link href="/admin/dashboard/manage-countries" onClick={handleLinkClick}>
                 Manage Countries
               </Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/manage-states">Manage States</Link>
+              <Link href="/admin/dashboard/manage-states" onClick={handleLinkClick}>Manage States</Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/manage-cities">Manage Cities</Link>
+              <Link href="/admin/dashboard/manage-cities" onClick={handleLinkClick}>Manage Cities</Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/manage-localities">
+              <Link href="/admin/dashboard/manage-localities" onClick={handleLinkClick}>
                 Manage Localities
               </Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/manage-score-evalution">
+              <Link href="/admin/dashboard/manage-score-evalution" onClick={handleLinkClick}>
                 Manage Score Evalution
               </Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/project-types">
+              <Link href="/admin/dashboard/project-types" onClick={handleLinkClick}>
                 Manage Project Types
               </Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/manage-project-status">
+              <Link href="/admin/dashboard/manage-project-status" onClick={handleLinkClick}>
                 Manage Project Status
               </Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/builder">Manage Builders</Link>
+              <Link href="/admin/dashboard/builder" onClick={handleLinkClick}>Manage Builders</Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/budget-options">
+              <Link href="/admin/dashboard/budget-options" onClick={handleLinkClick}>
                 Manage budget options
               </Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/manage-career-applications">
+              <Link href="/admin/dashboard/manage-career-applications" onClick={handleLinkClick}>
                 Manage career applications
               </Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/manage-location-benefits">
+              <Link href="/admin/dashboard/manage-location-benefits" onClick={handleLinkClick}>
                 Manage location benefits
               </Link>
             </li>
@@ -115,43 +125,43 @@ export default function SideNav() {
             }`}
           >
             <li>
-              <Link href="/admin/dashboard/project-amenity">
+              <Link href="/admin/dashboard/project-amenity" onClick={handleLinkClick}>
                 Manage Project&apos;s Amenities
               </Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/manage-banners">Manage Banners</Link>
+              <Link href="/admin/dashboard/manage-banners" onClick={handleLinkClick}>Manage Banners</Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/manage-floor-plans">
+              <Link href="/admin/dashboard/manage-floor-plans" onClick={handleLinkClick}>
                 Manage Floor Plans
               </Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/manage-gallery">Manage Gallery</Link>
+              <Link href="/admin/dashboard/manage-gallery" onClick={handleLinkClick}>Manage Gallery</Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/manage-faqs">Manage FAQs</Link>
+              <Link href="/admin/dashboard/manage-faqs" onClick={handleLinkClick}>Manage FAQs</Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/manage-project-about">
+              <Link href="/admin/dashboard/manage-project-about" onClick={handleLinkClick}>
                 Manage Project&apos;s About
               </Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/manage-project-walkthrough">
+              <Link href="/admin/dashboard/manage-project-walkthrough" onClick={handleLinkClick}>
                 Manage Project&apos;s Walkthrough
               </Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/location-benifits">
+              <Link href="/admin/dashboard/location-benifits" onClick={handleLinkClick}>
                 Location benifits
               </Link>
             </li>
           </ul>
         </li>
         <li>
-          <Link href="/admin/dashboard/manage-projects">Manage Projects</Link>
+          <Link href="/admin/dashboard/manage-projects" onClick={handleLinkClick}>Manage Projects</Link>
         </li>
         <li className={activeDropdown === "dropdown2" ? "active" : ""}>
           <Link
@@ -169,32 +179,32 @@ export default function SideNav() {
             }`}
           >
             <li>
-              <Link href="/admin/dashboard/city-price-data">
+              <Link href="/admin/dashboard/city-price-data" onClick={handleLinkClick}>
                 City Price Data
               </Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/manage-insight-headers">
+              <Link href="/admin/dashboard/manage-insight-headers" onClick={handleLinkClick}>
                 Manage Headers
               </Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/insight-category">
+              <Link href="/admin/dashboard/insight-category" onClick={handleLinkClick}>
                 Manage Insight Category
               </Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/top-developers">
+              <Link href="/admin/dashboard/top-developers" onClick={handleLinkClick}>
                 Manage Top developers
               </Link>
             </li>
           </ul>
         </li>
         <li>
-          <Link href="/admin/dashboard/aminities">Amenities</Link>
+          <Link href="/admin/dashboard/aminities" onClick={handleLinkClick}>Amenities</Link>
         </li>
         <li>
-          <Link href="/admin/dashboard/enquiries">Manage Enquiries</Link>
+          <Link href="/admin/dashboard/enquiries" onClick={handleLinkClick}>Manage Enquiries</Link>
         </li>
         <li className={activeDropdown === "dropdown4" ? "active" : ""}>
           <Link
@@ -212,10 +222,10 @@ export default function SideNav() {
             }`}
           >
             <li>
-              <Link href="/admin/dashboard/manage-blogs">Manage Blogs</Link>
+              <Link href="/admin/dashboard/manage-blogs" onClick={handleLinkClick}>Manage Blogs</Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/manage-categories">
+              <Link href="/admin/dashboard/manage-categories" onClick={handleLinkClick}>
                 Manage Blog Categories
               </Link>
             </li>
@@ -237,12 +247,12 @@ export default function SideNav() {
             }`}
           >
             <li>
-              <Link href="/admin/dashboard/web-story-category">
+              <Link href="/admin/dashboard/web-story-category" onClick={handleLinkClick}>
                 Web Story category
               </Link>
             </li>
             <li>
-              <Link href="/admin/dashboard/web-story">Web Story</Link>
+              <Link href="/admin/dashboard/web-story" onClick={handleLinkClick}>Web Story</Link>
             </li>
           </ul>
         </li>

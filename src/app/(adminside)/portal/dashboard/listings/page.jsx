@@ -3,14 +3,17 @@ import { Suspense, useState, useEffect, useCallback } from "react";
 import ModernPropertyListing from "../../_components/ModernPropertyListing";
 import { Card, Row, Col, Button, Badge, Spinner, Alert } from "react-bootstrap";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005";
 
 export default function ListingPage({ searchParams }) {
+  const router = useRouter();
   const [action, setAction] = useState(null);
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     // Check URL parameters on client side
@@ -31,7 +34,7 @@ export default function ListingPage({ searchParams }) {
       }
 
       const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      const response = await fetch(`${apiUrl}/api/user/master-properties/my-properties`, {
+      const response = await fetch(`${apiUrl}/api/user/property-listings`, {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
@@ -48,26 +51,32 @@ export default function ListingPage({ searchParams }) {
         const transformedListings = result.properties.map(property => {
           const locationParts = [];
           if (property.address) locationParts.push(property.address);
-          if (property.city?.name) locationParts.push(property.city.name);
-          if (property.state) locationParts.push(property.state);
+          if (property.locality) locationParts.push(property.locality);
+          if (property.city) locationParts.push(property.city);
+          if (property.pincode) locationParts.push(property.pincode);
 
-          const approvalStatus = property.isApproved ? "APPROVED" : "PENDING";
+          // Use approvalStatus directly from API, default to PENDING if not present
+          const approvalStatus = property.approvalStatus || "PENDING";
+          const approvalStatusUpper = typeof approvalStatus === 'string' 
+            ? approvalStatus.toUpperCase() 
+            : approvalStatus;
 
           return {
             id: property.id,
             title:
+              property.title ||
               property.projectName ||
               `${property.listingType || ""} ${property.subType || "Property"}`.trim(),
             location: locationParts.filter(Boolean).join(", ") || "Location not specified",
             price: formatPrice(property.totalPrice),
-            area: formatArea(property.carpetArea || property.builtUpArea || property.plotArea),
-            status: getStatusDisplay(approvalStatus),
-            statusBadge: getStatusBadge(approvalStatus),
+            area: formatArea(property.carpetArea || property.builtUpArea || property.superBuiltUpArea || property.plotArea),
+            status: getStatusDisplay(approvalStatusUpper),
+            statusBadge: getStatusBadge(approvalStatusUpper),
             views: 0,
             inquiries: 0,
             created: property.createdAt,
-            approvalStatus,
-            isApproved: !!property.isApproved,
+            approvalStatus: approvalStatusUpper,
+            isApproved: approvalStatusUpper === "APPROVED",
             raw: property
           };
         });
@@ -170,13 +179,62 @@ export default function ListingPage({ searchParams }) {
     }
   };
 
+  const handleDelete = async (listingId) => {
+    if (!window.confirm('Are you sure you want to delete this property? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      setDeletingId(listingId);
+      const token = Cookies.get("authToken") || Cookies.get("token");
+      
+      if (!token) {
+        alert("Please login to delete properties");
+        return;
+      }
+
+      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+      const response = await fetch(`${apiUrl}/api/user/property-listings/${listingId}`, {
+        method: 'DELETE',
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        alert('Property deleted successfully');
+        // Refresh the listings
+        fetchUserProperties();
+      } else {
+        alert(result.message || 'Failed to delete property');
+      }
+    } catch (error) {
+      console.error("Error deleting property:", error);
+      alert('Error deleting property. Please try again.');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const handleView = (listingId) => {
+    router.push(`/portal/dashboard/listings/${listingId}`);
+  };
+
+  const handleEdit = (listingId) => {
+    router.push(`/portal/dashboard/listings/${listingId}?action=edit`);
+  };
+
   if (action === 'add') {
     return <ModernPropertyListing />;
   }
 
-  const activeListings = listings.filter(l => l.isApproved).length;
-  const pendingListings = listings.filter(l => !l.isApproved).length;
+  const activeListings = listings.filter(l => l.approvalStatus === 'APPROVED').length;
+  const pendingListings = listings.filter(l => l.approvalStatus === 'PENDING').length;
   const draftListings = listings.filter(l => l.approvalStatus === 'DRAFT').length;
+  const rejectedListings = listings.filter(l => l.approvalStatus === 'REJECTED').length;
 
   return (
     <div className="portal-content">
@@ -338,7 +396,8 @@ export default function ListingPage({ searchParams }) {
                               variant="outline-primary" 
                               size="sm" 
                               className="portal-btn"
-                              onClick={() => window.location.href = `/portal/dashboard/listings/${listing.id}`}
+                              onClick={() => handleView(listing.id)}
+                              disabled={deletingId === listing.id}
                             >
                               View
                             </Button>
@@ -346,7 +405,8 @@ export default function ListingPage({ searchParams }) {
                               variant="outline-secondary" 
                               size="sm" 
                               className="portal-btn"
-                              onClick={() => window.location.href = `/portal/dashboard/listings/${listing.id}?action=edit`}
+                              onClick={() => handleEdit(listing.id)}
+                              disabled={deletingId === listing.id}
                             >
                               Edit
                             </Button>
@@ -354,13 +414,17 @@ export default function ListingPage({ searchParams }) {
                               variant="outline-danger" 
                               size="sm" 
                               className="portal-btn"
-                              onClick={() => {
-                                if (window.confirm('Are you sure you want to delete this property?')) {
-                                  alert('Delete functionality coming soon');
-                                }
-                              }}
+                              onClick={() => handleDelete(listing.id)}
+                              disabled={deletingId === listing.id}
                             >
-                              Delete
+                              {deletingId === listing.id ? (
+                                <>
+                                  <Spinner size="sm" className="me-1" />
+                                  Deleting...
+                                </>
+                              ) : (
+                                'Delete'
+                              )}
                             </Button>
                           </div>
                         </td>

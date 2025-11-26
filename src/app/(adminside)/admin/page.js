@@ -1,15 +1,17 @@
 "use client";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
 import "./dashboard/dashboard.css";
 import Image from "next/image";
 import Cookies from "js-cookie";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import { toast } from "react-toastify";
-export default function AdminPage() {
+
+function AdminPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -17,6 +19,24 @@ export default function AdminPage() {
   });
   const [showLoading, setShowLoading] = useState(false);
   const [buttonName, setButtonName] = useState("Go to dashboard");
+  const [mounted, setMounted] = useState(false);
+
+  // Set mounted to true after component mounts (client-side only)
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Check for access denied query parameter and show toast (only after mount)
+  useEffect(() => {
+    if (!mounted) return;
+    
+    const accessDenied = searchParams?.get("accessDenied");
+    if (accessDenied === "true") {
+      toast.error("You don't have authority to access this page. Super Admin access required.");
+      // Clean up the URL by removing the query parameter
+      router.replace("/admin", { scroll: false });
+    }
+  }, [mounted, searchParams, router]);
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -92,6 +112,7 @@ export default function AdminPage() {
             noValidate
             className={validated ? "was-validated" : ""}
             onSubmit={handleSubmit}
+            suppressHydrationWarning
           >
             <div className="form-group mb-4">
               <input
@@ -104,6 +125,8 @@ export default function AdminPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
+                suppressHydrationWarning
+                autoComplete="email"
               />
               <div className="invalid-feedback">Enter a valid username!</div>
             </div>
@@ -117,6 +140,8 @@ export default function AdminPage() {
                 value={formData.password}
                 onChange={handleChange}
                 required
+                suppressHydrationWarning
+                autoComplete="current-password"
               />
               <div className="invalid-feedback">Enter a valid password!</div>
             </div>
@@ -125,6 +150,7 @@ export default function AdminPage() {
                 type="submit"
                 className="btn btn-success"
                 disabled={showLoading}
+                suppressHydrationWarning
               >
                 {buttonName} <LoadingSpinner show={showLoading} />
               </button>
@@ -143,5 +169,29 @@ export default function AdminPage() {
         </div>
       </div>
     </>
+  );
+}
+
+export default function AdminPage() {
+  return (
+    <Suspense fallback={
+      <div className="container d-flex justify-content-center align-items-center min-vh-100">
+        <div className="card p-5 border border-success">
+          <h3 className="text-center mb-4">
+            <Image
+              height={100}
+              width={100}
+              alt="project-logo"
+              src="/logo.png"
+            />
+          </h3>
+          <div className="text-center">
+            <LoadingSpinner show={true} />
+          </div>
+        </div>
+      </div>
+    }>
+      <AdminPageContent />
+    </Suspense>
   );
 }

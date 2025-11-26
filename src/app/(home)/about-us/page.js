@@ -1,6 +1,7 @@
 import CommonBreadCrum from "../components/common/breadcrum";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import AboutUs from "./aboutUs";
+import NewAboutUs from "./NewAboutUs";
 
 export const metadata = {
   title: "About Us | MyPropertyFact – Real Estate Price Trends & Insights",
@@ -40,7 +41,7 @@ export default function AboutUsPage() {
   //Our commitment object
   const ourCommitment = {
     heading: "Our Commitment",
-    text: "We’re committed to transparency, innovation, and reliability. By harnessing the power of technology and a dedicated support team, we aim to make the entire real estate journey—from initial search to final closing—as smooth and rewarding as possible."
+    text: "We’re committed to transparency, innovation, and reliability. By harnessing the power of technology and a dedicated support team, we aim to make the entire real estate journey from initial search to final closing as smooth and rewarding as possible."
   };
 
   //Defining why my property fact array
@@ -81,11 +82,12 @@ export default function AboutUsPage() {
       pageName={"About Us"}
       />
       {/* <CommonBreadCrum pageName={"About Us"} /> */}
-      <AboutUs
+      {/* <AboutUs
         whyMyPropertyFact={whyMyPropertyFact}
         whatWeOffer={whatWeOffer}
         ourCommitment={ourCommitment}
-      />
+      /> */}
+      <NewAboutUs />
     </>
   );
 }

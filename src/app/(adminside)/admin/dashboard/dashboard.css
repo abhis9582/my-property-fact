@@ -4,9 +4,43 @@
 .cursor-pointer{
     cursor: pointer;
 }
-@media (max-width:991px) {
+
+/* Responsive Styles */
+@media (max-width: 991px) {
     .card{
         width: 100%;
     }
+}
+
+@media (max-width: 768px) {
+    .container-fluid h1 {
+        font-size: 1.75rem;
+    }
     
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container-fluid h1 {
+        font-size: 1.5rem;
+    }
+    
+    .card-title {
+        font-size: 1.1rem;
+    }
+    
+    .card-text {
+        font-size: 0.9rem;
+    }
+    
+    .btn {
+        font-size: 0.875rem;
+        padding: 0.5rem 1rem;
+    }
 }
