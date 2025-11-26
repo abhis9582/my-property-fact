@@ -392,15 +392,24 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                 <li>
                   <Link
                     className="text-decoration-none"
+                    href="/properties"
+                    onClick={openMenu}
+                  >
+                    Properties
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className="text-decoration-none"
                     href="/blog"
                     onClick={openMenu}
                   >
                     Blog
                   </Link>
                 </li>
-                {/* <li>
+                <li>
                   <Link href="/web-stories" onClick={openMenu}>Web Stories</Link>
-                </li> */}
+                </li>
                 <li>
                   <Link
                     className="text-decoration-none"

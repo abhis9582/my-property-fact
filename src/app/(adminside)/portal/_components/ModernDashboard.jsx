@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Card, Row, Col, Button, ProgressBar, Badge } from "react-bootstrap";
+import { Card, Row, Col, Button, ProgressBar, Badge, Spinner, Alert } from "react-bootstrap";
 import {
   cilHome,
   cilUser,
@@ -20,117 +20,250 @@ import Image from "next/image";
 import Link from "next/link";
 import { useUser } from "../_contexts/UserContext";
 import { setDemoUserData } from "../_utils/setUserData";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function ModernDashboard() {
-  const { userData, loading } = useUser();
+  const { userData, loading: userLoading } = useUser();
   const [stats, setStats] = useState({
-    totalListings: 24,
-    activeListings: 18,
-    pendingListings: 4,
-    soldListings: 2,
-    totalViews: 1250,
-    inquiries: 45,
-    conversions: 12,
-    revenue: 125000,
+    totalListings: 0,
+    activeListings: 0,
+    pendingListings: 0,
+    soldListings: 0,
+    totalViews: 0,
+    inquiries: 0,
+    conversions: 0,
+    revenue: 0,
   });
+  const [properties, setProperties] = useState([]);
+  const [recentActivities, setRecentActivities] = useState([]);
+  const [topProperties, setTopProperties] = useState([]);
+  const [upcomingTasks, setUpcomingTasks] = useState([]);
+  const [userProfile, setUserProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Format time ago
+  const formatTimeAgo = (dateString) => {
+    if (!dateString) return "Recently";
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - date) / 1000);
+    
+    if (diffInSeconds < 60) return "Just now";
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+    return date.toLocaleDateString();
+  };
+
+  // Fetch user properties
+  const fetchProperties = async () => {
+    try {
+      const token = Cookies.get("token") || Cookies.get("authToken");
+      if (!token) {
+        setError("Authentication required");
+        setLoading(false);
+        return;
+      }
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}api/user/property-listings`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.data.success && response.data.properties) {
+        const propertiesData = response.data.properties;
+        setProperties(propertiesData);
+
+        // Calculate statistics
+        const totalListings = propertiesData.length;
+        const activeListings = propertiesData.filter(
+          (p) => p.approvalStatus === "APPROVED"
+        ).length;
+        const pendingListings = propertiesData.filter(
+          (p) => p.approvalStatus === "PENDING"
+        ).length;
+        const draftListings = propertiesData.filter(
+          (p) => p.approvalStatus === "DRAFT"
+        ).length;
+        const rejectedListings = propertiesData.filter(
+          (p) => p.approvalStatus === "REJECTED"
+        ).length;
+
+        // Calculate revenue (sum of all property prices - simplified)
+        const revenue = propertiesData.reduce((sum, p) => {
+          if (p.projectPrice) {
+            const priceStr = p.projectPrice.replace(/[^0-9.]/g, "");
+            const price = parseFloat(priceStr) || 0;
+            return sum + price;
+          }
+          return sum;
+        }, 0);
+
+        setStats({
+          totalListings,
+          activeListings,
+          pendingListings,
+          soldListings: 0, // This would need to come from a separate field
+          totalViews: 0, // This would need to come from analytics
+          inquiries: 0, // This would need to come from enquiries
+          conversions: 0, // This would need to come from analytics
+          revenue: revenue,
+        });
+
+        // Generate recent activities from properties
+        const activities = propertiesData
+          .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))
+          .slice(0, 4)
+          .map((property, index) => {
+            let message = "";
+            let icon = cilHome;
+            let color = "info";
+
+            if (property.approvalStatus === "APPROVED") {
+              message = `Property approved: ${property.projectName || "Untitled Property"}`;
+              icon = cilStar;
+              color = "success";
+            } else if (property.approvalStatus === "PENDING") {
+              message = `Property submitted for approval: ${property.projectName || "Untitled Property"}`;
+              icon = cilCalendar;
+              color = "warning";
+            } else if (property.approvalStatus === "DRAFT") {
+              message = `Draft saved: ${property.projectName || "Untitled Property"}`;
+              icon = cilPencil;
+              color = "secondary";
+            } else {
+              message = `Property updated: ${property.projectName || "Untitled Property"}`;
+              icon = cilHome;
+              color = "info";
+            }
+
+            return {
+              id: property.id || index,
+              type: property.approvalStatus?.toLowerCase() || "update",
+              message,
+              time: formatTimeAgo(property.updatedAt || property.createdAt),
+              icon,
+              color,
+            };
+          });
+        setRecentActivities(activities);
+
+        // Get top properties (approved properties, sorted by most recent)
+        const topProps = propertiesData
+          .filter((p) => p.approvalStatus === "APPROVED")
+          .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))
+          .slice(0, 3)
+          .map((property) => {
+            // Get the first image from imageUrls array if available
+            let imageUrl = "/static/generic-floorplan.jpg";
+            
+            if (property.imageUrls && property.imageUrls.length > 0) {
+              // imageUrls contains relative paths like "property-listings/{id}/{filename}"
+              // Construct full URL using the API endpoint
+              const relativePath = property.imageUrls[0];
+              // Replace backslashes with forward slashes for URL
+              const normalizedPath = relativePath.replace(/\\/g, '/');
+              // Construct full URL: API_URL + get/images/ + normalized path
+              imageUrl = `${process.env.NEXT_PUBLIC_API_URL || ''}get/images/${normalizedPath}`;
+            } else if (property.projectThumbnail) {
+              // Fallback to projectThumbnail if available (for legacy data)
+              const slugURL = property.slugURL || property.projectName?.toLowerCase().replace(/\s+/g, '-');
+              imageUrl = `${process.env.NEXT_PUBLIC_IMAGE_URL || ''}properties/${slugURL}/${property.projectThumbnail}`;
+            } else if (property.projectLogo) {
+              // Fallback to projectLogo if available
+              const slugURL = property.slugURL || property.projectName?.toLowerCase().replace(/\s+/g, '-');
+              imageUrl = `${process.env.NEXT_PUBLIC_IMAGE_URL || ''}properties/${slugURL}/${property.projectLogo}`;
+            }
+            
+            return {
+              id: property.id,
+              title: property.projectName || property.title || "Untitled Property",
+              location: property.projectLocality || property.locality || property.address || "Location not specified",
+              price: property.projectPrice || (property.totalPrice ? `₹${property.totalPrice.toLocaleString()}` : "Price not available"),
+              views: 0, // Would need analytics data
+              inquiries: 0, // Would need enquiry data
+              status: "active",
+              image: imageUrl,
+            };
+          });
+        setTopProperties(topProps);
+
+        // Generate tasks from pending properties
+        const tasks = propertiesData
+          .filter((p) => p.approvalStatus === "PENDING" || p.approvalStatus === "REQUIRES_CHANGES")
+          .slice(0, 3)
+          .map((property, index) => {
+            const taskType = property.approvalStatus === "PENDING" ? "Review" : "Update";
+            const priority = property.approvalStatus === "REQUIRES_CHANGES" ? "high" : "medium";
+            
+            return {
+              id: property.id || index,
+              title: `${taskType} property: ${property.projectName || "Untitled"}`,
+              type: taskType,
+              time: new Date(property.updatedAt || property.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              priority,
+            };
+          });
+        setUpcomingTasks(tasks.length > 0 ? tasks : []);
+      }
+    } catch (err) {
+      console.error("Error fetching properties:", err);
+      setError("Failed to load dashboard data. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch user profile
+  const fetchUserProfile = async () => {
+    try {
+      const token = Cookies.get("token") || Cookies.get("authToken");
+      if (!token) {
+        // If no token, use userData from context as fallback
+        if (userData) {
+          setUserProfile(userData);
+        }
+        return;
+      }
+
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}users/me`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data) {
+        setUserProfile(response.data);
+      }
+    } catch (err) {
+      console.error("Error fetching user profile:", err);
+      // Fallback to userData from context if API fails
+      if (userData) {
+        setUserProfile(userData);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (!userLoading) {
+      fetchProperties();
+      fetchUserProfile();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userLoading]);
 
   const handleSetDemoData = () => {
     setDemoUserData();
     // Reload the page to refresh user data
     window.location.reload();
   };
-
-  const [recentActivities] = useState([
-    {
-      id: 1,
-      type: "inquiry",
-      message: "New inquiry for 3BHK Apartment in Sector 45",
-      time: "2 hours ago",
-      icon: cilPhone,
-      color: "primary",
-    },
-    {
-      id: 2,
-      type: "viewing",
-      message: "Site visit scheduled for Tomorrow at 10 AM",
-      time: "4 hours ago",
-      icon: cilCalendar,
-      color: "success",
-    },
-    {
-      id: 3,
-      type: "listing",
-      message: "New property listed: Villa in Golf Course Road",
-      time: "1 day ago",
-      icon: cilHome,
-      color: "info",
-    },
-    {
-      id: 4,
-      type: "sale",
-      message: "Property sold: 2BHK in DLF Phase 2",
-      time: "2 days ago",
-      icon: cilStar,
-      color: "warning",
-    },
-  ]);
-
-  const [topProperties] = useState([
-    {
-      id: 1,
-      title: "Luxury 3BHK Apartment",
-      location: "Sector 45, Gurgaon",
-      price: "₹1.2 Cr",
-      views: 245,
-      inquiries: 12,
-      status: "active",
-      image: "/static/generic-floorplan.jpg",
-    },
-    {
-      id: 2,
-      title: "Modern Villa with Garden",
-      location: "Golf Course Road",
-      price: "₹2.5 Cr",
-      views: 189,
-      inquiries: 8,
-      status: "active",
-      image: "/static/generic-floorplan.jpg",
-    },
-    {
-      id: 3,
-      title: "2BHK Ready to Move",
-      location: "DLF Phase 2",
-      price: "₹85 L",
-      views: 156,
-      inquiries: 15,
-      status: "sold",
-      image: "/static/generic-floorplan.jpg",
-    },
-  ]);
-
-  const [upcomingTasks] = useState([
-    {
-      id: 1,
-      title: "Follow up with Mr. Sharma",
-      type: "Call",
-      time: "10:30 AM",
-      priority: "high",
-    },
-    {
-      id: 2,
-      title: "Site visit at Sector 45",
-      type: "Meeting",
-      time: "2:00 PM",
-      priority: "medium",
-    },
-    {
-      id: 3,
-      title: "Update property photos",
-      type: "Task",
-      time: "4:00 PM",
-      priority: "low",
-    },
-  ]);
 
   const StatCard = ({ title, value, icon, color, change, changeType }) => (
     <Card className="stat-card h-100">
@@ -143,7 +276,7 @@ export default function ModernDashboard() {
           <h3 className="stat-value">{value}</h3>
           {change && (
             <small className={`stat-change text-${changeType}`}>
-              {changeType === "success" ? "↗" : "↘"} {change}
+              {changeType === "success" ? "↗" : changeType === "warning" ? "⚠" : "↘"} {change}
             </small>
           )}
         </div>
@@ -169,9 +302,10 @@ export default function ModernDashboard() {
         <Image
           src={property.image}
           alt={property.title}
-          width={300}
-          height={200}
-          className="property-image img-fluid"
+          fill
+          className="property-image"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          style={{ objectFit: 'cover' }}
         />
         <Badge
           bg={
@@ -204,14 +338,18 @@ export default function ModernDashboard() {
           </div>
         </div>
         <div className="property-actions mt-3">
-          <Button variant="outline-primary" size="sm" className="me-2">
-            <CIcon icon={cilViewModule} className="me-1" />
-            View
-          </Button>
-          <Button variant="outline-secondary" size="sm">
-            <CIcon icon={cilPencil} className="me-1" />
-            Edit
-          </Button>
+          <Link href={`/portal/dashboard/listings/${property.id}`}>
+            <Button variant="outline-primary" size="sm" className="me-2">
+              <CIcon icon={cilViewModule} className="me-1" />
+              View
+            </Button>
+          </Link>
+          <Link href={`/portal/dashboard/listings/${property.id}?edit=true`}>
+            <Button variant="outline-secondary" size="sm">
+              <CIcon icon={cilPencil} className="me-1" />
+              Edit
+            </Button>
+          </Link>
         </div>
       </Card.Body>
     </Card>
@@ -240,13 +378,60 @@ export default function ModernDashboard() {
     </div>
   );
 
+  // Calculate profile completion percentage
+  const calculateProfileCompletion = () => {
+    if (!userProfile) return 0;
+    let completed = 0;
+    let total = 7;
+
+    if (userProfile.fullName) completed++;
+    if (userProfile.email) completed++;
+    if (userProfile.phone) completed++;
+    if (userProfile.location) completed++;
+    if (userProfile.bio) completed++;
+    if (userProfile.avatar) completed++;
+    if (userProfile.experience) completed++;
+
+    return Math.round((completed / total) * 100);
+  };
+
+  // Calculate response rate (mock for now)
+  const calculateResponseRate = () => {
+    // This would need to come from enquiry/communication data
+    return 92;
+  };
+
+  // Calculate listing quality (based on approved vs total)
+  const calculateListingQuality = () => {
+    if (stats.totalListings === 0) return 0;
+    return Math.round((stats.activeListings / stats.totalListings) * 100);
+  };
+
+  if (loading || userLoading) {
+    return (
+      <div className="modern-dashboard d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="modern-dashboard p-4">
+        <Alert variant="danger">{error}</Alert>
+      </div>
+    );
+  }
+
   return (
     <div className="modern-dashboard">
       {/* Header */}
       <div className="dashboard-header">
         <div className="header-content">
           <div className="header-title">
-            <h2>Welcome back, {userData != null ? userData.fullName : ''}</h2>
+            <h2>Welcome back, {userProfile?.fullName || userData?.fullName || 'User'}</h2>
             <p>Here&apos;s what&apos;s happening with your properties today.</p>
           </div>
           <div className="header-actions">
@@ -294,21 +479,21 @@ export default function ModernDashboard() {
         </Col>
         <Col lg={3} md={6}>
           <StatCard
-            title="Total Views"
-            value={stats.totalViews.toLocaleString()}
+            title="Pending Listings"
+            value={stats.pendingListings}
             icon={cilViewModule}
             color="info"
-            change="+25%"
-            changeType="success"
+            change={stats.pendingListings > 0 ? `${stats.pendingListings} pending` : null}
+            changeType="warning"
           />
         </Col>
         <Col lg={3} md={6}>
           <StatCard
-            title="Revenue"
-            value={`₹${(stats.revenue / 100000).toFixed(1)}L`}
+            title="Total Properties"
+            value={stats.totalListings}
             icon={cilStar}
             color="warning"
-            change="+15%"
+            change={stats.totalListings > 0 ? `${stats.activeListings} active` : null}
             changeType="success"
           />
         </Col>
@@ -329,11 +514,15 @@ export default function ModernDashboard() {
               </Link>
             </Card.Header>
             <Card.Body>
-              <div className="activities-list">
-                {recentActivities.map((activity) => (
-                  <ActivityItem key={activity.id} activity={activity} />
-                ))}
-              </div>
+              {recentActivities.length > 0 ? (
+                <div className="activities-list">
+                  {recentActivities.map((activity) => (
+                    <ActivityItem key={activity.id} activity={activity} />
+                  ))}
+                </div>
+              ) : (
+                <p className="text-muted text-center py-4">No recent activities</p>
+              )}
             </Card.Body>
           </Card>
 
@@ -348,13 +537,17 @@ export default function ModernDashboard() {
               </Link>
             </Card.Header>
             <Card.Body>
-              <Row className="g-3">
-                {topProperties.map((property) => (
-                  <Col md={4} key={property.id}>
-                    <PropertyCard property={property} />
-                  </Col>
-                ))}
-              </Row>
+              {topProperties.length > 0 ? (
+                <Row className="g-3">
+                  {topProperties.map((property) => (
+                    <Col md={4} key={property.id}>
+                      <PropertyCard property={property} />
+                    </Col>
+                  ))}
+                </Row>
+              ) : (
+                <p className="text-muted text-center py-4">No approved properties yet</p>
+              )}
             </Card.Body>
           </Card>
         </Col>
@@ -372,36 +565,36 @@ export default function ModernDashboard() {
                   <span>Profile Completion</span>
                   <div className="d-flex align-items-center">
                     <ProgressBar
-                      now={85}
+                      now={calculateProfileCompletion()}
                       variant="success"
                       className="flex-grow-1 me-2"
                       style={{ height: "6px" }}
                     />
-                    <span className="stat-percentage">85%</span>
+                    <span className="stat-percentage">{calculateProfileCompletion()}%</span>
                   </div>
                 </div>
                 <div className="stat-row">
                   <span>Response Rate</span>
                   <div className="d-flex align-items-center">
                     <ProgressBar
-                      now={92}
+                      now={calculateResponseRate()}
                       variant="info"
                       className="flex-grow-1 me-2"
                       style={{ height: "6px" }}
                     />
-                    <span className="stat-percentage">92%</span>
+                    <span className="stat-percentage">{calculateResponseRate()}%</span>
                   </div>
                 </div>
                 <div className="stat-row">
                   <span>Listing Quality</span>
                   <div className="d-flex align-items-center">
                     <ProgressBar
-                      now={78}
+                      now={calculateListingQuality()}
                       variant="warning"
                       className="flex-grow-1 me-2"
                       style={{ height: "6px" }}
                     />
-                    <span className="stat-percentage">78%</span>
+                    <span className="stat-percentage">{calculateListingQuality()}%</span>
                   </div>
                 </div>
               </div>
@@ -419,11 +612,15 @@ export default function ModernDashboard() {
               </Link>
             </Card.Header>
             <Card.Body>
-              <div className="tasks-list">
-                {upcomingTasks.map((task) => (
-                  <TaskItem key={task.id} task={task} />
-                ))}
-              </div>
+              {upcomingTasks.length > 0 ? (
+                <div className="tasks-list">
+                  {upcomingTasks.map((task) => (
+                    <TaskItem key={task.id} task={task} />
+                  ))}
+                </div>
+              ) : (
+                <p className="text-muted text-center py-4">No pending tasks</p>
+              )}
             </Card.Body>
           </Card>
 
@@ -600,60 +797,85 @@ export default function ModernDashboard() {
         }
 
         .property-card {
-          border: none;
+          border: 1px solid #e9ecef;
           border-radius: 12px;
           overflow: hidden;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
           transition: all 0.3s ease;
+          background: #ffffff;
         }
 
         .property-card:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+          transform: translateY(-4px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          border-color: #dee2e6;
         }
 
         .property-image-container {
           position: relative;
-          height: 150px;
+          height: 200px;
           overflow: hidden;
+          background: #f8f9fa;
         }
 
         .property-image {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          transition: transform 0.4s ease;
+        }
+
+        .property-card:hover .property-image {
+          transform: scale(1.05);
         }
 
         .property-status {
           position: absolute;
-          top: 0.5rem;
-          right: 0.5rem;
+          top: 0.75rem;
+          right: 0.75rem;
+          padding: 0.375rem 0.75rem;
+          border-radius: 6px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: capitalize;
+          z-index: 2;
         }
 
         .property-title {
           font-weight: 600;
           margin-bottom: 0.5rem;
           color: #212529;
+          font-size: 1.1rem;
         }
 
         .property-location {
           color: #6c757d;
           font-size: 0.875rem;
-          margin-bottom: 0.5rem;
+          margin-bottom: 0.75rem;
+          display: flex;
+          align-items: center;
         }
 
         .property-price {
           font-weight: 700;
-          color: #28a745;
-          font-size: 1.1rem;
+          color: #0d5834;
+          font-size: 1.25rem;
           margin-bottom: 1rem;
         }
 
         .property-stats {
           display: flex;
-          gap: 1rem;
+          gap: 1.25rem;
           font-size: 0.8rem;
           color: #6c757d;
+          margin-bottom: 1rem;
+          padding-bottom: 1rem;
+          border-bottom: 1px solid #f1f3f4;
+        }
+
+        .stat-item {
+          display: flex;
+          align-items: center;
         }
 
         .property-actions {
