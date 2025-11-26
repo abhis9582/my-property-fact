@@ -262,7 +262,7 @@ gsap.ticker.lagSmoothing(0);
             sellDoParams.append("sell_do[form][lead][name]", name);
             sellDoParams.append("sell_do[form][lead][email]", email);
             sellDoParams.append("sell_do[form][lead][phone]", contact);
-            sellDoParams.append("api_key", "2c6ef87e83b9437a7007c7f8183099ca");
+            sellDoParams.append("api_key", `${process.env.NEXT_PUBLIC_ELDECO_API_KEY}`);
             sellDoParams.append("sell_do[form][note][content]", message || "No Message");
             sellDoParams.append("sell_do[campaign][srd]", "$Srd");
             const sellDoUrl = `https://app.sell.do/api/leads/create?${sellDoParams.toString()}`;
