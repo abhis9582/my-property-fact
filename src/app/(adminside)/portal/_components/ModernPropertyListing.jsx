@@ -2032,7 +2032,7 @@ function LocationAreaStep({
                         fontWeight: "500",
                       }}
                     >
-                      ✓ Custom builder: "{builderSearchTerm}" will be saved
+                      ✓ Custom builder: &quot;{builderSearchTerm}&quot; will be saved
                     </div>
                   ) : (
                     <div

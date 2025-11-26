@@ -2,13 +2,14 @@
 import axios from "axios";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import "./dashboard/dashboard.css";
 import Image from "next/image";
 import Cookies from "js-cookie";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import { toast } from "react-toastify";
-export default function AdminPage() {
+
+function AdminPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [validated, setValidated] = useState(false);
@@ -168,5 +169,29 @@ export default function AdminPage() {
         </div>
       </div>
     </>
+  );
+}
+
+export default function AdminPage() {
+  return (
+    <Suspense fallback={
+      <div className="container d-flex justify-content-center align-items-center min-vh-100">
+        <div className="card p-5 border border-success">
+          <h3 className="text-center mb-4">
+            <Image
+              height={100}
+              width={100}
+              alt="project-logo"
+              src="/logo.png"
+            />
+          </h3>
+          <div className="text-center">
+            <LoadingSpinner show={true} />
+          </div>
+        </div>
+      </div>
+    }>
+      <AdminPageContent />
+    </Suspense>
   );
 }

@@ -106,7 +106,7 @@ export default function ListingDetailPage() {
       <div className="portal-content">
         <Alert variant="warning">
           <Alert.Heading>Property Not Found</Alert.Heading>
-          <p>The property you're looking for doesn't exist or you don't have permission to view it.</p>
+          <p>The property you&apos;re looking for doesn&apos;t exist or you don&apos;t have permission to view it.</p>
           <Button variant="outline-warning" size="sm" onClick={() => router.push('/portal/dashboard/listings')}>
             Back to Listings
           </Button>

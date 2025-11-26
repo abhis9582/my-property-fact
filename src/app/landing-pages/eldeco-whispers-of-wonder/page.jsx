@@ -233,8 +233,9 @@ gsap.ticker.lagSmoothing(0);
           const date = new Date();
           const message = form.message ? form.message.value.trim() : "";
           const sourceValue = form.source ? form.source.value.trim() : "";
-
+          debugger
           try {
+            // Prepare Google Sheets data
             const params = new URLSearchParams();
             params.append("sheetName", "Sheet1");
             params.append("Name", name);
@@ -256,30 +257,80 @@ gsap.ticker.lagSmoothing(0);
             }
             console.log("Submitting form data:", params.toString());
             
-            const response = await fetch(endpoint, {
-              method: "POST",
-              headers: { "Content-Type": "application/x-www-form-urlencoded" },
-              body: params.toString(),
-            });
+            // Prepare Sell.do API data
+            const sellDoParams = new URLSearchParams();
+            sellDoParams.append("sell_do[form][lead][name]", name);
+            sellDoParams.append("sell_do[form][lead][email]", email);
+            sellDoParams.append("sell_do[form][lead][phone]", contact);
+            sellDoParams.append("api_key", "2c6ef87e83b9437a7007c7f8183099ca");
+            sellDoParams.append("sell_do[form][note][content]", message || "No Message");
+            sellDoParams.append("sell_do[campaign][srd]", "$Srd");
+            const sellDoUrl = `https://app.sell.do/api/leads/create?${sellDoParams.toString()}`;
             
-            const result = await response.json();
-            console.log("Response from Google Script:", result);
+            // Send to both APIs in parallel
+            const [sheetsResponse, sellDoResponse] = await Promise.allSettled([
+              fetch(endpoint, {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: params.toString(),
+              }),
+              fetch(sellDoUrl, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+              })
+            ]);
+            
+            // Check Google Sheets response (primary)
+            if (sheetsResponse.status === "fulfilled") {
+              const result = await sheetsResponse.value.json();
+              console.log("Response from Google Script:", result);
 
-            if (result.result === "success") {
-              status.textContent = "Your query has been submitted successfully!";
-              status.style.color = "#16a34a";
-              status.style.fontSize = "14px";
-              status.classList.remove("hidden");
-              form.reset();
-              btn.textContent = "Submitted!";
-              if (formId === "contactForm") {
-                closePopup();
+              if (result.result === "success") {
+                // Log Sell.do response (secondary)
+                if (sellDoResponse.status === "fulfilled") {
+                  try {
+                    const sellDoResult = await sellDoResponse.value.json();
+                    console.log("Response from Sell.do API:", sellDoResult);
+                    
+                    // Check if Sell.do submission was successful
+                    if (sellDoResult.sell_do_lead_id && (!sellDoResult.error || sellDoResult.error.length === 0)) {
+                      console.log(`✅ Lead created in Sell.do with ID: ${sellDoResult.sell_do_lead_id}`);
+                      if (sellDoResult.selldo_lead_details) {
+                        console.log("Lead details:", {
+                          stage: sellDoResult.selldo_lead_details.stage,
+                          lead_already_exists: sellDoResult.selldo_lead_details.lead_already_exists,
+                          created_at: sellDoResult.selldo_lead_details.lead_created_at
+                        });
+                      }
+                    } else {
+                      console.warn("⚠️ Sell.do API response indicates issues:", sellDoResult);
+                    }
+                  } catch (err) {
+                    console.error("Failed to parse Sell.do API response:", err);
+                    const textResponse = await sellDoResponse.value.text();
+                    console.log("Sell.do API raw response:", textResponse);
+                  }
+                } else {
+                  console.warn("⚠️ Sell.do API request failed:", sellDoResponse.reason);
+                }
+
+                status.textContent = "Your query has been submitted successfully!";
+                status.style.color = "#16a34a";
+                status.style.fontSize = "14px";
+                status.classList.remove("hidden");
+                form.reset();
+                btn.textContent = "Submitted!";
+                if (formId === "contactForm") {
+                  closePopup();
+                }
+                window.setTimeout(() => {
+                  window.location.href = "/landing-pages/eldeco-whispers-of-wonder/thankyou";
+                }, 800);
+              } else {
+                throw new Error(result.error?.message || "Form submission failed.");
               }
-              window.setTimeout(() => {
-                window.location.href = "/landing-pages/eldeco-whispers-of-wonder/thankyou";
-              }, 800);
             } else {
-              throw new Error(result.error?.message || "Form submission failed.");
+              throw new Error("Failed to submit to Google Sheets: " + sheetsResponse.reason?.message || "Network error");
             }
           } catch (error) {
             console.error("Form submission error:", error);
