@@ -1,13 +1,14 @@
 "use client";
 import Image from "next/image";
 import "./aboutus.css";
+import Link from "next/link";
 export default function WhyMyPropertyFact() {
   return (
     <>
       <div className="container-fluid position-relative why-mpf-section">
         <div className="why-mpf-section-top-imgae"></div>
         <div>
-          <h2 className="text-center fw-bold plus-jakarta-sans-bold pt-5">
+          <h2 className="text-center about-us-h2 plus-jakarta-sans-bold">
             Why My Property Fact?
           </h2>
         </div>
@@ -20,7 +21,7 @@ export default function WhyMyPropertyFact() {
                 We work for the buyer, not commissions or inventory pressure. Our frameworks reward clarity, not hype, so your shortlist is cleaner, your negotiation stronger, and your decision anchored to facts you can verify and trust.
                 </p>
               </div>
-              <div className="vertical-divs d-flex flex-column align-items-center justify-content-center" style={{ gap: "4rem" }}>
+              <div className="vertical-divs d-flex flex-column align-items-center justify-content-center">
                 <div className="why-mpf-card">
                   <h3 className="why-mpf-card-title">Transparent Price Normalisation</h3>
                   <p className="why-mpf-card-text">
@@ -72,7 +73,7 @@ export default function WhyMyPropertyFact() {
           </div>
           <div className="our-commitment-container">
             <div className="our-commitment-content-container">
-              <h2 className="our-commitment-heading plus-jakarta-sans-bold">
+              <h2 className="our-commitment-heading about-us-h2 plus-jakarta-sans-bold">
                 Our Commitment
               </h2>
               <div className="our-commitment-text-container">
@@ -85,9 +86,10 @@ export default function WhyMyPropertyFact() {
                 </p>
                 <p className="text-center">
                   Join Us At{" "}
-                  <span className="our-commitment-link">
+                  <Link href="/" target="_blank"
+                   className="our-commitment-link">
                     www.mypropertyfact.Com
-                  </span>{" "}
+                  </Link>{" "}
                   And Discover A New Way To Explore Real Estate. Whether You Are
                   Buying, Renting, Or Investing, My Property Fact Is Here To
                   Help You Make Your Next Move With Confidence.
