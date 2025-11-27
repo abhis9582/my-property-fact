@@ -204,7 +204,7 @@ export default function NewAboutUs() {
             variants={slideInLeft}
           >
             <Image
-              src="/static/about-us/about_section.png"
+              src="/static/about-us/about_us_section.jpg"
               alt="About Us"
               width={441}
               height={515}
@@ -264,7 +264,7 @@ export default function NewAboutUs() {
           variants={containerVariants}
         >
           <motion.h2 
-            className="new-about-us-section-2-heading text-center plus-jakarta-sans-bold pt-5"
+            className="new-about-us-section-2-heading text-center plus-jakarta-sans-bold"
             variants={headingFadeIn}
           >
             Our Story & Vision
@@ -312,7 +312,7 @@ export default function NewAboutUs() {
       </div>
       <div
         className="container-fluid position-relative"
-        style={{ background: "#EDF4FF", minHeight: "570px", padding: "64px 0" }}
+        style={{ background: "#EDF4FF", padding: "64px 0" }}
       >
         <motion.div 
           className="new-about-us-section-3-container-bg-image"
@@ -337,7 +337,7 @@ export default function NewAboutUs() {
           variants={containerVariants}
         >
           <motion.h2 
-            className="new-about-us-section-3-heading text-center plus-jakarta-sans-bold pt-5"
+            className="new-about-us-section-3-heading text-center plus-jakarta-sans-bold"
             variants={headingFadeIn}
           >
             What We Offer
