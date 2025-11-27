@@ -11,6 +11,10 @@
   overflow: hidden;
 }
 
+.about-us-h2 {
+  font-weight: 600;
+}
+
 .why-mpf-section-top-imgae {
   background: url("/static/about-us/about-us-bg_4.png") no-repeat center center;
   background-size: cover;
@@ -87,7 +91,7 @@
 .vertical-divs {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 4rem;
   align-items: center;
   justify-content: center;
 }
@@ -177,7 +181,7 @@
 }
 
 .our-commitment-heading {
-  font-weight: 700;
+  font-weight: 600;
   font-size: 36px;
   line-height: 1.2;
   color: rgba(0, 0, 0, 1);
@@ -795,6 +799,7 @@
   .why-mpf-section-top-imgae {
     height: 250px;
     max-width: 180px;
+    z-index: -1;
   }
 
   .why-mpf-cards-section-container {
@@ -823,7 +828,7 @@
 
   .why-mpf-card {
     max-width: 100%;
-    width: 100%;
+    width: 94% !important;
     min-height: auto;
     padding: 20px;
   }
@@ -863,7 +868,7 @@
   }
 
   .why-mpf-section-bottom-image-container img {
-    width: 100%;
+    width: 95%;
     max-width: 100%;
     height: auto;
   }
@@ -871,7 +876,7 @@
   .image-contant-bottom-container {
     max-width: 100%;
     min-height: auto;
-    gap: 1.5rem;
+    gap: 1.5rem !important;
     width: 100%;
   }
 
@@ -889,7 +894,9 @@
   }
 
   .image-bottom-container img {
-    width: 100%;
+    max-width: 100% !important;
+    width: 95%;
+    border-radius: 1rem;
     height: auto;
   }
 
@@ -1063,14 +1070,20 @@
     padding-top: 1.5rem !important;
   }
 
+  .why-mpf-cards-section-container-inner .py-5 {
+    padding-bottom: 0 !important;
+  }
+
   .why-mpf-cards-section-container-inner > div:first-child {
     gap: 1rem !important;
-    padding: 1rem 0 !important;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
   }
 
   .why-mpf-card {
     padding: 16px;
-    min-height: auto;
+    min-height: auto;    
+    width: 94% !important;
   }
 
   .why-mpf-card-title {
@@ -1083,7 +1096,7 @@
   }
 
   .vertical-divs {
-    gap: 1rem;
+    gap: 1.5rem;
   }
 
   .why-mpf-section-bottom-container {
@@ -1092,15 +1105,16 @@
   }
 
   .why-mpf-section-bottom-image-container img {
-    max-width: 100%;
+    max-width: 93%;
   }
 
   .image-contant-bottom-container {
-    gap: 1rem;
+    gap: 1rem !important;
   }
 
   .image-bottom-container img {
-    max-width: 100%;
+    max-width: 94%;
+    border-radius: 1rem;
   }
 
   .our-commitment-container {
