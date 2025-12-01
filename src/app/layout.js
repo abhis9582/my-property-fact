@@ -5,6 +5,7 @@ import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import GoogleAnalytics from "./_global_components/googleAnalytics";
 import { ProjectProvider } from "./_global_components/contexts/projectsContext";
+import CookieConsent from "./_global_components/CookieConsent";
 import localFont from "next/font/local";
 import "@fortawesome/fontawesome-svg-core/styles.css"; 
 import { config } from "@fortawesome/fontawesome-svg-core";
@@ -119,6 +120,7 @@ export default function RootLayout({ children }) {
           <ProjectProvider>{children}</ProjectProvider>
         </main>
         <ToastContainer />
+        {/* <CookieConsent /> */}
         {/* Meta Pixel noscript fallback */}
         <noscript>
           <img

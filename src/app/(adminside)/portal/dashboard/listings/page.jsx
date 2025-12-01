@@ -1,25 +1,72 @@
 "use client";
-import { Suspense, useState, useEffect, useCallback } from "react";
+import { Suspense, useState, useEffect, useCallback, useMemo } from "react";
 import ModernPropertyListing from "../../_components/ModernPropertyListing";
-import { Card, Row, Col, Button, Badge, Spinner, Alert } from "react-bootstrap";
+import { Card, Row, Col, Button, Badge, Spinner, Alert, Form, Collapse } from "react-bootstrap";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { 
+  cilFilter, 
+  cilX, 
+  cilHome, 
+  cilLocationPin,
+  cilMoney,
+  cilCheckCircle,
+  cilFilterSquare,
+  cilBuilding,
+  cilStar,
+  cilCalendar,
+  cilCarAlt,
+  cilCompass,
+  cilLayers
+} from "@coreui/icons";
+import CIcon from "@coreui/icons-react";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005";
 
-export default function ListingPage({ searchParams }) {
+export default function ListingPage() {
   const router = useRouter();
-  const [action, setAction] = useState(null);
-  const [listings, setListings] = useState([]);
+  const searchParamsHook = useSearchParams();
+  const action = searchParamsHook?.get('action') || null;
+  const [allListings, setAllListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
-
-  useEffect(() => {
-    // Check URL parameters on client side
-    const urlParams = new URLSearchParams(window.location.search);
-    setAction(urlParams.get('action'));
-  }, []);
+  const [showFilters, setShowFilters] = useState(false);
+  
+  // Filter states
+  const [filters, setFilters] = useState({
+    listingType: "",
+    subType: "",
+    transaction: "",
+    approvalStatus: "",
+    priceMin: "",
+    priceMax: "",
+    pricePerSqftMin: "",
+    pricePerSqftMax: "",
+    areaMin: "",
+    areaMax: "",
+    city: "",
+    locality: "",
+    builderName: "",
+    bedrooms: "",
+    bathrooms: "",
+    balconies: "",
+    furnished: "",
+    parking: "",
+    possession: "",
+    occupancy: "",
+    floorNumber: "",
+    totalFloors: "",
+    facing: "",
+    ageOfConstruction: "",
+    ownershipType: "",
+    reraId: "",
+    maintenanceChargesMin: "",
+    maintenanceChargesMax: "",
+    bookingAmountMin: "",
+    bookingAmountMax: "",
+    searchText: ""
+  });
 
   const fetchUserProperties = useCallback(async () => {
     try {
@@ -81,7 +128,7 @@ export default function ListingPage({ searchParams }) {
           };
         });
         
-        setListings(transformedListings);
+        setAllListings(transformedListings);
       } else {
         setError(result.message || "Failed to fetch properties");
       }
@@ -94,11 +141,13 @@ export default function ListingPage({ searchParams }) {
   }, []);
 
   useEffect(() => {
-    if (action !== 'add') {
+    if (action !== 'add' && action !== null) {
       fetchUserProperties();
     }
   }, [action, fetchUserProperties]);
 
+  // Early return must happen AFTER all hooks are called
+  // But we need to ensure hooks are always called in the same order
   const formatPrice = (price) => {
     if (!price && price !== 0) return "Price not set";
     
@@ -227,14 +276,395 @@ export default function ListingPage({ searchParams }) {
     router.push(`/portal/dashboard/listings/${listingId}?action=edit`);
   };
 
+  // Filter listings based on filter criteria
+  // NOTE: All hooks must be called before any early returns
+  const filteredListings = useMemo(() => {
+    if (action === 'add') {
+      return []; // Return empty array when action is 'add'
+    }
+    if (!allListings || allListings.length === 0) {
+      return [];
+    }
+    return allListings.filter(listing => {
+      const property = listing.raw;
+      
+      // Search text filter
+      if (filters.searchText) {
+        const searchLower = filters.searchText.toLowerCase();
+        const searchableText = [
+          listing.title,
+          listing.location,
+          property.listingType,
+          property.subType,
+          property.transaction || property.transactionType,
+          property.projectName,
+          property.builderName
+        ].filter(Boolean).join(' ').toLowerCase();
+        
+        if (!searchableText.includes(searchLower)) {
+          return false;
+        }
+      }
+      
+      // Listing type filter
+      if (filters.listingType && property.listingType !== filters.listingType) {
+        return false;
+      }
+      
+      // Transaction type filter
+      if (filters.transaction && property.transaction !== filters.transaction && property.transactionType !== filters.transaction) {
+        return false;
+      }
+      
+      // Approval status filter
+      if (filters.approvalStatus && listing.approvalStatus !== filters.approvalStatus) {
+        return false;
+      }
+      
+      // Price range filter
+      const price = property.totalPrice ? parseFloat(property.totalPrice) : null;
+      if (filters.priceMin && price !== null && price < parseFloat(filters.priceMin)) {
+        return false;
+      }
+      if (filters.priceMax && price !== null && price > parseFloat(filters.priceMax)) {
+        return false;
+      }
+      
+      // Area range filter
+      const area = property.carpetArea || property.builtUpArea || property.superBuiltUpArea || property.plotArea;
+      const numericArea = area ? parseFloat(area) : null;
+      if (filters.areaMin && numericArea !== null && numericArea < parseFloat(filters.areaMin)) {
+        return false;
+      }
+      if (filters.areaMax && numericArea !== null && numericArea > parseFloat(filters.areaMax)) {
+        return false;
+      }
+      
+      // City filter
+      if (filters.city && property.city && !property.city.toLowerCase().includes(filters.city.toLowerCase())) {
+        return false;
+      }
+      
+      // Locality filter
+      if (filters.locality && property.locality && !property.locality.toLowerCase().includes(filters.locality.toLowerCase())) {
+        return false;
+      }
+      
+      // Bedrooms filter
+      if (filters.bedrooms && property.bedrooms !== parseInt(filters.bedrooms)) {
+        return false;
+      }
+      
+      // Bathrooms filter
+      if (filters.bathrooms && property.bathrooms !== parseInt(filters.bathrooms)) {
+        return false;
+      }
+      
+      // Sub Type filter
+      if (filters.subType && property.subType !== filters.subType) {
+        return false;
+      }
+      
+      // Possession filter
+      if (filters.possession && property.possession && !property.possession.toLowerCase().includes(filters.possession.toLowerCase())) {
+        return false;
+      }
+      
+      // Occupancy filter
+      if (filters.occupancy && property.occupancy && !property.occupancy.toLowerCase().includes(filters.occupancy.toLowerCase())) {
+        return false;
+      }
+      
+      // Furnished filter
+      if (filters.furnished && property.furnished !== filters.furnished) {
+        return false;
+      }
+      
+      // Parking filter
+      if (filters.parking && property.parking && !property.parking.toLowerCase().includes(filters.parking.toLowerCase())) {
+        return false;
+      }
+      
+      // Balconies filter
+      if (filters.balconies && property.balconies !== parseInt(filters.balconies)) {
+        return false;
+      }
+      
+      // Floor number filter
+      if (filters.floorNumber && property.floorNumber !== parseInt(filters.floorNumber)) {
+        return false;
+      }
+      
+      // Total floors filter
+      if (filters.totalFloors && property.totalFloors !== parseInt(filters.totalFloors)) {
+        return false;
+      }
+      
+      // Facing filter
+      if (filters.facing && property.facing && !property.facing.toLowerCase().includes(filters.facing.toLowerCase())) {
+        return false;
+      }
+      
+      // Age of construction filter
+      if (filters.ageOfConstruction && property.ageOfConstruction !== parseInt(filters.ageOfConstruction)) {
+        return false;
+      }
+      
+      // Ownership type filter
+      if (filters.ownershipType && property.ownershipType && !property.ownershipType.toLowerCase().includes(filters.ownershipType.toLowerCase())) {
+        return false;
+      }
+      
+      // Builder name filter
+      if (filters.builderName && property.builderName && !property.builderName.toLowerCase().includes(filters.builderName.toLowerCase())) {
+        return false;
+      }
+      
+      // RERA ID filter
+      if (filters.reraId && property.reraId && !property.reraId.toLowerCase().includes(filters.reraId.toLowerCase())) {
+        return false;
+      }
+      
+      // Price per sqft range filter
+      const pricePerSqft = property.pricePerSqft ? parseFloat(property.pricePerSqft) : null;
+      if (filters.pricePerSqftMin && pricePerSqft !== null && pricePerSqft < parseFloat(filters.pricePerSqftMin)) {
+        return false;
+      }
+      if (filters.pricePerSqftMax && pricePerSqft !== null && pricePerSqft > parseFloat(filters.pricePerSqftMax)) {
+        return false;
+      }
+      
+      // Maintenance charges range filter
+      const maintenanceCharges = property.maintenanceCharges ? parseFloat(property.maintenanceCharges) : null;
+      if (filters.maintenanceChargesMin && maintenanceCharges !== null && maintenanceCharges < parseFloat(filters.maintenanceChargesMin)) {
+        return false;
+      }
+      if (filters.maintenanceChargesMax && maintenanceCharges !== null && maintenanceCharges > parseFloat(filters.maintenanceChargesMax)) {
+        return false;
+      }
+      
+      // Booking amount range filter
+      const bookingAmount = property.bookingAmount ? parseFloat(property.bookingAmount) : null;
+      if (filters.bookingAmountMin && bookingAmount !== null && bookingAmount < parseFloat(filters.bookingAmountMin)) {
+        return false;
+      }
+      if (filters.bookingAmountMax && bookingAmount !== null && bookingAmount > parseFloat(filters.bookingAmountMax)) {
+        return false;
+      }
+      
+      return true;
+    });
+  }, [allListings, filters, action]);
+  
+  // Get unique values for filter options
+  const uniqueValues = useMemo(() => {
+    if (action === 'add') {
+      return {
+        listingTypes: [],
+        subTypes: [],
+        transactions: [],
+        cities: [],
+        localities: [],
+        builderNames: [],
+        bedrooms: [],
+        bathrooms: [],
+        balconies: [],
+        furnished: [],
+        parking: [],
+        possessions: [],
+        occupancies: [],
+        facing: [],
+        ownershipTypes: [],
+        floorNumbers: [],
+        totalFloors: [],
+        ageOfConstruction: []
+      };
+    }
+    if (!allListings || allListings.length === 0) {
+      return {
+        listingTypes: [],
+        subTypes: [],
+        transactions: [],
+        cities: [],
+        localities: [],
+        builderNames: [],
+        bedrooms: [],
+        bathrooms: [],
+        balconies: [],
+        furnished: [],
+        parking: [],
+        possessions: [],
+        occupancies: [],
+        facing: [],
+        ownershipTypes: [],
+        floorNumbers: [],
+        totalFloors: [],
+        ageOfConstruction: []
+      };
+    }
+    const values = {
+      listingTypes: [],
+      subTypes: [],
+      transactions: [],
+      cities: [],
+      localities: [],
+      builderNames: [],
+      bedrooms: [],
+      bathrooms: [],
+      balconies: [],
+      furnished: [],
+      parking: [],
+      possessions: [],
+      occupancies: [],
+      facing: [],
+      ownershipTypes: [],
+      floorNumbers: [],
+      totalFloors: [],
+      ageOfConstruction: []
+    };
+    
+    allListings.forEach(listing => {
+      const prop = listing.raw;
+      
+      if (prop.listingType && !values.listingTypes.includes(prop.listingType)) {
+        values.listingTypes.push(prop.listingType);
+      }
+      
+      if (prop.subType && !values.subTypes.includes(prop.subType)) {
+        values.subTypes.push(prop.subType);
+      }
+      
+      const transaction = prop.transaction || prop.transactionType;
+      if (transaction && !values.transactions.includes(transaction)) {
+        values.transactions.push(transaction);
+      }
+      
+      if (prop.city && !values.cities.includes(prop.city)) {
+        values.cities.push(prop.city);
+      }
+      
+      if (prop.locality && !values.localities.includes(prop.locality)) {
+        values.localities.push(prop.locality);
+      }
+      
+      if (prop.builderName && !values.builderNames.includes(prop.builderName)) {
+        values.builderNames.push(prop.builderName);
+      }
+      
+      if (prop.bedrooms && !values.bedrooms.includes(prop.bedrooms)) {
+        values.bedrooms.push(prop.bedrooms);
+      }
+      
+      if (prop.bathrooms && !values.bathrooms.includes(prop.bathrooms)) {
+        values.bathrooms.push(prop.bathrooms);
+      }
+      
+      if (prop.balconies && !values.balconies.includes(prop.balconies)) {
+        values.balconies.push(prop.balconies);
+      }
+      
+      if (prop.furnished && !values.furnished.includes(prop.furnished)) {
+        values.furnished.push(prop.furnished);
+      }
+      
+      if (prop.parking && !values.parking.includes(prop.parking)) {
+        values.parking.push(prop.parking);
+      }
+      
+      if (prop.possession && !values.possessions.includes(prop.possession)) {
+        values.possessions.push(prop.possession);
+      }
+      
+      if (prop.occupancy && !values.occupancies.includes(prop.occupancy)) {
+        values.occupancies.push(prop.occupancy);
+      }
+      
+      if (prop.facing && !values.facing.includes(prop.facing)) {
+        values.facing.push(prop.facing);
+      }
+      
+      if (prop.ownershipType && !values.ownershipTypes.includes(prop.ownershipType)) {
+        values.ownershipTypes.push(prop.ownershipType);
+      }
+      
+      if (prop.floorNumber && !values.floorNumbers.includes(prop.floorNumber)) {
+        values.floorNumbers.push(prop.floorNumber);
+      }
+      
+      if (prop.totalFloors && !values.totalFloors.includes(prop.totalFloors)) {
+        values.totalFloors.push(prop.totalFloors);
+      }
+      
+      if (prop.ageOfConstruction && !values.ageOfConstruction.includes(prop.ageOfConstruction)) {
+        values.ageOfConstruction.push(prop.ageOfConstruction);
+      }
+    });
+    
+    // Sort numeric arrays
+    values.bedrooms.sort((a, b) => a - b);
+    values.bathrooms.sort((a, b) => a - b);
+    values.balconies.sort((a, b) => a - b);
+    values.floorNumbers.sort((a, b) => a - b);
+    values.totalFloors.sort((a, b) => a - b);
+    values.ageOfConstruction.sort((a, b) => a - b);
+    
+    return values;
+  }, [allListings, action]);
+  
+  // Count active filters
+  const activeFilterCount = useMemo(() => {
+    return Object.values(filters).filter(v => v && v !== "").length;
+  }, [filters]);
+  
+  // Reset all filters
+  const resetFilters = () => {
+    setFilters({
+      listingType: "",
+      subType: "",
+      transaction: "",
+      approvalStatus: "",
+      priceMin: "",
+      priceMax: "",
+      pricePerSqftMin: "",
+      pricePerSqftMax: "",
+      areaMin: "",
+      areaMax: "",
+      city: "",
+      locality: "",
+      builderName: "",
+      bedrooms: "",
+      bathrooms: "",
+      balconies: "",
+      furnished: "",
+      parking: "",
+      possession: "",
+      occupancy: "",
+      floorNumber: "",
+      totalFloors: "",
+      facing: "",
+      ageOfConstruction: "",
+      ownershipType: "",
+      reraId: "",
+      maintenanceChargesMin: "",
+      maintenanceChargesMax: "",
+      bookingAmountMin: "",
+      bookingAmountMax: "",
+      searchText: ""
+    });
+  };
+  
+  // Check if any filter is active
+  const hasActiveFilters = activeFilterCount > 0;
+  
+  const activeListings = allListings.filter(l => l.approvalStatus === 'APPROVED').length;
+  const pendingListings = allListings.filter(l => l.approvalStatus === 'PENDING').length;
+  const draftListings = allListings.filter(l => l.approvalStatus === 'DRAFT').length;
+  const rejectedListings = allListings.filter(l => l.approvalStatus === 'REJECTED').length;
+
+  // Early return AFTER all hooks have been called
   if (action === 'add') {
     return <ModernPropertyListing />;
   }
-
-  const activeListings = listings.filter(l => l.approvalStatus === 'APPROVED').length;
-  const pendingListings = listings.filter(l => l.approvalStatus === 'PENDING').length;
-  const draftListings = listings.filter(l => l.approvalStatus === 'DRAFT').length;
-  const rejectedListings = listings.filter(l => l.approvalStatus === 'REJECTED').length;
 
   return (
     <div className="portal-content">
@@ -266,7 +696,7 @@ export default function ListingPage({ searchParams }) {
                     <Spinner size="sm" className="mt-2" />
                   ) : (
                     <>
-                      <h3 className="mb-1" style={{color: 'var(--portal-primary)'}}>{listings.length}</h3>
+                      <h3 className="mb-1" style={{color: 'var(--portal-primary)'}}>{allListings.length}</h3>
                       <small className="text-muted">Properties posted</small>
                     </>
                   )}
@@ -321,11 +751,537 @@ export default function ListingPage({ searchParams }) {
           </Row>
         </div>
 
-        {/* Listings Table */}
+        {/* Filters and Listings Table */}
         <div className="portal-card">
           <div className="portal-card-header">
-            <h5 className="mb-0">All Listings</h5>
+            <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
+              <div>
+                <h5 className="mb-0">All Listings</h5>
+                <small className="text-muted">
+                  Showing {filteredListings.length} of {allListings.length} properties
+                  {hasActiveFilters && ` (${activeFilterCount} filter${activeFilterCount > 1 ? 's' : ''} applied)`}
+                </small>
+              </div>
+              <div className="d-flex gap-2">
+                {hasActiveFilters && (
+                  <Button 
+                    variant="outline-secondary" 
+                    size="sm"
+                    onClick={resetFilters}
+                    className="d-flex align-items-center gap-2"
+                  >
+                    <CIcon icon={cilX} />
+                    Clear Filters
+                  </Button>
+                )}
+                <Button 
+                  variant={showFilters ? "primary" : "outline-primary"}
+                  size="sm"
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="d-flex align-items-center gap-2"
+                >
+                  <CIcon icon={showFilters ? cilCheckCircle : cilFilter} />
+                  Filters
+                  {activeFilterCount > 0 && (
+                    <Badge bg="light" text="dark" className="ms-1">
+                      {activeFilterCount}
+                    </Badge>
+                  )}
+                </Button>
+              </div>
+            </div>
           </div>
+          
+          {/* Filter Panel */}
+          <Collapse in={showFilters}>
+            <div>
+              <Card.Body className="border-bottom bg-light">
+                <Row className="g-3">
+                  <Col md={12}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">
+                        <CIcon icon={cilFilterSquare} className="me-2" />
+                        Search
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Search by title, location, type..."
+                        value={filters.searchText}
+                        onChange={(e) => setFilters(prev => ({ ...prev, searchText: e.target.value }))}
+                      />
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold d-flex align-items-center">
+                        <CIcon icon={cilHome} className="me-2" />
+                        Listing Type
+                      </Form.Label>
+                      <Form.Select
+                        value={filters.listingType}
+                        onChange={(e) => setFilters(prev => ({ ...prev, listingType: e.target.value }))}
+                      >
+                        <option value="">All Types</option>
+                        {uniqueValues.listingTypes.map(type => (
+                          <option key={type} value={type}>{type}</option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold d-flex align-items-center">
+                        <CIcon icon={cilMoney} className="me-2" />
+                        Transaction
+                      </Form.Label>
+                      <Form.Select
+                        value={filters.transaction}
+                        onChange={(e) => setFilters(prev => ({ ...prev, transaction: e.target.value }))}
+                      >
+                        <option value="">All Transactions</option>
+                        {uniqueValues.transactions.map(trans => (
+                          <option key={trans} value={trans}>{trans}</option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold d-flex align-items-center">
+                        <CIcon icon={cilCheckCircle} className="me-2" />
+                        Approval Status
+                      </Form.Label>
+                      <Form.Select
+                        value={filters.approvalStatus}
+                        onChange={(e) => setFilters(prev => ({ ...prev, approvalStatus: e.target.value }))}
+                      >
+                        <option value="">All Statuses</option>
+                        <option value="DRAFT">Draft</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="APPROVED">Approved</option>
+                        <option value="REJECTED">Rejected</option>
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold d-flex align-items-center">
+                        <CIcon icon={cilLocationPin} className="me-2" />
+                        City
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Filter by city"
+                        value={filters.city}
+                        onChange={(e) => setFilters(prev => ({ ...prev, city: e.target.value }))}
+                        list="city-list"
+                      />
+                      <datalist id="city-list">
+                        {uniqueValues.cities.map(city => (
+                          <option key={city} value={city} />
+                        ))}
+                      </datalist>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold d-flex align-items-center">
+                        <CIcon icon={cilLocationPin} className="me-2" />
+                        Locality
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Filter by locality"
+                        value={filters.locality}
+                        onChange={(e) => setFilters(prev => ({ ...prev, locality: e.target.value }))}
+                        list="locality-list"
+                      />
+                      <datalist id="locality-list">
+                        {uniqueValues.localities.map(locality => (
+                          <option key={locality} value={locality} />
+                        ))}
+                      </datalist>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">Bedrooms</Form.Label>
+                      <Form.Select
+                        value={filters.bedrooms}
+                        onChange={(e) => setFilters(prev => ({ ...prev, bedrooms: e.target.value }))}
+                      >
+                        <option value="">All</option>
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map(bed => (
+                          <option key={bed} value={bed}>{bed} BHK</option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">Bathrooms</Form.Label>
+                      <Form.Select
+                        value={filters.bathrooms}
+                        onChange={(e) => setFilters(prev => ({ ...prev, bathrooms: e.target.value }))}
+                      >
+                        <option value="">All</option>
+                        {[1, 2, 3, 4, 5, 6].map(bath => (
+                          <option key={bath} value={bath}>{bath} Bath</option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold d-flex align-items-center">
+                        <CIcon icon={cilMoney} className="me-2" />
+                        Min Price (₹)
+                      </Form.Label>
+                      <Form.Control
+                        type="number"
+                        placeholder="Min price"
+                        value={filters.priceMin}
+                        onChange={(e) => setFilters(prev => ({ ...prev, priceMin: e.target.value }))}
+                      />
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold d-flex align-items-center">
+                        <CIcon icon={cilMoney} className="me-2" />
+                        Max Price (₹)
+                      </Form.Label>
+                      <Form.Control
+                        type="number"
+                        placeholder="Max price"
+                        value={filters.priceMax}
+                        onChange={(e) => setFilters(prev => ({ ...prev, priceMax: e.target.value }))}
+                      />
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">Min Area (sq ft)</Form.Label>
+                      <Form.Control
+                        type="number"
+                        placeholder="Min area"
+                        value={filters.areaMin}
+                        onChange={(e) => setFilters(prev => ({ ...prev, areaMin: e.target.value }))}
+                      />
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">Max Area (sq ft)</Form.Label>
+                      <Form.Control
+                        type="number"
+                        placeholder="Max area"
+                        value={filters.areaMax}
+                        onChange={(e) => setFilters(prev => ({ ...prev, areaMax: e.target.value }))}
+                      />
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">Sub Type</Form.Label>
+                      <Form.Select
+                        value={filters.subType}
+                        onChange={(e) => setFilters(prev => ({ ...prev, subType: e.target.value }))}
+                      >
+                        <option value="">All Sub Types</option>
+                        {uniqueValues.subTypes.map(type => (
+                          <option key={type} value={type}>{type}</option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold d-flex align-items-center">
+                        <CIcon icon={cilBuilding} className="me-2" />
+                        Builder Name
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Filter by builder"
+                        value={filters.builderName}
+                        onChange={(e) => setFilters(prev => ({ ...prev, builderName: e.target.value }))}
+                        list="builder-list"
+                      />
+                      <datalist id="builder-list">
+                        {uniqueValues.builderNames.map(builder => (
+                          <option key={builder} value={builder} />
+                        ))}
+                      </datalist>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">Balconies</Form.Label>
+                      <Form.Select
+                        value={filters.balconies}
+                        onChange={(e) => setFilters(prev => ({ ...prev, balconies: e.target.value }))}
+                      >
+                        <option value="">All</option>
+                        {[1, 2, 3, 4, 5, 6].map(bal => (
+                          <option key={bal} value={bal}>{bal} Balcony{bal > 1 ? 'ies' : ''}</option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">Furnished</Form.Label>
+                      <Form.Select
+                        value={filters.furnished}
+                        onChange={(e) => setFilters(prev => ({ ...prev, furnished: e.target.value }))}
+                      >
+                        <option value="">All</option>
+                        {uniqueValues.furnished.map(furn => (
+                          <option key={furn} value={furn}>{furn}</option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold d-flex align-items-center">
+                        <CIcon icon={cilCarAlt} className="me-2" />
+                        Parking
+                      </Form.Label>
+                      <Form.Select
+                        value={filters.parking}
+                        onChange={(e) => setFilters(prev => ({ ...prev, parking: e.target.value }))}
+                      >
+                        <option value="">All</option>
+                        {uniqueValues.parking.map(park => (
+                          <option key={park} value={park}>{park}</option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">Possession</Form.Label>
+                      <Form.Select
+                        value={filters.possession}
+                        onChange={(e) => setFilters(prev => ({ ...prev, possession: e.target.value }))}
+                      >
+                        <option value="">All</option>
+                        {uniqueValues.possessions.map(pos => (
+                          <option key={pos} value={pos}>{pos}</option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">Occupancy</Form.Label>
+                      <Form.Select
+                        value={filters.occupancy}
+                        onChange={(e) => setFilters(prev => ({ ...prev, occupancy: e.target.value }))}
+                      >
+                        <option value="">All</option>
+                        {uniqueValues.occupancies.map(occ => (
+                          <option key={occ} value={occ}>{occ}</option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold d-flex align-items-center">
+                        <CIcon icon={cilLayers} className="me-2" />
+                        Floor Number
+                      </Form.Label>
+                      <Form.Select
+                        value={filters.floorNumber}
+                        onChange={(e) => setFilters(prev => ({ ...prev, floorNumber: e.target.value }))}
+                      >
+                        <option value="">All</option>
+                        {uniqueValues.floorNumbers.map(floor => (
+                          <option key={floor} value={floor}>{floor}</option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold d-flex align-items-center">
+                        <CIcon icon={cilBuilding} className="me-2" />
+                        Total Floors
+                      </Form.Label>
+                      <Form.Select
+                        value={filters.totalFloors}
+                        onChange={(e) => setFilters(prev => ({ ...prev, totalFloors: e.target.value }))}
+                      >
+                        <option value="">All</option>
+                        {uniqueValues.totalFloors.map(floors => (
+                          <option key={floors} value={floors}>{floors}</option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold d-flex align-items-center">
+                        <CIcon icon={cilCompass} className="me-2" />
+                        Facing
+                      </Form.Label>
+                      <Form.Select
+                        value={filters.facing}
+                        onChange={(e) => setFilters(prev => ({ ...prev, facing: e.target.value }))}
+                      >
+                        <option value="">All Directions</option>
+                        {uniqueValues.facing.map(face => (
+                          <option key={face} value={face}>{face}</option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold d-flex align-items-center">
+                        <CIcon icon={cilCalendar} className="me-2" />
+                        Age of Construction
+                      </Form.Label>
+                      <Form.Select
+                        value={filters.ageOfConstruction}
+                        onChange={(e) => setFilters(prev => ({ ...prev, ageOfConstruction: e.target.value }))}
+                      >
+                        <option value="">All</option>
+                        {uniqueValues.ageOfConstruction.map(age => (
+                          <option key={age} value={age}>{age} Year{age > 1 ? 's' : ''}</option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">Ownership Type</Form.Label>
+                      <Form.Select
+                        value={filters.ownershipType}
+                        onChange={(e) => setFilters(prev => ({ ...prev, ownershipType: e.target.value }))}
+                      >
+                        <option value="">All</option>
+                        {uniqueValues.ownershipTypes.map(own => (
+                          <option key={own} value={own}>{own}</option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">RERA ID</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Filter by RERA ID"
+                        value={filters.reraId}
+                        onChange={(e) => setFilters(prev => ({ ...prev, reraId: e.target.value }))}
+                      />
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">Min Price/Sqft (₹)</Form.Label>
+                      <Form.Control
+                        type="number"
+                        placeholder="Min price/sqft"
+                        value={filters.pricePerSqftMin}
+                        onChange={(e) => setFilters(prev => ({ ...prev, pricePerSqftMin: e.target.value }))}
+                      />
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">Max Price/Sqft (₹)</Form.Label>
+                      <Form.Control
+                        type="number"
+                        placeholder="Max price/sqft"
+                        value={filters.pricePerSqftMax}
+                        onChange={(e) => setFilters(prev => ({ ...prev, pricePerSqftMax: e.target.value }))}
+                      />
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">Min Maintenance (₹)</Form.Label>
+                      <Form.Control
+                        type="number"
+                        placeholder="Min maintenance"
+                        value={filters.maintenanceChargesMin}
+                        onChange={(e) => setFilters(prev => ({ ...prev, maintenanceChargesMin: e.target.value }))}
+                      />
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">Max Maintenance (₹)</Form.Label>
+                      <Form.Control
+                        type="number"
+                        placeholder="Max maintenance"
+                        value={filters.maintenanceChargesMax}
+                        onChange={(e) => setFilters(prev => ({ ...prev, maintenanceChargesMax: e.target.value }))}
+                      />
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">Min Booking Amount (₹)</Form.Label>
+                      <Form.Control
+                        type="number"
+                        placeholder="Min booking amount"
+                        value={filters.bookingAmountMin}
+                        onChange={(e) => setFilters(prev => ({ ...prev, bookingAmountMin: e.target.value }))}
+                      />
+                    </Form.Group>
+                  </Col>
+                  
+                  <Col md={6} lg={3}>
+                    <Form.Group>
+                      <Form.Label className="fw-semibold">Max Booking Amount (₹)</Form.Label>
+                      <Form.Control
+                        type="number"
+                        placeholder="Max booking amount"
+                        value={filters.bookingAmountMax}
+                        onChange={(e) => setFilters(prev => ({ ...prev, bookingAmountMax: e.target.value }))}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </div>
+          </Collapse>
+          
           <div className="portal-card-body">
             {loading ? (
               <div className="text-center py-5">
@@ -342,7 +1298,7 @@ export default function ListingPage({ searchParams }) {
                   Retry
                 </Button>
               </Alert>
-            ) : listings.length === 0 ? (
+            ) : allListings.length === 0 ? (
               <div className="text-center py-5">
                 <p className="text-muted mb-3">You haven&apos;t posted any properties yet.</p>
                 <Button 
@@ -350,6 +1306,16 @@ export default function ListingPage({ searchParams }) {
                   onClick={() => window.location.href = '/portal/dashboard/listings?action=add'}
                 >
                   Add Your First Property
+                </Button>
+              </div>
+            ) : filteredListings.length === 0 ? (
+              <div className="text-center py-5">
+                <p className="text-muted mb-3">No properties match your filters.</p>
+                <Button 
+                  variant="outline-primary"
+                  onClick={resetFilters}
+                >
+                  Clear Filters
                 </Button>
               </div>
             ) : (
@@ -369,7 +1335,7 @@ export default function ListingPage({ searchParams }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {listings.map(listing => (
+                    {filteredListings.map(listing => (
                       <tr key={listing.id}>
                         <td>
                           <div>
@@ -437,6 +1403,83 @@ export default function ListingPage({ searchParams }) {
           </div>
         </div>
       </div>
+      
+      <style jsx>{`
+        .filter-panel {
+          background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+          border-radius: 12px;
+          padding: 1.5rem;
+          margin-bottom: 1.5rem;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        :global(.portal-card .bg-light) {
+          background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%) !important;
+          padding: 1.5rem !important;
+        }
+        
+        :global(.portal-card .bg-light .form-label) {
+          font-weight: 600;
+          color: #495057;
+          font-size: 0.875rem;
+          margin-bottom: 0.5rem;
+          display: flex;
+          align-items: center;
+        }
+        
+        :global(.portal-card .bg-light .form-control),
+        :global(.portal-card .bg-light .form-select) {
+          border: 2px solid #e9ecef;
+          border-radius: 8px;
+          padding: 0.625rem 0.875rem;
+          font-size: 0.9rem;
+          transition: all 0.2s;
+        }
+        
+        :global(.portal-card .bg-light .form-control:focus),
+        :global(.portal-card .bg-light .form-select:focus) {
+          border-color: #667eea;
+          box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+          outline: none;
+        }
+        
+        :global(.portal-table) {
+          font-size: 0.9rem;
+        }
+        
+        :global(.portal-table th) {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          font-weight: 600;
+          text-transform: uppercase;
+          font-size: 0.75rem;
+          letter-spacing: 0.5px;
+        }
+        
+        :global(.portal-table tbody tr) {
+          transition: all 0.2s;
+        }
+        
+        :global(.portal-table tbody tr:hover) {
+          background: rgba(102, 126, 234, 0.05);
+          transform: scale(1.01);
+        }
+        
+        @media (max-width: 768px) {
+          :global(.portal-card .bg-light) {
+            padding: 1rem !important;
+          }
+          
+          :global(.portal-table) {
+            font-size: 0.8rem;
+          }
+          
+          :global(.portal-table th),
+          :global(.portal-table td) {
+            padding: 0.5rem;
+          }
+        }
+      `}</style>
     </div>
   );
 }
