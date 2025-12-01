@@ -315,7 +315,7 @@ export default function PropertyApprovalsPage() {
         <div className="row">
           {properties.map((property) => (
             <div key={property.id} className="col-12 col-sm-6 col-md-6 col-lg-4 mb-4">
-              <Card>
+              <Card style={{ width: '100%' }}>
                 {property.imageUrls && property.imageUrls.length > 0 && (
                   <div style={{ height: '200px', position: 'relative', overflow: 'hidden' }}>
                     <NextImage
@@ -395,7 +395,7 @@ export default function PropertyApprovalsPage() {
                     <Button
                       variant="outline-primary"
                       size="sm"
-                      onClick={() => router.push(`/portal/dashboard/listings/${property.id}`)}
+                      onClick={() => router.push(`/admin/dashboard/property-approvals/${property.id}`)}
                       className="flex-fill flex-sm-grow-0"
                     >
                       View Details

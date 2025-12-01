@@ -69,9 +69,13 @@
   flex-shrink: 0;
   background-color: #68ac78;
   transition: transform 0.3s ease;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
   z-index: 1050;
-  overflow: visible;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .admin-sidebar-wrapper #sidebar {
@@ -87,6 +91,8 @@
   padding: 1.5rem;
   overflow-x: auto;
   background-color: #f8f9fa;
+  margin-left: 250px;
+  min-height: 100vh;
 }
 
 /* Responsive Styles */
@@ -141,6 +147,7 @@
 
   .admin-main-content {
     width: 100% !important;
+    margin-left: 0 !important;
     margin-top: 60px !important;
     padding: 1rem !important;
   }

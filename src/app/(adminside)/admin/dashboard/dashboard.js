@@ -10,8 +10,8 @@ export default function Dashboard({ noOfProjects }) {
             <div className="container mt-4">
                 <div className="row">
                     <div className="col-md-6">
-                        <div className="card">
-                            <div className="card-body">
+                        <div className="border p-3 rounded-2">
+                            <div className="">
                                 <h5 className="card-title">Property Approvals</h5>
                                 <p className="card-text">Review and approve pending property listings submitted by users.</p>
                                 <Link href="/admin/dashboard/property-approvals" className="btn btn-primary">
