@@ -107,6 +107,21 @@ export default function SideNav({ onLinkClick }) {
                 Manage location benefits
               </Link>
             </li>
+            <li>
+              <Link href="/admin/dashboard/aminities" onClick={handleLinkClick}>
+                Manage Amenities
+              </Link>
+            </li>
+            <li>
+              <Link href="/admin/dashboard/manage-features" onClick={handleLinkClick}>
+                Manage Features
+              </Link>
+            </li>
+            <li>
+              <Link href="/admin/dashboard/manage-location-benefits" onClick={handleLinkClick}>
+                Manage Nearby Benefits
+              </Link>
+            </li>
           </ul>
         </li>
         <li className={activeDropdown === "dropdown1" ? "active" : ""}>
@@ -124,6 +139,21 @@ export default function SideNav({ onLinkClick }) {
               activeDropdown === "dropdown1" ? "show" : ""
             }`}
           >
+            <li>
+              <Link href="/admin/dashboard/aminities" onClick={handleLinkClick}>
+                Manage Amenities
+              </Link>
+            </li>
+            <li>
+              <Link href="/admin/dashboard/manage-features" onClick={handleLinkClick}>
+                Manage Features
+              </Link>
+            </li>
+            <li>
+              <Link href="/admin/dashboard/manage-location-benefits" onClick={handleLinkClick}>
+                Manage Nearby Benefits
+              </Link>
+            </li>
             <li>
               <Link href="/admin/dashboard/project-amenity" onClick={handleLinkClick}>
                 Manage Project&apos;s Amenities
@@ -202,6 +232,12 @@ export default function SideNav({ onLinkClick }) {
         </li>
         <li>
           <Link href="/admin/dashboard/aminities" onClick={handleLinkClick}>Amenities</Link>
+        </li>
+        <li>
+          <Link href="/admin/dashboard/manage-features" onClick={handleLinkClick}>Manage Features</Link>
+        </li>
+        <li>
+          <Link href="/admin/dashboard/manage-location-benefits" onClick={handleLinkClick}>Manage Nearby Benefits</Link>
         </li>
         <li>
           <Link href="/admin/dashboard/enquiries" onClick={handleLinkClick}>Manage Enquiries</Link>

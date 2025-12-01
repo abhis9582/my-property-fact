@@ -555,7 +555,7 @@ export default function ModernDashboard() {
         {/* Right Column */}
         <Col lg={4}>
           {/* Quick Stats */}
-          <Card className="dashboard-card">
+          {/* <Card className="dashboard-card">
             <Card.Header>
               <h5 className="mb-0">Account Overview</h5>
             </Card.Header>
@@ -599,10 +599,10 @@ export default function ModernDashboard() {
                 </div>
               </div>
             </Card.Body>
-          </Card>
+          </Card> */}
 
           {/* Upcoming Tasks */}
-          <Card className="dashboard-card mt-4">
+          {/* <Card className="dashboard-card mt-4">
             <Card.Header className="d-flex justify-content-between align-items-center">
               <h5 className="mb-0">Today&apos;s Tasks</h5>
               <Link href="/portal/dashboard/tasks">
@@ -622,7 +622,7 @@ export default function ModernDashboard() {
                 <p className="text-muted text-center py-4">No pending tasks</p>
               )}
             </Card.Body>
-          </Card>
+          </Card> */}
 
           {/* Quick Actions */}
           <Card className="dashboard-card mt-4">
@@ -643,12 +643,12 @@ export default function ModernDashboard() {
                     View Leads
                   </Button>
                 </Link>
-                <Link href="/portal/dashboard/analytics">
+                {/* <Link href="/portal/dashboard/analytics">
                   <Button variant="outline-success" className="w-100 mb-2">
                     <CIcon icon={cilChart} className="me-1" />
                     View Analytics
                   </Button>
-                </Link>
+                </Link> */}
                 <Link href="/portal/dashboard/profile">
                   <Button variant="outline-secondary" className="w-100">
                     <CIcon icon={cilSettings} className="me-1" />

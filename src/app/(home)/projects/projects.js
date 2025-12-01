@@ -277,7 +277,7 @@ export default function Projects() {
         if (selectedType.projectTypeName === 'New Launches') {
           // "New Launches" is a special case - filter by project status instead of property type
           filtered = filtered.filter(
-            (item) => item.projectStatusName === 'New Launch'
+            (item) => item.projectStatusName === 'New Launched'
           );
         } else {
           // For other property types, filter by propertyTypeName or propertyTypeId
@@ -474,6 +474,7 @@ export default function Projects() {
   }, [filters, allProjectsList, applyFilters, isActive]);
 
   const filterSectionTab = (tabName) => {
+    debugger
     setIsActive(tabName);
     setPage(0);
 
@@ -507,9 +508,9 @@ export default function Projects() {
           (item) => item.propertyTypeName === "Residential"
         );
         setHasMore(false);
-      } else if (tabName === "New Launch") {
+      } else if (tabName === "New Launched") {
         filtered = allProjectsList.filter(
-          (item) => item.projectStatusName === "New Launch"
+          (item) => item.projectStatusName === "New Launched"
         );
         setHasMore(false);
       }
@@ -632,9 +633,9 @@ export default function Projects() {
               </button>
               <button
                 className={`filter-pill-btn ${
-                  isActive === "New Launch" ? "active" : ""
+                  isActive === "New Launched" ? "active" : ""
                 }`}
-                onClick={() => filterSectionTab("New Launch")}
+                onClick={() => filterSectionTab("New Launched")}
               >
                 New Launch
               </button>

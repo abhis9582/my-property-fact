@@ -32,7 +32,7 @@ import {
   faChevronDown,
   faChevronUp,
 } from "@fortawesome/free-solid-svg-icons";
-import { Spinner, Alert, Badge, Button } from "react-bootstrap";
+import { Spinner, Alert, Badge, Button, Modal, Form } from "react-bootstrap";
 import axios from "axios";
 import "./property-detail.css";
 
@@ -50,6 +50,19 @@ export default function PropertyDetailPage() {
   const [imageIndex, setImageIndex] = useState(0);
   const [mediaTab, setMediaTab] = useState("Property"); // "Videos" or "Property"
   const [showPriceDetails, setShowPriceDetails] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [contactForm, setContactForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+  const [allAmenities, setAllAmenities] = useState([]);
+  const [allFeatures, setAllFeatures] = useState([]);
+  const [allNearbyBenefits, setAllNearbyBenefits] = useState([]);
 
   // Extract ID from slug (slug format: title-id or just id)
   const propertyId = slug ? (() => {
@@ -70,7 +83,101 @@ export default function PropertyDetailPage() {
       fetchPropertyDetails();
       fetchRelatedProperties();
     }
+    fetchAllAmenities();
+    fetchAllFeatures();
+    fetchAllNearbyBenefits();
   }, [propertyId]);
+
+  // Smooth scroll behavior
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [propertyId]);
+
+  // Scroll to section function
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const headerOffset = 100; // Offset for fixed header if any
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  // Scroll spy to update active tab based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = [
+        { id: 'overview-section', tab: 'Overview' },
+        { id: 'society-section', tab: 'Society' },
+        { id: 'price-trends-section', tab: 'Price Trends' },
+        { id: 'locality-section', tab: 'Explore Locality' },
+        { id: 'recommendation-section', tab: 'Recommendation' }
+      ];
+
+      const scrollPosition = window.scrollY + 150; // Offset for better detection
+
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = document.getElementById(sections[i].id);
+        if (section) {
+          const sectionTop = section.offsetTop;
+          if (scrollPosition >= sectionTop) {
+            setActiveTab(sections[i].tab);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [property]);
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setSubmitError(null);
+    setSubmitSuccess(false);
+
+    try {
+      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+      const response = await axios.post(`${apiUrl}/api/public/properties/lead`, {
+        name: contactForm.name,
+        email: contactForm.email,
+        phone: contactForm.phone,
+        message: contactForm.message,
+        propertyId: propertyId
+      });
+
+      if (response.data.success) {
+        setSubmitSuccess(true);
+        setContactForm({ name: '', email: '', phone: '', message: '' });
+        setTimeout(() => {
+          setShowContactModal(false);
+          setSubmitSuccess(false);
+        }, 2000);
+      } else {
+        setSubmitError(response.data.message || 'Failed to submit inquiry. Please try again.');
+      }
+    } catch (err) {
+      console.error("Error submitting contact form:", err);
+      setSubmitError(err.response?.data?.message || "Failed to submit inquiry. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleContactFormChange = (e) => {
+    const { name, value } = e.target;
+    setContactForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   const fetchPropertyDetails = async () => {
     try {
@@ -181,6 +288,193 @@ export default function PropertyDetailPage() {
     return `${bedrooms} BHK`;
   };
 
+  // Fetch all amenities with images
+  const fetchAllAmenities = async () => {
+    try {
+      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+      const response = await axios.get(`${apiUrl}/amenity/get-all`);
+      if (Array.isArray(response.data)) {
+        setAllAmenities(response.data);
+      }
+    } catch (err) {
+      console.error("Error fetching amenities:", err);
+    }
+  };
+
+  // Get amenity image URL
+  const getAmenityImageUrl = (amenityImageUrl) => {
+    if (!amenityImageUrl) return null;
+    if (amenityImageUrl.startsWith('http://') || amenityImageUrl.startsWith('https://')) {
+      return amenityImageUrl;
+    }
+    const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+    let cleanImageUrl = amenityImageUrl;
+    
+    // Handle Windows paths
+    if (cleanImageUrl.match(/^[A-Za-z]:[\/\\]/)) {
+      const amenityIndex = cleanImageUrl.toLowerCase().indexOf("amenity");
+      if (amenityIndex !== -1) {
+        cleanImageUrl = cleanImageUrl.substring(amenityIndex);
+      }
+    }
+    
+    cleanImageUrl = cleanImageUrl.replace(/\\/g, '/');
+    
+    // Remove leading slashes
+    if (cleanImageUrl.startsWith('/')) {
+      cleanImageUrl = cleanImageUrl.slice(1);
+    }
+    
+    // Extract just the filename if there's a path
+    const pathParts = cleanImageUrl.split('/');
+    const filename = pathParts[pathParts.length - 1];
+    
+    // Use the amenity image endpoint
+    return `${apiUrl}/fetch-image/amenity/${filename}`;
+  };
+
+  // Fetch all features with images
+  const fetchAllFeatures = async () => {
+    try {
+      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+      const response = await axios.get(`${apiUrl}/feature/get-all`);
+      if (Array.isArray(response.data)) {
+        setAllFeatures(response.data);
+      }
+    } catch (err) {
+      console.error("Error fetching features:", err);
+    }
+  };
+
+  // Fetch all nearby benefits with images
+  const fetchAllNearbyBenefits = async () => {
+    try {
+      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+      const response = await axios.get(`${apiUrl}/nearby-benefit/get-all`);
+      if (Array.isArray(response.data)) {
+        setAllNearbyBenefits(response.data);
+      }
+    } catch (err) {
+      console.error("Error fetching nearby benefits:", err);
+    }
+  };
+
+  // Get feature image URL
+  const getFeatureImageUrl = (featureImageUrl) => {
+    if (!featureImageUrl) return null;
+    if (featureImageUrl.startsWith('http://') || featureImageUrl.startsWith('https://')) {
+      return featureImageUrl;
+    }
+    const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+    let cleanImageUrl = featureImageUrl;
+    
+    // Handle Windows paths
+    if (cleanImageUrl.match(/^[A-Za-z]:[\/\\]/)) {
+      const featureIndex = cleanImageUrl.toLowerCase().indexOf("feature");
+      if (featureIndex !== -1) {
+        cleanImageUrl = cleanImageUrl.substring(featureIndex);
+      }
+    }
+    
+    cleanImageUrl = cleanImageUrl.replace(/\\/g, '/');
+    
+    // Remove leading slashes
+    if (cleanImageUrl.startsWith('/')) {
+      cleanImageUrl = cleanImageUrl.slice(1);
+    }
+    
+    // Extract just the filename if there's a path
+    const pathParts = cleanImageUrl.split('/');
+    const filename = pathParts[pathParts.length - 1];
+    
+    // Use the feature image endpoint
+    return `${apiUrl}/fetch-image/feature/${filename}`;
+  };
+
+  // Get nearby benefit image URL
+  const getNearbyBenefitImageUrl = (benefitImageUrl) => {
+    if (!benefitImageUrl) return null;
+    if (benefitImageUrl.startsWith('http://') || benefitImageUrl.startsWith('https://')) {
+      return benefitImageUrl;
+    }
+    const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+    let cleanImageUrl = benefitImageUrl;
+    
+    // Handle Windows paths
+    if (cleanImageUrl.match(/^[A-Za-z]:[\/\\]/)) {
+      const benefitIndex = cleanImageUrl.toLowerCase().indexOf("nearby-benefit");
+      if (benefitIndex !== -1) {
+        cleanImageUrl = cleanImageUrl.substring(benefitIndex);
+      }
+    }
+    
+    cleanImageUrl = cleanImageUrl.replace(/\\/g, '/');
+    
+    // Remove leading slashes
+    if (cleanImageUrl.startsWith('/')) {
+      cleanImageUrl = cleanImageUrl.slice(1);
+    }
+    
+    // Extract just the filename if there's a path
+    const pathParts = cleanImageUrl.split('/');
+    const filename = pathParts[pathParts.length - 1];
+    
+    // Use the nearby benefit image endpoint
+    return `${apiUrl}/fetch-image/nearby-benefit/${filename}`;
+  };
+
+  // Get amenities with images for the property
+  const getPropertyAmenities = () => {
+    if (!property || !allAmenities.length) return [];
+    
+    // Try to match by IDs first
+    if (property.amenityIds && property.amenityIds.length > 0) {
+      return allAmenities.filter(amenity => 
+        property.amenityIds.includes(amenity.id)
+      );
+    }
+    
+    // Fallback to matching by names
+    if (property.amenityNames && property.amenityNames.length > 0) {
+      return allAmenities.filter(amenity => 
+        property.amenityNames.some(name => 
+          name.toLowerCase() === amenity.title?.toLowerCase()
+        )
+      );
+    }
+    
+    return [];
+  };
+
+  // Get features with images for the property
+  const getPropertyFeatures = () => {
+    if (!property || !allFeatures.length) return [];
+    
+    // Try to match by IDs first
+    if (property.featureIds && property.featureIds.length > 0) {
+      return allFeatures.filter(feature => 
+        property.featureIds.includes(feature.id)
+      );
+    }
+    
+    // Fallback to matching by names
+    if (property.featureNames && property.featureNames.length > 0) {
+      return allFeatures.filter(feature => 
+        property.featureNames.some(name => 
+          name.toLowerCase() === feature.title?.toLowerCase()
+        )
+      );
+    }
+    
+    return [];
+  };
+
+  // Get nearby benefits for the property (already includes distance from backend)
+  const getPropertyNearbyBenefits = () => {
+    if (!property || !property.nearbyBenefits) return [];
+    return property.nearbyBenefits;
+  };
+
   if (loading) {
     return (
       <div className="container my-5">
@@ -213,9 +507,10 @@ export default function PropertyDetailPage() {
     : [];
 
   const locationParts = [];
-  if (property.address) locationParts.push(property.address);
+  // Address removed - will be viewed elsewhere
   if (property.locality) locationParts.push(property.locality);
   if (property.city) locationParts.push(property.city);
+  if (property.pincode) locationParts.push(property.pincode);
 
   return (
     <div className="property-detail-page">
@@ -223,59 +518,128 @@ export default function PropertyDetailPage() {
       <div className="property-header-section">
         <div className="container">
           <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 py-3">
-            <div>
-              <h1 className="property-header-title mb-1">
-                {formatPrice(property.totalPrice)} {getBedroomLabel(property.bedrooms)} {property.bathrooms ? `${property.bathrooms}Baths` : ''}
-              </h1>
-              {property.reraId && (
-                <div className="rera-status">
-                  <span>RERA STATUS: </span>
-                  <a href={property.reraState ? `http://${property.reraState.toLowerCase()}-rera.in/projects` : '#'} target="_blank" rel="noopener noreferrer">
-                    {property.reraId}
-                  </a>
+            <div className="flex-grow-1">
+              {property.title && (
+                <h1 className="property-header-title mb-2">
+                  {property.title}
+                </h1>
+              )}
+              <div className="d-flex align-items-center flex-wrap gap-3 mb-2">
+                <h2 className="property-header-price mb-0">
+                  {formatPrice(property.totalPrice)} 
+                  {getBedroomLabel(property.bedrooms) && ` • ${getBedroomLabel(property.bedrooms)}`}
+                  {property.bathrooms ? ` • ${property.bathrooms} Baths` : ''}
+                </h2>
+              </div>
+              {locationParts.filter(Boolean).length > 0 && (
+                <div className="property-header-location mb-2">
+                  <FontAwesomeIcon icon={faMapMarkerAlt} className="me-2" />
+                  <span>{locationParts.filter(Boolean).join(", ")}</span>
                 </div>
               )}
+              <div className="d-flex align-items-center flex-wrap gap-3">
+                {property.reraId && (
+                  <div className="rera-status">
+                    <span>RERA: </span>
+                    <a href={property.reraState ? `http://${property.reraState.toLowerCase()}-rera.in/projects` : '#'} target="_blank" rel="noopener noreferrer">
+                      {property.reraId}
+                    </a>
+                  </div>
+                )}
+                {property.status && (
+                  <Badge 
+                    bg={property.status.toLowerCase().includes('ready') ? 'success' : 'warning'}
+                    className="modern-badge"
+                    style={{
+                      background: property.status.toLowerCase().includes('ready') 
+                        ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' 
+                        : 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                      border: 'none',
+                      padding: '0.5rem 1rem',
+                      borderRadius: '20px',
+                      fontWeight: '600',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                    }}
+                  >
+                    {property.status}
+                  </Badge>
+                )}
+                {property.transaction && (
+                  <Badge 
+                    bg="info"
+                    className="modern-badge"
+                    style={{
+                      background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                      border: 'none',
+                      padding: '0.5rem 1rem',
+                      borderRadius: '20px',
+                      fontWeight: '600',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                    }}
+                  >
+                    for {property.transaction}
+                  </Badge>
+                )}
+              </div>
             </div>
-            <Button variant="primary" className="contact-dealer-btn">
-              Contact Dealer
-            </Button>
+            <div className="d-flex flex-column gap-2">
+              <Button 
+                variant="primary" 
+                className="contact-dealer-btn"
+                onClick={() => setShowContactModal(true)}
+              >
+                <FontAwesomeIcon icon={faPhone} className="me-2" />
+                Contact Owner
+              </Button>
+            </div>
           </div>
           
           {/* Navigation Tabs */}
           <div className="property-nav-tabs">
             <button 
               className={activeTab === "Overview" ? "active" : ""}
-              onClick={() => setActiveTab("Overview")}
+              onClick={() => {
+                setActiveTab("Overview");
+                scrollToSection("overview-section");
+              }}
             >
               Overview
             </button>
-            <button 
-              className={activeTab === "Society" ? "active" : ""}
-              onClick={() => setActiveTab("Society")}
-            >
-              Society
-            </button>
-            <button 
-              className={activeTab === "Dealer Details" ? "active" : ""}
-              onClick={() => setActiveTab("Dealer Details")}
-            >
-              Dealer Details
-            </button>
+            {property.projectName && (
+              <button 
+                className={activeTab === "Society" ? "active" : ""}
+                onClick={() => {
+                  setActiveTab("Society");
+                  scrollToSection("society-section");
+                }}
+              >
+                Society
+              </button>
+            )}
             <button 
               className={activeTab === "Price Trends" ? "active" : ""}
-              onClick={() => setActiveTab("Price Trends")}
+              onClick={() => {
+                setActiveTab("Price Trends");
+                scrollToSection("price-trends-section");
+              }}
             >
               Price Trends
             </button>
             <button 
               className={activeTab === "Explore Locality" ? "active" : ""}
-              onClick={() => setActiveTab("Explore Locality")}
+              onClick={() => {
+                setActiveTab("Explore Locality");
+                scrollToSection("locality-section");
+              }}
             >
               Explore Locality
             </button>
             <button 
               className={activeTab === "Recommendation" ? "active" : ""}
-              onClick={() => setActiveTab("Recommendation")}
+              onClick={() => {
+                setActiveTab("Recommendation");
+                scrollToSection("recommendation-section");
+              }}
             >
               Recommendation
             </button>
@@ -362,136 +726,170 @@ export default function PropertyDetailPage() {
           {/* Right Panel - Property Details (60%) */}
           <div className="col-lg-7 col-md-12">
             <div className="property-details-hero">
-              {/* Area */}
-              <div className="detail-row">
-                <div className="detail-icon">
-                  <FontAwesomeIcon icon={faHome} />
+              <h3 className="details-hero-title">Property Details</h3>
+              
+              {/* Price Section - Highlighted */}
+              <div className="price-highlight-section">
+                <div className="price-main">
+                  <span className="price-label">Price</span>
+                  <span className="price-amount">{formatPrice(property.totalPrice)}{property.totalPrice && property.totalPrice >= 10000000 && '+'}</span>
                 </div>
-                <div className="detail-content">
-                  <div className="detail-label">Area</div>
-                  <div className="detail-value">
-                    {property.plotArea 
-                      ? `Plot area ${formatArea(property.plotArea, true)}`
-                      : property.superBuiltUpArea 
-                      ? `Super Built up area ${formatArea(property.superBuiltUpArea, true)}`
-                      : property.builtUpArea
-                      ? `Built up area ${formatArea(property.builtUpArea, true)}`
-                      : property.carpetArea
-                      ? `Carpet area ${formatArea(property.carpetArea, true)}`
-                      : 'Area not specified'}
-                    <FontAwesomeIcon icon={faChevronDown} className="ms-2 dropdown-arrow" />
+                {property.pricePerSqft && (
+                  <div className="price-per-sqft">
+                    {formatPricePerSqft(property.pricePerSqft, true)} per sq.m.
+                    {property.totalPrice && <span className="price-note"> </span>}
                   </div>
-                </div>
+                )}
+                <a href="#" className="price-details-link" onClick={(e) => { e.preventDefault(); setShowPriceDetails(!showPriceDetails); }}>
+                  View Price Details
+                </a>
               </div>
 
-              {/* Configuration */}
-              <div className="detail-row">
-                <div className="detail-icon">
-                  <FontAwesomeIcon icon={faBuilding} />
-                </div>
-                <div className="detail-content">
-                  <div className="detail-label">Configuration</div>
-                  <div className="detail-value">
-                    {property.bedrooms || 0} Bedrooms, {property.bathrooms || 0} Bathrooms, {property.balconies || 0} Balcony
-                    {property.studyRoom && ', Study Room'}
-                    {property.storeRoom && ', Store Room'}
-                  </div>
-                </div>
-              </div>
+              {/* Compact Details Table */}
+              <div className="details-table-container">
+                <table className="details-table">
+                  <tbody>
+                    {/* Area */}
+                    <tr>
+                      <td className="detail-label-cell">
+                        <FontAwesomeIcon icon={faHome} className="detail-table-icon" />
+                        <span>Area</span>
+                      </td>
+                      <td className="detail-value-cell">
+                        {property.plotArea 
+                          ? `Plot area ${formatArea(property.plotArea, true)}`
+                          : property.superBuiltUpArea 
+                          ? `Super Built up area ${formatArea(property.superBuiltUpArea, true)}`
+                          : property.builtUpArea
+                          ? `Built up area ${formatArea(property.builtUpArea, true)}`
+                          : property.carpetArea
+                          ? `Carpet area ${formatArea(property.carpetArea, true)}`
+                          : 'Area not specified'}
+                      </td>
+                    </tr>
 
-              {/* Price */}
-              <div className="detail-row">
-                <div className="detail-icon price-icon">
-                  <FontAwesomeIcon icon={faRocket} />
-                </div>
-                <div className="detail-content">
-                  <div className="detail-label">Price</div>
-                  <div className="detail-value price-value">
-                    {formatPrice(property.totalPrice)}
-                    {property.totalPrice && property.totalPrice >= 10000000 && '+'}
-                    {property.pricePerSqft && (
-                      <>
-                        {' '}Govt Charges & Tax @ {formatPricePerSqft(property.pricePerSqft, true)} per sq.m.
-                        {property.totalPrice && ' (All inclusive, Negotiable)'}
-                      </>
+                    {/* Configuration */}
+                    <tr>
+                      <td className="detail-label-cell">
+                        <FontAwesomeIcon icon={faBuilding} className="detail-table-icon" />
+                        <span>Configuration</span>
+                      </td>
+                      <td className="detail-value-cell">
+                        {property.bedrooms || 0} Bedrooms, {property.bathrooms || 0} Bathrooms, {property.balconies || 0} Balcony
+                        {property.studyRoom && ', Study Room'}
+                        {property.storeRoom && ', Store Room'}
+                      </td>
+                    </tr>
+
+                    {/* Floor Number */}
+                    {property.floorNumber && (
+                      <tr>
+                        <td className="detail-label-cell">
+                          <FontAwesomeIcon icon={faBuilding} className="detail-table-icon" />
+                          <span>Floor Number</span>
+                        </td>
+                        <td className="detail-value-cell">
+                          {property.floorNumber} {property.totalFloors ? `of ${property.totalFloors}` : ''}
+                        </td>
+                      </tr>
                     )}
-                  </div>
-                  <a href="#" className="price-details-link" onClick={(e) => { e.preventDefault(); setShowPriceDetails(!showPriceDetails); }}>
-                    View Price Details
-                  </a>
-                </div>
+
+                    {/* Total Floors */}
+                    {property.totalFloors && (
+                      <tr>
+                        <td className="detail-label-cell">
+                          <FontAwesomeIcon icon={faBuilding} className="detail-table-icon" />
+                          <span>Total Floors</span>
+                        </td>
+                        <td className="detail-value-cell">
+                          {property.totalFloors} {property.totalFloors === 1 ? 'Floor' : 'Floors'}
+                        </td>
+                      </tr>
+                    )}
+
+                    {/* Facing */}
+                    {property.facing && (
+                      <tr>
+                        <td className="detail-label-cell">
+                          <FontAwesomeIcon icon={faCompass} className="detail-table-icon" />
+                          <span>Facing</span>
+                        </td>
+                        <td className="detail-value-cell">{property.facing}</td>
+                      </tr>
+                    )}
+
+                    {/* Parking */}
+                    {property.parking && (
+                      <tr>
+                        <td className="detail-label-cell">
+                          <FontAwesomeIcon icon={faBuilding} className="detail-table-icon" />
+                          <span>Parking</span>
+                        </td>
+                        <td className="detail-value-cell">{property.parking}</td>
+                      </tr>
+                    )}
+
+                    {/* Property Status */}
+                    {property.status && (
+                      <tr>
+                        <td className="detail-label-cell">
+                          <FontAwesomeIcon icon={faBirthdayCake} className="detail-table-icon" />
+                          <span>Property Status</span>
+                        </td>
+                        <td className="detail-value-cell">
+                          {property.ageOfConstruction !== null && property.ageOfConstruction !== undefined
+                            ? `${property.ageOfConstruction} to ${property.ageOfConstruction + 1} Year Old`
+                            : property.status}
+                        </td>
+                      </tr>
+                    )}
+
+                    {/* Possession */}
+                    {property.possession && (
+                      <tr>
+                        <td className="detail-label-cell">
+                          <FontAwesomeIcon icon={faHome} className="detail-table-icon" />
+                          <span>Possession</span>
+                        </td>
+                        <td className="detail-value-cell">{property.possession}</td>
+                      </tr>
+                    )}
+
+                    {/* Occupancy */}
+                    {property.occupancy && (
+                      <tr>
+                        <td className="detail-label-cell">
+                          <FontAwesomeIcon icon={faHome} className="detail-table-icon" />
+                          <span>Occupancy</span>
+                        </td>
+                        <td className="detail-value-cell">{property.occupancy}</td>
+                      </tr>
+                    )}
+
+                    {/* Transaction Type */}
+                    {property.transaction && (
+                      <tr>
+                        <td className="detail-label-cell">
+                          <FontAwesomeIcon icon={faRocket} className="detail-table-icon" />
+                          <span>Transaction Type</span>
+                        </td>
+                        <td className="detail-value-cell">{property.transaction}</td>
+                      </tr>
+                    )}
+
+                    {/* Listing Type */}
+                    {property.listingType && (
+                      <tr>
+                        <td className="detail-label-cell">
+                          <FontAwesomeIcon icon={faBuilding} className="detail-table-icon" />
+                          <span>Property Type</span>
+                        </td>
+                        <td className="detail-value-cell">{property.listingType} {property.subType ? `- ${property.subType}` : ''}</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
-
-              {/* Address */}
-              <div className="detail-row">
-                <div className="detail-icon">
-                  <FontAwesomeIcon icon={faHome} />
-                </div>
-                <div className="detail-content">
-                  <div className="detail-label">Address</div>
-                  <div className="detail-value">
-                    {locationParts.filter(Boolean).join(", ") || "Address not specified"}
-                  </div>
-                </div>
-              </div>
-
-              {/* Total Floors */}
-              {property.totalFloors && (
-                <div className="detail-row">
-                  <div className="detail-icon">
-                    <FontAwesomeIcon icon={faBuilding} />
-                  </div>
-                  <div className="detail-content">
-                    <div className="detail-label">Total Floors</div>
-                    <div className="detail-value">
-                      {property.totalFloors} {property.totalFloors === 1 ? 'Floor' : 'Floors'}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Facing */}
-              {property.facing && (
-                <div className="detail-row">
-                  <div className="detail-icon">
-                    <FontAwesomeIcon icon={faCompass} />
-                  </div>
-                  <div className="detail-content">
-                    <div className="detail-label">Facing</div>
-                    <div className="detail-value">{property.facing}</div>
-                  </div>
-                </div>
-              )}
-
-              {/* Overlooking */}
-              {property.overlooking && (
-                <div className="detail-row">
-                  <div className="detail-icon">
-                    <FontAwesomeIcon icon={faWindowMaximize} />
-                  </div>
-                  <div className="detail-content">
-                    <div className="detail-label">Overlooking</div>
-                    <div className="detail-value">{property.overlooking}</div>
-                  </div>
-                </div>
-              )}
-
-              {/* Property Age */}
-              {property.status && (
-                <div className="detail-row">
-                  <div className="detail-icon">
-                    <FontAwesomeIcon icon={faBirthdayCake} />
-                  </div>
-                  <div className="detail-content">
-                    <div className="detail-label">Property Age</div>
-                    <div className="detail-value">
-                      {property.ageOfConstruction !== null && property.ageOfConstruction !== undefined
-                        ? `${property.ageOfConstruction} to ${property.ageOfConstruction + 1} Year Old`
-                        : property.status}
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -499,220 +897,304 @@ export default function PropertyDetailPage() {
         {/* Content Sections */}
         <div className="row">
           <div className="col-12">
-            {/* About Property Section */}
-            <div className="property-section mt-4">
+            {/* About Property Section - Overview */}
+            <div id="overview-section" className="property-section mt-4">
               <h3 className="section-title">About Property</h3>
-              <div className="property-address mb-3">
-                <FontAwesomeIcon icon={faMapMarkerAlt} className="me-2" />
-                <strong>Address: </strong>
-                {locationParts.filter(Boolean).join(", ") || "Address not specified"}
-              </div>
+              {property.title && (
+                <div className="mb-3">
+                  <h5 className="mb-2">{property.title}</h5>
+                </div>
+              )}
               <div className="property-description">
                 <p>
                   {property.description || "No description available."}
-                  {property.description && property.description.length > 200 && (
-                    <span className="text-primary ms-2" style={{ cursor: 'pointer' }}>More&gt;&gt;</span>
-                  )}
                 </p>
+              </div>
+              {property.additionalNotes && (
+                <div className="mt-3">
+                  <h6 className="mb-2">Additional Notes:</h6>
+                  <p className="text-muted">{property.additionalNotes}</p>
+                </div>
+              )}
+            </div>
+
+            {/* Property Details Grid */}
+            <div className="property-section mt-4">
+              <h4 className="section-subtitle">Property Details</h4>
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="property-details-grid">
+                    {property.listingType && (
+                      <div className="detail-item">
+                        <strong>Property Type:</strong>
+                        <span>{property.listingType} {property.subType ? `- ${property.subType}` : ''}</span>
+                      </div>
+                    )}
+                    {property.transaction && (
+                      <div className="detail-item">
+                        <strong>Transaction Type:</strong>
+                        <span>{property.transaction}</span>
+                      </div>
+                    )}
+                    {property.status && (
+                      <div className="detail-item">
+                        <strong>Status:</strong>
+                        <span>{property.status}</span>
+                      </div>
+                    )}
+                    {property.possession && (
+                      <div className="detail-item">
+                        <strong>Possession:</strong>
+                        <span>{property.possession}</span>
+                      </div>
+                    )}
+                    {property.occupancy && (
+                      <div className="detail-item">
+                        <strong>Occupancy:</strong>
+                        <span>{property.occupancy}</span>
+                      </div>
+                    )}
+                    {property.ownershipType && (
+                      <div className="detail-item">
+                        <strong>Ownership Type:</strong>
+                        <span>{property.ownershipType}</span>
+                      </div>
+                    )}
+                    {property.furnished && (
+                      <div className="detail-item">
+                        <strong>Furnishing:</strong>
+                        <span>{property.furnished}</span>
+                      </div>
+                    )}
+                    {property.parking && (
+                      <div className="detail-item">
+                        <strong>Parking:</strong>
+                        <span>{property.parking}</span>
+                      </div>
+                    )}
+                    {property.noticePeriod !== null && property.noticePeriod !== undefined && (
+                      <div className="detail-item">
+                        <strong>Notice Period:</strong>
+                        <span>{property.noticePeriod} {property.noticePeriod === 1 ? 'Month' : 'Months'}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="property-details-grid">
+                    {property.floorNumber && (
+                      <div className="detail-item">
+                        <strong>Floor Number:</strong>
+                        <span>{property.floorNumber} {property.totalFloors ? `of ${property.totalFloors}` : ''}</span>
+                      </div>
+                    )}
+                    {property.facing && (
+                      <div className="detail-item">
+                        <strong>Facing:</strong>
+                        <span>{property.facing}</span>
+                      </div>
+                    )}
+                    {property.ageOfConstruction !== null && property.ageOfConstruction !== undefined && (
+                      <div className="detail-item">
+                        <strong>Property Age:</strong>
+                        <span>{property.ageOfConstruction} to {property.ageOfConstruction + 1} Year Old</span>
+                      </div>
+                    )}
+                    {property.maintenanceCharges && (
+                      <div className="detail-item">
+                        <strong>Maintenance Charges:</strong>
+                        <span>{formatPrice(property.maintenanceCharges)}</span>
+                      </div>
+                    )}
+                    {property.bookingAmount && (
+                      <div className="detail-item">
+                        <strong>Booking Amount:</strong>
+                        <span>{formatPrice(property.bookingAmount)}</span>
+                      </div>
+                    )}
+                    {property.pricePerSqft && (
+                      <div className="detail-item">
+                        <strong>Price per Sq.ft:</strong>
+                        <span>{formatPricePerSqft(property.pricePerSqft)}</span>
+                      </div>
+                    )}
+                    {property.virtualTour && (
+                      <div className="detail-item">
+                        <strong>Virtual Tour:</strong>
+                        <a href={property.virtualTour} target="_blank" rel="noopener noreferrer" className="text-primary">
+                          View Virtual Tour
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Furnishing Details Section */}
-            {property.furnished && (
-              <div className="property-section mt-4">
-                <h4 className="section-subtitle">{property.furnished}</h4>
-                <h5 className="section-label">Furnishing Details</h5>
-                <div className="furnishing-grid">
-                  {/* Included Items */}
-                  <div className="furnishing-item included">
-                    <FontAwesomeIcon icon={faCheck} className="check-icon" />
-                    <span>2 Wardrobe</span>
-                  </div>
-                  <div className="furnishing-item included">
-                    <FontAwesomeIcon icon={faCheck} className="check-icon" />
-                    <span>1 Exhaust Fan</span>
-                  </div>
-                  <div className="furnishing-item included">
-                    <FontAwesomeIcon icon={faCheck} className="check-icon" />
-                    <span>2 Light</span>
-                  </div>
-                  <div className="furnishing-item included">
-                    <FontAwesomeIcon icon={faCheck} className="check-icon" />
-                    <span>1 Modular Kitchen</span>
-                  </div>
-                  {/* Excluded Items */}
-                  <div className="furnishing-item excluded">
-                    <FontAwesomeIcon icon={faXmark} className="x-icon" />
-                    <span>No AC</span>
-                  </div>
-                  <div className="furnishing-item excluded">
-                    <FontAwesomeIcon icon={faXmark} className="x-icon" />
-                    <span>No Bed</span>
-                  </div>
-                  <div className="furnishing-item excluded">
-                    <FontAwesomeIcon icon={faXmark} className="x-icon" />
-                    <span>No Chimney</span>
-                  </div>
-                  <div className="furnishing-item excluded">
-                    <FontAwesomeIcon icon={faXmark} className="x-icon" />
-                    <span>No Curtains</span>
-                  </div>
-                  <div className="furnishing-item excluded">
-                    <FontAwesomeIcon icon={faXmark} className="x-icon" />
-                    <span>No Dining Table</span>
-                  </div>
-                  <div className="furnishing-item excluded">
-                    <FontAwesomeIcon icon={faXmark} className="x-icon" />
-                    <span>No Fan</span>
-                  </div>
-                  <div className="furnishing-item excluded">
-                    <FontAwesomeIcon icon={faXmark} className="x-icon" />
-                    <span>No Geyser</span>
-                  </div>
-                  <div className="furnishing-item excluded">
-                    <FontAwesomeIcon icon={faXmark} className="x-icon" />
-                    <span>No Microwave</span>
-                  </div>
-                  <div className="furnishing-item excluded">
-                    <FontAwesomeIcon icon={faXmark} className="x-icon" />
-                    <span>No Fridge</span>
-                  </div>
-                  <div className="furnishing-item excluded">
-                    <FontAwesomeIcon icon={faXmark} className="x-icon" />
-                    <span>No Sofa</span>
-                  </div>
-                  <div className="furnishing-item excluded">
-                    <FontAwesomeIcon icon={faXmark} className="x-icon" />
-                    <span>No Stove</span>
-                  </div>
-                  <div className="furnishing-item excluded">
-                    <FontAwesomeIcon icon={faXmark} className="x-icon" />
-                    <span>No TV</span>
-                  </div>
-                  <div className="furnishing-item excluded">
-                    <FontAwesomeIcon icon={faXmark} className="x-icon" />
-                    <span>No Washing Machine</span>
-                  </div>
-                  <div className="furnishing-item excluded">
-                    <FontAwesomeIcon icon={faXmark} className="x-icon" />
-                    <span>No Water Purifier</span>
+            {/* Amenities Section */}
+            {(() => {
+              const propertyAmenities = getPropertyAmenities();
+              return propertyAmenities.length > 0 || (property.amenityNames && property.amenityNames.length > 0) ? (
+                <div className="property-section mt-4">
+                  <h4 className="section-subtitle">Amenities</h4>
+                  <div className="amenities-grid">
+                    {propertyAmenities.length > 0 ? (
+                      propertyAmenities.map((amenity, index) => {
+                        const imageUrl = getAmenityImageUrl(amenity.amenityImageUrl);
+                        return (
+                          <div key={amenity.id || index} className="amenity-item">
+                            {imageUrl ? (
+                              <div className="amenity-image-wrapper">
+                                <Image
+                                  src={imageUrl}
+                                  alt={amenity.altTag || amenity.title || 'Amenity'}
+                                  width={30}
+                                  height={30}
+                                  className="amenity-image"
+                                  unoptimized
+                                />
+                              </div>
+                            ) : (
+                              <div className="amenity-icon-wrapper">
+                                <FontAwesomeIcon icon={faCheck} className="amenity-icon" />
+                              </div>
+                            )}
+                            <span className="amenity-title">{amenity.title || property.amenityNames?.[index]}</span>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      property.amenityNames.map((amenity, index) => (
+                        <div key={index} className="amenity-item">
+                          <div className="amenity-icon-wrapper">
+                            <FontAwesomeIcon icon={faCheck} className="amenity-icon" />
+                          </div>
+                          <span className="amenity-title">{amenity}</span>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
-              </div>
-            )}
+              ) : null;
+            })()}
 
             {/* Features Section */}
-            {property.features && property.features.length > 0 && (
-              <div className="property-section mt-4">
-                <h4 className="section-subtitle">Features</h4>
-                <div className="features-grid">
-                  {property.features.map((feature, index) => (
-                    <div key={index} className="feature-item">
-                      <FontAwesomeIcon icon={faCheck} className="check-icon" />
-                      <span>{feature}</span>
-                    </div>
-                  ))}
+            {(() => {
+              const propertyFeatures = getPropertyFeatures();
+              return propertyFeatures.length > 0 || (property.featureNames && property.featureNames.length > 0) ? (
+                <div className="property-section mt-4">
+                  <h4 className="section-subtitle">Residential Features</h4>
+                  <div className="amenities-grid">
+                    {propertyFeatures.length > 0 ? (
+                      propertyFeatures.map((feature, index) => {
+                        const imageUrl = getFeatureImageUrl(feature.iconImageUrl);
+                        return (
+                          <div key={feature.id || index} className="amenity-item">
+                            {imageUrl ? (
+                              <div className="amenity-image-wrapper">
+                                <Image
+                                  src={imageUrl}
+                                  alt={feature.altTag || feature.title || 'Feature'}
+                                  width={60}
+                                  height={60}
+                                  className="amenity-image"
+                                  unoptimized
+                                />
+                              </div>
+                            ) : (
+                              <div className="amenity-icon-wrapper">
+                                <FontAwesomeIcon icon={faCheck} className="amenity-icon" />
+                              </div>
+                            )}
+                            <span className="amenity-title">{feature.title || property.featureNames?.[index]}</span>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      property.featureNames.map((feature, index) => (
+                        <div key={index} className="amenity-item">
+                          <div className="amenity-icon-wrapper">
+                            <FontAwesomeIcon icon={faCheck} className="amenity-icon" />
+                          </div>
+                          <span className="amenity-title">{feature}</span>
+                        </div>
+                      ))
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              ) : null;
+            })()}
 
-            {/* Society Section */}
+            {/* Nearby Benefits Section */}
+            {(() => {
+              const propertyNearbyBenefits = getPropertyNearbyBenefits();
+              return propertyNearbyBenefits.length > 0 ? (
+                <div className="property-section mt-4">
+                  <h4 className="section-subtitle">Nearby Benefits</h4>
+                  <div className="amenities-grid">
+                    {propertyNearbyBenefits.map((benefit, index) => {
+                      // Get the full benefit details from allNearbyBenefits
+                      const fullBenefit = allNearbyBenefits.find(b => b.id === benefit.id);
+                      const benefitIcon = benefit.benefitIcon || fullBenefit?.benefitIcon;
+                      const imageUrl = benefitIcon ? getNearbyBenefitImageUrl(benefitIcon) : null;
+                      const benefitName = benefit.benefitName || fullBenefit?.benefitName || 'Nearby Benefit';
+                      const distance = benefit.distance ? `${benefit.distance} KM` : '';
+                      const altTag = benefit.altTag || fullBenefit?.altTag || benefitName;
+                      
+                      return (
+                        <div key={benefit.id || index} className="amenity-item">
+                          {imageUrl ? (
+                            <div className="amenity-image-wrapper">
+                              <Image
+                                src={imageUrl}
+                                alt={altTag}
+                                width={60}
+                                height={60}
+                                className="amenity-image"
+                                unoptimized
+                              />
+                            </div>
+                          ) : (
+                            <div className="amenity-icon-wrapper">
+                              <FontAwesomeIcon icon={faMapMarkerAlt} className="amenity-icon" />
+                            </div>
+                          )}
+                          <div className="d-flex flex-column align-items-center">
+                            <span className="amenity-title">{benefitName}</span>
+                            {distance && (
+                              <span className="text-muted small mt-1" style={{ fontSize: '0.75rem' }}>
+                                {distance}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : null;
+            })()}
+
+            {/* Society / Project Section */}
             {property.projectName && (
-              <div className="property-section mt-4">
-                <h4 className="section-subtitle">Society</h4>
+              <div id="society-section" className="property-section mt-4">
+                <h4 className="section-subtitle">Society / Project</h4>
                 <div className="society-info">
                   <h5 className="society-name">{property.projectName}</h5>
                   <div className="society-details">
-                    <span>{getBedroomLabel(property.bedrooms)}</span>
+                    {property.bedrooms && (
+                      <span>{getBedroomLabel(property.bedrooms)}</span>
+                    )}
                     {property.builderName && (
-                      <span>Developed / built by {property.builderName}</span>
+                      <span className="ms-2">Developed / built by {property.builderName}</span>
                     )}
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Places Nearby Section */}
-            {property.city && (
-              <div className="property-section mt-4">
-                <h4 className="section-subtitle">Places nearby</h4>
-                <p className="text-muted mb-3">{locationParts.filter(Boolean).join(", ")}</p>
-                <div className="places-nearby">
-                  <div className="place-item">
-                    <FontAwesomeIcon icon={faMapMarkerAlt} />
-                    <span>Metro Station</span>
-                  </div>
-                  <div className="place-item">
-                    <FontAwesomeIcon icon={faMapMarkerAlt} />
-                    <span>Shopping Mall</span>
-                  </div>
-                  <div className="place-item">
-                    <FontAwesomeIcon icon={faMapMarkerAlt} />
-                    <span>School</span>
-                  </div>
-                  <Link href="#" className="view-all-link">View All (12)</Link>
-                </div>
-              </div>
-            )}
+            {/* Contact Information Section */}
 
-            {/* Locality Reviews Section */}
-            {property.city && (
-              <div className="property-section mt-4">
-                <h4 className="section-subtitle">Locality Reviews</h4>
-                <p className="text-muted mb-3">{locationParts.filter(Boolean).join(", ")}</p>
-                <div className="locality-reviews">
-                  <div className="review-summary">
-                    <div className="rating-display">
-                      <span className="rating-value">3.8</span>
-                      <span className="rating-max">/5</span>
-                    </div>
-                    <div className="rating-stars">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <FontAwesomeIcon 
-                          key={star} 
-                          icon={faStar} 
-                          className={star <= 3.8 ? "star-filled" : "star-empty"} 
-                        />
-                      ))}
-                    </div>
-                    <p className="review-count">17 Total Reviews</p>
-                  </div>
-                  <div className="rating-breakdown">
-                    <div className="rating-item">
-                      <span>Connectivity</span>
-                      <div className="rating-bar">
-                        <div className="rating-fill" style={{ width: '74%' }}></div>
-                      </div>
-                      <span>3.7</span>
-                    </div>
-                    <div className="rating-item">
-                      <span>Lifestyle</span>
-                      <div className="rating-bar">
-                        <div className="rating-fill" style={{ width: '78%' }}></div>
-                      </div>
-                      <span>3.9</span>
-                    </div>
-                    <div className="rating-item">
-                      <span>Safety</span>
-                      <div className="rating-bar">
-                        <div className="rating-fill" style={{ width: '78%' }}></div>
-                      </div>
-                      <span>3.9</span>
-                    </div>
-                    <div className="rating-item">
-                      <span>Green Area</span>
-                      <div className="rating-bar">
-                        <div className="rating-fill" style={{ width: '74%' }}></div>
-                      </div>
-                      <span>3.7</span>
-                    </div>
-                  </div>
-                  <Button variant="outline-primary" className="mt-3">
-                    Review your Society / Locality
-                  </Button>
-                </div>
-              </div>
-            )}
 
             {/* Sponsored Properties Section */}
             {relatedProperties.length > 0 && (
@@ -752,10 +1234,60 @@ export default function PropertyDetailPage() {
               </div>
             )}
 
-            {/* Owner Properties Section */}
+            {/* Price Trends Section */}
+            <div id="price-trends-section" className="property-section mt-4">
+              <h4 className="section-subtitle">Price Trends</h4>
+              <div className="price-trends-info">
+                <p className="text-muted">
+                  Price trends and market analysis for this property will be displayed here.
+                </p>
+                {property.totalPrice && property.pricePerSqft && (
+                  <div className="price-info-card mt-3">
+                    <div className="d-flex justify-content-between align-items-center mb-2">
+                      <span className="text-muted">Current Price:</span>
+                      <strong className="text-primary">{formatPrice(property.totalPrice)}</strong>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <span className="text-muted">Price per sq.ft:</span>
+                      <strong>{formatPricePerSqft(property.pricePerSqft)}</strong>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Explore Locality Section */}
+            <div id="locality-section" className="property-section mt-4">
+              <h4 className="section-subtitle">Explore Locality</h4>
+              <div className="locality-info">
+                {locationParts.filter(Boolean).length > 0 && (
+                  <div className="locality-details mb-3">
+                    <p className="mb-2">
+                      <strong>Location:</strong> {locationParts.filter(Boolean).join(", ")}
+                    </p>
+                    {property.latitude && property.longitude && (
+                      <a 
+                        href={`https://www.google.com/maps?q=${property.latitude},${property.longitude}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-outline-primary btn-sm"
+                      >
+                        <FontAwesomeIcon icon={faMapMarkerAlt} className="me-2" />
+                        View on Map
+                      </a>
+                    )}
+                  </div>
+                )}
+                <p className="text-muted">
+                  Explore the locality, nearby amenities, schools, hospitals, and other facilities in this area.
+                </p>
+              </div>
+            </div>
+
+            {/* Owner Properties Section - Recommendation */}
             {relatedProperties.length > 0 && (
-              <div className="property-section mt-4">
-                <h4 className="section-subtitle">Owner Properties Available Only on MB</h4>
+              <div id="recommendation-section" className="property-section mt-4">
+                <h4 className="section-subtitle">Owner Properties Available Only on MPF</h4>
                 <div className="owner-properties-grid">
                   {relatedProperties.map((related) => {
                     const relatedImageUrl = related.imageUrls && related.imageUrls.length > 0
@@ -808,6 +1340,141 @@ export default function PropertyDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Contact Form Modal - Compact Modern Design */}
+      <Modal 
+        show={showContactModal} 
+        onHide={() => {
+          setShowContactModal(false);
+          setSubmitError(null);
+          setSubmitSuccess(false);
+        }}
+        centered
+        size="sm"
+        className="modern-contact-modal"
+        backdrop="static"
+        style={{ zIndex: 9999 }}
+      >
+        <Modal.Header className="modern-modal-header-compact" closeButton>
+          <Modal.Title className="modern-modal-title-compact">
+            <FontAwesomeIcon icon={faPhone} className="me-2" />
+            Contact Owner
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="modern-modal-body-compact">
+          {submitSuccess ? (
+            <div className="success-message-compact">
+              <div className="success-icon-compact">
+                <FontAwesomeIcon icon={faCheck} />
+              </div>
+              <h5 className="mb-2">Thank You!</h5>
+              <p className="mb-0">Your inquiry has been submitted. The owner will contact you soon.</p>
+            </div>
+          ) : (
+            <Form onSubmit={handleContactSubmit} className="modern-contact-form-compact">
+              {submitError && (
+                <Alert variant="danger" dismissible onClose={() => setSubmitError(null)} className="modern-alert-compact mb-3">
+                  <FontAwesomeIcon icon={faXmark} className="me-2" />
+                  {submitError}
+                </Alert>
+              )}
+              
+              <Form.Group className="modern-form-group-compact">
+                <Form.Label className="modern-form-label-compact">
+                  Name <span className="required-star">*</span>
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  name="name"
+                  value={contactForm.name}
+                  onChange={handleContactFormChange}
+                  required
+                  placeholder="Your full name"
+                  className="modern-form-control-compact"
+                />
+              </Form.Group>
+
+              <Form.Group className="modern-form-group-compact">
+                <Form.Label className="modern-form-label-compact">
+                  Email <span className="required-star">*</span>
+                </Form.Label>
+                <Form.Control
+                  type="email"
+                  name="email"
+                  value={contactForm.email}
+                  onChange={handleContactFormChange}
+                  required
+                  placeholder="your.email@example.com"
+                  className="modern-form-control-compact"
+                />
+              </Form.Group>
+
+              <Form.Group className="modern-form-group-compact">
+                <Form.Label className="modern-form-label-compact">
+                  Phone <span className="required-star">*</span>
+                </Form.Label>
+                <Form.Control
+                  type="tel"
+                  name="phone"
+                  value={contactForm.phone}
+                  onChange={handleContactFormChange}
+                  required
+                  placeholder="+91 98765 43210"
+                  className="modern-form-control-compact"
+                />
+              </Form.Group>
+
+              <Form.Group className="modern-form-group-compact">
+                <Form.Label className="modern-form-label-compact">Message</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={2}
+                  name="message"
+                  value={contactForm.message}
+                  onChange={handleContactFormChange}
+                  placeholder="Your message (optional)"
+                  className="modern-form-control-compact modern-textarea-compact"
+                />
+              </Form.Group>
+
+              <div className="form-footer-compact">
+                <Button 
+                  variant="outline-secondary" 
+                  onClick={() => {
+                    setShowContactModal(false);
+                    setSubmitError(null);
+                    setSubmitSuccess(false);
+                  }}
+                  disabled={submitting}
+                  className="modern-cancel-btn-compact"
+                  size="sm"
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  variant="primary" 
+                  type="submit"
+                  disabled={submitting}
+                  className="modern-submit-btn-compact"
+                  size="sm"
+                >
+                  {submitting ? (
+                    <>
+                      <Spinner size="sm" className="me-2" animation="border" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <FontAwesomeIcon icon={faCheck} className="me-2" />
+                      Send
+                    </>
+                  )}
+                </Button>
+              </div>
+            </Form>
+          )}
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }

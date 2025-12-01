@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Card,
   Row,
@@ -30,6 +30,8 @@ import {
   cilFlagAlt,
   cilEnvelopeOpen,
   cilX,
+  cilChevronTop,
+  cilChevronBottom,
 } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import {
@@ -51,9 +53,17 @@ export default function ModernPropertyListing({ listingId }) {
   const [propertyStatus, setPropertyStatus] = useState([]);
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [builders, setBuilders] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [cities, setCities] = useState([]);
+  const [amenities, setAmenities] = useState([]);
+  const [features, setFeatures] = useState([]);
+  const [nearbyBenefits, setNearbyBenefits] = useState([]);
   const [loadingCities, setLoadingCities] = useState(false);
   const [loadingBuilders, setLoadingBuilders] = useState(false);
+  const [loadingProjects, setLoadingProjects] = useState(false);
+  const [loadingAmenities, setLoadingAmenities] = useState(false);
+  const [loadingFeatures, setLoadingFeatures] = useState(false);
+  const [loadingNearbyBenefits, setLoadingNearbyBenefits] = useState(false);
   const getInitialFormState = () => ({
     // Step 1: Basic Information
     listingType: "",
@@ -68,6 +78,7 @@ export default function ModernPropertyListing({ listingId }) {
 
     // Step 2: Location & Area
     projectName: "",
+    projectId: null,
     builderName: "",
     builderId: null,
     address: "",
@@ -96,8 +107,9 @@ export default function ModernPropertyListing({ listingId }) {
     balconies: "",
     parking: "",
     furnished: "",
-    amenities: [],
-    features: [],
+    amenityIds: [], // Array of amenity IDs
+    featureIds: [], // Array of feature IDs
+    nearbyBenefits: [], // Array of {id, distance} objects
 
     // Step 5: Media & Contact
     images: [],
@@ -587,11 +599,72 @@ export default function ModernPropertyListing({ listingId }) {
       }
     };
 
+    const loadProjects = async () => {
+      setLoadingProjects(true);
+      try {
+        const response = await axios.get(`${baseUrl}/projects/get-all-projects-list`);
+        // Handle different response formats
+        const projectData = response.data || [];
+        setProjects(Array.isArray(projectData) ? projectData : []);
+      } catch (error) {
+        console.error("Error loading projects:", error);
+        setProjects([]);
+      } finally {
+        setLoadingProjects(false);
+      }
+    };
+
+    const loadAmenities = async () => {
+      setLoadingAmenities(true);
+      try {
+        const response = await axios.get(`${baseUrl}/amenity/get-all`);
+        const amenityData = response.data || [];
+        setAmenities(Array.isArray(amenityData) ? amenityData : []);
+      } catch (error) {
+        console.error("Error loading amenities:", error);
+        setAmenities([]);
+      } finally {
+        setLoadingAmenities(false);
+      }
+    };
+
+    const loadFeatures = async () => {
+      setLoadingFeatures(true);
+      try {
+        const response = await axios.get(`${baseUrl}/feature/get-all`);
+        const featureData = response.data || [];
+        setFeatures(Array.isArray(featureData) ? featureData : []);
+      } catch (error) {
+        console.error("Error loading features:", error);
+        setFeatures([]);
+      } finally {
+        setLoadingFeatures(false);
+      }
+    };
+
+    const loadNearbyBenefits = async () => {
+      setLoadingNearbyBenefits(true);
+      try {
+        const response = await axios.get(`${baseUrl}/nearby-benefit/get-all`);
+        const benefitData = response.data || [];
+        setNearbyBenefits(Array.isArray(benefitData) ? benefitData : []);
+      } catch (error) {
+        console.error("Error loading nearby benefits:", error);
+        setNearbyBenefits([]);
+      } finally {
+        setLoadingNearbyBenefits(false);
+      }
+    };
+
     // Load all data in parallel
     loadProjectStatus();
     loadProjectTypes();
     loadCities();
     loadBuilders();
+    loadProjects();
+    loadAmenities();
+    loadFeatures();
+    loadNearbyBenefits();
   }, []);
 
   const handleNext = () => {
@@ -732,6 +805,7 @@ export default function ModernPropertyListing({ listingId }) {
 
       // Location
       projectName: emptyToNull(formData.projectName),
+      projectId: formData.projectId || null,
       builderName: emptyToNull(formData.builderName),
       address: emptyToNull(formData.address),
       locality: emptyToNull(formData.locality),
@@ -781,8 +855,10 @@ export default function ModernPropertyListing({ listingId }) {
       restrictions: emptyToNull(formData.restrictions),
       renovationHistory: emptyToNull(formData.additionalNotes),
 
-      // Amenities
+      // Amenities, Features, and Nearby Benefits
       amenityIds: formData.amenityIds || [],
+      featureIds: formData.featureIds || [],
+      nearbyBenefits: formData.nearbyBenefits || [], // Array of {id, distance}
 
       // Contact Information
       videoUrl: emptyToNull(formData.virtualTour),
@@ -907,9 +983,11 @@ export default function ModernPropertyListing({ listingId }) {
           <LocationAreaStep
             data={formData}
             builderList={builders}
+            projectList={projects}
             cities={cities}
             loadingCities={loadingCities}
             loadingBuilders={loadingBuilders}
+            loadingProjects={loadingProjects}
             onChange={handleInputChange}
             errors={errors}
           />
@@ -928,6 +1006,13 @@ export default function ModernPropertyListing({ listingId }) {
             data={formData}
             onChange={handleInputChange}
             errors={errors}
+            amenities={amenities}
+            features={features}
+            nearbyBenefits={nearbyBenefits}
+            loadingAmenities={loadingAmenities}
+            loadingFeatures={loadingFeatures}
+            loadingNearbyBenefits={loadingNearbyBenefits}
+            apiBaseUrl={(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005").replace(/\/$/, "")}
           />
         );
       case 5:
@@ -1771,10 +1856,17 @@ function LocationAreaStep({
   onChange, 
   errors, 
   builderList = [], 
+  projectList = [],
   cities = [], 
   loadingCities = false,
-  loadingBuilders = false
+  loadingBuilders = false,
+  loadingProjects = false
 }) {
+  const [projectSearchTerm, setProjectSearchTerm] = useState("");
+  const [showProjectDropdown, setShowProjectDropdown] = useState(false);
+  const [projectInputFocused, setProjectInputFocused] = useState(false);
+  const [projectHighlightedIndex, setProjectHighlightedIndex] = useState(-1);
+
   const [builderSearchTerm, setBuilderSearchTerm] = useState("");
   const [showBuilderDropdown, setShowBuilderDropdown] = useState(false);
   const [builderInputFocused, setBuilderInputFocused] = useState(false);
@@ -1784,6 +1876,14 @@ function LocationAreaStep({
   const [showCityDropdown, setShowCityDropdown] = useState(false);
   const [cityInputFocused, setCityInputFocused] = useState(false);
   const [cityHighlightedIndex, setCityHighlightedIndex] = useState(-1);
+
+  // Filter projects based on search term
+  const filteredProjects = projectList.filter((project) => {
+    if (!projectSearchTerm.trim()) return false; // Don't show all when empty
+    const projectName = (project.projectName || project.name || "").toLowerCase();
+    const searchLower = projectSearchTerm.toLowerCase();
+    return projectName.includes(searchLower);
+  }).slice(0, 10); // Limit to 10 results for better UX
 
   // Filter builders based on search term
   const filteredBuilders = builderList.filter((builder) => {
@@ -1801,6 +1901,15 @@ function LocationAreaStep({
     return cityName.includes(searchLower);
   }).slice(0, 10); // Limit to 10 results for better UX
 
+  // Handle project input change
+  const handleProjectInputChange = (value) => {
+    setProjectSearchTerm(value);
+    onChange("projectName", value);
+    onChange("projectId", null); // Clear ID when typing custom text
+    setShowProjectDropdown(true);
+    setProjectHighlightedIndex(-1);
+  };
+
   // Handle builder input change
   const handleBuilderInputChange = (value) => {
     setBuilderSearchTerm(value);
@@ -1817,6 +1926,27 @@ function LocationAreaStep({
     onChange("cityId", null); // Clear ID when typing
     setShowCityDropdown(true);
     setCityHighlightedIndex(-1);
+  };
+
+  // Handle keyboard navigation for project
+  const handleProjectKeyDown = (e) => {
+    if (!showProjectDropdown || filteredProjects.length === 0) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setProjectHighlightedIndex((prev) => 
+        prev < filteredProjects.length - 1 ? prev + 1 : prev
+      );
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setProjectHighlightedIndex((prev) => (prev > 0 ? prev - 1 : -1));
+    } else if (e.key === "Enter" && projectHighlightedIndex >= 0) {
+      e.preventDefault();
+      handleProjectSelect(filteredProjects[projectHighlightedIndex]);
+    } else if (e.key === "Escape") {
+      setShowProjectDropdown(false);
+      setProjectInputFocused(false);
+    }
   };
 
   // Handle keyboard navigation for builder
@@ -1861,6 +1991,43 @@ function LocationAreaStep({
     }
   };
 
+  // Handle project selection from dropdown
+  const handleProjectSelect = (project) => {
+    const projectName = project.projectName || project.name;
+    setProjectSearchTerm(projectName);
+    onChange("projectName", projectName);
+    if (project.id) {
+      onChange("projectId", project.id);
+    }
+    
+    // Auto-fill builder, city, and locality from selected project
+    if (project.builderName) {
+      setBuilderSearchTerm(project.builderName);
+      onChange("builderName", project.builderName);
+      if (project.builderId) {
+        onChange("builderId", project.builderId);
+      }
+    }
+    
+    if (project.cityName) {
+      setCitySearchTerm(project.cityName);
+      onChange("city", project.cityName);
+      if (project.cityId) {
+        onChange("cityId", project.cityId);
+      }
+    }
+    
+    if (project.projectLocality) {
+      onChange("locality", project.projectLocality);
+      if (project.localityId) {
+        onChange("localityId", project.localityId);
+      }
+    }
+    
+    setShowProjectDropdown(false);
+    setProjectInputFocused(false);
+  };
+
   // Handle builder selection from dropdown
   const handleBuilderSelect = (builder) => {
     const builderName = builder.builderName || builder.name;
@@ -1886,6 +2053,11 @@ function LocationAreaStep({
   };
 
   // Handle input focus
+  const handleProjectFocus = () => {
+    setProjectInputFocused(true);
+    setShowProjectDropdown(true);
+  };
+
   const handleBuilderFocus = () => {
     setBuilderInputFocused(true);
     setShowBuilderDropdown(true);
@@ -1897,6 +2069,13 @@ function LocationAreaStep({
   };
 
   // Handle input blur (with delay to allow click on dropdown)
+  const handleProjectBlur = () => {
+    setTimeout(() => {
+      setShowProjectDropdown(false);
+      setProjectInputFocused(false);
+    }, 200);
+  };
+
   const handleBuilderBlur = () => {
     setTimeout(() => {
       setShowBuilderDropdown(false);
@@ -1913,13 +2092,16 @@ function LocationAreaStep({
 
   // Initialize search term from data
   useEffect(() => {
+    if (data.projectName && !projectSearchTerm) {
+      setProjectSearchTerm(data.projectName);
+    }
     if (data.builderName && !builderSearchTerm) {
       setBuilderSearchTerm(data.builderName);
     }
     if (data.city && !citySearchTerm) {
       setCitySearchTerm(data.city);
     }
-  }, [data.builderName, data.city]);
+  }, [data.projectName, data.builderName, data.city]);
 
   return (
     <div className="step-content">
@@ -1938,14 +2120,83 @@ function LocationAreaStep({
               Project/Building Name
               <span className="required-indicator">*</span>
             </label>
-            <Form.Control
-              type="text"
-              value={data.projectName}
-              onChange={(e) => onChange("projectName", e.target.value)}
-              placeholder="Enter project or building name"
-              className="form-control-enhanced"
-              isInvalid={!!errors.projectName}
-            />
+            <div className="searchable-select-wrapper" style={{ position: "relative" }}>
+              <Form.Control
+                type="text"
+                value={projectSearchTerm}
+                onChange={(e) => handleProjectInputChange(e.target.value)}
+                onFocus={handleProjectFocus}
+                onBlur={handleProjectBlur}
+                onKeyDown={handleProjectKeyDown}
+                placeholder={loadingProjects ? "Loading projects..." : "Type to search or enter custom project name"}
+                className="form-control-enhanced"
+                disabled={loadingProjects}
+                autoComplete="off"
+                isInvalid={!!errors.projectName}
+              />
+              {loadingProjects && (
+                <div className="position-absolute" style={{ right: "15px", top: "50%", transform: "translateY(-50%)" }}>
+                  <div className="spinner-border spinner-border-sm text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              )}
+              
+              {/* Dropdown with filtered results */}
+              {showProjectDropdown && projectInputFocused && (
+                <div 
+                  className="project-dropdown"
+                  style={{
+                    position: "absolute",
+                    top: "100%",
+                    left: 0,
+                    right: 0,
+                    backgroundColor: "white",
+                    border: "1px solid #e9ecef",
+                    borderRadius: "0 0 10px 10px",
+                    maxHeight: "200px",
+                    overflowY: "auto",
+                    zIndex: 1000,
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    marginTop: "2px",
+                  }}
+                >
+                  {filteredProjects.length > 0 ? (
+                    filteredProjects.map((project, index) => {
+                      const projectName = project.projectName || project.name;
+                      const isHighlighted = index === projectHighlightedIndex;
+                      return (
+                        <div
+                          key={project.id || projectName}
+                          onClick={() => handleProjectSelect(project)}
+                          onMouseEnter={() => setProjectHighlightedIndex(index)}
+                          style={{
+                            padding: "0.75rem 1rem",
+                            cursor: "pointer",
+                            borderBottom: "1px solid #f1f3f4",
+                            transition: "background-color 0.2s",
+                            backgroundColor: isHighlighted ? "#f8f9fa" : "white",
+                          }}
+                        >
+                          <div style={{ fontWeight: 500, color: "#212529" }}>
+                            {projectName}
+                          </div>
+                          {project.projectLocality && (
+                            <div style={{ fontSize: "0.875rem", color: "#6c757d", marginTop: "0.25rem" }}>
+                              {project.projectLocality}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })
+                  ) : projectSearchTerm.trim() ? (
+                    <div style={{ padding: "1rem", textAlign: "center", color: "#6c757d" }}>
+                      No projects found. You can enter a custom name.
+                    </div>
+                  ) : null}
+                </div>
+              )}
+            </div>
             {errors.projectName && (
               <div className="error-message">
                 <CIcon icon={cilWarning} className="error-icon" />
@@ -2496,99 +2747,158 @@ function PricingDetailsStep({ data, onChange, errors }) {
   );
 }
 
-function FeaturesAmenitiesStep({ data, onChange, errors }) {
+function FeaturesAmenitiesStep({ 
+  data, 
+  onChange, 
+  errors,
+  amenities = [],
+  features = [],
+  nearbyBenefits = [],
+  loadingAmenities = false,
+  loadingFeatures = false,
+  loadingNearbyBenefits = false,
+  apiBaseUrl = ""
+}) {
   const isResidential = data.listingType === "Residential";
   const isCommercial = data.listingType === "Commercial";
+  
+  // Search states
+  const [amenitySearch, setAmenitySearch] = useState("");
+  const [featureSearch, setFeatureSearch] = useState("");
+  const [nearbyBenefitSearch, setNearbyBenefitSearch] = useState("");
+  
+  // Show more states for amenities, features, and nearby benefits
+  const [showAllAmenities, setShowAllAmenities] = useState(false);
+  const [showAllFeatures, setShowAllFeatures] = useState(false);
+  const [showAllNearbyBenefits, setShowAllNearbyBenefits] = useState(false);
+  
+  // Distance modal state
+  const [showDistanceModal, setShowDistanceModal] = useState(false);
+  const [selectedBenefit, setSelectedBenefit] = useState(null);
+  const [distanceInput, setDistanceInput] = useState("");
+  const [distanceError, setDistanceError] = useState("");
 
-  // Common amenities for both types
-  const commonAmenities = [
-    "Parking",
-    "Security",
-    "Lift",
-    "Power Backup",
-    "Water Supply",
-    "Shopping Center",
-    "Hospital",
-    "Metro Station",
-  ];
+  // Filter amenities, features, and nearby benefits based on search
+  const filteredAmenities = amenities.filter((amenity) => {
+    if (!amenitySearch.trim()) return true;
+    const title = (amenity.title || amenity.name || "").toLowerCase();
+    return title.includes(amenitySearch.toLowerCase());
+  });
 
-  // Residential-specific amenities
-  const residentialAmenities = [
-    "Swimming Pool",
-    "Gym",
-    "Garden",
-    "Club House",
-    "Children's Play Area",
-    "School",
-  ];
+  const filteredFeatures = features.filter((feature) => {
+    if (!featureSearch.trim()) return true;
+    const featureName = (feature.title || feature.featureName || feature.name || "").toLowerCase();
+    return featureName.includes(featureSearch.toLowerCase());
+  });
 
-  // Commercial-specific amenities
-  const commercialAmenities = [
-    "Conference Room",
-    "Reception Area",
-    "Cafeteria",
-    "Fire Safety",
-    "Air Conditioning",
-    "High-Speed Elevator",
-    "Banking Facility",
-    "ATM",
-  ];
+  const filteredNearbyBenefits = nearbyBenefits.filter((benefit) => {
+    if (!nearbyBenefitSearch.trim()) return true;
+    const benefitName = (benefit.benefitName || benefit.name || "").toLowerCase();
+    return benefitName.includes(nearbyBenefitSearch.toLowerCase());
+  });
 
-  // Combine amenities based on listing type
-  const amenities = isResidential
-    ? [...commonAmenities, ...residentialAmenities]
-    : isCommercial
-    ? [...commonAmenities, ...commercialAmenities]
-    : commonAmenities;
+  // Limit displayed items (3 lines = ~12 items assuming 4 per row)
+  const ITEMS_PER_LINE = 4;
+  const INITIAL_LINES = 3;
+  const INITIAL_ITEMS_TO_SHOW = ITEMS_PER_LINE * INITIAL_LINES;
 
-  // Residential-specific features
-  const residentialFeatures = [
-    "Fully Furnished",
-    "Semi Furnished",
-    "Unfurnished",
-    "Modular Kitchen",
-    "Wooden Flooring",
-    "Marble Flooring",
-    "Vitrified Tiles",
-    "Balcony",
-    "Study Room",
-    "Pooja Room",
-    "Store Room",
-    "Servant Room",
-  ];
+  const displayedAmenities = showAllAmenities 
+    ? filteredAmenities 
+    : filteredAmenities.slice(0, INITIAL_ITEMS_TO_SHOW);
+  
+  const displayedFeatures = showAllFeatures 
+    ? filteredFeatures 
+    : filteredFeatures.slice(0, INITIAL_ITEMS_TO_SHOW);
+  
+  const displayedNearbyBenefits = showAllNearbyBenefits 
+    ? filteredNearbyBenefits 
+    : filteredNearbyBenefits.slice(0, INITIAL_ITEMS_TO_SHOW);
 
-  // Commercial-specific features
-  const commercialFeatures = [
-    "Fully Furnished",
-    "Semi Furnished",
-    "Unfurnished",
-    "Air Conditioning",
-    "False Ceiling",
-    "Carpeted Flooring",
-    "Modular Workstations",
-    "Conference Room",
-    "Pantry",
-    "Reception Area",
-    "Storage Space",
-    "Parking Space",
-  ];
-
-  const features = isResidential ? residentialFeatures : isCommercial ? commercialFeatures : [];
-
-  const handleAmenityChange = (amenity) => {
-    const currentAmenities = data.amenities || [];
-    const updatedAmenities = currentAmenities.includes(amenity)
-      ? currentAmenities.filter((a) => a !== amenity)
-      : [...currentAmenities, amenity];
-    onChange("amenities", updatedAmenities);
+  // Get icon URL helper
+  const getIconUrl = (filename, type) => {
+    if (!filename) return null;
+    const baseUrl = apiBaseUrl.replace(/\/$/, "");
+    if (type === "amenity") {
+      return `${baseUrl}/fetch-image/amenity/${filename}`;
+    } else if (type === "feature") {
+      return `${baseUrl}/fetch-image/feature/${filename}`;
+    } else if (type === "nearby-benefit") {
+      return `${baseUrl}/fetch-image/nearby-benefit/${filename}`;
+    }
+    return null;
   };
 
-  const handleFeatureChange = (feature) => {
-    const currentFeatures = data.features || [];
-    const updatedFeatures = currentFeatures.includes(feature)
-      ? currentFeatures.filter((f) => f !== feature)
-      : [...currentFeatures, feature];
-    onChange("features", updatedFeatures);
+  // Handle amenity toggle
+  const handleAmenityToggle = (amenityId) => {
+    const currentIds = data.amenityIds || [];
+    const updatedIds = currentIds.includes(amenityId)
+      ? currentIds.filter((id) => id !== amenityId)
+      : [...currentIds, amenityId];
+    onChange("amenityIds", updatedIds);
+  };
+
+  // Handle feature toggle
+  const handleFeatureToggle = (featureId) => {
+    const currentIds = data.featureIds || [];
+    const updatedIds = currentIds.includes(featureId)
+      ? currentIds.filter((id) => id !== featureId)
+      : [...currentIds, featureId];
+    onChange("featureIds", updatedIds);
+  };
+
+  // Handle nearby benefit click - open distance modal
+  const handleNearbyBenefitClick = (benefit) => {
+    const currentBenefits = data.nearbyBenefits || [];
+    const existingIndex = currentBenefits.findIndex((b) => b.id === benefit.id);
+    
+    if (existingIndex >= 0) {
+      // Remove if already selected
+      const updated = currentBenefits.filter((b) => b.id !== benefit.id);
+      onChange("nearbyBenefits", updated);
+    } else {
+      // Open modal to get distance
+      setSelectedBenefit(benefit);
+      setDistanceInput("");
+      setDistanceError("");
+      setShowDistanceModal(true);
+    }
+  };
+
+  // Handle distance modal submit
+  const handleDistanceSubmit = () => {
+    const distance = parseFloat(distanceInput);
+    
+    if (!distanceInput.trim()) {
+      setDistanceError("Distance is required");
+      return;
+    }
+    
+    if (isNaN(distance) || distance <= 0) {
+      setDistanceError("Please enter a valid positive number");
+      return;
+    }
+
+    const currentBenefits = data.nearbyBenefits || [];
+    const updated = [...currentBenefits, { id: selectedBenefit.id, distance: distance }];
+    onChange("nearbyBenefits", updated);
+    setShowDistanceModal(false);
+    setSelectedBenefit(null);
+    setDistanceInput("");
+    setDistanceError("");
+  };
+
+  // Check if item is selected
+  const isAmenitySelected = (id) => (data.amenityIds || []).includes(id);
+  const isFeatureSelected = (id) => (data.featureIds || []).includes(id);
+  const isNearbyBenefitSelected = (id) => {
+    const benefits = data.nearbyBenefits || [];
+    return benefits.some((b) => b.id === id);
+  };
+  
+  const getNearbyBenefitDistance = (id) => {
+    const benefits = data.nearbyBenefits || [];
+    const benefit = benefits.find((b) => b.id === id);
+    return benefit ? benefit.distance : null;
   };
 
   return (
@@ -2743,61 +3053,406 @@ function FeaturesAmenitiesStep({ data, onChange, errors }) {
         )}
       </Row>
 
+      {/* Amenities Section */}
       <Row className="mt-4">
         <Col md={12}>
-          <h5>Amenities</h5>
-          <div className="amenities-grid">
-            {amenities.map((amenity) => (
-              <div key={amenity} className="amenity-item">
-                <Form.Check
-                  type="checkbox"
-                  id={`amenity-${amenity}`}
-                  label={amenity}
-                  checked={(data.amenities || []).includes(amenity)}
-                  onChange={() => handleAmenityChange(amenity)}
-                />
-              </div>
-            ))}
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <h5 className="mb-0">
+              <CIcon icon={cilStar} className="me-2" />
+              Amenities
+              <Badge bg="secondary" className="ms-2">
+                {data.amenityIds?.length || 0} selected
+              </Badge>
+            </h5>
           </div>
+          <Form.Control
+            type="text"
+            placeholder={loadingAmenities ? "Loading amenities..." : "Search amenities..."}
+            value={amenitySearch}
+            onChange={(e) => setAmenitySearch(e.target.value)}
+            className="mb-3"
+            disabled={loadingAmenities}
+          />
+          {loadingAmenities ? (
+            <div className="text-center py-4">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          ) : filteredAmenities.length === 0 ? (
+            <Alert variant="info">No amenities found. {amenitySearch && "Try a different search term."}</Alert>
+          ) : (
+            <>
+              <div className="amenities-features-grid">
+                {displayedAmenities.map((amenity) => {
+                const iconUrl = getIconUrl(amenity.iconImage || amenity.iconImageUrl || amenity.icon, "amenity");
+                const isSelected = isAmenitySelected(amenity.id);
+                const amenityName = amenity.title || amenity.name || "Amenity";
+                return (
+                  <div
+                    key={amenity.id}
+                    className={`amenity-feature-item ${isSelected ? "selected" : ""}`}
+                    onClick={() => handleAmenityToggle(amenity.id)}
+                    style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                  >
+                    <Form.Check
+                      type="checkbox"
+                      id={`amenity-${amenity.id}`}
+                      checked={isSelected}
+                      onChange={() => handleAmenityToggle(amenity.id)}
+                      onClick={(e) => e.stopPropagation()}
+                      style={{ margin: 0, flexShrink: 0 }}
+                    />
+                    {iconUrl && (
+                      <div className="item-icon" style={{ flexShrink: 0 }}>
+                        <NextImage
+                          src={iconUrl}
+                          alt={amenity.altTag || amenityName}
+                          width={40}
+                          height={40}
+                          style={{ objectFit: "contain" }}
+                        />
+                      </div>
+                    )}
+                    <label 
+                      htmlFor={`amenity-${amenity.id}`}
+                      style={{ margin: 0, cursor: "pointer", flex: 1 }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {amenityName}
+                    </label>
+                  </div>
+                );
+              })}
+              </div>
+              {filteredAmenities.length > INITIAL_ITEMS_TO_SHOW && (
+                <div className="text-center mt-3">
+                  <Button
+                    variant="outline-primary"
+                    size="sm"
+                    onClick={() => setShowAllAmenities(!showAllAmenities)}
+                  >
+                    {showAllAmenities ? (
+                      <>
+                        <CIcon icon={cilChevronTop} className="me-1" />
+                        Show Less
+                      </>
+                    ) : (
+                      <>
+                        Show More ({filteredAmenities.length - INITIAL_ITEMS_TO_SHOW} more)
+                        <CIcon icon={cilChevronBottom} className="ms-1" />
+                      </>
+                    )}
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
         </Col>
       </Row>
 
-      {features.length > 0 && (
-        <Row className="mt-4">
-          <Col md={12}>
-            <h5>{isResidential ? "Residential" : "Commercial"} Features</h5>
-            <div className="features-grid">
-              {features.map((feature) => (
-                <div key={feature} className="feature-item">
-                  <Form.Check
-                    type="checkbox"
-                    id={`feature-${feature}`}
-                    label={feature}
-                    checked={(data.features || []).includes(feature)}
-                    onChange={() => handleFeatureChange(feature)}
-                  />
-                </div>
-              ))}
+      {/* Features Section */}
+      <Row className="mt-4">
+        <Col md={12}>
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <h5 className="mb-0">
+              <CIcon icon={cilHome} className="me-2" />
+              {isResidential ? "Residential" : isCommercial ? "Commercial" : "Property"} Features
+              <Badge bg="secondary" className="ms-2">
+                {data.featureIds?.length || 0} selected
+              </Badge>
+            </h5>
+          </div>
+          <Form.Control
+            type="text"
+            placeholder={loadingFeatures ? "Loading features..." : "Search features..."}
+            value={featureSearch}
+            onChange={(e) => setFeatureSearch(e.target.value)}
+            className="mb-3"
+            disabled={loadingFeatures}
+          />
+          {loadingFeatures ? (
+            <div className="text-center py-4">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
             </div>
-          </Col>
-        </Row>
-      )}
+          ) : filteredFeatures.length === 0 ? (
+            <Alert variant="info">No features found. {featureSearch && "Try a different search term."}</Alert>
+          ) : (
+            <>
+              <div className="amenities-features-grid">
+                {displayedFeatures.map((feature) => {
+                const iconUrl = getIconUrl(feature.iconImageUrl, "feature");
+                const isSelected = isFeatureSelected(feature.id);
+                const featureName = feature.title || feature.featureName || feature.name || "Feature";
+                return (
+                  <div
+                    key={feature.id}
+                    className={`amenity-feature-item ${isSelected ? "selected" : ""}`}
+                    onClick={() => handleFeatureToggle(feature.id)}
+                    style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                  >
+                    <Form.Check
+                      type="checkbox"
+                      id={`feature-${feature.id}`}
+                      checked={isSelected}
+                      onChange={() => handleFeatureToggle(feature.id)}
+                      onClick={(e) => e.stopPropagation()}
+                      style={{ margin: 0, flexShrink: 0 }}
+                    />
+                    {iconUrl && (
+                      <div className="item-icon" style={{ flexShrink: 0 }}>
+                        <NextImage
+                          src={iconUrl}
+                          alt={feature.altTag || featureName}
+                          width={40}
+                          height={40}
+                          style={{ objectFit: "contain" }}
+                        />
+                      </div>
+                    )}
+                    <label 
+                      htmlFor={`feature-${feature.id}`}
+                      style={{ margin: 0, cursor: "pointer", flex: 1 }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {featureName}
+                    </label>
+                  </div>
+                );
+              })}
+              </div>
+              {filteredFeatures.length > INITIAL_ITEMS_TO_SHOW && (
+                <div className="text-center mt-3">
+                  <Button
+                    variant="outline-primary"
+                    size="sm"
+                    onClick={() => setShowAllFeatures(!showAllFeatures)}
+                  >
+                    {showAllFeatures ? (
+                      <>
+                        <CIcon icon={cilChevronTop} className="me-1" />
+                        Show Less
+                      </>
+                    ) : (
+                      <>
+                        Show More ({filteredFeatures.length - INITIAL_ITEMS_TO_SHOW} more)
+                        <CIcon icon={cilChevronBottom} className="ms-1" />
+                      </>
+                    )}
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
+        </Col>
+      </Row>
+
+      {/* Nearby Benefits Section */}
+      <Row className="mt-4">
+        <Col md={12}>
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <h5 className="mb-0">
+              <CIcon icon={cilMap} className="me-2" />
+              Nearby Benefits
+              <Badge bg="secondary" className="ms-2">
+                {data.nearbyBenefits?.length || 0} selected
+              </Badge>
+            </h5>
+          </div>
+          <Form.Control
+            type="text"
+            placeholder={loadingNearbyBenefits ? "Loading nearby benefits..." : "Search nearby benefits..."}
+            value={nearbyBenefitSearch}
+            onChange={(e) => setNearbyBenefitSearch(e.target.value)}
+            className="mb-3"
+            disabled={loadingNearbyBenefits}
+          />
+          {loadingNearbyBenefits ? (
+            <div className="text-center py-4">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          ) : filteredNearbyBenefits.length === 0 ? (
+            <Alert variant="info">No nearby benefits found. {nearbyBenefitSearch && "Try a different search term."}</Alert>
+          ) : (
+            <>
+              <div className="amenities-features-grid">
+                {displayedNearbyBenefits.map((benefit) => {
+                const iconUrl = getIconUrl(benefit.benefitIcon || benefit.iconImageUrl, "nearby-benefit");
+                const isSelected = isNearbyBenefitSelected(benefit.id);
+                const distance = getNearbyBenefitDistance(benefit.id);
+                return (
+                  <div
+                    key={benefit.id}
+                    className={`amenity-feature-item ${isSelected ? "selected" : ""}`}
+                    onClick={() => handleNearbyBenefitClick(benefit)}
+                    style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                  >
+                    <Form.Check
+                      type="checkbox"
+                      id={`nearby-${benefit.id}`}
+                      checked={isSelected}
+                      onChange={() => handleNearbyBenefitClick(benefit)}
+                      onClick={(e) => e.stopPropagation()}
+                      style={{ margin: 0, flexShrink: 0 }}
+                    />
+                    {iconUrl && (
+                      <div className="item-icon" style={{ flexShrink: 0 }}>
+                        <NextImage
+                          src={iconUrl}
+                          alt={benefit.altTag || benefit.benefitName || "Nearby Benefit"}
+                          width={40}
+                          height={40}
+                          style={{ objectFit: "contain" }}
+                        />
+                      </div>
+                    )}
+                    <div className="flex-grow-1" style={{ flex: 1 }}>
+                      <label 
+                        htmlFor={`nearby-${benefit.id}`}
+                        style={{ margin: 0, cursor: "pointer" }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {benefit.benefitName || benefit.name}
+                      </label>
+                      {isSelected && distance && (
+                        <small className="text-muted d-block mt-1">
+                          <CIcon icon={cilLocationPin} className="me-1" />
+                          {distance} KM
+                        </small>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+              </div>
+              {filteredNearbyBenefits.length > INITIAL_ITEMS_TO_SHOW && (
+                <div className="text-center mt-3">
+                  <Button
+                    variant="outline-primary"
+                    size="sm"
+                    onClick={() => setShowAllNearbyBenefits(!showAllNearbyBenefits)}
+                  >
+                    {showAllNearbyBenefits ? (
+                      <>
+                        <CIcon icon={cilChevronTop} className="me-1" />
+                        Show Less
+                      </>
+                    ) : (
+                      <>
+                        Show More ({filteredNearbyBenefits.length - INITIAL_ITEMS_TO_SHOW} more)
+                        <CIcon icon={cilChevronBottom} className="ms-1" />
+                      </>
+                    )}
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
+        </Col>
+      </Row>
+
+      {/* Distance Modal */}
+      <Modal show={showDistanceModal} onHide={() => setShowDistanceModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Enter Distance</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group>
+            <Form.Label>
+              Distance to {selectedBenefit?.benefitName || selectedBenefit?.name} (in KMs) *
+            </Form.Label>
+            <Form.Control
+              type="number"
+              step="0.1"
+              min="0.1"
+              value={distanceInput}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === "" || (parseFloat(value) > 0)) {
+                  setDistanceInput(value);
+                  setDistanceError("");
+                }
+              }}
+              placeholder="Enter distance (e.g., 2.5)"
+              isInvalid={!!distanceError}
+            />
+            {distanceError && (
+              <Form.Control.Feedback type="invalid">{distanceError}</Form.Control.Feedback>
+            )}
+            <Form.Text className="text-muted">
+              Please enter the distance in kilometers (positive numbers only)
+            </Form.Text>
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDistanceModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleDistanceSubmit}>
+            Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <style jsx>{`
-        .amenities-grid,
-        .features-grid {
+        .amenities-features-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 0.75rem;
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          gap: 1rem;
           margin-top: 1rem;
         }
 
-        .amenity-item,
-        .feature-item {
-          padding: 0.5rem;
-          border: 1px solid #e9ecef;
-          border-radius: 6px;
-          background: #f8f9fa;
+        .amenity-feature-item {
+          padding: 1rem;
+          border: 2px solid #e9ecef;
+          border-radius: 8px;
+          background: #ffffff;
+          cursor: pointer;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+
+        .amenity-feature-item:hover {
+          border-color: #667eea;
+          box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+          transform: translateY(-2px);
+        }
+
+        .amenity-feature-item.selected {
+          border-color: #667eea;
+          background: #f0f4ff;
+        }
+
+        .item-icon {
+          flex-shrink: 0;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .amenity-feature-item .form-check {
+          margin: 0;
+          flex-grow: 1;
+        }
+
+        .amenity-feature-item .form-check-label {
+          cursor: pointer;
+          font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+          .amenities-features-grid {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.75rem;
+          }
         }
       `}</style>
     </div>
@@ -2811,6 +3466,12 @@ function MediaContactStep({
   onImageRemove,
   errors,
 }) {
+  const fileInputRef = useRef(null);
+
+  const handleSelectImages = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
     <div className="step-content">
       <h4 className="step-title mb-4">Media & Contact Information</h4>
@@ -2818,82 +3479,165 @@ function MediaContactStep({
       <Row className="g-3">
         <Col md={12}>
           <Form.Group>
-            <Form.Label className="d-flex align-items-center gap-2 mb-2">
+            <Form.Label className="d-flex align-items-center gap-2 mb-3">
+              <CIcon icon={cilCamera} className="me-2" />
               Property Images
               <span className="required-indicator">*</span>
               {data.imagePreviews && data.imagePreviews.length > 0 && (
-                <Badge bg="primary" className="ms-2">
-                  {data.imagePreviews.length} {data.imagePreviews.length === 1 ? 'file' : 'files'}
+                <Badge bg="secondary" className="ms-2">
+                  {data.imagePreviews.length} {data.imagePreviews.length === 1 ? 'image' : 'images'} selected
                 </Badge>
               )}
             </Form.Label>
+            
+            {/* Hidden file input */}
             <Form.Control
+              ref={fileInputRef}
               type="file"
               multiple
               accept="image/*"
               onChange={onImageChange}
               isInvalid={!!errors.images}
-              className="form-control-enhanced"
+              className="d-none"
             />
+            
+            {/* Select Images Button */}
+            <Button
+              variant="outline-primary"
+              onClick={handleSelectImages}
+              className="mb-3"
+              style={{ width: "100%" }}
+            >
+              <CIcon icon={cilCamera} className="me-2" />
+              Select Multiple Images
+            </Button>
+            
             {errors.images && (
-              <Form.Control.Feedback type="invalid">
+              <div className="text-danger small mb-2">
+                <CIcon icon={cilWarning} className="me-1" />
                 {errors.images}
-              </Form.Control.Feedback>
+              </div>
             )}
-            <Form.Text className="text-muted">
+            
+            <Form.Text className="text-muted d-block mb-3">
               Upload at least one image of your property (JPG, PNG, max 5MB each). Images must be rectangular (not square).
             </Form.Text>
 
-            {/* Image Previews */}
+            {/* Image Previews Grid */}
             {data.imagePreviews && data.imagePreviews.length > 0 && (
-              <div className="image-gallery-container">
-                <div className="gallery-header">
-                  <div className="gallery-title">
-                    <CIcon icon={cilCamera} className="me-2" />
-                    <span>Selected Images</span>
-                    <Badge bg="primary" className="ms-2">
-                      {data.imagePreviews.length}
-                    </Badge>
-                  </div>
-                  <small className="text-muted">
-                    Click the remove button to delete images
-                  </small>
-                </div>
-
-                <div className="image-gallery">
-                  {data.imagePreviews.map((imageData, index) => (
-                    <div key={imageData.id} className="gallery-item">
-                      <div className="image-container">
-                        <NextImage
-                          src={imageData.preview}
-                          alt={`Property image ${index + 1}`}
-                          className="gallery-image"
-                          height={200}
-                          width={300}
-                        />
-                        <div className="image-overlay">
-                          <button
-                            type="button"
-                            className="remove-btn"
-                            onClick={() => onImageRemove(imageData.id)}
-                            title="Remove this image"
-                          >
-                            <CIcon icon={cilX} />
-                          </button>
-                        </div>
-                        <div className="image-number">{index + 1}</div>
-                      </div>
-                      <div className="image-details">
-                        <div className="file-name" title={imageData.file.name}>
-                          {imageData.file.name}
-                        </div>
-                        <div className="file-size">
-                          {(imageData.file.size / 1024 / 1024).toFixed(1)} MB
-                        </div>
+              <div className="property-images-grid" style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                gap: "1rem",
+                marginTop: "1rem"
+              }}>
+                {data.imagePreviews.map((imageData, index) => (
+                  <div 
+                    key={imageData.id} 
+                    style={{
+                      position: "relative",
+                      border: "2px solid #e9ecef",
+                      borderRadius: "8px",
+                      overflow: "hidden",
+                      background: "#ffffff",
+                      transition: "all 0.2s"
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = "#667eea";
+                      e.currentTarget.style.boxShadow = "0 2px 8px rgba(102, 126, 234, 0.15)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = "#e9ecef";
+                      e.currentTarget.style.boxShadow = "none";
+                    }}
+                  >
+                    <div style={{
+                      position: "relative",
+                      width: "200px",
+                      height: "100px",
+                      margin: "0 auto",
+                      overflow: "hidden"
+                    }}>
+                      <NextImage
+                        src={imageData.preview}
+                        alt={`Property image ${index + 1}`}
+                        fill
+                        style={{
+                          objectFit: "cover"
+                        }}
+                      />
+                      {/* Remove Icon */}
+                      <button
+                        type="button"
+                        onClick={() => onImageRemove(imageData.id)}
+                        title="Remove this image"
+                        style={{
+                          position: "absolute",
+                          top: "4px",
+                          right: "4px",
+                          background: "rgba(220, 53, 69, 0.9)",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "50%",
+                          width: "28px",
+                          height: "28px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          cursor: "pointer",
+                          transition: "all 0.2s",
+                          zIndex: 10
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = "rgba(220, 53, 69, 1)";
+                          e.currentTarget.style.transform = "scale(1.1)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = "rgba(220, 53, 69, 0.9)";
+                          e.currentTarget.style.transform = "scale(1)";
+                        }}
+                      >
+                        <CIcon icon={cilX} style={{ fontSize: "14px" }} />
+                      </button>
+                      {/* Image Number Badge */}
+                      <div style={{
+                        position: "absolute",
+                        top: "4px",
+                        left: "4px",
+                        background: "rgba(0, 0, 0, 0.6)",
+                        color: "white",
+                        borderRadius: "4px",
+                        padding: "2px 6px",
+                        fontSize: "12px",
+                        fontWeight: "bold"
+                      }}>
+                        {index + 1}
                       </div>
                     </div>
-                  ))}
-                </div>
+                    {/* Image Details */}
+                    <div style={{
+                      padding: "8px",
+                      borderTop: "1px solid #e9ecef"
+                    }}>
+                      <div style={{
+                        fontSize: "12px",
+                        fontWeight: "500",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        marginBottom: "4px"
+                      }} title={imageData.file.name}>
+                        {imageData.file.name}
+                      </div>
+                      <div style={{
+                        fontSize: "11px",
+                        color: "#6c757d"
+                      }}>
+                        {(imageData.file.size / 1024 / 1024).toFixed(1)} MB
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </Form.Group>

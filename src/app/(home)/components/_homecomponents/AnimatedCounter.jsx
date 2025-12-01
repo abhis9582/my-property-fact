@@ -77,13 +77,14 @@ export default function AnimatedCounter({ targetValue, suffix = "+" }) {
       }
     );
 
-    if (counterRef.current) {
-      observer.observe(counterRef.current);
+    const currentElement = counterRef.current;
+    if (currentElement) {
+      observer.observe(currentElement);
     }
 
     return () => {
-      if (counterRef.current) {
-        observer.unobserve(counterRef.current);
+      if (currentElement) {
+        observer.unobserve(currentElement);
       }
     };
   }, [targetValue, hasAnimated, isMounted, target]);
