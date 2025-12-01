@@ -19,36 +19,36 @@ import DashboardHeader from "../common-model/dashboardHeader";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-export default function ManageLocationBenefits({ allBenefits }) {
+export default function ManageFeatures({ list }) {
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState("");
   const [buttonName, setButtonName] = useState("");
   const [confirmBox, setConfirmBox] = useState(false);
-  const [benefitId, setBenefitId] = useState(0);
+  const [featureId, setFeatureId] = useState(0);
   const [images, setImages] = useState([]);
   const [showLoading, setShowLoading] = useState(false);
   const router = useRouter();
   const fileInputRef = useRef(null);
 
-  // Saving the benefit data
+  // Saving the feature data
   const handleSubmit = async (event) => {
     event.preventDefault();
     
     if (images.length === 0) {
-      toast.error("Please select at least one nearby benefit icon image.");
+      toast.error("Please select at least one feature icon image.");
       return;
     }
 
     const formDataToSend = new FormData();
     images.forEach((img) => {
-      formDataToSend.append("nearbyBenefitsFiles", img.file);
+      formDataToSend.append("featuresFiles", img.file);
     });
 
     try {
       setButtonName("");
       setShowLoading(true);
       const response = await axios.post(
-        process.env.NEXT_PUBLIC_API_URL + "nearby-benefit/post-multiple-nearby-benefits",
+        process.env.NEXT_PUBLIC_API_URL + "feature/post-multiple-features",
         formDataToSend,
         {
           headers: {
@@ -65,11 +65,11 @@ export default function ManageLocationBenefits({ allBenefits }) {
         toast.error(response.data.message);
       }
     } catch (error) {
-      toast.error(error?.response?.data?.message || error?.message || "Error saving nearby benefits");
+      toast.error(error?.response?.data?.message || error?.message || "Error saving features");
       console.log("Error submitting data", error);
     } finally {
       setShowLoading(false);
-      setButtonName("Add Nearby Benefits");
+      setButtonName("Add Features");
     }
   };
 
@@ -99,18 +99,18 @@ export default function ManageLocationBenefits({ allBenefits }) {
   // Handle confirmation dialog
   const openConfirmationBox = (id) => {
     setConfirmBox(true);
-    setBenefitId(id);
+    setFeatureId(id);
   };
 
   // Handling opening of add popup
   const openAddModel = () => {
-    setTitle("Add Nearby Benefit Icons");
-    setButtonName("Add Nearby Benefits");
+    setTitle("Add Feature Icons");
+    setButtonName("Add Features");
     setShowModal(true);
     setImages([]);
   };
 
-  //Defining table columns
+  // Defining table columns
   const columns = [
     {
       field: "index",
@@ -118,35 +118,48 @@ export default function ManageLocationBenefits({ allBenefits }) {
       width: 100,
       cellClassName: "centered-cell",
     },
+    { field: "title", headerName: "Title", flex: 1 },
     {
-      field: "benefitName",
-      headerName: "Benefit Name",
-      flex: 1,
-      cellClassName: "text-capitalize",
-    },
-    { 
-      field: "benefitIcon", 
-      headerName: "Benefit Icon", 
+      field: "image",
+      headerName: "Feature Icon",
       flex: 1,
       renderCell: (params) => (
-        params.row.benefitIcon ? (
-          <Image 
-            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}nearby-benefit/${params.row.benefitIcon}`}
+        params.row.iconImageUrl ? (
+          <Image
+            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}feature/${params.row.iconImageUrl}`}
+            alt={params.row.altTag || params.row.title || ""}
             width={50}
             height={50}
-            alt={params.row.altTag || params.row.benefitName || ""}
           />
         ) : (
           <span>N/A</span>
         )
-      )
+      ),
     },
     {
       field: "altTag",
-      headerName: "Alt Tag",
+      headerName: "Alt tag",
       flex: 1,
       renderCell: (params) => (
         <span>{params.row.altTag || "N/A"}</span>
+      ),
+    },
+    {
+      field: "description",
+      headerName: "Description",
+      flex: 1,
+      renderCell: (params) => (
+        <span>{params.row.description || "N/A"}</span>
+      ),
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      width: 120,
+      renderCell: (params) => (
+        <span className={params.row.status ? "text-success" : "text-danger"}>
+          {params.row.status ? "Active" : "Inactive"}
+        </span>
       ),
     },
     {
@@ -165,22 +178,18 @@ export default function ManageLocationBenefits({ allBenefits }) {
       ),
     },
   ];
-  
+
   return (
     <>
-      {/* header section  */}
       <DashboardHeader
-        buttonName={"+ Add new nearby benefit"}
+        buttonName={"+ Add new feature"}
         functionName={openAddModel}
-        heading={"Manage Nearby Benefits"}
+        heading={"Manage Features"}
       />
-
-      {/* table section  */}
       <div className="mt-5">
-        <DataTable columns={columns} list={allBenefits} />
+        <DataTable columns={columns} list={list} />
       </div>
-      
-      {/* Modal for adding nearby benefits */}
+      {/* Modal for adding features */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>{title}</Modal.Title>
@@ -237,11 +246,11 @@ export default function ManageLocationBenefits({ allBenefits }) {
                   marginBottom: "20px",
                 }}
               >
-                + Add Multiple Nearby Benefit Icons
+                + Add Multiple Feature Icons
               </div>
               <div className="mb-3">
                 <small className="text-muted">
-                  Upload multiple nearby benefit icons. Benefit name and alt tag will be automatically generated from the image filename.
+                  Upload multiple feature icons. Title and alt tag will be automatically generated from the image filename.
                 </small>
               </div>
               <Button variant="success" type="submit" disabled={showLoading}>
@@ -251,11 +260,10 @@ export default function ManageLocationBenefits({ allBenefits }) {
           </Container>
         </Modal.Body>
       </Modal>
-      
       <CommonModal
         confirmBox={confirmBox}
         setConfirmBox={setConfirmBox}
-        api={`${process.env.NEXT_PUBLIC_API_URL}nearby-benefit/delete/${benefitId}`}
+        api={`${process.env.NEXT_PUBLIC_API_URL}feature/delete/${featureId}`}
       />
     </>
   );

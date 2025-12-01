@@ -91,3 +91,138 @@
   }
 }
 
+/* Admin Property Detail Page Styles */
+.admin-property-detail-page {
+  padding: 1rem;
+}
+
+.admin-property-detail-page .property-images-swiper {
+  height: 500px;
+}
+
+.admin-property-detail-page .property-images-swiper .swiper-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-property-detail-page .amenities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.admin-property-detail-page .amenity-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 1rem;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 2px solid #e9ecef;
+  border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  cursor: pointer;
+}
+
+.admin-property-detail-page .amenity-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(104, 172, 120, 0.2);
+  border-color: #68ac78;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f9f4 100%);
+}
+
+.admin-property-detail-page .amenity-image-wrapper {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f0f9f4 0%, #e8f5e9 100%);
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.admin-property-detail-page .amenity-item:hover .amenity-image-wrapper {
+  border-color: #68ac78;
+  box-shadow: 0 4px 12px rgba(104, 172, 120, 0.2);
+}
+
+.admin-property-detail-page .amenity-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.admin-property-detail-page .amenity-item:hover .amenity-image {
+  transform: scale(1.1);
+}
+
+.admin-property-detail-page .amenity-icon-wrapper {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #68ac78 0%, #0d5834 100%);
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.admin-property-detail-page .amenity-icon {
+  font-size: 1.5rem;
+}
+
+.admin-property-detail-page .amenity-item:hover .amenity-icon-wrapper {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(104, 172, 120, 0.3);
+}
+
+.admin-property-detail-page .amenity-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #212529;
+  line-height: 1.4;
+  transition: color 0.3s ease;
+}
+
+.admin-property-detail-page .amenity-item:hover .amenity-title {
+  color: #0d5834;
+}
+
+.admin-property-detail-page .card-header {
+  background: linear-gradient(135deg, #0d5834 0%, #68ac78 100%);
+  color: white;
+  border-bottom: none;
+}
+
+.admin-property-detail-page .card-header h5 {
+  margin: 0;
+  font-weight: 600;
+}
+
+.admin-property-detail-page table td {
+  vertical-align: middle;
+}
+
+.admin-property-detail-page table td:first-child {
+  background-color: #f8f9fa;
+}
+
+@media (max-width: 768px) {
+  .admin-property-detail-page .amenities-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+  }
+  
+  .admin-property-detail-page .property-images-swiper {
+    height: 350px;
+  }
+}
+

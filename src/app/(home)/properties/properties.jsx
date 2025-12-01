@@ -27,18 +27,34 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005";
 export default function Properties() {
   const [activeTab, setActiveTab] = useState("Properties");
   const [sortBy, setSortBy] = useState("Relevance");
-  const [hideSeen, setHideSeen] = useState(false);
-  const [verifiedOnly, setVerifiedOnly] = useState(false);
   const [budgetMin, setBudgetMin] = useState("No min");
   const [budgetMax, setBudgetMax] = useState("No max");
   const [selectedPropertyTypes, setSelectedPropertyTypes] = useState([]);
   const [selectedBedrooms, setSelectedBedrooms] = useState([]);
   const [selectedConstructionStatuses, setSelectedConstructionStatuses] = useState([]);
+  const [selectedListingTypes, setSelectedListingTypes] = useState([]);
+  const [selectedSubTypes, setSelectedSubTypes] = useState([]);
+  const [selectedTransactions, setSelectedTransactions] = useState([]);
+  const [selectedCities, setSelectedCities] = useState([]);
+  const [selectedLocalities, setSelectedLocalities] = useState([]);
+  const [selectedBuilders, setSelectedBuilders] = useState([]);
+  const [selectedBathrooms, setSelectedBathrooms] = useState([]);
+  const [selectedFurnished, setSelectedFurnished] = useState([]);
+  const [selectedParking, setSelectedParking] = useState([]);
+  const [selectedFacing, setSelectedFacing] = useState([]);
+  const [areaMin, setAreaMin] = useState("");
+  const [areaMax, setAreaMax] = useState("");
   const [expandedSections, setExpandedSections] = useState({
     budget: true,
     propertyType: true,
     bedrooms: true,
     constructionStatus: true,
+    listingType: false,
+    subType: false,
+    transaction: false,
+    location: false,
+    area: false,
+    additional: false,
   });
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -281,20 +297,157 @@ export default function Properties() {
     setBudgetMin("No min");
     setBudgetMax("No max");
   };
+  
+  const toggleListingType = (type) => {
+    setSelectedListingTypes((prev) =>
+      prev.includes(type)
+        ? prev.filter((t) => t !== type)
+        : [...prev, type]
+    );
+  };
+  
+  const toggleSubType = (type) => {
+    setSelectedSubTypes((prev) =>
+      prev.includes(type)
+        ? prev.filter((t) => t !== type)
+        : [...prev, type]
+    );
+  };
+  
+  const toggleTransaction = (trans) => {
+    setSelectedTransactions((prev) =>
+      prev.includes(trans)
+        ? prev.filter((t) => t !== trans)
+        : [...prev, trans]
+    );
+  };
+  
+  const toggleCity = (city) => {
+    setSelectedCities((prev) =>
+      prev.includes(city)
+        ? prev.filter((c) => c !== city)
+        : [...prev, city]
+    );
+  };
+  
+  const toggleLocality = (locality) => {
+    setSelectedLocalities((prev) =>
+      prev.includes(locality)
+        ? prev.filter((l) => l !== locality)
+        : [...prev, locality]
+    );
+  };
+  
+  const toggleBuilder = (builder) => {
+    setSelectedBuilders((prev) =>
+      prev.includes(builder)
+        ? prev.filter((b) => b !== builder)
+        : [...prev, builder]
+    );
+  };
+  
+  const toggleBathroom = (bath) => {
+    setSelectedBathrooms((prev) =>
+      prev.includes(bath)
+        ? prev.filter((b) => b !== bath)
+        : [...prev, bath]
+    );
+  };
+  
+  const toggleFurnished = (furn) => {
+    setSelectedFurnished((prev) =>
+      prev.includes(furn)
+        ? prev.filter((f) => f !== furn)
+        : [...prev, furn]
+    );
+  };
+  
+  const toggleParking = (park) => {
+    setSelectedParking((prev) =>
+      prev.includes(park)
+        ? prev.filter((p) => p !== park)
+        : [...prev, park]
+    );
+  };
+  
+  const toggleFacing = (face) => {
+    setSelectedFacing((prev) =>
+      prev.includes(face)
+        ? prev.filter((f) => f !== face)
+        : [...prev, face]
+    );
+  };
+
+  // Get unique values for filter options
+  const uniqueValues = useMemo(() => {
+    const values = {
+      listingTypes: [],
+      subTypes: [],
+      transactions: [],
+      cities: [],
+      localities: [],
+      builders: [],
+      bathrooms: [],
+      furnished: [],
+      parking: [],
+      facing: [],
+    };
+    
+    enhancedProperties.forEach(property => {
+      if (property.raw) {
+        const prop = property.raw;
+        
+        if (prop.listingType && !values.listingTypes.includes(prop.listingType)) {
+          values.listingTypes.push(prop.listingType);
+        }
+        
+        if (prop.subType && !values.subTypes.includes(prop.subType)) {
+          values.subTypes.push(prop.subType);
+        }
+        
+        if (prop.transaction && !values.transactions.includes(prop.transaction)) {
+          values.transactions.push(prop.transaction);
+        }
+        
+        if (prop.city && !values.cities.includes(prop.city)) {
+          values.cities.push(prop.city);
+        }
+        
+        if (prop.locality && !values.localities.includes(prop.locality)) {
+          values.localities.push(prop.locality);
+        }
+        
+        if (prop.builderName && !values.builders.includes(prop.builderName)) {
+          values.builders.push(prop.builderName);
+        }
+        
+        if (prop.bathrooms && !values.bathrooms.includes(prop.bathrooms)) {
+          values.bathrooms.push(prop.bathrooms);
+        }
+        
+        if (prop.furnished && !values.furnished.includes(prop.furnished)) {
+          values.furnished.push(prop.furnished);
+        }
+        
+        if (prop.parking && !values.parking.includes(prop.parking)) {
+          values.parking.push(prop.parking);
+        }
+        
+        if (prop.facing && !values.facing.includes(prop.facing)) {
+          values.facing.push(prop.facing);
+        }
+      }
+    });
+    
+    // Sort numeric arrays
+    values.bathrooms.sort((a, b) => a - b);
+    
+    return values;
+  }, [enhancedProperties]);
 
   // Filter and sort logic
   const filteredAndSortedProperties = useMemo(() => {
     let filtered = enhancedProperties.filter((property) => {
-      // Hide seen filter
-      if (hideSeen && property.seen) {
-        return false;
-      }
-
-      // Verified filter
-      if (verifiedOnly && !property.verified) {
-        return false;
-      }
-
       // Budget filter
       const minBudget = parseBudget(budgetMin);
       const maxBudget = parseBudget(budgetMax);
@@ -322,6 +475,70 @@ export default function Properties() {
           return false;
         }
       }
+      
+      // Listing type filter
+      if (selectedListingTypes.length > 0 && property.raw?.listingType && !selectedListingTypes.includes(property.raw.listingType)) {
+        return false;
+      }
+      
+      // Sub type filter
+      if (selectedSubTypes.length > 0 && property.raw?.subType && !selectedSubTypes.includes(property.raw.subType)) {
+        return false;
+      }
+      
+      // Transaction filter
+      if (selectedTransactions.length > 0 && property.raw?.transaction && !selectedTransactions.includes(property.raw.transaction)) {
+        return false;
+      }
+      
+      // City filter
+      if (selectedCities.length > 0 && property.raw?.city && !selectedCities.includes(property.raw.city)) {
+        return false;
+      }
+      
+      // Locality filter
+      if (selectedLocalities.length > 0 && property.raw?.locality && !selectedLocalities.includes(property.raw.locality)) {
+        return false;
+      }
+      
+      // Builder filter
+      if (selectedBuilders.length > 0 && property.raw?.builderName && !selectedBuilders.includes(property.raw.builderName)) {
+        return false;
+      }
+      
+      // Bathrooms filter
+      if (selectedBathrooms.length > 0 && property.bathrooms && !selectedBathrooms.includes(property.bathrooms)) {
+        return false;
+      }
+      
+      // Furnished filter
+      if (selectedFurnished.length > 0 && property.raw?.furnished && !selectedFurnished.includes(property.raw.furnished)) {
+        return false;
+      }
+      
+      // Parking filter
+      if (selectedParking.length > 0 && property.raw?.parking && !selectedParking.includes(property.raw.parking)) {
+        return false;
+      }
+      
+      // Facing filter
+      if (selectedFacing.length > 0 && property.facing && !selectedFacing.includes(property.facing)) {
+        return false;
+      }
+      
+      // Area range filter
+      if (areaMin && property.area) {
+        const numericArea = typeof property.area === 'number' ? property.area : parseFloat(property.area);
+        if (!isNaN(numericArea) && numericArea < parseFloat(areaMin)) {
+          return false;
+        }
+      }
+      if (areaMax && property.area) {
+        const numericArea = typeof property.area === 'number' ? property.area : parseFloat(property.area);
+        if (!isNaN(numericArea) && numericArea > parseFloat(areaMax)) {
+          return false;
+        }
+      }
 
       return true;
     });
@@ -343,13 +560,23 @@ export default function Properties() {
 
     return sorted;
   }, [
-    hideSeen,
-    verifiedOnly,
     budgetMin,
     budgetMax,
     selectedPropertyTypes,
     selectedBedrooms,
     selectedConstructionStatuses,
+    selectedListingTypes,
+    selectedSubTypes,
+    selectedTransactions,
+    selectedCities,
+    selectedLocalities,
+    selectedBuilders,
+    selectedBathrooms,
+    selectedFurnished,
+    selectedParking,
+    selectedFacing,
+    areaMin,
+    areaMax,
     sortBy,
     enhancedProperties,
   ]);
@@ -360,47 +587,97 @@ export default function Properties() {
     selectedBedrooms.forEach((bedroom) => filters.push(bedroom));
     selectedPropertyTypes.forEach((type) => filters.push(type));
     selectedConstructionStatuses.forEach((status) => filters.push(status));
+    selectedListingTypes.forEach((type) => filters.push(type));
+    selectedSubTypes.forEach((type) => filters.push(type));
+    selectedTransactions.forEach((trans) => filters.push(trans));
+    selectedCities.forEach((city) => filters.push(city));
+    selectedLocalities.forEach((locality) => filters.push(locality));
+    selectedBuilders.forEach((builder) => filters.push(builder));
+    selectedBathrooms.forEach((bath) => filters.push(`${bath} Bath`));
+    selectedFurnished.forEach((furn) => filters.push(furn));
+    selectedParking.forEach((park) => filters.push(park));
+    selectedFacing.forEach((face) => filters.push(face));
     if (budgetMin !== "No min") filters.push(`Min: ${budgetMin}`);
     if (budgetMax !== "No max") filters.push(`Max: ${budgetMax}`);
-    if (hideSeen) filters.push("Hide Seen");
-    if (verifiedOnly) filters.push("Verified Only");
+    if (areaMin) filters.push(`Min Area: ${areaMin} sq ft`);
+    if (areaMax) filters.push(`Max Area: ${areaMax} sq ft`);
     return filters;
   }, [
-    hideSeen,
-    verifiedOnly,
     budgetMin,
     budgetMax,
+    areaMin,
+    areaMax,
     selectedPropertyTypes,
     selectedBedrooms,
     selectedConstructionStatuses,
+    selectedListingTypes,
+    selectedSubTypes,
+    selectedTransactions,
+    selectedCities,
+    selectedLocalities,
+    selectedBuilders,
+    selectedBathrooms,
+    selectedFurnished,
+    selectedParking,
+    selectedFacing,
   ]);
 
   const removeFilter = (filter) => {
-    if (filter === "Hide Seen") {
-      setHideSeen(false);
-    } else if (filter === "Verified Only") {
-      setVerifiedOnly(false);
-    } else if (filter.startsWith("Min: ")) {
+    if (filter.startsWith("Min: ")) {
       setBudgetMin("No min");
     } else if (filter.startsWith("Max: ")) {
       setBudgetMax("No max");
+    } else if (filter.startsWith("Min Area: ")) {
+      setAreaMin("");
+    } else if (filter.startsWith("Max Area: ")) {
+      setAreaMax("");
     } else if (selectedPropertyTypes.includes(filter)) {
       setSelectedPropertyTypes((prev) => prev.filter((t) => t !== filter));
     } else if (selectedBedrooms.includes(filter)) {
       setSelectedBedrooms((prev) => prev.filter((b) => b !== filter));
     } else if (selectedConstructionStatuses.includes(filter)) {
       setSelectedConstructionStatuses((prev) => prev.filter((s) => s !== filter));
+    } else if (selectedListingTypes.includes(filter)) {
+      setSelectedListingTypes((prev) => prev.filter((t) => t !== filter));
+    } else if (selectedSubTypes.includes(filter)) {
+      setSelectedSubTypes((prev) => prev.filter((t) => t !== filter));
+    } else if (selectedTransactions.includes(filter)) {
+      setSelectedTransactions((prev) => prev.filter((t) => t !== filter));
+    } else if (selectedCities.includes(filter)) {
+      setSelectedCities((prev) => prev.filter((c) => c !== filter));
+    } else if (selectedLocalities.includes(filter)) {
+      setSelectedLocalities((prev) => prev.filter((l) => l !== filter));
+    } else if (selectedBuilders.includes(filter)) {
+      setSelectedBuilders((prev) => prev.filter((b) => b !== filter));
+    } else if (filter.endsWith(" Bath") && selectedBathrooms.includes(parseInt(filter.replace(" Bath", "")))) {
+      setSelectedBathrooms((prev) => prev.filter((b) => b !== parseInt(filter.replace(" Bath", ""))));
+    } else if (selectedFurnished.includes(filter)) {
+      setSelectedFurnished((prev) => prev.filter((f) => f !== filter));
+    } else if (selectedParking.includes(filter)) {
+      setSelectedParking((prev) => prev.filter((p) => p !== filter));
+    } else if (selectedFacing.includes(filter)) {
+      setSelectedFacing((prev) => prev.filter((f) => f !== filter));
     }
   };
 
   const clearAllFilters = () => {
-    setHideSeen(false);
-    setVerifiedOnly(false);
     setBudgetMin("No min");
     setBudgetMax("No max");
+    setAreaMin("");
+    setAreaMax("");
     setSelectedPropertyTypes([]);
     setSelectedBedrooms([]);
     setSelectedConstructionStatuses([]);
+    setSelectedListingTypes([]);
+    setSelectedSubTypes([]);
+    setSelectedTransactions([]);
+    setSelectedCities([]);
+    setSelectedLocalities([]);
+    setSelectedBuilders([]);
+    setSelectedBathrooms([]);
+    setSelectedFurnished([]);
+    setSelectedParking([]);
+    setSelectedFacing([]);
   };
 
   const propertyTypes = [
@@ -412,7 +689,7 @@ export default function Properties() {
   ];
 
   const bedroomOptions = ["1 RK/1 BHK", "2 BHK", "3 BHK", "4 BHK", "5 BHK"];
-  const constructionStatuses = ["New Launch", "Under Construction", "Ready to move"];
+  const constructionStatuses = ["New Launched", "Under Construction", "Ready to move"];
 
   const generatePrice = (price) => {
     return `₹${price}`;
@@ -528,40 +805,6 @@ export default function Properties() {
                     </div>
                   </div>
                 )}
-
-                {/* Hide already seen */}
-                <div className="filter-section">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <label className="mb-0">Hide already seen</label>
-                    <div className="form-check form-switch">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        checked={hideSeen}
-                        onChange={(e) => setHideSeen(e.target.checked)}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Verified properties */}
-                <div className="filter-section">
-                  <div className="d-flex justify-content-between align-items-center mb-2">
-                    <label className="mb-0">Verified properties</label>
-                    <div className="form-check form-switch">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        checked={verifiedOnly}
-                        onChange={(e) => setVerifiedOnly(e.target.checked)}
-                      />
-                    </div>
-                  </div>
-                  <div className="d-flex align-items-center gap-2 text-success small">
-                    <FontAwesomeIcon icon={faCheck} />
-                    <span>by MyPropertyFact verification team</span>
-                  </div>
-                </div>
 
                 {/* Budget */}
                 <div className="filter-section">
@@ -738,6 +981,332 @@ export default function Properties() {
                         </div>
                       ))}
                     </div>
+                  )}
+                </div>
+
+                {/* Listing Type */}
+                <div className="filter-section">
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h6 className="mb-0 fw-bold">Listing Type</h6>
+                    <button
+                      className="btn-link border-0 bg-transparent p-0"
+                      onClick={() => toggleSection("listingType")}
+                    >
+                      <FontAwesomeIcon
+                        icon={expandedSections.listingType ? faChevronUp : faChevronDown}
+                      />
+                    </button>
+                  </div>
+                  {expandedSections.listingType && (
+                    <div className="d-flex flex-wrap gap-2">
+                      {uniqueValues.listingTypes.map((type, index) => (
+                        <button
+                          key={index}
+                          className={`bedroom-btn ${selectedListingTypes.includes(type) ? "active" : ""}`}
+                          onClick={() => {
+                            setSelectedListingTypes((prev) =>
+                              prev.includes(type)
+                                ? prev.filter((t) => t !== type)
+                                : [...prev, type]
+                            );
+                          }}
+                        >
+                          {selectedListingTypes.includes(type) ? type : `+ ${type}`}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Sub Type */}
+                <div className="filter-section">
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h6 className="mb-0 fw-bold">Sub Type</h6>
+                    <button
+                      className="btn-link border-0 bg-transparent p-0"
+                      onClick={() => toggleSection("subType")}
+                    >
+                      <FontAwesomeIcon
+                        icon={expandedSections.subType ? faChevronUp : faChevronDown}
+                      />
+                    </button>
+                  </div>
+                  {expandedSections.subType && (
+                    <div className="property-type-list">
+                      {uniqueValues.subTypes.map((type, index) => (
+                        <div key={index} className="property-type-item">
+                          {selectedSubTypes.includes(type) ? (
+                            <span 
+                              className="selected"
+                              onClick={() => {
+                                setSelectedSubTypes((prev) =>
+                                  prev.filter((t) => t !== type)
+                                );
+                              }}
+                              style={{ cursor: 'pointer' }}
+                            >
+                              <FontAwesomeIcon icon={faCheck} className="me-2" />
+                              {type}
+                            </span>
+                          ) : (
+                            <span 
+                              className="add-type"
+                              onClick={() => {
+                                setSelectedSubTypes((prev) => [...prev, type]);
+                              }}
+                              style={{ cursor: 'pointer' }}
+                            >
+                              + {type}
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Transaction */}
+                <div className="filter-section">
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h6 className="mb-0 fw-bold">Transaction</h6>
+                    <button
+                      className="btn-link border-0 bg-transparent p-0"
+                      onClick={() => toggleSection("transaction")}
+                    >
+                      <FontAwesomeIcon
+                        icon={expandedSections.transaction ? faChevronUp : faChevronDown}
+                      />
+                    </button>
+                  </div>
+                  {expandedSections.transaction && (
+                    <div className="d-flex flex-wrap gap-2">
+                      {uniqueValues.transactions.map((trans, index) => (
+                        <button
+                          key={index}
+                          className={`bedroom-btn ${selectedTransactions.includes(trans) ? "active" : ""}`}
+                          onClick={() => {
+                            setSelectedTransactions((prev) =>
+                              prev.includes(trans)
+                                ? prev.filter((t) => t !== trans)
+                                : [...prev, trans]
+                            );
+                          }}
+                        >
+                          {selectedTransactions.includes(trans) ? trans : `+ ${trans}`}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Location */}
+                <div className="filter-section">
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h6 className="mb-0 fw-bold">Location</h6>
+                    <button
+                      className="btn-link border-0 bg-transparent p-0"
+                      onClick={() => toggleSection("location")}
+                    >
+                      <FontAwesomeIcon
+                        icon={expandedSections.location ? faChevronUp : faChevronDown}
+                      />
+                    </button>
+                  </div>
+                  {expandedSections.location && (
+                    <>
+                      <div className="mb-3">
+                        <label className="small fw-semibold mb-2 d-block">City</label>
+                        <div className="d-flex flex-wrap gap-2">
+                          {uniqueValues.cities.slice(0, 10).map((city, index) => (
+                            <button
+                              key={index}
+                              className={`bedroom-btn ${selectedCities.includes(city) ? "active" : ""}`}
+                              onClick={() => {
+                                setSelectedCities((prev) =>
+                                  prev.includes(city)
+                                    ? prev.filter((c) => c !== city)
+                                    : [...prev, city]
+                                );
+                              }}
+                            >
+                              {selectedCities.includes(city) ? city : `+ ${city}`}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="mb-3">
+                        <label className="small fw-semibold mb-2 d-block">Locality</label>
+                        <div className="d-flex flex-wrap gap-2">
+                          {uniqueValues.localities.slice(0, 10).map((locality, index) => (
+                            <button
+                              key={index}
+                              className={`bedroom-btn ${selectedLocalities.includes(locality) ? "active" : ""}`}
+                              onClick={() => {
+                                setSelectedLocalities((prev) =>
+                                  prev.includes(locality)
+                                    ? prev.filter((l) => l !== locality)
+                                    : [...prev, locality]
+                                );
+                              }}
+                            >
+                              {selectedLocalities.includes(locality) ? locality : `+ ${locality}`}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="small fw-semibold mb-2 d-block">Builder</label>
+                        <div className="d-flex flex-wrap gap-2">
+                          {uniqueValues.builders.slice(0, 10).map((builder, index) => (
+                            <button
+                              key={index}
+                              className={`bedroom-btn ${selectedBuilders.includes(builder) ? "active" : ""}`}
+                              onClick={() => {
+                                setSelectedBuilders((prev) =>
+                                  prev.includes(builder)
+                                    ? prev.filter((b) => b !== builder)
+                                    : [...prev, builder]
+                                );
+                              }}
+                            >
+                              {selectedBuilders.includes(builder) ? builder : `+ ${builder}`}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {/* Area Range */}
+                <div className="filter-section">
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h6 className="mb-0 fw-bold">Area (sq ft)</h6>
+                    <button
+                      className="btn-link border-0 bg-transparent p-0"
+                      onClick={() => toggleSection("area")}
+                    >
+                      <FontAwesomeIcon
+                        icon={expandedSections.area ? faChevronUp : faChevronDown}
+                      />
+                    </button>
+                  </div>
+                  {expandedSections.area && (
+                    <div className="d-flex gap-2">
+                      <input
+                        type="number"
+                        className="form-control form-control-sm"
+                        placeholder="Min"
+                        value={areaMin}
+                        onChange={(e) => setAreaMin(e.target.value)}
+                      />
+                      <input
+                        type="number"
+                        className="form-control form-control-sm"
+                        placeholder="Max"
+                        value={areaMax}
+                        onChange={(e) => setAreaMax(e.target.value)}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Additional Filters */}
+                <div className="filter-section">
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h6 className="mb-0 fw-bold">Additional Filters</h6>
+                    <button
+                      className="btn-link border-0 bg-transparent p-0"
+                      onClick={() => toggleSection("additional")}
+                    >
+                      <FontAwesomeIcon
+                        icon={expandedSections.additional ? faChevronUp : faChevronDown}
+                      />
+                    </button>
+                  </div>
+                  {expandedSections.additional && (
+                    <>
+                      <div className="mb-3">
+                        <label className="small fw-semibold mb-2 d-block">Bathrooms</label>
+                        <div className="d-flex flex-wrap gap-2">
+                          {uniqueValues.bathrooms.map((bath, index) => (
+                            <button
+                              key={index}
+                              className={`bedroom-btn ${selectedBathrooms.includes(bath) ? "active" : ""}`}
+                              onClick={() => {
+                                setSelectedBathrooms((prev) =>
+                                  prev.includes(bath)
+                                    ? prev.filter((b) => b !== bath)
+                                    : [...prev, bath]
+                                );
+                              }}
+                            >
+                              {selectedBathrooms.includes(bath) ? `${bath} Bath` : `+ ${bath} Bath`}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="mb-3">
+                        <label className="small fw-semibold mb-2 d-block">Furnished</label>
+                        <div className="d-flex flex-wrap gap-2">
+                          {uniqueValues.furnished.map((furn, index) => (
+                            <button
+                              key={index}
+                              className={`bedroom-btn ${selectedFurnished.includes(furn) ? "active" : ""}`}
+                              onClick={() => {
+                                setSelectedFurnished((prev) =>
+                                  prev.includes(furn)
+                                    ? prev.filter((f) => f !== furn)
+                                    : [...prev, furn]
+                                );
+                              }}
+                            >
+                              {selectedFurnished.includes(furn) ? furn : `+ ${furn}`}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="mb-3">
+                        <label className="small fw-semibold mb-2 d-block">Parking</label>
+                        <div className="d-flex flex-wrap gap-2">
+                          {uniqueValues.parking.map((park, index) => (
+                            <button
+                              key={index}
+                              className={`bedroom-btn ${selectedParking.includes(park) ? "active" : ""}`}
+                              onClick={() => {
+                                setSelectedParking((prev) =>
+                                  prev.includes(park)
+                                    ? prev.filter((p) => p !== park)
+                                    : [...prev, park]
+                                );
+                              }}
+                            >
+                              {selectedParking.includes(park) ? park : `+ ${park}`}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="small fw-semibold mb-2 d-block">Facing</label>
+                        <div className="d-flex flex-wrap gap-2">
+                          {uniqueValues.facing.map((face, index) => (
+                            <button
+                              key={index}
+                              className={`bedroom-btn ${selectedFacing.includes(face) ? "active" : ""}`}
+                              onClick={() => {
+                                setSelectedFacing((prev) =>
+                                  prev.includes(face)
+                                    ? prev.filter((f) => f !== face)
+                                    : [...prev, face]
+                                );
+                              }}
+                            >
+                              {selectedFacing.includes(face) ? face : `+ ${face}`}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </>
                   )}
                 </div>
               </div>
