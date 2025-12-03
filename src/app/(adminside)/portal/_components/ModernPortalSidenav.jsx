@@ -200,7 +200,7 @@ export default function ModernPortalSidenav({ onNavigate }) {
         }
 
         .sidebar-modern {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+          background: #68ac78 !important;
           box-shadow: none !important;
           height: 100vh !important;
           max-height: 100vh !important;

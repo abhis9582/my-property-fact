@@ -1,6 +1,7 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
 import './portal-global.css';
+import './_components/PortalCommonStyles.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
 import { UserProvider } from './_contexts/UserContext';
 

@@ -81,6 +81,7 @@ export default function ListingPage() {
       }
 
       const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+      console.log(`${apiUrl}/api/user/property-listings`);
       const response = await fetch(`${apiUrl}/api/user/property-listings`, {
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -141,7 +142,7 @@ export default function ListingPage() {
   }, []);
 
   useEffect(() => {
-    if (action !== 'add' && action !== null) {
+    if (action !== 'add') {
       fetchUserProperties();
     }
   }, [action, fetchUserProperties]);
@@ -1405,79 +1406,16 @@ export default function ListingPage() {
       </div>
       
       <style jsx>{`
-        .filter-panel {
-          background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-          border-radius: 12px;
-          padding: 1.5rem;
-          margin-bottom: 1.5rem;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
+        /* Common styles are now in PortalCommonStyles.css */
+        /* Only page-specific styles below */
         
         :global(.portal-card .bg-light) {
           background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%) !important;
           padding: 1.5rem !important;
         }
         
-        :global(.portal-card .bg-light .form-label) {
-          font-weight: 600;
-          color: #495057;
-          font-size: 0.875rem;
-          margin-bottom: 0.5rem;
-          display: flex;
-          align-items: center;
-        }
-        
-        :global(.portal-card .bg-light .form-control),
-        :global(.portal-card .bg-light .form-select) {
-          border: 2px solid #e9ecef;
-          border-radius: 8px;
-          padding: 0.625rem 0.875rem;
-          font-size: 0.9rem;
-          transition: all 0.2s;
-        }
-        
-        :global(.portal-card .bg-light .form-control:focus),
-        :global(.portal-card .bg-light .form-select:focus) {
-          border-color: #667eea;
-          box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
-          outline: none;
-        }
-        
-        :global(.portal-table) {
-          font-size: 0.9rem;
-        }
-        
-        :global(.portal-table th) {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          font-weight: 600;
-          text-transform: uppercase;
-          font-size: 0.75rem;
-          letter-spacing: 0.5px;
-        }
-        
-        :global(.portal-table tbody tr) {
-          transition: all 0.2s;
-        }
-        
         :global(.portal-table tbody tr:hover) {
-          background: rgba(102, 126, 234, 0.05);
           transform: scale(1.01);
-        }
-        
-        @media (max-width: 768px) {
-          :global(.portal-card .bg-light) {
-            padding: 1rem !important;
-          }
-          
-          :global(.portal-table) {
-            font-size: 0.8rem;
-          }
-          
-          :global(.portal-table th),
-          :global(.portal-table td) {
-            padding: 0.5rem;
-          }
         }
       `}</style>
     </div>

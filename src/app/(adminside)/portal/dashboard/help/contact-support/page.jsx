@@ -12,7 +12,7 @@ import {
 import { 
   cilEnvelopeOpen, 
   cilPhone, 
-  cilChatBubbleBubble,
+  cilChatBubble,
   cilClock,
   cilUser,
   cilStar
@@ -64,14 +64,14 @@ export default function ContactSupportPage() {
       availability: "Mon-Fri 9AM-6PM",
       action: "+91 98765 43210"
     },
-    {
-      icon: cilChatBubble,
-      title: "Live Chat",
-      description: "Chat with our support team in real-time",
-      responseTime: "Immediate",
-      availability: "Mon-Fri 9AM-6PM",
-      action: "Start Chat"
-    }
+    // {
+    //   icon: cilChatBubble,
+    //   title: "Live Chat",
+    //   description: "Chat with our support team in real-time",
+    //   responseTime: "Immediate",
+    //   availability: "Mon-Fri 9AM-6PM",
+    //   action: "Start Chat"
+    // }
   ];
 
   return (
@@ -118,6 +118,7 @@ export default function ContactSupportPage() {
                         <Button 
                           variant={method.icon === cilChatBubble ? "primary" : "outline-primary"}
                           size="sm"
+                          className="w-100"
                         >
                           {method.action}
                         </Button>
@@ -130,7 +131,7 @@ export default function ContactSupportPage() {
           </Card>
 
           {/* Quick Tips */}
-          <Card className="quick-tips-card">
+          {/* <Card className="quick-tips-card">
             <Card.Header>
               <h5 className="mb-0">Quick Tips</h5>
             </Card.Header>
@@ -143,7 +144,7 @@ export default function ContactSupportPage() {
                 <li>Provide your account details</li>
               </ul>
             </Card.Body>
-          </Card>
+          </Card> */}
         </Col>
 
         {/* Contact Form */}
@@ -264,47 +265,8 @@ export default function ContactSupportPage() {
       </Row>
 
       <style jsx>{`
-        .contact-support-page {
-          padding: 2rem;
-          background: #f8f9fa;
-          min-height: 100vh;
-        }
-
-        .page-header {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 2rem;
-          border-radius: 12px;
-          margin-bottom: 2rem;
-          box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .header-content {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 1rem;
-        }
-
-        .header-title h2 {
-          margin: 0;
-          font-weight: 700;
-          font-size: 2rem;
-        }
-
-        .header-title p {
-          margin: 0.5rem 0 0;
-          opacity: 0.9;
-          font-size: 1.1rem;
-        }
-
-        .contact-methods-card, .quick-tips-card, .contact-form-card {
-          border: none;
-          border-radius: 12px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-          background: white;
-        }
+        /* Common styles are now in PortalCommonStyles.css */
+        /* Only page-specific styles below */
 
         .support-method-item {
           border: none;
@@ -318,8 +280,9 @@ export default function ContactSupportPage() {
 
         .support-method {
           display: flex;
-          align-items: center;
+          align-items: flex-start;
           gap: 1rem;
+          flex-wrap: wrap;
         }
 
         .method-icon {
@@ -331,30 +294,46 @@ export default function ContactSupportPage() {
           justify-content: center;
           font-size: 1.5rem;
           color: white;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: var(--portal-primary);
           flex-shrink: 0;
         }
 
         .method-info {
           flex: 1;
+          min-width: 0;
         }
 
         .method-title {
           font-weight: 600;
           color: #495057;
           margin-bottom: 0.5rem;
+          word-wrap: break-word;
         }
 
         .method-description {
           color: #6c757d;
           font-size: 0.9rem;
           margin-bottom: 0.75rem;
+          word-wrap: break-word;
         }
 
         .method-details {
           display: flex;
           align-items: center;
           gap: 1rem;
+          flex-wrap: wrap;
+        }
+
+        .method-action {
+          flex-shrink: 0;
+          width: 100%;
+        }
+
+        .method-action button {
+          width: 100%;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .tips-list {
@@ -368,9 +347,48 @@ export default function ContactSupportPage() {
           line-height: 1.5;
         }
 
+        @media (max-width: 992px) {
+          .support-method {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+
+          .method-action {
+            width: 100%;
+            margin-top: 0.5rem;
+          }
+
+          .method-action button {
+            width: 100%;
+          }
+
+          .method-details {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+            width: 100%;
+          }
+
+          .method-details small {
+            margin-left: 0 !important;
+          }
+        }
+
         @media (max-width: 768px) {
           .contact-support-page {
             padding: 1rem;
+          }
+
+          .page-header {
+            padding: 1.5rem;
+          }
+
+          .header-title h2 {
+            font-size: 1.5rem;
+          }
+
+          .header-title p {
+            font-size: 1rem;
           }
 
           .header-content {
@@ -378,16 +396,55 @@ export default function ContactSupportPage() {
             align-items: flex-start;
           }
 
-          .support-method {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 1rem;
+          .support-method-item {
+            padding: 1rem 0;
+          }
+
+          .method-icon {
+            width: 45px;
+            height: 45px;
+            font-size: 1.25rem;
+          }
+
+          .method-title {
+            font-size: 1rem;
+          }
+
+          .method-description {
+            font-size: 0.85rem;
           }
 
           .method-details {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.5rem;
+            font-size: 0.8rem;
+          }
+        }
+
+        @media (max-width: 576px) {
+          .contact-support-page {
+            padding: 0.75rem;
+          }
+
+          .page-header {
+            padding: 1rem;
+            margin-bottom: 1rem;
+          }
+
+          .header-title h2 {
+            font-size: 1.25rem;
+          }
+
+          .header-title p {
+            font-size: 0.9rem;
+          }
+
+          .support-method-item {
+            padding: 0.75rem 0;
+          }
+
+          .method-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
           }
         }
       `}</style>

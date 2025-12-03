@@ -117,7 +117,7 @@ export default function SecurityPage() {
   return (
     <div className="security-page">
       {/* Header */}
-      <div className="page-header">
+      <div className="page-header page-header-gradient">
         <div className="header-content">
           <div className="header-title">
             <h2>Security Settings</h2>
@@ -412,46 +412,10 @@ export default function SecurityPage() {
       </Modal>
 
       <style jsx>{`
-        .security-page {
-          padding: 2rem;
-          background: #f8f9fa;
-          min-height: 100vh;
-        }
-
-        .page-header {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 2rem;
-          border-radius: 12px;
-          margin-bottom: 2rem;
-          box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .header-content {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 1rem;
-        }
-
-        .header-title h2 {
-          margin: 0;
-          font-weight: 700;
-          font-size: 2rem;
-        }
-
-        .header-title p {
-          margin: 0.5rem 0 0;
-          opacity: 0.9;
-          font-size: 1.1rem;
-        }
-
+        /* Common styles are now in PortalCommonStyles.css */
+        /* Only page-specific styles below */
+        
         .security-card {
-          border: none;
-          border-radius: 12px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-          background: white;
           height: 100%;
         }
 
@@ -459,37 +423,10 @@ export default function SecurityPage() {
           margin-bottom: 1rem;
         }
 
-        .info-item {
-          display: flex;
-          align-items: center;
-          margin-bottom: 0.75rem;
-          font-size: 0.95rem;
-        }
-
         .settings-list {
           display: flex;
           flex-direction: column;
           gap: 1.5rem;
-        }
-
-        .setting-item {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 1rem;
-          background: #f8f9fa;
-          border-radius: 8px;
-          border: 1px solid #e9ecef;
-        }
-
-        .setting-info h6 {
-          margin: 0 0 0.25rem;
-          font-weight: 600;
-          color: #495057;
-        }
-
-        .setting-info small {
-          color: #6c757d;
         }
 
         .location-info {
@@ -511,35 +448,6 @@ export default function SecurityPage() {
 
         .qr-code {
           color: #6c757d;
-        }
-
-        .table th {
-          border-top: none;
-          font-weight: 600;
-          color: #495057;
-          font-size: 0.875rem;
-        }
-
-        .table td {
-          vertical-align: middle;
-          border-top: 1px solid #e9ecef;
-        }
-
-        @media (max-width: 768px) {
-          .security-page {
-            padding: 1rem;
-          }
-
-          .header-content {
-            flex-direction: column;
-            align-items: flex-start;
-          }
-
-          .setting-item {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 1rem;
-          }
         }
       `}</style>
     </div>

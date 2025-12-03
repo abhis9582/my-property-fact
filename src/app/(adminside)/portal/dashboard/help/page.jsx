@@ -115,7 +115,7 @@ export default function HelpPage() {
   return (
     <div className="help-page">
       {/* Header */}
-      <div className="page-header">
+      <div className="page-header page-header-gradient">
         <div className="header-content">
           <div className="header-title">
             <h2>Help & Support</h2>
@@ -333,7 +333,7 @@ export default function HelpPage() {
                 </Button>
               </div>
             </Col>
-            <Col md={4}>
+            {/* <Col md={4}>
               <div className="contact-method">
                 <div className="contact-icon">
                   <CIcon icon={cilChatBubble} />
@@ -345,53 +345,14 @@ export default function HelpPage() {
                   Start Chat
                 </Button>
               </div>
-            </Col>
+            </Col> */}
           </Row>
         </Card.Body>
       </Card>
 
       <style jsx>{`
-        .help-page {
-          padding: 2rem;
-          background: #f8f9fa;
-          min-height: 100vh;
-        }
-
-        .page-header {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 2rem;
-          border-radius: 12px;
-          margin-bottom: 2rem;
-          box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .header-content {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 1rem;
-        }
-
-        .header-title h2 {
-          margin: 0;
-          font-weight: 700;
-          font-size: 2rem;
-        }
-
-        .header-title p {
-          margin: 0.5rem 0 0;
-          opacity: 0.9;
-          font-size: 1.1rem;
-        }
-
-        .search-card, .categories-card, .featured-articles-card, .articles-card, .contact-support-card {
-          border: none;
-          border-radius: 12px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-          background: white;
-        }
+        /* Common styles are now in PortalCommonStyles.css */
+        /* Only page-specific styles below */
 
         .search-suggestions {
           display: flex;
