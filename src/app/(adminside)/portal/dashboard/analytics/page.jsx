@@ -363,58 +363,13 @@ export default function Analytics() {
       </Row>
 
       <style jsx>{`
-        .analytics-page {
-          padding: 2rem;
-          background: #f8f9fa;
-          min-height: 100vh;
-        }
-
-        .analytics-header {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 2rem;
-          border-radius: 12px;
-          margin-bottom: 2rem;
-          box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .header-content {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 1rem;
-        }
-
-        .header-title h2 {
-          margin: 0;
-          font-weight: 700;
-          font-size: 2rem;
-        }
-
-        .header-title p {
-          margin: 0.5rem 0 0;
-          opacity: 0.9;
-          font-size: 1.1rem;
-        }
-
+        /* Common styles are now in PortalCommonStyles.css */
+        /* Only page-specific styles below */
+        
         .header-controls {
           display: flex;
           gap: 0.5rem;
           align-items: center;
-        }
-
-        .analytics-stat-card {
-          border: none;
-          border-radius: 12px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-          background: white;
-          transition: all 0.3s ease;
-        }
-
-        .analytics-stat-card:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
         }
 
         .stat-icon-wrapper {
@@ -439,29 +394,8 @@ export default function Analytics() {
         }
 
         .stat-value {
-          color: #212529;
-          font-weight: 700;
           font-size: 2rem;
           margin: 0.5rem 0;
-        }
-
-        .stat-title {
-          color: #6c757d;
-          font-size: 0.875rem;
-          margin: 0;
-        }
-
-        .analytics-card {
-          border: none;
-          border-radius: 12px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-          background: white;
-        }
-
-        .analytics-card .card-header {
-          background: transparent;
-          border-bottom: 1px solid #e9ecef;
-          padding: 1.25rem;
         }
 
         .metric-card {
@@ -631,9 +565,7 @@ export default function Analytics() {
             font-size: 1.1rem;
           }
 
-          .table {
-            font-size: 0.875rem;
-          }
+          /* Common table styles are in PortalCommonStyles.css */
 
           .insight-item {
             padding: 0.75rem;
@@ -645,18 +577,6 @@ export default function Analytics() {
         }
 
         @media (max-width: 768px) {
-          .analytics-page {
-            padding: 0.75rem;
-          }
-
-          .header-title h2 {
-            font-size: 1.25rem;
-          }
-
-          .header-title p {
-            font-size: 1rem;
-          }
-
           .stat-value {
             font-size: 1.25rem;
           }
@@ -682,14 +602,7 @@ export default function Analytics() {
             font-size: 0.8rem;
           }
 
-          .table {
-            font-size: 0.8rem;
-          }
-
-          .table th,
-          .table td {
-            padding: 0.5rem 0.25rem;
-          }
+          /* Common table styles are in PortalCommonStyles.css */
 
           .insight-item {
             padding: 0.5rem;

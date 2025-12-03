@@ -748,28 +748,11 @@ export default function Profile() {
           z-index: 0;
         }
 
-        .loading-container {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          min-height: 60vh;
-          text-align: center;
-        }
-
+        /* Common loading styles are in PortalCommonStyles.css */
+        /* Profile page uses custom spinner colors */
         .loading-spinner {
-          width: 50px;
-          height: 50px;
           border: 4px solid rgba(102, 126, 234, 0.2);
           border-top: 4px solid #667eea;
-          border-radius: 50%;
-          animation: spin 1s linear infinite;
-          margin-bottom: 1.5rem;
-        }
-
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
         }
 
         .profile-header {
