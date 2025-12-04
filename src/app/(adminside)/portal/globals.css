@@ -470,7 +470,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: var(--portal-primary);
+  background: radial-gradient(circle at center, var(--portal-primary-dark, #0d5834), var(--portal-secondary, #0c2e23));
   color: white;
 }
 

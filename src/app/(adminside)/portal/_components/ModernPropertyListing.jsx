@@ -1277,9 +1277,9 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
   // Show loading state while fetching property data in edit mode
   if (loadingProperty) {
     return (
-      <div className="modern-property-listing">
+      <div className="modern-property-listing portal-content">
         <div className="text-center py-5">
-          <Spinner animation="border" role="status">
+          <Spinner animation="border" role="status" style={{ color: 'var(--portal-primary, #68ac78)' }}>
             <span className="visually-hidden">Loading...</span>
           </Spinner>
           <p className="mt-3 text-muted">Loading property data...</p>
@@ -1289,9 +1289,9 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
   }
 
   return (
-    <div className="modern-property-listing">
+    <div className="modern-property-listing portal-content">
       {/* Header */}
-      <div className="listing-header">
+      <div className="dashboard-header">
         <div className="header-content">
           <div className="header-title">
             <h2>{isEditMode ? "Edit Property" : "Add New Property"}</h2>
@@ -1299,8 +1299,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
           </div>
           <div className="header-actions">
             <Button 
-              variant="outline-secondary" 
-              className="me-2 text-white"
+              variant="light"
               onClick={handleSaveDraft}
               disabled={isSavingDraft}
             >
@@ -1312,20 +1311,20 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       </div>
 
       {/* Progress Indicator */}
-      <Card className="progress-card">
+      <Card className="dashboard-card progress-card">
         <Card.Body>
           <div className="progress-header">
             <h5>
               Step {currentStep} of {steps.length}:{" "}
               {steps[currentStep - 1].title}
             </h5>
-            <p>{steps[currentStep - 1].description}</p>
+            <p className="text-muted">{steps[currentStep - 1].description}</p>
           </div>
           <ProgressBar
             now={progressPercentage}
-            variant="primary"
+            variant="success"
             className="progress-bar-custom"
-            style={{ height: "8px", borderRadius: "4px" }}
+            style={{ height: "10px", borderRadius: "5px" }}
           />
           <div className="step-indicators">
             {steps.map((step, index) => (
@@ -1354,7 +1353,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       </Card>
 
       {/* Form Content */}
-      <Card className="form-card">
+      <Card className="dashboard-card form-card">
         <Card.Body>
           {draftSaved && (
             <Alert variant="success" className="mb-4" dismissible onClose={() => setDraftSaved(false)}>
@@ -1380,9 +1379,9 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       </Card>
 
       {/* Navigation */}
-      <Card className="navigation-card">
+      <Card className="dashboard-card navigation-card">
         <Card.Body>
-          <div className="d-flex justify-content-between align-items-center">
+          <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <Button
               variant="outline-secondary"
               onClick={handlePrevious}
@@ -1407,8 +1406,17 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
                 onClick={handleSubmit}
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Submitting..." : "Submit Property"}
-                <CIcon icon={cilCheck} className="ms-1" />
+                {isSubmitting ? (
+                  <>
+                    <Spinner size="sm" className="me-2" />
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    Submit Property
+                    <CIcon icon={cilCheck} className="ms-1" />
+                  </>
+                )}
               </Button>
             )}
           </div>
@@ -1465,15 +1473,6 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
           /* Uses common portal-page-container styles */
         }
 
-        .listing-header {
-          background: #68ac78;
-          color: white;
-          padding: 2rem;
-          border-radius: 12px;
-          margin-bottom: 2rem;
-          box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
-        }
-
         .progress-card,
         .form-card,
         .navigation-card {
@@ -1481,18 +1480,22 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
         }
 
         .progress-header h5 {
-          color: #212529;
+          color: var(--portal-gray-800, #212529);
           font-weight: 600;
           margin-bottom: 0.5rem;
         }
 
         .progress-header p {
-          color: #6c757d;
+          color: var(--portal-gray-600, #6c757d);
           margin-bottom: 1.5rem;
         }
 
         .progress-bar-custom {
-          background-color: #e9ecef;
+          background-color: var(--portal-gray-200, #e9ecef);
+        }
+        
+        .progress-bar-custom .progress-bar {
+          background: linear-gradient(135deg, var(--portal-primary, #68ac78) 0%, var(--portal-primary-dark, #0d5834) 100%);
         }
 
         .step-indicators {
@@ -1514,61 +1517,74 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
         .step-indicator:not(:last-child)::after {
           content: "";
           position: absolute;
-          top: 15px;
+          top: 20px;
           left: 60%;
           width: 80%;
-          height: 2px;
-          background: #e9ecef;
+          height: 3px;
+          background: var(--portal-gray-200, #e9ecef);
           z-index: 1;
+          border-radius: 2px;
         }
 
         .step-indicator.completed:not(:last-child)::after {
-          background: #28a745;
+          background: linear-gradient(90deg, var(--portal-success, #28a745) 0%, var(--portal-primary, #68ac78) 100%);
+        }
+
+        .step-indicator.active:not(:last-child)::after {
+          background: linear-gradient(90deg, var(--portal-success, #28a745) 0%, var(--portal-gray-200, #e9ecef) 50%);
         }
 
         .step-icon {
-          width: 30px;
-          height: 30px;
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
-          background: #e9ecef;
+          background: var(--portal-gray-200, #e9ecef);
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #6c757d;
-          font-size: 0.875rem;
+          color: var(--portal-gray-600, #6c757d);
+          font-size: 1rem;
           position: relative;
           z-index: 2;
+          transition: all 0.3s ease;
+          border: 3px solid var(--portal-white, #ffffff);
         }
 
         .step-indicator.active .step-icon {
-          background: #68ac78;
+          background: linear-gradient(135deg, var(--portal-primary, #68ac78) 0%, var(--portal-primary-dark, #0d5834) 100%);
           color: white;
+          box-shadow: 0 4px 12px rgba(104, 172, 120, 0.3);
+          transform: scale(1.1);
         }
 
         .step-indicator.completed .step-icon {
-          background: #28a745;
+          background: linear-gradient(135deg, var(--portal-success, #28a745) 0%, #1e7e34 100%);
           color: white;
+          box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
         }
 
         .step-label {
-          font-size: 0.75rem;
-          color: #6c757d;
+          font-size: 0.8rem;
+          color: var(--portal-gray-600, #6c757d);
           text-align: center;
           font-weight: 500;
+          margin-top: 0.5rem;
         }
 
         .step-indicator.active .step-label {
-          color: #68ac78;
+          color: var(--portal-primary, #68ac78);
           font-weight: 600;
         }
 
         .step-indicator.completed .step-label {
-          color: #28a745;
+          color: var(--portal-success, #28a745);
+          font-weight: 600;
         }
 
         .step-info {
-          color: #6c757d;
-          font-weight: 500;
+          color: var(--portal-gray-600, #6c757d);
+          font-weight: 600;
+          font-size: 0.95rem;
         }
 
         @media (max-width: 768px) {
@@ -1604,8 +1620,8 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
         /* Image Gallery Styles */
         .image-gallery-container {
           margin-top: 1.5rem;
-          background: #ffffff;
-          border: 1px solid #e9ecef;
+          background: var(--portal-white, #ffffff);
+          border: 1px solid var(--portal-gray-200, #e9ecef);
           border-radius: 16px;
           overflow: hidden;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
@@ -1617,10 +1633,10 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
         }
 
         .gallery-header {
-          background: #68ac78;
+          background: linear-gradient(135deg, var(--portal-primary, #68ac78) 0%, var(--portal-primary-dark, #0d5834) 100%);
           color: white;
           padding: 1rem 1.5rem;
-          border-bottom: 1px solid #e9ecef;
+          border-bottom: 1px solid var(--portal-gray-200, #e9ecef);
         }
 
         .gallery-title {
@@ -1648,12 +1664,12 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
         }
 
         .gallery-item {
-          background: #ffffff;
+          background: var(--portal-white, #ffffff);
           border-radius: 12px;
           overflow: hidden;
           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          border: 2px solid #e9ecef;
+          border: 2px solid var(--portal-gray-200, #e9ecef);
           width: 300px;
           flex-shrink: 0;
           display: flex;
@@ -1663,7 +1679,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
         .gallery-item:hover {
           transform: translateY(-6px) scale(1.02);
           box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1);
-          border-color: #68ac78;
+          border-color: var(--portal-primary, #68ac78);
         }
 
         .image-container {
@@ -1673,7 +1689,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
           min-height: 200px;
           max-height: 200px;
           overflow: hidden;
-          background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+          background: linear-gradient(135deg, var(--portal-gray-50, #f8f9fa) 0%, var(--portal-gray-200, #e9ecef) 100%);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -3739,9 +3755,9 @@ function FeaturesAmenitiesStep({
 
         .amenity-feature-item {
           padding: 1rem;
-          border: 2px solid #e9ecef;
+          border: 2px solid var(--portal-gray-200, #e9ecef);
           border-radius: 8px;
-          background: #ffffff;
+          background: var(--portal-white, #ffffff);
           cursor: pointer;
           transition: all 0.2s;
           display: flex;
@@ -3750,14 +3766,14 @@ function FeaturesAmenitiesStep({
         }
 
         .amenity-feature-item:hover {
-          border-color: #68ac78;
+          border-color: var(--portal-primary, #68ac78);
           box-shadow: 0 2px 8px rgba(104, 172, 120, 0.15);
           transform: translateY(-2px);
         }
 
         .amenity-feature-item.selected {
-          border-color: #68ac78;
-          background: #f0f9f2;
+          border-color: var(--portal-primary, #68ac78);
+          background: rgba(104, 172, 120, 0.08);
         }
 
         .item-icon {

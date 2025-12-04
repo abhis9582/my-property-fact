@@ -17,7 +17,9 @@ import {
   cilCalendar,
   cilCarAlt,
   cilCompass,
-  cilLayers
+  cilLayers,
+  cilPlus,
+  cilViewModule
 } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 
@@ -669,134 +671,148 @@ export default function ListingPage() {
 
   return (
     <div className="portal-content">
-      <div className="portal-card">
-        <div className="portal-card-header">
-          <div className="d-flex justify-content-between align-items-center">
-            <div>
-              <h2 className="mb-1">My Property Listings</h2>
-              <p className="text-muted mb-0">Manage your property listings and track their performance</p>
-            </div>
+      {/* Header */}
+      <div className="dashboard-header">
+        <div className="header-content">
+          <div className="header-title">
+            <h2>My Property Listings</h2>
+            <p>Manage your property listings and track their performance</p>
+          </div>
+          <div className="header-actions">
             <Button 
-              variant="primary"
-              className="portal-btn portal-btn-primary"
+              variant="light"
               onClick={() => window.location.href = '/portal/dashboard/listings?action=add'}
             >
+              <CIcon icon={cilPlus} className="me-1" />
               Add New Property
             </Button>
           </div>
         </div>
+      </div>
 
-        {/* Stats Cards */}
-        <div className="portal-card-body">
-          <Row className="g-4 mb-4">
-            <Col lg={3} md={6}>
-              <div className="portal-card">
-                <div className="portal-card-body text-center">
-                  <h6 className="portal-form-label">Total Listings</h6>
+      {/* Stats Cards */}
+      <Row className="g-4 mb-4">
+        <Col lg={3} md={6}>
+          <Card className="stat-card h-100">
+            <Card.Body>
+              <div className="stat-content">
+                <div className="stat-icon primary">
+                  <CIcon icon={cilHome} />
+                </div>
+                <div className="stat-info">
+                  <h6 className="stat-title">Total Listings</h6>
                   {loading ? (
-                    <Spinner size="sm" className="mt-2" />
+                    <Spinner size="sm" />
                   ) : (
-                    <>
-                      <h3 className="mb-1" style={{color: 'var(--portal-primary)'}}>{allListings.length}</h3>
-                      <small className="text-muted">Properties posted</small>
-                    </>
+                    <h3 className="stat-value">{allListings.length}</h3>
                   )}
                 </div>
               </div>
-            </Col>
-            <Col lg={3} md={6}>
-              <div className="portal-card">
-                <div className="portal-card-body text-center">
-                  <h6 className="portal-form-label">Active Listings</h6>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col lg={3} md={6}>
+          <Card className="stat-card h-100">
+            <Card.Body>
+              <div className="stat-content">
+                <div className="stat-icon success">
+                  <CIcon icon={cilCheckCircle} />
+                </div>
+                <div className="stat-info">
+                  <h6 className="stat-title">Active Listings</h6>
                   {loading ? (
-                    <Spinner size="sm" className="mt-2" />
+                    <Spinner size="sm" />
                   ) : (
-                    <>
-                      <h3 className="mb-1" style={{color: 'var(--portal-success)'}}>{activeListings}</h3>
-                      <small className="text-success">Approved & live</small>
-                    </>
+                    <h3 className="stat-value">{activeListings}</h3>
                   )}
                 </div>
               </div>
-            </Col>
-            <Col lg={3} md={6}>
-              <div className="portal-card">
-                <div className="portal-card-body text-center">
-                  <h6 className="portal-form-label">Pending Approval</h6>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col lg={3} md={6}>
+          <Card className="stat-card h-100">
+            <Card.Body>
+              <div className="stat-content">
+                <div className="stat-icon info">
+                  <CIcon icon={cilCalendar} />
+                </div>
+                <div className="stat-info">
+                  <h6 className="stat-title">Pending Approval</h6>
                   {loading ? (
-                    <Spinner size="sm" className="mt-2" />
+                    <Spinner size="sm" />
                   ) : (
-                    <>
-                      <h3 className="mb-1" style={{color: 'var(--portal-info)'}}>{pendingListings}</h3>
-                      <small className="text-info">Awaiting review</small>
-                    </>
+                    <h3 className="stat-value">{pendingListings}</h3>
                   )}
                 </div>
               </div>
-            </Col>
-            <Col lg={3} md={6}>
-              <div className="portal-card">
-                <div className="portal-card-body text-center">
-                  <h6 className="portal-form-label">Draft</h6>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col lg={3} md={6}>
+          <Card className="stat-card h-100">
+            <Card.Body>
+              <div className="stat-content">
+                <div className="stat-icon warning">
+                  <CIcon icon={cilLayers} />
+                </div>
+                <div className="stat-info">
+                  <h6 className="stat-title">Draft</h6>
                   {loading ? (
-                    <Spinner size="sm" className="mt-2" />
+                    <Spinner size="sm" />
                   ) : (
-                    <>
-                      <h3 className="mb-1" style={{color: 'var(--portal-warning)'}}>{draftListings}</h3>
-                      <small className="text-warning">Not submitted</small>
-                    </>
+                    <h3 className="stat-value">{draftListings}</h3>
                   )}
                 </div>
               </div>
-            </Col>
-          </Row>
-        </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
 
         {/* Filters and Listings Table */}
-        <div className="portal-card">
-          <div className="portal-card-header">
-            <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
-              <div>
-                <h5 className="mb-0">All Listings</h5>
-                <small className="text-muted">
-                  Showing {filteredListings.length} of {allListings.length} properties
-                  {hasActiveFilters && ` (${activeFilterCount} filter${activeFilterCount > 1 ? 's' : ''} applied)`}
-                </small>
-              </div>
-              <div className="d-flex gap-2">
-                {hasActiveFilters && (
-                  <Button 
-                    variant="outline-secondary" 
-                    size="sm"
-                    onClick={resetFilters}
-                    className="d-flex align-items-center gap-2"
-                  >
-                    <CIcon icon={cilX} />
-                    Clear Filters
-                  </Button>
-                )}
+        <Card className="dashboard-card">
+          <Card.Header className="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+              <h5 className="mb-1">All Listings</h5>
+              <small className="text-muted">
+                Showing {filteredListings.length} of {allListings.length} properties
+                {hasActiveFilters && ` (${activeFilterCount} filter${activeFilterCount > 1 ? 's' : ''} applied)`}
+              </small>
+            </div>
+            <div className="d-flex gap-2">
+              {hasActiveFilters && (
                 <Button 
-                  variant={showFilters ? "primary" : "outline-primary"}
+                  variant="outline-secondary" 
                   size="sm"
-                  onClick={() => setShowFilters(!showFilters)}
+                  onClick={resetFilters}
                   className="d-flex align-items-center gap-2"
                 >
-                  <CIcon icon={showFilters ? cilCheckCircle : cilFilter} />
-                  Filters
-                  {activeFilterCount > 0 && (
-                    <Badge bg="light" text="dark" className="ms-1">
-                      {activeFilterCount}
-                    </Badge>
-                  )}
+                  <CIcon icon={cilX} className="me-1" />
+                  Clear Filters
                 </Button>
-              </div>
+              )}
+              <Button 
+                variant={showFilters ? "primary" : "outline-primary"}
+                size="sm"
+                onClick={() => setShowFilters(!showFilters)}
+                className="d-flex align-items-center gap-2"
+              >
+                <CIcon icon={showFilters ? cilCheckCircle : cilFilter} className="me-1" />
+                Filters
+                {activeFilterCount > 0 && (
+                  <Badge bg="light" text="dark" className="ms-1">
+                    {activeFilterCount}
+                  </Badge>
+                )}
+              </Button>
             </div>
-          </div>
+          </Card.Header>
           
           {/* Filter Panel */}
           <Collapse in={showFilters}>
             <div>
-              <Card.Body className="border-bottom bg-light">
+              <Card.Body className="border-bottom" style={{ background: 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)' }}>
                 <Row className="g-3">
                   <Col md={12}>
                     <Form.Group>
@@ -1283,7 +1299,7 @@ export default function ListingPage() {
             </div>
           </Collapse>
           
-          <div className="portal-card-body">
+          <Card.Body>
             {loading ? (
               <div className="text-center py-5">
                 <Spinner animation="border" role="status">
@@ -1321,7 +1337,7 @@ export default function ListingPage() {
               </div>
             ) : (
               <div className="table-responsive">
-                <table className="portal-table">
+                <table className="table table-hover">
                   <thead>
                     <tr>
                       <th>Property</th>
@@ -1340,29 +1356,46 @@ export default function ListingPage() {
                       <tr key={listing.id}>
                         <td>
                           <div>
-                            <h6 className="mb-1">{listing.title}</h6>
+                            <h6 className="mb-1 fw-semibold">{listing.title}</h6>
                             <small className="text-muted">ID: #{listing.id}</small>
                           </div>
                         </td>
-                        <td>{listing.location}</td>
+                        <td>
+                          <div className="d-flex align-items-center">
+                            <CIcon icon={cilLocationPin} className="me-1 text-muted" />
+                            <span>{listing.location}</span>
+                          </div>
+                        </td>
                         <td>
                           <strong className="text-primary">{listing.price}</strong>
                         </td>
-                        <td>{listing.area}</td>
+                        <td>
+                          <div className="d-flex align-items-center">
+                            <CIcon icon={cilViewModule} className="me-1 text-muted" />
+                            <span>{listing.area}</span>
+                          </div>
+                        </td>
                         <td>
                           <Badge bg={listing.statusBadge}>
                             {listing.status}
                           </Badge>
                         </td>
-                        <td>{listing.views}</td>
-                        <td>{listing.inquiries}</td>
-                        <td>{listing.created ? new Date(listing.created).toLocaleDateString() : 'N/A'}</td>
+                        <td>
+                          <span className="text-muted">{listing.views}</span>
+                        </td>
+                        <td>
+                          <span className="text-muted">{listing.inquiries}</span>
+                        </td>
+                        <td>
+                          <small className="text-muted">
+                            {listing.created ? new Date(listing.created).toLocaleDateString() : 'N/A'}
+                          </small>
+                        </td>
                         <td>
                           <div className="d-flex gap-2">
                             <Button 
                               variant="outline-primary" 
-                              size="sm" 
-                              className="portal-btn"
+                              size="sm"
                               onClick={() => handleView(listing.id)}
                               disabled={deletingId === listing.id}
                             >
@@ -1370,8 +1403,7 @@ export default function ListingPage() {
                             </Button>
                             <Button 
                               variant="outline-secondary" 
-                              size="sm" 
-                              className="portal-btn"
+                              size="sm"
                               onClick={() => handleEdit(listing.id)}
                               disabled={deletingId === listing.id}
                             >
@@ -1379,8 +1411,7 @@ export default function ListingPage() {
                             </Button>
                             <Button 
                               variant="outline-danger" 
-                              size="sm" 
-                              className="portal-btn"
+                              size="sm"
                               onClick={() => handleDelete(listing.id)}
                               disabled={deletingId === listing.id}
                             >
@@ -1401,21 +1432,37 @@ export default function ListingPage() {
                 </table>
               </div>
             )}
-          </div>
-        </div>
-      </div>
+          </Card.Body>
+        </Card>
       
       <style jsx>{`
         /* Common styles are now in PortalCommonStyles.css */
         /* Only page-specific styles below */
         
-        :global(.portal-card .bg-light) {
-          background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%) !important;
-          padding: 1.5rem !important;
+        :global(.table thead th) {
+          background: var(--portal-primary, #68ac78);
+          color: white;
+          font-weight: 600;
+          text-transform: uppercase;
+          font-size: 0.75rem;
+          letter-spacing: 0.5px;
+          border: none;
+          padding: 1rem 0.75rem;
         }
         
-        :global(.portal-table tbody tr:hover) {
-          transform: scale(1.01);
+        :global(.table tbody tr) {
+          transition: all 0.2s ease;
+        }
+        
+        :global(.table tbody tr:hover) {
+          background: rgba(104, 172, 120, 0.05);
+          transform: translateX(2px);
+        }
+        
+        :global(.table td) {
+          vertical-align: middle;
+          padding: 1rem 0.75rem;
+          border-top: 1px solid var(--portal-gray-200, #e9ecef);
         }
       `}</style>
     </div>

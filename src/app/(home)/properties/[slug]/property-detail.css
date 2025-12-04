@@ -1482,3 +1482,17 @@ html {
     padding: 1rem;
   }
 }
+
+/* Custom Tooltip Styling - Left Aligned */
+.custom-tooltip .tooltip-inner {
+  text-align: left !important;
+  max-width: 350px;
+  padding: 12px 16px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  white-space: normal;
+}
+
+.custom-tooltip .tooltip-inner div {
+  text-align: left !important;
+}

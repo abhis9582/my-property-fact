@@ -31,8 +31,9 @@ import {
   faVolumeMute,
   faChevronDown,
   faChevronUp,
+  faCircleInfo,
 } from "@fortawesome/free-solid-svg-icons";
-import { Spinner, Alert, Badge, Button, Modal, Form } from "react-bootstrap";
+import { Spinner, Alert, Badge, Button, Modal, Form, OverlayTrigger, Tooltip } from "react-bootstrap";
 import axios from "axios";
 import "./property-detail.css";
 
@@ -63,6 +64,32 @@ export default function PropertyDetailPage() {
   const [allAmenities, setAllAmenities] = useState([]);
   const [allFeatures, setAllFeatures] = useState([]);
   const [allNearbyBenefits, setAllNearbyBenefits] = useState([]);
+  const [projectDetails, setProjectDetails] = useState(null);
+  const [loadingProject, setLoadingProject] = useState(false);
+  
+  const NearbyBenefitsTooltip = (props) => (
+    <Tooltip id="nearby-benefits-tooltip" {...props} className="custom-tooltip">
+      <div style={{ textAlign: 'left', maxWidth: '300px' }}>
+        All nearby landmarks that are mentioned on this page are done so at the sole discretion of the publisher of this listing. Distances mentioned for all landmarks are to be considered approximate values at best. We recommend that you do your own research before making any purchase decisions.
+      </div>
+    </Tooltip>
+  );
+
+  const AmenitiesTooltip = (props) => (
+    <Tooltip id="amenities-tooltip" {...props} className="custom-tooltip">
+      <div style={{ textAlign: 'left', maxWidth: '300px' }}>
+        All amenities that are mentioned on this page are done so at the sole discretion of the publisher of this listing. We recommend that you do your own research before making any purchase decisions.
+      </div>
+    </Tooltip>
+  );
+
+  const FeaturesTooltip = (props) => (
+    <Tooltip id="features-tooltip" {...props} className="custom-tooltip">
+      <div style={{ textAlign: 'left', maxWidth: '300px' }}>
+        All furnishings that are mentioned on this page are done so at the sole discretion of the publisher of this listing. We recommend that you do your own research before making any purchase decisions.
+      </div>
+    </Tooltip>
+  );
 
   // Extract ID from slug (slug format: title-id or just id)
   const propertyId = slug ? (() => {
@@ -87,6 +114,13 @@ export default function PropertyDetailPage() {
     fetchAllFeatures();
     fetchAllNearbyBenefits();
   }, [propertyId]);
+
+  // Fetch project details when property has projectName
+  useEffect(() => {
+    if (property && property.projectName) {
+      fetchProjectDetails();
+    }
+  }, [property]);
 
   // Smooth scroll behavior
   useEffect(() => {
@@ -473,6 +507,42 @@ export default function PropertyDetailPage() {
   const getPropertyNearbyBenefits = () => {
     if (!property || !property.nearbyBenefits) return [];
     return property.nearbyBenefits;
+  };
+
+  // Convert project name to slug format
+  const convertProjectNameToSlug = (projectName) => {
+    if (!projectName) return null;
+    return projectName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+  };
+
+  // Fetch project details by project name
+  const fetchProjectDetails = async () => {
+    if (!property || !property.projectName) return;
+    
+    try {
+      setLoadingProject(true);
+      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+      const projectSlug = convertProjectNameToSlug(property.projectName);
+      
+      if (!projectSlug) {
+        setLoadingProject(false);
+        return;
+      }
+
+      const response = await axios.get(`${apiUrl}/projects/get/${projectSlug}`);
+      
+      if (response.data && response.data.projectName) {
+        setProjectDetails(response.data);
+      }
+    } catch (err) {
+      console.error("Error fetching project details:", err);
+      // Silently fail - project might not exist in DB
+    } finally {
+      setLoadingProject(false);
+    }
   };
 
   if (loading) {
@@ -899,7 +969,9 @@ export default function PropertyDetailPage() {
           <div className="col-12">
             {/* About Property Section - Overview */}
             <div id="overview-section" className="property-section mt-4">
-              <h3 className="section-title">About Property</h3>
+              <div className="d-flex align-items-center justify-content-between mb-3">
+                <h3 className="section-title mb-0">About Property</h3>
+              </div>
               {property.title && (
                 <div className="mb-3">
                   <h5 className="mb-2">{property.title}</h5>
@@ -920,7 +992,9 @@ export default function PropertyDetailPage() {
 
             {/* Property Details Grid */}
             <div className="property-section mt-4">
-              <h4 className="section-subtitle">Property Details</h4>
+              <div className="d-flex align-items-center justify-content-between mb-3">
+                <h4 className="section-subtitle mb-0">Property Details</h4>
+              </div>
               <div className="row">
                 <div className="col-md-6">
                   <div className="property-details-grid">
@@ -1036,7 +1110,19 @@ export default function PropertyDetailPage() {
               const propertyAmenities = getPropertyAmenities();
               return propertyAmenities.length > 0 || (property.amenityNames && property.amenityNames.length > 0) ? (
                 <div className="property-section mt-4">
-                  <h4 className="section-subtitle">Amenities</h4>
+                  <div className="d-flex align-items-center justify-content-between mb-3">
+                    <h4 className="section-subtitle mb-0">Amenities</h4>
+                    <OverlayTrigger
+                      placement="top"
+                      overlay={AmenitiesTooltip}
+                    >
+                      <FontAwesomeIcon 
+                        icon={faCircleInfo} 
+                        className="info-icon-section"
+                        style={{ cursor: 'help', color: '#6c757d', fontSize: '0.85rem' }}
+                      />
+                    </OverlayTrigger>
+                  </div>
                   <div className="amenities-grid">
                     {propertyAmenities.length > 0 ? (
                       propertyAmenities.map((amenity, index) => {
@@ -1083,7 +1169,19 @@ export default function PropertyDetailPage() {
               const propertyFeatures = getPropertyFeatures();
               return propertyFeatures.length > 0 || (property.featureNames && property.featureNames.length > 0) ? (
                 <div className="property-section mt-4">
-                  <h4 className="section-subtitle">Residential Features</h4>
+                  <div className="d-flex align-items-center justify-content-between mb-3">
+                    <h4 className="section-subtitle mb-0">Residential Features</h4>
+                    <OverlayTrigger
+                      placement="top"
+                      overlay={FeaturesTooltip}
+                    >
+                      <FontAwesomeIcon 
+                        icon={faCircleInfo} 
+                        className="info-icon-section"
+                        style={{ cursor: 'help', color: '#6c757d', fontSize: '0.85rem' }}
+                      />
+                    </OverlayTrigger>
+                  </div>
                   <div className="amenities-grid">
                     {propertyFeatures.length > 0 ? (
                       propertyFeatures.map((feature, index) => {
@@ -1130,7 +1228,19 @@ export default function PropertyDetailPage() {
               const propertyNearbyBenefits = getPropertyNearbyBenefits();
               return propertyNearbyBenefits.length > 0 ? (
                 <div className="property-section mt-4">
-                  <h4 className="section-subtitle">Nearby Benefits</h4>
+                  <div className="d-flex align-items-center justify-content-between mb-3">
+                    <h4 className="section-subtitle mb-0">Nearby Benefits</h4>
+                    <OverlayTrigger
+                      placement="top"
+                      overlay={NearbyBenefitsTooltip}
+                    >
+                      <FontAwesomeIcon 
+                        icon={faCircleInfo} 
+                        className="info-icon-section"
+                        style={{ cursor: 'help', color: '#6c757d', fontSize: '0.85rem' }}
+                      />
+                    </OverlayTrigger>
+                  </div>
                   <div className="amenities-grid">
                     {propertyNearbyBenefits.map((benefit, index) => {
                       // Get the full benefit details from allNearbyBenefits
@@ -1138,7 +1248,7 @@ export default function PropertyDetailPage() {
                       const benefitIcon = benefit.benefitIcon || fullBenefit?.benefitIcon;
                       const imageUrl = benefitIcon ? getNearbyBenefitImageUrl(benefitIcon) : null;
                       const benefitName = benefit.benefitName || fullBenefit?.benefitName || 'Nearby Benefit';
-                      const distance = benefit.distance ? `${benefit.distance} KM` : '';
+                      const distance = benefit.distance ? `~ ${benefit.distance} KM` : '';
                       const altTag = benefit.altTag || fullBenefit?.altTag || benefitName;
                       
                       return (
@@ -1178,17 +1288,75 @@ export default function PropertyDetailPage() {
             {/* Society / Project Section */}
             {property.projectName && (
               <div id="society-section" className="property-section mt-4">
-                <h4 className="section-subtitle">Society / Project</h4>
+                <div className="d-flex align-items-center justify-content-between mb-3">
+                  <h4 className="section-subtitle mb-0">Society / Project</h4>
+                </div>
                 <div className="society-info">
                   <h5 className="society-name">{property.projectName}</h5>
                   <div className="society-details">
                     {property.bedrooms && (
                       <span>{getBedroomLabel(property.bedrooms)}</span>
                     )}
-                    {property.builderName && (
-                      <span className="ms-2">Developed / built by {property.builderName}</span>
+                    {/* Display builder from project details if available, otherwise from property */}
+                    {(projectDetails?.builderName || property.builderName) && (
+                      <span className="ms-2">
+                        Developed / built by {projectDetails?.builderName || property.builderName}
+                      </span>
+                    )}
+                    {/* Display builder details if available from project */}
+                    {projectDetails?.builderDetails && (
+                      <div className="mt-2">
+                        <p className="text-muted small mb-1">
+                          <strong>Builder:</strong> {projectDetails.builderDetails.builderName || projectDetails.builderName}
+                        </p>
+                        {projectDetails.builderDetails.builderDescription && (
+                          <p className="text-muted small mb-0">
+                            {projectDetails.builderDetails.builderDescription}
+                          </p>
+                        )}
+                      </div>
                     )}
                   </div>
+                  {/* Display project description if available */}
+                  {projectDetails?.projectDescription && (
+                    <div className="mt-3">
+                      <h6 className="mb-2">About Project</h6>
+                      <p className="text-muted">
+                        {projectDetails.projectDescription}
+                      </p>
+                    </div>
+                  )}
+                  {/* Display additional project details if available */}
+                  {projectDetails && (
+                    <div className="mt-3">
+                      {projectDetails.projectType && (
+                        <p className="text-muted small mb-1">
+                          <strong>Project Type:</strong> {projectDetails.projectType}
+                        </p>
+                      )}
+                      {projectDetails.totalUnits && (
+                        <p className="text-muted small mb-1">
+                          <strong>Total Units:</strong> {projectDetails.totalUnits}
+                        </p>
+                      )}
+                      {projectDetails.constructionStatus && (
+                        <p className="text-muted small mb-1">
+                          <strong>Construction Status:</strong> {projectDetails.constructionStatus}
+                        </p>
+                      )}
+                      {projectDetails.possessionDate && (
+                        <p className="text-muted small mb-1">
+                          <strong>Possession Date:</strong> {new Date(projectDetails.possessionDate).toLocaleDateString()}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                  {loadingProject && (
+                    <div className="mt-2">
+                      <Spinner size="sm" animation="border" />
+                      <span className="ms-2 text-muted small">Loading project details...</span>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -1236,7 +1404,9 @@ export default function PropertyDetailPage() {
 
             {/* Price Trends Section */}
             <div id="price-trends-section" className="property-section mt-4">
-              <h4 className="section-subtitle">Price Trends</h4>
+              <div className="d-flex align-items-center justify-content-between mb-3">
+                <h4 className="section-subtitle mb-0">Price Trends</h4>
+              </div>
               <div className="price-trends-info">
                 <p className="text-muted">
                   Price trends and market analysis for this property will be displayed here.
@@ -1258,7 +1428,9 @@ export default function PropertyDetailPage() {
 
             {/* Explore Locality Section */}
             <div id="locality-section" className="property-section mt-4">
-              <h4 className="section-subtitle">Explore Locality</h4>
+              <div className="d-flex align-items-center justify-content-between mb-3">
+                <h4 className="section-subtitle mb-0">Explore Locality</h4>
+              </div>
               <div className="locality-info">
                 {locationParts.filter(Boolean).length > 0 && (
                   <div className="locality-details mb-3">
@@ -1287,7 +1459,9 @@ export default function PropertyDetailPage() {
             {/* Owner Properties Section - Recommendation */}
             {relatedProperties.length > 0 && (
               <div id="recommendation-section" className="property-section mt-4">
-                <h4 className="section-subtitle">Owner Properties Available Only on MPF</h4>
+                <div className="d-flex align-items-center justify-content-between mb-3">
+                  <h4 className="section-subtitle mb-0">Owner Properties Available Only on MPF</h4>
+                </div>
                 <div className="owner-properties-grid">
                   {relatedProperties.map((related) => {
                     const relatedImageUrl = related.imageUrls && related.imageUrls.length > 0
