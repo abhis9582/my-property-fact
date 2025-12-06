@@ -35,6 +35,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Spinner, Alert, Badge, Button, Modal, Form, OverlayTrigger, Tooltip } from "react-bootstrap";
 import axios from "axios";
+import VirtualTour from "./VirtualTour";
 import "./property-detail.css";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005";
@@ -1360,6 +1361,14 @@ export default function PropertyDetailPage() {
                 </div>
               </div>
             )}
+
+            {/* Virtual Tour Section */}
+            {/* <div className="property-section mt-4">
+              <div className="d-flex align-items-center justify-content-between mb-3">
+                <h4 className="section-subtitle mb-0">Virtual Tour</h4>
+              </div>
+              <VirtualTour />
+            </div> */}
 
             {/* Contact Information Section */}
 
