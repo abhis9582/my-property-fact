@@ -212,7 +212,7 @@ export default function ManageGallery({ list, projectsList, newList }) {
         functionName={handleShow}
         heading={"Manage Project's Gallery"}
       />
-      <div className="table-container mt-5">
+      <div className="table-container">
         <DataTable
           columns={columns}
           list={list.map((item) => ({

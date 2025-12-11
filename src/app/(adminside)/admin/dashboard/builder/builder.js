@@ -113,7 +113,7 @@ export default function Builder({ list }) {
     return (
         <div>
             <DashboardHeader buttonName={"+ Add Builder"} functionName={openAddModel} heading={"Manage Builders"} />
-            <div className="table-container mt-5">
+            <div className="table-container">
                 <DataTable columns={columns} list={list} />
             </div>
             <GenerateForm

@@ -144,8 +144,14 @@ export default function AdminLayout({ children }) {
   // Show loading state while checking authorization
   if (isChecking) {
     return (
-      <div className="admin-layout-wrapper" style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
-        <div className="spinner-border text-primary" role="status">
+      <div className="admin-layout-wrapper" style={{ 
+        display: "flex", 
+        justifyContent: "center", 
+        alignItems: "center", 
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%)"
+      }}>
+        <div className="spinner-border" role="status" style={{ width: "3rem", height: "3rem", borderWidth: "0.3rem", color: "#68ac78" }}>
           <span className="visually-hidden">Loading...</span>
         </div>
       </div>

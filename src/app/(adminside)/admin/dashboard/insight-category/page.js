@@ -158,7 +158,7 @@ export default function InsightCategory() {
           {pageObject.headingbuttonName}
         </Button>
       </div>
-      <div className="table-container mt-5">
+      <div className="table-container">
         <Paper sx={{ height: 550, width: "100%" }}>
           <DataGrid
             rows={allHeadersList}

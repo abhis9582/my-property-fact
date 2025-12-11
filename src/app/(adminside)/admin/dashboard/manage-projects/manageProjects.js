@@ -653,7 +653,7 @@ export default function ManageProjects({
         exportExcel={"Export to excel"}
         exportFunction={exportAllProjectToExcel}
       />
-      <div className="table-container mt-5">
+      <div className="table-container">
         <DataTable list={projectDetailList} columns={columns} />
       </div>
       {/* Modal for adding a new project */}

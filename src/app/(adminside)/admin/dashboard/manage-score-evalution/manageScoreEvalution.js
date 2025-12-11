@@ -217,7 +217,7 @@ export default function ManageScoreEvalution({ localityList, list }) {
         heading={"Manage Score Evalution"}
       />
 
-      <div className="mt-5">
+      <div>
         <DataTable columns={columns} list={list} />
       </div>
 

@@ -77,7 +77,7 @@ export default function ManageCareerApplications({ list = [] }) {
                     Export to excel
                 </Button>
             </div>
-            <div className="table-responsive mt-5">
+            <div className="table-responsive">
                 <DataTable columns={columns} list={list} />
             </div>
             <CommonModal 

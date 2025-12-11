@@ -124,7 +124,7 @@ export default function ManageProjectWalkthrough({ list, projectList, projectWit
         <div className="container-fluid">
             <DashboardHeader buttonName={'+ Add Walkthrough'} functionName={openAddModal} heading={'Manage Project Walkthrough'} />
             {/* Show All data in tabular form */}
-            <div className="mt-5">
+            <div>
                 <DataTable columns={columns} list={list} />
             </div>
             {/* Model for adding walkthrough */}

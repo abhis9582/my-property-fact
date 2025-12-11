@@ -374,7 +374,7 @@ export default function ManageUsers({ users: initialUsers }) {
     <div className="container-fluid">
       <DashboardHeader heading="Manage Users" />
       
-      <div className="mt-4">
+      <div>
         <DataTable list={tableData} columns={columns} />
       </div>
 

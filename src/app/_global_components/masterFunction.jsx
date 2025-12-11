@@ -42,9 +42,10 @@ export const getAllProjects = cache(async () => {
   const res = await fetch(`${apiUrl}projects`, {
     next: { revalidate: 60 }, // ISR: refresh every 60s
   });
-  console.log(`Called getAllProjects and length is ${res.length}`);
   if (!res.ok) throw new Error("Failed to fetch projects");
-  return res.json();
+  const data = await res.json();
+  console.log(`Called getAllProjects and length is ${Array.isArray(data) ? data.length : "unknown"}`);
+  return data;
 });
 
 //Fetching all cities
@@ -56,9 +57,10 @@ export const fetchCityData = cache(async () => {
   const res = await fetch(`${apiUrl}city/all`, {
     next: { revalidate: 60 }, // revalidate every 60 seconds
   });
-  console.log(`Called fetchCityData and length is ${res.length}`);
   if (!res.ok) throw new Error("Failed to fetch cities");
-  return res.json();
+  const data = await res.json();
+  console.log(`Called fetchCityData and length is ${Array.isArray(data) ? data.length : "unknown"}`);
+  return data;
 });
 
 // Fetching project types
@@ -111,7 +113,6 @@ export const isFloorTypeUrl = async (slug) => {
   });
   if (!res.ok) throw new Error("Failed to fetch project details");
   const data = await res.json(); // array of projects'
-  debugger
   const uniqueUrls = new Set();
   data.forEach((project) => {
     if (Array.isArray(project.plans)) {
@@ -154,9 +155,12 @@ export const fetchBlogs = cache(async (page, size) => {
       next: { revalidate: 60 },
     }
   );
-  const blogsData = await res.json();
   if (!res.ok) throw new Error("Failed to fetch blogs");
-  console.log(`Fetched blogs and total is ${blogsData.length}`); // runs only once per cache
+  const blogsData = await res.json();
+  // Handle different response structures: could be array, object with data array, or object with total
+  const blogsArray = Array.isArray(blogsData) ? blogsData : (blogsData?.data || blogsData?.blogs || []);
+  const total = blogsData?.total || blogsData?.totalCount || blogsArray.length;
+  console.log(`Fetched blogs and total is ${total}`); // runs only once per cache
   return blogsData;
 });
 

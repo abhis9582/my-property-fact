@@ -152,7 +152,7 @@ export default function LocationBenefit({ list, projectList }) {
     return (
         <>
             <DashboardHeader buttonName={'+ Add New'} functionName={openAddModel} heading={'Manage Location Benefits'} />
-            <div className="table-container mt-5">
+            <div className="table-container">
                 <DataTable columns={columns} list={list.map(item => ({
                     ...item,
                     image: item.locationBenefits.map(item => item.image),

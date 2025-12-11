@@ -141,7 +141,7 @@ export default function ManageFaqs({ list, projectsList }) {
     return (
         <>
             <DashboardHeader buttonName={"+Add FAQ"} functionName={openAddModel} heading={"Manage FAQs"} />
-            <div className="table-container mt-5">
+            <div className="table-container">
                 <DataTable columns={columns} list={list} />
             </div>
             <Modal size="lg" show={show} onHide={() => setShow(false)} centered>

@@ -122,7 +122,7 @@ export default function ManageProjectAbout({ list, projectsList, projectIdsWithA
     return (
         <div className="container-fluid">
             <DashboardHeader buttonName={"+ Add"} functionName={openAddModel} heading={"Manage Project About"} />
-            <div className="table-container mt-5">
+            <div className="table-container">
                 <DataTable columns={columns} list={list} />
             </div>
             {/* Modal for adding a new city */}

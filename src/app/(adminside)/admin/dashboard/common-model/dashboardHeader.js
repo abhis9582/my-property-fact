@@ -9,7 +9,7 @@ export default function DashboardHeader({
 }) {
   return (
     <>
-      <div className="d-flex justify-content-between mt-3">
+      <div className="d-flex justify-content-between mt-2">
         <h1>{heading}</h1>
         <div>
           {exportExcel && (

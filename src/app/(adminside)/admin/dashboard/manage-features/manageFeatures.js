@@ -186,7 +186,7 @@ export default function ManageFeatures({ list }) {
         functionName={openAddModel}
         heading={"Manage Features"}
       />
-      <div className="mt-5">
+      <div>
         <DataTable columns={columns} list={list} />
       </div>
       {/* Modal for adding features */}
