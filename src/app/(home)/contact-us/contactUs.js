@@ -92,12 +92,10 @@ export default function ContactUs() {
         <div className="info-container-child">
           <p>Email Address</p>
           <p>social@mypropertyfact.com</p>
-          {/* <p>jobs@mypropertyfact.com</p> */}
         </div>
         <div className="info-container-child">
           <p>Phone Number</p>
           <p>8920024793</p>
-          {/* <p>+987-6543210</p> */}
         </div>
         <div className="info-container-child">
           <p>Office Address</p>

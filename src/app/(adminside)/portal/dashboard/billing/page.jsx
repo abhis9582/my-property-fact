@@ -116,7 +116,7 @@ export default function BillingPage() {
   return (
     <div className="billing-page">
       {/* Header */}
-      <div className="page-header">
+      <div className="page-header page-header-gradient">
         <div className="header-content">
           <div className="header-title">
             <h2>Billing & Subscription</h2>
@@ -363,47 +363,8 @@ export default function BillingPage() {
       </Row>
 
       <style jsx>{`
-        .billing-page {
-          padding: 2rem;
-          background: #f8f9fa;
-          min-height: 100vh;
-        }
-
-        .page-header {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 2rem;
-          border-radius: 12px;
-          margin-bottom: 2rem;
-          box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .header-content {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 1rem;
-        }
-
-        .header-title h2 {
-          margin: 0;
-          font-weight: 700;
-          font-size: 2rem;
-        }
-
-        .header-title p {
-          margin: 0.5rem 0 0;
-          opacity: 0.9;
-          font-size: 1.1rem;
-        }
-
-        .plan-card, .invoices-card, .payment-methods-card, .billing-summary-card, .quick-actions-card {
-          border: none;
-          border-radius: 12px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-          background: white;
-        }
+        /* Common styles are now in PortalCommonStyles.css */
+        /* Only page-specific styles below */
 
         .plan-name {
           color: #495057;

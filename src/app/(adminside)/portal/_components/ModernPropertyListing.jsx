@@ -10,6 +10,7 @@ import {
   Alert,
   Badge,
   Modal,
+  Spinner,
 } from "react-bootstrap";
 import Cookies from "js-cookie";
 import "./EnhancedFormStyles.css";
@@ -42,7 +43,7 @@ import {
 import axios from "axios";
 import NextImage from "next/image";
 
-export default function ModernPropertyListing({ listingId }) {
+export default function ModernPropertyListing({ listingId: propListingId }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,6 +51,10 @@ export default function ModernPropertyListing({ listingId }) {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [createdProperty, setCreatedProperty] = useState(null);
   const [draftSaved, setDraftSaved] = useState(false);
+  const [savedListingId, setSavedListingId] = useState(propListingId || null);
+  
+  // Use savedListingId if available, otherwise use propListingId
+  const listingId = savedListingId || propListingId;
   const [propertyStatus, setPropertyStatus] = useState([]);
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [builders, setBuilders] = useState([]);
@@ -125,11 +130,13 @@ export default function ModernPropertyListing({ listingId }) {
     contactPreference: "Phone",
     preferredTime: "",
     additionalNotes: "",
-    truthfulDeclaration: true,
-    dpdpConsent: true,
+    truthfulDeclaration: false,
+    dpdpConsent: false,
   });
 
-  const [formData, setFormData] = useState(getInitialFormState);
+  const [formData, setFormData] = useState(() => getInitialFormState());
+  const [loadingProperty, setLoadingProperty] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const steps = [
     {
@@ -312,6 +319,16 @@ export default function ModernPropertyListing({ listingId }) {
     if (step === 3) {
       const floor = Number(formData.floor);
       const totalFloors = Number(formData.totalFloors);
+      
+      // Check for negative values
+      if (formData.floor && floor < 0) {
+        stepErrors.floor = "Floor number cannot be negative";
+      }
+      if (formData.totalFloors && totalFloors < 0) {
+        stepErrors.totalFloors = "Total floors cannot be negative";
+      }
+      
+      // Check if floor is greater than total floors
       if (floor && totalFloors && floor > totalFloors) {
         stepErrors.floor = `Floor number cannot be greater than total floors (${totalFloors})`;
       }
@@ -512,8 +529,11 @@ export default function ModernPropertyListing({ listingId }) {
         (img) => img.id === imageId
       );
       if (imageToRemove) {
-        // Revoke the object URL to free memory
-        URL.revokeObjectURL(imageToRemove.preview);
+        // Only revoke object URLs (not HTTP URLs for existing images)
+        // Object URLs start with 'blob:' or are created via URL.createObjectURL
+        if (imageToRemove.preview && imageToRemove.preview.startsWith('blob:')) {
+          URL.revokeObjectURL(imageToRemove.preview);
+        }
       }
 
       return {
@@ -533,7 +553,10 @@ export default function ModernPropertyListing({ listingId }) {
   useEffect(() => {
     return () => {
       formData.imagePreviews.forEach((imageData) => {
-        URL.revokeObjectURL(imageData.preview);
+        // Only revoke object URLs (blob URLs), not HTTP URLs for existing images
+        if (imageData.preview && imageData.preview.startsWith('blob:')) {
+          URL.revokeObjectURL(imageData.preview);
+        }
       });
     };
   }, [formData.imagePreviews]);
@@ -667,6 +690,177 @@ export default function ModernPropertyListing({ listingId }) {
     loadNearbyBenefits();
   }, []);
 
+  // Load existing property data when listingId is provided (edit mode)
+  useEffect(() => {
+    // Update savedListingId when propListingId changes
+    if (propListingId && propListingId !== savedListingId) {
+      setSavedListingId(propListingId);
+    }
+  }, [propListingId]);
+
+  useEffect(() => {
+    if (!listingId) {
+      setIsEditMode(false);
+      return;
+    }
+
+    const fetchPropertyData = async () => {
+      setLoadingProperty(true);
+      setIsEditMode(true);
+      
+      try {
+        const token = Cookies.get("authToken") || Cookies.get("token");
+        if (!token) {
+          console.error("No authentication token found");
+          setLoadingProperty(false);
+          return;
+        }
+
+        const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005").replace(/\/$/, "");
+        const response = await fetch(`${baseUrl}/api/user/property-listings/${listingId}`, {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch property: ${response.status}`);
+        }
+
+        const result = await response.json();
+        
+        if (result.success && result.property) {
+          const property = result.property;
+          
+          // Debug: Log the property data to see what we're receiving
+          console.log("Property data received:", property);
+          console.log("truthfulDeclaration from API:", property.truthfulDeclaration);
+          console.log("dpdpConsent from API:", property.dpdpConsent);
+          
+          // Get initial form state first, then override with property data
+          const initialFormState = getInitialFormState();
+          
+          // Populate form with existing property data
+          setFormData({
+            ...initialFormState, // Start with all initial fields (checkboxes default to false)
+            // Basic Information
+            listingType: property.listingType || "",
+            transaction: property.transaction || property.transactionType || "",
+            subType: property.subType || "",
+            title: property.title || "",
+            description: property.description || "",
+            status: property.status || "",
+            possession: property.possession || "",
+            occupancy: property.occupancy || "",
+            noticePeriod: property.noticePeriod || "",
+
+            // Location & Area
+            projectName: property.projectName || "",
+            projectId: property.projectId || null,
+            builderName: property.builderName || "",
+            builderId: property.builderId || null,
+            address: property.address || "",
+            locality: property.locality || "",
+            city: property.city || "",
+            cityId: property.cityId || null,
+            pincode: property.pincode || property.pinCode || "",
+            carpetArea: property.carpetArea !== null && property.carpetArea !== undefined ? property.carpetArea.toString() : "",
+            builtUpArea: property.builtUpArea !== null && property.builtUpArea !== undefined ? property.builtUpArea.toString() : "",
+            superBuiltUpArea: property.superBuiltUpArea !== null && property.superBuiltUpArea !== undefined ? property.superBuiltUpArea.toString() : "",
+            plotArea: property.plotArea !== null && property.plotArea !== undefined ? property.plotArea.toString() : "",
+            latitude: property.latitude !== null && property.latitude !== undefined ? property.latitude.toString() : "",
+            longitude: property.longitude !== null && property.longitude !== undefined ? property.longitude.toString() : "",
+
+            // Pricing & Floor Details
+            totalPrice: property.totalPrice !== null && property.totalPrice !== undefined ? property.totalPrice.toString() : "",
+            pricePerSqFt: property.pricePerSqft !== null && property.pricePerSqft !== undefined ? property.pricePerSqft.toString() : (property.pricePerSqFt !== null && property.pricePerSqFt !== undefined ? property.pricePerSqFt.toString() : ""),
+            maintenanceCharges: property.maintenanceCharges !== null && property.maintenanceCharges !== undefined ? property.maintenanceCharges.toString() : (property.maintenanceCam !== null && property.maintenanceCam !== undefined ? property.maintenanceCam.toString() : ""),
+            bookingAmount: property.bookingAmount !== null && property.bookingAmount !== undefined ? property.bookingAmount.toString() : "",
+            floor: property.floorNumber !== null && property.floorNumber !== undefined ? property.floorNumber.toString() : (property.floorNo !== null && property.floorNo !== undefined ? property.floorNo.toString() : ""),
+            totalFloors: property.totalFloors !== null && property.totalFloors !== undefined ? property.totalFloors.toString() : "",
+            facing: property.facing || property.unitFacing || "",
+            ageOfConstruction: property.ageOfConstruction !== null && property.ageOfConstruction !== undefined ? property.ageOfConstruction.toString() : (property.ageOfProperty !== null && property.ageOfProperty !== undefined ? property.ageOfProperty.toString() : ""),
+
+            // Features & Amenities
+            bedrooms: (property.bedrooms !== null && property.bedrooms !== undefined) ? property.bedrooms.toString() : "",
+            bathrooms: (property.bathrooms !== null && property.bathrooms !== undefined) ? property.bathrooms.toString() : "",
+            balconies: (property.balconies !== null && property.balconies !== undefined) ? property.balconies.toString() : "",
+            parking: property.parking || property.parkingType || "",
+            furnished: property.furnished || property.furnishingLevel || "",
+            amenityIds: Array.isArray(property.amenityIds) ? property.amenityIds : (Array.isArray(property.amenities) ? property.amenities.map(a => typeof a === 'object' ? a.id : a) : []),
+            featureIds: Array.isArray(property.featureIds) ? property.featureIds : (Array.isArray(property.features) ? property.features.map(f => typeof f === 'object' ? f.id : f) : []),
+            nearbyBenefits: Array.isArray(property.nearbyBenefits) ? property.nearbyBenefits : [],
+
+            // Media & Contact
+            images: [],
+            imagePreviews: property.imageUrls ? property.imageUrls.map((url, index) => {
+              // Format image URL properly
+              let imageUrl = url;
+              if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                // Handle different URL formats
+                if (url.includes('property-listings')) {
+                  // Extract listing ID and filename from path
+                  const pathParts = url.replace(/\\/g, '/').split('/');
+                  const propertyListingsIndex = pathParts.findIndex(p => p.toLowerCase() === 'property-listings');
+                  if (propertyListingsIndex !== -1 && pathParts.length > propertyListingsIndex + 2) {
+                    const listingId = pathParts[propertyListingsIndex + 1];
+                    const filename = pathParts.slice(propertyListingsIndex + 2).join('/');
+                    imageUrl = `${baseUrl}/get/images/property-listings/${listingId}/${filename}`;
+                  } else {
+                    imageUrl = `${baseUrl}/get/images/${url.replace(/\\/g, '/')}`;
+                  }
+                } else {
+                  imageUrl = `${baseUrl}/get/images/${url.replace(/\\/g, '/')}`;
+                }
+              }
+              return {
+                id: `existing-${index}`,
+                preview: imageUrl,
+                isExisting: true,
+                url: url
+              };
+            }) : [],
+            videos: Array.isArray(property.videoUrls) ? property.videoUrls : [],
+            virtualTour: property.videoUrl || property.virtualTour || "",
+            ownershipType: property.ownershipType || "",
+            reraId: property.reraId || "",
+            reraState: property.reraState || "",
+            contactName: property.contactName || "",
+            contactPhone: property.contactPhone || property.primaryContact || "",
+            contactEmail: property.contactEmail || property.primaryEmail || "",
+            contactPreference: property.contactPreference || "Phone",
+            preferredTime: property.preferredTime || "",
+            additionalNotes: property.additionalNotes || property.renovationHistory || "",
+            truthfulDeclaration: property.truthfulDeclaration !== undefined ? property.truthfulDeclaration : false,
+            dpdpConsent: property.dpdpConsent !== undefined ? property.dpdpConsent : false,
+            // Additional fields that might be in the API response
+            waterSupply: property.waterSupply || "",
+            towerBlock: property.towerBlock || "",
+            powerBackup: property.powerBackup || "",
+            restrictions: property.restrictions || "",
+            taxesCharges: Array.isArray(property.taxesCharges) ? property.taxesCharges : [],
+            pointsOfInterest: Array.isArray(property.pointsOfInterest) ? property.pointsOfInterest : [],
+            state: property.state || "",
+            localityId: property.localityId || null,
+          });
+          
+          // Debug: Log the populated form data
+          console.log("Form data populated successfully");
+        } else {
+          console.error("Property data not found in API response:", result);
+        }
+      } catch (error) {
+        console.error("Error fetching property data:", error);
+        alert("Failed to load property data. Please try again.");
+      } finally {
+        setLoadingProperty(false);
+      }
+    };
+
+    fetchPropertyData();
+  }, [listingId]);
+
   const handleNext = () => {
     if (validateStep(currentStep)) {
       setCurrentStep((prev) => Math.min(prev + 1, steps.length));
@@ -708,6 +902,11 @@ export default function ModernPropertyListing({ listingId }) {
 
       // Prepare property data using shared function
       const propertyData = preparePropertyData();
+      
+      // Set approval status to PENDING when submitting (not draft)
+      // When user clicks "Submit Property", it should be submitted for approval
+      propertyData.approvalStatus = "PENDING";
+      propertyData.isUserSubmitted = true;
 
       // Add property data as JSON string (backend will parse it)
       formDataObj.append("property", JSON.stringify(propertyData));
@@ -715,17 +914,21 @@ export default function ModernPropertyListing({ listingId }) {
         process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005"
       ).replace(/\/$/, "");
 
-      const response = await fetch(
-        `${baseUrl}/api/user/property-listings`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            // Don't set Content-Type, browser will set it with boundary
-          },
-          body: formDataObj,
-        }
-      );
+      // Use PUT for updates, POST for new listings
+      const url = isEditMode && listingId
+        ? `${baseUrl}/api/user/property-listings/${listingId}`
+        : `${baseUrl}/api/user/property-listings`;
+      
+      const method = isEditMode && listingId ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // Don't set Content-Type, browser will set it with boundary
+        },
+        body: formDataObj,
+      });
 
       const responseText = await response.text();
       let result = null;
@@ -739,15 +942,31 @@ export default function ModernPropertyListing({ listingId }) {
 
       if (!response.ok || !(result && result.success)) {
         const message =
-          result?.message || `Failed to create property (status ${response.status})`;
+          result?.message || `Failed to ${isEditMode ? 'update' : 'create'} property (status ${response.status})`;
         throw new Error(message);
       }
 
       setCreatedProperty(result.property || null);
-      setFormData(getInitialFormState());
-      setErrors({});
-      setCurrentStep(1);
-      setShowSuccessModal(true);
+      
+      // Update savedListingId if property was created
+      if (result.property && result.property.id) {
+        setSavedListingId(result.property.id);
+      }
+      
+      if (isEditMode) {
+        // For edit mode, show success and redirect or refresh
+        alert("Property updated successfully!");
+        // Optionally redirect back to listings page
+        if (typeof window !== 'undefined') {
+          window.location.href = '/portal/dashboard/listings';
+        }
+      } else {
+        // For new listings, reset form and show success modal
+        setFormData(getInitialFormState());
+        setErrors({});
+        setCurrentStep(1);
+        setShowSuccessModal(true);
+      }
     } catch (error) {
       console.error("Error submitting property:", error);
       alert(error.message || "Error submitting property. Please try again.");
@@ -876,9 +1095,9 @@ export default function ModernPropertyListing({ listingId }) {
       truthfulDeclaration:
         formData.truthfulDeclaration !== undefined
           ? formData.truthfulDeclaration
-          : true,
+          : false,
       dpdpConsent:
-        formData.dpdpConsent !== undefined ? formData.dpdpConsent : true,
+        formData.dpdpConsent !== undefined ? formData.dpdpConsent : false,
 
       // Legacy/contact
       additionalNotes: emptyToNull(formData.additionalNotes),
@@ -916,6 +1135,10 @@ export default function ModernPropertyListing({ listingId }) {
 
       // Prepare property data
       const propertyData = preparePropertyData();
+      
+      // Set approval status to DRAFT when saving as draft
+      propertyData.approvalStatus = "DRAFT";
+      propertyData.isUserSubmitted = false; // Draft is not yet submitted for approval
 
       // Add property data as JSON string
       formDataObj.append("property", JSON.stringify(propertyData));
@@ -923,16 +1146,20 @@ export default function ModernPropertyListing({ listingId }) {
         process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005"
       ).replace(/\/$/, "");
 
-      const response = await fetch(
-        `${baseUrl}/api/user/property-listings`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formDataObj,
-        }
-      );
+      // Use PUT for updates, POST for new drafts
+      const url = isEditMode && listingId
+        ? `${baseUrl}/api/user/property-listings/${listingId}`
+        : `${baseUrl}/api/user/property-listings`;
+      
+      const method = isEditMode && listingId ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formDataObj,
+      });
 
       const responseText = await response.text();
       let result = null;
@@ -946,7 +1173,7 @@ export default function ModernPropertyListing({ listingId }) {
 
       if (!response.ok || !(result && result.success)) {
         const message =
-          result?.message || `Failed to save draft (status ${response.status})`;
+          result?.message || `Failed to ${isEditMode ? 'update' : 'save draft'} (status ${response.status})`;
         throw new Error(message);
       }
 
@@ -954,9 +1181,24 @@ export default function ModernPropertyListing({ listingId }) {
       setDraftSaved(true);
       setTimeout(() => setDraftSaved(false), 3000);
 
-      // If property was created, we could optionally redirect or update state
-      if (result.property) {
-        console.log("Draft saved with ID:", result.property.id);
+      // If property was created/updated, update listingId and isEditMode for future saves
+      if (result.property && result.property.id) {
+        const savedId = result.property.id;
+        console.log(`${isEditMode ? 'Draft updated' : 'Draft saved'} with ID:`, savedId);
+        
+        // Update savedListingId state so future saves use PUT instead of POST
+        setSavedListingId(savedId);
+        
+        // If this was a new draft (not edit mode), update URL and edit mode
+        if (!isEditMode && !propListingId) {
+          // Update the URL to include the ID for future edits
+          if (typeof window !== 'undefined') {
+            const newUrl = `/portal/dashboard/listings/${savedId}?action=edit`;
+            window.history.replaceState({}, '', newUrl);
+          }
+          // Update state so future saves use PUT instead of POST
+          setIsEditMode(true);
+        }
       }
     } catch (error) {
       console.error("Error saving draft:", error);
@@ -1032,19 +1274,32 @@ export default function ModernPropertyListing({ listingId }) {
 
   const progressPercentage = (currentStep / steps.length) * 100;
 
+  // Show loading state while fetching property data in edit mode
+  if (loadingProperty) {
+    return (
+      <div className="modern-property-listing portal-content">
+        <div className="text-center py-5">
+          <Spinner animation="border" role="status" style={{ color: 'var(--portal-primary, #68ac78)' }}>
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+          <p className="mt-3 text-muted">Loading property data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="modern-property-listing">
+    <div className="modern-property-listing portal-content">
       {/* Header */}
-      <div className="listing-header">
+      <div className="dashboard-header">
         <div className="header-content">
           <div className="header-title">
-            <h2>Add New Property</h2>
-            <p>Create a comprehensive property listing in 5 simple steps</p>
+            <h2>{isEditMode ? "Edit Property" : "Add New Property"}</h2>
+            <p>{isEditMode ? "Update your property listing information" : "Create a comprehensive property listing in 5 simple steps"}</p>
           </div>
           <div className="header-actions">
             <Button 
-              variant="outline-secondary" 
-              className="me-2"
+              variant="light"
               onClick={handleSaveDraft}
               disabled={isSavingDraft}
             >
@@ -1056,20 +1311,20 @@ export default function ModernPropertyListing({ listingId }) {
       </div>
 
       {/* Progress Indicator */}
-      <Card className="progress-card">
+      <Card className="dashboard-card progress-card">
         <Card.Body>
           <div className="progress-header">
             <h5>
               Step {currentStep} of {steps.length}:{" "}
               {steps[currentStep - 1].title}
             </h5>
-            <p>{steps[currentStep - 1].description}</p>
+            <p className="text-muted">{steps[currentStep - 1].description}</p>
           </div>
           <ProgressBar
             now={progressPercentage}
-            variant="primary"
+            variant="success"
             className="progress-bar-custom"
-            style={{ height: "8px", borderRadius: "4px" }}
+            style={{ height: "10px", borderRadius: "5px" }}
           />
           <div className="step-indicators">
             {steps.map((step, index) => (
@@ -1098,7 +1353,7 @@ export default function ModernPropertyListing({ listingId }) {
       </Card>
 
       {/* Form Content */}
-      <Card className="form-card">
+      <Card className="dashboard-card form-card">
         <Card.Body>
           {draftSaved && (
             <Alert variant="success" className="mb-4" dismissible onClose={() => setDraftSaved(false)}>
@@ -1124,9 +1379,9 @@ export default function ModernPropertyListing({ listingId }) {
       </Card>
 
       {/* Navigation */}
-      <Card className="navigation-card">
+      <Card className="dashboard-card navigation-card">
         <Card.Body>
-          <div className="d-flex justify-content-between align-items-center">
+          <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <Button
               variant="outline-secondary"
               onClick={handlePrevious}
@@ -1151,8 +1406,17 @@ export default function ModernPropertyListing({ listingId }) {
                 onClick={handleSubmit}
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Submitting..." : "Submit Property"}
-                <CIcon icon={cilCheck} className="ms-1" />
+                {isSubmitting ? (
+                  <>
+                    <Spinner size="sm" className="me-2" />
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    Submit Property
+                    <CIcon icon={cilCheck} className="ms-1" />
+                  </>
+                )}
               </Button>
             )}
           </div>
@@ -1202,64 +1466,36 @@ export default function ModernPropertyListing({ listingId }) {
       </Modal>
 
       <style jsx>{`
+        /* Common styles are now in PortalCommonStyles.css */
+        /* Only component-specific styles below */
+        
         .modern-property-listing {
-          padding: 2rem;
-          background: #f8f9fa;
-          min-height: 100vh;
-        }
-
-        .listing-header {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 2rem;
-          border-radius: 12px;
-          margin-bottom: 2rem;
-          box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .header-content {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 1rem;
-        }
-
-        .header-title h2 {
-          margin: 0;
-          font-weight: 700;
-          font-size: 2rem;
-        }
-
-        .header-title p {
-          margin: 0.5rem 0 0;
-          opacity: 0.9;
-          font-size: 1.1rem;
+          /* Uses common portal-page-container styles */
         }
 
         .progress-card,
         .form-card,
         .navigation-card {
-          border: none;
-          border-radius: 12px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-          background: white;
           margin-bottom: 2rem;
         }
 
         .progress-header h5 {
-          color: #212529;
+          color: var(--portal-gray-800, #212529);
           font-weight: 600;
           margin-bottom: 0.5rem;
         }
 
         .progress-header p {
-          color: #6c757d;
+          color: var(--portal-gray-600, #6c757d);
           margin-bottom: 1.5rem;
         }
 
         .progress-bar-custom {
-          background-color: #e9ecef;
+          background-color: var(--portal-gray-200, #e9ecef);
+        }
+        
+        .progress-bar-custom .progress-bar {
+          background: linear-gradient(135deg, var(--portal-primary, #68ac78) 0%, var(--portal-primary-dark, #0d5834) 100%);
         }
 
         .step-indicators {
@@ -1281,61 +1517,74 @@ export default function ModernPropertyListing({ listingId }) {
         .step-indicator:not(:last-child)::after {
           content: "";
           position: absolute;
-          top: 15px;
+          top: 20px;
           left: 60%;
           width: 80%;
-          height: 2px;
-          background: #e9ecef;
+          height: 3px;
+          background: var(--portal-gray-200, #e9ecef);
           z-index: 1;
+          border-radius: 2px;
         }
 
         .step-indicator.completed:not(:last-child)::after {
-          background: #28a745;
+          background: linear-gradient(90deg, var(--portal-success, #28a745) 0%, var(--portal-primary, #68ac78) 100%);
+        }
+
+        .step-indicator.active:not(:last-child)::after {
+          background: linear-gradient(90deg, var(--portal-success, #28a745) 0%, var(--portal-gray-200, #e9ecef) 50%);
         }
 
         .step-icon {
-          width: 30px;
-          height: 30px;
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
-          background: #e9ecef;
+          background: var(--portal-gray-200, #e9ecef);
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #6c757d;
-          font-size: 0.875rem;
+          color: var(--portal-gray-600, #6c757d);
+          font-size: 1rem;
           position: relative;
           z-index: 2;
+          transition: all 0.3s ease;
+          border: 3px solid var(--portal-white, #ffffff);
         }
 
         .step-indicator.active .step-icon {
-          background: #667eea;
+          background: linear-gradient(135deg, var(--portal-primary, #68ac78) 0%, var(--portal-primary-dark, #0d5834) 100%);
           color: white;
+          box-shadow: 0 4px 12px rgba(104, 172, 120, 0.3);
+          transform: scale(1.1);
         }
 
         .step-indicator.completed .step-icon {
-          background: #28a745;
+          background: linear-gradient(135deg, var(--portal-success, #28a745) 0%, #1e7e34 100%);
           color: white;
+          box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
         }
 
         .step-label {
-          font-size: 0.75rem;
-          color: #6c757d;
+          font-size: 0.8rem;
+          color: var(--portal-gray-600, #6c757d);
           text-align: center;
           font-weight: 500;
+          margin-top: 0.5rem;
         }
 
         .step-indicator.active .step-label {
-          color: #667eea;
+          color: var(--portal-primary, #68ac78);
           font-weight: 600;
         }
 
         .step-indicator.completed .step-label {
-          color: #28a745;
+          color: var(--portal-success, #28a745);
+          font-weight: 600;
         }
 
         .step-info {
-          color: #6c757d;
-          font-weight: 500;
+          color: var(--portal-gray-600, #6c757d);
+          font-weight: 600;
+          font-size: 0.95rem;
         }
 
         @media (max-width: 768px) {
@@ -1371,8 +1620,8 @@ export default function ModernPropertyListing({ listingId }) {
         /* Image Gallery Styles */
         .image-gallery-container {
           margin-top: 1.5rem;
-          background: #ffffff;
-          border: 1px solid #e9ecef;
+          background: var(--portal-white, #ffffff);
+          border: 1px solid var(--portal-gray-200, #e9ecef);
           border-radius: 16px;
           overflow: hidden;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
@@ -1384,10 +1633,10 @@ export default function ModernPropertyListing({ listingId }) {
         }
 
         .gallery-header {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, var(--portal-primary, #68ac78) 0%, var(--portal-primary-dark, #0d5834) 100%);
           color: white;
           padding: 1rem 1.5rem;
-          border-bottom: 1px solid #e9ecef;
+          border-bottom: 1px solid var(--portal-gray-200, #e9ecef);
         }
 
         .gallery-title {
@@ -1415,12 +1664,12 @@ export default function ModernPropertyListing({ listingId }) {
         }
 
         .gallery-item {
-          background: #ffffff;
+          background: var(--portal-white, #ffffff);
           border-radius: 12px;
           overflow: hidden;
           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          border: 2px solid #e9ecef;
+          border: 2px solid var(--portal-gray-200, #e9ecef);
           width: 300px;
           flex-shrink: 0;
           display: flex;
@@ -1430,7 +1679,7 @@ export default function ModernPropertyListing({ listingId }) {
         .gallery-item:hover {
           transform: translateY(-6px) scale(1.02);
           box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1);
-          border-color: #667eea;
+          border-color: var(--portal-primary, #68ac78);
         }
 
         .image-container {
@@ -1440,7 +1689,7 @@ export default function ModernPropertyListing({ listingId }) {
           min-height: 200px;
           max-height: 200px;
           overflow: hidden;
-          background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+          background: linear-gradient(135deg, var(--portal-gray-50, #f8f9fa) 0%, var(--portal-gray-200, #e9ecef) 100%);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -1780,7 +2029,7 @@ function BasicInformationStep({ data, onChange, errors, propertyTypes = [], prop
                   ))
                 ) : (
                   <>
-                    <option value="Ready">✅ Ready to Move</option>
+                    <option value="Ready to Move">✅ Ready to Move</option>
                     <option value="Under-Construction">
                       🚧 Under Construction
                     </option>
@@ -1877,6 +2126,11 @@ function LocationAreaStep({
   const [cityInputFocused, setCityInputFocused] = useState(false);
   const [cityHighlightedIndex, setCityHighlightedIndex] = useState(-1);
 
+  // Refs to track dropdown clicks
+  const projectDropdownRef = useRef(null);
+  const builderDropdownRef = useRef(null);
+  const cityDropdownRef = useRef(null);
+
   // Filter projects based on search term
   const filteredProjects = projectList.filter((project) => {
     if (!projectSearchTerm.trim()) return false; // Don't show all when empty
@@ -1942,7 +2196,7 @@ function LocationAreaStep({
       setProjectHighlightedIndex((prev) => (prev > 0 ? prev - 1 : -1));
     } else if (e.key === "Enter" && projectHighlightedIndex >= 0) {
       e.preventDefault();
-      handleProjectSelect(filteredProjects[projectHighlightedIndex]);
+      handleProjectSelect(filteredProjects[projectHighlightedIndex], e);
     } else if (e.key === "Escape") {
       setShowProjectDropdown(false);
       setProjectInputFocused(false);
@@ -1963,7 +2217,7 @@ function LocationAreaStep({
       setBuilderHighlightedIndex((prev) => (prev > 0 ? prev - 1 : -1));
     } else if (e.key === "Enter" && builderHighlightedIndex >= 0) {
       e.preventDefault();
-      handleBuilderSelect(filteredBuilders[builderHighlightedIndex]);
+      handleBuilderSelect(filteredBuilders[builderHighlightedIndex], e);
     } else if (e.key === "Escape") {
       setShowBuilderDropdown(false);
       setBuilderInputFocused(false);
@@ -1984,7 +2238,7 @@ function LocationAreaStep({
       setCityHighlightedIndex((prev) => (prev > 0 ? prev - 1 : -1));
     } else if (e.key === "Enter" && cityHighlightedIndex >= 0) {
       e.preventDefault();
-      handleCitySelect(filteredCities[cityHighlightedIndex]);
+      handleCitySelect(filteredCities[cityHighlightedIndex], e);
     } else if (e.key === "Escape") {
       setShowCityDropdown(false);
       setCityInputFocused(false);
@@ -1992,7 +2246,11 @@ function LocationAreaStep({
   };
 
   // Handle project selection from dropdown
-  const handleProjectSelect = (project) => {
+  const handleProjectSelect = (project, e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     const projectName = project.projectName || project.name;
     setProjectSearchTerm(projectName);
     onChange("projectName", projectName);
@@ -2029,7 +2287,11 @@ function LocationAreaStep({
   };
 
   // Handle builder selection from dropdown
-  const handleBuilderSelect = (builder) => {
+  const handleBuilderSelect = (builder, e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     const builderName = builder.builderName || builder.name;
     setBuilderSearchTerm(builderName);
     onChange("builderName", builderName);
@@ -2041,7 +2303,11 @@ function LocationAreaStep({
   };
 
   // Handle city selection from dropdown
-  const handleCitySelect = (city) => {
+  const handleCitySelect = (city, e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     const cityName = city.cityName || city.name || city;
     setCitySearchTerm(cityName);
     onChange("city", cityName);
@@ -2069,25 +2335,42 @@ function LocationAreaStep({
   };
 
   // Handle input blur (with delay to allow click on dropdown)
-  const handleProjectBlur = () => {
+  const handleProjectBlur = (e) => {
+    // Check if the related target (where focus is moving) is inside the dropdown
+    if (projectDropdownRef.current && projectDropdownRef.current.contains(e.relatedTarget)) {
+      return; // Don't close if clicking inside dropdown
+    }
     setTimeout(() => {
-      setShowProjectDropdown(false);
-      setProjectInputFocused(false);
-    }, 200);
+      // Double-check if dropdown is still not being interacted with
+      if (!projectDropdownRef.current?.matches(':hover')) {
+        setShowProjectDropdown(false);
+        setProjectInputFocused(false);
+      }
+    }, 300);
   };
 
-  const handleBuilderBlur = () => {
+  const handleBuilderBlur = (e) => {
+    if (builderDropdownRef.current && builderDropdownRef.current.contains(e.relatedTarget)) {
+      return;
+    }
     setTimeout(() => {
-      setShowBuilderDropdown(false);
-      setBuilderInputFocused(false);
-    }, 200);
+      if (!builderDropdownRef.current?.matches(':hover')) {
+        setShowBuilderDropdown(false);
+        setBuilderInputFocused(false);
+      }
+    }, 300);
   };
 
-  const handleCityBlur = () => {
+  const handleCityBlur = (e) => {
+    if (cityDropdownRef.current && cityDropdownRef.current.contains(e.relatedTarget)) {
+      return;
+    }
     setTimeout(() => {
-      setShowCityDropdown(false);
-      setCityInputFocused(false);
-    }, 200);
+      if (!cityDropdownRef.current?.matches(':hover')) {
+        setShowCityDropdown(false);
+        setCityInputFocused(false);
+      }
+    }, 300);
   };
 
   // Initialize search term from data
@@ -2145,6 +2428,7 @@ function LocationAreaStep({
               {/* Dropdown with filtered results */}
               {showProjectDropdown && projectInputFocused && (
                 <div 
+                  ref={projectDropdownRef}
                   className="project-dropdown"
                   style={{
                     position: "absolute",
@@ -2160,6 +2444,7 @@ function LocationAreaStep({
                     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
                     marginTop: "2px",
                   }}
+                  onMouseDown={(e) => e.preventDefault()} // Prevent input blur on dropdown click
                 >
                   {filteredProjects.length > 0 ? (
                     filteredProjects.map((project, index) => {
@@ -2168,7 +2453,16 @@ function LocationAreaStep({
                       return (
                         <div
                           key={project.id || projectName}
-                          onClick={() => handleProjectSelect(project)}
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleProjectSelect(project, e);
+                          }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleProjectSelect(project, e);
+                          }}
                           onMouseEnter={() => setProjectHighlightedIndex(index)}
                           style={{
                             padding: "0.75rem 1rem",
@@ -2176,6 +2470,7 @@ function LocationAreaStep({
                             borderBottom: "1px solid #f1f3f4",
                             transition: "background-color 0.2s",
                             backgroundColor: isHighlighted ? "#f8f9fa" : "white",
+                            userSelect: "none",
                           }}
                         >
                           <div style={{ fontWeight: 500, color: "#212529" }}>
@@ -2237,6 +2532,7 @@ function LocationAreaStep({
               {/* Dropdown with filtered results */}
               {showBuilderDropdown && builderInputFocused && (
                 <div 
+                  ref={builderDropdownRef}
                   className="builder-dropdown"
                   style={{
                     position: "absolute",
@@ -2252,6 +2548,7 @@ function LocationAreaStep({
                     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
                     marginTop: "2px",
                   }}
+                  onMouseDown={(e) => e.preventDefault()} // Prevent input blur on dropdown click
                 >
                   {filteredBuilders.length > 0 ? (
                     filteredBuilders.map((builder, index) => {
@@ -2260,7 +2557,16 @@ function LocationAreaStep({
                       return (
                         <div
                           key={builder.id || builderName}
-                          onClick={() => handleBuilderSelect(builder)}
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleBuilderSelect(builder, e);
+                          }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleBuilderSelect(builder, e);
+                          }}
                           onMouseEnter={() => setBuilderHighlightedIndex(index)}
                           style={{
                             padding: "0.75rem 1rem",
@@ -2268,6 +2574,7 @@ function LocationAreaStep({
                             borderBottom: "1px solid #f1f3f4",
                             transition: "background-color 0.2s",
                             backgroundColor: isHighlighted ? "#f8f9fa" : "white",
+                            userSelect: "none",
                           }}
                           onMouseLeave={() => setBuilderHighlightedIndex(-1)}
                         >
@@ -2386,6 +2693,7 @@ function LocationAreaStep({
               {/* Dropdown with filtered results */}
               {showCityDropdown && cityInputFocused && (
                 <div 
+                  ref={cityDropdownRef}
                   className="city-dropdown"
                   style={{
                     position: "absolute",
@@ -2401,6 +2709,7 @@ function LocationAreaStep({
                     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
                     marginTop: "2px",
                   }}
+                  onMouseDown={(e) => e.preventDefault()} // Prevent input blur on dropdown click
                 >
                   {filteredCities.length > 0 ? (
                     filteredCities.map((city, index) => {
@@ -2409,7 +2718,16 @@ function LocationAreaStep({
                       return (
                         <div
                           key={city.id || cityName}
-                          onClick={() => handleCitySelect(city)}
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleCitySelect(city, e);
+                          }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleCitySelect(city, e);
+                          }}
                           onMouseEnter={() => setCityHighlightedIndex(index)}
                           style={{
                             padding: "0.75rem 1rem",
@@ -2417,6 +2735,7 @@ function LocationAreaStep({
                             borderBottom: "1px solid #f1f3f4",
                             transition: "background-color 0.2s",
                             backgroundColor: isHighlighted ? "#f8f9fa" : "white",
+                            userSelect: "none",
                           }}
                           onMouseLeave={() => setCityHighlightedIndex(-1)}
                         >
@@ -2680,8 +2999,22 @@ function PricingDetailsStep({ data, onChange, errors }) {
             <Form.Label>Floor Number *</Form.Label>
             <Form.Control
               type="number"
+              min="0"
               value={data.floor}
-              onChange={(e) => onChange("floor", e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                // Allow empty string or positive numbers only
+                if (value === "" || (!isNaN(value) && parseFloat(value) >= 0)) {
+                  onChange("floor", value);
+                }
+              }}
+              onBlur={(e) => {
+                const value = parseFloat(e.target.value);
+                // Clear if negative on blur
+                if (!isNaN(value) && value < 0) {
+                  onChange("floor", "");
+                }
+              }}
               placeholder="Floor number"
               isInvalid={!!errors.floor}
             />
@@ -2696,8 +3029,22 @@ function PricingDetailsStep({ data, onChange, errors }) {
             <Form.Label>Total Floors *</Form.Label>
             <Form.Control
               type="number"
+              min="0"
               value={data.totalFloors}
-              onChange={(e) => onChange("totalFloors", e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                // Allow empty string or positive numbers only
+                if (value === "" || (!isNaN(value) && parseFloat(value) >= 0)) {
+                  onChange("totalFloors", value);
+                }
+              }}
+              onBlur={(e) => {
+                const value = parseFloat(e.target.value);
+                // Clear if negative on blur
+                if (!isNaN(value) && value < 0) {
+                  onChange("totalFloors", "");
+                }
+              }}
               placeholder="Total floors in building"
               isInvalid={!!errors.totalFloors}
             />
@@ -3408,9 +3755,9 @@ function FeaturesAmenitiesStep({
 
         .amenity-feature-item {
           padding: 1rem;
-          border: 2px solid #e9ecef;
+          border: 2px solid var(--portal-gray-200, #e9ecef);
           border-radius: 8px;
-          background: #ffffff;
+          background: var(--portal-white, #ffffff);
           cursor: pointer;
           transition: all 0.2s;
           display: flex;
@@ -3419,14 +3766,14 @@ function FeaturesAmenitiesStep({
         }
 
         .amenity-feature-item:hover {
-          border-color: #667eea;
-          box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+          border-color: var(--portal-primary, #68ac78);
+          box-shadow: 0 2px 8px rgba(104, 172, 120, 0.15);
           transform: translateY(-2px);
         }
 
         .amenity-feature-item.selected {
-          border-color: #667eea;
-          background: #f0f4ff;
+          border-color: var(--portal-primary, #68ac78);
+          background: rgba(104, 172, 120, 0.08);
         }
 
         .item-icon {
@@ -3543,8 +3890,8 @@ function MediaContactStep({
                       transition: "all 0.2s"
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = "#667eea";
-                      e.currentTarget.style.boxShadow = "0 2px 8px rgba(102, 126, 234, 0.15)";
+                      e.currentTarget.style.borderColor = "#68ac78";
+                      e.currentTarget.style.boxShadow = "0 2px 8px rgba(104, 172, 120, 0.15)";
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.borderColor = "#e9ecef";
@@ -3626,15 +3973,25 @@ function MediaContactStep({
                         textOverflow: "ellipsis",
                         whiteSpace: "nowrap",
                         marginBottom: "4px"
-                      }} title={imageData.file.name}>
-                        {imageData.file.name}
+                      }} title={imageData.file ? imageData.file.name : (imageData.url || "Existing image")}>
+                        {imageData.file ? imageData.file.name : (imageData.isExisting ? "Existing Image" : "Image")}
                       </div>
-                      <div style={{
-                        fontSize: "11px",
-                        color: "#6c757d"
-                      }}>
-                        {(imageData.file.size / 1024 / 1024).toFixed(1)} MB
-                      </div>
+                      {imageData.file && (
+                        <div style={{
+                          fontSize: "11px",
+                          color: "#6c757d"
+                        }}>
+                          {(imageData.file.size / 1024 / 1024).toFixed(1)} MB
+                        </div>
+                      )}
+                      {imageData.isExisting && (
+                        <div style={{
+                          fontSize: "11px",
+                          color: "#28a745"
+                        }}>
+                          ✓ Saved
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -3804,7 +4161,7 @@ function MediaContactStep({
               type="checkbox"
               id="truthfulDeclaration"
               label="I confirm that the information provided is true and accurate"
-              checked={!!data.truthfulDeclaration}
+              checked={data.truthfulDeclaration === true}
               onChange={(e) => onChange("truthfulDeclaration", e.target.checked)}
               isInvalid={!!errors.truthfulDeclaration}
             />
@@ -3818,7 +4175,7 @@ function MediaContactStep({
               type="checkbox"
               id="dpdpConsent"
               label="I consent to MyPropertyFact storing and processing my data"
-              checked={!!data.dpdpConsent}
+              checked={data.dpdpConsent === true}
               onChange={(e) => onChange("dpdpConsent", e.target.checked)}
               isInvalid={!!errors.dpdpConsent}
             />

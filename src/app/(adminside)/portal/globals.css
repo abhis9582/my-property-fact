@@ -35,7 +35,7 @@ body {
 /* Global portal-specific styles */
 .portal-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--portal-primary);
 }
 
 /* Custom scrollbar for portal */
@@ -49,21 +49,21 @@ body {
 }
 
 .portal-body ::-webkit-scrollbar-thumb {
-  background: #667eea;
+  background: var(--portal-primary);
   border-radius: 4px;
 }
 
 .portal-body ::-webkit-scrollbar-thumb:hover {
-  background: #5a6fd8;
+  background: var(--portal-primary-dark);
 }
 
 /* Portal-specific CSS Variables */
 :root {
-  /* Primary Colors */
-  --portal-primary: #667eea;
-  --portal-primary-dark: #5a6fd8;
-  --portal-primary-light: #7c8eec;
-  --portal-secondary: #764ba2;
+  /* Primary Colors - Matching Project Theme */
+  --portal-primary: #68ac78;
+  --portal-primary-dark: #0d5834;
+  --portal-primary-light: #70b987;
+  --portal-secondary: #0c2e23;
   
   /* Neutral Colors */
   --portal-white: #ffffff;
@@ -147,7 +147,7 @@ body {
 .portal-sidebar {
   width: 280px;
   flex-shrink: 0;
-  background: linear-gradient(135deg, var(--portal-primary) 0%, var(--portal-secondary) 100%);
+  background: var(--portal-primary);
   box-shadow: var(--portal-shadow-lg);
   z-index: 1000;
 }
@@ -220,12 +220,12 @@ body {
 }
 
 .portal-btn-primary {
-  background: linear-gradient(135deg, var(--portal-primary) 0%, var(--portal-primary-dark) 100%);
+  background: var(--portal-primary);
   color: var(--portal-white);
 }
 
 .portal-btn-primary:hover {
-  background: linear-gradient(135deg, var(--portal-primary-dark) 0%, var(--portal-primary) 100%);
+  background: var(--portal-primary-dark);
   transform: translateY(-1px);
   box-shadow: var(--portal-shadow);
 }
@@ -264,7 +264,7 @@ body {
 .portal-form-control:focus {
   outline: none;
   border-color: var(--portal-primary);
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgba(104, 172, 120, 0.1);
 }
 
 /* Portal Tables */
@@ -470,7 +470,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: radial-gradient(circle at center, var(--portal-primary-dark, #0d5834), var(--portal-secondary, #0c2e23));
   color: white;
 }
 

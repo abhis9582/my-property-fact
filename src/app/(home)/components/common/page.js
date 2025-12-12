@@ -99,7 +99,7 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
   };
   return (
     <>
-      <Link
+      <Link 
         href={`/${data.slugURL}`}
         className="rounded-4 custom-shadow d-flex flex-column justify-content-between bg-light text-decoration-none text-dark project-container overflow-hidden position-relative"
         target="_blank"

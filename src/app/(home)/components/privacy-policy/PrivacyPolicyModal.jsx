@@ -20,22 +20,22 @@ export default function PrivacyPolicyModal({ show, onHide }) {
     {
       id: "3",
       title: "Data We Collect",
-      content: `A. Identification & Contact — name, email, mobile number, country/state/city, WhatsApp opt‑in, OTPs.\n\nB. Role & Professional — buyer/tenant/owner/agent/developer; firm details; RERA registration (if provided).\n\nC. Listing & Transaction — property details, budgets, preferences, inquiries, site‑visit data, shortlists, feedback.\n\nD. Usage & Technical — device identifiers, IP address, timestamps, event logs, referrers/UTM, cookies/SDK telemetry, crash reports.\n\nE. Communications — emails, tickets, chat transcripts, call recordings (with notice/consent where required), IVR logs.\n\nF. Marketing & Attribution — ad interactions, lead‑form data, event RSVPs, notification choices.\n\nG. Payments (if enabled) — billing contact, invoice meta, gateway tokens/IDs (MPF does not store raw card data).\n\nH. Compliance/KYC (contextual) — documents/numbers you share (e.g., RERA/GST/PAN) to verify professional identity.`
+      content: `A. Identification & Contact - name, email, mobile number, country/state/city, WhatsApp opt‑in, OTPs.\n\nB. Role & Professional - buyer/tenant/owner/agent/developer; firm details; RERA registration (if provided).\n\nC. Listing & Transaction - property details, budgets, preferences, inquiries, site‑visit data, shortlists, feedback.\n\nD. Usage & Technical - device identifiers, IP address, timestamps, event logs, referrers/UTM, cookies/SDK telemetry, crash reports.\n\nE. Communications - emails, tickets, chat transcripts, call recordings (with notice/consent where required), IVR logs.\n\nF. Marketing & Attribution - ad interactions, lead‑form data, event RSVPs, notification choices.\n\nG. Payments (if enabled) - billing contact, invoice meta, gateway tokens/IDs (MPF does not store raw card data).\n\nH. Compliance/KYC (contextual) - documents/numbers you share (e.g., RERA/GST/PAN) to verify professional identity.`
     },
     {
       id: "4",
       title: "Sources of Data",
-      content: `• You — account creation, forms, calls, chats, WhatsApp, emails, events.\n\n• Automated — cookies, SDKs, analytics, and service logs on our properties.\n\n• Partners (based on your actions) — developers, brokers/agents, channel partners, payment & analytics providers, CRM/helpdesk vendors, lead‑gen partners, and (if applicable) consent managers.`
+      content: `• You - account creation, forms, calls, chats, WhatsApp, emails, events.\n\n• Automated - cookies, SDKs, analytics, and service logs on our properties.\n\n• Partners (based on your actions) - developers, brokers/agents, channel partners, payment & analytics providers, CRM/helpdesk vendors, lead‑gen partners, and (if applicable) consent managers.`
     },
     {
       id: "5",
       title: "Lawful Grounds (DPDP)",
-      content: `We process your personal data based on:\n\n- Consent — e.g., marketing communications, non‑essential cookies/SDKs.\n\n- Certain legitimate uses permitted under DPDP — e.g., providing a service you requested, preventing fraud, ensuring network security, complying with legal obligations.\n\n- Contractual necessity — to perform our agreement with you.\n\n- Legal obligations/requests — courts, law enforcement, regulators.\n\nConsent withdrawal: You may withdraw consent at any time with the same ease with which you gave it. We will honour your choice going forward.`
+      content: `We process your personal data based on:\n\n- Consent - e.g., marketing communications, non‑essential cookies/SDKs.\n\n- Certain legitimate uses permitted under DPDP - e.g., providing a service you requested, preventing fraud, ensuring network security, complying with legal obligations.\n\n- Contractual necessity - to perform our agreement with you.\n\n- Legal obligations/requests - courts, law enforcement, regulators.\n\nConsent withdrawal: You may withdraw consent at any time with the same ease with which you gave it. We will honour your choice going forward.`
     },
     {
       id: "6",
       title: "Purposes of Processing",
-      content: `• Core services — create and manage accounts; run searches, alerts & recommendations; publish and promote listings; match and connect buyers/tenants with owners/developers/agents; route inquiries, callbacks, WhatsApp and site‑visit requests.\n\n• Service communications — confirmations, updates, support and grievance redressal.\n\n• Quality & safety — spam/fraud/impersonation detection; platform and network security; incident logging and response as required by law.\n\n• Personalisation & analytics — experience tailoring, A/B testing, product improvement, performance measurement.\n\n• Marketing (with consent/opt‑out) — newsletters, offers, alerts, events; clear disclosures for paid/sponsored content.\n\n• Compliance — record keeping, responding to lawful requests, and other statutory duties.`
+      content: `• Core services - create and manage accounts; run searches, alerts & recommendations; publish and promote listings; match and connect buyers/tenants with owners/developers/agents; route inquiries, callbacks, WhatsApp and site‑visit requests.\n\n• Service communications - confirmations, updates, support and grievance redressal.\n\n• Quality & safety - spam/fraud/impersonation detection; platform and network security; incident logging and response as required by law.\n\n• Personalisation & analytics - experience tailoring, A/B testing, product improvement, performance measurement.\n\n• Marketing (with consent/opt‑out) - newsletters, offers, alerts, events; clear disclosures for paid/sponsored content.\n\n• Compliance - record keeping, responding to lawful requests, and other statutory duties.`
     },
     {
       id: "7",
@@ -45,7 +45,7 @@ export default function PrivacyPolicyModal({ show, onHide }) {
     {
       id: "8",
       title: "Disclosures & Third‑Party Sharing",
-      content: `We do not sell personal data. We disclose limited data, as needed, to:\n\n1. Counterparties you engage — owners, developers, brokers/agents, channel partners when you initiate contact (e.g., Call/WhatsApp/Request Callback/Arrange Site Visit).\n\n2. Service providers (processors) — hosting/CDN, CRM/helpdesk, analytics/attribution, SMS/email/WhatsApp gateways, payment processors, KYC/verification and security vendors — under contracts restricting use to our instructions with appropriate safeguards.\n\n3. Authorities/courts/law enforcement — when legally required or to protect rights, safety, or security; in accordance with due process.\n\n4. Corporate events — in a merger, acquisition, or reorganisation, data may be transferred subject to this Policy's protections.`
+      content: `We do not sell personal data. We disclose limited data, as needed, to:\n\n1. Counterparties you engage - owners, developers, brokers/agents, channel partners when you initiate contact (e.g., Call/WhatsApp/Request Callback/Arrange Site Visit).\n\n2. Service providers (processors) - hosting/CDN, CRM/helpdesk, analytics/attribution, SMS/email/WhatsApp gateways, payment processors, KYC/verification and security vendors - under contracts restricting use to our instructions with appropriate safeguards.\n\n3. Authorities/courts/law enforcement - when legally required or to protect rights, safety, or security; in accordance with due process.\n\n4. Corporate events - in a merger, acquisition, or reorganisation, data may be transferred subject to this Policy's protections.`
     },
     {
       id: "9",
@@ -138,7 +138,7 @@ export default function PrivacyPolicyModal({ show, onHide }) {
               Privacy Policy
             </Modal.Title>
             <p className="privacy-modal-subtitle mb-0">
-              My Property Fact (MPF) — Effective Date: 11 November 2025
+              My Property Fact (MPF) - Effective Date: 11 November 2025
             </p>
           </div>
         </div>
@@ -196,12 +196,12 @@ export default function PrivacyPolicyModal({ show, onHide }) {
           </p>
           <p className="mb-2"><strong>Privacy Center:</strong></p>
           <ul className="small mb-0">
-            <li>Access your data — Request a summary of your personal data processed by MPF.</li>
-            <li>Correct/Update — Ask us to fix or complete your data.</li>
-            <li>Delete — Request deletion of data no longer needed or where consent is withdrawn.</li>
-            <li>Marketing choices — Subscribe/unsubscribe to email/SMS/WhatsApp/calls.</li>
-            <li>Cookie preferences — Update consent settings.</li>
-            <li>Nominate — Appoint a nominee to exercise your rights if needed.</li>
+            <li>Access your data: Request a summary of your personal data processed by MPF.</li>
+            <li>Correct/Update: Ask us to fix or complete your data.</li>
+            <li>Delete: Request deletion of data no longer needed or where consent is withdrawn.</li>
+            <li>Marketing choices: Subscribe/unsubscribe to email/SMS/WhatsApp/calls.</li>
+            <li>Cookie preferences: Update consent settings.</li>
+            <li>Nominate: Appoint a nominee to exercise your rights if needed.</li>
           </ul>
         </div>
       </Modal.Body>

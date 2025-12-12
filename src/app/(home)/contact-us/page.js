@@ -2,6 +2,7 @@ import { Spinner } from "react-bootstrap";
 import CommonBreadCrum from "../components/common/breadcrum";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import ContactUs from "./contactUs";
+import NewContactUs from "./NewContactUs";
 
 export default function ContactUsPage() {
   return (
@@ -12,7 +13,8 @@ export default function ContactUsPage() {
         pageName={"Contact Us"}
       />
       {/* <CommonBreadCrum pageName={"Contact-us"} /> */}
-      <ContactUs />
+      {/* <ContactUs /> */}
+      <NewContactUs />
     </>
   );
 }
