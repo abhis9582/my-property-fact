@@ -219,7 +219,7 @@ export default function ManageAminity({ list }) {
         functionName={openAddModel}
         heading={"Manage Amenities"}
       />
-      <div className="mt-5">
+      <div>
         <DataTable columns={columns} list={list} />
       </div>
       {/* Modal for adding a new city */}

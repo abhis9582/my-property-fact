@@ -142,7 +142,7 @@ export default function ManageFloorPlans({ list, projectsList }) {
         functionName={openAddFloorPlan}
         heading={"Manage Floor Plans"}
       />
-      <div className="table-container mt-5">
+      <div className="table-container">
         <DataTable
           columns={columns}
           list={list

@@ -126,7 +126,7 @@ export default function City({ list, stateList }) {
     return (
         <div>
             <DashboardHeader heading={"Manage Cities"} buttonName={"+ Add new city"} functionName={openAddModel} />
-            <div className="table-container mt-5">
+            <div className="table-container">
                 <DataTable list={list} columns={columns} />
             </div>
             {/* Modal for adding a new city */}

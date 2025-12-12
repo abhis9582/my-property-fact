@@ -260,7 +260,7 @@ export default function Enquiries({ list }) {
         functionName={exportToExcel}
         heading={"Manage Enquiries"}
       />
-      <div className="mt-5">
+      <div>
         <DataTable columns={columns} list={list} />
       </div>
       <CommonModal

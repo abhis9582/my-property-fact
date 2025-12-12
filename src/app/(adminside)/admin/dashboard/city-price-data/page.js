@@ -254,7 +254,7 @@ export default function CityPriceData() {
           + Add new data
         </Button>
       </div>
-      <div className="table-container mt-5">
+      <div className="table-container">
         <Paper sx={{ height: 550, width: "100%" }}>
           <DataGrid
             rows={cityPriceList}

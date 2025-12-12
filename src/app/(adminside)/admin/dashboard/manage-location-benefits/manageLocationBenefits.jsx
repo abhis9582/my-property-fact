@@ -176,7 +176,7 @@ export default function ManageLocationBenefits({ allBenefits }) {
       />
 
       {/* table section  */}
-      <div className="mt-5">
+      <div>
         <DataTable columns={columns} list={allBenefits} />
       </div>
       

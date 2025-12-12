@@ -7,7 +7,8 @@ export const dynamic = 'force-dynamic';
 const fetchNearbyBenefits = async () => {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    const response = await axios.get(`${apiUrl}/nearby-benefit/get-all`);
+    // Match the pattern used in location-benifits/page.js - no leading slash on endpoint
+    const response = await axios.get(`${apiUrl}nearby-benefit/get-all`);
     const list = response.data.map((item, index) => ({
       ...item,
       index: index + 1,
@@ -15,6 +16,8 @@ const fetchNearbyBenefits = async () => {
     return list;
   } catch (error) {
     console.error("Error fetching nearby benefits:", error);
+    console.error("Error details:", error.response?.data || error.message);
+    console.error("Request URL:", `${process.env.NEXT_PUBLIC_API_URL}nearby-benefit/get-all`);
     return [];
   }
 };

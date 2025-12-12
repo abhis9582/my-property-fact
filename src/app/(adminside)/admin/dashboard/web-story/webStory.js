@@ -160,7 +160,7 @@ export default function WebStory({ categoryList, list }) {
                 functionName={openAddModel}
                 heading={"Manage web story"}
             />
-            <div className="mt-5">
+            <div>
                 <DataTable columns={columns} list={list} />
             </div>
 

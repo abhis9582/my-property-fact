@@ -128,7 +128,7 @@
 }
 
 .admin-property-detail-page .amenity-item:hover {
-  transform: translateY(-3px);
+  transform: translateY(-6px);
   box-shadow: 0 12px 32px rgba(104, 172, 120, 0.2);
   border-color: #68ac78;
   background: linear-gradient(135deg, #ffffff 0%, #f0f9f4 100%);

@@ -118,7 +118,7 @@ export default function WebStroyCategory({ list }) {
                 functionName={openAddModel}
                 heading={"Manage web story category"}
             />
-            <div className="mt-5">
+            <div>
                 <DataTable columns={columns} list={list} />
             </div>
 

@@ -84,7 +84,7 @@ export default function ManageProjectStatus({ projectStatusList = [] }) {
         functionName={addProjectStatus}
         heading={"Manage Project Status"}
       />
-      <div className="mt-5">
+      <div>
         <DataTable columns={columns} list={projectStatusList} />
       </div>
 

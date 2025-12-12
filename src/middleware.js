@@ -13,17 +13,9 @@ async function checkToken(token, refreshToken) {
       },
     });
 
-    // Handle both successful and error responses
-    let data;
-    try {
-      data = await res.json();
-    } catch (e) {
-      // If response is not JSON, token is invalid
-      data = { valid: false };
-    }
+    const data = await res.json();
 
-    // If token is valid, return success
-    if (res.ok && data.valid) {
+    if (data.valid) {
       return { 
         valid: true, 
         token, 
@@ -34,67 +26,39 @@ async function checkToken(token, refreshToken) {
 
     // Access token invalid → try refreshing
     if (refreshToken) {
-      try {
-        const refreshRes = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}auth/refresh`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ refreshToken }),
-          }
-        );
-
-        let refreshData;
-        try {
-          refreshData = await refreshRes.json();
-        } catch (e) {
-          // If refresh response is not JSON, refresh failed
-          return { valid: false };
+      const refreshRes = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}auth/refresh`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refreshToken }),
         }
+      );
 
-        if (refreshRes.ok && refreshData.token) {
-          // Verify the new token to get roles
-          try {
-            const verifyRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}auth/verify`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${refreshData.token}`,
-              },
-            });
+      const refreshData = await refreshRes.json();
 
-            let verifyData;
-            try {
-              verifyData = await verifyRes.json();
-            } catch (e) {
-              // If verify response is not JSON, use empty roles
-              verifyData = { roles: [] };
-            }
-            
-            return {
-              valid: true,
-              token: refreshData.token,
-              refreshToken: refreshData.refreshToken || refreshToken,
-              roles: verifyData.roles || [],
-            };
-          } catch (verifyErr) {
-            console.error("Error verifying refreshed token:", verifyErr);
-            // Even if verification fails, return the new token
-            return {
-              valid: true,
-              token: refreshData.token,
-              refreshToken: refreshData.refreshToken || refreshToken,
-              roles: [],
-            };
-          }
-        }
-      } catch (refreshErr) {
-        console.error("Error refreshing token:", refreshErr);
-        return { valid: false };
+      if (refreshRes.ok && refreshData.token) {
+        // Verify the new token to get roles
+        const verifyRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}auth/verify`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${refreshData.token}`,
+          },
+        });
+
+        const verifyData = await verifyRes.json();
+        
+        return {
+          valid: true,
+          token: refreshData.token,
+          refreshToken: refreshData.refreshToken || refreshToken,
+          roles: verifyData.roles || [],
+        };
       }
     }
 
-    // Both expired or refresh failed
+    // Both expired
     return { valid: false };
   } catch (err) {
     console.error("checkToken error:", err);

@@ -121,7 +121,7 @@ export default function ManageCountry({ list }) {
                 heading={"Manage Countries"}
                 functionName={openAddModel}
             />
-            <div className="mt-5">
+            <div>
                 <DataTable columns={columns} list={list} />
             </div>
 

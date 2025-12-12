@@ -93,7 +93,7 @@ export default function ManageBlogCategory({ list }) {
         <div>
             <DashboardHeader buttonName={'+ Add New Category'} functionName={openAddModel} heading={'Manage Blog Categories'} />
             {/* Table containing all the blog categories */}
-            <div className="mt-5">
+            <div>
                 <DataTable columns={columns} list={list} />
             </div>
             {/* Generating from for blog category  */}
