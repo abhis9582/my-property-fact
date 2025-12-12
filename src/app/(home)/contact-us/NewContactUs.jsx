@@ -1,7 +1,97 @@
+"use client";
+import { useState } from "react";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
+import axios from "axios";
+import { toast } from "react-toastify";
 import SocialFeedsOfMPF from "../components/_homecomponents/SocialFeedsOfMPF";
 
 export default function NewContactUs() {
+  const pathname = usePathname();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    preferredTime: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [validated, setValidated] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+      setValidated(true);
+      toast.error("Please fill all required fields!");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setValidated(true);
+
+    try {
+      // Prepare enquiry data
+      const enquiryData = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.preferredTime 
+          ? `Preferred Time: ${formData.preferredTime}\n\nMessage: ${formData.message}`
+          : formData.message,
+        pageName: "Contact Us - Get A Quote",
+        enquiryFrom: "Contact Us Page",
+        projectLink: `${process.env.NEXT_PUBLIC_ROOT_URL || window.location.origin}${pathname}`,
+        status: "PENDING",
+        id: 0, // Required for new enquiry
+      };
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}enquiry/post`,
+        enquiryData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.data.isSuccess === 1) {
+        toast.success(response.data.message || "Enquiry submitted successfully!");
+        // Reset form
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          preferredTime: "",
+          message: "",
+        });
+        setValidated(false);
+      } else {
+        toast.error(response.data.message || "Failed to submit enquiry. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting enquiry:", error);
+      toast.error(
+        error.response?.data?.message || 
+        error.message || 
+        "An error occurred. Please try again later."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <>
       {/* Contact inforamtion of MPF here  */}
@@ -71,21 +161,27 @@ export default function NewContactUs() {
               <h2 className="get-quote-heading plus-jakarta-sans-bold text-center mb-4">
                 Get A Quote
               </h2>
-              <form className="get-quote-form">
+              <form className="get-quote-form" onSubmit={handleSubmit} noValidate>
                 <div className="row mb-3">
                   <div className="col-md-6 mb-3 mb-md-0">
                     <input
                       type="text"
+                      name="name"
                       className="form-control get-quote-input"
                       placeholder="Name"
+                      value={formData.name}
+                      onChange={handleChange}
                       required
                     />
                   </div>
                   <div className="col-md-6">
                     <input
                       type="email"
+                      name="email"
                       className="form-control get-quote-input"
                       placeholder="Email"
+                      value={formData.email}
+                      onChange={handleChange}
                       required
                     />
                   </div>
@@ -94,16 +190,22 @@ export default function NewContactUs() {
                   <div className="col-md-6 mb-3 mb-md-0">
                     <input
                       type="tel"
+                      name="phone"
                       className="form-control get-quote-input"
                       placeholder="Phone"
+                      value={formData.phone}
+                      onChange={handleChange}
                       required
                     />
                   </div>
                   <div className="col-md-6">
                     <input
                       type="text"
+                      name="preferredTime"
                       className="form-control get-quote-input"
                       placeholder="Preferred Time"
+                      value={formData.preferredTime}
+                      onChange={handleChange}
                       required
                     />
                   </div>
@@ -111,16 +213,23 @@ export default function NewContactUs() {
                 <div className="row mb-4">
                   <div className="col-12">
                     <textarea
+                      name="message"
                       className="form-control get-quote-input get-quote-textarea"
                       placeholder="Message"
                       rows="4"
+                      value={formData.message}
+                      onChange={handleChange}
                       required
                     ></textarea>
                   </div>
                 </div>
                 <div className="text-center">
-                  <button type="submit" className="btn get-quote-submit-btn">
-                    Submit
+                  <button 
+                    type="submit" 
+                    className="btn get-quote-submit-btn"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Submitting..." : "Submit"}
                   </button>
                 </div>
               </form>
