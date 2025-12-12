@@ -257,7 +257,7 @@ export default function NewContactUs() {
         </div>
         <div className="looking-for-dream-home-section-image2">
           <Image
-            src="/static/contact-us/looking_for_Dream_home.png"
+            src="/static/contact-us/looking_for_dream_home.png"
             alt="Dream Home"
             width={480}
             height={500}
