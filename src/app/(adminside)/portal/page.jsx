@@ -571,7 +571,7 @@ export default function PortalSignInPage() {
               </div>
 
               <p className="terms-text">
-                By clicking "continue with Google or Phone number" above, you acknowledge that you have read and understood, and agree to{" "}
+                By clicking &quot;continue with Google or Phone number&quot; above, you acknowledge that you have read and understood, and agree to{" "}
                 <a href="#" className="terms-link">Privacy Policy</a> and{" "}
                 <a href="#" className="terms-link">Terms and Conditions</a>.
               </p>

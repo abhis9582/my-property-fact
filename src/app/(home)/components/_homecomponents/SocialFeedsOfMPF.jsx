@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
@@ -68,10 +68,10 @@ export default function SocialFeedsOfMPF() {
     setIsPopupOpen(true);
   };
 
-  const closePopup = () => {
+  const closePopup = useCallback(() => {
     setIsPopupOpen(false);
     setSelectedVideoIndex(null);
-  };
+  }, []);
 
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -79,18 +79,18 @@ export default function SocialFeedsOfMPF() {
     }
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = useCallback((e) => {
     if (e.key === 'Escape' && isPopupOpen) {
       closePopup();
     }
-  };
+  }, [isPopupOpen, closePopup]);
 
   useEffect(() => {
     if (isPopupOpen) {
       window.addEventListener('keydown', handleKeyDown);
       return () => window.removeEventListener('keydown', handleKeyDown);
     }
-  }, [isPopupOpen]);
+  }, [isPopupOpen, handleKeyDown]);
 
   const selectedVideo = selectedVideoIndex !== null ? socialPosts[selectedVideoIndex] : null;
 

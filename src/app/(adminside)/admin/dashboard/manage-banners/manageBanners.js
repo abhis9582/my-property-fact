@@ -276,11 +276,7 @@ export default function ManageBanners({ list }) {
                     functionName={openAddBanner}
                     heading={"Manage Project Banners"}
                 />
-<<<<<<< HEAD
-                <div className="table-container mt-5">
-=======
                 <div className="table-container">
->>>>>>> origin/main
                     <DataTable columns={columns} list={list.filter(item => (item.projectDesktopBannerDtoList.length > 0) || (item.projectMobileBannerDtoList.length > 0))} />
                 </div>
             </div>
