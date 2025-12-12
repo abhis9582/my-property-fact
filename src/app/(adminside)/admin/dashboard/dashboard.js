@@ -94,7 +94,7 @@ export default function Dashboard({
                             {getGreeting()}! 👋
                         </h1>
                         <p className="mb-2" style={{ fontSize: '1.1rem', color: '#6c757d', margin: 0 }}>
-                            Here's what's happening with your platform today
+                            Here&apos;s what&apos;s happening with your platform today
                         </p>
                         <p className="text-muted mb-0" style={{ fontSize: '0.9rem' }}>
                             {formatDate(currentTime)} • {formatTime(currentTime)}
