@@ -252,7 +252,7 @@ export default function NewContactUs() {
           <h2 className="plus-jakarta-sans-bold">Looking For A Dream Home?</h2>
           <p>We can help you realize your dream of a new home</p>
           <div>
-            <button>View Projects</button>
+            <button onClick={()=>{window.location.href = "/projects";}}>View Projects</button>
           </div>
         </div>
         <div className="looking-for-dream-home-section-image2">
