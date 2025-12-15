@@ -47,17 +47,20 @@ export default function SocialFeedsOfMPF() {
       video: "/static/social-media/social1.mp4"
     },
     {
-      text: "Noida",
+      text: `Sector 12, Greater Noida West is changing the luxury game and Ashtech is leading the way.
+From a 5.7 acre corner plot to Sunday Deck balconies, triple-height lobbies and 70,000 sq.ft. clubhouse,
+this is where lifestyle meets pure elegance!`,
       position: "bottom",
       video: "/static/social-media/social2.mp4"
     },
     {
-      text: "praying for our work stress to disappear",
+      text: `Ever looked at a plot and wondered what truly defines its potential? It’s not just the size - it’s the FAR.
+Curious how this one number can change the entire value of land? Understand FAR in this video and see real estate with a whole new lens.`,
       position: "bottom",
       video: "/static/social-media/social3.mp4"
     },
     {
-      text: "love you, doesn't mean your Girlfriend won't",
+      text: "From Shah Rukh khan to Hritik Roshan, Bollywood celebs are now the face of Dubai’s premium real estate launches. Reason? strategy 🔥",
       position: "top",
       video: "/static/social-media/social4.mp4"
     }
