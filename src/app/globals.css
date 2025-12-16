@@ -30,7 +30,8 @@
   --heaing-font: "gotham-bold", "sans-serif";
   --headeing-bolded: "heading-pro";
   --text-font: "gotham-light", "sans-serif";
-  --btn-background: linear-gradient(to right, #d1ad5b, #a07e38);
+  /* --btn-background: linear-gradient(to right, #d1ad5b, #a07e38); */
+  --btn-background: linear-gradient(180deg, #453106 0%, #E6A315 100%);
   --btn-background-hover: linear-gradient(to right, #b8934d, #8a6b2f);
   --footer-bg: radial-gradient(circle at center, #0d5834, #0c2e23);
   --link-bg: linear-gradient(to right, #d1ad5b, #a07e38);

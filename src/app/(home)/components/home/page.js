@@ -14,6 +14,7 @@ import {
 } from "@/app/_global_components/masterFunction";
 import NewInsight from "../_homecomponents/NewInsight";
 import DreamPropertySection from "./dream-project/DreamPropertySection";
+// import HomeMetaData from "../_homecomponents/HomeMetaData";
 
 export default async function HomePage() {
   const projects = await getAllProjects();
@@ -38,6 +39,8 @@ export default async function HomePage() {
       <>
         {/* Pass props to client component if needed */}
         <HeroSection />
+
+        {/* <HomeMetaData /> */}
 
         {/* MPF-top pick section  */}
         <MpfTopPicks topProject={mpfTopPicProject} />

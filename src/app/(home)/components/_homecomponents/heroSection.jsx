@@ -2,6 +2,7 @@ import Link from "next/link";
 import SearchFilter from "./searchFIlter";
 import AnimatedCounter from "./AnimatedCounter";
 import HeroBannerSlider from "./HeroBannerSlider";
+import SnowEffect from "./SnowEffect";
 import "../home/home.css";
 import {
   fetchAllProjects,
@@ -40,7 +41,7 @@ export default async function HeroSection() {
   const heroSlides = [
     {
       id: "hero-primary",
-      desktop: "/static/banners/desktop_banner1.jpeg",
+      desktop: "/static/banners/desktop_banner1.jpg",
       tablet: "/static/banners/tablet_banner1.jpg",
       mobile: "/static/banners/mobile_banner1.jpg",
       alt: "Find the best property with My Property Fact",
@@ -80,6 +81,7 @@ export default async function HeroSection() {
       <div className="position-relative mb-5">
         <div className="mpf-hero-banner position-relative">
           <div className="position-relative">
+              <SnowEffect />
             <HeroBannerSlider slides={heroSlides} />
             <div className="bannercontainer">
               <h1 className="text-center text-light">Find the best property</h1>
