@@ -1,21 +1,21 @@
 "use client";
 import { useState } from "react";
-import { 
-  Card, 
-  Row, 
-  Col, 
-  Button, 
+import {
+  Card,
+  Row,
+  Col,
+  Button,
   Form,
   Alert,
-  ListGroup
+  ListGroup,
 } from "react-bootstrap";
-import { 
-  cilEnvelopeOpen, 
-  cilPhone, 
+import {
+  cilEnvelopeOpen,
+  cilPhone,
   cilChatBubble,
   cilClock,
   cilUser,
-  cilStar
+  cilStar,
 } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 
@@ -26,7 +26,7 @@ export default function ContactSupportPage() {
     subject: "",
     priority: "medium",
     category: "general",
-    message: ""
+    message: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,7 +35,7 @@ export default function ContactSupportPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       setIsSubmitting(false);
@@ -44,7 +44,7 @@ export default function ContactSupportPage() {
   };
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const supportMethods = [
@@ -54,7 +54,7 @@ export default function ContactSupportPage() {
       description: "Get help via email within 24 hours",
       responseTime: "Within 24 hours",
       availability: "24/7",
-      action: "support@propertyportal.com"
+      action: "support@propertyportal.com",
     },
     {
       icon: cilPhone,
@@ -62,7 +62,7 @@ export default function ContactSupportPage() {
       description: "Call us for immediate assistance",
       responseTime: "Immediate",
       availability: "Mon-Fri 9AM-6PM",
-      action: "+91 98765 43210"
+      action: "+91 98765 43210",
     },
     // {
     //   icon: cilChatBubble,
@@ -103,7 +103,9 @@ export default function ContactSupportPage() {
                       </div>
                       <div className="method-info">
                         <h6 className="method-title">{method.title}</h6>
-                        <p className="method-description">{method.description}</p>
+                        <p className="method-description">
+                          {method.description}
+                        </p>
                         <div className="method-details">
                           <small className="text-muted">
                             <CIcon icon={cilClock} className="me-1" />
@@ -115,8 +117,12 @@ export default function ContactSupportPage() {
                         </div>
                       </div>
                       <div className="method-action">
-                        <Button 
-                          variant={method.icon === cilChatBubble ? "primary" : "outline-primary"}
+                        <Button
+                          variant={
+                            method.icon === cilChatBubble
+                              ? "primary"
+                              : "outline-primary"
+                          }
                           size="sm"
                           className="w-100"
                         >
@@ -157,7 +163,8 @@ export default function ContactSupportPage() {
               {submitted ? (
                 <Alert variant="success">
                   <CIcon icon={cilStar} className="me-2" />
-                  <strong>Message Sent!</strong> We&apos;ll get back to you within 24 hours.
+                  <strong>Message Sent!</strong> We&apos;ll get back to you
+                  within 24 hours.
                 </Alert>
               ) : (
                 <Form onSubmit={handleSubmit}>
@@ -168,7 +175,9 @@ export default function ContactSupportPage() {
                         <Form.Control
                           type="text"
                           value={formData.name}
-                          onChange={(e) => handleInputChange('name', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("name", e.target.value)
+                          }
                           required
                         />
                       </Form.Group>
@@ -179,7 +188,9 @@ export default function ContactSupportPage() {
                         <Form.Control
                           type="email"
                           value={formData.email}
-                          onChange={(e) => handleInputChange('email', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("email", e.target.value)
+                          }
                           required
                         />
                       </Form.Group>
@@ -190,7 +201,9 @@ export default function ContactSupportPage() {
                         <Form.Control
                           type="text"
                           value={formData.subject}
-                          onChange={(e) => handleInputChange('subject', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("subject", e.target.value)
+                          }
                           required
                         />
                       </Form.Group>
@@ -200,7 +213,9 @@ export default function ContactSupportPage() {
                         <Form.Label>Priority</Form.Label>
                         <Form.Select
                           value={formData.priority}
-                          onChange={(e) => handleInputChange('priority', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("priority", e.target.value)
+                          }
                         >
                           <option value="low">Low</option>
                           <option value="medium">Medium</option>
@@ -214,7 +229,9 @@ export default function ContactSupportPage() {
                         <Form.Label>Category</Form.Label>
                         <Form.Select
                           value={formData.category}
-                          onChange={(e) => handleInputChange('category', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("category", e.target.value)
+                          }
                         >
                           <option value="general">General Inquiry</option>
                           <option value="technical">Technical Issue</option>
@@ -231,21 +248,26 @@ export default function ContactSupportPage() {
                           as="textarea"
                           rows={6}
                           value={formData.message}
-                          onChange={(e) => handleInputChange('message', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("message", e.target.value)
+                          }
                           placeholder="Please describe your issue or question in detail..."
                           required
                         />
                       </Form.Group>
                     </Col>
                     <Col md={12}>
-                      <Button 
-                        type="submit" 
-                        variant="primary" 
+                      <Button
+                        type="submit"
+                        variant="primary"
                         disabled={isSubmitting}
                       >
                         {isSubmitting ? (
                           <>
-                            <span className="spinner-border spinner-border-sm me-2" role="status" />
+                            <span
+                              className="spinner-border spinner-border-sm me-2"
+                              role="status"
+                            />
                             Sending...
                           </>
                         ) : (
@@ -267,7 +289,9 @@ export default function ContactSupportPage() {
       <style jsx>{`
         /* Common styles are now in PortalCommonStyles.css */
         /* Only page-specific styles below */
-
+        .contact-support-page {
+          padding: 1.5rem;
+        }
         .support-method-item {
           border: none;
           padding: 1.5rem 0;

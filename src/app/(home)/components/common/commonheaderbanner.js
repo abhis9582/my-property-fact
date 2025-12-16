@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import './common.css';
+import SnowEffect from "../_homecomponents/SnowEffect";
 
 export default function CommonHeaderBanner({ image, headerText, firstPage, pageName }) {
   // Build breadcrumb path
@@ -40,6 +41,9 @@ export default function CommonHeaderBanner({ image, headerText, firstPage, pageN
         />
         {/* Dark Overlay */}
         <div className="banner-overlay"></div>
+        
+        {/* Snow Effect */}
+        <SnowEffect />
         
         {/* Content Container */}
         <div className="banner-content">

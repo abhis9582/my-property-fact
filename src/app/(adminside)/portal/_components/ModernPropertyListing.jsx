@@ -1003,10 +1003,24 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     // Generate title from property details if not provided
     const generateTitle = () => {
       const parts = [];
-      if (formData.bedrooms) parts.push(`${formData.bedrooms} BHK`);
-      if (formData.subType) parts.push(formData.subType);
-      if (formData.locality) parts.push(`in ${formData.locality}`);
-      if (formData.city) parts.push(formData.city);
+      
+      if (formData.listingType === "Commercial") {
+        // Commercial property title format: "1200 sq ft Office Space in Sector 45, Gurgaon" (space first, then type)
+        if (formData.carpetArea) {
+          // Add area first for commercial properties
+          parts.push(`${formData.carpetArea} sq ft`);
+        }
+        if (formData.subType) parts.push(formData.subType);
+        if (formData.locality) parts.push(`in ${formData.locality}`);
+        if (formData.city) parts.push(formData.city);
+      } else {
+        // Residential property title format: "3 BHK Apartment in Sector 45, Gurgaon"
+        if (formData.bedrooms) parts.push(`${formData.bedrooms} BHK`);
+        if (formData.subType) parts.push(formData.subType);
+        if (formData.locality) parts.push(`in ${formData.locality}`);
+        if (formData.city) parts.push(formData.city);
+      }
+      
       return parts.length > 0 ? parts.join(" ") : "Property Listing";
     };
 
@@ -1050,18 +1064,19 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       // Property Details
       floorNo: toInteger(formData.floor),
       totalFloors: toInteger(formData.totalFloors),
-      facing: emptyToNull(formData.facing),
-      unitFacing: emptyToNull(formData.facing),
+      // Facing is only for residential properties
+      facing: formData.listingType === "Residential" ? emptyToNull(formData.facing) : null,
+      unitFacing: formData.listingType === "Residential" ? emptyToNull(formData.facing) : null,
       ageOfConstruction: toInteger(formData.ageOfConstruction),
-      ageOfProperty: toInteger(formData.ageOfConstruction),
+      // Remove duplicate ageOfProperty field
       carParkingSlots: extractParkingSlots(formData.parking),
       parkingType: emptyToNull(formData.parking),
       powerBackup: emptyToNull(formData.powerBackup),
 
-      // Configuration
-      bedrooms: toInteger(formData.bedrooms),
+      // Configuration - residential-specific fields set to null for commercial
+      bedrooms: formData.listingType === "Residential" ? toInteger(formData.bedrooms) : null,
       bathrooms: toInteger(formData.bathrooms),
-      balconies: toInteger(formData.balconies),
+      balconies: formData.listingType === "Residential" ? toInteger(formData.balconies) : null,
       furnishingLevel: emptyToNull(formData.furnished),
       additionalRooms:
         formData.features && formData.features.length
@@ -1089,8 +1104,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       contactName: emptyToNull(formData.contactName),
       contactPhone: emptyToNull(formData.contactPhone),
       contactEmail: emptyToNull(formData.contactEmail),
-      primaryContact: emptyToNull(formData.contactPhone),
-      primaryEmail: emptyToNull(formData.contactEmail),
+      // Remove duplicate primaryContact and primaryEmail fields
       preferredTime: emptyToNull(formData.preferredTime),
       truthfulDeclaration:
         formData.truthfulDeclaration !== undefined
@@ -1945,7 +1959,7 @@ function BasicInformationStep({ data, onChange, errors, propertyTypes = [], prop
               >
                 <option value="">Choose transaction type</option>
                 <option value="Sale">💰 Sale</option>
-                <option value="Rent">📋 Rent/Lease</option>
+                {/* <option value="Rent">📋 Rent/Lease</option> */}
               </Form.Select>
               <div className="select-arrow"></div>
             </div>
@@ -3328,7 +3342,7 @@ function FeaturesAmenitiesStep({
         {isCommercial && (
           <>
             <Col md={6}>
-              <Form.Group>
+              {/* <Form.Group>
                 <Form.Label>Number of Floors/Levels</Form.Label>
                 <Form.Select
                   value={data.bedrooms}
@@ -3341,7 +3355,7 @@ function FeaturesAmenitiesStep({
                   <option value="4">3rd Floor</option>
                   <option value="5">4+ Floors</option>
                 </Form.Select>
-              </Form.Group>
+              </Form.Group> */}
             </Col>
 
             <Col md={6}>
