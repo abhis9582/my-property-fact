@@ -156,6 +156,7 @@
   left: 50% !important;
   transform: translateX(-50%) !important;
   width: 100%;
+  z-index: 5;
 }
 /* .home-search-container {
   position: absolute !important;
