@@ -33,6 +33,7 @@ import {
   cilX,
   cilChevronTop,
   cilChevronBottom,
+  cilCalendar,
 } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import {
@@ -42,6 +43,68 @@ import {
 } from "@/app/_global_components/masterFunction";
 import axios from "axios";
 import NextImage from "next/image";
+
+// Helper function to determine which fields should be shown based on property type, subtype, and status
+const getFieldVisibility = (listingType, subType, status) => {
+  const isResidential = listingType === "Residential";
+  const isCommercial = listingType === "Commercial";
+  const isUnderConstruction = status && (
+    status.toLowerCase().includes("under") || 
+    status.toLowerCase().includes("construction") ||
+    status.toLowerCase().includes("upcoming")
+  );
+  const isReadyToMove = status && (
+    status.toLowerCase().includes("ready") || 
+    status.toLowerCase().includes("move") ||
+    status.toLowerCase().includes("possession")
+  );
+  
+  // Subtype checks
+  const isVilla = subType === "Villa";
+  const isApartment = subType === "Apartment";
+  const isPlot = subType === "Plot" || subType === "Land";
+  const isOffice = subType === "Office";
+  const isRetail = subType === "Retail";
+  const isWarehouse = subType === "Warehouse";
+  const isIndependentHouse = subType === "Independent House";
+  const isFarmhouse = subType === "Farmhouse";
+  const isPenthouse = subType === "Penthouse";
+  
+  return {
+    // Basic Information fields
+    showPossession: isUnderConstruction && isResidential,
+    showOccupancy: isReadyToMove && isResidential,
+    showNoticePeriod: isReadyToMove && (isResidential || isCommercial),
+    
+    // Location & Area fields
+    showPlotArea: isPlot || isVilla || isFarmhouse || isIndependentHouse,
+    showCarpetArea: !isPlot && (isResidential || isCommercial),
+    showBuiltUpArea: !isPlot && (isResidential || isCommercial),
+    showSuperBuiltUpArea: isApartment || isOffice || isRetail,
+    
+    // Pricing fields
+    showBookingAmount: isUnderConstruction,
+    showMaintenanceCharges: (isApartment || isOffice || isRetail) && !isPlot,
+    showPricePerSqFt: !isPlot,
+    showAgeOfConstruction: isReadyToMove && !isPlot,
+    
+    // Floor details
+    showFloor: !isPlot && !isWarehouse && !isFarmhouse,
+    showTotalFloors: !isPlot && !isWarehouse && !isFarmhouse,
+    showFacing: isResidential && !isPlot && (isApartment || isVilla || isIndependentHouse || isPenthouse),
+    
+    // Features & Amenities
+    showBedrooms: isResidential && !isPlot,
+    showBathrooms: !isPlot,
+    showBalconies: isResidential && (isApartment || isVilla || isPenthouse),
+    showFurnishing: isResidential && !isPlot && isReadyToMove,
+    showParking: !isPlot,
+    
+    // Commercial specific
+    showWashrooms: isCommercial && !isPlot,
+    showFloorsLevels: isCommercial && (isOffice || isRetail),
+  };
+};
 
 export default function ModernPropertyListing({ listingId: propListingId }) {
   const [currentStep, setCurrentStep] = useState(1);
@@ -1894,6 +1957,8 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
 
 // Step Components
 function BasicInformationStep({ data, onChange, errors, propertyTypes = [], propertyStatus = [] }) {
+  const fieldVisibility = getFieldVisibility(data.listingType, data.subType, data.status);
+  
   return (
     <div className="step-content">
       <div className="step-header">
@@ -2109,6 +2174,75 @@ function BasicInformationStep({ data, onChange, errors, propertyTypes = [], prop
             )}
           </div>
         </Col>
+
+        {/* Conditional fields based on property type, subtype, and status */}
+        {fieldVisibility.showPossession && (
+          <Col md={6}>
+            <div className="form-group-enhanced">
+              <label className="form-label-enhanced">
+                <CIcon icon={cilCalendar} className="label-icon" />
+                Possession Date
+                <span className="required-indicator">*</span>
+              </label>
+              <Form.Control
+                type="date"
+                value={data.possession || ""}
+                onChange={(e) => onChange("possession", e.target.value)}
+                isInvalid={!!errors.possession}
+                className="form-control-enhanced"
+              />
+              {errors.possession && (
+                <div className="error-message">
+                  <CIcon icon={cilWarning} className="error-icon" />
+                  {errors.possession}
+                </div>
+              )}
+            </div>
+          </Col>
+        )}
+
+        {fieldVisibility.showOccupancy && (
+          <Col md={6}>
+            <div className="form-group-enhanced">
+              <label className="form-label-enhanced">
+                <CIcon icon={cilUser} className="label-icon" />
+                Occupancy Status
+              </label>
+              <div className="select-wrapper">
+                <Form.Select
+                  value={data.occupancy || ""}
+                  onChange={(e) => onChange("occupancy", e.target.value)}
+                  className="form-control-enhanced"
+                >
+                  <option value="">Select Occupancy</option>
+                  <option value="Vacant">Vacant</option>
+                  <option value="Tenanted">Tenanted</option>
+                  <option value="Self Occupied">Self Occupied</option>
+                </Form.Select>
+                <div className="select-arrow"></div>
+              </div>
+            </div>
+          </Col>
+        )}
+
+        {fieldVisibility.showNoticePeriod && (
+          <Col md={6}>
+            <div className="form-group-enhanced">
+              <label className="form-label-enhanced">
+                <CIcon icon={cilFlagAlt} className="label-icon" />
+                Notice Period (Days)
+              </label>
+              <Form.Control
+                type="number"
+                min="0"
+                value={data.noticePeriod || ""}
+                onChange={(e) => onChange("noticePeriod", e.target.value)}
+                placeholder="e.g., 30"
+                className="form-control-enhanced"
+              />
+            </div>
+          </Col>
+        )}
       </Row>
     </div>
   );
@@ -2125,6 +2259,7 @@ function LocationAreaStep({
   loadingBuilders = false,
   loadingProjects = false
 }) {
+  const fieldVisibility = getFieldVisibility(data.listingType, data.subType, data.status);
   const [projectSearchTerm, setProjectSearchTerm] = useState("");
   const [showProjectDropdown, setShowProjectDropdown] = useState(false);
   const [projectInputFocused, setProjectInputFocused] = useState(false);
@@ -2826,45 +2961,86 @@ function LocationAreaStep({
           </div>
         </Col>
 
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Carpet Area (sq ft) *</Form.Label>
-            <Form.Control
-              type="number"
-              value={data.carpetArea}
-              onChange={(e) => onChange("carpetArea", e.target.value)}
-              placeholder="Enter carpet area"
-              min={50}
-              isInvalid={!!errors.carpetArea}
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.carpetArea}
-            </Form.Control.Feedback>
-            <Form.Text className="text-muted">
-              <CIcon icon={cilCheck} className="me-1" />
-              Used for automatic price calculations
-            </Form.Text>
-          </Form.Group>
-        </Col>
+        {/* Conditional Area Fields */}
+        {fieldVisibility.showPlotArea && (
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Plot Area (sq ft) *</Form.Label>
+              <Form.Control
+                type="number"
+                value={data.plotArea}
+                onChange={(e) => onChange("plotArea", e.target.value)}
+                placeholder="Enter plot area"
+                min={50}
+                isInvalid={!!errors.plotArea}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.plotArea}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+        )}
 
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Built-up Area (sq ft)</Form.Label>
-            <Form.Control
-              type="number"
-              value={data.builtUpArea}
-              onChange={(e) => onChange("builtUpArea", e.target.value)}
-              placeholder="Enter built-up area"
-              min={0}
-            />
-          </Form.Group>
-        </Col>
+        {fieldVisibility.showCarpetArea && (
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Carpet Area (sq ft) *</Form.Label>
+              <Form.Control
+                type="number"
+                value={data.carpetArea}
+                onChange={(e) => onChange("carpetArea", e.target.value)}
+                placeholder="Enter carpet area"
+                min={50}
+                isInvalid={!!errors.carpetArea}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.carpetArea}
+              </Form.Control.Feedback>
+              <Form.Text className="text-muted">
+                <CIcon icon={cilCheck} className="me-1" />
+                Used for automatic price calculations
+              </Form.Text>
+            </Form.Group>
+          </Col>
+        )}
+
+        {fieldVisibility.showBuiltUpArea && (
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Built-up Area (sq ft)</Form.Label>
+              <Form.Control
+                type="number"
+                value={data.builtUpArea}
+                onChange={(e) => onChange("builtUpArea", e.target.value)}
+                placeholder="Enter built-up area"
+                min={0}
+              />
+            </Form.Group>
+          </Col>
+        )}
+
+        {fieldVisibility.showSuperBuiltUpArea && (
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Super Built-up Area (sq ft)</Form.Label>
+              <Form.Control
+                type="number"
+                value={data.superBuiltUpArea}
+                onChange={(e) => onChange("superBuiltUpArea", e.target.value)}
+                placeholder="Enter super built-up area"
+                min={0}
+              />
+            </Form.Group>
+          </Col>
+        )}
       </Row>
     </div>
   );
 }
 
 function PricingDetailsStep({ data, onChange, errors }) {
+  const fieldVisibility = getFieldVisibility(data.listingType, data.subType, data.status);
+  
   // Number formatting functions
   const formatNumberWithCommas = (value) => {
     if (!value) return "";
@@ -2952,124 +3128,133 @@ function PricingDetailsStep({ data, onChange, errors }) {
           </Form.Group>
         </Col>
 
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Price per sq ft (₹)</Form.Label>
-            <Form.Control
-              type="text"
-              value={formatNumberWithCommas(data.pricePerSqFt)}
-              onChange={(e) => handlePricePerSqFtChange(e.target.value)}
-              placeholder="Price per square foot (e.g., 5,000)"
-              className="form-control-enhanced price-field"
-            />
-            {data.carpetArea && (
-              <Form.Text className="text-muted">
-                <CIcon icon={cilCheck} className="me-1" />
-                Auto-calculates total price based on carpet area (
-                {data.carpetArea} sq ft)
-              </Form.Text>
-            )}
-          </Form.Group>
-        </Col>
+        {fieldVisibility.showPricePerSqFt && (
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Price per sq ft (₹)</Form.Label>
+              <Form.Control
+                type="text"
+                value={formatNumberWithCommas(data.pricePerSqFt)}
+                onChange={(e) => handlePricePerSqFtChange(e.target.value)}
+                placeholder="Price per square foot (e.g., 5,000)"
+                className="form-control-enhanced price-field"
+              />
+              {data.carpetArea && (
+                <Form.Text className="text-muted">
+                  <CIcon icon={cilCheck} className="me-1" />
+                  Auto-calculates total price based on carpet area (
+                  {data.carpetArea} sq ft)
+                </Form.Text>
+              )}
+            </Form.Group>
+          </Col>
+        )}
 
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Maintenance Charges (₹/month)</Form.Label>
-            <Form.Control
-              type="text"
-              value={formatNumberWithCommas(data.maintenanceCharges)}
-              onChange={(e) =>
-                onChange(
-                  "maintenanceCharges",
-                  parseNumberFromFormatted(e.target.value)
-                )
-              }
-              placeholder="Monthly maintenance charges (e.g., 2,500)"
-              className="form-control-enhanced price-field"
-            />
-          </Form.Group>
-        </Col>
-
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Booking Amount (₹)</Form.Label>
-            <Form.Control
-              type="text"
-              value={formatNumberWithCommas(data.bookingAmount)}
-              onChange={(e) =>
-                onChange(
-                  "bookingAmount",
-                  parseNumberFromFormatted(e.target.value)
-                )
-              }
-              placeholder="Booking amount (e.g., 1,00,000)"
-              className="form-control-enhanced price-field"
-            />
-          </Form.Group>
-        </Col>
-
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Floor Number *</Form.Label>
-            <Form.Control
-              type="number"
-              min="0"
-              value={data.floor}
-              onChange={(e) => {
-                const value = e.target.value;
-                // Allow empty string or positive numbers only
-                if (value === "" || (!isNaN(value) && parseFloat(value) >= 0)) {
-                  onChange("floor", value);
+        {fieldVisibility.showMaintenanceCharges && (
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Maintenance Charges (₹/month)</Form.Label>
+              <Form.Control
+                type="text"
+                value={formatNumberWithCommas(data.maintenanceCharges)}
+                onChange={(e) =>
+                  onChange(
+                    "maintenanceCharges",
+                    parseNumberFromFormatted(e.target.value)
+                  )
                 }
-              }}
-              onBlur={(e) => {
-                const value = parseFloat(e.target.value);
-                // Clear if negative on blur
-                if (!isNaN(value) && value < 0) {
-                  onChange("floor", "");
-                }
-              }}
-              placeholder="Floor number"
-              isInvalid={!!errors.floor}
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.floor}
-            </Form.Control.Feedback>
-          </Form.Group>
-        </Col>
+                placeholder="Monthly maintenance charges (e.g., 2,500)"
+                className="form-control-enhanced price-field"
+              />
+            </Form.Group>
+          </Col>
+        )}
 
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Total Floors *</Form.Label>
-            <Form.Control
-              type="number"
-              min="0"
-              value={data.totalFloors}
-              onChange={(e) => {
-                const value = e.target.value;
-                // Allow empty string or positive numbers only
-                if (value === "" || (!isNaN(value) && parseFloat(value) >= 0)) {
-                  onChange("totalFloors", value);
+        {fieldVisibility.showBookingAmount && (
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Booking Amount (₹)</Form.Label>
+              <Form.Control
+                type="text"
+                value={formatNumberWithCommas(data.bookingAmount)}
+                onChange={(e) =>
+                  onChange(
+                    "bookingAmount",
+                    parseNumberFromFormatted(e.target.value)
+                  )
                 }
-              }}
-              onBlur={(e) => {
-                const value = parseFloat(e.target.value);
-                // Clear if negative on blur
-                if (!isNaN(value) && value < 0) {
-                  onChange("totalFloors", "");
-                }
-              }}
-              placeholder="Total floors in building"
-              isInvalid={!!errors.totalFloors}
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.totalFloors}
-            </Form.Control.Feedback>
-          </Form.Group>
-        </Col>
+                placeholder="Booking amount (e.g., 1,00,000)"
+                className="form-control-enhanced price-field"
+              />
+            </Form.Group>
+          </Col>
+        )}
 
-        {/* Facing - More relevant for residential properties */}
-        {data.listingType === "Residential" && (
+        {fieldVisibility.showFloor && (
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Floor Number *</Form.Label>
+              <Form.Control
+                type="number"
+                min="0"
+                value={data.floor}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  // Allow empty string or positive numbers only
+                  if (value === "" || (!isNaN(value) && parseFloat(value) >= 0)) {
+                    onChange("floor", value);
+                  }
+                }}
+                onBlur={(e) => {
+                  const value = parseFloat(e.target.value);
+                  // Clear if negative on blur
+                  if (!isNaN(value) && value < 0) {
+                    onChange("floor", "");
+                  }
+                }}
+                placeholder="Floor number"
+                isInvalid={!!errors.floor}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.floor}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+        )}
+
+        {fieldVisibility.showTotalFloors && (
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Total Floors *</Form.Label>
+              <Form.Control
+                type="number"
+                min="0"
+                value={data.totalFloors}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  // Allow empty string or positive numbers only
+                  if (value === "" || (!isNaN(value) && parseFloat(value) >= 0)) {
+                    onChange("totalFloors", value);
+                  }
+                }}
+                onBlur={(e) => {
+                  const value = parseFloat(e.target.value);
+                  // Clear if negative on blur
+                  if (!isNaN(value) && value < 0) {
+                    onChange("totalFloors", "");
+                  }
+                }}
+                placeholder="Total floors in building"
+                isInvalid={!!errors.totalFloors}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.totalFloors}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+        )}
+
+        {fieldVisibility.showFacing && (
           <Col md={6}>
             <Form.Group>
               <Form.Label>Facing</Form.Label>
@@ -3091,18 +3276,20 @@ function PricingDetailsStep({ data, onChange, errors }) {
           </Col>
         )}
 
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Age of Construction</Form.Label>
-            <Form.Control
-              type="number"
-              value={data.ageOfConstruction}
-              onChange={(e) => onChange("ageOfConstruction", e.target.value)}
-              placeholder="Years since construction"
-              min={0}
-            />
-          </Form.Group>
-        </Col>
+        {fieldVisibility.showAgeOfConstruction && (
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Age of Construction</Form.Label>
+              <Form.Control
+                type="number"
+                value={data.ageOfConstruction}
+                onChange={(e) => onChange("ageOfConstruction", e.target.value)}
+                placeholder="Years since construction"
+                min={0}
+              />
+            </Form.Group>
+          </Col>
+        )}
       </Row>
     </div>
   );
@@ -3120,6 +3307,7 @@ function FeaturesAmenitiesStep({
   loadingNearbyBenefits = false,
   apiBaseUrl = ""
 }) {
+  const fieldVisibility = getFieldVisibility(data.listingType, data.subType, data.status);
   const isResidential = data.listingType === "Residential";
   const isCommercial = data.listingType === "Commercial";
   
@@ -3277,126 +3465,113 @@ function FeaturesAmenitiesStep({
 
       <Row className="g-3">
         {/* Residential-specific fields */}
-        {isResidential && (
-          <>
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label>Number of Bedrooms (BHK) *</Form.Label>
-                <Form.Select
-                  value={data.bedrooms}
-                  onChange={(e) => onChange("bedrooms", e.target.value)}
-                  isInvalid={!!errors.bedrooms}
-                >
-                  <option value="">Select Bedrooms</option>
-                  <option value="1">1 BHK</option>
-                  <option value="2">2 BHK</option>
-                  <option value="3">3 BHK</option>
-                  <option value="4">4 BHK</option>
-                  <option value="5">5+ BHK</option>
-                </Form.Select>
-                <Form.Control.Feedback type="invalid">
-                  {errors.bedrooms}
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
+        {fieldVisibility.showBedrooms && (
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Number of Bedrooms (BHK) *</Form.Label>
+              <Form.Select
+                value={data.bedrooms}
+                onChange={(e) => onChange("bedrooms", e.target.value)}
+                isInvalid={!!errors.bedrooms}
+              >
+                <option value="">Select Bedrooms</option>
+                <option value="1">1 BHK</option>
+                <option value="2">2 BHK</option>
+                <option value="3">3 BHK</option>
+                <option value="4">4 BHK</option>
+                <option value="5">5+ BHK</option>
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                {errors.bedrooms}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+        )}
 
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label>Number of Bathrooms *</Form.Label>
-                <Form.Select
-                  value={data.bathrooms}
-                  onChange={(e) => onChange("bathrooms", e.target.value)}
-                  isInvalid={!!errors.bathrooms}
-                >
-                  <option value="">Select Bathrooms</option>
-                  <option value="1">1 Bathroom</option>
-                  <option value="2">2 Bathrooms</option>
-                  <option value="3">3 Bathrooms</option>
-                  <option value="4">4+ Bathrooms</option>
-                </Form.Select>
-                <Form.Control.Feedback type="invalid">
-                  {errors.bathrooms}
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
+        {fieldVisibility.showBathrooms && (
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>
+                {isResidential ? "Number of Bathrooms *" : "Number of Washrooms"}
+              </Form.Label>
+              <Form.Select
+                value={data.bathrooms}
+                onChange={(e) => onChange("bathrooms", e.target.value)}
+                isInvalid={!!errors.bathrooms}
+              >
+                <option value="">Select {isResidential ? "Bathrooms" : "Washrooms"}</option>
+                <option value="1">1 {isResidential ? "Bathroom" : "Washroom"}</option>
+                <option value="2">2 {isResidential ? "Bathrooms" : "Washrooms"}</option>
+                <option value="3">3 {isResidential ? "Bathrooms" : "Washrooms"}</option>
+                <option value="4">4+ {isResidential ? "Bathrooms" : "Washrooms"}</option>
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                {errors.bathrooms}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+        )}
 
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label>Number of Balconies</Form.Label>
-                <Form.Select
-                  value={data.balconies}
-                  onChange={(e) => onChange("balconies", e.target.value)}
-                >
-                  <option value="">Select Balconies</option>
-                  <option value="0">No Balcony</option>
-                  <option value="1">1 Balcony</option>
-                  <option value="2">2 Balconies</option>
-                  <option value="3">3+ Balconies</option>
-                </Form.Select>
-              </Form.Group>
-            </Col>
-          </>
+        {fieldVisibility.showBalconies && (
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Number of Balconies</Form.Label>
+              <Form.Select
+                value={data.balconies}
+                onChange={(e) => onChange("balconies", e.target.value)}
+              >
+                <option value="">Select Balconies</option>
+                <option value="0">No Balcony</option>
+                <option value="1">1 Balcony</option>
+                <option value="2">2 Balconies</option>
+                <option value="3">3+ Balconies</option>
+              </Form.Select>
+            </Form.Group>
+          </Col>
         )}
 
         {/* Commercial-specific fields */}
-        {isCommercial && (
-          <>
-            <Col md={6}>
-              {/* <Form.Group>
-                <Form.Label>Number of Floors/Levels</Form.Label>
-                <Form.Select
-                  value={data.bedrooms}
-                  onChange={(e) => onChange("bedrooms", e.target.value)}
-                >
-                  <option value="">Select Levels</option>
-                  <option value="1">Ground Floor</option>
-                  <option value="2">1st Floor</option>
-                  <option value="3">2nd Floor</option>
-                  <option value="4">3rd Floor</option>
-                  <option value="5">4+ Floors</option>
-                </Form.Select>
-              </Form.Group> */}
-            </Col>
-
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label>Number of Washrooms</Form.Label>
-                <Form.Select
-                  value={data.bathrooms}
-                  onChange={(e) => onChange("bathrooms", e.target.value)}
-                >
-                  <option value="">Select Washrooms</option>
-                  <option value="1">1 Washroom</option>
-                  <option value="2">2 Washrooms</option>
-                  <option value="3">3 Washrooms</option>
-                  <option value="4">4+ Washrooms</option>
-                </Form.Select>
-              </Form.Group>
-            </Col>
-          </>
+        {fieldVisibility.showWashrooms && isCommercial && (
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Number of Washrooms</Form.Label>
+              <Form.Select
+                value={data.bathrooms}
+                onChange={(e) => onChange("bathrooms", e.target.value)}
+              >
+                <option value="">Select Washrooms</option>
+                <option value="1">1 Washroom</option>
+                <option value="2">2 Washrooms</option>
+                <option value="3">3 Washrooms</option>
+                <option value="4">4+ Washrooms</option>
+              </Form.Select>
+            </Form.Group>
+          </Col>
         )}
 
         {/* Common fields for both */}
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Parking</Form.Label>
-            <Form.Select
-              value={data.parking}
-              onChange={(e) => onChange("parking", e.target.value)}
-            >
-              <option value="">Select Parking</option>
-              <option value="No Parking">No Parking</option>
-              <option value="1 Covered">1 Covered</option>
-              <option value="1 Open">1 Open</option>
-              <option value="2 Covered">2 Covered</option>
-              <option value="2 Open">2 Open</option>
-              <option value="Multiple">Multiple</option>
-            </Form.Select>
-          </Form.Group>
-        </Col>
+        {fieldVisibility.showParking && (
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Parking</Form.Label>
+              <Form.Select
+                value={data.parking}
+                onChange={(e) => onChange("parking", e.target.value)}
+              >
+                <option value="">Select Parking</option>
+                <option value="No Parking">No Parking</option>
+                <option value="1 Covered">1 Covered</option>
+                <option value="1 Open">1 Open</option>
+                <option value="2 Covered">2 Covered</option>
+                <option value="2 Open">2 Open</option>
+                <option value="Multiple">Multiple</option>
+              </Form.Select>
+            </Form.Group>
+          </Col>
+        )}
 
-        {/* Furnishing - more relevant for residential but available for commercial too */}
-        {(isResidential || isCommercial) && (
+        {/* Furnishing - conditional based on property type and status */}
+        {fieldVisibility.showFurnishing && (
           <Col md={6}>
             <Form.Group>
               <Form.Label>Furnishing Status</Form.Label>
