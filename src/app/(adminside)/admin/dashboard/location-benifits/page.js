@@ -19,7 +19,7 @@ const fetchAllBenefits = async () => {
 //Fetching all projects list
 const fetchProjects = async () => {
   const projectResponse = await axios.get(
-    process.env.NEXT_PUBLIC_API_URL + "projects/get-all-projects-list"
+    process.env.NEXT_PUBLIC_API_URL + "projects/all-projects"
   );  
   return projectResponse.data;
 };

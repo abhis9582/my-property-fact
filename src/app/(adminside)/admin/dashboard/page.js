@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 const countAllProjects = async () => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
+      `${process.env.NEXT_PUBLIC_API_URL}projects/all-projects`
     );
     return response.data.length || 0;
   } catch (error) {

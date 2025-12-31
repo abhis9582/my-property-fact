@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Enable compression
+  compress: true,
+  
   images: {
     remotePatterns: [
       {
@@ -38,6 +41,12 @@ const nextConfig = {
   // Enable CSS optimization without experimental features
   compiler: {
     styledComponents: true,
+  },
+  // Optimize production builds
+  swcMinify: true,
+  // Reduce bundle size
+  experimental: {
+    optimizePackageImports: ['@mui/material', '@coreui/react', 'react-bootstrap'],
   },
 };
 

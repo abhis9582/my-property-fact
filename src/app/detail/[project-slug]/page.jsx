@@ -334,7 +334,7 @@ export default function ProjectDetailPage() {
             </Col>
             <Col md={3} className="text-center">
               <h4 className="text-primary mb-2">
-                <Badge bg="success">{project.projectStatusName || "Available"}</Badge>
+                <Badge bg="success">{project.projectStatus || "Available"}</Badge>
               </h4>
               <p className="text-muted mb-0">Status</p>
             </Col>
@@ -678,7 +678,7 @@ export default function ProjectDetailPage() {
                                   if (!hasGetImages) {
                                     cleanBase = `${cleanBase}/get/images`;
                                   }
-                                  return `${cleanBase}/location-benefit/${benefit.iconImage || benefit.image}`;
+                                  return `${cleanBase}/nearby-benefit/${benefit.iconImage || benefit.image}`;
                                 })()}`}
                                 alt={benefit.title || benefit.benefitName || benefit.name || `Location benefit ${index + 1}`}
                                 width={50}
@@ -824,10 +824,10 @@ export default function ProjectDetailPage() {
                     </div>
                   )}
                   
-                  {project.propertyTypeName && (
+                  {project.projectType && (
                     <div className="mb-3">
                       <strong>Property Type:</strong>
-                      <p className="mb-0">{project.propertyTypeName}</p>
+                      <p className="mb-0">{project.projectType}</p>
                     </div>
                   )}
                   

@@ -1,0 +1,31 @@
+.new-home-meta-data-container {
+  background-color: #fff;
+  background: url("/static/home-meta-data/meta-data-bg.png") no-repeat center
+    center;
+  backdrop-filter: blur(10px);
+  max-height: 401px;
+  height: 401px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.new-home-meta-data-container h1 {
+  font-weight: 500;
+  font-style: Medium;
+  font-size: 18px;
+  line-height: 100%;
+  letter-spacing: 3px;
+  text-align: center;
+  text-transform: capitalize;
+  color: #000;
+}
+
+/* .data-container-child {
+    background: #fff;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+} */

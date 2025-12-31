@@ -90,37 +90,14 @@ export default function ManageProjects({
     setCities(state ? state.cityList : []);
   };
 
-  //Handle opening model
+  //Handle opening model - redirect to multi-step form
   const openAddModel = () => {
-    setTitle("Add New Project");
-    setShowModal(true);
-    setButtonName("Add Project");
-    setFormData(initialFormData);
-    setValidated(false);
-    setCities([]);
-    setStates([]);
+    router.push("/admin/dashboard/manage-projects/edit?step=basic");
   };
 
-  //Handling opening of edit model
+  //Handling opening of edit model - redirect to multi-step form
   const openEditModel = (item) => {
-    setTitle("Edit Project Details");
-    setShowModal(true);
-    setButtonName("Update Project");
-    // Dynamically update the form data with the values from the item
-    setFormData({
-      ...initialFormData, // You can retain the initial values if needed
-      ...item, // Overwrite with item data
-      locationMap: null,
-      projectLogo: null,
-      projectThumbnail: null,
-      locationMapPreview: `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.locationMapImage}`,
-      projectLogoPreview: `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.projectLogoImage}`,
-      projectThumbnailPreview: `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.projectThumbnailImage}`,
-    });
-    const country = countryData?.find((c) => c.id === item.countryId);
-    setStates(country ? country?.stateList : []);
-    const state = country?.stateList?.find((s) => s.id === item.stateId);
-    setCities(state ? state.cityList : []);
+    router.push(`/admin/dashboard/manage-projects/edit?projectId=${item.id}&step=basic`);
   };
 
   //Opening delete confirmation box
@@ -456,8 +433,8 @@ export default function ManageProjects({
       flex: 1,
     },
     {
-      field: "projectLocality",
-      headerName: "Project Locality",
+      field: "projectAddress",
+      headerName: "Project Address",
       flex: 1,
     },
     {
@@ -466,18 +443,18 @@ export default function ManageProjects({
       flex: 1,
     },
     {
-      field: "propertyTypeName",
-      headerName: "Property Type",
+      field: "projectType",
+      headerName: "Project Type",
       flex: 1,
     },
     {
-      field: "projectStatusName",
+      field: "projectStatus",
       headerName: "Project Status",
       flex: 1,
     },
     {
       field: "status",
-      headerName: "Draft Status",
+      headerName: "IsActive",
       flex: 1,
     },
     {

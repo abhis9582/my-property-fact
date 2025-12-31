@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 //fetching all project list details
 const fetchProjectsWithDetail = async () => {
   const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
+    `${process.env.NEXT_PUBLIC_API_URL}projects/all-projects`
   );
   const res = response.data;
   const list = res.map((item, index) => ({

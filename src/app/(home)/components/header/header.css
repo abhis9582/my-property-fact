@@ -99,7 +99,7 @@
   overflow: auto;
   min-width: 960px;
   position: absolute;
-  top: 40px;
+  top: 30px;
 }
 
 .menu ul li.hasChild .dropdown.dropdown-lg ul {

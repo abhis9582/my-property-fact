@@ -75,13 +75,14 @@ function AdminPageContent() {
           path: "/",
         });
 
-        // Redirect to admin dashboard
-        router.push("/admin/dashboard");
+        // Use replace instead of push for faster navigation (doesn't add to history)
+        // This provides immediate redirect after successful login
+        router.replace("/admin/dashboard");
+        return; // Exit early to avoid unnecessary state updates
       }
     } catch (error) {
       toast.error("Invalid username or password!");
       console.log(error);
-    } finally {
       setShowLoading(false);
       setButtonName("Go to dashboard");
     }

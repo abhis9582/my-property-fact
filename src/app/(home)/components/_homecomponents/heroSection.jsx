@@ -4,14 +4,14 @@ import AnimatedCounter from "./AnimatedCounter";
 import HeroBannerSlider from "./HeroBannerSlider";
 import "../home/home.css";
 import {
-  fetchAllProjects,
+  getAllProjects,
   fetchBuilderData,
   fetchCityData,
   fetchProjectTypes,
 } from "@/app/_global_components/masterFunction";
 import NewYearEffect from "./NewYearEffect";
 export default async function HeroSection() {
-  const totalProjects = await fetchAllProjects();
+  const totalProjects = await getAllProjects();
   const cities = await fetchCityData();
   const builders = await fetchBuilderData();
   //Our facts

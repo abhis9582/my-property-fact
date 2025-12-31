@@ -67,13 +67,13 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
   };
 
   const renderStatusBadge = () => {
-    if (!data.projectStatusName) {
+    if (!data.projectStatus) {
       return null;
     }
 
     if (badgeVariant === "home-featured") {
       const { backgroundColor, textColor } = getFeaturedBadgeStyle(
-        data.projectStatusName
+        data.projectStatus
       );
 
       return (
@@ -84,7 +84,7 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
             "--badge-text-color": textColor,
           }}
         >
-          {data.projectStatusName}
+          {data.projectStatus}
         </div>
       );
     }
@@ -92,7 +92,7 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
     return (
       <div className="position-absolute top-0 end-0 m-2 status-badge-container">
         <h6 className="border p-2 d-inline-block rounded bg-light text-dark shadow-sm fw-bold">
-          {data.projectStatusName}
+          {data.projectStatus}
         </h6>
       </div>
     );
@@ -121,7 +121,7 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
         {renderStatusBadge()}
         <div className="mt-3 ms-3">
           <h5 className="mb-2 fw-bold">{data.projectName}</h5>
-          <p className="mb-2">{data.propertyTypeName}</p>
+          <p className="mb-2">{data.projectType}</p>
           <h5 className="text-success d-flex gap-2 mb-0">
             <span className="fw-bold"> {generatePrice(data.projectPrice)}</span>
           </h5>

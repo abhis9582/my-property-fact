@@ -2,7 +2,7 @@
 import PropertyContainer from "@/app/(home)/components/common/page";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import { useEffect, useState } from "react";
-import { fetchAllProjects } from "../masterFunction";
+import { getAllProjects } from "../masterFunction";
 
 export default function ProjectListByFloorTypeClient({ title }) {
   const [projects, setProjects] = useState([]);
@@ -34,7 +34,7 @@ export default function ProjectListByFloorTypeClient({ title }) {
     const city = title.split(" In ")[1];
     console.log("cityname", city);
     async function fetchData() {
-      const data = await fetchAllProjects();
+      const data = await getAllProjects();
       const filteredData = await getListOfProjectFromBkType(
         data,
         bhkType,

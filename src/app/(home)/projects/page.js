@@ -1,6 +1,5 @@
 import { getAllProjects } from "@/app/_global_components/masterFunction";
 import Projects from "./projects";
-import NewProjectListPage from "./newProjectListPage";
 
 export const metadata = {
   title:

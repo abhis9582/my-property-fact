@@ -16,7 +16,7 @@ const fetchAllFloorPlans = async () => {
 //Fetching all projects list from api
 const fetchProjects = async () => {
   const projectResponse = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
+    `${process.env.NEXT_PUBLIC_API_URL}projects/all-projects`
   );
 
   const sortedProjects = projectResponse.data.sort((a, b) => {

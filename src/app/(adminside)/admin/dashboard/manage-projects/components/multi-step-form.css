@@ -1,0 +1,324 @@
+.multi-step-form-container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  background: transparent;
+  min-height: calc(100vh - 100px);
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Header uses admin-page-header class from dashboard */
+
+/* Progress Section - Uses admin-content-card class */
+.progress-section {
+  padding: 1rem 1.5rem;
+}
+
+.progress-section small {
+  color: #6c757d;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.progress {
+  border-radius: 10px;
+  overflow: hidden;
+  background: #e8ecf1;
+  height: 8px;
+}
+
+.progress-bar {
+  transition: width 0.3s ease;
+  background: linear-gradient(90deg, #68ac78 0%, #5a9a68 100%);
+}
+
+.progress-section .badge {
+  background: #68ac78;
+  color: white;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+/* Step Tabs - Uses admin-content-card class */
+.step-tabs-container {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+}
+
+.step-tabs {
+  border: none;
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.step-tabs::-webkit-scrollbar {
+  height: 4px;
+}
+
+.step-tabs::-webkit-scrollbar-track {
+  background: #f5f7fa;
+  border-radius: 2px;
+}
+
+.step-tabs::-webkit-scrollbar-thumb {
+  background: rgba(104, 172, 120, 0.3);
+  border-radius: 2px;
+}
+
+.step-tabs::-webkit-scrollbar-thumb:hover {
+  background: rgba(104, 172, 120, 0.5);
+}
+
+.step-tab {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px !important;
+  border: none !important;
+  border-bottom: 3px solid transparent !important;
+  color: #6c757d;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  border-radius: 8px 8px 0 0;
+  margin-right: 4px;
+}
+
+.step-tab:hover:not(.disabled) {
+  color: #68ac78;
+  background: rgba(104, 172, 120, 0.1);
+  border-bottom-color: rgba(104, 172, 120, 0.3) !important;
+}
+
+.step-tab.active {
+  color: #68ac78;
+  background: rgba(104, 172, 120, 0.1);
+  border-bottom-color: #68ac78 !important;
+  font-weight: 600;
+}
+
+.step-tab.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.step-icon {
+  margin-right: 6px;
+  font-size: 16px;
+}
+
+.step-label {
+  font-size: 0.875rem;
+}
+
+/* Form Content - Uses admin-content-card class */
+.form-content {
+  padding: 2rem;
+  min-height: 500px;
+  margin-bottom: 1.5rem;
+}
+
+/* Footer Navigation - Uses admin-content-card class */
+.form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  position: sticky;
+  bottom: 20px;
+  z-index: 10;
+}
+
+.form-footer .btn {
+  min-width: 100px;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 8px 20px;
+  transition: all 0.3s ease;
+}
+
+.form-footer .btn-primary {
+  background: #68ac78;
+  border-color: #68ac78;
+  color: white;
+}
+
+.form-footer .btn-primary:hover:not(:disabled) {
+  background: #5a9a68;
+  border-color: #5a9a68;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(104, 172, 120, 0.4);
+}
+
+.form-footer .btn-outline-secondary {
+  border-color: rgba(104, 172, 120, 0.3);
+  color: #68ac78;
+}
+
+.form-footer .btn-outline-secondary:hover:not(:disabled) {
+  background: #68ac78;
+  border-color: #68ac78;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(104, 172, 120, 0.4);
+}
+
+/* Step Indicator Dots */
+.step-indicator-dots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #dee2e6;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot:hover {
+  transform: scale(1.2);
+  background: rgba(104, 172, 120, 0.5);
+}
+
+.dot.active {
+  width: 12px;
+  height: 12px;
+  background: #68ac78;
+  box-shadow: 0 0 0 3px rgba(104, 172, 120, 0.2);
+}
+
+.dot.completed {
+  background: #68ac78;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .multi-step-form-container {
+    padding: 10px;
+  }
+
+  .form-header {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .form-header h4 {
+    font-size: 1.25rem;
+  }
+
+  .step-tabs-container {
+    padding: 0.75rem;
+  }
+
+  .step-tab {
+    padding: 8px 12px !important;
+    font-size: 0.75rem;
+  }
+
+  .step-label {
+    display: none;
+  }
+
+  .step-icon {
+    margin-right: 0;
+    font-size: 18px;
+  }
+
+  .form-content {
+    padding: 1.5rem;
+    min-height: 400px;
+  }
+
+  .form-footer {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 1rem;
+  }
+
+  .step-indicator-dots {
+    order: -1;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .form-footer .btn {
+    flex: 1;
+    min-width: auto;
+    font-size: 0.875rem;
+    padding: 6px 16px;
+  }
+}
+
+/* Smooth transitions */
+.tab-content {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Form elements matching dashboard */
+.form-content .form-label {
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-content .form-control,
+.form-content .form-select {
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+}
+
+.form-content .form-control:focus,
+.form-content .form-select:focus {
+  border-color: #68ac78;
+  box-shadow: 0 0 0 0.2rem rgba(104, 172, 120, 0.25);
+  outline: none;
+}
+
+.form-content .btn-success {
+  background: #68ac78;
+  border-color: #68ac78;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.form-content .btn-success:hover:not(:disabled) {
+  background: #5a9a68;
+  border-color: #5a9a68;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(104, 172, 120, 0.4);
+}
+
+/* Alert styles matching dashboard */
+.form-content .alert {
+  border-radius: 8px;
+  border: none;
+  background: rgba(104, 172, 120, 0.1);
+  color: #2c3e50;
+  border-left: 4px solid #68ac78;
+}

@@ -1,7 +1,7 @@
 "use client";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { fetchAllProjects } from "../masterFunction";
+import { getAllProjects } from "../masterFunction";
 import PropertyContainer from "@/app/(home)/components/common/page";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import Link from "next/link";
@@ -41,7 +41,7 @@ export default function MasterBHKProjectList() {
         case "apartments":
           filteredData = projects.filter(
             (item) =>
-              item.propertyTypeName.toLowerCase() === "residential" &&
+              item.projectType.toLowerCase() === "residential" &&
               item.cityName.toLowerCase() === cityName.trim().toLowerCase()
           );
           setFloorTypeList(
@@ -64,7 +64,7 @@ export default function MasterBHKProjectList() {
         case "new-projects":
           filteredData = projects.filter(
             (item) =>
-              item.projectStatusName === "New Launched" &&
+              item.projectStatus === "New Launched" &&
               item.cityName.toLowerCase() === cityName.toLowerCase()
           );
           setFloorTypeList(
@@ -88,7 +88,7 @@ export default function MasterBHKProjectList() {
           filteredData = projects.filter(
             (item) =>
               item.cityName.toLowerCase() === cityName.trim().toLowerCase() &&
-              item.propertyTypeName.toLowerCase() === "residential"
+              item.projectType.toLowerCase() === "residential"
           );
           setFloorTypeList(
             Array.from(
@@ -110,7 +110,7 @@ export default function MasterBHKProjectList() {
         case "commercial":
           filteredData = projects.filter(
             (item) =>
-              item.propertyTypeName.toLowerCase() === "commercial" &&
+              item.projectType.toLowerCase() === "commercial" &&
               item.cityName.toLowerCase() === cityName.toLowerCase()
           );
           setFloorTypeList(
@@ -167,7 +167,7 @@ export default function MasterBHKProjectList() {
       "/new-projects-in-",
     ];
     async function fetchData() {
-      const data = await fetchAllProjects();
+      const data = await getAllProjects();
       setProjects(data);
       let foundCity = "";
       slugPrefix.map((slug) => {

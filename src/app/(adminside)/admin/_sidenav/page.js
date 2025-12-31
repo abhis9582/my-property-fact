@@ -60,10 +60,7 @@ export default function SideNav({ onLinkClick }) {
         "/admin/dashboard/manage-project-status",
         "/admin/dashboard/builder",
         "/admin/dashboard/budget-options",
-        "/admin/dashboard/manage-career-applications",
-        "/admin/dashboard/manage-location-benefits",
-        "/admin/dashboard/aminities",
-        "/admin/dashboard/manage-features"
+        "/admin/dashboard/manage-career-applications"
       ],
       dropdown4: [
         "/admin/dashboard/manage-blogs",
@@ -128,10 +125,7 @@ export default function SideNav({ onLinkClick }) {
           "/admin/dashboard/manage-project-status",
           "/admin/dashboard/builder",
           "/admin/dashboard/budget-options",
-          "/admin/dashboard/manage-career-applications",
-          "/admin/dashboard/manage-location-benefits",
-          "/admin/dashboard/aminities",
-          "/admin/dashboard/manage-features"
+          "/admin/dashboard/manage-career-applications"
         ]) ? "active" : ""}>
           <Link
             href="#"
@@ -189,26 +183,6 @@ export default function SideNav({ onLinkClick }) {
             <li className={isActive("/admin/dashboard/manage-career-applications") ? "active" : ""}>
               <Link href="/admin/dashboard/manage-career-applications" onClick={handleLinkClick}>
                 Manage career applications
-              </Link>
-            </li>
-            <li className={isActive("/admin/dashboard/manage-location-benefits") ? "active" : ""}>
-              <Link href="/admin/dashboard/manage-location-benefits" onClick={handleLinkClick}>
-                Manage location benefits
-              </Link>
-            </li>
-            <li className={isActive("/admin/dashboard/aminities") ? "active" : ""}>
-              <Link href="/admin/dashboard/aminities" onClick={handleLinkClick}>
-                Manage Amenities
-              </Link>
-            </li>
-            <li className={isActive("/admin/dashboard/manage-features") ? "active" : ""}>
-              <Link href="/admin/dashboard/manage-features" onClick={handleLinkClick}>
-                Manage Features
-              </Link>
-            </li>
-            <li className={isActive("/admin/dashboard/manage-location-benefits") ? "active" : ""}>
-              <Link href="/admin/dashboard/manage-location-benefits" onClick={handleLinkClick}>
-                Manage Nearby Benefits
               </Link>
             </li>
           </ul>
@@ -352,15 +326,6 @@ export default function SideNav({ onLinkClick }) {
               </Link>
             </li>
           </ul>
-        </li>
-        <li className={isActive("/admin/dashboard/aminities") ? "active" : ""}>
-          <Link href="/admin/dashboard/aminities" onClick={handleLinkClick}>Amenities</Link>
-        </li>
-        <li className={isActive("/admin/dashboard/manage-features") ? "active" : ""}>
-          <Link href="/admin/dashboard/manage-features" onClick={handleLinkClick}>Manage Features</Link>
-        </li>
-        <li className={isActive("/admin/dashboard/manage-location-benefits") ? "active" : ""}>
-          <Link href="/admin/dashboard/manage-location-benefits" onClick={handleLinkClick}>Manage Nearby Benefits</Link>
         </li>
         <li className={isActive("/admin/dashboard/enquiries") ? "active" : ""}>
           <Link href="/admin/dashboard/enquiries" onClick={handleLinkClick}>Manage Enquiries</Link>

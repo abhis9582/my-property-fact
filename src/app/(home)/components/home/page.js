@@ -28,10 +28,10 @@ export default async function HomePage() {
     return allowedSlugs.includes(project.slugURL);
   });
   const residentalProjects = projects
-    .filter((project) => project.propertyTypeName === "Residential")
+    .filter((project) => project.projectType === "Residential")
     .slice(0, 9);
   const commercialProjects = projects
-    .filter((project) => project.propertyTypeName === "Commercial")
+    .filter((project) => project.projectType === "Commercial")
     .slice(0, 9);
   const mpfTopPicProject = await getWeeklyProject(projects);
   try {

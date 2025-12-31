@@ -39,7 +39,7 @@ export const getAllProjects = cache(async () => {
   if (!apiUrl) {
     throw new Error("NEXT_PUBLIC_API_URL is not defined");
   }
-  const res = await fetch(`${apiUrl}projects`, {
+  const res = await fetch(`${apiUrl}projects/all-projects`, {
     next: { revalidate: 60 }, // ISR: refresh every 60s
   });
   if (!res.ok) throw new Error("Failed to fetch projects");
@@ -162,36 +162,6 @@ export const fetchBlogs = cache(async (page, size) => {
   const total = blogsData?.total || blogsData?.totalCount || blogsArray.length;
   console.log(`Fetched blogs and total is ${total}`); // runs only once per cache
   return blogsData;
-});
-
-//Get projects in parts
-export const getProjectsInPart = cache(async (page, size, category = "All") => {
-  const project = await fetch(
-    `${apiUrl}projects/get-projects-in-parts?page=${page}&size=${size}`,
-    {
-      next: { revalidate: 60 },
-    }
-  );
-  if (!project.ok) throw new Error("Failed to fetch blogs");
-  const projectPartData = await project.json();
-  console.log(
-    `Fetched project through pagination of page ${page} and size ${size} and length is ${projectPartData.length}`
-  );
-  switch (category) {
-    case "Commercial":
-      projectPartData.filter((item) => item.propertyTypeName === category);
-      break;
-    case "Residential":
-      projectPartData.filter((item) => item.propertyTypeName === category);
-      break;
-    case "New Launch":
-      projectPartData.filter((item) => item.propertyTypeName === category);
-      break;
-    default:
-      projectPartData;
-      break;
-  }
-  return projectPartData;
 });
 
 //Fetch all benefits from server

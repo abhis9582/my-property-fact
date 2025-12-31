@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic';
 //fetch data for this component
 const fetchProjects = async () => {
   const apis = [
-    axios.get(`${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`),
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}projects/all-projects`),
     axios.get(`${process.env.NEXT_PUBLIC_API_URL}project-walkthrough/get`),
   ];
   const [projectsRes, walkthroughRes] = await Promise.all(apis);

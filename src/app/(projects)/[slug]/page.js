@@ -2,7 +2,7 @@ import Property from "./propertypage";
 import Footer from "../../(home)/components/footer/page";
 import {
   checkIfProjectSlug,
-  fetchAllProjects,
+  getAllProjects,
   fetchCityData,
   fetchProjectDetailsBySlug,
   fetchProjectTypes,
@@ -58,7 +58,7 @@ export default async function PropertyPage({ params, searchParams }) {
       fetchCityData(),
       fetchProjectTypes(),
       fetchProjectDetailsBySlug(slug),
-      fetchAllProjects(),
+      getAllProjects(),
     ]);
   const isFloorTypeSlug = await isFloorTypeUrl(slug);
   console.log("floor type", isFloorTypeSlug);
@@ -70,7 +70,7 @@ export default async function PropertyPage({ params, searchParams }) {
   const similarProject = featuredProjects.filter(
               (item) =>
                 item.cityName === projectDetail.cityName &&
-                item.propertyTypeName === projectDetail.propertyTypeName
+                item.projectType === projectDetail.projectType
                 && item.id !== projectDetail.id                
             );
   if (isCitySlug) {

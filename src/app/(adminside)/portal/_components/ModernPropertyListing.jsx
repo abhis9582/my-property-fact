@@ -688,7 +688,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     const loadProjects = async () => {
       setLoadingProjects(true);
       try {
-        const response = await axios.get(`${baseUrl}/projects/get-all-projects-list`);
+        const response = await axios.get(`${baseUrl}/projects/all-projects`);
         // Handle different response formats
         const projectData = response.data || [];
         setProjects(Array.isArray(projectData) ? projectData : []);

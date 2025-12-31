@@ -36,7 +36,7 @@ module.exports = {
 
     // Projects
     const projectsRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
+      `${process.env.NEXT_PUBLIC_API_URL}projects/all-projects`
     );
     const projects = await projectsRes.json();
 

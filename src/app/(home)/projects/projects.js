@@ -34,7 +34,7 @@ export default function Projects() {
   const observer = useRef(null);
   const loadMoreRef = useRef(null);
   const [isActive, setIsActive] = useState("");
-  const PAGE_SIZE = 15;
+  const PAGE_SIZE = 150;
   const { setProjectData } = useProjectContext();
   const [fadeKey, setFadeKey] = useState(0);
   const [filteredProjectData, setFilteredProjectData] = useState([]);
@@ -74,7 +74,7 @@ export default function Projects() {
         }
 
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}projects/get-projects-in-parts`,
+          `${process.env.NEXT_PUBLIC_API_URL}projects/all-projects`,
           {
             params: {
               page: pageNum,
@@ -277,12 +277,12 @@ export default function Projects() {
         if (selectedType.projectTypeName === 'New Launches') {
           // "New Launches" is a special case - filter by project status instead of property type
           filtered = filtered.filter(
-            (item) => item.projectStatusName === 'New Launched'
+            (item) => item.projectStatus === 'New Launched'
           );
         } else {
-          // For other property types, filter by propertyTypeName or propertyTypeId
+          // For other property types, filter by projectType or propertyTypeId
           filtered = filtered.filter(
-            (item) => item.propertyTypeName === selectedType.projectTypeName || item.propertyTypeId === selectedType.id
+            (item) => item.projectType === selectedType.projectTypeName || item.propertyTypeId === selectedType.id
           );
         }
       } else {
@@ -334,7 +334,7 @@ export default function Projects() {
       );
       if (selectedStatus) {
         filtered = filtered.filter(
-          (item) => item.projectStatusName === selectedStatus.statusName
+          (item) => item.projectStatus === selectedStatus.statusName
         );
       } else {
         // If status not found, filter by ID directly
@@ -474,7 +474,6 @@ export default function Projects() {
   }, [filters, allProjectsList, applyFilters, isActive]);
 
   const filterSectionTab = (tabName) => {
-    debugger
     setIsActive(tabName);
     setPage(0);
 
@@ -500,17 +499,17 @@ export default function Projects() {
         setHasMore(totalLoaded >= PAGE_SIZE && totalLoaded % PAGE_SIZE === 0);
       } else if (tabName === "Commercial") {
         filtered = allProjectsList.filter(
-          (item) => item.propertyTypeName === "Commercial"
+          (item) => item.projectType === "Commercial"
         );
         setHasMore(false);
       } else if (tabName === "Residential") {
         filtered = allProjectsList.filter(
-          (item) => item.propertyTypeName === "Residential"
+          (item) => item.projectType === "Residential"
         );
         setHasMore(false);
       } else if (tabName === "New Launched") {
         filtered = allProjectsList.filter(
-          (item) => item.projectStatusName === "New Launched"
+          (item) => item.projectStatus === "New Launched"
         );
         setHasMore(false);
       }
