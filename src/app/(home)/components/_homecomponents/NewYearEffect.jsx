@@ -11,9 +11,9 @@ export default function NewYearEffect() {
   const hRef = useRef(0);
 
   const duration = 5000;
-  const str = ["Happy", "New", "Year", "2026"];
 
   useEffect(() => {
+    const str = ["Happy", "New", "Year", "2026"];
     const canvas = canvasRef.current;
     if (!canvas) return;
 

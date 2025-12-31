@@ -3,7 +3,6 @@ import Link from "next/link";
 import './common.css';
 // import SnowEffect from "../_homecomponents/SnowEffect";
 import NewYearEffect from "../_homecomponents/NewYearEffect";
-import NewYearText from "../_homecomponents/NewYearText";
 
 export default function CommonHeaderBanner({ image, headerText, firstPage, pageName }) {
   // Build breadcrumb path
