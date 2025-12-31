@@ -2,7 +2,6 @@ import Link from "next/link";
 import SearchFilter from "./searchFIlter";
 import AnimatedCounter from "./AnimatedCounter";
 import HeroBannerSlider from "./HeroBannerSlider";
-import SnowEffect from "./SnowEffect";
 import "../home/home.css";
 import {
   fetchAllProjects,
@@ -10,6 +9,7 @@ import {
   fetchCityData,
   fetchProjectTypes,
 } from "@/app/_global_components/masterFunction";
+import NewYearEffect from "./NewYearEffect";
 export default async function HeroSection() {
   const totalProjects = await fetchAllProjects();
   const cities = await fetchCityData();
@@ -81,7 +81,8 @@ export default async function HeroSection() {
       <div className="position-relative mb-5">
         <div className="mpf-hero-banner position-relative">
           <div className="position-relative">
-              <SnowEffect />
+              {/* <SnowEffect /> */}
+              <NewYearEffect />
             <HeroBannerSlider slides={heroSlides} />
             <div className="bannercontainer">
               <h1 className="text-center text-light">Find the best property</h1>
