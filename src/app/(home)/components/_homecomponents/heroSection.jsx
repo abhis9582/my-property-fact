@@ -9,7 +9,6 @@ import {
   fetchCityData,
   fetchProjectTypes,
 } from "@/app/_global_components/masterFunction";
-import NewYearEffect from "./NewYearEffect";
 export default async function HeroSection() {
   const totalProjects = await fetchAllProjects();
   const cities = await fetchCityData();
@@ -82,7 +81,7 @@ export default async function HeroSection() {
         <div className="mpf-hero-banner position-relative">
           <div className="position-relative">
               {/* <SnowEffect /> */}
-              <NewYearEffect />
+              {/* <NewYearEffect /> */}
             <HeroBannerSlider slides={heroSlides} />
             <div className="bannercontainer">
               <h1 className="text-center text-light">Find the best property</h1>
