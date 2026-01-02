@@ -1,8 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import './common.css';
-// import SnowEffect from "../_homecomponents/SnowEffect";
-import NewYearEffect from "../_homecomponents/NewYearEffect";
 
 export default function CommonHeaderBanner({ image, headerText, firstPage, pageName }) {
   // Build breadcrumb path
@@ -45,7 +43,7 @@ export default function CommonHeaderBanner({ image, headerText, firstPage, pageN
         
         {/* Snow Effect */}
         {/* <SnowEffect /> */}
-        <NewYearEffect />
+        {/* <NewYearEffect /> */}
         
         {/* Content Container */}
         <div className="banner-content">
