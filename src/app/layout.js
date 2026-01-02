@@ -5,7 +5,6 @@ import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import GoogleAnalytics from "./_global_components/googleAnalytics";
 import { ProjectProvider } from "./_global_components/contexts/projectsContext";
-import CookieConsent from "./_global_components/CookieConsent";
 import localFont from "next/font/local";
 import "@fortawesome/fontawesome-svg-core/styles.css"; 
 import { config } from "@fortawesome/fontawesome-svg-core";
@@ -13,8 +12,8 @@ config.autoAddCss = false;
 
 // app/layout.js
 export const metadata = {
-  title: "Not found",
-  description: "page is not found",
+  title: "My Property Fact - Real Estate Insights & Property Data",
+  description: "Discover top property insights, LOCATE scores, and real estate trends across India.",
 };
 
 
@@ -47,7 +46,7 @@ export default function RootLayout({ children }) {
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
             j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-WL4BBZM8');
+            })(window,document,'script','dataLayer', ${process.env.NEXT_PUBLIC_GTM_ID});
           `}
         </Script>
         {/* End Google Tag Manager */}
@@ -76,7 +75,7 @@ export default function RootLayout({ children }) {
             t.src=v;s=b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '994098169297958');
+            fbq('init', ${process.env.NEXT_PUBLIC_FB_PIXEL_ID});
             fbq('track', 'PageView');
           `}
         </Script>
@@ -108,7 +107,7 @@ export default function RootLayout({ children }) {
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-WL4BBZM8"
+            src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GTM_ID}`}
             height="0"
             width="0"
             style={{ display: "none", visibility: "hidden" }}
@@ -127,7 +126,7 @@ export default function RootLayout({ children }) {
             height="1"
             width="1"
             style={{ display: "none" }}
-            src="https://www.facebook.com/tr?id=994098169297958&ev=PageView&noscript=1"
+            src={`https://www.facebook.com/tr?id=${process.env.NEXT_PUBLIC_FB_PIXEL_ID}&ev=PageView&noscript=1`}
           />
         </noscript>
       </body>

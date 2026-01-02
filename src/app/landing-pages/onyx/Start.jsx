@@ -40,7 +40,7 @@ const Start = () => {
       <Contact />
       {/* Google tag (gtag.js) */}
       <Script
-        src="https://www.googletagmanager.com/gtag/js?id=AW-11480562062"
+        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_ONYX_GTAG_KEY}`}
         strategy="afterInteractive"
       />
       <Script id="gtag-init" strategy="afterInteractive">
@@ -48,7 +48,7 @@ const Start = () => {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'AW-11480562062');
+            gtag('config', ${process.env.NEXT_PUBLIC_ONYX_GTAG_KEY});
           `}
       </Script>
     </>

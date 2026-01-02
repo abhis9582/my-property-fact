@@ -79,17 +79,8 @@ export default function RERAPage() {
         return;
       }
 
-      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      
-      // TODO: Replace with actual API endpoint when backend is ready
-      // const response = await fetch(`${apiUrl}/api/user/rera-credentials`, {
-      //   headers: {
-      //     "Authorization": `Bearer ${token}`,
-      //     "Content-Type": "application/json"
-      //   }
-      // });
-      
-      // For now, use mock data
+      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;      
+
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 500));
       
@@ -175,24 +166,7 @@ export default function RERAPage() {
         return;
       }
 
-      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      
-      // TODO: Replace with actual API endpoint when backend is ready
-      // const url = selectedRera 
-      //   ? `${apiUrl}/api/user/rera-credentials/${selectedRera.id}`
-      //   : `${apiUrl}/api/user/rera-credentials`;
-      // 
-      // const method = selectedRera ? "PUT" : "POST";
-      // 
-      // const response = await fetch(url, {
-      //   method: method,
-      //   headers: {
-      //     "Authorization": `Bearer ${token}`,
-      //     "Content-Type": "application/json"
-      //   },
-      //   body: JSON.stringify(formData)
-      // });
-      
+      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;      
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
@@ -231,15 +205,6 @@ export default function RERAPage() {
       }
 
       const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      
-      // TODO: Replace with actual API endpoint when backend is ready
-      // const response = await fetch(`${apiUrl}/api/user/rera-credentials/${selectedRera.id}`, {
-      //   method: "DELETE",
-      //   headers: {
-      //     "Authorization": `Bearer ${token}`,
-      //     "Content-Type": "application/json"
-      //   }
-      // });
       
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 500));

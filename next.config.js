@@ -38,12 +38,6 @@ const nextConfig = {
     // Disable image optimization if backend is slow (uncomment if needed)
     // unoptimized: true,
   },
-  // Enable CSS optimization without experimental features
-  compiler: {
-    styledComponents: true,
-  },
-  // Optimize production builds
-  swcMinify: true,
   // Reduce bundle size
   experimental: {
     optimizePackageImports: ['@mui/material', '@coreui/react', 'react-bootstrap'],
