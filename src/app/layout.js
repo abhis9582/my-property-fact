@@ -115,53 +115,6 @@ export default function RootLayout({ children }) {
           ></iframe>
         </noscript>
         {/* End Google Tag Manager (noscript) */}
-        {/* Chunk Loading Error Handler */}
-        <Script id="chunk-error-handler" strategy="beforeInteractive">
-          {`
-            (function() {
-              if (typeof window === 'undefined') return;
-              
-              // Handle chunk loading errors
-              window.addEventListener('error', function(e) {
-                if (e.message && (
-                  e.message.includes('ChunkLoadError') || 
-                  e.message.includes('Loading chunk') ||
-                  e.message.includes('Failed to fetch dynamically imported module')
-                )) {
-                  console.warn('Chunk loading error detected, attempting recovery...');
-                  
-                  // Try to reload the page after a short delay
-                  setTimeout(function() {
-                    if (confirm('A required file failed to load. Would you like to reload the page?')) {
-                      window.location.reload();
-                    }
-                  }, 1000);
-                }
-              }, true);
-              
-              // Handle unhandled promise rejections (chunk loading errors)
-              window.addEventListener('unhandledrejection', function(e) {
-                if (e.reason && (
-                  e.reason.message && (
-                    e.reason.message.includes('ChunkLoadError') ||
-                    e.reason.message.includes('Loading chunk') ||
-                    e.reason.message.includes('Failed to fetch dynamically imported module')
-                  ) ||
-                  e.reason.name === 'ChunkLoadError'
-                )) {
-                  console.warn('Chunk loading error detected in promise rejection, attempting recovery...');
-                  e.preventDefault();
-                  
-                  setTimeout(function() {
-                    if (confirm('A required file failed to load. Would you like to reload the page?')) {
-                      window.location.reload();
-                    }
-                  }, 1000);
-                }
-              });
-            })();
-          `}
-        </Script>
         <GoogleAnalytics />
         <main>
           <ProjectProvider>{children}</ProjectProvider>

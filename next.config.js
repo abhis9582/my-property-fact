@@ -39,8 +39,6 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
-  // Ensure proper static file generation
-  trailingSlash: false,
 };
 
 module.exports = nextConfig;
