@@ -17,7 +17,7 @@ export default function MpfTopPicks({ topProject }) {
     projectConfiguration,
     projectPrice,
     projectLogo,
-    projectBannerImage,
+    projectThumbnailImage,
     slugURL,
   } = topProject;
 
@@ -30,8 +30,8 @@ export default function MpfTopPicks({ topProject }) {
       : "₹ " + parseFloat(price) + " Cr* Onwards";
   };
 
-  const bannerImageSrc = projectBannerImage
-    ? `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${slugURL}/${projectBannerImage}`
+  const bannerImageSrc = projectThumbnailImage
+    ? `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${slugURL}/${projectThumbnailImage}`
     : "/static/no_image.png";
 
   const logoSrc = projectLogo

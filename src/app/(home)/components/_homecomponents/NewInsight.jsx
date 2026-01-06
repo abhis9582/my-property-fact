@@ -105,8 +105,6 @@ export default function NewInsight() {
             loop={true}
             pagination={{ clickable: true }}
             scrollbar={{ draggable: true }}
-            onSwiper={(swiper) => console.log(swiper)}
-            onSlideChange={() => console.log("slide change")}
           >
             {insights.map((insight, index) => (
               <SwiperSlide key={`${index}-${insight.id}`}>

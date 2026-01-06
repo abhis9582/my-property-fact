@@ -140,6 +140,11 @@ export default function LocationBenefitsStep({
     setShowDetailsModal(true);
     // Pre-fill benefit name with master benefit name
     setBenefitName(masterBenefit.benefitName || "");
+    // If master benefit has an icon, set it as preview (user can still upload custom)
+    if (masterBenefit.benefitIcon) {
+      setIconPreview(`${process.env.NEXT_PUBLIC_IMAGE_URL}nearby-benefit/${masterBenefit.benefitIcon}`);
+      setIconImage(null); // Clear any previous custom icon
+    }
   };
 
   const handleEditBenefit = (benefit) => {
@@ -206,7 +211,7 @@ export default function LocationBenefitsStep({
         } else {
           // Download master benefit icon and convert to file
           try {
-            const iconUrl = `${process.env.NEXT_PUBLIC_IMAGE_URL}location-benefit/${selectedMasterBenefit.benefitIcon}`;
+            const iconUrl = `${process.env.NEXT_PUBLIC_IMAGE_URL}nearby-benefit/${selectedMasterBenefit.benefitIcon}`;
             const iconResponse = await fetch(iconUrl);
             const blob = await iconResponse.blob();
             const fileName = selectedMasterBenefit.benefitIcon;
@@ -414,7 +419,7 @@ export default function LocationBenefitsStep({
             <Row className="g-3">
               {masterBenefits.map((benefit) => {
                 const iconUrl = benefit.benefitIcon
-                  ? `${process.env.NEXT_PUBLIC_IMAGE_URL}location-benefit/${benefit.benefitIcon}`
+                  ? `${process.env.NEXT_PUBLIC_IMAGE_URL}nearby-benefit/${benefit.benefitIcon}`
                   : null;
                 
                 return (
@@ -487,7 +492,7 @@ export default function LocationBenefitsStep({
             <div className="mb-3 p-3 bg-light rounded d-flex align-items-center gap-3">
               {selectedMasterBenefit.benefitIcon && (
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}location-benefit/${selectedMasterBenefit.benefitIcon}`}
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}nearby-benefit/${selectedMasterBenefit.benefitIcon}`}
                   alt={selectedMasterBenefit.benefitName}
                   width={50}
                   height={50}
@@ -541,7 +546,7 @@ export default function LocationBenefitsStep({
             {!editingId && (
               <Form.Group className="mb-3">
                 <Form.Label className="fw-bold">
-                  Icon Image <span className="text-danger">*</span>
+                  Icon Image {!selectedMasterBenefit?.benefitIcon && <span className="text-danger">*</span>}
                 </Form.Label>
                 {iconPreview && (
                   <div className="mb-2">
@@ -552,18 +557,30 @@ export default function LocationBenefitsStep({
                       height={60}
                       className="rounded border"
                     />
+                    {selectedMasterBenefit?.benefitIcon && iconPreview.includes('nearby-benefit') && (
+                      <div className="small text-success mt-1">
+                        <strong>Using default icon</strong> - You can upload a custom icon below to replace it
+                      </div>
+                    )}
+                    {iconPreview.startsWith('blob:') && (
+                      <div className="small text-info mt-1">
+                        <strong>Custom icon selected</strong> - This will replace the default icon
+                      </div>
+                    )}
                   </div>
                 )}
                 {selectedMasterBenefit?.benefitIcon && !iconPreview && (
                   <div className="mb-2">
                     <Image
-                      src={`${process.env.NEXT_PUBLIC_IMAGE_URL}location-benefit/${selectedMasterBenefit.benefitIcon}`}
+                      src={`${process.env.NEXT_PUBLIC_IMAGE_URL}nearby-benefit/${selectedMasterBenefit.benefitIcon}`}
                       alt="Default icon"
                       width={60}
                       height={60}
                       className="rounded border"
                     />
-                    <div className="small text-muted mt-1">Default icon (you can upload a custom one)</div>
+                    <div className="small text-success mt-1">
+                      <strong>Default icon will be used</strong> - You can upload a custom icon below to replace it
+                    </div>
                   </div>
                 )}
                 <Form.Control
@@ -573,7 +590,9 @@ export default function LocationBenefitsStep({
                   onChange={handleFileChange}
                 />
                 <Form.Text className="text-muted">
-                  Upload a custom icon image (optional). Maximum size: 10MB. If not provided, default icon will be used.
+                  {selectedMasterBenefit?.benefitIcon 
+                    ? "Upload a custom icon image (optional). Maximum size: 10MB. If not provided, the default icon will be used automatically."
+                    : "Upload an icon image. Maximum size: 10MB."}
                 </Form.Text>
               </Form.Group>
             )}

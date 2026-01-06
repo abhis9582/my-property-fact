@@ -1,6 +1,6 @@
 import "../globals.css";
-import HeaderClientWrapper from "./components/header/HeaderClientWrapper";
-import FooterClientWrapper from "./components/footer/FooterClientWrapper";
+import FooterPage from "./components/footer/page";
+import Header from "./components/header/header";
 
 export const metadata = {
   title: "My Property Fact | Smarter Real Estate Decisions Start Here",
@@ -25,11 +25,11 @@ export default function RootLayout({ children, params }) {
   return (
     <>
       {/* header - client component, loads data after initial render (non-blocking) */}
-      <HeaderClientWrapper />
+      <Header />
       {/* dynamic render all its child components  */}
       {children}
       {/* footer - client component, loads data after initial render (non-blocking) */}
-      <FooterClientWrapper />
+      <FooterPage />
     </>
   );
 }

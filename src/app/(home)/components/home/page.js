@@ -1,12 +1,8 @@
-import DreamProject from "./dream-project/page";
-import InsightNew from "./insight/page";
 import NewsViews from "./new-views/page";
 import SocialFeedPage from "./social-feed/page";
-import VideoSliderPage from "./video-slider/page";
 import MpfTopPicks from "../mpfTopPick";
 import HeroSection from "../_homecomponents/heroSection";
 import FeaturedPage from "./featured/page";
-import InstagramFeed from "./instagram-feed";
 import ScrollToTop from "../_homecomponents/ScrollToTop";
 import {
   getAllProjects,

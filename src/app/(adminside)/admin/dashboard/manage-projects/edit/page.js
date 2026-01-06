@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 // Fetching all required data for the form
 const fetchBuilders = async () => {
   const builders = await axios.get(
-    process.env.NEXT_PUBLIC_API_URL + "builder/get-all"
+    `${process.env.NEXT_PUBLIC_API_URL}builder/get-all`
   );
   return builders.data.builders;
 };
