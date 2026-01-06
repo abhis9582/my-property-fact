@@ -233,7 +233,6 @@ gsap.ticker.lagSmoothing(0);
           const date = new Date();
           const message = form.message ? form.message.value.trim() : "";
           const sourceValue = form.source ? form.source.value.trim() : "";
-          debugger
           try {
             // Prepare Google Sheets data
             const params = new URLSearchParams();

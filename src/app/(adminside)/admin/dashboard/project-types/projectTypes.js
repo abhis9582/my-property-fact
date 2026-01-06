@@ -109,7 +109,7 @@ export default function ProjectTypes({ list }) {
                 buttonName={"+ Add Project Type"}
                 functionName={openAddModel}
             />
-            <div className="table-container mt-5">
+            <div className="table-container">
                 <DataTable columns={columns} list={list} />
             </div>
             {/* Modal for adding a new city */}

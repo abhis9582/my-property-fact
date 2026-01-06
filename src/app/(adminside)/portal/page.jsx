@@ -1,19 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, startTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Form, Alert, Spinner } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import axios from "axios";
 import Cookies from "js-cookie";
-import Image from "next/image";
-import "./portal-signin.css";
 
 export default function PortalSignInPage() {
   const router = useRouter();
-  const [isRightPanelActive, setIsRightPanelActive] = useState(false);
+  const [activeTab, setActiveTab] = useState("signin");
   const [formData, setFormData] = useState({
     phoneNumber: "",
     otp: "",
@@ -25,12 +21,11 @@ export default function PortalSignInPage() {
   const [error, setError] = useState("");
   const [googleLoginEnabled, setGoogleLoginEnabled] = useState(true);
 
-  // Check if user is already logged in
   useEffect(() => {
     const token = Cookies.get("token") || Cookies.get("authToken");
     if (token) {
-      // Verify token is still valid before redirecting
-      router.push("/portal/dashboard");
+      // Use router for existing sessions to maintain SPA behavior
+      router.replace("/portal/dashboard");
     }
   }, [router]);
 
@@ -42,15 +37,12 @@ export default function PortalSignInPage() {
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}auth/google`,
-        {
-          token: token,
-        }
+        { token: token }
       );
       
       if (response.data.token) {
         const authToken = response.data.token;
         
-        // Store tokens (both token and authToken for compatibility)
         Cookies.set("token", authToken, {
           expires: 7,
           secure: process.env.NODE_ENV === "production",
@@ -73,7 +65,6 @@ export default function PortalSignInPage() {
           });
         }
 
-        // Store user data
         if (response.data.user) {
           Cookies.set("userData", JSON.stringify(response.data.user), {
             expires: 7,
@@ -83,7 +74,8 @@ export default function PortalSignInPage() {
           });
         }
 
-        router.push("/portal/dashboard");
+        // Use window.location for immediate navigation (bypasses Next.js router delay)
+        window.location.href = "/portal/dashboard";
       }
     } catch (error) {
       setError(error.response?.data?.message || "Google login failed. Please try again.");
@@ -94,25 +86,21 @@ export default function PortalSignInPage() {
 
   const handleError = () => {
     setError("Google login failed. Please try again.");
-    // Silently disable Google login if there's a configuration error
     setGoogleLoginEnabled(false);
   };
 
-  // Handle manual phone number login/signup
   const handlePhoneAuth = async (isSignup = false) => {
     if (!formData.phoneNumber) {
       setError("Please enter your phone number");
       return;
     }
 
-    // Validate phone number is exactly 10 digits
     const phoneDigits = formData.phoneNumber.replace(/\D/g, "");
     if (phoneDigits.length !== 10) {
       setError("Phone number must be exactly 10 digits");
       return;
     }
 
-    // For signup, also require name
     if (isSignup && !formData.fullName) {
       setError("Please enter your full name");
       return;
@@ -129,13 +117,11 @@ export default function PortalSignInPage() {
 
       if (response.data.success) {
         setShowOTP(true);
-        // Store the OTP for development (will be removed in production)
         if (response.data.otp) {
           setReceivedOTP(response.data.otp);
         }
       }
     } catch (error) {
-      // Show user-friendly error messages
       const errorMessage = error.response?.data?.message || 
                           error.response?.data?.error || 
                           "Failed to send OTP. Please check your phone number and try again.";
@@ -145,7 +131,6 @@ export default function PortalSignInPage() {
     }
   };
 
-  // Handle OTP verification
   const handleOTPVerify = async (isSignup = false) => {
     if (!formData.otp) {
       setError("Please enter the OTP");
@@ -161,7 +146,6 @@ export default function PortalSignInPage() {
         otp: formData.otp,
       };
 
-      // Add fullName for signup
       if (isSignup && formData.fullName) {
         requestData.fullName = formData.fullName;
       }
@@ -174,7 +158,6 @@ export default function PortalSignInPage() {
       if (response.data.token) {
         const authToken = response.data.token;
         
-        // Store token (both token and authToken for compatibility)
         Cookies.set("token", authToken, {
           expires: 7,
           secure: process.env.NODE_ENV === "production",
@@ -188,7 +171,6 @@ export default function PortalSignInPage() {
           path: "/",
         });
 
-        // Store refresh token
         if (response.data.refreshToken) {
           Cookies.set("refreshToken", response.data.refreshToken, {
             expires: 7,
@@ -198,7 +180,6 @@ export default function PortalSignInPage() {
           });
         }
 
-        // Store user data
         if (response.data.user) {
           Cookies.set("userData", JSON.stringify(response.data.user), {
             expires: 7,
@@ -208,15 +189,15 @@ export default function PortalSignInPage() {
           });
         }
 
-        // Reset form
         setFormData({ phoneNumber: "", otp: "", fullName: "" });
         setShowOTP(false);
         setReceivedOTP("");
         
-        router.push("/portal/dashboard");
+        // Use window.location for immediate navigation (bypasses Next.js router delay)
+        // This is faster than router.push/replace because it doesn't wait for middleware verification
+        window.location.href = "/portal/dashboard";
       }
     } catch (error) {
-      // Show user-friendly error messages
       const errorMessage = error.response?.data?.message || 
                           error.response?.data?.error || 
                           "Invalid OTP. Please check the code and try again.";
@@ -226,17 +207,12 @@ export default function PortalSignInPage() {
     }
   };
 
-  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     
-    // Validate phone number input - only allow digits, max 10 digits
     if (name === "phoneNumber") {
-      // Remove all non-digit characters
       const digitsOnly = value.replace(/\D/g, "");
-      // Limit to 10 digits
       const limitedValue = digitsOnly.slice(0, 10);
-      
       setFormData((prev) => ({
         ...prev,
         [name]: limitedValue,
@@ -250,8 +226,8 @@ export default function PortalSignInPage() {
     setError("");
   };
 
-  const togglePanel = () => {
-    setIsRightPanelActive(!isRightPanelActive);
+  const switchTab = (tab) => {
+    setActiveTab(tab);
     setError("");
     setShowOTP(false);
     setFormData({ phoneNumber: "", otp: "", fullName: "" });
@@ -259,7 +235,6 @@ export default function PortalSignInPage() {
 
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
 
-  // Suppress Google Sign-In console errors
   useEffect(() => {
     const originalError = console.error;
     console.error = (...args) => {
@@ -268,7 +243,6 @@ export default function PortalSignInPage() {
         args[0]?.includes?.("origin is not allowed") ||
         args[0]?.includes?.("client ID")
       ) {
-        // Silently ignore Google Sign-In configuration errors
         setGoogleLoginEnabled(false);
         return;
       }
@@ -282,305 +256,325 @@ export default function PortalSignInPage() {
 
   return (
     <GoogleOAuthProvider clientId={googleClientId}>
-      <div className="portal-signin-container">
-        <div className={`portal-signin-wrapper ${isRightPanelActive ? "right-panel-active" : ""}`}>
-          {/* Sign In Panel */}
-          <div className="portal-signin-panel portal-signin-panel-left">
-            <div className="portal-signin-content">
-              <h2>Welcome Back!</h2>
-              <p>Sign in to access your property portal</p>
-              
-              {error && (
-                <Alert variant="danger" className="mt-3 mb-3">
-                  {error}
-                </Alert>
-              )}
-
-              {!showOTP ? (
-                <>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Phone Number</Form.Label>
-                    <Form.Control
-                      type="tel"
-                      name="phoneNumber"
-                      value={formData.phoneNumber}
-                      onChange={handleInputChange}
-                      placeholder="Enter 10-digit phone number"
-                      maxLength={10}
-                      pattern="[0-9]{10}"
-                      disabled={isLoading}
-                    />
-                    <Form.Text className="text-muted">
-                      Enter 10 digits only (e.g., 9876543210)
-                    </Form.Text>
-                  </Form.Group>
-
-                  <Button
-                    variant="primary"
-                    className="w-100 mb-3"
-                    onClick={() => handlePhoneAuth(false)}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <>
-                        <Spinner size="sm" className="me-2" />
-                        Sending OTP...
-                      </>
-                    ) : (
-                      "Send OTP"
-                    )}
-                  </Button>
-                </>
-              ) : (
-                <>
-                  {receivedOTP && (
-                    <Alert variant="info" className="mb-3">
-                      <small>Development OTP: <strong>{receivedOTP}</strong></small>
-                    </Alert>
-                  )}
-                  
-                  <Form.Group className="mb-3">
-                    <Form.Label>Enter OTP</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="otp"
-                      value={formData.otp}
-                      onChange={handleInputChange}
-                      placeholder="Enter 6-digit OTP"
-                      maxLength={6}
-                      disabled={isLoading}
-                    />
-                  </Form.Group>
-
-                  <Button
-                    variant="primary"
-                    className="w-100 mb-3"
-                    onClick={() => handleOTPVerify(false)}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <>
-                        <Spinner size="sm" className="me-2" />
-                        Verifying...
-                      </>
-                    ) : (
-                      "Verify OTP"
-                    )}
-                  </Button>
-
-                  <Button
-                    variant="link"
-                    className="w-100"
-                    onClick={() => {
-                      setShowOTP(false);
-                      setFormData((prev) => ({ ...prev, otp: "" }));
-                    }}
-                    disabled={isLoading}
-                  >
-                    Change Phone Number
-                  </Button>
-                </>
-              )}
-
-              {googleClientId && googleLoginEnabled && (
-                <>
-                  <div className="portal-divider">
-                    <span>OR</span>
-                  </div>
-
-                  <div className="portal-social-login">
-                    <GoogleLogin
-                      onSuccess={handleSuccess}
-                      onError={handleError}
-                      useOneTap={false}
-                      theme="outline"
-                      size="large"
-                      text="signin_with"
-                    />
-                  </div>
-                </>
-              )}
-
-              <p className="portal-signup-link">
-                Don&apos;t have an account?{" "}
-                <button
-                  type="button"
-                  className="portal-link-button"
-                  onClick={togglePanel}
-                >
-                  Sign Up
-                </button>
-              </p>
-            </div>
+      <div className="auth-page-container">
+        {/* Left Side - Features List */}
+        <div className="auth-features-panel">
+          <div className="features-content">
+            <h2 className="features-title">Features of a My Property Fact Account</h2>
+            <ul className="features-list">
+              <li className="feature-item">
+                <span className="feature-icon">✓</span>
+                <span>List unlimited properties for free every day</span>
+              </li>
+              <li className="feature-item">
+                <span className="feature-icon">✓</span>
+                <span>Set up personalized property alerts</span>
+              </li>
+              <li className="feature-item">
+                <span className="feature-icon">✓</span>
+                <span>Connect with buyers across the nation</span>
+              </li>
+              <li className="feature-item">
+                <span className="feature-icon">✓</span>
+                <span>Showcase your property for Rent or Sale</span>
+              </li>
+              <li className="feature-item">
+                <span className="feature-icon">✓</span>
+                <span>Receive quick inquiries via phone, email, and SMS</span>
+              </li>
+              <li className="feature-item">
+                <span className="feature-icon">✓</span>
+                <span>Track search performance and monitor responses and views online</span>
+              </li>
+              <li className="feature-item">
+                <span className="feature-icon">✓</span>
+                <span>Add extensive property details and multiple photos per listing</span>
+              </li>
+            </ul>
           </div>
+        </div>
 
-          {/* Sign Up Panel */}
-          <div className="portal-signin-panel portal-signin-panel-right">
-            <div className="portal-signin-content">
-              <h2>Create Account!</h2>
-              <p>Sign up to start listing your properties</p>
-              
-              {error && (
-                <Alert variant="danger" className="mt-3 mb-3">
-                  {error}
-                </Alert>
-              )}
-
-              {!showOTP ? (
-                <>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Full Name</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="fullName"
-                      value={formData.fullName}
-                      onChange={handleInputChange}
-                      placeholder="Enter your full name"
-                      disabled={isLoading}
-                    />
-                  </Form.Group>
-
-                  <Form.Group className="mb-3">
-                    <Form.Label>Phone Number</Form.Label>
-                    <Form.Control
-                      type="tel"
-                      name="phoneNumber"
-                      value={formData.phoneNumber}
-                      onChange={handleInputChange}
-                      placeholder="Enter 10-digit phone number"
-                      maxLength={10}
-                      pattern="[0-9]{10}"
-                      disabled={isLoading}
-                    />
-                    <Form.Text className="text-muted">
-                      Enter 10 digits only (e.g., 9876543210)
-                    </Form.Text>
-                  </Form.Group>
-
-                  <Button
-                    variant="primary"
-                    className="w-100 mb-3"
-                    onClick={() => handlePhoneAuth(true)}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <>
-                        <Spinner size="sm" className="me-2" />
-                        Sending OTP...
-                      </>
-                    ) : (
-                      "Send OTP"
-                    )}
-                  </Button>
-                </>
-              ) : (
-                <>
-                  {receivedOTP && (
-                    <Alert variant="info" className="mb-3">
-                      <small>Development OTP: <strong>{receivedOTP}</strong></small>
-                    </Alert>
-                  )}
-                  
-                  <Form.Group className="mb-3">
-                    <Form.Label>Enter OTP</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="otp"
-                      value={formData.otp}
-                      onChange={handleInputChange}
-                      placeholder="Enter 6-digit OTP"
-                      maxLength={6}
-                      disabled={isLoading}
-                    />
-                  </Form.Group>
-
-                  <Button
-                    variant="primary"
-                    className="w-100 mb-3"
-                    onClick={() => handleOTPVerify(true)}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <>
-                        <Spinner size="sm" className="me-2" />
-                        Verifying...
-                      </>
-                    ) : (
-                      "Verify OTP & Sign Up"
-                    )}
-                  </Button>
-
-                  <Button
-                    variant="link"
-                    className="w-100"
-                    onClick={() => {
-                      setShowOTP(false);
-                      setFormData((prev) => ({ ...prev, otp: "" }));
-                    }}
-                    disabled={isLoading}
-                  >
-                    Change Phone Number
-                  </Button>
-                </>
-              )}
-
-              {googleClientId && googleLoginEnabled && (
-                <>
-                  <div className="portal-divider">
-                    <span>OR</span>
-                  </div>
-
-                  <div className="portal-social-login">
-                    <GoogleLogin
-                      onSuccess={handleSuccess}
-                      onError={handleError}
-                      useOneTap={false}
-                      theme="outline"
-                      size="large"
-                      text="signup_with"
-                    />
-                  </div>
-                </>
-              )}
-
-              <p className="portal-signup-link">
-                Already have an account?{" "}
-                <button
-                  type="button"
-                  className="portal-link-button"
-                  onClick={togglePanel}
-                >
-                  Sign In
-                </button>
-              </p>
+        {/* Right Side - Auth Form */}
+        <div className="auth-form-panel">
+          <div className="auth-form-card">
+            <div className="form-header-area">
+              <h1 className="form-main-heading">Log In or Sign Up</h1>
             </div>
-          </div>
 
-          {/* Overlay Panel */}
-          <div className="portal-signin-overlay">
-            <div className="portal-signin-overlay-panel">
-              <div className="portal-signin-overlay-left">
-                <h2>New here?</h2>
-                <p>Sign up and start listing your properties today!</p>
-                <Button
-                  variant="outline-light"
-                  className="portal-ghost-button"
-                  onClick={togglePanel}
-                >
-                  Sign Up
-                </Button>
+            <div className="form-tabs-area">
+              <button
+                className={`form-tab-button ${activeTab === "signin" ? "active" : ""}`}
+                onClick={() => switchTab("signin")}
+              >
+                Sign In
+              </button>
+              <span className="tab-separator">or</span>
+              <button
+                className={`form-tab-button ${activeTab === "signup" ? "active" : ""}`}
+                onClick={() => switchTab("signup")}
+              >
+                Sign Up
+              </button>
+            </div>
+
+            <div className="form-body-area">
+              {error && (
+                <div className="error-message-box">
+                  <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                    <path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z" stroke="currentColor" strokeWidth="2"/>
+                    <path d="M10 6V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    <path d="M10 14H10.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                  {error}
+                </div>
+              )}
+
+              {/* Sign In Panel */}
+              <div className={`form-panel-wrapper ${activeTab === "signin" ? "active" : ""}`}>
+                {!showOTP ? (
+                  <>
+                    <div className="phone-input-group">
+                      <label className="input-label-text">Phone Number</label>
+                      <div className="phone-input-wrapper">
+                        <div className="country-code">
+                          <span className="flag-icon">🇮🇳</span>
+                          <span className="code-text">(91)</span>
+                        </div>
+                        <input
+                          type="tel"
+                          name="phoneNumber"
+                          value={formData.phoneNumber}
+                          onChange={handleInputChange}
+                          placeholder="10 digit phone number"
+                          maxLength={10}
+                          disabled={isLoading}
+                          className="phone-input-field"
+                        />
+                      </div>
+                    </div>
+
+                    <button
+                      className="primary-action-button"
+                      onClick={() => handlePhoneAuth(false)}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Spinner size="sm" className="me-2" />
+                          Sending OTP...
+                        </>
+                      ) : (
+                        "Sign In"
+                      )}
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    {receivedOTP && (
+                      <div className="info-message-box">
+                        <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                          <path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z" stroke="currentColor" strokeWidth="2"/>
+                          <path d="M10 6V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                          <path d="M10 14H10.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                        </svg>
+                        <span>Development OTP: <strong>{receivedOTP}</strong></span>
+                      </div>
+                    )}
+                    
+                    <div className="phone-input-group">
+                      <label className="input-label-text">Enter OTP</label>
+                      <input
+                        type="text"
+                        name="otp"
+                        value={formData.otp}
+                        onChange={handleInputChange}
+                        placeholder="Enter 6-digit OTP"
+                        maxLength={6}
+                        disabled={isLoading}
+                        className="phone-input-field otp-field"
+                      />
+                    </div>
+
+                    <button
+                      className="primary-action-button"
+                      onClick={() => handleOTPVerify(false)}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Spinner size="sm" className="me-2" />
+                          Verifying...
+                        </>
+                      ) : (
+                        "Verify OTP"
+                      )}
+                    </button>
+
+                    <button
+                      type="button"
+                      className="secondary-link-button"
+                      onClick={() => {
+                        setShowOTP(false);
+                        setFormData((prev) => ({ ...prev, otp: "" }));
+                      }}
+                      disabled={isLoading}
+                    >
+                      Change Phone Number
+                    </button>
+                  </>
+                )}
+
+                {googleClientId && googleLoginEnabled && (
+                  <>
+                    <div className="divider-section">
+                      <span>OR</span>
+                    </div>
+                    <div className="google-auth-section">
+                      <GoogleLogin
+                        onSuccess={handleSuccess}
+                        onError={handleError}
+                        useOneTap={false}
+                        theme="outline"
+                        size="large"
+                        text="signin_with"
+                      />
+                    </div>
+                  </>
+                )}
               </div>
-              <div className="portal-signin-overlay-right">
-                <h2>Welcome back!</h2>
-                <p>Sign in to access your property portal</p>
-                <Button
-                  variant="outline-light"
-                  className="portal-ghost-button"
-                  onClick={togglePanel}
-                >
-                  Sign In
-                </Button>
+
+              {/* Sign Up Panel */}
+              <div className={`form-panel-wrapper ${activeTab === "signup" ? "active" : ""}`}>
+                {!showOTP ? (
+                  <>
+                    <div className="phone-input-group">
+                      <label className="input-label-text">Full Name</label>
+                      <input
+                        type="text"
+                        name="fullName"
+                        value={formData.fullName}
+                        onChange={handleInputChange}
+                        placeholder="Enter your full name"
+                        disabled={isLoading}
+                        className="phone-input-field"
+                      />
+                    </div>
+
+                    <div className="phone-input-group">
+                      <label className="input-label-text">Phone Number</label>
+                      <div className="phone-input-wrapper">
+                        <div className="country-code">
+                          <span className="flag-icon">🇮🇳</span>
+                          <span className="code-text">(91)</span>
+                        </div>
+                        <input
+                          type="tel"
+                          name="phoneNumber"
+                          value={formData.phoneNumber}
+                          onChange={handleInputChange}
+                          placeholder="10 digit phone number"
+                          maxLength={10}
+                          disabled={isLoading}
+                          className="phone-input-field"
+                        />
+                      </div>
+                    </div>
+
+                    <button
+                      className="primary-action-button"
+                      onClick={() => handlePhoneAuth(true)}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Spinner size="sm" className="me-2" />
+                          Sending OTP...
+                        </>
+                      ) : (
+                        "Sign Up"
+                      )}
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    {receivedOTP && (
+                      <div className="info-message-box">
+                        <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                          <path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z" stroke="currentColor" strokeWidth="2"/>
+                          <path d="M10 6V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                          <path d="M10 14H10.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                        </svg>
+                        <span>Development OTP: <strong>{receivedOTP}</strong></span>
+                      </div>
+                    )}
+                    
+                    <div className="phone-input-group">
+                      <label className="input-label-text">Enter OTP</label>
+                      <input
+                        type="text"
+                        name="otp"
+                        value={formData.otp}
+                        onChange={handleInputChange}
+                        placeholder="Enter 6-digit OTP"
+                        maxLength={6}
+                        disabled={isLoading}
+                        className="phone-input-field otp-field"
+                      />
+                    </div>
+
+                    <button
+                      className="primary-action-button"
+                      onClick={() => handleOTPVerify(true)}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Spinner size="sm" className="me-2" />
+                          Verifying...
+                        </>
+                      ) : (
+                        "Verify OTP & Sign Up"
+                      )}
+                    </button>
+
+                    <button
+                      type="button"
+                      className="secondary-link-button"
+                      onClick={() => {
+                        setShowOTP(false);
+                        setFormData((prev) => ({ ...prev, otp: "" }));
+                      }}
+                      disabled={isLoading}
+                    >
+                      Change Phone Number
+                    </button>
+                  </>
+                )}
+
+                {googleClientId && googleLoginEnabled && (
+                  <>
+                    <div className="divider-section">
+                      <span>OR</span>
+                    </div>
+                    <div className="google-auth-section">
+                      <GoogleLogin
+                        onSuccess={handleSuccess}
+                        onError={handleError}
+                        useOneTap={false}
+                        theme="outline"
+                        size="large"
+                        text="signup_with"
+                      />
+                    </div>
+                  </>
+                )}
               </div>
+
+              <p className="terms-text">
+                By clicking &quot;continue with Google or Phone number&quot; above, you acknowledge that you have read and understood, and agree to{" "}
+                <a href="#" className="terms-link">Privacy Policy</a> and{" "}
+                <a href="#" className="terms-link">Terms and Conditions</a>.
+              </p>
             </div>
           </div>
         </div>

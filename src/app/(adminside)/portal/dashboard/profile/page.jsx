@@ -10,7 +10,8 @@ import {
   Tabs,
   Badge,
   ProgressBar,
-  Alert
+  Alert,
+  Spinner
 } from "react-bootstrap";
 import { 
   cilUser, 
@@ -23,13 +24,15 @@ import {
   cilStar,
   cilCheck,
   cilPencil,
-  cilAccountLogout
+  cilAccountLogout,
+  cilInfo
 } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import Image from "next/image";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useUser } from "../../_contexts/UserContext";
+import "../../_components/PortalCommonStyles.css";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005/";
 
@@ -284,27 +287,98 @@ export default function Profile() {
 
   if (loading) {
     return (
-      <div className="profile-page">
+      <div className="portal-content">
         <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <h3>Loading Profile...</h3>
-          <p>Please wait while we load your profile data</p>
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+          <h3 className="mt-3">Loading Profile...</h3>
+          <p className="text-muted">Please wait while we load your profile data</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="profile-page">
-      <div className="profile-header">
-        <h2>My Profile</h2>
-        <p>Welcome back, {profile.name || 'User'}! Manage your account settings and preferences</p>
+    <div className="portal-content">
+      {/* Header */}
+      <div className="dashboard-header">
+        <div className="header-content">
+          <div className="header-title">
+            <h2>My Profile</h2>
+            <p>Welcome back, {profile.name || 'User'}! Manage your account settings and preferences</p>
+          </div>
+        </div>
       </div>
 
+      {/* Stats Cards Row - Full Width */}
+      <Row className="g-4 mb-4">
+        <Col xs={6} md={3}>
+          <Card className="stat-card h-100">
+            <Card.Body>
+              <div className="stat-content">
+                <div className="stat-icon primary">
+                  <CIcon icon={cilStar} />
+                </div>
+                <div className="stat-info">
+                  <h6 className="stat-title">Total Deals</h6>
+                  <h3 className="stat-value">{profile.totalDeals || 0}</h3>
+                </div>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={6} md={3}>
+          <Card className="stat-card h-100">
+            <Card.Body>
+              <div className="stat-content">
+                <div className="stat-icon info">
+                  <CIcon icon={cilCalendar} />
+                </div>
+                <div className="stat-info">
+                  <h6 className="stat-title">Experience</h6>
+                  <h3 className="stat-value">{profile.experience || '0'}</h3>
+                </div>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={6} md={3}>
+          <Card className="stat-card h-100">
+            <Card.Body>
+              <div className="stat-content">
+                <div className="stat-icon success">
+                  <CIcon icon={cilUser} />
+                </div>
+                <div className="stat-info">
+                  <h6 className="stat-title">Profile</h6>
+                  <h3 className="stat-value">{stats.profileCompletion || 0}%</h3>
+                </div>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={6} md={3}>
+          <Card className="stat-card h-100">
+            <Card.Body>
+              <div className="stat-content">
+                <div className="stat-icon warning">
+                  <CIcon icon={cilStar} />
+                </div>
+                <div className="stat-info">
+                  <h6 className="stat-title">Rating</h6>
+                  <h3 className="stat-value">{profile.rating || 0}</h3>
+                </div>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
       <Row className="g-4">
-        {/* Profile Overview */}
-        <Col lg={4}>
-          <Card className="profile-card">
+        {/* Profile Overview - Left Sidebar */}
+        <Col lg={4} md={12} className="order-lg-1 order-2">
+          <Card className="dashboard-card">
             <Card.Body className="text-center">
               <div className="profile-avatar-wrapper">
                 <div className="profile-avatar">
@@ -354,92 +428,63 @@ export default function Profile() {
                   <span className="rating-count">(127 reviews)</span>
                 </div>
               </div>
-              <div className="profile-stats-grid">
-                <div className="stat-card">
-                  <div className="stat-icon deals">
-                    <CIcon icon={cilStar} />
-                  </div>
-                  <div className="stat-content">
-                    <span className="stat-value">{profile.totalDeals || 0}</span>
-                    <span className="stat-label">Total Deals</span>
-                  </div>
-                </div>
-                <div className="stat-card">
-                  <div className="stat-icon experience">
-                    <CIcon icon={cilCalendar} />
-                  </div>
-                  <div className="stat-content">
-                    <span className="stat-value">{profile.experience || '0'}</span>
-                    <span className="stat-label">Experience</span>
-                  </div>
-                </div>
+              <div className="d-grid gap-2 mt-3">
+                <Button 
+                  variant="primary" 
+                  onClick={() => setEditMode(!editMode)}
+                >
+                  <CIcon icon={cilPencil} className="me-2" />
+                  {editMode ? 'Cancel Edit' : 'Edit Profile'}
+                </Button>
+                <Button 
+                  variant="outline-danger" 
+                  onClick={handleLogout}
+                >
+                  <CIcon icon={cilAccountLogout} className="me-2" />
+                  Logout
+                </Button>
               </div>
-              <Button 
-                variant="primary" 
-                className="btn-modern btn-primary-modern w-100 mt-3 mb-2"
-                onClick={() => setEditMode(!editMode)}
-              >
-                <CIcon icon={cilPencil} className="me-2" />
-                {editMode ? 'Cancel Edit' : 'Edit Profile'}
-              </Button>
-              <Button 
-                variant="outline-danger" 
-                className="btn-modern btn-outline-danger-modern w-100" 
-                onClick={handleLogout}
-              >
-                <CIcon icon={cilAccountLogout} className="me-2" />
-                Logout
-              </Button>
             </Card.Body>
           </Card>
 
           {/* Profile Completion */}
-          <Card className="profile-card completion-card mt-4">
-            <Card.Header className="card-header-modern">
+          <Card className="dashboard-card mt-4">
+            <Card.Header className="d-flex justify-content-between align-items-center">
               <div className="d-flex align-items-center">
-                <div className="header-icon-wrapper">
-                  <CIcon icon={cilSettings} className="header-icon" />
-                </div>
-                <h6 className="mb-0 ms-2">Profile Completion</h6>
+                <CIcon icon={cilSettings} className="me-2" />
+                <h5 className="mb-0">Profile Completion</h5>
               </div>
             </Card.Header>
             <Card.Body>
-              <div className="completion-stats">
-                <div className="completion-item">
-                  <div className="d-flex justify-content-between align-items-center mb-2">
-                    <span className="completion-label">
-                      <CIcon icon={cilUser} className="me-2" />
-                      Profile Info
-                    </span>
-                    <span className="completion-percentage">{stats.profileCompletion || 0}%</span>
-                  </div>
-                  <div className="progress-wrapper">
-                    <ProgressBar 
-                      now={stats.profileCompletion || 0} 
-                      variant="success" 
-                      className="progress-modern"
-                    />
-                  </div>
+              <div className="mb-3">
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <span className="fw-semibold d-flex align-items-center">
+                    <CIcon icon={cilUser} className="me-2" />
+                    Profile Info
+                  </span>
+                  <span className="text-primary fw-bold">{stats.profileCompletion || 0}%</span>
                 </div>
+                <ProgressBar 
+                  now={stats.profileCompletion || 0} 
+                  variant="success"
+                  style={{ height: '10px', borderRadius: '10px' }}
+                />
               </div>
-              <div className="completion-tip mt-3">
-                <small className="text-muted">
-                  Complete your profile to get better visibility and more opportunities.
-                </small>
-              </div>
+              <Alert variant="info" className="mb-0">
+                <CIcon icon={cilInfo} className="me-2" />
+                Complete your profile to get better visibility and more opportunities.
+              </Alert>
             </Card.Body>
           </Card>
         </Col>
 
-        {/* Profile Details */}
-        <Col lg={8}>
-          <Card className="profile-card details-card">
-            <Card.Header className="card-header-modern">
+        {/* Profile Details - Main Content */}
+        <Col lg={8} md={12} className="order-lg-2 order-1">
+          <Card className="dashboard-card">
+            <Card.Header className="d-flex justify-content-between align-items-center">
               <div className="d-flex align-items-center">
-                <div className="header-icon-wrapper">
-                  <CIcon icon={cilUser} className="header-icon" />
-                </div>
-                <h6 className="mb-0 ms-2">Personal Information</h6>
+                <CIcon icon={cilUser} className="me-2" />
+                <h5 className="mb-0">Personal Information</h5>
               </div>
             </Card.Header>
             <Card.Body>
@@ -457,8 +502,8 @@ export default function Profile() {
               {!editMode ? (
                 // Read-only view
                 <div className="profile-info-view">
-                  <Row className="g-4">
-                    <Col md={6}>
+                  <Row className="g-3">
+                    <Col xs={12} sm={6}>
                       <div className="info-item">
                         <div className="info-label">
                           <CIcon icon={cilUser} className="me-2" />
@@ -467,7 +512,7 @@ export default function Profile() {
                         <div className="info-value">{profile.name || "Not provided"}</div>
                       </div>
                     </Col>
-                    <Col md={6}>
+                    <Col xs={12} sm={6}>
                       <div className="info-item">
                         <div className="info-label">
                           <CIcon icon={cilEnvelopeOpen} className="me-2" />
@@ -476,7 +521,7 @@ export default function Profile() {
                         <div className="info-value">{profile.email || "Not provided"}</div>
                       </div>
                     </Col>
-                    <Col md={6}>
+                    <Col xs={12} sm={6}>
                       <div className="info-item">
                         <div className="info-label">
                           <CIcon icon={cilPhone} className="me-2" />
@@ -485,7 +530,7 @@ export default function Profile() {
                         <div className="info-value">{profile.phone || "Not provided"}</div>
                       </div>
                     </Col>
-                    <Col md={6}>
+                    <Col xs={12} sm={6}>
                       <div className="info-item">
                         <div className="info-label">
                           <CIcon icon={cilLocationPin} className="me-2" />
@@ -494,7 +539,7 @@ export default function Profile() {
                         <div className="info-value">{profile.location || "Not provided"}</div>
                       </div>
                     </Col>
-                    <Col md={6}>
+                    <Col xs={12} sm={6}>
                       <div className="info-item">
                         <div className="info-label">
                           <CIcon icon={cilSettings} className="me-2" />
@@ -503,7 +548,7 @@ export default function Profile() {
                         <div className="info-value">{profile.experience || "Not provided"}</div>
                       </div>
                     </Col>
-                    <Col md={6}>
+                    <Col xs={12} sm={6}>
                       <div className="info-item">
                         <div className="info-label">
                           <CIcon icon={cilCalendar} className="me-2" />
@@ -520,7 +565,7 @@ export default function Profile() {
                         </div>
                       </div>
                     </Col>
-                    <Col md={12}>
+                    <Col xs={12}>
                       <div className="info-item">
                         <div className="info-label">
                           <CIcon icon={cilUser} className="me-2" />
@@ -536,130 +581,123 @@ export default function Profile() {
               ) : (
                 // Editable form
                 <Form className="profile-form">
-                <Row className="g-4">
-                  <Col md={6}>
-                    <Form.Group className="form-group-modern">
-                      <Form.Label className="form-label-modern">
+                <Row className="g-3">
+                  <Col xs={12} sm={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="fw-semibold d-flex align-items-center">
                         <CIcon icon={cilUser} className="me-2" />
                         Full Name
                       </Form.Label>
                       <Form.Control
                         type="text"
-                        className="form-control-modern"
                         value={profile.name}
                         onChange={(e) => handleInputChange('name', e.target.value)}
                         placeholder="Enter your full name"
                       />
                     </Form.Group>
                   </Col>
-                  <Col md={6}>
-                    <Form.Group className="form-group-modern">
-                      <Form.Label className="form-label-modern">
+                  <Col xs={12} sm={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="fw-semibold d-flex align-items-center">
                         <CIcon icon={cilEnvelopeOpen} className="me-2" />
                         Email Address
                       </Form.Label>
                       <Form.Control
                         type="email"
-                        className="form-control-modern"
                         value={profile.email}
                         onChange={(e) => handleInputChange('email', e.target.value)}
                         placeholder="your.email@example.com"
                         disabled
                       />
-                      <Form.Text className="text-muted">
+                      <Form.Text className="text-muted small">
                         Email cannot be changed
                       </Form.Text>
                     </Form.Group>
                   </Col>
-                  <Col md={6}>
-                    <Form.Group className="form-group-modern">
-                      <Form.Label className="form-label-modern">
+                  <Col xs={12} sm={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="fw-semibold d-flex align-items-center">
                         <CIcon icon={cilPhone} className="me-2" />
                         Phone Number
                       </Form.Label>
                       <Form.Control
                         type="tel"
-                        className="form-control-modern"
                         value={profile.phone}
                         onChange={(e) => handleInputChange('phone', e.target.value)}
                         placeholder="+1 234 567 8900"
                       />
                     </Form.Group>
                   </Col>
-                  <Col md={6}>
-                    <Form.Group className="form-group-modern">
-                      <Form.Label className="form-label-modern">
+                  <Col xs={12} sm={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="fw-semibold d-flex align-items-center">
                         <CIcon icon={cilLocationPin} className="me-2" />
                         Location
                       </Form.Label>
                       <Form.Control
                         type="text"
-                        className="form-control-modern"
                         value={profile.location}
                         onChange={(e) => handleInputChange('location', e.target.value)}
                         placeholder="City, State, Country"
                       />
                     </Form.Group>
                   </Col>
-                  <Col md={6}>
-                    <Form.Group className="form-group-modern">
-                      <Form.Label className="form-label-modern">
+                  <Col xs={12} sm={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="fw-semibold d-flex align-items-center">
                         <CIcon icon={cilSettings} className="me-2" />
                         Experience
                       </Form.Label>
                       <Form.Control
                         type="text"
-                        className="form-control-modern"
                         value={profile.experience}
                         onChange={(e) => handleInputChange('experience', e.target.value)}
                         placeholder="e.g., 5 years, Senior Agent"
                       />
-                      <Form.Text className="text-muted">
+                      <Form.Text className="text-muted small">
                         Your professional experience
                       </Form.Text>
                     </Form.Group>
                   </Col>
-                  <Col md={6}>
-                    <Form.Group className="form-group-modern">
-                      <Form.Label className="form-label-modern">
+                  <Col xs={12} sm={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="fw-semibold d-flex align-items-center">
                         <CIcon icon={cilCalendar} className="me-2" />
                         Member Since
                       </Form.Label>
                       <Form.Control
                         type="date"
-                        className="form-control-modern"
                         value={profile.joinDate}
                         disabled
                       />
-                      <Form.Text className="text-muted">
+                      <Form.Text className="text-muted small">
                         Account creation date
                       </Form.Text>
                     </Form.Group>
                   </Col>
-                  <Col md={12}>
-                    <Form.Group className="form-group-modern">
-                      <Form.Label className="form-label-modern">
+                  <Col xs={12}>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="fw-semibold d-flex align-items-center">
                         <CIcon icon={cilUser} className="me-2" />
                         Bio
                       </Form.Label>
                       <Form.Control
                         as="textarea"
                         rows={5}
-                        className="form-control-modern"
                         value={profile.bio}
                         onChange={(e) => handleInputChange('bio', e.target.value)}
                         placeholder="Tell us about yourself..."
                       />
-                      <Form.Text className="text-muted">
+                      <Form.Text className="text-muted small">
                         Write a short bio to help others know you better
                       </Form.Text>
                     </Form.Group>
                   </Col>
                 </Row>
-                  <div className="form-actions mt-4">
+                  <div className="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-4 pt-3 border-top">
                     <Button 
-                      variant="outline-secondary" 
-                      className="btn-modern px-4 me-2"
+                      variant="secondary" 
+                      className="w-100 w-sm-auto"
                       onClick={() => {
                         setEditMode(false);
                         setError(null);
@@ -670,13 +708,13 @@ export default function Profile() {
                     </Button>
                     <Button 
                       variant="primary" 
-                      className="btn-modern btn-primary-modern px-4"
+                      className="w-100 w-sm-auto"
                       onClick={handleSave} 
                       disabled={saving}
                     >
                       {saving ? (
                         <>
-                          <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                          <Spinner animation="border" size="sm" className="me-2" />
                           Saving...
                         </>
                       ) : (
@@ -692,151 +730,50 @@ export default function Profile() {
             </Card.Body>
           </Card>
 
-          {/* Recent Achievements */}
-          <Card className="profile-card achievements-card mt-4">
-            <Card.Header className="card-header-modern">
+        </Col>
+      </Row>
+
+      {/* Recent Achievements - Full Width */}
+      <Row className="g-4 mt-2">
+        <Col xs={12}>
+          <Card className="dashboard-card">
+            <Card.Header className="d-flex justify-content-between align-items-center">
               <div className="d-flex align-items-center">
-                <div className="header-icon-wrapper">
-                  <CIcon icon={cilStar} className="header-icon" />
-                </div>
-                <h6 className="mb-0 ms-2">Recent Achievements</h6>
+                <CIcon icon={cilStar} className="me-2" />
+                <h5 className="mb-0">Recent Achievements</h5>
               </div>
             </Card.Header>
             <Card.Body>
-              <div className="achievements-list">
+              <Row className="g-3">
                 {recentAchievements.map(achievement => (
-                  <div key={achievement.id} className="achievement-item-modern">
-                    <div className={`achievement-icon-modern achievement-${achievement.type}`}>
-                      <CIcon icon={cilStar} />
-                    </div>
-                    <div className="achievement-content-modern">
-                      <h6 className="achievement-title-modern">{achievement.title}</h6>
-                      <p className="achievement-description-modern">{achievement.description}</p>
-                      <div className="achievement-date-modern">
-                        <CIcon icon={cilCalendar} className="me-1" />
-                        {new Date(achievement.date).toLocaleDateString('en-US', { 
-                          year: 'numeric', 
-                          month: 'long', 
-                          day: 'numeric' 
-                        })}
+                  <Col xs={12} sm={6} lg={4} key={achievement.id}>
+                    <div className="achievement-item-modern h-100">
+                      <div className={`achievement-icon-modern achievement-${achievement.type}`}>
+                        <CIcon icon={cilStar} />
+                      </div>
+                      <div className="achievement-content-modern">
+                        <h6 className="achievement-title-modern">{achievement.title}</h6>
+                        <p className="achievement-description-modern">{achievement.description}</p>
+                        <div className="achievement-date-modern">
+                          <CIcon icon={cilCalendar} className="me-1" />
+                          {new Date(achievement.date).toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                          })}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </Col>
                 ))}
-              </div>
+              </Row>
             </Card.Body>
           </Card>
         </Col>
       </Row>
 
       <style jsx>{`
-        :global(.profile-page) {
-          padding: 2rem;
-          background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-          min-height: 100vh;
-          position: relative;
-        }
-
-        :global(.profile-page::before) {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 200px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          z-index: 0;
-        }
-
-        .loading-container {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          min-height: 60vh;
-          text-align: center;
-        }
-
-        .loading-spinner {
-          width: 50px;
-          height: 50px;
-          border: 4px solid rgba(102, 126, 234, 0.2);
-          border-top: 4px solid #667eea;
-          border-radius: 50%;
-          animation: spin 1s linear infinite;
-          margin-bottom: 1.5rem;
-        }
-
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-
-        .profile-header {
-          margin-bottom: 2rem;
-          position: relative;
-          z-index: 1;
-        }
-
-        .profile-header h2 {
-          color: white;
-          font-weight: 700;
-          font-size: 2.5rem;
-          margin-bottom: 0.5rem;
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .profile-header p {
-          color: rgba(255, 255, 255, 0.9);
-          margin: 0;
-          font-size: 1.1rem;
-        }
-
-        :global(.profile-card) {
-          border: none;
-          border-radius: 20px;
-          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-          background: white;
-          overflow: hidden;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          position: relative;
-          z-index: 1;
-        }
-
-        :global(.profile-card:hover) {
-          transform: translateY(-4px);
-          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        :global(.card-header-modern) {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          border: none;
-          padding: 1.5rem;
-          color: white;
-        }
-
-        .header-icon-wrapper {
-          width: 36px;
-          height: 36px;
-          border-radius: 10px;
-          background: rgba(255, 255, 255, 0.2);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          backdrop-filter: blur(10px);
-        }
-
-        .header-icon {
-          color: white;
-          font-size: 1.2rem;
-        }
-
-        :global(.card-header-modern h6) {
-          color: white;
-          font-weight: 600;
-          font-size: 1.1rem;
-        }
-
+        /* Profile-specific styles */
         .profile-avatar-wrapper {
           margin-bottom: 1.5rem;
         }
@@ -852,10 +789,11 @@ export default function Profile() {
           width: 140px;
           height: 140px;
           border-radius: 50%;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, var(--portal-primary, #68ac78) 0%, var(--portal-primary-dark, #0d5834) 100%);
           padding: 5px;
-          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+          box-shadow: 0 8px 25px rgba(104, 172, 120, 0.3);
           animation: pulse 2s ease-in-out infinite;
+          margin: 0 auto;
         }
 
         @keyframes pulse {
@@ -875,7 +813,7 @@ export default function Profile() {
           width: 100%;
           height: 100%;
           border-radius: 50%;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, var(--portal-primary, #68ac78) 0%, var(--portal-primary-dark, #0d5834) 100%);
           color: white;
           display: flex;
           align-items: center;
@@ -899,14 +837,14 @@ export default function Profile() {
         }
 
         :global(.profile-name) {
-          color: #212529;
+          color: var(--portal-gray-800, #212529);
           font-weight: 700;
           font-size: 1.5rem;
           margin-bottom: 0.5rem;
         }
 
         :global(.profile-role) {
-          color: #6c757d;
+          color: var(--portal-gray-600, #6c757d);
           margin-bottom: 1.5rem;
           font-size: 1rem;
         }
@@ -946,161 +884,12 @@ export default function Profile() {
         :global(.rating-text) {
           font-weight: 700;
           font-size: 1.1rem;
-          color: #212529;
+          color: var(--portal-gray-800, #212529);
         }
 
         :global(.rating-count) {
-          color: #6c757d;
+          color: var(--portal-gray-600, #6c757d);
           font-size: 0.875rem;
-        }
-
-        :global(.profile-stats-grid) {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 1rem;
-          margin-bottom: 1.5rem;
-        }
-
-        .stat-card {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-          padding: 1rem;
-          background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-          border-radius: 15px;
-          transition: all 0.3s;
-        }
-
-        .stat-card:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-icon {
-          width: 48px;
-          height: 48px;
-          border-radius: 12px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1.5rem;
-        }
-
-        .stat-icon.deals {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-        }
-
-        .stat-icon.experience {
-          background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-          color: white;
-        }
-
-        .stat-content {
-          display: flex;
-          flex-direction: column;
-        }
-
-        :global(.stat-value) {
-          font-weight: 700;
-          font-size: 1.5rem;
-          color: #212529;
-          line-height: 1.2;
-        }
-
-        :global(.stat-label) {
-          font-size: 0.875rem;
-          color: #6c757d;
-        }
-
-        :global(.btn-modern) {
-          border-radius: 12px;
-          padding: 0.75rem 1.5rem;
-          font-weight: 600;
-          transition: all 0.3s;
-          border: none;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        :global(.btn-primary-modern) {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-        }
-
-        :global(.btn-primary-modern:hover) {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        :global(.btn-outline-danger-modern) {
-          border: 2px solid #dc3545;
-          color: #dc3545;
-          background: white;
-        }
-
-        :global(.btn-outline-danger-modern:hover) {
-          background: #dc3545;
-          color: white;
-          transform: translateY(-2px);
-        }
-
-        :global(.btn-outline-secondary) {
-          border: 2px solid #6c757d;
-          color: #6c757d;
-          background: white;
-        }
-
-        :global(.btn-outline-secondary:hover) {
-          background: #6c757d;
-          color: white;
-          transform: translateY(-2px);
-        }
-
-        .completion-stats {
-          display: flex;
-          flex-direction: column;
-          gap: 1.5rem;
-        }
-
-        .completion-item {
-          font-size: 0.9rem;
-        }
-
-        .completion-label {
-          font-weight: 600;
-          color: #212529;
-          display: flex;
-          align-items: center;
-        }
-
-        .completion-percentage {
-          font-weight: 700;
-          color: #667eea;
-          font-size: 1rem;
-        }
-
-        .progress-wrapper {
-          margin-top: 0.5rem;
-        }
-
-        :global(.progress-modern) {
-          height: 10px !important;
-          border-radius: 10px;
-          background: #e9ecef;
-          overflow: hidden;
-        }
-
-        :global(.progress-modern .progress-bar) {
-          border-radius: 10px;
-          background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-          transition: width 0.6s ease;
-        }
-
-        .completion-tip {
-          padding: 1rem;
-          background: rgba(102, 126, 234, 0.1);
-          border-radius: 10px;
-          border-left: 4px solid #667eea;
         }
 
         .profile-info-view {
@@ -1113,8 +902,8 @@ export default function Profile() {
 
         .info-label {
           font-weight: 600;
-          color: #6c757d;
-          margin-bottom: 0.5rem;
+          color: var(--portal-gray-600, #6c757d);
+          margin-right: 1rem;
           display: flex;
           align-items: center;
           font-size: 0.9rem;
@@ -1123,7 +912,7 @@ export default function Profile() {
         }
 
         .info-value {
-          color: #212529;
+          color: var(--portal-gray-800, #212529);
           font-size: 1rem;
           font-weight: 500;
           padding: 0.75rem 0;
@@ -1135,55 +924,12 @@ export default function Profile() {
         .bio-text {
           white-space: pre-wrap;
           line-height: 1.6;
-          color: #495057;
+          color: var(--portal-gray-700, #495057);
           padding: 1rem;
-          background: #f8f9fa;
+          background: var(--portal-gray-50, #f8f9fa);
           border-radius: 8px;
           min-height: 100px;
           font-style: italic;
-        }
-
-        :global(.profile-form) {
-          padding: 0.5rem 0;
-        }
-
-        :global(.form-group-modern) {
-          margin-bottom: 1.5rem;
-        }
-
-        :global(.form-label-modern) {
-          font-weight: 600;
-          color: #212529;
-          margin-bottom: 0.75rem;
-          display: flex;
-          align-items: center;
-          font-size: 0.95rem;
-        }
-
-        :global(.form-control-modern) {
-          border: 2px solid #e9ecef;
-          border-radius: 12px;
-          padding: 0.75rem 1rem;
-          font-size: 0.95rem;
-          transition: all 0.3s;
-        }
-
-        :global(.form-control-modern:focus) {
-          border-color: #667eea;
-          box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-          outline: none;
-        }
-
-        :global(.form-control-modern:disabled) {
-          background-color: #f8f9fa;
-          opacity: 0.7;
-        }
-
-        .form-actions {
-          display: flex;
-          justify-content: flex-end;
-          padding-top: 1rem;
-          border-top: 1px solid #e9ecef;
         }
 
         .achievements-list {
@@ -1195,28 +941,29 @@ export default function Profile() {
         .achievement-item-modern {
           display: flex;
           align-items: flex-start;
-          gap: 1.25rem;
-          padding: 1.5rem;
-          background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-          border-radius: 15px;
-          border-left: 4px solid #667eea;
+          gap: 1rem;
+          padding: 1.25rem;
+          background: linear-gradient(135deg, var(--portal-gray-50, #f8f9fa) 0%, #ffffff 100%);
+          border-radius: 12px;
+          border-left: 4px solid var(--portal-primary, #68ac78);
           transition: all 0.3s;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+          height: 100%;
         }
 
         .achievement-item-modern:hover {
-          transform: translateX(5px);
+          transform: translateY(-2px);
           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .achievement-icon-modern {
-          width: 50px;
-          height: 50px;
-          border-radius: 12px;
+          width: 45px;
+          height: 45px;
+          border-radius: 10px;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 1.5rem;
+          font-size: 1.25rem;
           flex-shrink: 0;
         }
 
@@ -1231,7 +978,7 @@ export default function Profile() {
         }
 
         .achievement-response {
-          background: linear-gradient(135deg, #17a2b8 0%, #667eea 100%);
+          background: linear-gradient(135deg, #17a2b8 0%, var(--portal-primary, #68ac78) 100%);
           color: white;
         }
 
@@ -1242,128 +989,88 @@ export default function Profile() {
         .achievement-title-modern {
           margin: 0 0 0.5rem;
           font-weight: 700;
-          color: #212529;
+          color: var(--portal-gray-800, #212529);
           font-size: 1.1rem;
         }
 
         .achievement-description-modern {
           margin: 0 0 0.75rem;
-          color: #6c757d;
+          color: var(--portal-gray-600, #6c757d);
           font-size: 0.9rem;
           line-height: 1.5;
         }
 
         .achievement-date-modern {
-          color: #adb5bd;
+          color: var(--portal-gray-500, #adb5bd);
           font-size: 0.85rem;
           display: flex;
           align-items: center;
         }
 
-        @media (max-width: 1200px) {
-          :global(.profile-page) {
-            padding: 1.5rem;
-          }
-
-          .profile-header h2 {
-            font-size: 2rem;
-          }
-
+        @media (max-width: 992px) {
           .avatar-border {
             width: 120px;
             height: 120px;
           }
         }
 
-        @media (max-width: 992px) {
-          :global(.profile-page) {
-            padding: 1rem;
-          }
-
-          .profile-header h2 {
-            font-size: 1.75rem;
-          }
-
+        @media (max-width: 768px) {
           .avatar-border {
             width: 100px;
             height: 100px;
           }
 
-          :global(.profile-stats-grid) {
-            gap: 0.75rem;
-          }
-
-          .stat-card {
-            padding: 0.75rem;
-          }
-        }
-
-        @media (max-width: 768px) {
-          :global(.profile-page) {
-            padding: 0.75rem;
-          }
-
-          .profile-header h2 {
-            font-size: 1.5rem;
-          }
-
-          .profile-header p {
-            font-size: 0.95rem;
-          }
-
-          .avatar-border {
-            width: 90px;
-            height: 90px;
-          }
-
-          :global(.profile-stats-grid) {
-            grid-template-columns: 1fr;
-          }
-
-          :global(.profile-card .card-body) {
-            padding: 1rem;
-          }
-
           .achievement-item-modern {
             padding: 1rem;
-            gap: 1rem;
+            gap: 0.875rem;
+          }
+
+          .achievement-icon-modern {
+            width: 40px;
+            height: 40px;
+            font-size: 1.1rem;
+          }
+
+          .achievement-title-modern {
+            font-size: 1rem;
+          }
+
+          .achievement-description-modern {
+            font-size: 0.85rem;
           }
         }
 
         @media (max-width: 576px) {
-          :global(.profile-page) {
-            padding: 0.5rem;
-          }
-
-          .profile-header h2 {
-            font-size: 1.25rem;
-          }
-
-          .profile-header p {
-            font-size: 0.85rem;
-          }
-
           .avatar-border {
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
           }
 
           :global(.profile-name) {
             font-size: 1.25rem;
           }
 
-          :global(.stat-value) {
-            font-size: 1.25rem;
+          .info-item {
+            margin-bottom: 1.25rem;
+          }
+
+          .info-label {
+            font-size: 0.8rem;
+          }
+
+          .info-value {
+            font-size: 0.9rem;
           }
 
           .achievement-item-modern {
-            flex-direction: column;
-            text-align: center;
-            align-items: center;
+            padding: 0.875rem;
+            gap: 0.75rem;
           }
 
           .achievement-icon-modern {
-            margin: 0 auto;
+            width: 35px;
+            height: 35px;
+            font-size: 1rem;
           }
         }
       `}</style>

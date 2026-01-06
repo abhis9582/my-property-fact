@@ -80,6 +80,8 @@ export default async function HeroSection() {
       <div className="position-relative mb-5">
         <div className="mpf-hero-banner position-relative">
           <div className="position-relative">
+              {/* <SnowEffect /> */}
+              {/* <NewYearEffect /> */}
             <HeroBannerSlider slides={heroSlides} />
             <div className="bannercontainer">
               <h1 className="text-center text-light">Find the best property</h1>

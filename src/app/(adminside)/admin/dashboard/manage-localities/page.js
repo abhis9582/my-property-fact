@@ -3,8 +3,23 @@ import ManageLocality from "./manageLocalities";
 export const dynamic = 'force-dynamic';
 // fetch all cities 
 const fetchAllCities = async () => {
-    const city = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}city/get-all-cities`);
-    return city.data;
+    try {
+        // Use the /city/all endpoint which is more reliable
+        const city = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}city/all`);
+        // Map the response to ensure consistent format
+        const cityList = Array.isArray(city.data) ? city.data : [];
+        return cityList.map((item, index) => ({
+            ...item,
+            // Ensure the format matches what the component expects
+            name: item.name || item.cityName,
+            id: item.id || item.districtId,
+            index: index + 1
+        }));
+    } catch (error) {
+        console.error("Error fetching cities:", error.response?.status, error.message);
+        console.error("Error details:", error.response?.data);
+        return [];
+    }
 }
 
 // fetch all cities 

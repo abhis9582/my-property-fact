@@ -120,7 +120,7 @@ export default function ProjectsAmenity({ projectList, amenityList }) {
                 functionName={openAddModel}
                 heading={"Manage Project & Amenity"}
             />
-            <div className="table-container mt-5">
+            <div className="table-container">
                 <DataTable columns={columns} list={projectList.filter(item => item.projectAmenityList.length > 0)} />
             </div>
             {/* Modal for adding a new city */}

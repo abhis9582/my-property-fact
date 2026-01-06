@@ -14,6 +14,10 @@ import {
   cilPhone,
   cilLocationPin,
   cilStar,
+  cilBuilding,
+  cilLayers,
+  cilCarAlt,
+  cilMoney,
 } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import Image from "next/image";
@@ -22,6 +26,7 @@ import { useUser } from "../_contexts/UserContext";
 import { setDemoUserData } from "../_utils/setUserData";
 import axios from "axios";
 import Cookies from "js-cookie";
+import "./PortalCommonStyles.css";
 
 export default function ModernDashboard() {
   const { userData, loading: userLoading } = useUser();
@@ -179,15 +184,61 @@ export default function ModernDashboard() {
               imageUrl = `${process.env.NEXT_PUBLIC_IMAGE_URL || ''}properties/${slugURL}/${property.projectLogo}`;
             }
             
+            // Format area
+            const formatArea = (area) => {
+              if (!area) return null;
+              const numArea = typeof area === 'string' ? parseFloat(area) : area;
+              if (isNaN(numArea)) return null;
+              return `${numArea.toLocaleString('en-IN')} sq ft`;
+            };
+
+            const area = formatArea(property.carpetArea || property.builtUpArea || property.superBuiltUpArea || property.plotArea);
+            
+            // Format price per sq ft
+            const formatPricePerSqFt = () => {
+              if (property.pricePerSqFt) {
+                const price = typeof property.pricePerSqFt === 'string' 
+                  ? parseFloat(property.pricePerSqFt.replace(/[^0-9.]/g, "")) 
+                  : property.pricePerSqFt;
+                if (!isNaN(price)) return `₹${price.toLocaleString('en-IN')}/sq ft`;
+              }
+              // Calculate from total price and area
+              if (property.totalPrice && area) {
+                const totalPrice = typeof property.totalPrice === 'string' 
+                  ? parseFloat(property.totalPrice.replace(/[^0-9.]/g, "")) 
+                  : property.totalPrice;
+                const areaNum = parseFloat(area.replace(/[^0-9.]/g, ""));
+                if (!isNaN(totalPrice) && !isNaN(areaNum) && areaNum > 0) {
+                  const pricePerSqFt = Math.round(totalPrice / areaNum);
+                  return `₹${pricePerSqFt.toLocaleString('en-IN')}/sq ft`;
+                }
+              }
+              return null;
+            };
+
             return {
               id: property.id,
               title: property.projectName || property.title || "Untitled Property",
               location: property.projectLocality || property.locality || property.address || "Location not specified",
-              price: property.projectPrice || (property.totalPrice ? `₹${property.totalPrice.toLocaleString()}` : "Price not available"),
+              city: property.city || null,
+              price: property.projectPrice || (property.totalPrice ? `₹${property.totalPrice.toLocaleString('en-IN')}` : "Price not available"),
+              pricePerSqFt: formatPricePerSqFt(),
+              area: area,
+              bedrooms: property.bedrooms || null,
+              bathrooms: property.bathrooms || null,
+              builderName: property.builderName || null,
+              projectType: property.listingType || property.subType || property.projectType || null,
+              floor: property.floor || null,
+              totalFloors: property.totalFloors || null,
+              furnished: property.furnished || null,
+              parking: property.parking || null,
+              possession: property.possession || null,
               views: 0, // Would need analytics data
               inquiries: 0, // Would need enquiry data
               status: "active",
               image: imageUrl,
+              createdAt: property.createdAt,
+              updatedAt: property.updatedAt,
             };
           });
         setTopProperties(topProps);
@@ -267,18 +318,15 @@ export default function ModernDashboard() {
 
   const StatCard = ({ title, value, icon, color, change, changeType }) => (
     <Card className="stat-card h-100">
-      <Card.Body className="d-flex align-items-center">
-        <div className="stat-icon-wrapper">
-          <CIcon icon={icon} className={`stat-icon text-${color}`} />
-        </div>
+      <Card.Body>
         <div className="stat-content">
-          <h6 className="stat-title">{title}</h6>
-          <h3 className="stat-value">{value}</h3>
-          {change && (
-            <small className={`stat-change text-${changeType}`}>
-              {changeType === "success" ? "↗" : changeType === "warning" ? "⚠" : "↘"} {change}
-            </small>
-          )}
+          <div className={`stat-icon ${color}`}>
+            <CIcon icon={icon} />
+          </div>
+          <div className="stat-info">
+            <h6 className="stat-title">{title}</h6>
+            <h3 className="stat-value">{value}</h3>
+          </div>
         </div>
       </Card.Body>
     </Card>
@@ -321,13 +369,96 @@ export default function ModernDashboard() {
         </Badge>
       </div>
       <Card.Body>
-        <h6 className="property-title">{property.title}</h6>
-        <p className="property-location">
+        <h6 className="property-title mb-2">{property.title}</h6>
+        
+        {/* Location */}
+        <p className="property-location text-muted small mb-2">
           <CIcon icon={cilLocationPin} className="me-1" />
           {property.location}
+          {property.city && `, ${property.city}`}
         </p>
-        <div className="property-price">{property.price}</div>
-        <div className="property-stats">
+
+        {/* Builder Name */}
+        {property.builderName && (
+          <p className="text-muted small mb-2">
+            <CIcon icon={cilBuilding} className="me-1" />
+            {property.builderName}
+          </p>
+        )}
+
+        {/* Price */}
+        <div className="property-price mb-2">
+          <strong className="text-primary">{property.price}</strong>
+          {property.pricePerSqFt && (
+            <small className="text-muted d-block">{property.pricePerSqFt}</small>
+          )}
+        </div>
+
+        {/* Property Details Grid */}
+        <div className="property-details-grid mb-3">
+          {(property.bedrooms || property.bathrooms) && (
+            <div className="detail-item">
+              {property.bedrooms && (
+                <span className="me-2">
+                  <CIcon icon={cilHome} className="me-1" />
+                  {property.bedrooms} BHK
+                </span>
+              )}
+              {property.bathrooms && (
+                <span>
+                  <CIcon icon={cilLayers} className="me-1" />
+                  {property.bathrooms} Bath
+                </span>
+              )}
+            </div>
+          )}
+          
+          {property.area && (
+            <div className="detail-item">
+              <CIcon icon={cilViewModule} className="me-1" />
+              {property.area}
+            </div>
+          )}
+
+          {property.floor && (
+            <div className="detail-item">
+              <CIcon icon={cilBuilding} className="me-1" />
+              Floor {property.floor}
+              {property.totalFloors && ` of ${property.totalFloors}`}
+            </div>
+          )}
+
+          {property.parking && (
+            <div className="detail-item">
+              <CIcon icon={cilCarAlt} className="me-1" />
+              {property.parking} Parking
+            </div>
+          )}
+
+          {property.furnished && (
+            <div className="detail-item">
+              <CIcon icon={cilStar} className="me-1" />
+              {property.furnished}
+            </div>
+          )}
+
+          {property.possession && (
+            <div className="detail-item">
+              <CIcon icon={cilCalendar} className="me-1" />
+              {property.possession}
+            </div>
+          )}
+        </div>
+
+        {/* Property Type Badge */}
+        {property.projectType && (
+          <div className="mb-2">
+            <Badge bg="info" className="me-1">{property.projectType}</Badge>
+          </div>
+        )}
+
+        {/* Stats */}
+        <div className="property-stats mb-3">
           <div className="stat-item">
             <CIcon icon={cilViewModule} className="me-1" />
             {property.views} views
@@ -337,7 +468,9 @@ export default function ModernDashboard() {
             {property.inquiries} inquiries
           </div>
         </div>
-        <div className="property-actions mt-3">
+
+        {/* Actions */}
+        <div className="property-actions">
           <Link href={`/portal/dashboard/listings/${property.id}`}>
             <Button variant="outline-primary" size="sm" className="me-2">
               <CIcon icon={cilViewModule} className="me-1" />
@@ -436,17 +569,13 @@ export default function ModernDashboard() {
           </div>
           <div className="header-actions">
             <Link href="/portal/dashboard/listings?action=add">
-              <Button variant="primary" className="me-2">
+              <Button variant="light" className="me-2">
                 <CIcon icon={cilPlus} className="me-1" />
                 Add Property
               </Button>
             </Link>
-            <Button variant="outline-secondary" className="me-2">
-              <CIcon icon={cilBell} className="me-1" />
-              Notifications
-            </Button>
             {!userData && (
-              <Button variant="outline-info" onClick={handleSetDemoData}>
+              <Button variant="light" onClick={handleSetDemoData}>
                 <CIcon icon={cilUser} className="me-1" />
                 Set Demo User
               </Button>
@@ -499,19 +628,43 @@ export default function ModernDashboard() {
         </Col>
       </Row>
 
-      {/* Main Content */}
+      {/* Main Content - Reorganized Layout */}
       <Row className="g-4">
-        {/* Left Column */}
-        <Col lg={8}>
-          {/* Recent Activities */}
+        {/* Top Properties - Full Width */}
+        <Col lg={12}>
+          <Card className="dashboard-card">
+            <Card.Header className="d-flex justify-content-between align-items-center">
+              <h5 className="mb-0">Top Performing Properties</h5>
+              <Link href="/portal/dashboard/listings">
+                <Button variant="link" size="sm">
+                  Manage All
+                </Button>
+              </Link>
+            </Card.Header>
+            <Card.Body>
+              {topProperties.length > 0 ? (
+                <Row className="g-4">
+                  {topProperties.map((property) => (
+                    <Col lg={4} md={6} key={property.id}>
+                      <PropertyCard property={property} />
+                    </Col>
+                  ))}
+                </Row>
+              ) : (
+                <p className="text-muted text-center py-4">No approved properties yet</p>
+              )}
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Bottom Section - Activities and Quick Actions Side by Side */}
+      <Row className="g-4 mt-2">
+        {/* Recent Activities */}
+        <Col lg={8} md={7}>
           <Card className="dashboard-card">
             <Card.Header className="d-flex justify-content-between align-items-center">
               <h5 className="mb-0">Recent Activities</h5>
-              <Link href="/portal/dashboard/activities">
-                <Button variant="link" size="sm">
-                  View All
-                </Button>
-              </Link>
             </Card.Header>
             <Card.Body>
               {recentActivities.length > 0 ? (
@@ -525,107 +678,11 @@ export default function ModernDashboard() {
               )}
             </Card.Body>
           </Card>
-
-          {/* Top Properties */}
-          <Card className="dashboard-card mt-4">
-            <Card.Header className="d-flex justify-content-between align-items-center">
-              <h5 className="mb-0">Top Performing Properties</h5>
-              <Link href="/portal/dashboard/listings">
-                <Button variant="link" size="sm">
-                  Manage All
-                </Button>
-              </Link>
-            </Card.Header>
-            <Card.Body>
-              {topProperties.length > 0 ? (
-                <Row className="g-3">
-                  {topProperties.map((property) => (
-                    <Col md={4} key={property.id}>
-                      <PropertyCard property={property} />
-                    </Col>
-                  ))}
-                </Row>
-              ) : (
-                <p className="text-muted text-center py-4">No approved properties yet</p>
-              )}
-            </Card.Body>
-          </Card>
         </Col>
 
-        {/* Right Column */}
-        <Col lg={4}>
-          {/* Quick Stats */}
-          {/* <Card className="dashboard-card">
-            <Card.Header>
-              <h5 className="mb-0">Account Overview</h5>
-            </Card.Header>
-            <Card.Body>
-              <div className="quick-stats">
-                <div className="stat-row">
-                  <span>Profile Completion</span>
-                  <div className="d-flex align-items-center">
-                    <ProgressBar
-                      now={calculateProfileCompletion()}
-                      variant="success"
-                      className="flex-grow-1 me-2"
-                      style={{ height: "6px" }}
-                    />
-                    <span className="stat-percentage">{calculateProfileCompletion()}%</span>
-                  </div>
-                </div>
-                <div className="stat-row">
-                  <span>Response Rate</span>
-                  <div className="d-flex align-items-center">
-                    <ProgressBar
-                      now={calculateResponseRate()}
-                      variant="info"
-                      className="flex-grow-1 me-2"
-                      style={{ height: "6px" }}
-                    />
-                    <span className="stat-percentage">{calculateResponseRate()}%</span>
-                  </div>
-                </div>
-                <div className="stat-row">
-                  <span>Listing Quality</span>
-                  <div className="d-flex align-items-center">
-                    <ProgressBar
-                      now={calculateListingQuality()}
-                      variant="warning"
-                      className="flex-grow-1 me-2"
-                      style={{ height: "6px" }}
-                    />
-                    <span className="stat-percentage">{calculateListingQuality()}%</span>
-                  </div>
-                </div>
-              </div>
-            </Card.Body>
-          </Card> */}
-
-          {/* Upcoming Tasks */}
-          {/* <Card className="dashboard-card mt-4">
-            <Card.Header className="d-flex justify-content-between align-items-center">
-              <h5 className="mb-0">Today&apos;s Tasks</h5>
-              <Link href="/portal/dashboard/tasks">
-                <Button variant="link" size="sm">
-                  View All
-                </Button>
-              </Link>
-            </Card.Header>
-            <Card.Body>
-              {upcomingTasks.length > 0 ? (
-                <div className="tasks-list">
-                  {upcomingTasks.map((task) => (
-                    <TaskItem key={task.id} task={task} />
-                  ))}
-                </div>
-              ) : (
-                <p className="text-muted text-center py-4">No pending tasks</p>
-              )}
-            </Card.Body>
-          </Card> */}
-
-          {/* Quick Actions */}
-          <Card className="dashboard-card mt-4">
+        {/* Quick Actions */}
+        <Col lg={4} md={5}>
+          <Card className="dashboard-card">
             <Card.Header>
               <h5 className="mb-0">Quick Actions</h5>
             </Card.Header>
@@ -643,12 +700,6 @@ export default function ModernDashboard() {
                     View Leads
                   </Button>
                 </Link>
-                {/* <Link href="/portal/dashboard/analytics">
-                  <Button variant="outline-success" className="w-100 mb-2">
-                    <CIcon icon={cilChart} className="me-1" />
-                    View Analytics
-                  </Button>
-                </Link> */}
                 <Link href="/portal/dashboard/profile">
                   <Button variant="outline-secondary" className="w-100">
                     <CIcon icon={cilSettings} className="me-1" />
@@ -660,482 +711,6 @@ export default function ModernDashboard() {
           </Card>
         </Col>
       </Row>
-
-      <style jsx>{`
-        .modern-dashboard {
-          padding: 2rem;
-          background: #f8f9fa;
-          min-height: 100vh;
-        }
-
-        .dashboard-header {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 2rem;
-          border-radius: 12px;
-          margin-bottom: 2rem;
-          box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .header-content {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 1rem;
-        }
-
-        .header-title h2 {
-          margin: 0;
-          font-weight: 700;
-          font-size: 2rem;
-        }
-
-        .header-title p {
-          margin: 0.5rem 0 0;
-          opacity: 0.9;
-          font-size: 1.1rem;
-        }
-
-        .header-actions {
-          display: flex;
-          gap: 0.5rem;
-        }
-
-        .stat-card {
-          border: none;
-          border-radius: 12px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-          transition: all 0.3s ease;
-          background: white;
-        }
-
-        .stat-card:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-        }
-
-        .stat-icon-wrapper {
-          width: 60px;
-          height: 60px;
-          border-radius: 12px;
-          background: rgba(102, 126, 234, 0.1);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-right: 1rem;
-        }
-
-        .stat-icon {
-          font-size: 1.5rem;
-        }
-
-        .stat-title {
-          color: #6c757d;
-          font-size: 0.875rem;
-          font-weight: 500;
-          margin: 0;
-        }
-
-        .stat-value {
-          color: #212529;
-          font-weight: 700;
-          font-size: 1.75rem;
-          margin: 0.25rem 0;
-        }
-
-        .stat-change {
-          font-size: 0.75rem;
-          font-weight: 600;
-        }
-
-        .dashboard-card {
-          border: none;
-          border-radius: 12px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-          background: white;
-        }
-
-        .dashboard-card .card-header {
-          background: transparent;
-          border-bottom: 1px solid #e9ecef;
-          padding: 1.25rem;
-        }
-
-        .activity-item {
-          display: flex;
-          align-items: flex-start;
-          gap: 1rem;
-          padding: 1rem 0;
-          border-bottom: 1px solid #f1f3f4;
-        }
-
-        .activity-item:last-child {
-          border-bottom: none;
-        }
-
-        .activity-icon {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background: rgba(102, 126, 234, 0.1);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-        }
-
-        .activity-message {
-          margin: 0 0 0.25rem;
-          font-size: 0.9rem;
-          color: #495057;
-        }
-
-        .activity-time {
-          color: #6c757d;
-          font-size: 0.8rem;
-        }
-
-        .property-card {
-          border: 1px solid #e9ecef;
-          border-radius: 12px;
-          overflow: hidden;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-          transition: all 0.3s ease;
-          background: #ffffff;
-        }
-
-        .property-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          border-color: #dee2e6;
-        }
-
-        .property-image-container {
-          position: relative;
-          height: 200px;
-          overflow: hidden;
-          background: #f8f9fa;
-        }
-
-        .property-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.4s ease;
-        }
-
-        .property-card:hover .property-image {
-          transform: scale(1.05);
-        }
-
-        .property-status {
-          position: absolute;
-          top: 0.75rem;
-          right: 0.75rem;
-          padding: 0.375rem 0.75rem;
-          border-radius: 6px;
-          font-size: 0.75rem;
-          font-weight: 600;
-          text-transform: capitalize;
-          z-index: 2;
-        }
-
-        .property-title {
-          font-weight: 600;
-          margin-bottom: 0.5rem;
-          color: #212529;
-          font-size: 1.1rem;
-        }
-
-        .property-location {
-          color: #6c757d;
-          font-size: 0.875rem;
-          margin-bottom: 0.75rem;
-          display: flex;
-          align-items: center;
-        }
-
-        .property-price {
-          font-weight: 700;
-          color: #0d5834;
-          font-size: 1.25rem;
-          margin-bottom: 1rem;
-        }
-
-        .property-stats {
-          display: flex;
-          gap: 1.25rem;
-          font-size: 0.8rem;
-          color: #6c757d;
-          margin-bottom: 1rem;
-          padding-bottom: 1rem;
-          border-bottom: 1px solid #f1f3f4;
-        }
-
-        .stat-item {
-          display: flex;
-          align-items: center;
-        }
-
-        .property-actions {
-          display: flex;
-          gap: 0.5rem;
-        }
-
-        .quick-stats .stat-row {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 1rem;
-          font-size: 0.875rem;
-        }
-
-        .stat-percentage {
-          font-weight: 600;
-          color: #495057;
-          min-width: 35px;
-          text-align: right;
-        }
-
-        .task-item {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 0.75rem 0;
-          border-bottom: 1px solid #f1f3f4;
-        }
-
-        .task-item:last-child {
-          border-bottom: none;
-        }
-
-        .task-title {
-          margin: 0 0 0.25rem;
-          font-size: 0.9rem;
-          color: #495057;
-        }
-
-        .task-type {
-          color: #6c757d;
-          font-size: 0.8rem;
-        }
-
-        .task-meta {
-          text-align: right;
-        }
-
-        .task-time {
-          display: block;
-          color: #6c757d;
-          font-size: 0.8rem;
-          margin-top: 0.25rem;
-        }
-
-        .quick-actions {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-        }
-
-        @media (max-width: 1200px) {
-          .modern-dashboard {
-            padding: 1.5rem;
-          }
-
-          .header-title h2 {
-            font-size: 1.75rem;
-          }
-
-          .stat-value {
-            font-size: 1.5rem;
-          }
-        }
-
-        @media (max-width: 992px) {
-          .modern-dashboard {
-            padding: 1rem;
-          }
-
-          .header-content {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 1.5rem;
-          }
-
-          .header-actions {
-            width: 100%;
-            justify-content: stretch;
-          }
-
-          .header-actions .btn {
-            flex: 1;
-          }
-
-          .header-title h2 {
-            font-size: 1.5rem;
-          }
-
-          .stat-value {
-            font-size: 1.25rem;
-          }
-
-          .stat-icon-wrapper {
-            width: 50px;
-            height: 50px;
-            margin-right: 0.75rem;
-          }
-
-          .stat-icon {
-            font-size: 1.25rem;
-          }
-
-          .property-stats {
-            gap: 0.5rem;
-            flex-direction: column;
-            align-items: flex-start;
-          }
-
-          .property-actions {
-            flex-direction: column;
-            gap: 0.5rem;
-          }
-
-          .property-actions .btn {
-            width: 100%;
-          }
-        }
-
-        @media (max-width: 768px) {
-          .modern-dashboard {
-            padding: 0.75rem;
-          }
-
-          .header-title h2 {
-            font-size: 1.25rem;
-          }
-
-          .header-title p {
-            font-size: 1rem;
-          }
-
-          .stat-card {
-            margin-bottom: 1rem;
-          }
-
-          .stat-value {
-            font-size: 1.1rem;
-          }
-
-          .stat-title {
-            font-size: 0.8rem;
-          }
-
-          .dashboard-card .card-header {
-            padding: 1rem;
-          }
-
-          .dashboard-card .card-body {
-            padding: 1rem;
-          }
-
-          .activity-item {
-            padding: 0.75rem 0;
-          }
-
-          .activity-icon {
-            width: 35px;
-            height: 35px;
-          }
-
-          .property-image-container {
-            height: 120px;
-          }
-
-          .quick-stats .stat-row {
-            margin-bottom: 0.75rem;
-          }
-
-          .task-item {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.5rem;
-          }
-
-          .task-meta {
-            text-align: left;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-          }
-        }
-
-        @media (max-width: 576px) {
-          .modern-dashboard {
-            padding: 0.5rem;
-          }
-
-          .header-title h2 {
-            font-size: 1.1rem;
-          }
-
-          .header-title p {
-            font-size: 0.9rem;
-          }
-
-          .stat-value {
-            font-size: 1rem;
-          }
-
-          .stat-title {
-            font-size: 0.75rem;
-          }
-
-          .activity-item {
-            padding: 0.5rem 0;
-            gap: 0.75rem;
-          }
-
-          .activity-icon {
-            width: 30px;
-            height: 30px;
-          }
-
-          .activity-message {
-            font-size: 0.85rem;
-          }
-
-          .activity-time {
-            font-size: 0.75rem;
-          }
-
-          .property-title {
-            font-size: 0.9rem;
-          }
-
-          .property-location {
-            font-size: 0.8rem;
-          }
-
-          .property-price {
-            font-size: 1rem;
-          }
-
-          .dashboard-card .card-header {
-            padding: 0.75rem;
-          }
-
-          .dashboard-card .card-body {
-            padding: 0.75rem;
-          }
-
-          .quick-actions .btn {
-            font-size: 0.875rem;
-            padding: 0.5rem;
-          }
-        }
-      `}</style>
     </div>
   );
 }

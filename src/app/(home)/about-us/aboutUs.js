@@ -67,6 +67,7 @@ export default function AboutUs({ whatWeOffer, ourCommitment, whyMyPropertyFact 
                     <h1 className="my-3">{ourCommitment.heading}</h1>
                     <p>{ourCommitment.text}</p>
                     <hr />
+                    {/* this is description of our commitment section */}
                     <p>
                         Join us at www.mypropertyfact.in and discover a new way to explore real estate. Whether you are buying, renting, or investing, My Property Fact is here to help you make your next move with confidence.
                     </p>

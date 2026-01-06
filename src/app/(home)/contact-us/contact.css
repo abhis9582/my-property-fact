@@ -1,198 +1,521 @@
-.contactus-head {
-    margin: 0px;
-    padding: 6%;
-    background: url("/static/contact-banner.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+/* ============================================
+   CONTACT US PAGE STYLES
+   ============================================ */
+
+/* ============================================
+   1. CONTACT INFO CONTAINER SECTION
+   ============================================ */
+
+.contact-info-container {
+  width: 100%;
+  max-width: 408px;
+  min-height: 306px;
+  height: auto;
+  border-width: 1px;
+  padding-top: 80px;
+  padding-right: 25px;
+  padding-bottom: 80px;
+  padding-left: 25px;
+  gap: 10px;
+  transition: all 0.8s ease;
+  margin: 0 auto;
 }
 
-.contact-nav {
-    display: flex;
-    gap: .5rem;
-    margin-left: 2rem;
-    align-items: center;
+.contact-info-container-child {
+  width: 100%;
+  max-width: 257px;
+  min-height: 158.78px;
+  height: auto;
+  gap: 16px;
 }
 
-.contact-nav a {
-    text-decoration: none;
-    color: #fff;
+.contact-info-container-child > div:first-child img {
+  position: absolute;
+  top: 16.5px;
+  left: 3px;
 }
 
-.contact-nav a:hover {
-    color: #000;
-    text-decoration: underline;
+.col-4:nth-of-type(3) .contact-info-container-child > div:first-child img {
+  position: absolute;
+  top: 19.5px;
+  left: 3px;
 }
 
-.contact-nav p {
-    margin: 0px;
+.contact-info-container-child div {
+  position: relative;
+  width: 41.99px;
+  height: 56.78px;
 }
 
-.info-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    width: 80%;
+.contact-info-container-child div::before {
+  content: "";
+  position: absolute;
+  width: 41.39px;
+  height: 41.39px;
+  left: 0.6px;
+  top: 0.6px;
+  background: #ea9e23;
+  border-radius: 50%;
+  z-index: 0;
+  transform: all 0.8s ease;
+  
 }
 
-.info-container-child {
-    border: 1px solid #68ac78;
-    padding: 2rem;
-    align-items: center;
-    text-align: center;
-    width: 360px;
-    border-radius: 1rem;
+/* Hover States */
+.contact-info-container:hover {
+  background: #ea9e23;
+  color: #fff;
 }
 
-.info-container-child p:first-child {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #68ac78;
+.contact-info-container:hover .contact-info-container-child div::before {
+  background: #ffffff !important;
+  transform: all 0.8s ease;
 }
 
-.info-container-child p:not(:first-child) {
-    font-size: 1.2rem;
-    font-weight: 300;
-    color: gray;
-    line-height: 1.2rem;
+
+
+/* ============================================
+   2. GET A QUOTE SECTION
+   ============================================ */
+
+.get-quote-section {
+  position: relative;
+  padding: 80px 0;
+  background-image: url("/static/contact-us/contact-bg.png") !important;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-.contact-form-section {
-    display: flex;
+.get-quote-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 0;
+}
+
+.get-quote-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Heading */
+.get-quote-heading {
+  font-size: 3.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 2rem !important;
+  letter-spacing: 2px;
+}
+
+/* Form */
+.get-quote-form {
+  background: transparent;
+  padding: 0;
+}
+
+/* Input Fields */
+.get-quote-input {
+  background: #bcbcbc4d;
+  border: 1px solid #3a3a3a !important;
+  border-radius: 4px !important;
+  color: #fff !important;
+  padding: 15px 20px !important;
+  font-size: 16px;
+  height: auto;
+  transition: all 0.3s ease;
+}
+
+.get-quote-input::placeholder {
+  color: #ffffff99;
+  opacity: 1;
+}
+
+.get-quote-input:focus {
+  background-color: #333 !important;
+  border-color: #ea9e23 !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 0.2rem rgba(234, 158, 35, 0.25) !important;
+  outline: none;
+}
+
+.get-quote-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Submit Button */
+.get-quote-submit-btn {
+  background: linear-gradient(135deg, #d1ad5b 0%, #a07e38 100%) !important;
+  background-color: #d1ad5b !important;
+  color: #fff !important;
+  padding: 15px 50px !important;
+  font-size: 18px;
+  font-weight: 600;
+  border: none !important;
+  border-radius: 50px !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  min-width: 200px;
+}
+
+.get-quote-submit-btn:hover {
+  background: linear-gradient(135deg, #b8934d 0%, #8a6b2f 100%) !important;
+  background-color: #b8934d !important;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(209, 173, 91, 0.4);
+}
+
+.get-quote-submit-btn:active {
+  transform: translateY(0);
+}
+
+/* ============================================
+   3. DREAM HOME SECTION
+   ============================================ */
+
+.looking-for-dream-home-section {
+  background: #eaeac4;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  height: 603px;
+}
+
+.looking-for-dream-home-section-image1 {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: end;
+  justify-content: start;
+  position: relative;
+}
+
+.looking-for-dream-home-section-image2 {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: end;
+  justify-content: end;
+  position: relative;
+}
+
+.looking-for-dream-home-section-image2 img {
+  position: absolute;
+  bottom: 0;
+}
+
+.looking-for-dream-home-section-content {
+  width: 100%;
+  gap: 29px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin-bottom: 6rem;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.looking-for-dream-home-section-content p {
+  font-size: 18px;
+  color: #00000099;
+}
+
+.looking-for-dream-home-section-content h2 {
+  width: 100%;
+  max-width: 700px;
+  width: 670px;
+  height: auto;
+  color: #000;
+  font-weight: 600;
+  font-size: 48px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-align: center;
+  text-transform: capitalize;
+  margin: 0px;
+}
+
+.looking-for-dream-home-section-content p {
+  margin-bottom: 0;
+}
+
+.looking-for-dream-home-section-content button {
+  width: 100%;
+  max-width: 297px;
+  width: 297px;
+  min-height: 53px;
+  height: auto;
+  padding-top: 14px;
+  padding-right: 20px;
+  padding-bottom: 14px;
+  padding-left: 20px;
+  background: #232323;
+  color: #fff;
+  border: none;
+  /* border-radius: 8px; */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.looking-for-dream-home-section-content button:hover {
+  background: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================
+   4. MAP CONTAINER SECTION
+   ============================================ */
+
+.map-container {
+  overflow: hidden;
+}
+
+.contact-map-iframe {
+  width: 100%;
+  height: 465px;
+  border: 0;
+  display: block;
+}
+
+/* ============================================
+   RESPONSIVE MEDIA QUERIES
+   ============================================ */
+
+/* Large devices (desktops, 992px - 1199px) */
+@media (max-width: 1199px) {
+  .looking-for-dream-home-section {
+    height: auto;
+    min-height: 603px;
+    padding: 40px 20px;
+  }
+
+  .looking-for-dream-home-section-image1,
+  .looking-for-dream-home-section-image2 {
+    width: auto;
+    flex: 0 0 auto;
+  }
+
+  .looking-for-dream-home-section-content {
+    flex: 1;
+    margin-bottom: 3rem;
+  }
+
+  .looking-for-dream-home-section-content h2 {
+    font-size: 42px;
+  }
+
+  .contact-map-iframe {
+    height: 400px;
+  }
+}
+
+/* Medium devices (tablets, 768px - 991px) */
+@media (max-width: 991px) {
+  /* Contact Info Container */
+  .contact-info-container {
+    max-width: 100%;
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .contact-info-container-child {
+    max-width: 100%;
+  }
+
+  .col-md-12 .contact-info-container {
+    max-width: 100%;
+  }
+
+  /* Get Quote Section */
+  .get-quote-heading {
+    font-size: 3rem;
+  }
+
+  /* Dream Home Section */
+  .looking-for-dream-home-section {
+    flex-direction: column;
+    height: auto;
+    min-height: auto;
+    padding: 60px 20px;
+    gap: 30px;
+  }
+
+  .looking-for-dream-home-section-image1 {
+    order: 1;
+    width: 100%;
     justify-content: center;
-    padding: 1rem;
-}
+    height: auto;
+  }
 
-.input-item {
+  .looking-for-dream-home-section-image1 img {
+    width: 100%;
+    max-width: 414px;
+    height: auto;
+  }
+
+  .looking-for-dream-home-section-content {
+    order: 2;
+    margin-bottom: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .looking-for-dream-home-section-content h2 {
+    font-size: 36px;
+    width: 100%;
+  }
+
+  .looking-for-dream-home-section-image2 {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    height: auto;
     position: relative;
-}
+  }
 
-.contact-form-section form {
-    width: 50%;
-    padding: 40px 50px 50px;
+  .looking-for-dream-home-section-image2 img {
     position: relative;
-    z-index: 1;
-    border: 1px solid;
-    border-radius: 1rem;
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+  }
+
+  /* Map */
+  .contact-map-iframe {
+    height: 400px;
+  }
 }
 
-.input-item svg {
-    position: absolute;
-    top: 35%;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
-    right: 20px;
-    color: #68ac78;
-}
+/* Small devices (landscape phones, 576px - 767px) */
+@media (max-width: 767px) {
+  /* Get Quote Section */
+  .get-quote-heading {
+    font-size: 2.5rem;
+    letter-spacing: 1px;
+  }
 
-.contact-form-section textarea {
-    resize: vertical;
-    padding: 15px 20px;
-    min-height: 150px;
-}
+  .get-quote-section {
+    padding: 60px 0;
+  }
 
-.contact-form-section input[type="text"],
-.contact-form-section input[type="email"],
-.contact-form-section input[type="number"],
-.contact-form-section input[type="submit"],
-.contact-form-section textarea {
-    background-color: var(--white);
-    border: 2px solid #68ac78;
-    height: 65px;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    padding-left: 20px;
+  .get-quote-input {
+    font-size: 14px;
+    padding: 12px 18px !important;
+  }
+
+  .get-quote-submit-btn {
+    padding: 12px 40px !important;
     font-size: 16px;
-    color: var(--ltn__paragraph-color);
-    width: 100%;
-    margin-bottom: 30px;
-    border-radius: 0;
-    padding-right: 40px;
+    min-width: 180px;
+  }
+
+  /* Dream Home Section */
+  .looking-for-dream-home-section {
+    padding: 40px 15px;
+  }
+
+  .looking-for-dream-home-section-content h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+  }
+
+  .looking-for-dream-home-section-content p {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .looking-for-dream-home-section-content button {
+    max-width: 100%;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  .looking-for-dream-home-section-image1 img {
+    max-width: 100%;
+  }
+
+  .looking-for-dream-home-section-image2 img {
+    max-width: 100%;
+  }
+
+  /* Map */
+  .contact-map-iframe {
+    height: 380px;
+  }
 }
 
-.contact-form-section button {
-    padding: 1rem 2rem;
-    background-color: #68ac78;
-    color: #fff;
-    text-transform: uppercase;
-    font-weight: bold;
-}
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575px) {
+  /* Contact Info Container */
+  .contact-info-container {
+    padding: 40px 20px;
+    height: 225px !important;
+    min-height: 225px !important;
+  }
 
-.looking-for-home {
-    position: relative;
-    bottom: 0px;
-    padding: 2rem;
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-}
+  .contact-info-container-child h3 {
+    font-size: 1.1rem;
+  }
 
-.looking-for-home-child {
-    position: absolute;
-    background-color: #68ac78;
-    justify-content: space-between;
-    width: 80%;
-    padding: 2rem;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-}
+  .contact-info-container-child p {
+    font-size: 0.9rem;
+  }
 
-.looking-for-home-child-text p:first-child {
-    color: #fff;
+  /* Get Quote Section */
+  .get-quote-heading {
     font-size: 2rem;
-    font-weight: bolder;
-    padding: 0px;
-    margin: 0px;
-}
+    margin-bottom: 1.5rem !important;
+  }
 
-.looking-for-home-child-text p:last-child {
-    color: #fff;
-    font-size: 1rem;
-}
+  .get-quote-section {
+    padding: 40px 0;
+  }
 
-.looking-for-home-child a {
-    text-decoration: none;
-    font-size: 1.5rem;
-    color: #68ac78;
-    background-color: #fff;
-    padding: 1rem 5rem;
-    font-weight: bold;
-    transition: color 0.5s linear, background-color 0.5s linear;
-}
+  .get-quote-input {
+    font-size: 14px;
+    padding: 10px 15px !important;
+  }
 
-.looking-for-home-child a:hover {
-    color: #fff;
-    background-color: #000;
-}
+  .get-quote-submit-btn {
+    padding: 10px 30px !important;
+    font-size: 14px;
+    min-width: 150px;
+  }
 
-@media (max-width:426px) {
-    .contact-us {
-        margin-top: 68px;
-    }
+  /* Dream Home Section */
+  .looking-for-dream-home-section {
+    padding: 0px 10px !important;
+  }
 
-    .info-container-child {
-        margin-top: 1rem;
-    }
+  .looking-for-dream-home-section-content {
+    padding: 0 10px;
+  }
 
-    .contact-form-section form {
-        width: 100%;
-        padding: 40px 50px 50px;
-        position: relative;
-        z-index: 1;
-        border: 1px solid;
-        border-radius: 1rem;
-    }
+  .looking-for-dream-home-section-content h2 {
+    font-size: 24px;
+    line-height: 1.2;
+  }
 
-    .looking-for-home-child a {
-        padding: 1rem;
-    }
+  .looking-for-dream-home-section-content p {
+    font-size: 13px;
+  }
 
-    .looking-for-home {
-        height: 290px;
-    }
+  .looking-for-dream-home-section-content button {
+    padding: 10px 18px;
+    font-size: 13px;
+  }
+
+  /* Map */
+  .contact-map-iframe {
+    height: 350px !important;
+  }
 }

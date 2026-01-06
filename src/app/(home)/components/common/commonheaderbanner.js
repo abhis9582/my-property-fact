@@ -41,6 +41,10 @@ export default function CommonHeaderBanner({ image, headerText, firstPage, pageN
         {/* Dark Overlay */}
         <div className="banner-overlay"></div>
         
+        {/* Snow Effect */}
+        {/* <SnowEffect /> */}
+        {/* <NewYearEffect /> */}
+        
         {/* Content Container */}
         <div className="banner-content">
           {headerText === 'Blog-Detail' ? (

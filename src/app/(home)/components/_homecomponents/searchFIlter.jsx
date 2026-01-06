@@ -53,6 +53,7 @@ export default function SearchFilter({ projectTypeList, cityList }) {
   }, []);
   return (
     <div className="w-100 home-search-container">
+      {/* <div className="container bg-white border rounded-2 custom-shadow">*/}
       <div className="container bg-light border rounded-4 custom-shadow">
         <form method="Get" action="projects">
           <div className="d-flex flex-wrap flex-md-row flex-column p-3 p-md-4 gap-2 gap-md-3 font-gotham-light">
@@ -115,6 +116,12 @@ export default function SearchFilter({ projectTypeList, cityList }) {
                 onClick={handleSubmit}
                 aria-label="Search"
               >
+                {/* <button
+                type="submit"
+                className="home-search-filter-button btn-background"
+                onClick={handleSubmit}
+                aria-label="Search"
+              > */}
                 {loading ? (
                   <Spinner animation="border" variant="light" />
                 ) : (

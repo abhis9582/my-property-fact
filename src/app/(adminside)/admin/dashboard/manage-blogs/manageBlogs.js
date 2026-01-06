@@ -259,7 +259,7 @@ export default function ManageBlogs({ list, categoryList, cityList }) {
         functionName={openAddModel}
         heading={"Manage Blogs"}
       />
-      <div className="table-container mt-5">
+      <div className="table-container">
         <DataTable columns={columns} list={list} />
       </div>
       {/* Blog form */}

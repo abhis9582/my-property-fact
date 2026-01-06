@@ -42,7 +42,7 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
 
   const getFeaturedBadgeStyle = (status) => {
     const defaultStyle = {
-      backgroundColor: "linear-gradient(90deg, #349C1C 0%, #192F14 100%)",
+      backgroundColor: "#FF5800",
       textColor: "#ffffff",
     };
 
@@ -52,12 +52,12 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
 
 
     const colorMap = {
-      "new launched": { backgroundColor: "linear-gradient(90deg, #C78D11 0%, #FE891B 100%)", textColor: "#fff" },
-      "new launch": { backgroundColor: "linear-gradient(90deg, #EC191C 0%, #CCEC2A 100%)", textColor: "#1f2937" },
-      "ultra luxury": { backgroundColor: "linear-gradient(90deg, #EC191C 0%, #CCEC2A 100%)", textColor: "#ffffff" },
+      "new launched": { backgroundColor: "#35A332", textColor: "#fff" },
+      "new launch": { backgroundColor: "#EC191C", textColor: "#1f2937" },
+      "ultra luxury": { backgroundColor: "#CC9848", textColor: "#ffffff" },
       luxury: { backgroundColor: "#d32f2f", textColor: "#ffffff" },
       "ready to move": { backgroundColor: "#0f766e", textColor: "#ffffff" },
-      "under construction": { backgroundColor: "#f97316", textColor: "#ffffff" },
+      "under construction": { backgroundColor: "#566BCA", textColor: "#fffffe" },
       "possession soon": { backgroundColor: "#2563eb", textColor: "#ffffff" },
       affordable: { backgroundColor: "#22c55e", textColor: "#ffffff" },
     };
@@ -99,44 +99,43 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
   };
   return (
     <>
-      <Link href={`/${data.slugURL}`} legacyBehavior>
-        <a
-          className="rounded-4 custom-shadow d-flex flex-column justify-content-between bg-light text-decoration-none text-dark project-container overflow-hidden position-relative"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`View details about ${data.projectName}`}
-        >
-          <div className="w-100 project-image-container">
-            <Image
-              src={getImageSrc()}
-              alt={data.projectName || "Project image"}
-              className="img-fluid w-100 rounded-top-4 object-fit-cover"
-              priority
-              width={400}
-              height={400}
-              onError={() => setImageError(true)}
-              unoptimized={imageError || !data.projectThumbnailImage}
-            />
-          </div>
-          {renderStatusBadge()}
-          <div className="mt-3 ms-3">
-            <h5 className="mb-2 fw-bold">{data.projectName}</h5>
-            <p className="mb-2">{data.propertyTypeName}</p>
-            <h5 className="text-success d-flex gap-2 mb-0">
-              <span className="fw-bold"> {generatePrice(data.projectPrice)}</span>
-            </h5>
-          </div>
+      <Link 
+        href={`/${data.slugURL}`}
+        className="rounded-4 custom-shadow d-flex flex-column justify-content-between bg-light text-decoration-none text-dark project-container overflow-hidden position-relative"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`View details about ${data.projectName}`}
+      >
+        <div className="w-100 project-image-container">
+          <Image
+            src={getImageSrc()}
+            alt={data.projectName || "Project image"}
+            className="img-fluid w-100 rounded-top-4 object-fit-cover"
+            priority
+            width={400}
+            height={400}
+            onError={() => setImageError(true)}
+            unoptimized={imageError || !data.projectThumbnailImage}
+          />
+        </div>
+        {renderStatusBadge()}
+        <div className="mt-3 ms-3">
+          <h5 className="mb-2 fw-bold">{data.projectName}</h5>
+          <p className="mb-2">{data.propertyTypeName}</p>
+          <h5 className="text-success d-flex gap-2 mb-0">
+            <span className="fw-bold"> {generatePrice(data.projectPrice)}</span>
+          </h5>
+        </div>
 
-          <div className="ms-3 pb-3 text-truncate small fw-medium mt-2 d-flex align-items-center">
-            <span>
-              <FontAwesomeIcon
-                icon={faMapMarker}
-                className="me-2 text-success"
-              />
-            </span>
-            <p className="p-0 m-0 fw-bold">{data.projectAddress}</p>
-          </div>
-        </a>
+        <div className="ms-3 pb-3 text-truncate small fw-medium mt-2 d-flex align-items-center">
+          <span>
+            <FontAwesomeIcon
+              icon={faMapMarker}
+              className="me-2 text-success"
+            />
+          </span>
+          <p className="p-0 m-0 fw-bold">{data.projectAddress}</p>
+        </div>
       </Link>
     </>
   );

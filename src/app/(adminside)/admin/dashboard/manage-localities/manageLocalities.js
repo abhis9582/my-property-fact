@@ -118,7 +118,7 @@ export default function ManageLocality({ cityList, localityList, typeList }) {
             />
 
             {/* table section  */}
-            <div className="mt-5">
+            <div>
                 <DataTable columns={columns} list={localityList} />
             </div>
 

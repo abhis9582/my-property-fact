@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { motion } from "framer-motion";
+import { IoIosArrowBack, IoIosArrowForward, IoIosArrowDown } from "react-icons/io";
+import { motion, AnimatePresence } from "framer-motion";
 import "./aboutus.css";
 import WhyMyPropertyFact from "./WhyMyPropertyFact";
 
@@ -43,7 +43,7 @@ export default function NewAboutUs() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [cardsPerView, setCardsPerView] = useState(3);
   const [windowWidth, setWindowWidth] = useState(0);
-
+  const [isReadMore, setIsReadMore] = useState(false);
   // Responsive cards per view
   useEffect(() => {
     const handleResize = () => {
@@ -233,13 +233,25 @@ export default function NewAboutUs() {
             >
               My Property Fact (MPF) is India&apos;s buyer-first real estate guide. We combine data, on-ground verification, and plain-English advice to help you choose confidently. Our proprietary LOCATE Score compares neighbourhoods on economy, projects, connectivity, amenities, trends, and supply and demand. We demystify carpet area, approvals, GST, and stamp duty, and normalise every home to an effective price per usable square foot. Whether you&apos;re shortlisting your first 2-BHK or benchmarking a portfolio, MPF gives you clear checklists, calculators, and market insights you can actually use. No hype, just transparent comparisons, verified documentation support, and milestone-based decision frameworks so you can buy once, buy right, and sleep well.
             </motion.p>
-            <motion.p 
-              className="new-about-us-container-content-text2"
-              variants={textFadeIn}
-            >
-              Welcome to My Property Fact, your go-to platform for discovering
-              the perfect real estate opportunities. Whethe
-            </motion.p>
+            <AnimatePresence>
+              {isReadMore && (
+                <motion.p
+                  className="new-about-us-container-content-text2"
+                  initial={{ opacity: 0, height: 0, y: -20 }}
+                  animate={{ opacity: 1, height: "auto", y: 0 }}
+                  exit={{ opacity: 0, height: 0, y: -20 }}
+                  transition={{ 
+                    duration: 0.4, 
+                    ease: "easeInOut",
+                    opacity: { duration: 0.3 },
+                    height: { duration: 0.4 }
+                  }}
+                >
+                  Welcome to My Property Fact, your go-to platform for discovering
+                  the perfect real estate opportunities. Whether you&apos;re an investor hunting for the next big project, a business owner scouting commercial space, or a family looking for a new home to call your own. We bring together all types of properties, from high-end apartments and cozy farmhouses to strategic commercial plots and premium office spaces for both buying and renting.
+                </motion.p>
+              )}
+            </AnimatePresence>
             <motion.div variants={bounceIn}>
               <motion.button
                 className="new-about-us-container-content-button"
@@ -248,8 +260,38 @@ export default function NewAboutUs() {
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => setIsReadMore(!isReadMore)}
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
               >
-                Read More
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={isReadMore ? "less" : "more"}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    transition={{ duration: 0.2, ease: "easeInOut" }}
+                    style={{ display: "inline-block" }}
+                  >
+                    {isReadMore ? "Read Less" : "Read More"}
+                  </motion.span>
+                </AnimatePresence>
+                <motion.span
+                  animate={{ 
+                    rotate: isReadMore ? 180 : 0,
+                    y: isReadMore ? 0 : [0, 4, 0]
+                  }}
+                  transition={{ 
+                    rotate: { duration: 0.3 },
+                    y: { 
+                      duration: 1.5, 
+                      repeat: Infinity, 
+                      ease: "easeInOut" 
+                    }
+                  }}
+                  style={{ display: "inline-flex", alignItems: "center" }}
+                >
+                  <IoIosArrowDown />
+                </motion.span>
               </motion.button>
             </motion.div>
           </motion.div>

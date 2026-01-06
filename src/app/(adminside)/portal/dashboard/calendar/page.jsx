@@ -225,7 +225,7 @@ export default function CalendarPage() {
   return (
     <div className="calendar-page">
       {/* Header */}
-      <div className="page-header">
+      <div className="page-header page-header-gradient">
         <div className="header-content">
           <div className="header-title">
             <h2>Calendar & Events</h2>
@@ -641,60 +641,9 @@ export default function CalendarPage() {
       </Modal>
 
       <style jsx>{`
-        .calendar-page {
-          padding: 2rem;
-          background: #f8f9fa;
-          min-height: 100vh;
-        }
-
-        .page-header {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 2rem;
-          border-radius: 12px;
-          margin-bottom: 2rem;
-          box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .header-content {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 1rem;
-        }
-
-        .header-title h2 {
-          margin: 0;
-          font-weight: 700;
-          font-size: 2rem;
-        }
-
-        .header-title p {
-          margin: 0.5rem 0 0;
-          opacity: 0.9;
-          font-size: 1.1rem;
-        }
-
-        .stat-card {
-          border: none;
-          border-radius: 12px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-          background: white;
-          transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-        }
-
-        .stat-content {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-        }
-
+        /* Common styles are now in PortalCommonStyles.css */
+        /* Only page-specific styles below */
+        
         .stat-icon {
           width: 50px;
           height: 50px;
@@ -718,15 +667,6 @@ export default function CalendarPage() {
         .stat-icon.pending {
           background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
         }
-
-        .stat-title {
-          color: #6c757d;
-          font-size: 0.875rem;
-          font-weight: 500;
-          margin: 0;
-        }
-
-        .stat-value {
           color: #212529;
           font-weight: 700;
           font-size: 1.75rem;

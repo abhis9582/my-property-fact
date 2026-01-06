@@ -17,32 +17,28 @@
 
 .home-featured-status-badge {
     position: absolute;
-    top: 1rem;
-    /* left: 1rem; */
-    padding: 0.5rem 1.4rem 0.5rem 1rem;
-    font-size: 0.875rem;
-    /* font-weight: 700; */
+    top: 0.75rem;
+    left: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
     background: var(--badge-color);
-    color: var(--badge-text-color, #ffffff);
+    color: #ffffff;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    line-height: 1.2;
-    clip-path: polygon(0 0, 100% 0, 100% calc(50% - 16px), calc(100% - 12px) 50%, 100% calc(50% + 16px), 100% 100%, 0 100%);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     text-transform: capitalize;
-    letter-spacing: 0.3px;
     z-index: 2;
     white-space: nowrap;
+    border-radius: 4px;
 }
+
 
 @media (max-width: 576px) {
     .home-featured-status-badge {
-        font-size: 0.75rem;
-        padding: 0.4rem 2rem 0.4rem 0.85rem;
-        top: 0.75rem;
-        /* left: 0.75rem; */
-        /* clip-path: polygon(0 0, 100% 0, 100% calc(50% - 10px), calc(100% - 20px) 50%, 100% calc(50% + 10px), 100% 100%, 0 100%); */
+        font-size: 0.65rem;
+        padding: 0.2rem 0.4rem;
+        top: 0.5rem;
+        left: 0.5rem;
     }
 }
 
