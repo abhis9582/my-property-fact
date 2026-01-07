@@ -70,6 +70,14 @@ export default function PopupForm() {
       return;
     }
 
+    // Phone number validation (10 digits starting with 6-9)
+    const cleanedPhone = formData.phone.replace(/[\s\-\(\)]/g, "");
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(cleanedPhone)) {
+      setStatus("Phone number must be exactly 10 digits starting with 6, 7, 8, or 9.");
+      return;
+    }
+
     setStatus("Submitting...");
 
     try {

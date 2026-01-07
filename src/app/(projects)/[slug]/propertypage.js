@@ -62,6 +62,61 @@ export default function Property({ projectDetail }) {
   //Defining loading state
   const [loading, setLoading] = useState(true);
 
+  //Validation errors state
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
+
+  //Validation functions
+  const validateName = (name) => {
+    if (!name.trim()) {
+      return "Name is required";
+    }
+    if (name.trim().length < 2) {
+      return "Name must be at least 2 characters";
+    }
+    // Allow letters, spaces, hyphens, and apostrophes
+    const nameRegex = /^[a-zA-Z\s'-]+$/;
+    if (!nameRegex.test(name.trim())) {
+      return "Name can only contain letters, spaces, hyphens, and apostrophes";
+    }
+    return "";
+  };
+
+  const validateEmail = (email) => {
+    if (!email.trim()) {
+      return "Email is required";
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      return "Please enter a valid email address";
+    }
+    return "";
+  };
+
+  const validatePhone = (phone) => {
+    if (!phone.trim()) {
+      return "Phone number is required";
+    }
+    // Remove spaces, dashes, and parentheses for validation
+    const cleanedPhone = phone.toString().replace(/[\s\-\(\)]/g, "");
+    // Check if it's all digits
+    if (!/^\d+$/.test(cleanedPhone)) {
+      return "Phone number can only contain digits, spaces, dashes, and parentheses";
+    }
+    // Check length (exactly 10 digits)
+    if (cleanedPhone.length !== 10) {
+      return "Phone number must be exactly 10 digits";
+    }
+    // Check if first digit is between 6-9
+    if (!/^[6-9]/.test(cleanedPhone)) {
+      return "Phone number must start with 6, 7, 8, or 9";
+    }
+    return "";
+  };
+
   //Handling answer div
   const toggleAnswer = (index) => {
     const updatedVisibility = [...isAnswerVisible];
@@ -128,89 +183,120 @@ export default function Property({ projectDetail }) {
       ...preData,
       [name]: value,
     }));
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+  };
+
+  //Handle blur validation
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    let error = "";
+
+    if (name === "name") {
+      error = validateName(value);
+    } else if (name === "email") {
+      error = validateEmail(value);
+    } else if (name === "phone") {
+      error = validatePhone(value);
+    }
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: error,
+    }));
   };
 
   //Handle submit form
   const handleSubmit = async (e, form_position) => {
     e.preventDefault();
+    const form = e.currentTarget;
+
+    // Validate all fields
+    const nameError = validateName(formData.name);
+    const emailError = validateEmail(formData.email);
+    const phoneError = validatePhone(formData.phone);
+
+    const newErrors = {
+      name: nameError,
+      email: emailError,
+      phone: phoneError,
+    };
+
+    setErrors(newErrors);
+
+    // Check if form is valid
+    const isFormValid =
+      form.checkValidity() &&
+      !nameError &&
+      !emailError &&
+      !phoneError &&
+      formData.message.trim() !== "";
+
     if (form_position === "bottom_form") {
-      const form = e.currentTarget;
-      if (form.checkValidity() === false) {
+      if (!isFormValid) {
         e.stopPropagation();
         setValidated1(true);
+        toast.error("Please fill all fields correctly!");
         return;
-      }
-      if (form.checkValidity() === true) {
-        try {
-          setShowLoading(true);
-          // Make API request
-          formData.enquiryFrom = projectDetail.projectName;
-          formData.projectLink = process.env.NEXT_PUBLIC_UI_URL + pathname;
-          formData.pageName = "Project Detail"
-          const response = await axios.post(
-            process.env.NEXT_PUBLIC_API_URL + "enquiry/post",
-            formData
-          );
-          // Check if response is successful
-          if (response.data.isSuccess === 1) {
-            setFormData({
-              name: "",
-              email: "",
-              phone: "",
-              message: "",
-              enquiryFrom: "",
-              projectLink: "",
-            });
-            toast.success(response.data.message);
-            setValidated(false);
-          } else {
-            toast.error(response.data.message);
-          }
-        } catch (error) {
-          console.error("Error submitting form:", error);
-        } finally {
-          setShowLoading(false);
-        }
       }
     } else {
-      const form = e.currentTarget;
-      if (form.checkValidity() === false) {
+      if (!isFormValid) {
         e.stopPropagation();
         setValidated(true);
+        toast.error("Please fill all fields correctly!");
         return;
       }
-      if (form.checkValidity() === true) {
-        try {
-          setShowLoading(true);
-          // Make API request
-          formData.enquiryFrom = projectDetail.projectName;
-          formData.projectLink = process.env.NEXT_PUBLIC_UI_URL + pathname;
-          formData.pageName = "Project Detail"
-          const response = await axios.post(
-            process.env.NEXT_PUBLIC_API_URL + "enquiry/post",
-            formData
-          );
-          // Check if response is successful
-          if (response.data.isSuccess === 1) {
-            setFormData({
-              email: "",
-              name: "",
-              phone: "",
-              message: "",
-              enquiryFrom: "",
-              projectLink: "",
-            });
-            setValidated(false);
-            toast.success(response.data.message);
-          } else {
-            toast.error(response.data.message);
-          }
-        } catch (error) {
-          console.error("Error submitting form:", error);
-        } finally {
-          setShowLoading(false);
+    }
+
+    try {
+      setShowLoading(true);
+      // Make API request
+      const submitData = {
+        ...formData,
+        enquiryFrom: projectDetail.projectName,
+        projectLink: process.env.NEXT_PUBLIC_UI_URL + pathname,
+        pageName: "Project Detail",
+      };
+
+      const response = await axios.post(
+        process.env.NEXT_PUBLIC_API_URL + "enquiry/post",
+        submitData
+      );
+      // Check if response is successful
+      if (response.data.isSuccess === 1) {
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          message: "",
+          enquiryFrom: "",
+          projectLink: "",
+        });
+        setErrors({
+          name: "",
+          email: "",
+          phone: "",
+        });
+        if (form_position === "bottom_form") {
+          setValidated1(false);
+        } else {
+          setValidated(false);
         }
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
       }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error(error.response?.data?.message || "An error occurred. Please try again.");
+    } finally {
+      setShowLoading(false);
     }
   };
 
@@ -508,11 +594,13 @@ export default function Property({ projectDetail }) {
                   placeholder="Full name"
                   value={formData.name || ""}
                   onChange={(e) => handleChange(e)}
+                  onBlur={handleBlur}
                   name="name"
+                  isInvalid={!!errors.name || (validated && !formData.name.trim())}
                   required
                 />
                 <Form.Control.Feedback type="invalid">
-                  Please provide a valid name.
+                  {errors.name || "Please provide a valid name."}
                 </Form.Control.Feedback>
               </Form.Group>
               <Form.Group className="mb-3" controlId="email_id">
@@ -521,24 +609,28 @@ export default function Property({ projectDetail }) {
                   placeholder="Email id"
                   value={formData.email || ""}
                   onChange={(e) => handleChange(e)}
+                  onBlur={handleBlur}
                   name="email"
+                  isInvalid={!!errors.email || (validated && !formData.email.trim())}
                   required
                 />
                 <Form.Control.Feedback type="invalid">
-                  Please provide a valid email.
+                  {errors.email || "Please provide a valid email."}
                 </Form.Control.Feedback>
               </Form.Group>
               <Form.Group className="mb-3" controlId="phone_number">
                 <Form.Control
-                  type="number"
+                  type="tel"
                   placeholder="Phone Number"
                   value={formData.phone || ""}
                   onChange={(e) => handleChange(e)}
+                  onBlur={handleBlur}
                   name="phone"
+                  isInvalid={!!errors.phone || (validated && !formData.phone.trim())}
                   required
                 />
                 <Form.Control.Feedback type="invalid">
-                  Please provide a valid phone number.
+                  {errors.phone || "Please provide a valid phone number."}
                 </Form.Control.Feedback>
               </Form.Group>
               <Form.Group className="mb-3" controlId="message">
@@ -960,11 +1052,13 @@ export default function Property({ projectDetail }) {
                           placeholder="Full Name"
                           value={formData.name || ""}
                           onChange={(e) => handleChange(e)}
+                          onBlur={handleBlur}
                           name="name"
+                          isInvalid={!!errors.name || (validated1 && !formData.name.trim())}
                           required
                         />
                         <Form.Control.Feedback type="invalid">
-                          Please provide a valid name.
+                          {errors.name || "Please provide a valid name."}
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
@@ -975,24 +1069,28 @@ export default function Property({ projectDetail }) {
                       placeholder="Email Id"
                       value={formData.email || ""}
                       onChange={(e) => handleChange(e)}
+                      onBlur={handleBlur}
                       name="email"
+                      isInvalid={!!errors.email || (validated1 && !formData.email.trim())}
                       required
                     />
                     <Form.Control.Feedback type="invalid">
-                      Please provide a valid email.
+                      {errors.email || "Please provide a valid email."}
                     </Form.Control.Feedback>
                   </Form.Group>
                   <Form.Group className="mb-3" controlId="phone_number">
                     <Form.Control
-                      type="number"
+                      type="tel"
                       placeholder="Phone Number"
                       value={formData.phone || ""}
                       onChange={(e) => handleChange(e)}
+                      onBlur={handleBlur}
                       name="phone"
+                      isInvalid={!!errors.phone || (validated1 && !formData.phone.trim())}
                       required
                     />
                     <Form.Control.Feedback type="invalid">
-                      Please provide a valid phone number.
+                      {errors.phone || "Please provide a valid phone number."}
                     </Form.Control.Feedback>
                   </Form.Group>
                   <Form.Group className="mb-3" controlId="message">
