@@ -25,42 +25,83 @@ export default function BlogDetail({ blogDetail }) {
   const [formData, setFormData] = useState(initialFormData);
   const [validated, setValidated] = useState(false);
   const pathname = usePathname();
+
+  //Validation errors state
+  const [errors, setErrors] = useState({
+    phone: "",
+  });
+
+  //Validation function for phone
+  const validatePhone = (phone) => {
+    if (!phone.trim()) {
+      return "Phone number is required";
+    }
+    // Remove spaces, dashes, and parentheses for validation
+    const cleanedPhone = phone.toString().replace(/[\s\-\(\)]/g, "");
+    // Check if it's all digits
+    if (!/^\d+$/.test(cleanedPhone)) {
+      return "Phone number can only contain digits, spaces, dashes, and parentheses";
+    }
+    // Check length (exactly 10 digits)
+    if (cleanedPhone.length !== 10) {
+      return "Phone number must be exactly 10 digits";
+    }
+    // Check if first digit is between 6-9
+    if (!/^[6-9]/.test(cleanedPhone)) {
+      return "Phone number must start with 6, 7, 8, or 9";
+    }
+    return "";
+  };
+
   //handle form submit
   const handleSubmit = async (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
+
+    // Validate phone
+    const phoneError = validatePhone(formData.phone);
+    const newErrors = {
+      phone: phoneError,
+    };
+    setErrors(newErrors);
+
+    // Check if form is valid
+    const isFormValid =
+      form.checkValidity() &&
+      !phoneError;
+
+    if (!isFormValid) {
       setValidated(true);
       event.stopPropagation();
       return;
-    } else {
-      event.preventDefault();
-      try {
-        setShowLoading(true);
-        setButtonName("");
-        // Make API request
-        formData.enquiryFrom = blogDetail.blogTitle.replace(/\u00A0/g, " ")
-        formData.projectLink = process.env.NEXT_PUBLIC_UI_URL + pathname;
-        formData.pageName = "Blog Page";
-        const response = await axios.post(
-          process.env.NEXT_PUBLIC_API_URL + "enquiry/post",
-          formData
-        );
-        // Check if response is successful
-        if (response.data.isSuccess === 1) {
-          setFormData(initialFormData); // Reset form data
-          setValidated(false); // Reset validation state
-          toast.success(response.data.message);
-        } else {
-          toast.error(response.data.message);
-        }
-      } catch (error) {
-        toast.error(error.data.message);
-        console.error("Error submitting form:", error);
-      } finally {
-        setShowLoading(false);
-        setButtonName("Submit Enquiry");
+    }
+
+    try {
+      setShowLoading(true);
+      setButtonName("");
+      // Make API request
+      formData.enquiryFrom = blogDetail.blogTitle.replace(/\u00A0/g, " ")
+      formData.projectLink = process.env.NEXT_PUBLIC_UI_URL + pathname;
+      formData.pageName = "Blog Page";
+      const response = await axios.post(
+        process.env.NEXT_PUBLIC_API_URL + "enquiry/post",
+        formData
+      );
+      // Check if response is successful
+      if (response.data.isSuccess === 1) {
+        setFormData(initialFormData); // Reset form data
+        setValidated(false); // Reset validation state
+        setErrors({ phone: "" });
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
       }
+    } catch (error) {
+      toast.error(error.data.message);
+      console.error("Error submitting form:", error);
+    } finally {
+      setShowLoading(false);
+      setButtonName("Submit Enquiry");
     }
   };
 
@@ -71,6 +112,26 @@ export default function BlogDetail({ blogDetail }) {
       ...formData,
       [name]: value,
     });
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+  };
+
+  //Handle blur validation
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    if (name === "phone") {
+      const error = validatePhone(value);
+      setErrors((prev) => ({
+        ...prev,
+        [name]: error,
+      }));
+    }
   };
 
   const blogTitle = blogDetail.blogTitle.replace(/\u00A0/g, " ");
@@ -157,7 +218,7 @@ export default function BlogDetail({ blogDetail }) {
                   </Form.Control.Feedback>
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="email">
+                <Form.Group className="mb-3" controlId="phone">
                   {/* <Form.Label>Phone Number</Form.Label> */}
                   <Form.Control
                     type="tel"
@@ -165,10 +226,12 @@ export default function BlogDetail({ blogDetail }) {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
+                    onBlur={handleBlur}
+                    isInvalid={!!errors.phone || (validated && !formData.phone.trim())}
                     required
                   />
                   <Form.Control.Feedback type="invalid">
-                    Please enter a valid phone number.
+                    {errors.phone || "Please enter a valid phone number."}
                   </Form.Control.Feedback>
                 </Form.Group>
 

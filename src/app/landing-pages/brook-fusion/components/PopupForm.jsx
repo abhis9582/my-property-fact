@@ -45,13 +45,11 @@ export default function PopupForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Phone number validation
-    const phoneRegex = /^\d{10}$/;
-    if (!/^\d{10}$/.test(formData.phone)) {
-      toast.error("Phone number must be exactly 10 digits and numeric only.");
-      return;
-    } else if (isNaN(formData.phone)) {
-      toast.error("Phone number must be a valid number.");
+    // Phone number validation (10 digits starting with 6-9)
+    const cleanedPhone = formData.phone.replace(/[\s\-\(\)]/g, "");
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(cleanedPhone)) {
+      toast.error("Phone number must be exactly 10 digits starting with 6, 7, 8, or 9.");
       return;
     }
 

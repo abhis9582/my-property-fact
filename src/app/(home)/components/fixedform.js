@@ -14,6 +14,33 @@ export default function FixedForm({ resetTrigger, onSuccess }) {
   };
   const [formData, setFormData] = useState(intitalData);
 
+  //Validation errors state
+  const [errors, setErrors] = useState({
+    phone: "",
+  });
+
+  //Validation function for phone
+  const validatePhone = (phone) => {
+    if (!phone.trim()) {
+      return "Phone number is required";
+    }
+    // Remove spaces, dashes, and parentheses for validation
+    const cleanedPhone = phone.toString().replace(/[\s\-\(\)]/g, "");
+    // Check if it's all digits
+    if (!/^\d+$/.test(cleanedPhone)) {
+      return "Phone number can only contain digits, spaces, dashes, and parentheses";
+    }
+    // Check length (exactly 10 digits)
+    if (cleanedPhone.length !== 10) {
+      return "Phone number must be exactly 10 digits";
+    }
+    // Check if first digit is between 6-9
+    if (!/^[6-9]/.test(cleanedPhone)) {
+      return "Phone number must start with 6, 7, 8, or 9";
+    }
+    return "";
+  };
+
   //Handle setting form data 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,36 +48,69 @@ export default function FixedForm({ resetTrigger, onSuccess }) {
       ...prevFormData,
       [name]: value,
     }));
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+  };
+
+  //Handle blur validation
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    if (name === "phone") {
+      const error = validatePhone(value);
+      setErrors((prev) => ({
+        ...prev,
+        [name]: error,
+      }));
+    }
   };
 
   //handle form submit
   const handleSubmit = async (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
+
+    // Validate phone
+    const phoneError = validatePhone(formData.phone);
+    const newErrors = {
+      phone: phoneError,
+    };
+    setErrors(newErrors);
+
+    // Check if form is valid
+    const isFormValid =
+      form.checkValidity() &&
+      !phoneError;
+
+    if (!isFormValid) {
       event.stopPropagation();
       setValidated(true);
       return;
-    } else {
-      event.preventDefault();
-      try {
-        // Make API request
-        const response = await axios.post(
-          process.env.NEXT_PUBLIC_API_URL + "enquiry/post",
-          formData
-        );
-        // Check if response is successful
-        if (response.data.isSuccess === 1) {
-          onSuccess();
-          formRef.current.reset(); // Reset form fields
-          setValidated(false); // Reset validation state
-          setFormData(intitalData);
-        } else {
-          alert(response.data.message);
-        }
-      } catch (error) {
-        console.error("Error submitting form:", error);
+    }
+
+    try {
+      // Make API request
+      const response = await axios.post(
+        process.env.NEXT_PUBLIC_API_URL + "enquiry/post",
+        formData
+      );
+      // Check if response is successful
+      if (response.data.isSuccess === 1) {
+        onSuccess();
+        formRef.current.reset(); // Reset form fields
+        setValidated(false); // Reset validation state
+        setFormData(intitalData);
+        setErrors({ phone: "" });
+      } else {
+        alert(response.data.message);
       }
+    } catch (error) {
+      console.error("Error submitting form:", error);
     }
   };
 
@@ -99,15 +159,17 @@ export default function FixedForm({ resetTrigger, onSuccess }) {
           </Form.Group>
           <Form.Group className="mb-3" controlId="phone_number">
             <Form.Control
-              type="number"
+              type="tel"
               placeholder="Phone Number"
               value={formData.phone}
               onChange={(e) => handleChange(e)}
+              onBlur={handleBlur}
               name="phone"
+              isInvalid={!!errors.phone || (validated && !formData.phone.trim())}
               required
             />
             <Form.Control.Feedback type="invalid">
-              Please provide a valid phone number.
+              {errors.phone || "Please provide a valid phone number."}
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-3" controlId="message">

@@ -18,27 +18,130 @@ export default function NewContactUs() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validated, setValidated] = useState(false);
 
+  //Validation errors state
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
+
+  //Validation functions
+  const validateName = (name) => {
+    if (!name.trim()) {
+      return "Name is required";
+    }
+    if (name.trim().length < 2) {
+      return "Name must be at least 2 characters";
+    }
+    // Allow letters, spaces, hyphens, and apostrophes
+    const nameRegex = /^[a-zA-Z\s'-]+$/;
+    if (!nameRegex.test(name.trim())) {
+      return "Name can only contain letters, spaces, hyphens, and apostrophes";
+    }
+    return "";
+  };
+
+  const validateEmail = (email) => {
+    if (!email.trim()) {
+      return "Email is required";
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      return "Please enter a valid email address";
+    }
+    return "";
+  };
+
+  const validatePhone = (phone) => {
+    if (!phone.trim()) {
+      return "Phone number is required";
+    }
+    // Remove spaces, dashes, and parentheses for validation
+    const cleanedPhone = phone.replace(/[\s\-\(\)]/g, "");
+    // Check if it's all digits
+    if (!/^\d+$/.test(cleanedPhone)) {
+      return "Phone number can only contain digits, spaces, dashes, and parentheses";
+    }
+    // Check length (exactly 10 digits)
+    if (cleanedPhone.length !== 10) {
+      return "Phone number must be exactly 10 digits";
+    }
+    // Check if first digit is between 6-9
+    if (!/^[6-9]/.test(cleanedPhone)) {
+      return "Phone number must start with 6, 7, 8, or 9";
+    }
+    return "";
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+  };
+
+  //Handle blur validation
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    let error = "";
+
+    if (name === "name") {
+      error = validateName(value);
+    } else if (name === "email") {
+      error = validateEmail(value);
+    } else if (name === "phone") {
+      error = validatePhone(value);
+    }
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: error,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
-    
-    if (form.checkValidity() === false) {
+
+    // Validate all fields
+    const nameError = validateName(formData.name);
+    const emailError = validateEmail(formData.email);
+    const phoneError = validatePhone(formData.phone);
+
+    const newErrors = {
+      name: nameError,
+      email: emailError,
+      phone: phoneError,
+    };
+
+    setErrors(newErrors);
+    setValidated(true);
+
+    // Check if form is valid
+    const isFormValid =
+      form.checkValidity() &&
+      !nameError &&
+      !emailError &&
+      !phoneError &&
+      formData.message.trim() !== "" &&
+      formData.preferredTime.trim() !== "";
+
+    if (!isFormValid) {
       e.stopPropagation();
-      setValidated(true);
-      toast.error("Please fill all required fields!");
+      toast.error("Please fill all fields correctly!");
       return;
     }
 
     setIsSubmitting(true);
-    setValidated(true);
 
     try {
       // Prepare enquiry data
@@ -46,12 +149,14 @@ export default function NewContactUs() {
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
-        message: formData.preferredTime 
+        message: formData.preferredTime
           ? `Preferred Time: ${formData.preferredTime}\n\nMessage: ${formData.message}`
           : formData.message,
         pageName: "Contact Us - Get A Quote",
         enquiryFrom: "Contact Us Page",
-        projectLink: `${process.env.NEXT_PUBLIC_ROOT_URL || window.location.origin}${pathname}`,
+        projectLink: `${
+          process.env.NEXT_PUBLIC_ROOT_URL || window.location.origin
+        }${pathname}`,
         status: "PENDING",
         id: 0, // Required for new enquiry
       };
@@ -61,13 +166,15 @@ export default function NewContactUs() {
         enquiryData,
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
 
       if (response.data.isSuccess === 1) {
-        toast.success(response.data.message || "Enquiry submitted successfully!");
+        toast.success(
+          response.data.message || "Enquiry submitted successfully!"
+        );
         // Reset form
         setFormData({
           name: "",
@@ -76,16 +183,23 @@ export default function NewContactUs() {
           preferredTime: "",
           message: "",
         });
+        setErrors({
+          name: "",
+          email: "",
+          phone: "",
+        });
         setValidated(false);
       } else {
-        toast.error(response.data.message || "Failed to submit enquiry. Please try again.");
+        toast.error(
+          response.data.message || "Failed to submit enquiry. Please try again."
+        );
       }
     } catch (error) {
       console.error("Error submitting enquiry:", error);
       toast.error(
-        error.response?.data?.message || 
-        error.message || 
-        "An error occurred. Please try again later."
+        error.response?.data?.message ||
+          error.message ||
+          "An error occurred. Please try again later."
       );
     } finally {
       setIsSubmitting(false);
@@ -161,29 +275,45 @@ export default function NewContactUs() {
               <h2 className="get-quote-heading plus-jakarta-sans-bold text-center mb-4">
                 Get A Quote
               </h2>
-              <form className="get-quote-form" onSubmit={handleSubmit} noValidate>
+              <form
+                className="get-quote-form"
+                onSubmit={handleSubmit}
+                noValidate
+              >
                 <div className="row mb-3">
                   <div className="col-md-6 mb-3 mb-md-0">
                     <input
                       type="text"
                       name="name"
-                      className="form-control get-quote-input"
+                      className={`form-control get-quote-input ${
+                        errors.name ? "error" : ""
+                      }`}
                       placeholder="Name"
                       value={formData.name}
                       onChange={handleChange}
+                      onBlur={handleBlur}
                       required
                     />
+                    {errors.name && (
+                      <span className="error-message">{errors.name}</span>
+                    )}
                   </div>
                   <div className="col-md-6">
                     <input
                       type="email"
                       name="email"
-                      className="form-control get-quote-input"
+                      className={`form-control get-quote-input ${
+                        errors.email ? "error" : ""
+                      }`}
                       placeholder="Email"
                       value={formData.email}
                       onChange={handleChange}
+                      onBlur={handleBlur}
                       required
                     />
+                    {errors.email && (
+                      <span className="error-message">{errors.email}</span>
+                    )}
                   </div>
                 </div>
                 <div className="row mb-3">
@@ -191,12 +321,18 @@ export default function NewContactUs() {
                     <input
                       type="tel"
                       name="phone"
-                      className="form-control get-quote-input"
+                      className={`form-control get-quote-input ${
+                        errors.phone ? "error" : ""
+                      }`}
                       placeholder="Phone"
                       value={formData.phone}
                       onChange={handleChange}
+                      onBlur={handleBlur}
                       required
                     />
+                    {errors.phone && (
+                      <span className="error-message">{errors.phone}</span>
+                    )}
                   </div>
                   <div className="col-md-6">
                     <input
@@ -224,8 +360,8 @@ export default function NewContactUs() {
                   </div>
                 </div>
                 <div className="text-center">
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="btn get-quote-submit-btn"
                     disabled={isSubmitting}
                   >
@@ -252,7 +388,13 @@ export default function NewContactUs() {
           <h2 className="plus-jakarta-sans-bold">Looking For A Dream Home?</h2>
           <p>We can help you realize your dream of a new home</p>
           <div>
-            <button onClick={()=>{window.location.href = "/projects";}}>View Projects</button>
+            <button
+              onClick={() => {
+                window.location.href = "/projects";
+              }}
+            >
+              View Projects
+            </button>
           </div>
         </div>
         <div className="looking-for-dream-home-section-image2">

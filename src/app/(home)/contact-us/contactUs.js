@@ -29,51 +29,137 @@ export default function ContactUs() {
     pageName: "",
   });
 
+  //Validation errors state
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
+
+  //Validation functions
+  const validateName = (name) => {
+    if (!name.trim()) {
+      return "Name is required";
+    }
+    if (name.trim().length < 2) {
+      return "Name must be at least 2 characters";
+    }
+    // Allow letters, spaces, hyphens, and apostrophes
+    const nameRegex = /^[a-zA-Z\s'-]+$/;
+    if (!nameRegex.test(name.trim())) {
+      return "Name can only contain letters, spaces, hyphens, and apostrophes";
+    }
+    return "";
+  };
+
+  const validateEmail = (email) => {
+    if (!email.trim()) {
+      return "Email is required";
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      return "Please enter a valid email address";
+    }
+    return "";
+  };
+
+  const validatePhone = (phone) => {
+    if (!phone.trim()) {
+      return "Phone number is required";
+    }
+    // Remove spaces, dashes, and parentheses for validation
+    const cleanedPhone = phone.replace(/[\s\-\(\)]/g, "");
+    // Check if it's all digits
+    if (!/^\d+$/.test(cleanedPhone)) {
+      return "Phone number can only contain digits, spaces, dashes, and parentheses";
+    }
+    // Check length (exactly 10 digits)
+    if (cleanedPhone.length !== 10) {
+      return "Phone number must be exactly 10 digits";
+    }
+    // Check if first digit is between 6-9
+    if (!/^[6-9]/.test(cleanedPhone)) {
+      return "Phone number must start with 6, 7, 8, or 9";
+    }
+    return "";
+  };
+
   //Handling form submit
   const handleSubmit = async (e) => {
+    e.preventDefault();
     const form = e.currentTarget;
     setShowLoading(true);
     setButtonName("");
-    if (form.checkValidity() === false) {
-      e.preventDefault();
+
+    // Validate all fields
+    const nameError = validateName(formData.name);
+    const emailError = validateEmail(formData.email);
+    const phoneError = validatePhone(formData.phone);
+
+    const newErrors = {
+      name: nameError,
+      email: emailError,
+      phone: phoneError,
+    };
+
+    setErrors(newErrors);
+    setValidated(true);
+
+    // Check if form is valid
+    const isFormValid =
+      form.checkValidity() &&
+      !nameError &&
+      !emailError &&
+      !phoneError &&
+      formData.message.trim() !== "";
+
+    if (!isFormValid) {
       e.stopPropagation();
-      setValidated(true);
-      toast.error("Please fill all fields!");
+      toast.error("Please fill all fields correctly!");
       setShowLoading(false);
       setButtonName("Get a free service");
       return;
     }
-    if (form.checkValidity() === true) {
-      e.preventDefault();
-      try {
-        formData.pageName = "Contact us";
-        formData.projectLink = `${process.env.NEXT_PUBLIC_ROOT_URL}${pathName}`
-        formData.enquiryFrom = `Contact us page`
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}enquiry/post`,
-          formData
-        );
-        if (response.data.isSuccess === 1) {
-          toast.success(response.data.message);
-          setFormData({
-            name: "",
-            email: "",
-            phone: "",
-            message: "",
-            enquiryFrom: "",
-            projectLink: "",
-          });
-          setButtonName("Get a free service");
-          setShowLoading(false);
-        } else {
-          toast.error(response.data.message);
-        }
-      } catch (error) {
-        toast.error(error);
-      } finally {
+
+    try {
+      const submitData = {
+        ...formData,
+        pageName: "Contact us",
+        projectLink: `${process.env.NEXT_PUBLIC_ROOT_URL}${pathName}`,
+        enquiryFrom: `Contact us page`,
+      };
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}enquiry/post`,
+        submitData
+      );
+      if (response.data.isSuccess === 1) {
+        toast.success(response.data.message);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          message: "",
+          enquiryFrom: "",
+          projectLink: "",
+        });
+        setErrors({
+          name: "",
+          email: "",
+          phone: "",
+        });
+        setValidated(false);
+        setButtonName("Get a free service");
+        setShowLoading(false);
+      } else {
+        toast.error(response.data.message);
         setShowLoading(false);
         setButtonName("Get a free service");
       }
+    } catch (error) {
+      toast.error(error.message || "An error occurred. Please try again.");
+      setShowLoading(false);
+      setButtonName("Get a free service");
     }
   };
 
@@ -83,6 +169,33 @@ export default function ContactUs() {
     setFormData((item) => ({
       ...item,
       [name]: value,
+    }));
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+  };
+
+  //Handle blur validation
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    let error = "";
+
+    if (name === "name") {
+      error = validateName(value);
+    } else if (name === "email") {
+      error = validateEmail(value);
+    } else if (name === "phone") {
+      error = validatePhone(value);
+    }
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: error,
     }));
   };
 
@@ -114,8 +227,11 @@ export default function ContactUs() {
               required
               value={formData.name}
               onChange={(e) => handleChange(e)}
+              onBlur={(e) => handleBlur(e)}
+              className={errors.name ? "error" : ""}
             />
             <FontAwesomeIcon icon={faUser} width={20} />
+            {errors.name && <span className="error-message">{errors.name}</span>}
           </div>
           <div className="input-item">
             <input
@@ -124,20 +240,26 @@ export default function ContactUs() {
               type="email"
               value={formData.email}
               onChange={(e) => handleChange(e)}
+              onBlur={(e) => handleBlur(e)}
               required
+              className={errors.email ? "error" : ""}
             />
             <FontAwesomeIcon icon={faVoicemail} width={20} />
+            {errors.email && <span className="error-message">{errors.email}</span>}
           </div>
           <div className="input-item">
             <input
               placeholder="Enter your phone number"
               name="phone"
-              type="number"
+              type="tel"
               value={formData.phone}
               onChange={(e) => handleChange(e)}
+              onBlur={(e) => handleBlur(e)}
               required
+              className={errors.phone ? "error" : ""}
             />
             <FontAwesomeIcon icon={faPhone} width={20} />
+            {errors.phone && <span className="error-message">{errors.phone}</span>}
           </div>
           <div className="input-item">
             <textarea
