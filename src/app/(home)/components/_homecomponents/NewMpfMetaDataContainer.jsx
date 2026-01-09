@@ -158,7 +158,8 @@ export default function NewMpfMetaDataContainer() {
 
   // Intersection Observer to trigger animation when component is visible
   useEffect(() => {
-    if (!observerRef.current) return;
+    const currentRef = observerRef.current;
+    if (!currentRef) return;
 
     // Check if statistics have valid data (not all zeros)
     const hasValidData = statistics.some(stat => parseNumber(stat.number) > 0);
@@ -179,12 +180,12 @@ export default function NewMpfMetaDataContainer() {
       { threshold: 0.1 }
     );
 
-    observer.observe(observerRef.current);
+    observer.observe(currentRef);
 
     // If component is already visible and data is loaded, trigger animation immediately
     const checkVisibility = () => {
-      if (observerRef.current) {
-        const rect = observerRef.current.getBoundingClientRect();
+      if (currentRef) {
+        const rect = currentRef.getBoundingClientRect();
         const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
         if (isVisible && !hasAnimated && hasValidData) {
           setHasAnimated(true);
@@ -202,8 +203,8 @@ export default function NewMpfMetaDataContainer() {
 
     return () => {
       clearTimeout(timeoutId);
-      if (observerRef.current) {
-        observer.unobserve(observerRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, [hasAnimated, statistics, parseNumber, animateCounter]);
