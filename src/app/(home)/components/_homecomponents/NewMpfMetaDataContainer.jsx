@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./newmpfmetadata.css";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function NewMpfMetaDataContainer() {
   const [activePropertyType, setActivePropertyType] = useState("Commercial");
@@ -43,9 +44,9 @@ export default function NewMpfMetaDataContainer() {
   const observerRef = useRef(null);
 
   const propertyTypes = [
-    { id: "Commercial", label: "Commercial" },
-    { id: "New Launches", label: "New Launches" },
-    { id: "Residential", label: "Residential" },
+    { id: "Commercial", label: "Commercial", slugUrl: "/commercial" },
+    { id: "New Launches", label: "New Launches", slugUrl: "/new-launches" },
+    { id: "Residential", label: "Residential", slugUrl: "/residential" },
   ];
 
   // Fetch statistics data dynamically
@@ -55,7 +56,7 @@ export default function NewMpfMetaDataContainer() {
         // You can replace this with your actual API endpoint
         // For now, using the default values as fallback
         const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-        
+
         // Example: If you have a statistics endpoint, uncomment and modify:
         // const response = await fetch(`${apiUrl}statistics`);
         // if (response.ok) {
@@ -65,7 +66,7 @@ export default function NewMpfMetaDataContainer() {
         //   setHasAnimated(false);
         //   setAnimatedValues([0, 0, 0, 0]);
         // }
-        
+
         // For now, we'll use the existing data structure
         // You can modify this to fetch from your API
       } catch (error) {
@@ -96,10 +97,12 @@ export default function NewMpfMetaDataContainer() {
     const animate = (currentTime) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      
+
       // Easing function for smooth animation
       const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-      const currentValue = Math.floor(startValue + (targetValue - startValue) * easeOutQuart);
+      const currentValue = Math.floor(
+        startValue + (targetValue - startValue) * easeOutQuart
+      );
 
       setAnimatedValues((prev) => {
         const newValues = [...prev];
@@ -164,20 +167,19 @@ export default function NewMpfMetaDataContainer() {
           </div>
         </div>
         <div className="property-search-card-content">
-          <h2 className="property-search-title plus-jakarta-sans-bold">
+          <h2 className="property-search-title plus-jakarta-sans-bold mt-3 mt-md-0">
             Find The Best Property
           </h2>
-          <div className="property-type-buttons">
-            {propertyTypes.map((type) => (
-              <button
-                key={type.id}
-                className={`property-type-btn btn-normal-color ${
-                  activePropertyType === type.id ? "active" : ""
-                }`}
-                onClick={() => setActivePropertyType(type.id)}
-              >
-                {type.label}
-              </button>
+          <div className="d-flex flex-wrap align-item-center justify-content-center gap-4 my-4">
+            {propertyTypes.map((item, index) => (
+              <div key={`row-${index}`}>
+                <Link
+                  href={`projects/${item.slugUrl}`}
+                  className="btn-normal-color rounded-5 py-2 px-3 text-white text-decoration-none"
+                >
+                  {item.label}
+                </Link>
+              </div>
             ))}
           </div>
         </div>

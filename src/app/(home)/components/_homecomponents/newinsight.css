@@ -20,11 +20,11 @@
   }
 }
 
-.insight-content-wrapper {
-  position: relative;
+/* .insight-content-wrapper { */
+  /* position: relative;
   width: 100%;
   max-width: 100%;
-}
+} */
 
 .insight-header {
   display: flex;

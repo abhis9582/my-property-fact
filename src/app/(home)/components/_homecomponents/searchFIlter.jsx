@@ -115,7 +115,7 @@ export default function SearchFilter({ projectTypeList, cityList }) {
             <div className="d-flex align-items-end">
               <button
                 type="submit"
-                className="py-1 px-4 text-light m-0 border rounded-pill btn-normal-color"
+                className="py-1 px-4 text-light m-0 border rounded-pill btn-normal-color search-btn-home-page"
                 onClick={handleSubmit}
                 aria-label="Search"
               >

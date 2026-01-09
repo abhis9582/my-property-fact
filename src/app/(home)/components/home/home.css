@@ -406,6 +406,14 @@
     position: absolute !important;
     bottom: -135px !important;
   }
+
+  .search-btn-home-page {
+    margin-top: 8px !important;
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+  }
   
   .enquiry-sticky-btn {
     width: 30px;

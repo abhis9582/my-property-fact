@@ -740,7 +740,8 @@
     .newsletter-button {
         padding: 10px 25px;
         font-size: 13px;
-        width: 20%;
+        display: flex;
+        justify-content: center;
     }
     
     .new-design-footer-top-right-content {

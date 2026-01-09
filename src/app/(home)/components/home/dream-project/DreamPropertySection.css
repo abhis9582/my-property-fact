@@ -1,5 +1,5 @@
 .dream-property-section {
-    margin-top: 30px;
+  margin-top: 30px;
   position: relative;
   padding: 80px 0;
   background: linear-gradient(
@@ -35,6 +35,10 @@
   margin: 0 auto;
   padding: 0 20px;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 /* Header Styles */
@@ -132,6 +136,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 250px;
 }
 
 .city-card:hover {
@@ -152,7 +157,7 @@
 }
 
 .city-content {
-    text-align: center;
+  text-align: center;
 }
 
 .city-card:hover .city-image {
@@ -189,7 +194,7 @@
 }
 
 .explore-details-button:hover {
-  background: linear-gradient(90deg, #CDA958 0%, #A28039 100%);
+  background: linear-gradient(90deg, #cda958 0%, #a28039 100%);
   color: white;
   transform: translateY(-2px);
   text-decoration: none;
@@ -246,7 +251,7 @@
 
   .city-cards-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    gap: 15px 55px;
   }
 
   .city-name {
@@ -256,7 +261,7 @@
 
   .explore-details-button {
     margin: 0 15px 15px 15px;
-    padding: 10px 20px;
+    padding: 2px 10px;
     font-size: 0.9rem;
   }
 }
@@ -267,11 +272,16 @@
   }
 
   .city-card {
-    width: 85% !important;
     justify-self: center;
   }
 
+  .dream-property-header {
+    margin-bottom: 0px !important;
+  }
+
   .city-cards-grid {
+    width: 85% !important;
+    justify-self: center;
     grid-template-columns: 1fr;
     gap: 20px;
   }

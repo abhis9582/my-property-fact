@@ -16,7 +16,7 @@
   height: 143px;
   border: 1px solid #ececec;
   padding: 20px 20px;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   position: relative;
   overflow: hidden;
 }
@@ -90,7 +90,7 @@
 .statistics-section {
   display: flex;
   gap: 24px;
-  margin-top: 40px;
+  margin-top: 30px;
   align-items: center;
   justify-content: center;
 }
@@ -225,6 +225,7 @@
 
   .property-search-card {
     height: auto !important;
+    padding: 12px !important;
   }
 
   .property-search-card-content {
