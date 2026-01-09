@@ -36,6 +36,7 @@
   --footer-bg: radial-gradient(circle at center, #0d5834, #0c2e23);
   --link-bg: linear-gradient(to right, #d1ad5b, #a07e38);
   --light-gradient: linear-gradient(to right, #a8d5a2, #70b987);
+  --btn-normal-color: #C9A24D;
 }
 
 html {
@@ -56,6 +57,16 @@ html {
 
 .btn-background {
   background: var(--btn-background);
+}
+
+.btn-normal-color {
+  background: var(--btn-normal-color);
+}
+
+.btn-normal-color:hover {
+  background: #0d5834;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
 }
 
 .btn-background:hover {

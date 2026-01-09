@@ -1,12 +1,8 @@
-import DreamProject from "./dream-project/page";
-import InsightNew from "./insight/page";
 import NewsViews from "./new-views/page";
 import SocialFeedPage from "./social-feed/page";
-import VideoSliderPage from "./video-slider/page";
 import MpfTopPicks from "../mpfTopPick";
 import HeroSection from "../_homecomponents/heroSection";
 import FeaturedPage from "./featured/page";
-import InstagramFeed from "./instagram-feed";
 import ScrollToTop from "../_homecomponents/ScrollToTop";
 import {
   getAllProjects,
@@ -14,6 +10,8 @@ import {
 } from "@/app/_global_components/masterFunction";
 import NewInsight from "../_homecomponents/NewInsight";
 import DreamPropertySection from "./dream-project/DreamPropertySection";
+import NewMpfMetaDataContainer from "../_homecomponents/NewMpfMetaDataContainer";
+import SocialFeedsOfMPF from "../_homecomponents/SocialFeedsOfMPF";
 // import HomeMetaData from "../_homecomponents/HomeMetaData";
 
 export default async function HomePage() {
@@ -43,17 +41,19 @@ export default async function HomePage() {
         {/* <HomeMetaData /> */}
 
         {/* MPF-top pick section  */}
+        
+        <NewMpfMetaDataContainer />
         <MpfTopPicks topProject={mpfTopPicProject} />
 
         {/* Static Sections */}
-        <div className="position-relative mb-3">
+        <div className="position-relative">
           {/* insight section  */}
           {/* <h2 className="text-center fw-bold my-5">Insights</h2> */}
           {/* <InsightNew /> */}
           <NewInsight />
 
           {/* featured projects section  */}
-          <h2 className="text-center mb-5 fw-bold">Featured Projects</h2>
+          <h2 className="text-center mb-5 fw-bold plus-jakarta-sans-bold">Featured Projects</h2>
           <FeaturedPage
             autoPlay={false}
             allFeaturedProperties={featuredProjects}
@@ -67,7 +67,7 @@ export default async function HomePage() {
           <DreamPropertySection />
 
           {/* residential projects section  */}
-          <h2 className="text-center mt-4 mb-5 fw-bold">
+          <h2 className="text-center mt-4 mb-5 fw-bold plus-jakarta-sans-bold">
             Explore Our Premier Residential Projects
           </h2>
           <FeaturedPage
@@ -76,7 +76,7 @@ export default async function HomePage() {
           />
 
           {/* commertial projects section  */}
-          <h2 className="text-center my-5 fw-bold">
+          <h2 className="text-center my-5 fw-bold plus-jakarta-sans-bold">
             Explore Top Commercial Spaces for Growth
           </h2>
           <FeaturedPage
@@ -85,11 +85,9 @@ export default async function HomePage() {
           />
 
           {/* web story section  */}
-          <h2 className="text-center my-5 fw-bold">Realty Updates Web Stories</h2>
+          <h2 className="text-center my-5 fw-bold plus-jakarta-sans-bold">Realty Updates Web Stories</h2>
           <NewsViews />
 
-          {/* blogs section  */}
-          <h2 className="text-center my-5 fw-bold">Investor Education Blog</h2>
           <SocialFeedPage />
           
           {/* video slider section  */}
@@ -97,7 +95,9 @@ export default async function HomePage() {
           {/* <div className="mb-5">
             <InstagramFeed />
           </div> */}
+          <SocialFeedsOfMPF />
         </div>
+        {/* <PopularCitiesComponent /> */}
         {/* Scroll to top button */}
         <ScrollToTop />
       </>

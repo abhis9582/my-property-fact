@@ -1,6 +1,9 @@
 import "../globals.css";
+import NewFooterDesign from "./components/footer/NewFooterDesign";
 import Footer from "./components/footer/page";
 import Header from "./components/header/header";
+import { fetchCityData } from "@/app/_global_components/masterFunction";
+
 export const metadata = {
   title: "My Property Fact | Smarter Real Estate Decisions Start Here",
   description:
@@ -20,7 +23,9 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children, params }) {
+export default async function RootLayout({ children, params }) {
+  const cityList = await fetchCityData();
+  
   return (
     <>
       {/* header for the user side  */}
@@ -28,7 +33,7 @@ export default function RootLayout({ children, params }) {
       {/* dynamic render all its child components  */}
       {children}
       {/* footer for user side  */}
-      <Footer />
+      <NewFooterDesign cityList={cityList} />
     </>
   );
 }

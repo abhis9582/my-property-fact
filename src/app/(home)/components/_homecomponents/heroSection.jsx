@@ -40,21 +40,21 @@ export default async function HeroSection() {
   const heroSlides = [
     {
       id: "hero-primary",
-      desktop: "/static/banners/desktop_banner1.jpeg",
+      desktop: "/static/banners/desktop_banner1.png",
       tablet: "/static/banners/tablet_banner1.jpg",
-      mobile: "/static/banners/mobile_banner1.jpg",
+      mobile: "/static/banners/mobile_banner1.png",
       alt: "Find the best property with My Property Fact",
       priority: true,
-      href: "/m3m-jacob-and-co-residences",
-    },
-    {
-      id: "hero-secondary",
-      desktop: "/static/banners/desktop_banner2.jpg",
-      tablet: "/static/banners/tablet_banner2.jpg",
-      mobile: "/static/banners/mobile_banner2.jpg",
-      alt: "Discover top real estate projects across India",
       href: "#",
     },
+    // {
+    //   id: "hero-secondary",
+    //   desktop: "/static/banners/desktop_banner2.jpg",
+    //   tablet: "/static/banners/tablet_banner2.jpg",
+    //   mobile: "/static/banners/mobile_banner2.jpg",
+    //   alt: "Discover top real estate projects across India",
+    //   href: "#",
+    // },
     // {
     //   id: "hero-secondary",
     //   desktop: "/static/banners/desktop_banner3.jpg",
@@ -77,13 +77,13 @@ export default async function HeroSection() {
   ]);
   return (
     <>
-      <div className="position-relative mb-5">
+      <div className="position-relative">
         <div className="mpf-hero-banner position-relative">
           <div className="position-relative">
               {/* <SnowEffect /> */}
               {/* <NewYearEffect /> */}
             <HeroBannerSlider slides={heroSlides} />
-            <div className="bannercontainer">
+            {/* <div className="bannercontainer">
               <h1 className="text-center text-light">Find the best property</h1>
               <div className="d-flex flex-wrap align-item-center justify-content-center gap-4 my-4">
                 {projectTypeList.map((item, index) => (
@@ -117,7 +117,7 @@ export default async function HeroSection() {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
           {/* <div className="overlay"></div> */}
           <SearchFilter projectTypeList={projectTypeList} cityList={cityList} />

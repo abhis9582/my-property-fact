@@ -1,0 +1,242 @@
+/* New MPF Meta Data Container Styles */
+.mpf-metadata-container {
+  width: 100%;
+  /* max-width: 1200px; */
+  margin-top: 40px;
+  padding: 40px 0px;
+}
+
+/* Property Search Card */
+.property-search-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border-radius: 29px;
+  height: 143px;
+  border: 1px solid #ececec;
+  padding: 20px 20px;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.property-search-title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: #333333;
+  letter-spacing: 3px;
+  font-family: var(--heaing-font);
+}
+
+.property-type-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.property-type-btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--text-font);
+  color: #ffffff;
+}
+
+.property-search-illustrations {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  gap: 20px;
+}
+
+.illustration-left,
+.illustration-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 75px;
+}
+
+.right-illustration-container {
+  position: absolute;
+  right: -20px;
+  bottom: -38px;
+}
+
+.left-iilution-container {
+  position: absolute;
+  bottom: -35px;
+}
+
+.city-skyline-svg,
+.house-figures-svg {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+}
+
+/* Statistics Section */
+.statistics-section {
+  display: flex;
+  gap: 24px;
+  margin-top: 40px;
+  align-items: center;
+  justify-content: center;
+}
+
+.statistics-card {
+  background: #ffffff;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0px 2px 8px 0px #63636333;
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
+  height: 194px;
+  width: 202px;
+}
+
+.statistics-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.statistics-icon {
+  font-size: 36px;
+  color: #333333;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.statistics-number {
+  font-size: 32px;
+  font-weight: 700;
+  color: #333333;
+  margin-bottom: 0px;
+  font-family: var(--heaing-font);
+  position: relative;
+}
+
+.statistics-number span {
+  position: absolute;
+  font-size: 20px;
+}
+
+.statistics-label {
+  font-size: 16px;
+  color: #000;
+  font-weight: 500;
+  font-family: var(--text-font);
+}
+
+.property-search-card-content {
+  max-width: 500px;
+  width: 500px;
+  height: 75px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .right-illustration-container, .left-iilution-container {
+    display: none !important;
+  }
+  .statistics-section {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .property-search-illustrations {
+    flex-direction: column;
+  }
+
+  .illustration-left,
+  .illustration-right {
+    max-width: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mpf-metadata-container {
+    padding: 30px 15px;
+    margin-top: 0px !important;
+  }
+
+  .property-search-card {
+    padding: 30px 20px;
+  }
+
+  .property-search-title {
+    font-size: 18px;
+  }
+
+  .property-type-buttons {
+    gap: 12px;
+  }
+
+  .property-type-btn {
+    padding: 10px 24px;
+    font-size: 14px;
+  }
+
+  .statistics-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .statistics-card {
+    width: auto !important;
+    padding: 20px 12px;
+  }
+
+  .statistics-icon {
+    font-size: 24px;
+    margin-bottom: 12px;
+  }
+
+  .statistics-number {
+    font-size: 24px;
+  }
+
+  .statistics-label {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .property-type-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .mpf-metadata-container {
+    margin-top: 135px !important;
+  }
+
+  .property-search-card {
+    height: auto !important;
+  }
+
+  .property-search-card-content {
+    height: auto !important;
+  }
+
+  .property-type-btn {
+    width: 100%;
+  }
+
+  .city-skyline-svg,
+  .house-figures-svg {
+    max-width: 200px;
+  }
+}

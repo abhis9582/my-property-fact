@@ -99,7 +99,6 @@
 }
 
 .see-all-button {
-  background: linear-gradient(90deg, #CDA958 0%, #A28039 100%);
   color: white;
   padding: 14px 50px;
   border-radius: 30px;
@@ -112,8 +111,6 @@
 }
 
 .see-all-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(212, 165, 116, 0.4);
   color: white;
   text-decoration: none;
 }
@@ -267,6 +264,11 @@
 @media (max-width: 576px) {
   .dream-property-title {
     font-size: 1.5rem;
+  }
+
+  .city-card {
+    width: 85% !important;
+    justify-self: center;
   }
 
   .city-cards-grid {

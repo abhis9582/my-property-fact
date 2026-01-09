@@ -6,7 +6,7 @@ import "../new-views/newviews.css";
 export default function NewsAndViews({ webStoryList }) {
   return (
     <div className="container">
-      <div className="row">
+      <div className="row web-stories-container">
         {webStoryList
           .filter((item) => item.webStories.length > 0)
           .map((item, index) => (

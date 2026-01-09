@@ -64,7 +64,7 @@ export default function Featured({
       {autoPlay && type !== 'Similar' && (
         <div className="text-center pt-3">
           <Link
-            className="btn btn-success btn-background border-0"
+            className="btn text-white btn-normal-color border-0"
             href={`/projects/${url}`}
           >
             View all

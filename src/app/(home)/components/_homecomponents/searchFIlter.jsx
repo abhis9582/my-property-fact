@@ -52,12 +52,13 @@ export default function SearchFilter({ projectTypeList, cityList }) {
     }
   }, []);
   return (
-    <div className="w-100 home-search-container">
+    <div className="home-search-container container">
       {/* <div className="container bg-white border rounded-2 custom-shadow">*/}
-      <div className="container bg-light border rounded-4 custom-shadow">
+      <div className="container bg-white border rounded-4 search-filter-shadow">
         <form method="Get" action="projects">
           <div className="d-flex flex-wrap flex-md-row flex-column p-3 p-md-4 gap-2 gap-md-3 font-gotham-light">
             <div className="col">
+              <label className="mb-2 fw-bold">Property Type</label>
               <select
                 name="category"
                 id="category"
@@ -77,6 +78,7 @@ export default function SearchFilter({ projectTypeList, cityList }) {
               </select>
             </div>
             <div className="col">
+              <label className="mb-2 fw-bold">Location</label>
               <select
                 name="location"
                 id="location"
@@ -93,6 +95,7 @@ export default function SearchFilter({ projectTypeList, cityList }) {
               </select>
             </div>
             <div className="col">
+              <label className="mb-2 fw-bold">Price Range</label>
               <select
                 name="projectname"
                 id="projectname"
@@ -109,10 +112,10 @@ export default function SearchFilter({ projectTypeList, cityList }) {
               </select>
             </div>
 
-            <div className="d-flex align-items-center">
+            <div className="d-flex align-items-end">
               <button
                 type="submit"
-                className="py-1 px-4 text-light m-0 border rounded-3 btn-background"
+                className="py-1 px-4 text-light m-0 border rounded-pill btn-normal-color"
                 onClick={handleSubmit}
                 aria-label="Search"
               >
@@ -125,7 +128,8 @@ export default function SearchFilter({ projectTypeList, cityList }) {
                 {loading ? (
                   <Spinner animation="border" variant="light" />
                 ) : (
-                  <FontAwesomeIcon icon={faSearch} fixedWidth />
+                  // <FontAwesomeIcon icon={faSearch} fixedWidth />
+                  <span>Search</span>
                 )}
               </button>
             </div>

@@ -38,7 +38,7 @@ export default function ScrollToTop() {
       {isVisible && (
         <button
           onClick={scrollToTop}
-          className="scroll-to-top-btn"
+          className="scroll-to-top-btn btn-normal-color"
           aria-label="Scroll to top"
         >
           <FontAwesomeIcon icon={faArrowUp} />

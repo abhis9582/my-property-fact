@@ -155,7 +155,6 @@
   bottom: -50px !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
-  width: 100%;
   z-index: 5;
 }
 /* .home-search-container {
@@ -219,17 +218,15 @@
 }
 
 .form-select {
-  border: none;
-  border-bottom: 1px solid;
-  background-color: transparent;
-  border-radius: 0px;
+  background-color: white;
+  border-radius: 3rem;
+  box-shadow: 0px 2px 8px 0px #63636333;
+  color: #999;
 }
 
-/* .form-select {
-  box-shadow: 0px 1px 12px 0px #0000001A;
-  border-radius: 30px;
-  border: none;
-} */
+.search-filter-shadow {
+  box-shadow: 0px 2px 8px 0px #63636333;
+}
 
 @keyframes zoomin {
   100% {
@@ -354,12 +351,76 @@
   display: none !important;
 }
 
+/* Responsive Styles for Home Page */
+@media (max-width: 1200px) {
+  .home-search-container {
+    width: 90% !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .home-search-container {
+    width: 95% !important;
+    bottom: -40px !important;
+  }
+  
+  .enquiry-sticky-btn {
+    width: 35px;
+    height: 100px;
+    font-size: 12px;
+    padding: 8px 0.75rem;
+  }
+}
+
 @media (max-width: 768px) {
   .home-search-container {
     bottom: 0px !important;
     position: relative !important;
-    padding: 10px;
-    /* width: 100% !important	; */
+    width: 100% !important;
+    margin-top: 20px;
+  }
+  
+  .enquiry-sticky-btn {
+    width: 32px;
+    height: 90px;
+    font-size: 11px;
+    padding: 6px 0.5rem;
+    top: calc(30% + 1rem);
+  }
+  
+  .fixed-form-container {
+    width: 280px;
+    padding: 18px;
+  }
+  
+  .data-container {
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 576px) {
+  .home-search-container {
+    padding: 8px;
+    position: absolute !important;
+    bottom: -135px !important;
+  }
+  
+  .enquiry-sticky-btn {
+    width: 30px;
+    height: 80px;
+    font-size: 10px;
+    padding: 5px 0.4rem;
+  }
+  
+  .fixed-form-container {
+    width: 260px;
+    padding: 16px;
+  }
+  
+  .data-container {
+    gap: 1.5rem;
   }
 }
 
@@ -367,7 +428,12 @@
   .data-container {
     display: flex;
     color: #fff;
-    gap: 2rem;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .enquiry-sticky-btn {
+    display: none; /* Hide on very small screens */
   }
 }
 
@@ -376,6 +442,16 @@
     display: flex;
     color: #fff;
     gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .home-search-container {
+    padding: 6px;
+  }
+  
+  .fixed-form-container {
+    width: 240px;
+    padding: 14px;
   }
 }
 
@@ -385,6 +461,10 @@
     color: #fff;
     gap: 0.5rem;
     flex-wrap: wrap;
+  }
+  
+  .home-search-container {
+    padding: 4px;
   }
 }
 
@@ -404,9 +484,7 @@
   position: absolute;
   top: -10px;
   color: #ffffff !important;
-  text-shadow: 
-    0 0 10px rgba(255, 255, 255, 0.8),
-    0 2px 4px rgba(0, 0, 0, 0.3),
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.3),
     0 1px 2px rgba(0, 0, 0, 0.2);
   opacity: 0.8;
   animation-name: fall;
@@ -433,5 +511,63 @@
   100% {
     transform: translateX(-25px) translateY(110vh);
     opacity: 0;
+  }
+}
+
+/* Responsive Styles for Page Headings */
+.position-relative h2 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  padding: 0 1rem;
+  word-wrap: break-word;
+  line-height: 1.3;
+}
+
+@media (max-width: 992px) {  
+  .position-relative h2 {
+    font-size: clamp(1.4rem, 4.5vw, 2.25rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .position-relative h2 {
+    font-size: clamp(1.25rem, 5vw, 2rem);
+    margin-bottom: 1.5rem !important;
+    margin-top: 1.5rem !important;
+  }
+}
+
+@media (max-width: 576px) {  
+  .position-relative h2 {
+    font-size: clamp(1.1rem, 6vw, 1.75rem);
+    margin-bottom: 1rem !important;
+    margin-top: 1rem !important;
+  }
+}
+
+@media (max-width: 375px) {  
+  .position-relative h2 {
+    font-size: clamp(1rem, 7vw, 1.5rem);
+    padding: 0;
+    line-height: 1.2;
+  }
+}
+
+/* Container Responsive Styles */
+.container {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+@media (max-width: 375px) {
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
   }
 }

@@ -41,7 +41,7 @@ export default function MpfTopPicks({ topProject }) {
   return (
     <>
       <div className="container-fluid position-relative mpf-top-picks-section-container">
-        <section className="container pt-0 pt-lg-5 top-space">
+        <section className="container pt-0 pt-lg-2 top-space">
           <div className="mpf-top-picks-section">
             <div className="mpf-top-picks-header">
               <div>
@@ -109,7 +109,7 @@ export default function MpfTopPicks({ topProject }) {
 
                 <Link
                   href={`/${slugURL}`}
-                  className="mpf-top-picks-card__cta"
+                  className="mpf-top-picks-card__cta btn-normal-color"
                   aria-label={`More about ${projectName}`}
                 >
                   More About {projectName}
@@ -137,7 +137,7 @@ export default function MpfTopPicks({ topProject }) {
             </div>
           </div>
         </section>
-        <div className="mpf-top-picks-banner">
+        {/* <div className="mpf-top-picks-banner">
           <div className="mpf-top-picks-banner__content">
             <span className="mpf-top-picks-banner__eyebrow">
             Get Verified Leads, Register for FREE on My Property Fact !
@@ -159,7 +159,7 @@ export default function MpfTopPicks({ topProject }) {
               className="img-fluid"
             />
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );
