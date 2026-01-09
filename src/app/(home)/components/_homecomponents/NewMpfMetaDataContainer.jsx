@@ -12,24 +12,23 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function NewMpfMetaDataContainer() {
-  const [activePropertyType, setActivePropertyType] = useState("Commercial");
   const [statistics, setStatistics] = useState([
     {
       image: "/static/footer/icon1.svg",
       alt: "Cities",
-      number: "26",
+      number: "0",
       label: "Cities",
     },
     {
       image: "/static/footer/icon2.svg",
       alt: "Builders",
-      number: "273",
+      number: "0",
       label: "Builders",
     },
     {
       image: "/static/footer/icon3.svg",
       alt: "Projects",
-      number: "687",
+      number: "0",
       label: "Projects",
     },
     {
@@ -53,22 +52,55 @@ export default function NewMpfMetaDataContainer() {
   useEffect(() => {
     const fetchStatistics = async () => {
       try {
-        // You can replace this with your actual API endpoint
-        // For now, using the default values as fallback
         const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+        if (!apiUrl) {
+          console.error("NEXT_PUBLIC_API_URL is not defined");
+          return;
+        }
 
-        // Example: If you have a statistics endpoint, uncomment and modify:
-        // const response = await fetch(`${apiUrl}statistics`);
-        // if (response.ok) {
-        //   const data = await response.json();
-        //   setStatistics(data);
-        //   // Reset animation when new data is fetched
-        //   setHasAnimated(false);
-        //   setAnimatedValues([0, 0, 0, 0]);
-        // }
+        // Fetch all data in parallel
+        const [projectsRes, citiesRes, buildersRes] = await Promise.all([
+          fetch(`${apiUrl}projects`).catch(() => null),
+          fetch(`${apiUrl}city/all`).catch(() => null),
+          fetch(`${apiUrl}builder/get-all`).catch(() => null),
+        ]);
 
-        // For now, we'll use the existing data structure
-        // You can modify this to fetch from your API
+        const projects = projectsRes?.ok ? await projectsRes.json() : [];
+        const cities = citiesRes?.ok ? await citiesRes.json() : [];
+        const builders = buildersRes?.ok ? await buildersRes.json() : [];
+
+        // Update statistics with fetched data
+        const newStatistics = [
+          {
+            image: "/static/footer/icon1.svg",
+            alt: "Cities",
+            number: `${Array.isArray(cities) ? cities.length : cities?.data?.length || 0}`,
+            label: "Cities",
+          },
+          {
+            image: "/static/footer/icon2.svg",
+            alt: "Builders",
+            number: `${Array.isArray(builders) ? builders.length : builders?.builders?.length || builders?.data?.length || 0}`,
+            label: "Builders",
+          },
+          {
+            image: "/static/footer/icon3.svg",
+            alt: "Projects",
+            number: `${Array.isArray(projects) ? projects.length : 0}`,
+            label: "Projects",
+          },
+          {
+            image: "/static/footer/icon4.svg",
+            alt: "Units",
+            number: "10,030",
+            label: "Units",
+          },
+        ];
+
+        setStatistics(newStatistics);
+        // Reset animation when new data is fetched
+        setHasAnimated(false);
+        setAnimatedValues([0, 0, 0, 0]);
       } catch (error) {
         console.error("Error fetching statistics:", error);
         // Keep default values on error
@@ -126,7 +158,11 @@ export default function NewMpfMetaDataContainer() {
 
   // Intersection Observer to trigger animation when component is visible
   useEffect(() => {
-    if (!observerRef.current || hasAnimated) return;
+    if (!observerRef.current) return;
+
+    // Check if statistics have valid data (not all zeros)
+    const hasValidData = statistics.some(stat => parseNumber(stat.number) > 0);
+    if (!hasValidData) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -145,7 +181,27 @@ export default function NewMpfMetaDataContainer() {
 
     observer.observe(observerRef.current);
 
+    // If component is already visible and data is loaded, trigger animation immediately
+    const checkVisibility = () => {
+      if (observerRef.current) {
+        const rect = observerRef.current.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+        if (isVisible && !hasAnimated && hasValidData) {
+          setHasAnimated(true);
+          statistics.forEach((stat, index) => {
+            const targetValue = parseNumber(stat.number);
+            animateCounter(targetValue, index);
+          });
+        }
+      }
+    };
+
+    // Check immediately and after a short delay
+    checkVisibility();
+    const timeoutId = setTimeout(checkVisibility, 100);
+
     return () => {
+      clearTimeout(timeoutId);
       if (observerRef.current) {
         observer.unobserve(observerRef.current);
       }
