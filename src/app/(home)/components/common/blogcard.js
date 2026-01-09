@@ -9,17 +9,10 @@ export default function BlogCard({ blog }) {
         return words.slice(0, wordLimit).join(" ") + " ...";
     };
 
-    const truncateTitle = (text, wordLimit) => {
-        const title = text.replace(/\u00A0/g, ' ');
-        const words = title.split(" ");
-        if (words.length <= wordLimit) return title;
-        return words.slice(0, wordLimit).join(" ") + "...";
-    }
-
     return (
         <>
             <Link href={`/blog/${blog.slugUrl}`}
-                className="card border-0 rounded-3 overflow-hidden custom-shadow blog-card my-3 text-decoration-none"
+                className="card border-0 rounded-4 overflow-hidden blog-card my-3 text-decoration-none"
                 onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
                 onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
             >
@@ -31,20 +24,20 @@ export default function BlogCard({ blog }) {
                     className="img-fluid"
                     
                 />
-                <div className="card-body d-flex flex-column">
-                    <p className="blog-date">{new Date(blog.createdAt).toLocaleString('en-US', {
+                <div className="card-body d-flex flex-column plus-jakarta-sans-bold">
+                    <p className="blog-date m-0 mb-2">{new Date(blog.createdAt).toLocaleString('en-US', {
                         dateStyle: 'medium',
                         // timeStyle: 'short'
                     })}</p>
-                    <h4 className="card-title fw-bold" title={blog.blogTitle}>{truncateTitle(blog.blogTitle, 8)}</h4>
+                    <h4 className="card-title fw-bold" title={blog.blogTitle}>{blog.blogTitle}</h4>
 
-                    <div className="flex-grow-1 mb-3">
+                    <div className="flex-grow-1 mb-1">
                         <p className="card-text text-muted small">
                             {truncateWords(blog.blogMetaDescription || 'Click below to continue reading...', 50)}
                         </p>
                     </div>
 
-                    <button className="btn btn-background text-white btn-sm mt-auto w-50">
+                    <button className="plus-jakarta-sans-regular mt-1 btn-continue-reading">
                         Continue Reading...
                     </button>
                 </div>

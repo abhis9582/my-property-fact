@@ -49,10 +49,6 @@
   z-index: 3;
 }
 
-.blog-card {
-  min-height: 475px;
-}
-
 /* .top-banner-each-pages::before {
     content: "";
     position: absolute;
@@ -164,6 +160,27 @@
   content: none;
 }
 
+.card-title {
+  font-size: 17px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-continue-reading {
+  color: #C9A24D;
+  border: none;
+  background: none;
+  text-align: left;
+  font-size: 14px;
+  padding: 0px;
+}
+
+.blog-section-container {
+  background: #F9F9F9;
+}
+
 /* All media queries for header banner starts*/
 @media (max-width: 1200px) {
   .top-banner-each-pages {
@@ -210,10 +227,6 @@
 
   .banner-content {
     padding: 0 12px;
-  }
-
-  .blog-card {
-    min-height: 500px;
   }
 }
 
@@ -266,10 +279,6 @@
   .banner-content {
     padding: 0 8px;
   }
-
-  .blog-card {
-    min-height: 450px;
-  }
 }
 
 @media (max-width: 375px) {
@@ -296,8 +305,6 @@
 .blog-date {
   font-size: 14px;
   color: #555;
-  margin-top: 10px;
-  font-style: italic !important;
 }
 
 /* Snow Effect Styles for Common Header Banner */

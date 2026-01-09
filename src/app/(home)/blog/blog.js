@@ -52,7 +52,7 @@ export default function Blog() {
           ) : (
             blogsList.map((blog, index) => (
               <div
-                className="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4 mb-4 blog-card"
+                className="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4 mb-4"
                 key={index}
               >
                 <BlogCard key={index} blog={blog} index={index} />

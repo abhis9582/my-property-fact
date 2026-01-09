@@ -94,8 +94,71 @@
     }
 }
 
+@media (max-width: 768px) {
+    .featured-projects-container {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .slick-prev {
+        left: 25% !important;
+    }
+
+    .slick-next {
+        right: 25% !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .featured-projects-container {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .slick-prev {
+        left: 20% !important;
+        bottom: -35px !important;
+    }
+
+    .slick-next {
+        right: 20% !important;
+        bottom: -35px !important;
+    }
+    
+    .slick-prev:before,
+    .slick-next:before {
+        font-size: 24px;
+    }
+}
+
 @media (max-width: 426px) {
     .featured-projects-container {
-        max-width: 300px;
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .slick-prev {
+        left: 15% !important;
+        bottom: -30px !important;
+    }
+
+    .slick-next {
+        right: 15% !important;
+        bottom: -30px !important;
+    }
+    
+    .slick-prev:before,
+    .slick-next:before {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 375px) {
+    .slick-prev {
+        left: 10% !important;
+    }
+
+    .slick-next {
+        right: 10% !important;
     }
 }

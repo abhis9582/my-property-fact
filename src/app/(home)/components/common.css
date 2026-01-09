@@ -1,16 +1,10 @@
 .top-space {
-  margin-top: 7rem !important;
-}
-
-@media (max-width: 768px) {
-  .top-space {
-    margin-top: 4rem !important;
-  }
+  margin-top: 0rem !important;
 }
 
 @media (max-width: 576px) {
   .top-space {
-    margin-top: 2rem !important;
+    margin-top: 1rem !important;
   }
 }
 
@@ -342,7 +336,6 @@
   justify-content: center;
   padding: clamp(12px, 2.5vw, 14px) clamp(20px, 4vw, 28px);
   border-radius: 999px;
-  background: linear-gradient(90deg, #cda958 0%, #a28039 100%);
   color: #ffffff;
   font-weight: 500;
   font-size: clamp(0.875rem, 2vw, 1rem);

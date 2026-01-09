@@ -85,7 +85,7 @@ const DreamPropertySection = () => {
               </button>
             </h2>
           </div>
-          <Link href="/projects" className="see-all-button">
+          <Link href="/projects" className="see-all-button text-white btn-normal-color">
             See All Properties
           </Link>
         </div>

@@ -6,6 +6,49 @@
     margin-bottom: 2rem;
     flex-wrap: wrap;
 }
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .toggleHead {
+    gap: 8px;
+    margin-bottom: 1.5rem;
+  }
+  
+  .toggleHead .toggleBtn {
+    flex: 0 0 calc(50% - 4px);
+    max-width: calc(50% - 4px);
+    font-size: 13px;
+    padding: 8px 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .toggleHead {
+    gap: 6px;
+    margin-bottom: 1.25rem;
+  }
+  
+  .toggleHead .toggleBtn {
+    flex: 0 0 calc(50% - 3px);
+    max-width: calc(50% - 3px);
+    font-size: 12px;
+    padding: 8px 0.5rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .toggleHead {
+    gap: 5px;
+    margin-bottom: 1rem;
+  }
+  
+  .toggleHead .toggleBtn {
+    flex: 0 0 calc(50% - 2.5px);
+    max-width: calc(50% - 2.5px);
+    font-size: 11px;
+    padding: 6px 0.4rem;
+  }
+}
 .toggleHead .toggleBtn.active {
     font-weight: 700;
 }

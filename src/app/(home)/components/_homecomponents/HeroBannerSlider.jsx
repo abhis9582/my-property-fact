@@ -48,7 +48,7 @@ const HeroBannerSlider = ({ slides = [] }) => {
           const imageContent = (
             <picture className="position-relative home-banner">
               <source srcSet={mobileSrc} media="(max-width: 426px)" />
-              <source srcSet={tabletSrc} media="(max-width: 1199px)" />
+              <source srcSet={desktopSrc} media="(max-width: 1199px)" />
               <Image
                 src={desktopSrc}
                 alt={alt}
