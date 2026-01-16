@@ -21,8 +21,10 @@ import {
   faSlidersH,
   faHome,
 } from "@fortawesome/free-solid-svg-icons";
+import { useSearchParams } from "next/navigation";
 
 export default function Projects() {
+  const searchParams = useSearchParams();
   const [allProjectsList, setAllProjectsList] = useState([]);
   const [pageName, setPageName] = useState("Projects");
   const [page, setPage] = useState(0);
@@ -38,6 +40,7 @@ export default function Projects() {
   const { setProjectData } = useProjectContext();
   const [fadeKey, setFadeKey] = useState(0);
   const [filteredProjectData, setFilteredProjectData] = useState([]);
+  const [hasUrlParams, setHasUrlParams] = useState(false);
 
   // Filter states
   const [propertyTypes, setPropertyTypes] = useState([]);
@@ -181,21 +184,42 @@ export default function Projects() {
     setProjectData(allProjectsList);
   }, [allProjectsList, setProjectData]);
 
-  // Initial load - only run once on mount
+  // Initial load - check URL params first, then sessionStorage, then default
   useEffect(() => {
-    const searched_query = sessionStorage.getItem("mpf-querry");
-    if (searched_query) {
-      try {
-        const queryP = JSON.parse(searched_query);
-        fetchParamsData(queryP);
-        setIsActive("All");
-      } catch (error) {
+    // Check for URL query parameters
+    const propertyType = searchParams.get("propertyType");
+    const propertyLocation = searchParams.get("propertyLocation");
+    const budget = searchParams.get("budget");
+    
+    if (propertyType || propertyLocation || budget) {
+      // URL parameters are present
+      setHasUrlParams(true);
+      setShowFilters(false); // Hide filters when URL params are present
+      const queryParams = {};
+      
+      if (propertyType) queryParams.propertyType = propertyType;
+      if (propertyLocation) queryParams.propertyLocation = propertyLocation;
+      if (budget) queryParams.budget = budget;
+      
+      fetchParamsData(queryParams);
+      setIsActive("All");
+    } else {
+      // No URL params, check sessionStorage
+      setHasUrlParams(false);
+      const searched_query = sessionStorage.getItem("mpf-querry");
+      if (searched_query) {
+        try {
+          const queryP = JSON.parse(searched_query);
+          fetchParamsData(queryP);
+          setIsActive("All");
+        } catch (error) {
+          fetchProjects(0, false);
+        }
+      } else {
         fetchProjects(0, false);
       }
-    } else {
-      fetchProjects(0, false);
     }
-  }, [fetchProjects]);
+  }, [fetchProjects, searchParams]);
 
   // Load more handler
   const loadMore = useCallback(() => {
@@ -474,7 +498,6 @@ export default function Projects() {
   }, [filters, allProjectsList, applyFilters, isActive]);
 
   const filterSectionTab = (tabName) => {
-    debugger
     setIsActive(tabName);
     setPage(0);
 
@@ -530,7 +553,10 @@ export default function Projects() {
   // Determine which projects to display
   let displayProjects = [];
 
-  if (isActive === "All") {
+  // If URL params are present, always show all projects from API directly
+  if (hasUrlParams) {
+    displayProjects = allProjectsList;
+  } else if (isActive === "All") {
     // Show all projects when "All" is selected and no advanced filters
     displayProjects = hasActiveFilters ? filteredProjectData : allProjectsList;
   } else if (hasQuickFilterActive) {
@@ -570,7 +596,7 @@ export default function Projects() {
               <p className="page-subtitle mb-0">
                 Showing <strong>{displayProjects.length}</strong>{" "}
                 {displayProjects.length === 1 ? "project" : "projects"}
-                {(hasQuickFilter || activeFiltersCount > 0) && (
+                {!hasUrlParams && (hasQuickFilter || activeFiltersCount > 0) && (
                   <span className="ms-2">
                     <Badge bg="success" className="ms-1">
                       {activeFiltersCount + (hasQuickFilter ? 1 : 0)} active
@@ -579,73 +605,77 @@ export default function Projects() {
                 )}
               </p>
             </div>
-            <div className="d-flex gap-2">
-              <button
-                className="btn btn-outline-primary btn-sm"
-                onClick={() => setShowFilters(!showFilters)}
-              >
-                <FontAwesomeIcon icon={faSlidersH} className="me-2" />
-                {showFilters ? "Hide" : "Show"} Filters
-                {activeFiltersCount > 0 && (
-                  <Badge bg="danger" className="ms-2">
-                    {activeFiltersCount}
-                  </Badge>
-                )}
-              </button>
-              {(hasQuickFilter || activeFiltersCount > 0) && (
+            {!hasUrlParams && (
+              <div className="d-flex gap-2">
                 <button
-                  className="btn btn-outline-danger btn-sm"
-                  onClick={clearFilters}
+                  className="btn btn-outline-primary btn-sm"
+                  onClick={() => setShowFilters(!showFilters)}
                 >
-                  <FontAwesomeIcon icon={faTimes} className="me-2" />
-                  Clear
+                  <FontAwesomeIcon icon={faSlidersH} className="me-2" />
+                  {showFilters ? "Hide" : "Show"} Filters
+                  {activeFiltersCount > 0 && (
+                    <Badge bg="danger" className="ms-2">
+                      {activeFiltersCount}
+                    </Badge>
+                  )}
                 </button>
-              )}
-            </div>
+                {(hasQuickFilter || activeFiltersCount > 0) && (
+                  <button
+                    className="btn btn-outline-danger btn-sm"
+                    onClick={clearFilters}
+                  >
+                    <FontAwesomeIcon icon={faTimes} className="me-2" />
+                    Clear
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
-          {/* Quick Filter Pills */}
-          <div className="quick-filters-row">
-            <div className="filter-pills-container">
-              <button
-                className={`filter-pill-btn ${
-                  isActive === "All" ? "active" : ""
-                }`}
-                onClick={() => filterSectionTab("All")}
-              >
-                All Projects
-              </button>
-              <button
-                className={`filter-pill-btn ${
-                  isActive === "Commercial" ? "active" : ""
-                }`}
-                onClick={() => filterSectionTab("Commercial")}
-              >
-                Commercial
-              </button>
-              <button
-                className={`filter-pill-btn ${
-                  isActive === "Residential" ? "active" : ""
-                }`}
-                onClick={() => filterSectionTab("Residential")}
-              >
-                Residential
-              </button>
-              <button
-                className={`filter-pill-btn ${
-                  isActive === "New Launched" ? "active" : ""
-                }`}
-                onClick={() => filterSectionTab("New Launched")}
-              >
-                New Launch
-              </button>
+          {/* Quick Filter Pills - Hide when URL params are present */}
+          {!hasUrlParams && (
+            <div className="quick-filters-row">
+              <div className="filter-pills-container">
+                <button
+                  className={`filter-pill-btn ${
+                    isActive === "All" ? "active" : ""
+                  }`}
+                  onClick={() => filterSectionTab("All")}
+                >
+                  All Projects
+                </button>
+                <button
+                  className={`filter-pill-btn ${
+                    isActive === "Commercial" ? "active" : ""
+                  }`}
+                  onClick={() => filterSectionTab("Commercial")}
+                >
+                  Commercial
+                </button>
+                <button
+                  className={`filter-pill-btn ${
+                    isActive === "Residential" ? "active" : ""
+                  }`}
+                  onClick={() => filterSectionTab("Residential")}
+                >
+                  Residential
+                </button>
+                <button
+                  className={`filter-pill-btn ${
+                    isActive === "New Launched" ? "active" : ""
+                  }`}
+                  onClick={() => filterSectionTab("New Launched")}
+                >
+                  New Launch
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         <div className="row g-4">
           {/* Collapsible Filter Sidebar */}
-          {showFilters && (
+          {!hasUrlParams && showFilters && (
             <div className="col-12 col-lg-3">
               <div className="filter-sidebar-card">
                 <div className="filter-card-header">
