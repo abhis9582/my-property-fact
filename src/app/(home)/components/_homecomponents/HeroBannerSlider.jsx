@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Slider from "react-slick";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,6 +11,23 @@ const HeroBannerSlider = ({ slides = [] }) => {
   if (!slides.length) {
     return null;
   }
+
+  const resolveDesktopSrc = (slide) =>
+    slide?.desktop || slide?.tablet || slide?.mobile || "/mpf-banner.jpg";
+
+  const updateHeaderBackground = (slideIndex) => {
+    if (typeof document === "undefined") return;
+    const slide = slides[slideIndex];
+    const desktopSrc = resolveDesktopSrc(slide);
+    document.documentElement.style.setProperty(
+      "--hero-header-bg",
+      `url("${desktopSrc}")`
+    );
+  };
+
+  useEffect(() => {
+    updateHeaderBackground(0);
+  }, [slides]);
 
   const settings = {
     dots: true,
@@ -22,6 +40,7 @@ const HeroBannerSlider = ({ slides = [] }) => {
     pauseOnFocus: false,
     fade: true,
     adaptiveHeight: false,
+    afterChange: (current) => updateHeaderBackground(current),
   };
 
   return (
@@ -64,7 +83,10 @@ const HeroBannerSlider = ({ slides = [] }) => {
           );
 
           return (
-            <div key={id || `hero-slide-${index}`} className="hero-banner-slide">
+            <div
+              key={id || `hero-slide-${index}`}
+              className={`hero-banner-slide ${slide.className || ""}`}
+            >
               {navigationLink ? (
                 <Link href={navigationLink} className="d-block">
                   {imageContent}

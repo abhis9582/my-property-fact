@@ -102,13 +102,13 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
             />
           </Link>
         </div>
-        <nav className="d-none d-lg-flex">
+        <nav className="d-none d-lg-flex flex-grow-1 justify-content-center">
           <div className="menu position-relative">
             <ul className="d-flex gap-5 m-0 align-items-center header-links list-unstyled fw-bold">
               <li className="hasChild">
                 <Link
                   href="/"
-                  className={`text-light py-3 text-uppercase text-decoration-none ${
+                  className={`text-light py-3 text-decoration-none ${
                     pathname === "/" ? "header-link-active" : ""
                   }`}
                 >
@@ -118,102 +118,132 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
               <li className="hasChild">
                 <Link
                   href="#"
-                  className={`text-light text-uppercase text-decoration-none py-3 ${
+                  className={`text-light text-decoration-none py-3 ${
                     isCityRoute ? "header-link-active" : ""
                   }`}
                 >
-                  City<sup>+</sup>
+                  City
                 </Link>
-                <div className="dropdown dropdown-lg z-3">
+                <div className="dropdown dropdown-lg z-3 city-dropdown">
                   {!cityList ? (
                     <div className="d-flex align-items-center justify-content-center p-3">
                       <Spinner animation="border" variant="light" />
                     </div>
                   ) : (
-                    <ul className="list-inline">
-                      {cityList?.map((city) => (
-                        <li key={city.id}>
-                          <Link
-                            href={`/city/${city.slugURL}`}
-                            className={`text-light py-3 text-decoration-none ${
-                              pathname === "/city/" + city.URL
-                                ? "header-link-active"
-                                : ""
-                            }`}
-                          >
-                            {city.cityName}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="city-dropdown-content">
+                      <div className="city-dropdown-left">
+                        <div className="city-dropdown-item">Commercial</div>
+                        <div className="city-dropdown-item">Residential</div>
+                        <div className="city-dropdown-item with-badge">
+                          New Launches <span className="city-dropdown-badge">New</span>
+                        </div>
+                        <div className="city-dropdown-item">Articles &amp; News</div>
+                      </div>
+                      <ul className="list-inline city-dropdown-right">
+                        {cityList?.map((city) => (
+                          <li key={city.id}>
+                            <Link
+                              href={`/city/${city.slugURL}`}
+                              className={`text-light text-decoration-none ${
+                                pathname === "/city/" + city.URL
+                                  ? "header-link-active"
+                                  : ""
+                              }`}
+                            >
+                              {city.cityName}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   )}
                 </div>
               </li>
               <li className="hasChild">
                 <Link
                   href="#"
-                  className={`text-light py-3 text-uppercase text-decoration-none ${
+                  className={`text-light py-3 text-decoration-none ${
                     isBuilderRoute ? "header-link-active" : ""
                   }`}
                 >
-                  Builder<sup>+</sup>
+                  Builder
                 </Link>
-                <div className="dropdown dropdown-lg z-3">
+                <div className="dropdown dropdown-lg z-3 builder-dropdown">
                   {builderList.length === 0 ? (
                     <div className="d-flex align-items-center justify-content-center p-3">
                       <Spinner animation="border" variant="light" />
                     </div>
                   ) : (
-                    <ul className="list-inline">
-                      {builderList?.map((builder) => (
-                        <li key={builder.id}>
-                          <Link
-                            href={`/builder/${builder.slugUrl}`}
-                            className={`text-light text-decoration-none ${
-                              pathname === "/builder/" + builder.slugUrl
-                                ? "header-link-active"
-                                : ""
-                            }`}
-                          >
-                            {builder.builderName}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="city-dropdown-content">
+                      <div className="city-dropdown-left">
+                        <div className="city-dropdown-item">Commercial</div>
+                        <div className="city-dropdown-item">Residential</div>
+                        <div className="city-dropdown-item with-badge">
+                          New Launches <span className="city-dropdown-badge">New</span>
+                        </div>
+                        <div className="city-dropdown-item">Articles &amp; News</div>
+                      </div>
+                      <ul className="list-inline city-dropdown-right">
+                        {builderList?.map((builder) => (
+                          <li key={builder.id}>
+                            <Link
+                              href={`/builder/${builder.slugUrl}`}
+                              className={`text-light text-decoration-none ${
+                                pathname === "/builder/" + builder.slugUrl
+                                  ? "header-link-active"
+                                  : ""
+                              }`}
+                            >
+                              {builder.builderName}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   )}
                 </div>
               </li>
               <li className="hasChild">
                 <Link
                   href="/projects"
-                  className={`text-light py-3 text-uppercase text-decoration-none ${
+                  className={`text-light py-3 text-decoration-none ${
                     isProjectTypeRoute ? "header-link-active" : ""
                   }`}
                 >
-                  Projects<sup>+</sup>
+                  Projects
                 </Link>
-                <div className="dropdown projects-dropdown z-3">
+                <div className="dropdown dropdown-lg projects-dropdown z-3">
                   {!projectTypes ? (
                     <div className="d-flex align-items-center justify-content-center p-3">
                       <Spinner animation="border" variant="light" />
                     </div>
                   ) : (
-                    <ul className="list-inline">
-                      {projectTypes?.map((project) => (
-                        <li key={project.id}>
-                          <Link
-                            href={`/projects/${project.slugUrl}`}
-                            className={`text-light text-decoration-none ${
-                              pathname === "/projects/" + project.slugUrl
-                                ? "header-link-active"
-                                : ""
-                            }`}
-                          >
-                            {project.projectTypeName}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="city-dropdown-content">
+                      <div className="city-dropdown-left">
+                        <div className="city-dropdown-item">Commercial</div>
+                        <div className="city-dropdown-item">Residential</div>
+                        <div className="city-dropdown-item with-badge">
+                          New Launches <span className="city-dropdown-badge">New</span>
+                        </div>
+                        <div className="city-dropdown-item">Articles &amp; News</div>
+                      </div>
+                      <ul className="list-inline city-dropdown-right">
+                        {projectTypes?.map((project) => (
+                          <li key={project.id}>
+                            <Link
+                              href={`/projects/${project.slugUrl}`}
+                              className={`text-light text-decoration-none ${
+                                pathname === "/projects/" + project.slugUrl
+                                  ? "header-link-active"
+                                  : ""
+                              }`}
+                            >
+                              {project.projectTypeName}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   )}
                 </div>
               </li>
@@ -230,7 +260,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
               <li className="hasChild">
                 <Link
                   href="/about-us"
-                  className={`text-light py-3 text-uppercase text-decoration-none ${
+                  className={`text-light py-3  text-decoration-none ${
                     pathname === "/about-us" ? "header-link-active" : ""
                   }`}
                 >
@@ -240,7 +270,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
               <li className="hasChild">
                 <Link
                   href="/blog"
-                  className={`text-light py-3 text-uppercase text-decoration-none ${
+                  className={`text-light py-3  text-decoration-none ${
                     isBlogTypeRoute ? "header-link-active" : ""
                   }`}
                 >
@@ -253,22 +283,22 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
               <li className="hasChild">
                 <Link
                   href="/contact-us"
-                  className={`text-light py-3 text-uppercase text-decoration-none ${
+                  className={`text-light py-3 text-decoration-none ${
                     pathname === "/contact-us" ? "header-link-active" : ""
                   }`}
                 >
-                  Contact us
+                  Contact Us
                 </Link>
               </li>
-              {/* <li>
-                <div className="bg-white rounded rounded-3 p-2 cursor-pointer hover-effect"
-                onClick={openSignUpModal}>
-                  <p className="text-dark m-0 p-0">Post Property</p>
-                </div>
-              </li> */}
             </ul>
           </div>
         </nav>
+        <div className="d-none d-lg-flex align-items-center">
+          <div className="post-property-btn" onClick={openSignUpModal}>
+            <span className="post-property-text">Post Property</span>
+            <span className="free-tag">Free</span>
+          </div>
+        </div>
         <div className="menuBtn d-flex d-lg-none " onClick={openMenu}>
           <span id="menuLine1"></span>
           <span id="menuLine2"></span>
@@ -299,7 +329,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                     className="text-decoration-none"
                     onClick={() => openMenuMobile("city")}
                   >
-                    City<sup>+</sup>
+                    City
                   </Link>
                   <div
                     className={`dropdown ${
@@ -331,7 +361,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                     href="#"
                     onClick={() => openMenuMobile("builder")}
                   >
-                    Builder<sup>+</sup>
+                    Builder
                   </Link>
                   <div
                     className={`dropdown ${
@@ -363,7 +393,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                     className="text-decoration-none"
                     onClick={() => openMenuMobile("projects")}
                   >
-                    Projects<sup>+</sup>
+                    Projects
                   </Link>
                   <div
                     className={`dropdown ${

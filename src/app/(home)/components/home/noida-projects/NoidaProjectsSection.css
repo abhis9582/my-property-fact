@@ -1,0 +1,146 @@
+.noida-projects-section {
+  padding: 48px 0 16px;
+  background: #ffffff;
+}
+
+.noida-projects-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.noida-projects-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1d1d1d;
+  margin-bottom: 2px;
+}
+
+.noida-projects-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 28px;
+  line-height: 1.25;
+  color: #0f0f0f;
+}
+
+.noida-projects-slider-wrap {
+  position: relative;
+}
+
+.noida-projects-slider {
+  padding-bottom: 8px;
+}
+
+.noida-projects-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: #ffffff;
+  color: #111;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.noida-projects-prev {
+  left: -20px;
+}
+
+.noida-projects-next {
+  right: -20px;
+}
+
+@media (max-width: 640px) {
+  .noida-projects-prev {
+    left: -10px;
+  }
+
+  .noida-projects-next {
+    right: -10px;
+  }
+}
+
+.noida-projects-slider .swiper-wrapper {
+  align-items: stretch;
+}
+
+.noida-projects-slider .swiper-slide {
+  height: auto;
+}
+
+.noida-project-card {
+  background: #fff6e4;
+  border-radius: 12px;
+  padding: 18px;
+  border-top: 2px solid #1b5e20;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  height: 100%;
+}
+
+.noida-project-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.noida-project-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  color: #111;
+}
+
+.noida-project-icon {
+  color: #2c2c2c;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.noida-project-price {
+  margin: 0;
+  font-size: 13px;
+  color: #5c5c5c;
+}
+
+.noida-project-link {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1b5e20;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.noida-project-link:hover {
+  color: #0d5834;
+}
+
+.noida-project-image {
+  margin-top: 8px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.noida-project-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+

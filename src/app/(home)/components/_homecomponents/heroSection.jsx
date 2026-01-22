@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import SearchFilter from "./searchFIlter";
 import AnimatedCounter from "./AnimatedCounter";
 import HeroBannerSlider from "./HeroBannerSlider";
@@ -40,9 +41,10 @@ export default async function HeroSection() {
   const heroSlides = [
     {
       id: "hero-primary",
-      desktop: "/static/banners/desktop_banner1.png",
-      tablet: "/static/banners/tablet_banner1.jpg",
-      mobile: "/static/banners/mobile_banner1.png",
+      className: "hero-republic-26",
+      desktop: "/static/banners/26_republic.png",
+      tablet: "/static/banners/26_republic.png",
+      mobile: "/static/banners/26_republic.png",
       alt: "Find the best property with My Property Fact",
       priority: true,
       href: "#",
@@ -83,6 +85,15 @@ export default async function HeroSection() {
               {/* <SnowEffect /> */}
               {/* <NewYearEffect /> */}
             <HeroBannerSlider slides={heroSlides} />
+            <div className="hero-center-emblem">
+              <Image
+                src="/static/banners/banner 21 january-10.svg"
+                alt="Republic Day emblem"
+                width={280}
+                height={280}
+                priority
+              />
+            </div>
             {/* <div className="bannercontainer">
               <h1 className="text-center text-light">Find the best property</h1>
               <div className="d-flex flex-wrap align-item-center justify-content-center gap-4 my-4">

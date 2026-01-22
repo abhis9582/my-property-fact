@@ -185,7 +185,7 @@ export default function NewFooterDesign({ cityList = [] }) {
                 />
               </div>
               <p className="company-description">
-                My Property Fact is your trusted platform for discovering the perfect real estate opportunities across India. We bring together verified properties, transparent data, and smart tools to help you make informed decisions whether you&apos;re buying or investing.
+                My Property Fact is your trusted platform for discovering the perfect real estate opportunities across India. We bring together verified properties, transparent data,smart tools to help you make informed decisions whether you&apos;re buying or investing.
               </p>
             </div>
             <div className="contact-details">
