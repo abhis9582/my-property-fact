@@ -128,12 +128,15 @@
 .newsletter-form {
     display: flex;
     gap: 10px;
+    padding-right: 40px;
+    
 }
 
 .newsletter-input {
     flex: 1;
-    padding: 12px 16px;
-    border-radius: 3rem;
+    /* padding-right: 20px; */
+    padding-left: 20px;
+    border-radius: 30px;
     border: none;
     font-size: 14px;
     background: #ffffff;
@@ -146,7 +149,7 @@
 }
 
 .newsletter-button {
-    padding: 12px 60px;
+    padding: 12px 20px;
     border-radius: 3rem;
     border: none;
     color: #ffffff;
@@ -159,6 +162,7 @@
     height: 29px;
     display: flex;
     align-items: center;
+    gap: 10px;
 }
 
 /* Middle Section */

@@ -1,11 +1,14 @@
 "use client";
 import Link from "next/link";
 import "./header.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Spinner } from "react-bootstrap";
 import LoginSignupModal from "../_homecomponents/loginSignupModal";
+import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -18,6 +21,13 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
   const isBlogTypeRoute = pathname.startsWith("/blog");
   //Defining scroll variable
   const [isScrolled, setIsScrolled] = useState(false);
+  
+  // Project search state
+  const [projectSearchQuery, setProjectSearchQuery] = useState("");
+  const [projectSearchResults, setProjectSearchResults] = useState([]);
+  const [isSearchingProjects, setIsSearchingProjects] = useState(false);
+  const projectSearchTimeoutRef = useRef(null);
+  const projectsDropdownRef = useRef(null);
   const openMenuMobile = (dropdown) => {
     setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
   };
@@ -35,6 +45,88 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  // Prevent body scroll when dropdown is hovered
+  useEffect(() => {
+    let scrollTimeout = null;
+    let scrollPosition = 0;
+
+    const preventBodyScroll = () => {
+      scrollPosition = window.scrollY;
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollPosition}px`;
+      document.body.style.width = '100%';
+    };
+
+    const allowBodyScroll = () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollPosition);
+    };
+
+    const handleDropdownEnter = () => {
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      preventBodyScroll();
+    };
+
+    const handleDropdownLeave = (e) => {
+      const relatedTarget = e.relatedTarget;
+      // Check if moving to another dropdown or header item
+      if (!relatedTarget || 
+          (!relatedTarget.closest('.dropdown.dropdown-lg') && 
+           !relatedTarget.closest('.hasChild'))) {
+        if (scrollTimeout) clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          const stillHovering = document.querySelector('.hasChild:hover .dropdown.dropdown-lg') ||
+                               document.querySelector('.dropdown.dropdown-lg:hover');
+          if (!stillHovering) {
+            allowBodyScroll();
+          }
+        }, 150);
+      }
+    };
+
+    const handleHeaderItemLeave = (e) => {
+      const relatedTarget = e.relatedTarget;
+      if (!relatedTarget || !relatedTarget.closest('.dropdown.dropdown-lg')) {
+        if (scrollTimeout) clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          const stillHovering = document.querySelector('.hasChild:hover .dropdown.dropdown-lg') ||
+                               document.querySelector('.dropdown.dropdown-lg:hover');
+          if (!stillHovering) {
+            allowBodyScroll();
+          }
+        }, 150);
+      }
+    };
+
+    const dropdowns = document.querySelectorAll('.dropdown.dropdown-lg');
+    const headerItems = document.querySelectorAll('.hasChild');
+
+    dropdowns.forEach(dropdown => {
+      dropdown.addEventListener('mouseenter', handleDropdownEnter);
+      dropdown.addEventListener('mouseleave', handleDropdownLeave);
+    });
+
+    headerItems.forEach(item => {
+      item.addEventListener('mouseleave', handleHeaderItemLeave);
+    });
+
+    return () => {
+      dropdowns.forEach(dropdown => {
+        dropdown.removeEventListener('mouseenter', handleDropdownEnter);
+        dropdown.removeEventListener('mouseleave', handleDropdownLeave);
+      });
+      headerItems.forEach(item => {
+        item.removeEventListener('mouseleave', handleHeaderItemLeave);
+      });
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      allowBodyScroll();
     };
   }, []);
 
@@ -84,6 +176,85 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
     setShowModal(true);
   };
 
+  // Handle project search
+  useEffect(() => {
+    if (projectSearchQuery.trim().length >= 2) {
+      setIsSearchingProjects(true);
+      
+      // Clear previous timeout
+      if (projectSearchTimeoutRef.current) {
+        clearTimeout(projectSearchTimeoutRef.current);
+      }
+
+      // Debounce search
+      projectSearchTimeoutRef.current = setTimeout(async () => {
+        try {
+          // Fetch all projects and filter client-side
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}projects`
+          );
+          const allProjects = Array.isArray(response.data) ? response.data : [];
+          
+          // Filter projects by search query
+          const query = projectSearchQuery.trim().toLowerCase();
+          const filtered = allProjects.filter((project) => {
+            const projectName = (project.projectName || project.name || "").toLowerCase();
+            const builderName = (project.builderName || "").toLowerCase();
+            const cityName = (project.cityName || "").toLowerCase();
+            const location = (project.location || "").toLowerCase();
+            
+            return (
+              projectName.includes(query) ||
+              builderName.includes(query) ||
+              cityName.includes(query) ||
+              location.includes(query)
+            );
+          }).slice(0, 50); // Limit to 50 results
+          
+          setProjectSearchResults(filtered);
+        } catch (error) {
+          console.error("Error searching projects:", error);
+          setProjectSearchResults([]);
+        } finally {
+          setIsSearchingProjects(false);
+        }
+      }, 300);
+    } else {
+      setProjectSearchResults([]);
+      setIsSearchingProjects(false);
+    }
+
+    return () => {
+      if (projectSearchTimeoutRef.current) {
+        clearTimeout(projectSearchTimeoutRef.current);
+      }
+    };
+  }, [projectSearchQuery]);
+
+  // Reset search when dropdown closes
+  useEffect(() => {
+    const handleMouseLeave = () => {
+      // Reset search when mouse leaves the projects dropdown area
+      setTimeout(() => {
+        const projectsLi = document.querySelector('.hasChild:has(.projects-dropdown)');
+        const isHovering = projectsLi?.matches(':hover') || 
+                          projectsDropdownRef.current?.matches(':hover');
+        if (!isHovering) {
+          setProjectSearchQuery("");
+          setProjectSearchResults([]);
+        }
+      }, 200);
+    };
+
+    const projectsLi = document.querySelector('.hasChild:has(.projects-dropdown)');
+    if (projectsLi) {
+      projectsLi.addEventListener('mouseleave', handleMouseLeave);
+      return () => {
+        projectsLi.removeEventListener('mouseleave', handleMouseLeave);
+      };
+    }
+  }, []);
+
   return (
     <>
       <div
@@ -132,12 +303,18 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                   ) : (
                     <div className="city-dropdown-content">
                       <div className="city-dropdown-left">
-                        <div className="city-dropdown-item">Commercial</div>
-                        <div className="city-dropdown-item">Residential</div>
-                        <div className="city-dropdown-item with-badge">
+                        <Link href="/commercial" className="city-dropdown-item">
+                          Commercial
+                        </Link>
+                        <Link href="/residential" className="city-dropdown-item">
+                          Residential
+                        </Link>
+                        <Link href="/new-launches" className="city-dropdown-item with-badge">
                           New Launches <span className="city-dropdown-badge">New</span>
-                        </div>
-                        <div className="city-dropdown-item">Articles &amp; News</div>
+                        </Link>
+                        <Link href="/blog" className="city-dropdown-item">
+                          Articles &amp; News
+                        </Link>
                       </div>
                       <ul className="list-inline city-dropdown-right">
                         {cityList?.map((city) => (
@@ -176,12 +353,18 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                   ) : (
                     <div className="city-dropdown-content">
                       <div className="city-dropdown-left">
-                        <div className="city-dropdown-item">Commercial</div>
-                        <div className="city-dropdown-item">Residential</div>
-                        <div className="city-dropdown-item with-badge">
+                        <Link href="/commercial" className="city-dropdown-item">
+                          Commercial
+                        </Link>
+                        <Link href="/residential" className="city-dropdown-item">
+                          Residential
+                        </Link>
+                        <Link href="/new-launches" className="city-dropdown-item with-badge">
                           New Launches <span className="city-dropdown-badge">New</span>
-                        </div>
-                        <div className="city-dropdown-item">Articles &amp; News</div>
+                        </Link>
+                        <Link href="/blog" className="city-dropdown-item">
+                          Articles &amp; News
+                        </Link>
                       </div>
                       <ul className="list-inline city-dropdown-right">
                         {builderList?.map((builder) => (
@@ -212,7 +395,10 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                 >
                   Projects
                 </Link>
-                <div className="dropdown dropdown-lg projects-dropdown z-3">
+                <div 
+                  className="dropdown dropdown-lg projects-dropdown z-3"
+                  ref={projectsDropdownRef}
+                >
                   {!projectTypes ? (
                     <div className="d-flex align-items-center justify-content-center p-3">
                       <Spinner animation="border" variant="light" />
@@ -220,29 +406,81 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                   ) : (
                     <div className="city-dropdown-content">
                       <div className="city-dropdown-left">
-                        <div className="city-dropdown-item">Commercial</div>
-                        <div className="city-dropdown-item">Residential</div>
-                        <div className="city-dropdown-item with-badge">
+                        <Link href="/commercial" className="city-dropdown-item">
+                          Commercial
+                        </Link>
+                        <Link href="/residential" className="city-dropdown-item">
+                          Residential
+                        </Link>
+                        <Link href="/new-launches" className="city-dropdown-item with-badge">
                           New Launches <span className="city-dropdown-badge">New</span>
-                        </div>
-                        <div className="city-dropdown-item">Articles &amp; News</div>
+                        </Link>
+                        <Link href="/blog" className="city-dropdown-item">
+                          Articles &amp; News
+                        </Link>
                       </div>
-                      <ul className="list-inline city-dropdown-right">
-                        {projectTypes?.map((project) => (
-                          <li key={project.id}>
-                            <Link
-                              href={`/projects/${project.slugUrl}`}
-                              className={`text-light text-decoration-none ${
-                                pathname === "/projects/" + project.slugUrl
-                                  ? "header-link-active"
-                                  : ""
-                              }`}
-                            >
-                              {project.projectTypeName}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
+                      <div className="city-dropdown-right projects-search-section">
+                        <div className="projects-search-wrapper">
+                          <h3 className="projects-search-title">Search Your Dream Home</h3>
+                          <div className="projects-search-container">
+                            <div className="projects-search-input-wrapper">
+                              <FontAwesomeIcon icon={faSearch} className="projects-search-icon" />
+                              <input
+                                type="text"
+                                placeholder="Search"
+                                className="projects-search-input"
+                                value={projectSearchQuery}
+                                onChange={(e) => setProjectSearchQuery(e.target.value)}
+                              />
+                              <button className="projects-explore-btn">Explore</button>
+                            </div>
+                          </div>
+                          <div className="projects-email-info">
+                            Email Us At Services@Social@Mypropertyfact.Com. Or Call Us At 8920024793 (IND Toll-Free)
+                          </div>
+                        </div>
+                        {isSearchingProjects && (
+                          <div className="projects-search-loader">
+                            <Spinner animation="border" variant="light" size="sm" />
+                            <span className="ms-2">Searching...</span>
+                          </div>
+                        )}
+                        {!isSearchingProjects && projectSearchQuery.trim().length >= 2 && (
+                          <div className="projects-search-results">
+                            {projectSearchResults.length > 0 ? (
+                              <ul className="list-inline projects-results-list">
+                                {projectSearchResults.map((project) => (
+                                  <li key={project.id || project.slugURL}>
+                                    <Link
+                                      href={`/projects/${project.slugURL || project.slugUrl}`}
+                                      className="text-light text-decoration-none project-result-item"
+                                      onClick={() => {
+                                        setProjectSearchQuery("");
+                                        setProjectSearchResults([]);
+                                      }}
+                                    >
+                                      {project.projectName || project.name || "Project"}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <div className="projects-no-results">
+                                No projects found
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      <div className="projects-dropdown-footer">
+                        <div className="projects-dropdown-footer-label">
+                          Contact Us Toll Free On
+                        </div>
+                        <div className="projects-dropdown-footer-phone">
+                          <i className="fas fa-phone"></i>
+                          <span>8920024793 (IND Toll-Free)</span>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>

@@ -167,7 +167,7 @@
 
 @media (max-width: 768px) {
   .mpf-metadata-container {
-    padding: 30px 15px;
+    padding: 20px 12px;
     margin-top: 0px !important;
   }
 
@@ -220,7 +220,8 @@
   }
 
   .mpf-metadata-container {
-    margin-top: 135px !important;
+    margin-top: 0 !important;
+    padding-top: 12px;
   }
 
   .property-search-card {

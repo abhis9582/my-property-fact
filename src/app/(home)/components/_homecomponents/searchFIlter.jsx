@@ -54,7 +54,7 @@ export default function SearchFilter({ projectTypeList, cityList }) {
   return (
     <div className="home-search-container container">
       {/* <div className="container bg-white border rounded-2 custom-shadow">*/}
-      <div className="container border rounded-4 search-filter-shadow">
+      <div className="container border rounded-1 search-filter-shadow">
         <form method="Get" action="projects">
           <div className="d-flex flex-wrap flex-md-row flex-column p-3 p-md-4 gap-2 gap-md-3 font-gotham-light">
             <div className="col">
