@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import Slider from "react-slick";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,23 +10,6 @@ const HeroBannerSlider = ({ slides = [] }) => {
   if (!slides.length) {
     return null;
   }
-
-  const resolveDesktopSrc = (slide) =>
-    slide?.desktop || slide?.tablet || slide?.mobile || "/mpf-banner.jpg";
-
-  const updateHeaderBackground = (slideIndex) => {
-    if (typeof document === "undefined") return;
-    const slide = slides[slideIndex];
-    const desktopSrc = resolveDesktopSrc(slide);
-    document.documentElement.style.setProperty(
-      "--hero-header-bg",
-      `url("${desktopSrc}")`
-    );
-  };
-
-  useEffect(() => {
-    updateHeaderBackground(0);
-  }, [slides]);
 
   const settings = {
     dots: true,
@@ -40,7 +22,6 @@ const HeroBannerSlider = ({ slides = [] }) => {
     pauseOnFocus: false,
     fade: true,
     adaptiveHeight: false,
-    afterChange: (current) => updateHeaderBackground(current),
   };
 
   return (
@@ -66,9 +47,8 @@ const HeroBannerSlider = ({ slides = [] }) => {
 
           const imageContent = (
             <picture className="position-relative home-banner">
-              <source srcSet={mobileSrc} media="(max-width: 767px)" />
-              <source srcSet={tabletSrc} media="(max-width: 1023px)" />
-              <source srcSet={desktopSrc} media="(min-width: 1024px)" />
+              <source srcSet={mobileSrc} media="(max-width: 426px)" />
+              <source srcSet={desktopSrc} media="(max-width: 1199px)" />
               <Image
                 src={desktopSrc}
                 alt={alt}
@@ -78,16 +58,13 @@ const HeroBannerSlider = ({ slides = [] }) => {
                 priority={priority}
                 loading={priority ? "eager" : "lazy"}
                 fetchPriority={priority ? "high" : "auto"}
-                sizes="(max-width: 767px) 100vw, (max-width: 1023px) 100vw, 1920px"
+                sizes="(max-width: 426px) 100vw, (max-width: 1199px) 100vw, 1920px"
               />
             </picture>
           );
 
           return (
-            <div
-              key={id || `hero-slide-${index}`}
-              className={`hero-banner-slide ${slide.className || ""}`}
-            >
+            <div key={id || `hero-slide-${index}`} className="hero-banner-slide">
               {navigationLink ? (
                 <Link href={navigationLink} className="d-block">
                   {imageContent}

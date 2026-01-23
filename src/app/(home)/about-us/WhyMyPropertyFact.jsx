@@ -86,9 +86,9 @@ export default function WhyMyPropertyFact() {
                 </p>
                 <p className="text-center">
                   Join Us At{" "}
-                  <Link href="https://www.mypropertyfact.com" target="_blank"
+                  <Link href="/" target="_blank"
                    className="our-commitment-link">
-                    mypropertyfact.com
+                    www.mypropertyfact.Com
                   </Link>{" "}
                   And Discover A New Way To Explore Real Estate. Whether You Are
                   Buying, Renting, Or Investing, My Property Fact Is Here To

@@ -30,9 +30,6 @@ export default function NewsAndViews({ webStoryList }) {
                       </div>
                     </div>
                     <div className="flip-card-back">
-                      <h5 className="flip-card-back-title">
-                        {item.categoryName}
-                      </h5>
                       <p>{item.categoryDescription}</p>
                     </div>
                   </div>

@@ -43,9 +43,9 @@ export default function NewMpfMetaDataContainer() {
   const observerRef = useRef(null);
 
   const propertyTypes = [
-    { id: "Commercial", label: "Commercial", slugUrl: "commercial" },
-    { id: "New Launches", label: "New Launches", slugUrl: "new-launches" },
-    { id: "Residential", label: "Residential", slugUrl: "residential" },
+    { id: "Commercial", label: "Commercial", slugUrl: "/commercial" },
+    { id: "New Launches", label: "New Launches", slugUrl: "/new-launches" },
+    { id: "Residential", label: "Residential", slugUrl: "/residential" },
   ];
 
   // Fetch statistics data dynamically
