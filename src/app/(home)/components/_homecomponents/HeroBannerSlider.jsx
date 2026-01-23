@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import Slider from "react-slick";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,26 +8,29 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const HeroBannerSlider = ({ slides = [] }) => {
-  if (!slides.length) {
-    return null;
-  }
-
   const resolveDesktopSrc = (slide) =>
     slide?.desktop || slide?.tablet || slide?.mobile || "/mpf-banner.jpg";
 
-  const updateHeaderBackground = (slideIndex) => {
+  const updateHeaderBackground = useCallback((slideIndex) => {
     if (typeof document === "undefined") return;
     const slide = slides[slideIndex];
+    if (!slide) return;
     const desktopSrc = resolveDesktopSrc(slide);
     document.documentElement.style.setProperty(
       "--hero-header-bg",
       `url("${desktopSrc}")`
     );
-  };
+  }, [slides]);
 
   useEffect(() => {
-    updateHeaderBackground(0);
-  }, [slides]);
+    if (slides.length > 0) {
+      updateHeaderBackground(0);
+    }
+  }, [slides, updateHeaderBackground]);
+
+  if (!slides.length) {
+    return null;
+  }
 
   const settings = {
     dots: true,
