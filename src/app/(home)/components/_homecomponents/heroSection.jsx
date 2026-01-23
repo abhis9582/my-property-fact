@@ -43,8 +43,8 @@ export default async function HeroSection() {
       id: "hero-primary",
       className: "hero-republic-26",
       desktop: "/static/banners/26_republic.png",
-      tablet: "/static/banners/26_republic.png",
-      mobile: "/static/banners/26_republic.png",
+      tablet: "/static/banners/republic_new_tablet.png",
+      mobile: "/static/banners/new_repu.jpg",
       alt: "Find the best property with My Property Fact",
       priority: true,
       href: "#",
@@ -87,7 +87,7 @@ export default async function HeroSection() {
             <HeroBannerSlider slides={heroSlides} />
             <div className="hero-center-emblem">
               <Image
-                src="/static/banners/banner 21 january-10.svg"
+                src="/static/banners/new_chakra.svg"
                 alt="Republic Day emblem"
                 width={280}
                 height={280}

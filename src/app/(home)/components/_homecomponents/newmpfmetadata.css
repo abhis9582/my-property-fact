@@ -2,8 +2,8 @@
 .mpf-metadata-container {
   width: 100%;
   /* max-width: 1200px; */
-  margin-top: 40px;
-  padding: 40px 0px;
+  /* margin-top: 40px; */
+  padding: 50px 0px;
 }
 
 /* Property Search Card */
@@ -221,7 +221,7 @@
 
   .mpf-metadata-container {
     margin-top: 0 !important;
-    padding-top: 12px;
+    /* padding-top: 12px; */
   }
 
   .property-search-card {

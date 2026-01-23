@@ -4,17 +4,19 @@
 }
 
 .noida-projects-container {
-  max-width: 1200px;
+  max-width: 1800px;
   margin: 0 auto;
-  padding: 0 clamp(16px, 2vw, 32px);
+  padding: 0 clamp(16px, 3vw, 32px);
 }
+
 
 .noida-projects-label {
   display: block;
-  font-size: clamp(12px, 1.1vw, 15px);
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 200;
   color: #1d1d1d;
   margin-bottom: clamp(2px, 0.3vw, 4px);
+
 }
 
 .noida-projects-title {
@@ -71,11 +73,11 @@
   .noida-projects-section {
     padding: 20px 0 12px;
   }
-  
+
   .noida-projects-container {
     padding: 0 12px;
   }
-  
+
   .noida-projects-prev {
     left: -12px;
   }
@@ -83,7 +85,7 @@
   .noida-projects-next {
     right: -12px;
   }
-  
+
   .noida-projects-nav {
     width: 32px;
     height: 32px;
@@ -95,11 +97,11 @@
   .noida-projects-section {
     padding: 24px 0 14px;
   }
-  
+
   .noida-projects-container {
     padding: 0 14px;
   }
-  
+
   .noida-projects-prev {
     left: -14px;
   }
@@ -107,7 +109,7 @@
   .noida-projects-next {
     right: -14px;
   }
-  
+
   .noida-projects-nav {
     width: 34px;
     height: 34px;
@@ -123,7 +125,7 @@
   .noida-projects-next {
     right: -16px;
   }
-  
+
   .noida-projects-nav {
     width: 36px;
     height: 36px;
@@ -139,7 +141,7 @@
   .noida-projects-next {
     right: -18px;
   }
-  
+
   .noida-projects-nav {
     width: 38px;
     height: 38px;
@@ -245,15 +247,15 @@
     padding: 12px;
     gap: 8px;
   }
-  
+
   .noida-project-name {
     font-size: 13px;
   }
-  
+
   .noida-project-price {
     font-size: 11px;
   }
-  
+
   .noida-project-link {
     font-size: 11px;
   }
@@ -264,17 +266,68 @@
     padding: 14px;
     gap: 9px;
   }
-  
+
+  .noida-projects-container {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
   .noida-project-name {
     font-size: 14px;
   }
-  
+
   .noida-project-price {
     font-size: 12px;
   }
-  
+
+  .noida-projects-label,
+  .noida-projects-title {
+    text-align: center;
+    width: 100% !important;
+  }
+
   .noida-project-link {
     font-size: 12px;
   }
 }
 
+
+/* Mobile: 320–576 */
+@media (max-width: 576px) {
+  .noida-projects-container {
+    margin: 0 auto;
+    text-align: center;
+  }
+}
+
+/* Tablet: 577–768 */
+@media (min-width: 577px) and (max-width: 768px) {
+  .noida-projects-container {
+    margin: 0 auto;
+  }
+}
+
+/* Small laptop: 769–1024 */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .noida-projects-container {
+    margin-left: 80px;
+    margin-right: 0;
+  }
+}
+
+/* Desktop: 1025+ */
+@media (min-width: 1025px) {
+  .noida-projects-container {
+    margin-left: 160px;
+    margin-right: 0;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1440px) {
+  .noida-projects-container {
+    margin-left: 0px;
+    margin-right: 0;
+  }
+}

@@ -10,6 +10,15 @@
   overflow: hidden;
 }
 
+/* Ensure text overlay is not cut off */
+.flip-card-front {
+  overflow: hidden;
+}
+
+.flip-card {
+  overflow: visible;
+}
+
 .flip-card-front,
 .flip-card-back {
   position: absolute;
@@ -36,12 +45,29 @@
   outline: 1px solid #0000;
   perspective: inherit;
   position: absolute;
-  top: 85%;
-  transform: translateY(-50%) translateZ(60px) scale(.94);
-  -webkit-transform: translateY(-50%) translateZ(60px) scale(.94);
-  -ms-transform: translateY(-50%) translateZ(60px) scale(.94);
+  bottom: 0;
+  top: auto;
+  transform: translateY(0) translateZ(60px) scale(.94);
+  -webkit-transform: translateY(0) translateZ(60px) scale(.94);
+  -ms-transform: translateY(0) translateZ(60px) scale(.94);
   width: 100%;
   z-index: 2;
+  padding: 12px 8px !important;
+  box-sizing: border-box;
+  overflow: visible;
+  word-wrap: break-word;
+  white-space: normal;
+  max-height: 25%;
+}
+
+.title-3d p {
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  word-wrap: break-word;
+  white-space: normal;
+  line-height: 1.4;
+  display: block;
 }
 
 .flip-card:hover .title-3d {
@@ -85,13 +111,45 @@
   }
 }
 
+/* Tablet specific fix (768px) */
+@media (min-width: 768px) and (max-width: 768px) {
+  .flip-card-inner {
+    overflow: visible;
+    padding-bottom: 20px;
+  }
+  
+  .flip-card-front {
+    overflow: visible;
+  }
+  
+  .title-3d {
+    position: absolute;
+    bottom: 0;
+    top: auto;
+    transform: translateY(0) translateZ(60px) scale(.94);
+    -webkit-transform: translateY(0) translateZ(60px) scale(.94);
+    -ms-transform: translateY(0) translateZ(60px) scale(.94);
+    padding: 12px 8px !important;
+    overflow: visible;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+}
+
 @media (max-width: 768px) {
   .flip-card {
     margin-bottom: 20px;
+    overflow: visible;
   }
   
   .flip-card-inner {
     height: 350px;
+    overflow: visible;
+    padding-bottom: 20px;
+  }
+  
+  .flip-card-front {
+    overflow: visible;
   }
   
   .flip-card-back {
@@ -100,8 +158,25 @@
   
   .title-3d {
     font-size: 14px;
-    padding: 10px;
-    top: 80%;
+    padding: 12px 8px !important;
+    top: auto;
+    bottom: 0;
+    position: absolute;
+    transform: translateY(0) translateZ(60px) scale(.94);
+    -webkit-transform: translateY(0) translateZ(60px) scale(.94);
+    -ms-transform: translateY(0) translateZ(60px) scale(.94);
+    overflow: visible;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+  
+  .title-3d p {
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    word-wrap: break-word;
+    white-space: normal;
+    line-height: 1.4;
   }
 }
 

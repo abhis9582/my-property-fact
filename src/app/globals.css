@@ -443,3 +443,10 @@ textarea.form-input-custom {
   width: 0;
   background: transparent;
 }
+
+
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+}

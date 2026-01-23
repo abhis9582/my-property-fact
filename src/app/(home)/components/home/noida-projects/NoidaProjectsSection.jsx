@@ -50,7 +50,7 @@ export default function NoidaProjectsSection() {
   return (
     <section className="noida-projects-section">
       <div className="noida-projects-container">
-        <span className="noida-projects-label">Explore</span>
+        <h2 className="noida-projects-label">Explore</h2>
         <h2 className="noida-projects-title">
           Popular Projects In Greater Noida
         </h2>
@@ -120,12 +120,12 @@ export default function NoidaProjectsSection() {
             </SwiperSlide>
           ))}
           </Swiper>
-          <button
+          {/* <button
             className="noida-projects-nav noida-projects-next"
             aria-label="Next projects"
           >
             ›
-          </button>
+          </button> */}
         </div>
       </div>
     </section>

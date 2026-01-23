@@ -134,14 +134,14 @@
 
 .newsletter-input {
     flex: 1;
-    /* padding-right: 20px; */
-    padding-left: 20px;
+    padding: 12px 24px;
     border-radius: 30px;
     border: none;
     font-size: 14px;
     background: #ffffff;
     color: #333;
-    height: 29px;
+    height: 48px;
+    box-sizing: border-box;
 }
 
 .newsletter-input::placeholder {
@@ -149,7 +149,7 @@
 }
 
 .newsletter-button {
-    padding: 12px 20px;
+    padding: 12px 32px;
     border-radius: 3rem;
     border: none;
     color: #ffffff;
@@ -159,10 +159,11 @@
     transition: background 0.3s ease;
     white-space: nowrap;
     min-width: fit-content;
-    height: 29px;
+    height: 48px;
     display: flex;
     align-items: center;
     gap: 10px;
+    box-sizing: border-box;
 }
 
 /* Middle Section */

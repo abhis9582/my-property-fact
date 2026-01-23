@@ -49,86 +49,86 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
   }, []);
 
   // Prevent body scroll when dropdown is hovered
-  useEffect(() => {
-    let scrollTimeout = null;
-    let scrollPosition = 0;
+  // useEffect(() => {
+  //   let scrollTimeout = null;
+  //   let scrollPosition = 0;
 
-    const preventBodyScroll = () => {
-      scrollPosition = window.scrollY;
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollPosition}px`;
-      document.body.style.width = '100%';
-    };
+  //   const preventBodyScroll = () => {
+  //     scrollPosition = window.scrollY;
+  //     document.body.style.overflow = 'hidden';
+  //     document.body.style.position = 'fixed';
+  //     document.body.style.top = `-${scrollPosition}px`;
+  //     document.body.style.width = '100%';
+  //   };
 
-    const allowBodyScroll = () => {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      window.scrollTo(0, scrollPosition);
-    };
+  //   const allowBodyScroll = () => {
+  //     document.body.style.overflow = '';
+  //     document.body.style.position = '';
+  //     document.body.style.top = '';
+  //     document.body.style.width = '';
+  //     window.scrollTo(0, scrollPosition);
+  //   };
 
-    const handleDropdownEnter = () => {
-      if (scrollTimeout) clearTimeout(scrollTimeout);
-      preventBodyScroll();
-    };
+  //   const handleDropdownEnter = () => {
+  //     if (scrollTimeout) clearTimeout(scrollTimeout);
+  //     preventBodyScroll();
+  //   };
 
-    const handleDropdownLeave = (e) => {
-      const relatedTarget = e.relatedTarget;
-      // Check if moving to another dropdown or header item
-      if (!relatedTarget || 
-          (!relatedTarget.closest('.dropdown.dropdown-lg') && 
-           !relatedTarget.closest('.hasChild'))) {
-        if (scrollTimeout) clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-          const stillHovering = document.querySelector('.hasChild:hover .dropdown.dropdown-lg') ||
-                               document.querySelector('.dropdown.dropdown-lg:hover');
-          if (!stillHovering) {
-            allowBodyScroll();
-          }
-        }, 150);
-      }
-    };
+  //   const handleDropdownLeave = (e) => {
+  //     const relatedTarget = e.relatedTarget;
+  //     // Check if moving to another dropdown or header item
+  //     if (!relatedTarget || 
+  //         (!relatedTarget.closest('.dropdown.dropdown-lg') && 
+  //          !relatedTarget.closest('.hasChild'))) {
+  //       if (scrollTimeout) clearTimeout(scrollTimeout);
+  //       scrollTimeout = setTimeout(() => {
+  //         const stillHovering = document.querySelector('.hasChild:hover .dropdown.dropdown-lg') ||
+  //                              document.querySelector('.dropdown.dropdown-lg:hover');
+  //         if (!stillHovering) {
+  //           allowBodyScroll();
+  //         }
+  //       }, 150);
+  //     }
+  //   };
 
-    const handleHeaderItemLeave = (e) => {
-      const relatedTarget = e.relatedTarget;
-      if (!relatedTarget || !relatedTarget.closest('.dropdown.dropdown-lg')) {
-        if (scrollTimeout) clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-          const stillHovering = document.querySelector('.hasChild:hover .dropdown.dropdown-lg') ||
-                               document.querySelector('.dropdown.dropdown-lg:hover');
-          if (!stillHovering) {
-            allowBodyScroll();
-          }
-        }, 150);
-      }
-    };
+  //   const handleHeaderItemLeave = (e) => {
+  //     const relatedTarget = e.relatedTarget;
+  //     if (!relatedTarget || !relatedTarget.closest('.dropdown.dropdown-lg')) {
+  //       if (scrollTimeout) clearTimeout(scrollTimeout);
+  //       scrollTimeout = setTimeout(() => {
+  //         const stillHovering = document.querySelector('.hasChild:hover .dropdown.dropdown-lg') ||
+  //                              document.querySelector('.dropdown.dropdown-lg:hover');
+  //         if (!stillHovering) {
+  //           allowBodyScroll();
+  //         }
+  //       }, 150);
+  //     }
+  //   };
 
-    const dropdowns = document.querySelectorAll('.dropdown.dropdown-lg');
-    const headerItems = document.querySelectorAll('.hasChild');
+  //   const dropdowns = document.querySelectorAll('.dropdown.dropdown-lg');
+  //   const headerItems = document.querySelectorAll('.hasChild');
 
-    dropdowns.forEach(dropdown => {
-      dropdown.addEventListener('mouseenter', handleDropdownEnter);
-      dropdown.addEventListener('mouseleave', handleDropdownLeave);
-    });
+  //   dropdowns.forEach(dropdown => {
+  //     dropdown.addEventListener('mouseenter', handleDropdownEnter);
+  //     dropdown.addEventListener('mouseleave', handleDropdownLeave);
+  //   });
 
-    headerItems.forEach(item => {
-      item.addEventListener('mouseleave', handleHeaderItemLeave);
-    });
+  //   headerItems.forEach(item => {
+  //     item.addEventListener('mouseleave', handleHeaderItemLeave);
+  //   });
 
-    return () => {
-      dropdowns.forEach(dropdown => {
-        dropdown.removeEventListener('mouseenter', handleDropdownEnter);
-        dropdown.removeEventListener('mouseleave', handleDropdownLeave);
-      });
-      headerItems.forEach(item => {
-        item.removeEventListener('mouseleave', handleHeaderItemLeave);
-      });
-      if (scrollTimeout) clearTimeout(scrollTimeout);
-      allowBodyScroll();
-    };
-  }, []);
+  //   return () => {
+  //     dropdowns.forEach(dropdown => {
+  //       dropdown.removeEventListener('mouseenter', handleDropdownEnter);
+  //       dropdown.removeEventListener('mouseleave', handleDropdownLeave);
+  //     });
+  //     headerItems.forEach(item => {
+  //       item.removeEventListener('mouseleave', handleHeaderItemLeave);
+  //     });
+  //     if (scrollTimeout) clearTimeout(scrollTimeout);
+  //     allowBodyScroll();
+  //   };
+  // }, []);
 
   const openMenu = () => {
     const menuButtons = document.getElementsByClassName("menuBtn");
@@ -276,7 +276,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
         <nav className="d-none d-lg-flex flex-grow-1 justify-content-center">
           <div className="menu position-relative">
             <ul className="d-flex gap-5 m-0 align-items-center header-links list-unstyled fw-bold">
-              <li className="hasChild">
+              {/* <li className="hasChild">
                 <Link
                   href="/"
                   className={`text-light py-3 text-decoration-none ${
@@ -285,7 +285,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                 >
                   Home
                 </Link>
-              </li>
+              </li> */}
               <li className="hasChild">
                 <Link
                   href="#"
@@ -388,6 +388,16 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
               </li>
               <li className="hasChild">
                 <Link
+                  href="/about-us"
+                  className={`text-light py-3  text-decoration-none ${
+                    pathname === "/about-us" ? "header-link-active" : ""
+                  }`}
+                >
+                  About Us
+                </Link>
+              </li>
+              <li className="hasChild">
+                <Link
                   href="/projects"
                   className={`text-light py-3 text-decoration-none ${
                     isProjectTypeRoute ? "header-link-active" : ""
@@ -452,7 +462,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                                 {projectSearchResults.map((project) => (
                                   <li key={project.id || project.slugURL}>
                                     <Link
-                                      href={`/projects/${project.slugURL || project.slugUrl}`}
+                                      href={`/${project.slugURL || project.slugUrl}`}
                                       className="text-light text-decoration-none project-result-item"
                                       onClick={() => {
                                         setProjectSearchQuery("");
@@ -477,33 +487,19 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                           Contact Us Toll Free On
                         </div>
                         <div className="projects-dropdown-footer-phone">
-                          <i className="fas fa-phone"></i>
+                          <Image
+                            src="/static/icon/Vector.svg"
+                            alt="Phone"
+                            width={16}
+                            height={16}
+                            className="projects-phone-icon"
+                          />
                           <span>8920024793 (IND Toll-Free)</span>
                         </div>
                       </div>
                     </div>
                   )}
                 </div>
-              </li>
-              {/* <li className="hasChild">
-                <Link
-                  href="/properties"
-                  className={`text-light py-3 text-uppercase text-decoration-none ${
-                    pathname === "/properties" ? "header-link-active" : ""
-                  }`}
-                >
-                  Properties
-                </Link>
-              </li> */}
-              <li className="hasChild">
-                <Link
-                  href="/about-us"
-                  className={`text-light py-3  text-decoration-none ${
-                    pathname === "/about-us" ? "header-link-active" : ""
-                  }`}
-                >
-                  About Us
-                </Link>
               </li>
               <li className="hasChild">
                 <Link
@@ -515,9 +511,16 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                   Blog
                 </Link>
               </li>
-              {/* <li className="hasChild">
-                <Link href="/clients-speak" className={`text-light text-uppercase ${pathname === "/clients-speak" ? "header-link-active" : ""}`}>Clients Speak</Link>
-              </li> */}
+              <li className="hasChild">
+                <Link
+                  href="/career"
+                  className={`text-light py-3 text-decoration-none ${
+                    pathname === "/career" ? "header-link-active" : ""
+                  }`}
+                >
+                  Career
+                </Link>
+              </li>
               <li className="hasChild">
                 <Link
                   href="/contact-us"
@@ -548,15 +551,6 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
           <div className="h-100 scroller">
             <div className="bigMenuList">
               <ul className="list-inline active list-unstyled">
-                <li>
-                  <Link
-                    className="text-decoration-none"
-                    href="/"
-                    onClick={openMenu}
-                  >
-                    Home
-                  </Link>
-                </li>
                 <li
                   className={`mb-hasChild ${
                     activeDropdown === "city" ? "active" : ""
@@ -621,6 +615,15 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                     </ul>
                   </div>
                 </li>
+                <li>
+                  <Link
+                    className="text-decoration-none"
+                    href="/about-us"
+                    onClick={openMenu}
+                  >
+                    About Us
+                  </Link>
+                </li>
                 <li
                   className={`mb-hasChild ${
                     activeDropdown === "projects" ? "active" : ""
@@ -660,40 +663,10 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                 <li>
                   <Link
                     className="text-decoration-none"
-                    href="/properties"
-                    onClick={openMenu}
-                  >
-                    Properties
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="text-decoration-none"
                     href="/blog"
                     onClick={openMenu}
                   >
                     Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/web-stories" onClick={openMenu}>Web Stories</Link>
-                </li>
-                <li>
-                  <Link
-                    className="text-decoration-none"
-                    href="/about-us"
-                    onClick={openMenu}
-                  >
-                    About Us
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="text-decoration-none"
-                    href="/clients-speak"
-                    onClick={openMenu}
-                  >
-                    Clients Speak
                   </Link>
                 </li>
                 <li>

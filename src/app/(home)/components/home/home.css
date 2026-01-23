@@ -45,6 +45,35 @@
   display: block;
 }
 
+/* Tablet: Ensure full width coverage without side spacing */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .home-banner img {
+    width: 100% !important;
+    max-width: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+  
+  .home-banner picture {
+    width: 100% !important;
+    display: block !important;
+  }
+  
+  .hero-banner-slide {
+    width: 100% !important;
+  }
+  
+  .mpf-hero-banner {
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .home-search-container {
+    top: 70% !important;
+    position: relative !important;
+  }
+}
+
 .hero-banner-slide.hero-republic-26 .home-banner {
   transform: translateY(12px);
   top:20px;
@@ -70,6 +99,8 @@
   transform: translate(-50%, -50%);
   z-index: 3;
   pointer-events: none;
+  /* Initially hide, will be shown on specific breakpoints */
+  display: none;
 }
 
 .hero-center-emblem img {
@@ -78,9 +109,78 @@
   transform-origin: center center;
 }
 
-@media (min-width: 768px) {
+/* Show rotating chakra on tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hero-center-emblem {
+    display: block !important;
+    left: 50% !important;
+    top: 65% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 10 !important;
+  }
+  
   .hero-center-emblem img {
-    width: 500px;
+    
+    width: auto !important;
+    animation: spin 10s linear infinite !important;
+    transform-origin: center center !important;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+
+  }
+}
+
+/* Show rotating chakra on mobile (max-width: 767px) */
+@media (max-width: 767px) {
+  .hero-center-emblem {
+    display: block !important;
+    left: 50% !important;
+    top: 60% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 10 !important;
+  }
+  
+  .hero-center-emblem img {
+    width: auto !important;
+    animation: spin 10s linear infinite !important;
+    transform-origin: center center !important;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  /* Ensure mobile banner covers full width */
+  .home-banner img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+  
+  .home-banner picture {
+    width: 100% !important;
+    display: block !important;
+    height: 100vh !important;
+  }
+  
+  .mpf-hero-banner {
+    width: 100% !important;
+    overflow: hidden !important;
+    min-height: 100vh !important;
+  }
+}
+
+/* Show rotating chakra on desktop */
+@media (min-width: 1024px) {
+  .hero-center-emblem {
+    display: block;
+  }
+  
+  .hero-center-emblem img {
+    width: 980px;
   }
 }
 
@@ -190,13 +290,28 @@
   .home-search-container {
     top: 50% !important;
     transform: translate(-50%, -50%) !important;
+  
   }
 }
 
+@media (min-width: 1200px) and (max-width: 1440px) {
+  .home-search-container {
+    left: 35% !important;
+    transform: translate(-50%, -50%) !important;
+
+    margin: auto !important;
+  }
+}
+
+
 .home-search-container {
-  position: absolute !important;
-  top: 95% !important;
-  left: 50% !important;
+  position: relative !important;
+  top: 90% !important;
+  /* left: 50% !important; */
+  /* left: 0 !important;
+  right: 0 !important;
+  margin: 0 auto !important; */
+  justify-content: center !important;
   transform: translate(-50%, -50%) !important;
   z-index: 5;
   width: 953px;
@@ -283,10 +398,43 @@
 
 .search-filter-shadow {
   background: #FFFFFF1A !important;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Ensure blur effect on all screen sizes */
+@media (max-width: 1200px) {
+  .search-filter-shadow {
+    background: #FFFFFF1A !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .search-filter-shadow {
+    background: #FFFFFF1A !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .search-filter-shadow {
+    background: #FFFFFF1A !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .search-filter-shadow {
+    background: #FFFFFF1A !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
 }
 
 .home-search-container label {
@@ -463,12 +611,42 @@
   }
 }
 
+/* Tablet specific styles (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .home-search-container {
+    top: 80% !important;
+    transform: translate(-50%, -50%) !important;
+    position: relative !important;
+    background: transparent !important;
+  }
+  
+  /* Fix form select text alignment on tablet */
+  .home-search-container .form-select {
+    padding: 12px 20px !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    vertical-align: middle !important;
+  }
+  
+  .home-search-container .col {
+    display: flex !important;
+    align-items: center !important;
+  }
+}
+
 @media (max-width: 768px) {
   .home-search-container {
     bottom: 0px !important;
     position: relative !important;
     width: 100% !important;
-    margin-top: 20px;
+    /* margin-top: 20px; */
+    /* background: transparent  !important; */
+    /* backdrop-filter: blur(20px) !important; */
+    
+
   }
   
   .enquiry-sticky-btn {
@@ -493,10 +671,39 @@
 @media (max-width: 576px) {
   .home-search-container {
     padding: 8px;
-    position: absolute !important;
-    top: 60% !important;
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    /* bottom: auto !important; */
     transform: translate(-50%, -50%) !important;
-    width: 95%;
+    width: 100% !important;
+    max-width: 100% !important;
+    left: 50% !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    margin-bottom: 40px !important;
+  }
+
+  .hero-center-emblem {
+    top: 71% !important;
+  }
+
+
+  
+  /* Fix side spacing for mobile banner */
+  .mpf-hero-banner {
+    width: 100% !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    padding-bottom: 120px !important;
+    min-height: 600px !important;
+  }
+  
+  .home-banner img {
+    width: 100% !important;
+    max-width: 100% !important;
+    object-fit: cover !important;
   }
 
   .search-btn-home-page {
