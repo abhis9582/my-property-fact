@@ -1,603 +1,335 @@
 .new-insight-container {
-  padding-top: 64px;
-  padding-right: 180px;
-  padding-bottom: 64px;
-  padding-left: 180px;
-  gap: 53px;
+  padding: 64px 0px;
 }
 
 @media (max-width: 1400px) {
   .new-insight-container {
-    padding-left: 100px;
-    padding-right: 100px;
+    padding: 64px 100px;
   }
 }
 
 @media (max-width: 1024px) {
   .new-insight-container {
-    padding-left: 50px;
-    padding-right: 50px;
+    padding: 56px 50px;
   }
 }
 
-/* .insight-content-wrapper { */
-  /* position: relative;
+.insight-content-wrapper {
   width: 100%;
-  max-width: 100%;
-} */
-
-.insight-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  margin-bottom: 30px;
 }
 
-.insight-header h2 {
+.insight-section-title {
   font-weight: 600;
-  font-style: SemiBold;
-  font-size: 36px;
-  line-height: 100%;
-  letter-spacing: 0%;
-  text-transform: capitalize;
+  font-size: 32px;
+  line-height: 120%;
+  color: #1a1a1a;
+  margin-bottom: 28px;
 }
 
-@media (max-width: 768px) {
-  .insight-header h2 {
-    font-size: 28px;
-  }
+.insight-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 32px;
+  align-items: center;
 }
 
-@media (max-width: 480px) {
-  .insight-header h2 {
-    font-size: 24px;
-  }
+.insight-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  width: 100%;
+  max-width: 602px;
 }
 
-.insight-navigation-buttons {
-  display: flex;
+.insight-card {
+  border: 1px solid #e6e6e6;
+  border-radius: 14px;
+  padding: 20px 24px;
+  display: grid;
+  align-items: flex-start;
   gap: 16px;
-  align-items: center;
-}
-
-.insight-button-prev,
-.insight-button-next {
-  width: 56px;
-  height: 56px;
-  background: white;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border: none;
-  transition: background 0.2s;
-  position: relative;
-  flex-shrink: 0;
-}
-
-@media (max-width: 768px) {
-  .insight-button-prev,
-  .insight-button-next {
-    width: 44px;
-    height: 44px;
-  }
-}
-
-@media (max-width: 480px) {
-  .insight-button-prev,
-  .insight-button-next {
-    width: 40px;
-    height: 40px;
-  }
-}
-
-.insight-button-prev:hover,
-.insight-button-next:hover {
-  background: #f5f5f5;
-}
-
-.insight-swiper-wrapper {
+  background: #ffffff;
   width: 100%;
-  /* max-width: 1080px; */
-  min-height: 291px;
-  gap: 26px;
-  border-radius: 10px;
-  padding: 40px;
-  box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
-}
-
-@media (max-width: 1200px) {
-  .insight-swiper-wrapper {
-    padding: 30px;
-  }
-}
-
-@media (max-width: 768px) {
-  .insight-swiper-wrapper {
-    padding: 24px;
-    min-height: auto;
-  }
-}
-
-@media (max-width: 480px) {
-  .insight-swiper-wrapper {
-    padding: 20px;
-  }
-}
-
-/* Insight Card */
-.insight-card-new {
-  border-radius: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 26px;
-  width: 100%;
-}
-
-@media (max-width: 992px) {
-  .insight-card-new {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
-.insight-card-left {
-  width: 100%;
-  max-width: 484px;
-  min-height: 231px;
-  gap: 41px;
-  display: flex;
-  align-items: center;
-  flex: 1;
-}
-
-@media (max-width: 992px) {
-  .insight-card-left {
-    max-width: 100%;
-    width: 100%;
-    min-height: auto;
-    gap: 24px;
-  }
-}
-
-@media (max-width: 768px) {
-  .insight-card-left {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .insight-card-left {
-    gap: 16px;
-  }
+  
+  height: 279px;
 }
 
 .insight-icon-wrapper {
-  width: 113px;
-  height: 113px;
-  min-width: 113px;
-  gap: 10px;
-  border-radius: 80px;
-  padding: 17px;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: #e7f0e9;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(241, 217, 162, 1);
   flex-shrink: 0;
 }
 
 .insight-icon {
-  width: 55px;
-  height: 55px;
+  width: 30px;
+  height: 30px;
   object-fit: contain;
-}
-
-@media (max-width: 768px) {
-  .insight-icon-wrapper {
-    width: 90px;
-    height: 90px;
-    min-width: 90px;
-    padding: 14px;
-  }
-
-  .insight-icon {
-    width: 45px;
-    height: 45px;
-  }
-}
-
-@media (max-width: 480px) {
-  .insight-icon-wrapper {
-    width: 80px;
-    height: 80px;
-    min-width: 80px;
-    padding: 12px;
-  }
-
-  .insight-icon {
-    width: 40px;
-    height: 40px;
-  }
-}
-
-.insight-icon-house {
-  position: absolute;
-  font-size: 32px;
-  color: #1a1a1a;
-  z-index: 2;
-}
-
-.insight-icon-chart {
-  position: absolute;
-  font-size: 24px;
-  color: #1a1a1a;
-  bottom: 8px;
-  right: 8px;
-  z-index: 1;
 }
 
 .insight-content {
   display: flex;
-  width: 100%;
-  max-width: 334px;
-  min-height: 231px;
-  gap: 16px;
   flex-direction: column;
-  flex: 1;
-}
-
-@media (max-width: 992px) {
-  .insight-content {
-    max-width: 100%;
-    min-height: auto;
-  }
-}
-
-@media (max-width: 768px) {
-  .insight-content {
-    width: 100%;
-  }
-}
-
-.insight-button-wrapper {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.insight-button {
-  padding: 5px 10px;
-  border-radius: 5px;
-  position: relative;
-  overflow: hidden;
-  transition: background 1s linear;
-  background: transparent;
-}
-
-.insight-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: #16a34a;
-  transition: left 0.4s ease;
-  z-index: 0;
-  border-radius: 5px;
-}
-
-.insight-button p{
-  font-weight: 500;
-  font-style: Medium;
-  font-size: 16px;
-  line-height: 100%;
-  letter-spacing: 0%;
-  text-transform: capitalize;
-  color: rgba(5, 153, 0, 1);
-  position: relative;
-  z-index: 1;
-  transition: color 0.3s ease;
-  white-space: nowrap;
-}
-
-@media (max-width: 480px) {
-  .insight-button p {
-    font-size: 14px;
-  }
-}
-
-.icon-container {
-  width: 29.99999948657187px;
-  height: 29.99999948657187px;
-  opacity: 1;
-  gap: 10px;
-  border-radius: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  position: relative;
-  z-index: 1;
-}
-
-.icon-container img {
-  transition: all 0.3s ease;
-}
-
-/* Hover effects */
-.insight-button:hover{
-  transform: translateX(10px);
-  background: rgba(5, 153, 0, 1);
-}
-
-.insight-button:hover p {
-  color: white !important;
-}
-
-.insight-button:hover .icon-container {
-  /* background: white; */
-  border-radius: 50%;
-  transform: translateX(4px);
-  background-color: #fff;
+  gap: 8px;
 }
 
 .insight-title {
   font-weight: 600;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 120%;
-  letter-spacing: 0%;
-  text-transform: uppercase;
-}
-
-@media (max-width: 768px) {
-  .insight-title {
-    font-size: 18px;
-  }
-}
-
-@media (max-width: 480px) {
-  .insight-title {
-    font-size: 16px;
-  }
+  text-transform: capitalize;
+  margin: 0;
 }
 
 .insight-description {
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 24px;
+  margin: 0;
+  font-size: 14px;
   line-height: 1.5;
-}
-
-@media (max-width: 768px) {
-  .insight-description {
-    font-size: 15px;
-    margin-bottom: 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .insight-description {
-    font-size: 14px;
-    margin-bottom: 16px;
-  }
+  color: #6b6b6b;
 }
 
 .insight-link {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  color: #16a34a;
-  text-decoration: none;
+  gap: 8px;
   font-size: 14px;
   font-weight: 500;
-  transition: color 0.2s;
+  color: #1f6f46;
+  text-decoration: none;
 }
 
 .insight-link:hover {
-  color: #15803d;
+  color: #185837;
 }
 
-.insight-link-icon {
-  font-size: 12px;
+.insight-link-arrow {
+  display: inline-flex;
+  transform: translateY(-1px);
+  transition: transform 0.2s ease;
+  animation: insight-arrow-pulse 1.2s ease-in-out infinite;
 }
 
-.insight-card-right {
+.insight-link:hover .insight-link-arrow {
+  transform: translate(4px, -1px);
+}
+
+.insight-image-wrapper {
+  position: relative;
   width: 100%;
-  max-width: 489.409912109375px;
-  height: auto;
-  min-height: 209px;
-  flex: 1;
 }
 
-.insight-card-right img,
-.insight-card-image {
+.insight-logo-wrapper {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 16px;
+  background: rgba(200, 30, 35, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 190px;
+  height: auto;
+  box-sizing: border-box;
+}
+
+.insight-main-image {
   width: 100%;
   height: auto;
-  object-fit: contain;
+  border-radius: 16px;
   display: block;
 }
 
-@media (max-width: 992px) {
-  .insight-card-right {
-    max-width: 100%;
-    width: 100%;
-    min-height: auto;
-  }
+.insight-logo {
+  width: auto;
+  height: auto;
+  display: block;
 }
 
-@media (max-width: 768px) {
-  .insight-card-right {
-    min-height: 180px;
-  }
-}
-
-@media (max-width: 480px) {
-  .insight-card-right {
-    min-height: 150px;
-  }
-}
-
-.chart-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 20px;
-}
-
-.chart-container {
-  flex: 1;
-  width: 100%;
-  min-height: 300px;
-  position: relative;
-}
-
-.chart-container svg {
-  width: 100% !important;
-  height: 100% !important;
-}
-
-/* Hide pagination and scrollbar */
-.insight-swiper-wrapper .swiper-pagination {
-  display: none;
-}
-
-.insight-swiper-wrapper .swiper-scrollbar {
-  display: none;
-}
-
-/* Responsive adjustments */
 @media (max-width: 1200px) {
-  .new-insight-container {
-    padding-left: 60px;
-    padding-right: 60px;
-    padding-top: 48px;
-    padding-bottom: 48px;
+  .insight-layout {
+    grid-template-columns: 1fr;
   }
 
-  .insight-header {
-    margin-bottom: 24px;
-  }
-
-  .insight-navigation-buttons {
-    gap: 12px;
+  .insight-cards {
+    grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 992px) {
-  .new-insight-container {
-    padding-left: 40px;
-    padding-right: 40px;
-    padding-top: 40px;
-    padding-bottom: 40px;
+/* Tablet specific (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .insight-content-wrapper {
+    margin: 0 auto;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
-  .insight-header {
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-}
-
-@media (max-width: 768px) {
-  .new-insight-container {
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-top: 32px;
-    padding-bottom: 32px;
+  .insight-section-title {
+    text-align: center;
   }
 
-  .insight-header {
-    margin-bottom: 20px;
+  .insight-layout {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
   }
 
-  .insight-navigation-buttons {
-    gap: 8px;
+  .insight-cards {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    justify-content: center;
   }
 
-  .insight-swiper-wrapper {
-    gap: 20px;
-  }
-
-  .insight-card-new {
-    gap: 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .new-insight-container {
-    padding-left: 16px;
-    padding-right: 16px;
-    padding-top: 24px;
-    padding-bottom: 24px;
-  }
-
-  .insight-header {
-    margin-bottom: 16px;
-  }
-
-  .insight-swiper-wrapper {
-    gap: 16px;
-    border-radius: 8px;
-  }
-
-  .insight-card-new {
-    gap: 16px;
-  }
-
-  .icon-container {
-    width: 26px;
-    height: 26px;
-  }
-}
-
-@media (max-width: 360px) {
-  .new-insight-container {
-    padding-left: 12px;
-    padding-right: 12px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-  }
-
-  .insight-header h2 {
-    font-size: 20px;
-  }
-
-  .insight-button-prev,
-  .insight-button-next {
-    width: 36px;
-    height: 36px;
-  }
-
-  .insight-swiper-wrapper {
-    padding: 16px;
-  }
-
-  .insight-title {
-    font-size: 14px;
-  }
-
-  .insight-description {
-    font-size: 13px;
+  .insight-card {
+    align-items: center;
+    text-align: center;
+    width: 100%;
   }
 
   .insight-icon-wrapper {
-    width: 70px;
-    height: 70px;
-    min-width: 70px;
-    padding: 10px;
+    margin: 0 auto;
+  }
+
+  .insight-content {
+    align-items: center;
+    text-align: center;
+  }
+
+  .insight-title {
+    text-align: center;
+  }
+
+  .insight-description {
+    text-align: center;
+  }
+
+  .insight-link {
+    justify-content: center;
+  }
+  
+  .insight-image-wrapper {
+    width: 100%;
+    order: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .new-insight-container {
+    padding: 40px 20px;
+  }
+
+  .insight-content-wrapper {
+    margin: 0 auto;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .insight-section-title {
+    font-size: 26px;
+    text-align: center;
+  }
+
+  .insight-layout {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .insight-cards {
+    justify-content: center;
+    max-width: 100%;
+  }
+
+  .insight-card {
+    padding: 18px 20px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .insight-icon-wrapper {
+    margin: 0 auto;
+  }
+
+  .insight-content {
+    align-items: center;
+    text-align: center;
+  }
+
+  .insight-title {
+    text-align: center;
+  }
+
+  .insight-description {
+    text-align: center;
+  }
+
+  .insight-link {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .new-insight-container {
+    padding: 32px 16px;
+  }
+
+  .insight-section-title {
+    font-size: 22px;
+  }
+
+  .insight-card {
+    align-items: center;
+    text-align: center;
+  }
+
+  .insight-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto;
   }
 
   .insight-icon {
-    width: 35px;
-    height: 35px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .insight-content {
+    align-items: center;
+    text-align: center;
+  }
+
+  .insight-title {
+    text-align: center;
+  }
+
+  .insight-description {
+    text-align: center;
+  }
+
+  .insight-link {
+    justify-content: center;
+  }
+}
+
+@keyframes insight-arrow-pulse {
+  0%,
+  100% {
+    transform: translate(0, -1px);
+  }
+  50% {
+    transform: translate(6px, -1px);
   }
 }

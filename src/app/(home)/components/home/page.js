@@ -12,6 +12,8 @@ import NewInsight from "../_homecomponents/NewInsight";
 import DreamPropertySection from "./dream-project/DreamPropertySection";
 import NewMpfMetaDataContainer from "../_homecomponents/NewMpfMetaDataContainer";
 import SocialFeedsOfMPF from "../_homecomponents/SocialFeedsOfMPF";
+import PopularCitiesSection from "./popular-cities/PopularCitiesSection";
+import NoidaProjectsSection from "./noida-projects/NoidaProjectsSection";
 // import HomeMetaData from "../_homecomponents/HomeMetaData";
 
 export default async function HomePage() {
@@ -88,6 +90,8 @@ export default async function HomePage() {
           <h2 className="text-center my-5 fw-bold plus-jakarta-sans-bold">Realty Updates Web Stories</h2>
           <NewsViews />
 
+          <NoidaProjectsSection />
+
           <SocialFeedPage />
           
           {/* video slider section  */}
@@ -96,6 +100,7 @@ export default async function HomePage() {
             <InstagramFeed />
           </div> */}
           <SocialFeedsOfMPF />
+          <PopularCitiesSection />
         </div>
         {/* <PopularCitiesComponent /> */}
         {/* Scroll to top button */}

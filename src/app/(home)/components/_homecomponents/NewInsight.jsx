@@ -1,173 +1,75 @@
 "use client";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/scrollbar";
 import "./newinsight.css";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import Image from "next/image";
-import {
-  faBarsProgress,
-  faCalculator,
-  faChartLine,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 
 export default function NewInsight() {
   const insights = [
     {
       id: 1,
-      src: "/static/icon/Growth_Tracker.jpg",
-      alt: "price-trends-img",
-      heading: "Property Growth Tracker",
+      heading: "EMI Calculator",
       sub_heading:
-        "Monitor property value, rental yields, neighbourhood upgrades; visual graphs track appreciation, send alerts, suggest reinvestment or exit timing decisions smartly.",
-      color: "light-green",
-      button_color: "dark-green",
-      href: "/property-rate-and-trend",
-      icon: faChartLine,
+        "Compute Monthly EMI, Total Interest, Lifetime Cost Instantly; Adjust Loan Amount, Tenure, Rate...",
+      href: "/emi-calculator",
+      iconSrc: "/static/icon/Calci.svg",
     },
     {
       id: 2,
-      src: "/static/icon/Loan_calculator.jpg",
-      alt: "property-rates-heatmap-img",
-      heading: "EMI Calculator",
+      heading: "Locate Score",
       sub_heading:
-        "Compute monthly EMI, total interest, lifetime cost instantly; adjust loan amount, tenure, rate to secure stress‑free financing decisions for buyers.",
-      color: "light-pink",
-      button_color: "dark-pink",
-      href: "/emi-calculator",
-      icon: faCalculator,
-    },
-    {
-      id: 3,
-      src: "/static/icon/Market_Analysis.jpg",
-      alt: "price-trends-img",
-      heading: "Market Analysis",
-      sub_heading:
-        "We deliver price trends, policy updates, infrastructure news, enabling investors, developers, and lenders to recalibrate the market strategies regularly.",
-      color: "light-yellow",
-      button_color: "dark-yellow",
-      // href: "/market-analysis",
-      href: "/market-analysis",
-      icon: faBarsProgress,
-    },
-    {
-      id: 4,
-      src: "/static/icon/LOCATE_Score.jpg",
-      alt: "price-trends-img",
-      heading: "LOCATE Score",
-      sub_heading:
-        "This converts economy, projects, connectivity, amenities, trends, supply data into one 1000‑point LOCATE rating guiding smart investments with clarity.",
-      color: "light-blue",
-      button_color: "dark-blue",
+        "Compute Monthly EMI, Total Interest, Lifetime Cost Instantly; Adjust Loan Amount, Tenure, Rate...",
       href: "/locate-score",
-      icon: faChartLine,
+      iconSrc: "/static/icon/Graph.svg",
     },
   ];
 
   return (
     <div className="container-fluid bg-white new-insight-container">
       <div className="container insight-content-wrapper">
-        <div className="insight-header">
-          <h2>Insight</h2>
-          <div className="insight-navigation-buttons">
-            <button className="insight-button-prev" aria-label="Previous slide">
-              {/* <HiArrowLeft /> */}
-              <Image
-                src="/static/icon/left_arrow.png"
-                alt="Previous slide"
-                width={16}
-                height={16}
-              />
-            </button>
-            <button className="insight-button-next" aria-label="Next slide">
-              <Image
-                src="/static/icon/right_arrow.png"
-                alt="Previous slide"
-                width={16}
-                height={16}
-              />
-            </button>
-          </div>
-        </div>
-        <div className="insight-swiper-wrapper">
-          <Swiper
-            modules={[Navigation, Pagination, Scrollbar, A11y]}
-            spaceBetween={30}
-            slidesPerView={1}
-            navigation={{
-              nextEl: ".insight-button-next",
-              prevEl: ".insight-button-prev",
-            }}
-            loop={true}
-            pagination={{ clickable: true }}
-            scrollbar={{ draggable: true }}
-            onSwiper={(swiper) => console.log(swiper)}
-            onSlideChange={() => console.log("slide change")}
-          >
-            {insights.map((insight, index) => (
-              <SwiperSlide key={`${index}-${insight.id}`}>
-                <div className="insight-card-new">
-                  <div className="insight-card-left">
-                    <div>
-                      <div className="insight-icon-wrapper">
-                        {/* <Image
-                          src="/static/icon/home_icon.png"
-                          alt="chart"
-                          width={55}
-                          height={55}
-                          className="img-fluid"
-                        /> */}
-                        <FontAwesomeIcon
-                          icon={insight.icon}
-                          className="insight-icon"
-                          style={{ color: "#9b8755" }}
-                        />
-                      </div>
-                    </div>
-                    <div className="insight-content">
-                      <h3 className="insight-title">{insight.heading}</h3>
-                      <p className="insight-description">
-                        {insight.sub_heading}
-                      </p>
-                      <div className="d-flex align-items-center gap-2 insight-button-wrapper">
-                        <div className="d-flex align-items-center gap-2 insight-button">
-                          <Link
-                            className="text-decoration-none"
-                            href={insight.href}
-                          >
-                            <p className="p-0 m-0">Explore Now</p>
-                          </Link>
-                          <div className="icon-container">
-                            <Image
-                              src="/static/icon/explore_arrow.png"
-                              alt="Previous slide"
-                              width={13.2}
-                              height={13.2}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="insight-card-right">
-                    <Image
-                      src={insight.src}
-                      alt="chart"
-                      width={496}
-                      height={228}
-                      quality={100}
-                      className="insight-card-image"
-                      style={{ width: "100%", height: "auto" }}
-                    />
-                  </div>
+        <h2 className="insight-section-title">Expert Insights & Resources</h2>
+        <div className="insight-layout">
+          <div className="insight-cards">
+            {insights.map((insight) => (
+              <div className="insight-card" key={insight.id}>
+                <div className="insight-icon-wrapper">
+                  <Image
+                    src={insight.iconSrc}
+                    alt={`${insight.heading} icon`}
+                    width={32}
+                    height={32}
+                    className="insight-icon"
+                  />
                 </div>
-              </SwiperSlide>
+                <div className="insight-content">
+                  <h3 className="insight-title">{insight.heading}</h3>
+                  <p className="insight-description">{insight.sub_heading}</p>
+                  <Link className="insight-link" href={insight.href}>
+                    Explore Now
+                    <span className="insight-link-arrow">→</span>
+                  </Link>
+                </div>
+              </div>
             ))}
-          </Swiper>
+          </div>
+          <div className="insight-image-wrapper">
+            <Image
+              src="/static/family.svg"
+              alt="Family"
+              width={604}
+              height={308}
+              className="insight-main-image"
+              priority
+            />
+            <div className="insight-logo-wrapper">
+              <Image
+                src="/static/icon/jacob.svg"
+                alt="Jacob & Co"
+                width={170}
+                height={82}
+                className="insight-logo"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

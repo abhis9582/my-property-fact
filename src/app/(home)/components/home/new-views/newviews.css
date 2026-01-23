@@ -1,17 +1,22 @@
 .flip-card {
   perspective: 1000px;
+  position: relative;
 }
 
 .flip-card-inner {
   position: relative;
   width: 100%;
   height: 400px;
-  transition: transform 1s;
-  transform-style: preserve-3d;
+  overflow: hidden;
 }
 
-.flip-card:hover .flip-card-inner {
-  transform: rotateY(180deg);
+/* Ensure text overlay is not cut off */
+.flip-card-front {
+  overflow: hidden;
+}
+
+.flip-card {
+  overflow: visible;
 }
 
 .flip-card-front,
@@ -19,15 +24,12 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  backface-visibility: hidden;
   border-radius: 8px;
   overflow: hidden;
-  transform-style: preserve-3d;
 }
 
 .flip-card-front {
   background: black;
-  transform-style: preserve-3d;
 }
 
 .flip-card-front img {
@@ -43,23 +45,63 @@
   outline: 1px solid #0000;
   perspective: inherit;
   position: absolute;
-  top: 85%;
-  transform: translateY(-50%) translateZ(60px) scale(.94);
-  -webkit-transform: translateY(-50%) translateZ(60px) scale(.94);
-  -ms-transform: translateY(-50%) translateZ(60px) scale(.94);
+  bottom: 0;
+  top: auto;
+  transform: translateY(0) translateZ(60px) scale(.94);
+  -webkit-transform: translateY(0) translateZ(60px) scale(.94);
+  -ms-transform: translateY(0) translateZ(60px) scale(.94);
   width: 100%;
   z-index: 2;
+  padding: 12px 8px !important;
+  box-sizing: border-box;
+  overflow: visible;
+  word-wrap: break-word;
+  white-space: normal;
+  max-height: 25%;
+}
+
+.title-3d p {
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  word-wrap: break-word;
+  white-space: normal;
+  line-height: 1.4;
+  display: block;
+}
+
+.flip-card:hover .title-3d {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .flip-card-back {
-  background: var(--bg-with-gradient);
+  background: #0D5834;
   color: white;
-  transform: rotateY(180deg);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 20px;
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.6s ease, opacity 0.6s ease;
+}
+
+.flip-card-back-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.flip-card:hover .flip-card-back-title {
+  display: none;
+}
+
+.flip-card:hover .flip-card-back {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 /* Responsive Styles */
@@ -69,13 +111,45 @@
   }
 }
 
+/* Tablet specific fix (768px) */
+@media (min-width: 768px) and (max-width: 768px) {
+  .flip-card-inner {
+    overflow: visible;
+    padding-bottom: 20px;
+  }
+  
+  .flip-card-front {
+    overflow: visible;
+  }
+  
+  .title-3d {
+    position: absolute;
+    bottom: 0;
+    top: auto;
+    transform: translateY(0) translateZ(60px) scale(.94);
+    -webkit-transform: translateY(0) translateZ(60px) scale(.94);
+    -ms-transform: translateY(0) translateZ(60px) scale(.94);
+    padding: 12px 8px !important;
+    overflow: visible;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+}
+
 @media (max-width: 768px) {
   .flip-card {
     margin-bottom: 20px;
+    overflow: visible;
   }
   
   .flip-card-inner {
     height: 350px;
+    overflow: visible;
+    padding-bottom: 20px;
+  }
+  
+  .flip-card-front {
+    overflow: visible;
   }
   
   .flip-card-back {
@@ -84,8 +158,25 @@
   
   .title-3d {
     font-size: 14px;
-    padding: 10px;
-    top: 80%;
+    padding: 12px 8px !important;
+    top: auto;
+    bottom: 0;
+    position: absolute;
+    transform: translateY(0) translateZ(60px) scale(.94);
+    -webkit-transform: translateY(0) translateZ(60px) scale(.94);
+    -ms-transform: translateY(0) translateZ(60px) scale(.94);
+    overflow: visible;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+  
+  .title-3d p {
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    word-wrap: break-word;
+    white-space: normal;
+    line-height: 1.4;
   }
 }
 

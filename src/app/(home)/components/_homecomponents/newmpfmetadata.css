@@ -3,7 +3,7 @@
   width: 100%;
   /* max-width: 1200px; */
   margin-top: 40px;
-  padding: 40px 0px;
+  padding: 50px 0px;
 }
 
 /* Property Search Card */
@@ -163,12 +163,16 @@
   .illustration-right {
     max-width: 250px;
   }
+  .mpf-metadata-container {
+    padding: 20px 12px;
+    margin-top: 40px !important;
+  }
 }
 
 @media (max-width: 768px) {
   .mpf-metadata-container {
-    padding: 30px 15px;
-    margin-top: 0px !important;
+    padding: 20px 12px;
+    margin-top: 50px !important;
   }
 
   .property-search-card {
@@ -220,7 +224,8 @@
   }
 
   .mpf-metadata-container {
-    margin-top: 135px !important;
+    margin-top: 130px !important;
+    /* padding-top: 12px; */
   }
 
   .property-search-card {
