@@ -104,7 +104,7 @@
 }
 
 .hero-center-emblem img {
-  width: 980px;
+  width: 200px;
   animation: spin 10s linear infinite;
   transform-origin: center center;
 }
@@ -186,7 +186,7 @@
 
 @media (min-width: 1200px) {
   .hero-center-emblem img {
-    width: 1300px;
+    width: 220px;
     height: auto;
   }
 }

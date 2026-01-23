@@ -87,7 +87,7 @@ export default async function HeroSection() {
             <HeroBannerSlider slides={heroSlides} />
             <div className="hero-center-emblem">
               <Image
-                src="/static/banners/new_chakra.svg"
+                src="/static/banners/ch.svg"
                 alt="Republic Day emblem"
                 width={280}
                 height={280}
