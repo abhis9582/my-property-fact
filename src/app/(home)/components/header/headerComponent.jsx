@@ -535,10 +535,10 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
           </div>
         </nav>
         <div className="d-none d-lg-flex align-items-center">
-          <div className="post-property-btn" onClick={openSignUpModal}>
+          {/* <div className="post-property-btn" onClick={openSignUpModal}>
             <span className="post-property-text">Post Property</span>
             <span className="free-tag">Free</span>
-          </div>
+          </div> */}
         </div>
         <div className="menuBtn d-flex d-lg-none " onClick={openMenu}>
           <span id="menuLine1"></span>

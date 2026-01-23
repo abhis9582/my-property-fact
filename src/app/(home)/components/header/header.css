@@ -867,7 +867,7 @@
 }
 
 .menuBtn.closeMenuBtn span#menuLine1 {
-  transform: rotate(45deg) translate(8px, 8px);
+  transform: rotate(45deg) translate(3px, 8px);
 }
 
 .menuBtn.closeMenuBtn span#menuLine2 {
@@ -876,7 +876,7 @@
 }
 
 .menuBtn.closeMenuBtn span#menuLine3 {
-  transform: rotate(-45deg) translate(8px, -8px);
+  transform: rotate(-45deg) translate(2px, -8px);
 }
 
 .mbMenuContainer {
