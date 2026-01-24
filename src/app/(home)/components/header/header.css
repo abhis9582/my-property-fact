@@ -238,7 +238,7 @@
   max-width: 1200px;
   min-width: 900px;
   height: auto;
-  max-height: 400px;
+  max-height: 600px;
 
   padding: 28px 48px;
 
@@ -295,8 +295,9 @@
 }
 
 .projects-dropdown .city-dropdown-content {
-  align-items: center;
+  align-items: flex-start;
   gap: 64px;
+  flex-direction: row;
 }
 
 .city-dropdown-left {
@@ -561,18 +562,17 @@
 .projects-search-section {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 0;
   position: relative;
   width: 100%;
+  flex: 1;
 }
 
 .projects-search-wrapper {
   display: flex;
   flex-direction: column;
- 
-  gap: 20px;
+  gap: 16px;
   width: 100%;
-  
 }
 
 .projects-search-title {
@@ -586,10 +586,10 @@
 
 .projects-search-container {
   width: 100%;
-  max-width: 800px;
+  max-width: 100%;
   margin: 0;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .projects-search-input-wrapper {
@@ -601,7 +601,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   gap: 8px;
   width: 100%;
-  max-width: 1500px;
+  max-width: 100%;
 }
 
 .projects-search-icon {
@@ -624,7 +624,8 @@
   font-family: "BentonRegular", sans-serif;
   outline: none;
   transition: all 0.3s ease;
-  min-width: 300px;
+  min-width: 0;
+  width: 100%;
 }
 
 .projects-search-input::placeholder {
@@ -658,9 +659,9 @@
 .projects-email-info {
   color: rgba(255, 255, 255, 0.8);
   font-size: 13px;
-  text-align: center;
+  text-align: left;
   line-height: 1.5;
-  margin-top: 21%;
+  margin-top: 16px;
 }
 
 .projects-dropdown-footer {
@@ -709,17 +710,19 @@
 .projects-search-loader {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 20px;
+  justify-content: flex-start;
+  padding: 16px 0;
   color: rgba(255, 255, 255, 0.8);
   font-size: 14px;
 }
 
 .projects-search-results {
-  max-height: 280px;
+  max-height: 350px;
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 8px;
+  margin-top: 16px;
+  width: 100%;
 }
 
 .projects-results-list {
@@ -728,31 +731,66 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
 }
 
 .project-result-item {
   display: block;
-  padding: 10px 12px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  text-align: left;
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.project-result-item {
+  padding: 0;
+  background: transparent;
+  border-radius: 8px;
   transition: all 0.3s ease;
+  text-align: left;
+  width: 100%;
 }
 
 .project-result-item:hover {
-  background: linear-gradient(90deg, #CDA958 0%, #67552C 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  transform: translateX(4px);
+  transform: translateY(-2px);
+}
+
+.project-result-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.project-result-item:hover .project-result-content {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.project-result-image {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.project-result-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.project-result-name {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.4;
+  font-family: "BentonRegular", sans-serif;
+}
+
+.project-result-item:hover .project-result-name {
+  color: #CDA958;
 }
 
 .projects-no-results {

@@ -445,42 +445,62 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                               <button className="projects-explore-btn">Explore</button>
                             </div>
                           </div>
+                          {isSearchingProjects && (
+                            <div className="projects-search-loader">
+                              <Spinner animation="border" variant="light" size="sm" />
+                              <span className="ms-2">Searching...</span>
+                            </div>
+                          )}
+                          {!isSearchingProjects && projectSearchQuery.trim().length >= 2 && (
+                            <div className="projects-search-results">
+                              {projectSearchResults.length > 0 ? (
+                                <ul className="list-inline projects-results-list">
+                                  {projectSearchResults.map((project) => {
+                                    const imageUrl = project.projectThumbnailImage && project.slugURL
+                                      ? `${process.env.NEXT_PUBLIC_IMAGE_URL || ''}properties/${project.slugURL}/${project.projectThumbnailImage}`
+                                      : null;
+                                    return (
+                                      <li key={project.id || project.slugURL}>
+                                        <Link
+                                          href={`/${project.slugURL || project.slugUrl}`}
+                                          className="text-light text-decoration-none project-result-item"
+                                          onClick={() => {
+                                            setProjectSearchQuery("");
+                                            setProjectSearchResults([]);
+                                          }}
+                                        >
+                                          <div className="project-result-content">
+                                            {imageUrl && (
+                                              <div className="project-result-image">
+                                                <Image
+                                                  src={imageUrl}
+                                                  alt={project.projectName || project.name || "Project"}
+                                                  width={60}
+                                                  height={60}
+                                                  style={{ objectFit: 'cover', borderRadius: '8px' }}
+                                                />
+                                              </div>
+                                            )}
+                                            <span className="project-result-name">
+                                              {project.projectName || project.name || "Project"}
+                                            </span>
+                                          </div>
+                                        </Link>
+                                      </li>
+                                    );
+                                  })}
+                                </ul>
+                              ) : (
+                                <div className="projects-no-results">
+                                  No projects found
+                                </div>
+                              )}
+                            </div>
+                          )}
                           <div className="projects-email-info">
                             Email Us At Services@Social@Mypropertyfact.Com. Or Call Us At 8920024793 (IND Toll-Free)
                           </div>
                         </div>
-                        {isSearchingProjects && (
-                          <div className="projects-search-loader">
-                            <Spinner animation="border" variant="light" size="sm" />
-                            <span className="ms-2">Searching...</span>
-                          </div>
-                        )}
-                        {!isSearchingProjects && projectSearchQuery.trim().length >= 2 && (
-                          <div className="projects-search-results">
-                            {projectSearchResults.length > 0 ? (
-                              <ul className="list-inline projects-results-list">
-                                {projectSearchResults.map((project) => (
-                                  <li key={project.id || project.slugURL}>
-                                    <Link
-                                      href={`/${project.slugURL || project.slugUrl}`}
-                                      className="text-light text-decoration-none project-result-item"
-                                      onClick={() => {
-                                        setProjectSearchQuery("");
-                                        setProjectSearchResults([]);
-                                      }}
-                                    >
-                                      {project.projectName || project.name || "Project"}
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
-                            ) : (
-                              <div className="projects-no-results">
-                                No projects found
-                              </div>
-                            )}
-                          </div>
-                        )}
                       </div>
                       <div className="projects-dropdown-footer">
                         <div className="projects-dropdown-footer-label">
