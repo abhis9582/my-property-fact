@@ -3,6 +3,7 @@ import {
   fetchBuilderData,
   fetchCityData,
   fetchProjectTypes,
+  fetchAllProjects,
 } from "@/app/_global_components/masterFunction";
 
 const HeaderClient = async () => {
@@ -10,6 +11,7 @@ const HeaderClient = async () => {
     fetchCityData(),
     fetchProjectTypes(),
     fetchBuilderData(),
+    fetchAllProjects(),
   ]);
 
   return (
@@ -17,6 +19,7 @@ const HeaderClient = async () => {
       cityList={cities}
       projectTypes={projectTypes}
       builderList={builders}
+      projectList={projects}
     />
   );
 };

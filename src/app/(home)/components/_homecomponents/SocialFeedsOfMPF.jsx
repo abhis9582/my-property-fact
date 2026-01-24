@@ -17,10 +17,10 @@ export default function SocialFeedsOfMPF() {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
+
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
@@ -31,7 +31,7 @@ export default function SocialFeedsOfMPF() {
     } else {
       document.body.style.overflow = 'unset';
     }
-    
+
     return () => {
       document.body.style.overflow = 'unset';
     };
@@ -99,13 +99,13 @@ Curious how this one number can change the entire value of land? Understand FAR 
 
   return (
     <>
-      <div className="social-feeds-section py-5">
+      <div className="social-feeds-section my-4 my-lg-5">
         <div className="container-fluid">
-          <div className="section-header-wrapper">
-            <h2 className="text-center mb-2 plus-jakarta-sans-bold fw-bold">
+          <div className="section-header-wrapper mb-lg-5">
+            <h2 className="text-center mb-0 plus-jakarta-sans-bold fw-bold">
               Social Feeds from MPF on Instagram
             </h2>
-            
+
           </div>
           <div className="container">
             <div className="social-feeds-swiper-wrapper">
@@ -167,7 +167,7 @@ Curious how this one number can change the entire value of land? Understand FAR 
               >
                 {socialPosts.map((post, index) => (
                   <SwiperSlide key={index}>
-                    <div 
+                    <div
                       className="instagram-post-card"
                       onMouseEnter={() => !isMobile && setHoveredIndex(index)}
                       onMouseLeave={() => !isMobile && setHoveredIndex(null)}
@@ -189,7 +189,7 @@ Curious how this one number can change the entire value of land? Understand FAR 
                           preload="metadata"
                         >
                           <source src={post.video} type="video/mp4" />
-                          Your browser does not support the video tag.  
+                          Your browser does not support the video tag.
                         </video>
                         {/* Play Icon Overlay - Always show on hover */}
                         {hoveredIndex === index && (
@@ -240,18 +240,18 @@ Curious how this one number can change the entire value of land? Understand FAR 
 
       {/* Video Popup Modal */}
       {isPopupOpen && selectedVideo && (
-        <div 
+        <div
           className="video-popup-overlay"
           onClick={handleBackdropClick}
         >
           <div className="video-popup-container">
-            <button 
+            <button
               className="video-popup-close"
               onClick={closePopup}
               aria-label="Close video popup"
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
             <div className="video-popup-content">

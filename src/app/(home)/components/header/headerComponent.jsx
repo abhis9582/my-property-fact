@@ -10,7 +10,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
-const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
+const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [showLoginModal, setShowModal] = useState(false);
   const pathname = usePathname();
@@ -189,15 +189,9 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
       // Debounce search
       projectSearchTimeoutRef.current = setTimeout(async () => {
         try {
-          // Fetch all projects and filter client-side
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}projects`
-          );
-          const allProjects = Array.isArray(response.data) ? response.data : [];
-          
           // Filter projects by search query
           const query = projectSearchQuery.trim().toLowerCase();
-          const filtered = allProjects.filter((project) => {
+          const filtered = projectList.filter((project) => {
             const projectName = (project.projectName || project.name || "").toLowerCase();
             const builderName = (project.builderName || "").toLowerCase();
             const cityName = (project.cityName || "").toLowerCase();
@@ -303,13 +297,13 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                   ) : (
                     <div className="city-dropdown-content">
                       <div className="city-dropdown-left">
-                        <Link href="/commercial" className="city-dropdown-item">
+                        <Link href="/projects/commercial" className="city-dropdown-item">
                           Commercial
                         </Link>
-                        <Link href="/residential" className="city-dropdown-item">
+                        <Link href="/projects/residential" className="city-dropdown-item">
                           Residential
                         </Link>
-                        <Link href="/new-launches" className="city-dropdown-item with-badge">
+                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge">
                           New Launches <span className="city-dropdown-badge">New</span>
                         </Link>
                         <Link href="/blog" className="city-dropdown-item">
@@ -416,13 +410,13 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                   ) : (
                     <div className="city-dropdown-content">
                       <div className="city-dropdown-left">
-                        <Link href="/commercial" className="city-dropdown-item">
+                        <Link href="/projects/commercial" className="city-dropdown-item">
                           Commercial
                         </Link>
-                        <Link href="/residential" className="city-dropdown-item">
+                        <Link href="/projects/residential" className="city-dropdown-item">
                           Residential
                         </Link>
-                        <Link href="/new-launches" className="city-dropdown-item with-badge">
+                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge">
                           New Launches <span className="city-dropdown-badge">New</span>
                         </Link>
                         <Link href="/blog" className="city-dropdown-item">
@@ -445,9 +439,9 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                               <button className="projects-explore-btn">Explore</button>
                             </div>
                           </div>
-                          <div className="projects-email-info">
+                          {/* <div className="projects-email-info">
                             Email Us At Services@Social@Mypropertyfact.Com. Or Call Us At 8920024793 (IND Toll-Free)
-                          </div>
+                          </div> */}
                         </div>
                         {isSearchingProjects && (
                           <div className="projects-search-loader">
@@ -482,7 +476,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                           </div>
                         )}
                       </div>
-                      <div className="projects-dropdown-footer">
+                      {/* <div className="projects-dropdown-footer">
                         <div className="projects-dropdown-footer-label">
                           Contact Us Toll Free On
                         </div>
@@ -496,7 +490,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                           />
                           <span>8920024793 (IND Toll-Free)</span>
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   )}
                 </div>

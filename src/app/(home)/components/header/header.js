@@ -2,14 +2,16 @@ import {
   fetchBuilderData,
   fetchCityData,
   fetchProjectTypes,
+  fetchAllProjects,
 } from "@/app/_global_components/masterFunction";
 import HeaderComponent from "./headerComponent";
 
 const Header = async () => {
-  const [cities, projectTypes, builders] = await Promise.all([
+  const [cities, projectTypes, builders, projects] = await Promise.all([
     fetchCityData(),
     fetchProjectTypes(),
     fetchBuilderData(),
+    fetchAllProjects(),
   ]);
 
   return (
@@ -17,6 +19,7 @@ const Header = async () => {
       cityList={cities}
       projectTypes={projectTypes}
       builderList={builders.builders}
+      projectList={projects}
     />
   );
 };

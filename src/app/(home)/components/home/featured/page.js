@@ -5,6 +5,7 @@ export default async function FeaturedPage({
   autoPlay,
   allFeaturedProperties = [],
   type,
+  title,
 }) {
   if (type === "Similar") {
     return (
@@ -14,6 +15,7 @@ export default async function FeaturedPage({
         autoPlay={autoPlay}
         type={type}
         badgeVariant={type === "Similar" ? "default" : "home-featured"}
+        title={title}
       />
     );
   } else {
@@ -24,6 +26,7 @@ export default async function FeaturedPage({
           allProjects={allFeaturedProperties}
           autoPlay={autoPlay}
           badgeVariant="home-featured"
+          title={title}
         />
       </>
     );

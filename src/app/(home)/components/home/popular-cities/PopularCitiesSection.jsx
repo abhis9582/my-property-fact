@@ -7,6 +7,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "./PopularCitiesSection.css";
 
+// Defining popular cities data with name, link, image and alt text
 const cities = [
   {
     name: "Agra",
@@ -58,6 +59,7 @@ const cities = [
   },
 ];
 
+// Returning the popular cities section
 export default function PopularCitiesSection() {
   return (
     <section className="popular-cities-section">
@@ -87,7 +89,7 @@ export default function PopularCitiesSection() {
               slidesPerView={6}
               breakpoints={{
                 0: { slidesPerView: 1.3, spaceBetween: 12 },
-                480: { slidesPerView: 2.3, spaceBetween: 14 },
+                480: { slidesPerView: 3, spaceBetween: 6 },
                 768: { slidesPerView: 3.3, spaceBetween: 14 },
                 992: { slidesPerView: 4.3, spaceBetween: 16 },
                 1200: { slidesPerView: 6, spaceBetween: 16 },

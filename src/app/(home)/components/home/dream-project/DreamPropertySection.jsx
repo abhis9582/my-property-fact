@@ -7,7 +7,7 @@ import "./DreamPropertySection.css";
 
 const DreamPropertySection = () => {
   const cityCardsRef = useRef(null);
-
+  // Scroll to cities function
   const scrollToCities = () => {
     if (cityCardsRef.current) {
       cityCardsRef.current.scrollIntoView({
@@ -16,7 +16,7 @@ const DreamPropertySection = () => {
       });
     }
   };
-  // Cities data matching the image
+  // Cities data matching the image with name, link, image and alt text
   const cities = [
     {
       name: "Agra",
@@ -68,8 +68,9 @@ const DreamPropertySection = () => {
     },
   ];
 
+  // Returning the dream property section
   return (
-    <section className="dream-property-section">
+    <section className="dream-property-section my-4 my-lg-5">
       <div className="dream-property-container">
         {/* Header Section */}
         <div className="dream-property-header">

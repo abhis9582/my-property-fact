@@ -8,6 +8,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "./NoidaProjectsSection.css";
 
+// Noida projects data with id, title, price, count and image
 const projects = [
   {
     id: "noida-extension-1",

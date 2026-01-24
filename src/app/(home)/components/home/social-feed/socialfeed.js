@@ -1,11 +1,11 @@
-"use client";
 import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import BlogCard from "../../common/blogcard";
 import "../../common/common.css";
 
 export default function SocialFeed({ data }) {
+  // Returning the social feed section
   return (
-    <div className="blog-section-container mt-5 py-4">
+    <div className="blog-section-container mt-4 my-lg-5 py-4">
       <div className="container">
         <h2 className="text-center mb-3 fw-bold plus-jakarta-sans-bold">Investor Education Blog</h2>
         {data?.length < 0 ? (

@@ -1,34 +1,28 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faMapMarkerAlt,
-  faHardHat,
-  faFileAlt,
-  faBuilding,
-} from "@fortawesome/free-solid-svg-icons";
 import "./newmpfmetadata.css";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function NewMpfMetaDataContainer() {
+export default function NewMpfMetaDataContainer({ propertyTypes, projects, builders, cities }) {
+  // Default statistics for MPF meta data
   const [statistics, setStatistics] = useState([
     {
       image: "/static/footer/icon1.svg",
       alt: "Cities",
-      number: "0",
+      number: cities.length > 0 ? cities.length : 0,
       label: "Cities",
     },
     {
       image: "/static/footer/icon2.svg",
       alt: "Builders",
-      number: "0",
+      number: builders.length > 0 ? builders.length : 0,
       label: "Builders",
     },
     {
       image: "/static/footer/icon3.svg",
       alt: "Projects",
-      number: "0",
+      number: projects.length > 0 ? projects.length : 0,
       label: "Projects",
     },
     {
@@ -38,77 +32,13 @@ export default function NewMpfMetaDataContainer() {
       label: "Units",
     },
   ]);
+  // Animated values for statistics
   const [animatedValues, setAnimatedValues] = useState([0, 0, 0, 0]);
+  // Has animated flag
   const [hasAnimated, setHasAnimated] = useState(false);
+  // Observer reference
   const observerRef = useRef(null);
-
-  const propertyTypes = [
-    { id: "Commercial", label: "Commercial", slugUrl: "commercial" },
-    { id: "New Launches", label: "New Launches", slugUrl: "new-launches" },
-    { id: "Residential", label: "Residential", slugUrl: "residential" },
-  ];
-
-  // Fetch statistics data dynamically
-  useEffect(() => {
-    const fetchStatistics = async () => {
-      try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-        if (!apiUrl) {
-          console.error("NEXT_PUBLIC_API_URL is not defined");
-          return;
-        }
-
-        // Fetch all data in parallel
-        const [projectsRes, citiesRes, buildersRes] = await Promise.all([
-          fetch(`${apiUrl}projects`).catch(() => null),
-          fetch(`${apiUrl}city/all`).catch(() => null),
-          fetch(`${apiUrl}builder/get-all`).catch(() => null),
-        ]);
-
-        const projects = projectsRes?.ok ? await projectsRes.json() : [];
-        const cities = citiesRes?.ok ? await citiesRes.json() : [];
-        const builders = buildersRes?.ok ? await buildersRes.json() : [];
-
-        // Update statistics with fetched data
-        const newStatistics = [
-          {
-            image: "/static/footer/icon1.svg",
-            alt: "Cities",
-            number: `${Array.isArray(cities) ? cities.length : cities?.data?.length || 0}`,
-            label: "Cities",
-          },
-          {
-            image: "/static/footer/icon2.svg",
-            alt: "Builders",
-            number: `${Array.isArray(builders) ? builders.length : builders?.builders?.length || builders?.data?.length || 0}`,
-            label: "Builders",
-          },
-          {
-            image: "/static/footer/icon3.svg",
-            alt: "Projects",
-            number: `${Array.isArray(projects) ? projects.length : 0}`,
-            label: "Projects",
-          },
-          {
-            image: "/static/footer/icon4.svg",
-            alt: "Units",
-            number: "10,030",
-            label: "Units",
-          },
-        ];
-
-        setStatistics(newStatistics);
-        // Reset animation when new data is fetched
-        setHasAnimated(false);
-        setAnimatedValues([0, 0, 0, 0]);
-      } catch (error) {
-        console.error("Error fetching statistics:", error);
-        // Keep default values on error
-      }
-    };
-
-    fetchStatistics();
-  }, []);
+  // Fetch statistics data dynamically from API
 
   // Helper function to parse number from string (handles commas)
   const parseNumber = useCallback((value) => {
@@ -210,7 +140,7 @@ export default function NewMpfMetaDataContainer() {
   }, [hasAnimated, statistics, parseNumber, animateCounter]);
 
   return (
-    <div className="mpf-metadata-container container">
+    <div className="mpf-metadata-container container my-5">
       {/* Top Section: Property Search Interface */}
       <div className="property-search-card">
         <div className="illustration-left">
@@ -228,13 +158,13 @@ export default function NewMpfMetaDataContainer() {
             Find The Best Property
           </h2>
           <div className="d-flex flex-wrap align-item-center justify-content-center gap-4 my-4">
-            {propertyTypes.map((item, index) => (
+            {propertyTypes && propertyTypes.map((item, index) => (
               <div key={`row-${index}`}>
                 <Link
                   href={`projects/${item.slugUrl}`}
                   className="btn-normal-color rounded-5 py-2 px-3 text-white text-decoration-none"
                 >
-                  {item.label}
+                  {item.projectTypeName}
                 </Link>
               </div>
             ))}

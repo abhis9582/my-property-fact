@@ -1,9 +1,9 @@
-"use client";
 import "./newinsight.css";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function NewInsight() {
+  // Defining insights data
   const insights = [
     {
       id: 1,
@@ -23,8 +23,9 @@ export default function NewInsight() {
     },
   ];
 
+  // Returning the new insight section
   return (
-    <div className="container-fluid bg-white new-insight-container">
+    <div className="container-fluid bg-white new-insight-container my-4 my-lg-5">
       <div className="container insight-content-wrapper">
         <h2 className="insight-section-title">Expert Insights & Resources</h2>
         <div className="insight-layout">
