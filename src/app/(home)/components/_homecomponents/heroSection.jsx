@@ -5,14 +5,22 @@ import "../home/home.css";
 export default async function HeroSection({ projectTypeList, cityList }) {
   // Hero banners sliders meta data
   const heroSlides = [
+    // {
+    //   id: "hero-primary",
+    //   className: "hero-republic-26",
+    //   desktop: "/static/banners/26_republic.png",
+    //   tablet: "/static/banners/republic_new_tablet.png",
+    //   mobile: "/static/banners/new_repu.jpg",
+    //   alt: "Find the best property with My Property Fact",
+    //   priority: true,
+    //   href: "#",
+    // },
     {
-      id: "hero-primary",
-      className: "hero-republic-26",
-      desktop: "/static/banners/26_republic.png",
-      tablet: "/static/banners/republic_new_tablet.png",
-      mobile: "/static/banners/new_repu.jpg",
-      alt: "Find the best property with My Property Fact",
-      priority: true,
+      id: "hero-secondary",
+      desktop: "/static/banners/desktop_banner1.png",
+      tablet: "/static/banners/tablet_banner1.png",
+      mobile: "/static/banners/mobile_banner1.png",
+      alt: "Discover top real estate projects across India",
       href: "#",
     },
     // {
@@ -51,7 +59,7 @@ export default async function HeroSection({ projectTypeList, cityList }) {
             {/* Banners conatiner component on hero section*/}
             <HeroBannerSlider slides={heroSlides} />
             {/* Republic day emblem component on hero section*/}
-            <div className="hero-center-emblem">
+            {/* <div className="hero-center-emblem">
               <Image
                 src="/static/banners/ch.svg"
                 alt="Republic Day emblem"
@@ -59,7 +67,7 @@ export default async function HeroSection({ projectTypeList, cityList }) {
                 height={280}
                 priority
               />
-            </div>
+            </div> */}
           </div>
 
           {/* Search filter component  */}

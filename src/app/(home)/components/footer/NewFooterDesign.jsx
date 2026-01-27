@@ -230,13 +230,13 @@ export default function NewFooterDesign({ cityList = [] }) {
                     <Link href="/about-us" className="footer-link">About MPF</Link>
                   </li>
                   <li>
-                    <Link href="/projects/commercial" className="footer-link">Commercial</Link>
+                    <Link href="/projects/commercial" className="footer-link" prefetch={true}>Commercial</Link>
                   </li>
                   <li>
-                    <Link href="/projects/new-launches" className="footer-link">New Launches</Link>
+                    <Link href="/projects/new-launches" className="footer-link" prefetch={true}>New Launches</Link>
                   </li>
                   <li>
-                    <Link href="/projects/residential" className="footer-link">Residential</Link>
+                    <Link href="/projects/residential" className="footer-link" prefetch={true}>Residential</Link>
                   </li>
                 </ul>
               </div>

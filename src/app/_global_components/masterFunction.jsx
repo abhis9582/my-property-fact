@@ -26,8 +26,7 @@ export const fetchAllProjects = cache(async () => {
   if (!res.ok) throw new Error("Failed to fetch projects");
   const data = await res.json();
   console.log(
-    `Called fetchAllProjects and length is ${
-      Array.isArray(data) ? data.length : "unknown"
+    `Called fetchAllProjects and length is ${Array.isArray(data) ? data.length : "unknown"
     }`,
   );
   return data;
@@ -250,4 +249,14 @@ export const fetchProjectStatus = cache(async () => {
       data: [],
     };
   }
+});
+
+// Fetching all projects by project type
+export const fetchAllProjectsByProjectType = cache(async (projectType) => {
+  const projects = await fetch(`${apiUrl}project-types/get/${projectType}`, {
+    next: { revalidate: 60 },
+  });
+  if (!projects.ok) throw new Error("Failed to fetch projects");
+  const projectsData = await projects.json();
+  return projectsData;
 });

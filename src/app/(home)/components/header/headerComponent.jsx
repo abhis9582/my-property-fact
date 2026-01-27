@@ -297,13 +297,13 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                   ) : (
                     <div className="city-dropdown-content">
                       <div className="city-dropdown-left">
-                        <Link href="/projects/commercial" className="city-dropdown-item">
+                        <Link href="/projects/commercial" className="city-dropdown-item" prefetch={true}>
                           Commercial
                         </Link>
-                        <Link href="/projects/residential" className="city-dropdown-item">
+                        <Link href="/projects/residential" className="city-dropdown-item" prefetch={true}>
                           Residential
                         </Link>
-                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge">
+                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge" prefetch={true}>
                           New Launches <span className="city-dropdown-badge">New</span>
                         </Link>
                         <Link href="/blog" className="city-dropdown-item">
@@ -410,13 +410,13 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                   ) : (
                     <div className="city-dropdown-content">
                       <div className="city-dropdown-left">
-                        <Link href="/projects/commercial" className="city-dropdown-item">
+                        <Link href="/projects/commercial" className="city-dropdown-item" prefetch={true}>
                           Commercial
                         </Link>
-                        <Link href="/projects/residential" className="city-dropdown-item">
+                        <Link href="/projects/residential" className="city-dropdown-item" prefetch={true}>
                           Residential
                         </Link>
-                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge">
+                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge" prefetch={true}>
                           New Launches <span className="city-dropdown-badge">New</span>
                         </Link>
                         <Link href="/blog" className="city-dropdown-item">

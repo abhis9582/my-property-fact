@@ -1,5 +1,4 @@
 import PropertyContainer from "@/app/(home)/components/common/page";
-import CommonBreadCrum from "../../components/common/breadcrum";
 import CommonHeaderBanner from "../../components/common/commonheaderbanner";
 import { LoadingSpinner } from "../../contact-us/page";
 
