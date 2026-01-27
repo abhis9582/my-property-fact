@@ -8,8 +8,9 @@ import { Spinner } from "react-bootstrap";
 import LoginSignupModal from "../_homecomponents/loginSignupModal";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faChevronDown, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
+import { faFacebook, faInstagram, faLinkedin, faYoutube } from "@fortawesome/free-brands-svg-icons";
 
 const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -55,108 +56,75 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
     setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
   };
 
-  //Hadling header fixed
+  //Hadling header fixed - only when mobile menu is not open
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 100) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
+      // Check if mobile menu is open
+      const menu = document.getElementById("mbdiv");
+      const isMenuOpen = menu && menu.classList.contains("active");
+      
+      // Prevent scrolling when menu is open
+      if (isMenuOpen) {
+        // Restore scroll position if it changed
+        window.scrollTo(0, scrollPositionRef.current);
+        return;
+      }
+      
+      // Only update scroll state if menu is not open
+      if (!isMenuOpen) {
+        if (window.scrollY > 100) {
+          setIsScrolled(true);
+        } else {
+          setIsScrolled(false);
+        }
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    // Also prevent scroll events on touch devices - but allow scrolling in dropdowns
+    const preventScroll = (e) => {
+      const menu = document.getElementById("mbdiv");
+      const isMenuOpen = menu && menu.classList.contains("active");
+      if (isMenuOpen) {
+        // Check if the touch is inside a scrollable dropdown menu
+        const target = e.target;
+        const dropdownUl = target.closest('.bigMenuList .dropdown.activeHeader ul');
+        const dropdownContainer = target.closest('.bigMenuList .dropdown.activeHeader');
+        
+        // Allow scrolling inside dropdown menus - don't prevent default
+        if (dropdownUl || dropdownContainer) {
+          // Don't prevent default - allow natural scrolling
+          return; // Exit early without preventing
+        }
+        
+        // Check if touch is inside the main menu scroller or any menu content
+        const isInsideMenu = target.closest('.mbMenuContainer .mbMenu');
+        if (isInsideMenu) {
+          // Allow scrolling in main menu container and all its children
+          return; // Don't prevent - allow scrolling
+        }
+        
+        // Only prevent scrolling on backdrop/container (outside menu)
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: false });
+    window.addEventListener("wheel", preventScroll, { passive: false });
+    // Use capture phase to check before other handlers
+    window.addEventListener("touchmove", preventScroll, { passive: false, capture: true });
+    
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("wheel", preventScroll);
+      window.removeEventListener("touchmove", preventScroll);
     };
   }, []);
-
-  // Prevent body scroll when dropdown is hovered
-  // useEffect(() => {
-  //   let scrollTimeout = null;
-  //   let scrollPosition = 0;
-
-  //   const preventBodyScroll = () => {
-  //     scrollPosition = window.scrollY;
-  //     document.body.style.overflow = 'hidden';
-  //     document.body.style.position = 'fixed';
-  //     document.body.style.top = `-${scrollPosition}px`;
-  //     document.body.style.width = '100%';
-  //   };
-
-  //   const allowBodyScroll = () => {
-  //     document.body.style.overflow = '';
-  //     document.body.style.position = '';
-  //     document.body.style.top = '';
-  //     document.body.style.width = '';
-  //     window.scrollTo(0, scrollPosition);
-  //   };
-
-  //   const handleDropdownEnter = () => {
-  //     if (scrollTimeout) clearTimeout(scrollTimeout);
-  //     preventBodyScroll();
-  //   };
-
-  //   const handleDropdownLeave = (e) => {
-  //     const relatedTarget = e.relatedTarget;
-  //     // Check if moving to another dropdown or header item
-  //     if (!relatedTarget || 
-  //         (!relatedTarget.closest('.dropdown.dropdown-lg') && 
-  //          !relatedTarget.closest('.hasChild'))) {
-  //       if (scrollTimeout) clearTimeout(scrollTimeout);
-  //       scrollTimeout = setTimeout(() => {
-  //         const stillHovering = document.querySelector('.hasChild:hover .dropdown.dropdown-lg') ||
-  //                              document.querySelector('.dropdown.dropdown-lg:hover');
-  //         if (!stillHovering) {
-  //           allowBodyScroll();
-  //         }
-  //       }, 150);
-  //     }
-  //   };
-
-  //   const handleHeaderItemLeave = (e) => {
-  //     const relatedTarget = e.relatedTarget;
-  //     if (!relatedTarget || !relatedTarget.closest('.dropdown.dropdown-lg')) {
-  //       if (scrollTimeout) clearTimeout(scrollTimeout);
-  //       scrollTimeout = setTimeout(() => {
-  //         const stillHovering = document.querySelector('.hasChild:hover .dropdown.dropdown-lg') ||
-  //                              document.querySelector('.dropdown.dropdown-lg:hover');
-  //         if (!stillHovering) {
-  //           allowBodyScroll();
-  //         }
-  //       }, 150);
-  //     }
-  //   };
-
-  //   const dropdowns = document.querySelectorAll('.dropdown.dropdown-lg');
-  //   const headerItems = document.querySelectorAll('.hasChild');
-
-  //   dropdowns.forEach(dropdown => {
-  //     dropdown.addEventListener('mouseenter', handleDropdownEnter);
-  //     dropdown.addEventListener('mouseleave', handleDropdownLeave);
-  //   });
-
-  //   headerItems.forEach(item => {
-  //     item.addEventListener('mouseleave', handleHeaderItemLeave);
-  //   });
-
-  //   return () => {
-  //     dropdowns.forEach(dropdown => {
-  //       dropdown.removeEventListener('mouseenter', handleDropdownEnter);
-  //       dropdown.removeEventListener('mouseleave', handleDropdownLeave);
-  //     });
-  //     headerItems.forEach(item => {
-  //       item.removeEventListener('mouseleave', handleHeaderItemLeave);
-  //     });
-  //     if (scrollTimeout) clearTimeout(scrollTimeout);
-  //     allowBodyScroll();
-  //   };
-  // }, []);
 
   const openMenu = () => {
     const menuButtons = document.getElementsByClassName("menuBtn");
     const menu = document.getElementById("mbdiv");
-
     // Check if the menu is already open
     const isMenuOpen = menu.classList.contains("active");
 
@@ -179,7 +147,9 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
       document.body.style.position = "";
       document.body.style.top = "";
       document.body.style.width = "";
+      document.body.style.height = "";
       document.documentElement.style.overflow = "";
+      document.documentElement.style.height = "";
       
       // Restore scroll position
       window.scrollTo(0, scrollPositionRef.current);
@@ -203,7 +173,9 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
       document.body.style.top = `-${scrollPositionRef.current}px`;
       document.body.style.width = "100%";
       document.body.style.overflow = "hidden";
+      document.body.style.height = "100%";
       document.documentElement.style.overflow = "hidden";
+      document.documentElement.style.height = "100%";
     }
   };
 
@@ -328,16 +300,6 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
         <nav className="d-none d-lg-flex flex-grow-1 justify-content-center">
           <div className="menu position-relative">
             <ul className="d-flex gap-5 m-0 align-items-center header-links list-unstyled fw-bold">
-              {/* <li className="hasChild">
-                <Link
-                  href="/"
-                  className={`text-light py-3 text-decoration-none ${
-                    pathname === "/" ? "header-link-active" : ""
-                  }`}
-                >
-                  Home
-                </Link>
-              </li> */}
               <li className="hasChild">
                 <Link
                   href="#"
@@ -557,26 +519,8 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                               ) : null}
                             </div>
                           )}
-                          {/* <div className="projects-email-info">
-                            Email Us At Services@Social@Mypropertyfact.Com. Or Call Us At 8920024793 (IND Toll-Free)
-                          </div> */}
                         </div>
                       </div>
-                      {/* <div className="projects-dropdown-footer">
-                        <div className="projects-dropdown-footer-label">
-                          Contact Us Toll Free On
-                        </div>
-                        <div className="projects-dropdown-footer-phone">
-                          <Image
-                            src="/static/icon/Vector.svg"
-                            alt="Phone"
-                            width={16}
-                            height={16}
-                            className="projects-phone-icon"
-                          />
-                          <span>8920024793 (IND Toll-Free)</span>
-                        </div>
-                      </div> */}
                     </div>
                   )}
                 </div>
@@ -637,6 +581,27 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
         }}
       >
         <div className="mbMenu" onClick={(e) => e.stopPropagation()}>
+          {/* Mobile Menu Header with Logo and Close Button */}
+          <div className="mobile-menu-header">
+            <Link href="/" onClick={openMenu} className="mobile-menu-logo">
+              <Image
+                src="/logo.png"
+                alt="My Property Fact"
+                height={50}
+                width={55}
+                priority
+              />
+            </Link>
+            <button 
+              className="mobile-menu-close-btn" 
+              onClick={openMenu}
+              aria-label="Close menu"
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          </div>
           <div className="h-100 scroller">
             <div className="bigMenuList">
               <ul className="list-inline active list-unstyled">
@@ -647,13 +612,17 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                 >
                   <Link
                     href="#"
-                    className="text-decoration-none"
+                    className="text-decoration-none mobile-menu-item"
                     onClick={() => openMenuMobile("city")}
                   >
-                    City
+                    <span>City</span>
+                    <FontAwesomeIcon 
+                      icon={faChevronDown} 
+                      className={`mobile-dropdown-icon ${activeDropdown === "city" ? "rotate" : ""}`}
+                    />
                   </Link>
                   <div
-                    className={`dropdown ${
+                    className={`dropdown mobile-dropdown ${
                       activeDropdown === "city" ? "activeHeader" : ""
                     }`}
                   >
@@ -678,14 +647,18 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                   }`}
                 >
                   <Link
-                    className="text-decoration-none"
+                    className="text-decoration-none mobile-menu-item"
                     href="#"
                     onClick={() => openMenuMobile("builder")}
                   >
-                    Builder
+                    <span>Builder</span>
+                    <FontAwesomeIcon 
+                      icon={faChevronDown} 
+                      className={`mobile-dropdown-icon ${activeDropdown === "builder" ? "rotate" : ""}`}
+                    />
                   </Link>
                   <div
-                    className={`dropdown ${
+                    className={`dropdown mobile-dropdown ${
                       activeDropdown === "builder" ? "activeHeader" : ""
                     }`}
                   >
@@ -720,13 +693,17 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                 >
                   <Link
                     href="#"
-                    className="text-decoration-none"
+                    className="text-decoration-none mobile-menu-item"
                     onClick={() => openMenuMobile("projects")}
                   >
-                    Projects
+                    <span>Projects</span>
+                    <FontAwesomeIcon 
+                      icon={faChevronDown} 
+                      className={`mobile-dropdown-icon ${activeDropdown === "projects" ? "rotate" : ""}`}
+                    />
                   </Link>
                   <div
-                    className={`dropdown ${
+                    className={`dropdown mobile-dropdown ${
                       activeDropdown === "projects" ? "activeHeader" : ""
                     }`}
                   >
@@ -792,7 +769,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                     href="https://www.facebook.com/starestate.in"
                     target="_blank"
                   >
-                    <i className="fab fa-facebook-f"></i>
+                    <FontAwesomeIcon icon={faFacebook} />
                   </Link>
                 </li>
                 <li>
@@ -801,7 +778,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                     href="https://www.instagram.com/starestate_official/"
                     target="_blank"
                   >
-                    <i className="fab fa-instagram"></i>
+                    <FontAwesomeIcon icon={faInstagram} />
                   </Link>
                 </li>
                 <li>
@@ -810,7 +787,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                     href="https://www.linkedin.com/company/star-estate"
                     target="_blank"
                   >
-                    <i className="fab fa-linkedin-in"></i>
+                    <FontAwesomeIcon icon={faLinkedin} />
                   </Link>
                 </li>
                 <li>
@@ -819,7 +796,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                     href="https://www.youtube.com/channel/UCwfDf7Ut8jrkjiBeRnbZUPw"
                     target="_blank"
                   >
-                    <i className="fab fa-youtube"></i>
+                    <FontAwesomeIcon icon={faYoutube} />
                   </Link>
                 </li>
               </ul>

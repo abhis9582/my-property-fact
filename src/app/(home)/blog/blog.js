@@ -39,7 +39,7 @@ export default function Blog() {
       pageName={"Blog"}
       />
       {/* <CommonBreadCrum pageName={"Blog"} /> */}
-      <div className="container-fluid my-5 px-5">
+      <div className="container-fluid my-3 my-lg-5 px-3 px-lg-5">
         {/* <p className="text-center h2 mt-3">Blog</p> */}
         <div className="row">
           {loading ? (
