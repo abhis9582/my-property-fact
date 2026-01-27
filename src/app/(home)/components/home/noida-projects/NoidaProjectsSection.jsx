@@ -51,9 +51,9 @@ export default function NoidaProjectsSection() {
   return (
     <section className="noida-projects-section">
       <div className="noida-projects-container">
-        <h2 className="noida-projects-label">Explore</h2>
+        {/* <h2 className="noida-projects-label">Explore</h2> */}
         <h2 className="noida-projects-title">
-          Popular Projects In Greater Noida
+          Explore Popular Projects In Greater Noida
         </h2>
         <div className="noida-projects-slider-wrap">
           <button

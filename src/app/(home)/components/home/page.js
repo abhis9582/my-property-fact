@@ -3,7 +3,6 @@ import SocialFeedPage from "./social-feed/page";
 import MpfTopPicks from "../mpfTopPick";
 import HeroSection from "../_homecomponents/heroSection";
 import FeaturedPage from "./featured/page";
-import ScrollToTop from "../_homecomponents/ScrollToTop";
 import {
   fetchCityData,
   fetchProjectTypes,
@@ -16,7 +15,7 @@ import DreamPropertySection from "./dream-project/DreamPropertySection";
 import NewMpfMetaDataContainer from "../_homecomponents/NewMpfMetaDataContainer";
 import SocialFeedsOfMPF from "../_homecomponents/SocialFeedsOfMPF";
 import PopularCitiesSection from "./popular-cities/PopularCitiesSection";
-// import NoidaProjectsSection from "./noida-projects/NoidaProjectsSection";
+import NoidaProjectsSection from "./noida-projects/NoidaProjectsSection";
 
 export default async function HomePage() {
   // Fetching all projects with short details
@@ -100,7 +99,7 @@ export default async function HomePage() {
           <NewsViews title="Realty Updates Web Stories" />
 
           {/* Top projects container on home page */}
-          {/* <NoidaProjectsSection /> */}
+          <NoidaProjectsSection />
 
           {/* Latest blogs from our blog section */}
           <SocialFeedPage />
@@ -109,10 +108,8 @@ export default async function HomePage() {
           <SocialFeedsOfMPF />
 
           {/* Popular cities section on home page  */}
-          {/* <PopularCitiesSection /> */}
+          <PopularCitiesSection />
         </div>
-        {/* Scroll to top button */}
-        <ScrollToTop />
       </>
     );
   } catch (error) {
