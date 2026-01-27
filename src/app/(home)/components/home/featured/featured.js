@@ -3,10 +3,8 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./featured.css";
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import PropertyContainer from "../../common/page";
-import { useProjectContext } from "@/app/_global_components/contexts/projectsContext";
 
 export default function Featured({
   url = "",
@@ -14,12 +12,8 @@ export default function Featured({
   allProjects,
   type,
   badgeVariant = "default",
+  title
 }) {
-  const { setProjectData } = useProjectContext();
-  useEffect(() => {    
-    setProjectData(allProjects);
-  }, []);
-
   const settings = {
     dots: false,
     infinite: allProjects.length > 1,
@@ -49,6 +43,7 @@ export default function Featured({
 
   return (
     <div className="container">
+      <h2 className="text-center my-4 my-lg-5 fw-bold plus-jakarta-sans-bold">{title}</h2>
       {allProjects?.length > 0 && (
         <div className="featured-page-slider">
           <Slider {...settings}>

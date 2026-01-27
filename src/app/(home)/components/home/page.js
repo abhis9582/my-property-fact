@@ -5,104 +5,112 @@ import HeroSection from "../_homecomponents/heroSection";
 import FeaturedPage from "./featured/page";
 import ScrollToTop from "../_homecomponents/ScrollToTop";
 import {
+  fetchCityData,
+  fetchProjectTypes,
   getAllProjects,
   getWeeklyProject,
+  fetchBuilderData,
 } from "@/app/_global_components/masterFunction";
 import NewInsight from "../_homecomponents/NewInsight";
 import DreamPropertySection from "./dream-project/DreamPropertySection";
 import NewMpfMetaDataContainer from "../_homecomponents/NewMpfMetaDataContainer";
 import SocialFeedsOfMPF from "../_homecomponents/SocialFeedsOfMPF";
 import PopularCitiesSection from "./popular-cities/PopularCitiesSection";
-import NoidaProjectsSection from "./noida-projects/NoidaProjectsSection";
-// import HomeMetaData from "../_homecomponents/HomeMetaData";
+// import NoidaProjectsSection from "./noida-projects/NoidaProjectsSection";
 
 export default async function HomePage() {
+  // Fetching all projects with short details
   const projects = await getAllProjects();
+
+  // Allowed slugs for featured projects
   const allowedSlugs = [
     "m3m-jacob-and-co-residences",
     "eldeco-whispers-of-wonder",
     "ace-edit",
   ];
+
+  // Fetching citylist and project types and storing in variables
+  const [cityList, projectTypeList, builders] = await Promise.all([
+    fetchCityData(),
+    fetchProjectTypes(),
+    fetchBuilderData(),
+  ]);
+
+  // Filtering only featured projects from projects list
   const featuredProjects = projects.filter((project) => {
     if (!project.slugURL) return false;
     return allowedSlugs.includes(project.slugURL);
   });
+
+  // Filtering residential projects from projects list
   const residentalProjects = projects
     .filter((project) => project.propertyTypeName === "Residential")
     .slice(0, 9);
+
+  // Filtering commercial projects from projects list
   const commercialProjects = projects
     .filter((project) => project.propertyTypeName === "Commercial")
     .slice(0, 9);
+
+  // Getting weekly project from projects list
   const mpfTopPicProject = await getWeeklyProject(projects);
+
   try {
     return (
       <>
-        {/* Pass props to client component if needed */}
-        <HeroSection />
+        {/* Hero section component  */}
+        <HeroSection projectTypeList={projectTypeList} cityList={cityList} />
 
-        {/* <HomeMetaData /> */}
+        {/* My property fact meta data container component */}
+        <NewMpfMetaDataContainer propertyTypes={projectTypeList} projects={projects} builders={builders.builders} cities={cityList} />
 
         {/* MPF-top pick section  */}
-        
-        <NewMpfMetaDataContainer />
         <MpfTopPicks topProject={mpfTopPicProject} />
 
         {/* Static Sections */}
         <div className="position-relative">
-          {/* insight section  */}
-          {/* <h2 className="text-center fw-bold my-5">Insights</h2> */}
-          {/* <InsightNew /> */}
+          {/* Insight section  */}
           <NewInsight />
 
           {/* featured projects section  */}
-          <h2 className="text-center mb-5 fw-bold plus-jakarta-sans-bold">Featured Projects</h2>
           <FeaturedPage
+            title="Featured Projects"
+            type="Featured"
             autoPlay={false}
             allFeaturedProperties={featuredProjects}
           />
           {/* dream cities section  */}
-          {/* <h2 className="text-center my-5 fw-bold">
-            Find your dream property in the city you are searching in
-          </h2>
-          <DreamProject /> */}
-
           <DreamPropertySection />
 
           {/* residential projects section  */}
-          <h2 className="text-center mt-4 mb-5 fw-bold plus-jakarta-sans-bold">
-            Explore Our Premier Residential Projects
-          </h2>
           <FeaturedPage
+            title="Explore Our Premier Residential Projects"
             autoPlay={true}
             allFeaturedProperties={residentalProjects}
           />
 
           {/* commertial projects section  */}
-          <h2 className="text-center my-5 fw-bold plus-jakarta-sans-bold">
-            Explore Top Commercial Spaces for Growth
-          </h2>
           <FeaturedPage
+            title="Explore Top Commercial Spaces for Growth"
             autoPlay={true}
             allFeaturedProperties={commercialProjects}
           />
 
           {/* web story section  */}
-          <h2 className="text-center my-5 fw-bold plus-jakarta-sans-bold">Realty Updates Web Stories</h2>
-          <NewsViews />
+          <NewsViews title="Realty Updates Web Stories" />
 
-          <NoidaProjectsSection />
+          {/* Top projects container on home page */}
+          {/* <NoidaProjectsSection /> */}
 
+          {/* Latest blogs from our blog section */}
           <SocialFeedPage />
-          
-          {/* video slider section  */}
-          {/* <VideoSliderPage /> */}
-          {/* <div className="mb-5">
-            <InstagramFeed />
-          </div> */}
+
+          {/* Social feeds from instagram and facebook */}
           <SocialFeedsOfMPF />
-          <PopularCitiesSection />
+
+          {/* Popular cities section on home page  */}
+          {/* <PopularCitiesSection /> */}
         </div>
-        {/* <PopularCitiesComponent /> */}
         {/* Scroll to top button */}
         <ScrollToTop />
       </>

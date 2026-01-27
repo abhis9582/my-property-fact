@@ -2,13 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import "./common.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBuilding, faHouse, faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 
 export default function MpfTopPicks({ topProject }) {
+  // If no top project is provided, return null
   if (!topProject) {
     return null;
   }
-
+  // Extracting data from top project
   const {
     builderName,
     builderSlug,
@@ -21,6 +22,7 @@ export default function MpfTopPicks({ topProject }) {
     slugURL,
   } = topProject;
 
+  // Generating price in lakh & cr
   const generatePrice = (price) => {
     if (/[a-zA-Z]/.test(price)) {
       return price;
@@ -29,15 +31,18 @@ export default function MpfTopPicks({ topProject }) {
       ? "₹ " + Math.round(parseFloat(price) * 100) + " Lakh* Onwards"
       : "₹ " + parseFloat(price) + " Cr* Onwards";
   };
-
+  
+  // Generating banner image source
   const bannerImageSrc = projectBannerImage
     ? `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${slugURL}/${projectBannerImage}`
     : "/static/no_image.png";
 
+  // Generating logo source
   const logoSrc = projectLogo
     ? `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${slugURL}/${projectLogo}`
     : "/logo.png";
 
+  // Returning the MPF top picks section
   return (
     <>
       <div className="container-fluid position-relative mpf-top-picks-section-container">
@@ -137,29 +142,6 @@ export default function MpfTopPicks({ topProject }) {
             </div>
           </div>
         </section>
-        {/* <div className="mpf-top-picks-banner">
-          <div className="mpf-top-picks-banner__content">
-            <span className="mpf-top-picks-banner__eyebrow">
-            Get Verified Leads, Register for FREE on My Property Fact !
-            </span>
-            <Link
-              href="/contact-us"
-              className="mpf-top-picks-banner__cta"
-              aria-label="Explore more about posting your property on MyPropertyFact"
-            >
-              Contact us
-            </Link>
-          </div>
-          <div>
-            <Image
-              src="/static/home_emplore_image.png"
-              alt="MPF Top Picks Banner"
-              width={173.68}
-              height={180.78}
-              className="img-fluid"
-            />
-          </div>
-        </div> */}
       </div>
     </>
   );

@@ -32,12 +32,14 @@ const HeroBannerSlider = ({ slides = [] }) => {
     return null;
   }
 
+  const isSingleSlide = slides.length === 1;
+
   const settings = {
-    dots: true,
+    dots: !isSingleSlide, // Hide dots for single slide
     arrows: false,
-    infinite: true,
+    infinite: !isSingleSlide, // Disable infinite for single slide
     speed: 800,
-    autoplay: true,
+    autoplay: !isSingleSlide, // Disable autoplay for single slide
     autoplaySpeed: 5000,
     pauseOnHover: false,
     pauseOnFocus: false,
@@ -56,11 +58,14 @@ const HeroBannerSlider = ({ slides = [] }) => {
             tablet,
             mobile,
             alt = "Hero banner",
-            priority = index === 0,
+            priority: slidePriority,
             height = 600,
             link,
             href,
           } = slide;
+
+          // For single slide, always prioritize. Otherwise, prioritize first slide or use slide's priority prop
+          const priority = isSingleSlide ? true : (slidePriority !== undefined ? slidePriority : index === 0);
 
           const desktopSrc = desktop || "/mpf-banner.jpg";
           const tabletSrc = tablet || desktopSrc;
@@ -78,9 +83,9 @@ const HeroBannerSlider = ({ slides = [] }) => {
                 width={1920}
                 height={height}
                 className="img-fluid w-100"
-                priority={priority}
-                loading={priority ? "eager" : "lazy"}
+                priority
                 fetchPriority={priority ? "high" : "auto"}
+                quality={80}
                 sizes="(max-width: 767px) 100vw, (max-width: 1023px) 100vw, 1920px"
               />
             </picture>

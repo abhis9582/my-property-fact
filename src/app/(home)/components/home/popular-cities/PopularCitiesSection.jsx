@@ -7,6 +7,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "./PopularCitiesSection.css";
 
+// Defining popular cities data with name, link, image and alt text
 const cities = [
   {
     name: "Agra",
@@ -58,6 +59,7 @@ const cities = [
   },
 ];
 
+// Returning the popular cities section
 export default function PopularCitiesSection() {
   return (
     <section className="popular-cities-section">

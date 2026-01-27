@@ -193,9 +193,9 @@
 }
 
 @media (max-width: 992px) {
-  .top-banner-each-pages {
+   .top-banner-each-pages {
     height: 280px;
-  }
+  } 
 
   .projects-heading {
     font-size: 3rem;
@@ -282,9 +282,9 @@
 }
 
 @media (max-width: 375px) {
-  .top-banner-each-pages {
+  /* .top-banner-each-pages {
     height: 160px;
-  }
+  } */
 
   .projects-heading {
     font-size: 1.25rem;

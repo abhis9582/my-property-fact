@@ -9,11 +9,13 @@ import LoginSignupModal from "../_homecomponents/loginSignupModal";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "next/navigation";
 
-const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
+const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [showLoginModal, setShowModal] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   // Check if the pathname starts with /city/
   const isCityRoute = pathname.startsWith("/city");
   const isBuilderRoute = pathname.startsWith("/builder");
@@ -26,8 +28,29 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
   const [projectSearchQuery, setProjectSearchQuery] = useState("");
   const [projectSearchResults, setProjectSearchResults] = useState([]);
   const [isSearchingProjects, setIsSearchingProjects] = useState(false);
+  const [imageErrors, setImageErrors] = useState({}); // Track image errors per project
   const projectSearchTimeoutRef = useRef(null);
   const projectsDropdownRef = useRef(null);
+  const scrollPositionRef = useRef(0);
+
+  // Get image URL for a project (matching the pattern used in PropertyContainer)
+  const getProjectImageSrc = (project) => {
+    const DEFAULT_IMAGE = "/static/no_image.png";
+    const projectId = project.id || project.slugURL;
+    
+    // If image failed to load for this project, return default
+    if (imageErrors[projectId] || !project.projectThumbnailImage) {
+      return DEFAULT_IMAGE;
+    }
+    
+    // Construct full image URL
+    return `${process.env.NEXT_PUBLIC_IMAGE_URL || ''}properties/${project.slugURL}/${project.projectThumbnailImage}`;
+  };
+
+  // Handle image error
+  const handleImageError = (projectId) => {
+    setImageErrors(prev => ({ ...prev, [projectId]: true }));
+  };
   const openMenuMobile = (dropdown) => {
     setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
   };
@@ -151,8 +174,15 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
         header.classList.remove("notfixed");
       }
 
-      // Toggle className for body to remove overflow-hidden
-      document.body.classList.remove("overflow-hidden");
+      // Restore body scroll
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      document.documentElement.style.overflow = "";
+      
+      // Restore scroll position
+      window.scrollTo(0, scrollPositionRef.current);
     } else {
       // Open the menu
       for (let i = 0; i < menuButtons.length; i++) {
@@ -167,8 +197,13 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
         header.classList.add("notfixed");
       }
 
-      // Toggle className for body to add overflow-hidden
-      document.body.classList.add("overflow-hidden");
+      // Prevent body scroll - save current scroll position
+      scrollPositionRef.current = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollPositionRef.current}px`;
+      document.body.style.width = "100%";
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
     }
   };
 
@@ -178,7 +213,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
 
   // Handle project search
   useEffect(() => {
-    if (projectSearchQuery.trim().length >= 2) {
+    if (projectSearchQuery.trim().length >= 2 && projectList && projectList.length > 0) {
       setIsSearchingProjects(true);
       
       // Clear previous timeout
@@ -189,19 +224,13 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
       // Debounce search
       projectSearchTimeoutRef.current = setTimeout(async () => {
         try {
-          // Fetch all projects and filter client-side
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}projects`
-          );
-          const allProjects = Array.isArray(response.data) ? response.data : [];
-          
           // Filter projects by search query
           const query = projectSearchQuery.trim().toLowerCase();
-          const filtered = allProjects.filter((project) => {
+          const filtered = projectList.filter((project) => {
             const projectName = (project.projectName || project.name || "").toLowerCase();
             const builderName = (project.builderName || "").toLowerCase();
             const cityName = (project.cityName || "").toLowerCase();
-            const location = (project.location || "").toLowerCase();
+            const location = (project.location || project.projectAddress || "").toLowerCase();
             
             return (
               projectName.includes(query) ||
@@ -229,7 +258,30 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
         clearTimeout(projectSearchTimeoutRef.current);
       }
     };
-  }, [projectSearchQuery]);
+  }, [projectSearchQuery, projectList]);
+
+  // Handle project click navigation
+  const handleProjectClick = (project) => {
+    if (project.slugURL) {
+      router.push(`/${project.slugURL}`);
+      setProjectSearchQuery("");
+      setProjectSearchResults([]);
+    }
+  };
+
+  // Handle Explore button click
+  const handleExploreClick = () => {
+    if (projectSearchResults.length > 0 && projectSearchResults[0]?.slugURL) {
+      router.push(`/${projectSearchResults[0].slugURL}`);
+      setProjectSearchQuery("");
+      setProjectSearchResults([]);
+    } else if (projectSearchQuery.trim().length >= 2) {
+      // Navigate to projects page with search query
+      router.push(`/projects?search=${encodeURIComponent(projectSearchQuery)}`);
+      setProjectSearchQuery("");
+      setProjectSearchResults([]);
+    }
+  };
 
   // Reset search when dropdown closes
   useEffect(() => {
@@ -303,13 +355,13 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                   ) : (
                     <div className="city-dropdown-content">
                       <div className="city-dropdown-left">
-                        <Link href="/commercial" className="city-dropdown-item">
+                        <Link href="/projects/commercial" className="city-dropdown-item">
                           Commercial
                         </Link>
-                        <Link href="/residential" className="city-dropdown-item">
+                        <Link href="/projects/residential" className="city-dropdown-item">
                           Residential
                         </Link>
-                        <Link href="/new-launches" className="city-dropdown-item with-badge">
+                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge">
                           New Launches <span className="city-dropdown-badge">New</span>
                         </Link>
                         <Link href="/blog" className="city-dropdown-item">
@@ -416,13 +468,13 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                   ) : (
                     <div className="city-dropdown-content">
                       <div className="city-dropdown-left">
-                        <Link href="/commercial" className="city-dropdown-item">
+                        <Link href="/projects/commercial" className="city-dropdown-item">
                           Commercial
                         </Link>
-                        <Link href="/residential" className="city-dropdown-item">
+                        <Link href="/projects/residential" className="city-dropdown-item">
                           Residential
                         </Link>
-                        <Link href="/new-launches" className="city-dropdown-item with-badge">
+                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge">
                           New Launches <span className="city-dropdown-badge">New</span>
                         </Link>
                         <Link href="/blog" className="city-dropdown-item">
@@ -441,68 +493,76 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                                 className="projects-search-input"
                                 value={projectSearchQuery}
                                 onChange={(e) => setProjectSearchQuery(e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    handleExploreClick();
+                                  }
+                                }}
                               />
-                              <button className="projects-explore-btn">Explore</button>
+                              <button 
+                                className="projects-explore-btn"
+                                onClick={handleExploreClick}
+                              >
+                                Explore
+                              </button>
                             </div>
                           </div>
-                          {isSearchingProjects && (
-                            <div className="projects-search-loader">
-                              <Spinner animation="border" variant="light" size="sm" />
-                              <span className="ms-2">Searching...</span>
-                            </div>
-                          )}
-                          {!isSearchingProjects && projectSearchQuery.trim().length >= 2 && (
+                          {/* Search Results */}
+                          {projectSearchQuery.trim().length >= 2 && (
                             <div className="projects-search-results">
-                              {projectSearchResults.length > 0 ? (
-                                <ul className="list-inline projects-results-list">
+                              {isSearchingProjects ? (
+                                <div className="projects-search-loader">
+                                  <Spinner animation="border" size="sm" variant="light" />
+                                  <span className="ms-2">Searching...</span>
+                                </div>
+                              ) : projectSearchResults.length > 0 ? (
+                                <ul className="projects-results-list">
                                   {projectSearchResults.map((project) => {
-                                    const imageUrl = project.projectThumbnailImage && project.slugURL
-                                      ? `${process.env.NEXT_PUBLIC_IMAGE_URL || ''}properties/${project.slugURL}/${project.projectThumbnailImage}`
-                                      : null;
+                                    const projectId = project.id || project.slugURL;
                                     return (
-                                      <li key={project.id || project.slugURL}>
-                                        <Link
-                                          href={`/${project.slugURL || project.slugUrl}`}
-                                          className="text-light text-decoration-none project-result-item"
-                                          onClick={() => {
-                                            setProjectSearchQuery("");
-                                            setProjectSearchResults([]);
-                                          }}
-                                        >
-                                          <div className="project-result-content">
-                                            {imageUrl && (
-                                              <div className="project-result-image">
-                                                <Image
-                                                  src={imageUrl}
-                                                  alt={project.projectName || project.name || "Project"}
-                                                  width={60}
-                                                  height={60}
-                                                  style={{ objectFit: 'cover', borderRadius: '8px' }}
-                                                />
+                                      <li
+                                        key={projectId}
+                                        className="project-result-item"
+                                        onClick={() => handleProjectClick(project)}
+                                      >
+                                        <div className="project-result-content">
+                                          <div className="project-result-image">
+                                            <Image
+                                              src={getProjectImageSrc(project)}
+                                              alt={project.projectName || project.name || "Project"}
+                                              width={60}
+                                              height={60}
+                                              unoptimized
+                                              onError={() => handleImageError(projectId)}
+                                            />
+                                          </div>
+                                          <div className="project-result-name">
+                                            <div>{project.projectName || project.name}</div>
+                                            {(project.cityName || project.builderName) && (
+                                              <div style={{ fontSize: '12px', opacity: 0.8, marginTop: '4px' }}>
+                                                {[project.cityName, project.builderName].filter(Boolean).join(' • ')}
                                               </div>
                                             )}
-                                            <span className="project-result-name">
-                                              {project.projectName || project.name || "Project"}
-                                            </span>
                                           </div>
-                                        </Link>
+                                        </div>
                                       </li>
                                     );
                                   })}
                                 </ul>
-                              ) : (
+                              ) : projectSearchQuery.trim().length >= 2 ? (
                                 <div className="projects-no-results">
-                                  No projects found
+                                  No projects found matching &quot;{projectSearchQuery}&quot;
                                 </div>
-                              )}
+                              ) : null}
                             </div>
                           )}
-                          <div className="projects-email-info">
+                          {/* <div className="projects-email-info">
                             Email Us At Services@Social@Mypropertyfact.Com. Or Call Us At 8920024793 (IND Toll-Free)
-                          </div>
+                          </div> */}
                         </div>
                       </div>
-                      <div className="projects-dropdown-footer">
+                      {/* <div className="projects-dropdown-footer">
                         <div className="projects-dropdown-footer-label">
                           Contact Us Toll Free On
                         </div>
@@ -516,7 +576,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                           />
                           <span>8920024793 (IND Toll-Free)</span>
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   )}
                 </div>
@@ -566,8 +626,17 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
           <span id="menuLine3"></span>
         </div>
       </div>
-      <div className="mbMenuContainer" id="mbdiv">
-        <div className="mbMenu">
+      <div 
+        className="mbMenuContainer" 
+        id="mbdiv"
+        onClick={(e) => {
+          // Close menu if clicking on the backdrop (container), not on the menu panel
+          if (e.target.id === "mbdiv") {
+            openMenu();
+          }
+        }}
+      >
+        <div className="mbMenu" onClick={(e) => e.stopPropagation()}>
           <div className="h-100 scroller">
             <div className="bigMenuList">
               <ul className="list-inline active list-unstyled">
@@ -624,7 +693,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList }) => {
                       {builderList?.map((builder) => (
                         <li key={builder.id}>
                           <Link
-                            className="text-decoration-none"
+                            className="text-decoration-none builder-link"
                             href={`/builder/${builder.slugUrl}`}
                             onClick={openMenu}
                           >
