@@ -78,9 +78,14 @@ export default function NoidaProjectsSection() {
             spaceBetween={24}
             slidesPerView={3}
             breakpoints={{
-              0: { slidesPerView: 1.1, spaceBetween: 16 },
-              640: { slidesPerView: 2, spaceBetween: 20 },
-              1024: { slidesPerView: 3, spaceBetween: 24 },
+              0: { slidesPerView: 1.1, spaceBetween: 12 },
+              375: { slidesPerView: 1.2, spaceBetween: 14 },
+              480: { slidesPerView: 1.5, spaceBetween: 16 },
+              576: { slidesPerView: 1.8, spaceBetween: 18 },
+              768: { slidesPerView: 2, spaceBetween: 20 },
+              992: { slidesPerView: 2.5, spaceBetween: 22 },
+              1200: { slidesPerView: 3, spaceBetween: 24 },
+              1440: { slidesPerView: 3, spaceBetween: 24 },
             }}
           >
           {projects.map((project) => (
@@ -121,12 +126,12 @@ export default function NoidaProjectsSection() {
             </SwiperSlide>
           ))}
           </Swiper>
-          {/* <button
+          <button
             className="noida-projects-nav noida-projects-next"
             aria-label="Next projects"
           >
             ›
-          </button> */}
+          </button>
         </div>
       </div>
     </section>

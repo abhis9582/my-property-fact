@@ -5,6 +5,13 @@
   /* Remove default spacing */
 }
 
+.home-banner img,
+.home-banner picture,
+.hero-banner-slide img {
+  transform: translateY(-1px); /* header height ke barabar */
+}
+
+
 .hero-banner-slider {
   width: 100%;
   overflow: hidden;

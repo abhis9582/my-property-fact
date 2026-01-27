@@ -7,7 +7,7 @@ import {
 } from "@/app/_global_components/masterFunction";
 
 const HeaderClient = async () => {
-  const [cities, projectTypes, builders] = await Promise.all([
+  const [cities, projectTypes, builders, projects] = await Promise.all([
     fetchCityData(),
     fetchProjectTypes(),
     fetchBuilderData(),
