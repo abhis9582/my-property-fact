@@ -49,18 +49,16 @@
 
 /* Positioning the previous button */
 .slick-prev {
-    left: 43%;
-    bottom: -42px;
-    /* Adjust as needed */
+    left: 41%;
+    bottom: -55px;
     top: auto;
     transform: translateX(-50%);
 }
 
 /* Positioning the next button */
 .slick-next {
-    right: 43%;
-    bottom: -42px;
-    /* Adjust as needed */
+    right: 41%;
+    bottom: -55px;
     top: auto;
     transform: translateX(50%);
 }
@@ -68,29 +66,47 @@
 /* Styling the arrows */
 .slick-prev:before,
 .slick-next:before {
-    font-size: 30px;
-    color: #000;
-    opacity: 0.8;
+  content: "";
+  font-size: 0;
+  opacity: 0;
 }
 
 /* On hover effect */
 .slick-prev:hover:before,
 .slick-next:hover:before {
-    color: #68ac78;
-    opacity: 1;
+  opacity: 0;
+}
+
+.custom-featured-arrow {
+  background: #ffffff;
+  border: none;
+  padding: 0;
+  width: 48px;
+  height: 48px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0px 4px 16px 0px #0000001A;
+  cursor: pointer;
+}
+
+.custom-featured-arrow img {
+  width: 16px;
+  height: 16px;
 }
 
 .slick-dots {
     bottom: -25px;
 }
 
-@media (max-width: 769px) {
+@media (max-width: 768px) {
     .slick-prev {
-        left: 28%;
+        left: 35%;
     }
 
     .slick-next {
-        right: 28%;
+        right: 35%;
     }
 }
 
@@ -100,13 +116,13 @@
         max-width: 100%;
     }
     
-    .slick-prev {
+    /* .slick-prev {
         left: 25% !important;
     }
 
     .slick-next {
         right: 25% !important;
-    }
+    } */
 }
 
 @media (max-width: 576px) {
@@ -116,13 +132,13 @@
     }
     
     .slick-prev {
-        left: 20% !important;
-        bottom: -35px !important;
+        /* left: 20% !important; */
+        /* bottom: -35px !important; */
     }
 
     .slick-next {
-        right: 20% !important;
-        bottom: -35px !important;
+        /* right: 20% !important; */
+        /* bottom: -35px !important; */
     }
     
     .slick-prev:before,
@@ -138,13 +154,13 @@
     }
     
     .slick-prev {
-        left: 15% !important;
-        bottom: -30px !important;
+        /* left: 15% !important; */
+        /* bottom: -30px !important; */
     }
 
     .slick-next {
-        right: 15% !important;
-        bottom: -30px !important;
+        /* right: 15% !important; */
+        /* bottom: -30px !important; */
     }
     
     .slick-prev:before,
@@ -155,10 +171,10 @@
 
 @media (max-width: 375px) {
     .slick-prev {
-        left: 10% !important;
+        /* left: 10% !important; */
     }
 
     .slick-next {
-        right: 10% !important;
+        /* right: 10% !important; */
     }
 }

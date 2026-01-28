@@ -7,16 +7,22 @@ import CommonHeaderBanner from "../../components/common/commonheaderbanner";
 import CommonBreadCrum from "../../components/common/breadcrum";
 import { LoadingSpinner } from "../../contact-us/page";
 import Image from "next/image";
+
 export default function CityPage({ cityData }) {
+  // Safely handle cases where API doesn't return a project list
+  const projects = Array.isArray(cityData?.projectList)
+    ? cityData.projectList
+    : [];
+
   return (
     <>
       <div className="p-0">
         <div className="container-fluid p-0">
           <CommonHeaderBanner
             image={"realestate-bg.jpg"}
-            headerText={cityData.cityName}
+            headerText={cityData?.cityName || ""}
             firstPage={"projects"}
-            pageName={cityData.cityName}
+            pageName={cityData?.cityName || ""}
           />
         </div>
         {/* <div className="container-fluid mt-4">
@@ -33,13 +39,13 @@ export default function CityPage({ cityData }) {
           <div>
             <Image
               src={"/static/about-us-bg-left.png"}
-              alt={cityData.cityName}
+              alt={cityData?.cityName || ""}
               width={161}
               height={353}
             />
           </div>
           <div>
-            <p>{cityData.cityDescription}</p>
+            <p>{cityData?.cityDescription}</p>
             <div className="text-center">
               <Link href="#" className="btn text-white btn-background about-us-read-more">
                 Read More
@@ -49,7 +55,7 @@ export default function CityPage({ cityData }) {
           <div>
             <Image
               src={"/static/about-us-bg-right.png"}
-              alt={cityData.cityName}
+              alt={cityData?.cityName || ""}
               width={161}
               height={353}
             />
@@ -65,8 +71,8 @@ export default function CityPage({ cityData }) {
         ) : (
           <div className="container my-3">
             <div className="row g-3">
-              {cityData.projectList.length > 0 ? (
-                cityData.projectList.map((item, index) => (
+              {projects.length > 0 ? (
+                projects.map((item, index) => (
                   <div key={`${index}`} className="col-12 col-sm-6 col-md-4">
                     <PropertyContainer data={item} />
                   </div>

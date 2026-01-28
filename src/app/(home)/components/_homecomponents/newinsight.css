@@ -96,6 +96,7 @@
   transform: translateY(-1px);
   transition: transform 0.2s ease;
   animation: insight-arrow-pulse 1.2s ease-in-out infinite;
+  color: #1f6f46;
 }
 
 .insight-link:hover .insight-link-arrow {

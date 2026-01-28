@@ -72,9 +72,7 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
     }
 
     if (badgeVariant === "home-featured") {
-      const { backgroundColor, textColor } = getFeaturedBadgeStyle(
-        data.projectStatusName
-      );
+      const { backgroundColor, textColor } = getFeaturedBadgeStyle(data.projectStatusName);
 
       return (
         <div
@@ -89,11 +87,19 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
       );
     }
 
+    const { backgroundColor, textColor } = getFeaturedBadgeStyle(data.projectStatusName);
+
     return (
       <div className="position-absolute top-0 end-0 m-2 status-badge-container">
-        <h6 className="border p-2 d-inline-block rounded bg-light text-dark shadow-sm fw-bold">
+        <span
+          className="status-badge-pill"
+          style={{
+            backgroundColor,
+            color: textColor,
+          }}
+        >
           {data.projectStatusName}
-        </h6>
+        </span>
       </div>
     );
   };

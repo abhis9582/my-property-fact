@@ -3,8 +3,49 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./featured.css";
+import Image from "next/image";
 import Link from "next/link";
 import PropertyContainer from "../../common/page";
+
+function NextArrow(props) {
+  const { className, style, onClick } = props;
+  return (
+    <button
+      type="button"
+      className={`${className} custom-featured-arrow custom-featured-arrow-next`}
+      style={style}
+      onClick={onClick}
+      aria-label="Next slide"
+    >
+      <Image
+        src="/icon/right-arrow.svg"
+        alt="Next"
+        width={32}
+        height={32}
+      />
+    </button>
+  );
+}
+
+function PrevArrow(props) {
+  const { className, style, onClick } = props;
+  return (
+    <button
+      type="button"
+      className={`${className} custom-featured-arrow custom-featured-arrow-prev`}
+      style={style}
+      onClick={onClick}
+      aria-label="Previous slide"
+    >
+      <Image
+        src="/icon/left-arrow.svg"
+        alt="Previous"
+        width={32}
+        height={32}
+      />
+    </button>
+  );
+}
 
 export default function Featured({
   url = "",
@@ -21,6 +62,8 @@ export default function Featured({
     autoplay: autoPlay,
     autoplaySpeed: 5000,
     arrows: autoPlay,
+    nextArrow: autoPlay ? <NextArrow /> : null,
+    prevArrow: autoPlay ? <PrevArrow /> : null,
     slidesToShow: 3,
     slidesToScroll: 1,
     responsive: [

@@ -1,6 +1,8 @@
 import "./newinsight.css";
 import Image from "next/image";
 import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 export default function NewInsight() {
   // Defining insights data
@@ -46,7 +48,9 @@ export default function NewInsight() {
                   <p className="insight-description">{insight.sub_heading}</p>
                   <Link className="insight-link" href={insight.href}>
                     Explore Now
-                    <span className="insight-link-arrow">→</span>
+                    <span className="insight-link-arrow">
+                      <FontAwesomeIcon icon={faArrowRight} />
+                    </span>
                   </Link>
                 </div>
               </div>
