@@ -17,9 +17,9 @@ export default async function HeroSection({ projectTypeList, cityList }) {
     // },
     {
       id: "hero-secondary",
-      desktop: "/static/banners/new_banner_desktop1.jpg",
-      tablet: "/static/banners/new_banner_tab1.jpg",
-      mobile: "/static/banners/new_banner_mobile1.jpg",
+      desktop: "/static/banners/new_desktop_banner1.jpg",
+      tablet: "/static/banners/new_tablet_banner1.jpg",
+      mobile: "/static/banners/new_mobile_banner1.jpg",
       alt: "Discover top real estate projects across India",
       href: "#",
     },
