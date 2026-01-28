@@ -15,7 +15,7 @@ import DreamPropertySection from "./dream-project/DreamPropertySection";
 import NewMpfMetaDataContainer from "../_homecomponents/NewMpfMetaDataContainer";
 import SocialFeedsOfMPF from "../_homecomponents/SocialFeedsOfMPF";
 import PopularCitiesSection from "./popular-cities/PopularCitiesSection";
-import NoidaProjectsSection from "./noida-projects/NoidaProjectsSection";
+// import NoidaProjectsSection from "./noida-projects/NoidaProjectsSection";
 
 export default async function HomePage() {
   // Fetching all projects with short details
@@ -99,7 +99,7 @@ export default async function HomePage() {
           <NewsViews title="Realty Updates Web Stories" />
 
           {/* Top projects container on home page */}
-          <NoidaProjectsSection />
+          {/* <NoidaProjectsSection /> */}
 
           {/* Latest blogs from our blog section */}
           <SocialFeedPage />
