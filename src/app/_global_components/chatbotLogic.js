@@ -1,7 +1,7 @@
 const axios = require('axios');
 
-const API_URL = 'https://apis.mypropertyfact.in/projects/search-by-type-city-budget';
-const IMAGE_BASE_URL = 'https://apis.mypropertyfact.in/get/images/properties/';
+const API_URL = `${process.env.NEXT_PUBLIC_API_URL}projects/search-by-type-city-budget`;
+const IMAGE_BASE_URL = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/`;
 
 const PROPERTY_TYPE_MAP = {
     'residential': 1,
@@ -14,7 +14,9 @@ const CITY_MAP = {
     'agra': 1, 'noida': 2, 'ludhiana': 6, 'mumbai': 14, 'ghaziabad': 15,
     'gurugram': 17, 'bangalore': 18, 'jaipur': 19, 'kochi': 20, 'hyderabad': 21,
     'greater noida': 26, 'noida extension': 27, 'lucknow': 31, 'chandigarh': 33,
-    'goa': 41, 'delhi': 2, 'pune': 14, 'faridabad': 35
+    'goa': 41, 'delhi': 30, 'faridabad': 35, 'mohali': 42, 'pune': 39,
+    'bareilly': 43, 'chennai': 37, 'dehradun': 32, 'indore': 38, 'sonipat': 44,
+    'thiruvananthapuram': 36, 'vrindavan': 34, 'greater noida west': 45
 };
 
 const CITY_ALIASES = {
@@ -26,10 +28,20 @@ const CITY_ALIASES = {
     'bengluru': 'bangalore',
     'new delhi': 'delhi',
     'gr noida': 'greater noida',
-    'gzb': 'ghaziabad'
+    'gzb': 'ghaziabad',
+    'trivandrum': 'thiruvananthapuram',
+    'thrivananthapura': 'thiruvananthapuram',
+    'trivendrum': 'thiruvananthapuram',
+    'thrivunthapuram': 'thiruvananthapuram',
+    'trivandram': 'thiruvananthapuram',
+    'trivanthapuram': 'thiruvananthapuram',
+    'thirivanthapuram': 'thiruvananthapuram',
+    'chenai': 'chennai',
+    'dehradoon': 'dehradun',
+    'aggra': 'agra'
 };
 
-const ALLOWED_CITIES = Object.keys(CITY_MAP);
+const ALLOWED_CITIES = Object.keys(CITY_MAP).sort((a, b) => b.length - a.length);
 
 const STATES = {
     WELCOME: 'WELCOME',
@@ -49,10 +61,22 @@ async function generateAIResponse(message, sessionId) {
     }
     const session = sessions[sessionId];
 
-    if (msg === 'restart' || msg === 'reset' || msg === 'hi' || msg === 'hello') {
+    if (msg === 'restart' || msg === 'reset' || msg === 'hi' || msg === 'hello' ||
+        ['commercial', 'residential', 'new launch'].includes(msg)) {
         session.step = STATES.WELCOME;
         session.data = {};
         session.flags = null;
+
+        // If it's a property type, start the flow immediately at TYPE_SELECTED
+        if (['commercial', 'residential', 'new launch'].includes(msg)) {
+            session.data.type = msg;
+            session.step = STATES.TYPE_SELECTED;
+            return {
+                reply: `Which city are you interested in?`,
+                options: ['Noida', 'Gurugram', 'Ghaziabad', 'Greater Noida', 'Faridabad', 'Delhi', 'Other']
+            };
+        }
+
         return {
             reply: `Hi 👋\nWelcome to My Property Fact!\n\nReady to find the perfect property? 🏡✨\n\nPlease select your property type to get started.`,
             options: ['Commercial', 'Residential', 'New Launch']
@@ -155,9 +179,20 @@ async function generateAIResponse(message, sessionId) {
             }
 
             if (session.flags && session.flags.waitingForCity) {
-                const matched = ALLOWED_CITIES.find(c => inputCity.includes(c));
+                // Unify with robust matching logic
+                const allMatchable = [...ALLOWED_CITIES, ...Object.keys(CITY_ALIASES)].sort((a, b) => b.length - a.length);
+                let matchedKey = allMatchable.find(k => {
+                    const regex = new RegExp(`\\b${k}\\b`, 'i');
+                    return regex.test(inputCity);
+                });
+
+                let matchedCity = null;
+                if (matchedKey) {
+                    matchedCity = CITY_MAP[matchedKey] ? matchedKey : CITY_ALIASES[matchedKey];
+                }
+
                 let fuzzyMatch = null;
-                if (!matched) {
+                if (!matchedCity) {
                     for (const city of ALLOWED_CITIES) {
                         const dist = getLevenshteinDistance(inputCity, city);
                         const threshold = city.length > 5 ? 3 : 2;
@@ -173,8 +208,8 @@ async function generateAIResponse(message, sessionId) {
                 const longSentence = inputCity.split(/\s+/).length > 3;
                 const isOutOfScope = isQuestion || hasKeywords || longSentence;
 
-                if (matched) {
-                    session.data.city = matched;
+                if (matchedCity) {
+                    session.data.city = matchedCity;
                     session.step = STATES.CITY_SELECTED;
                     session.flags = null;
                     return {
@@ -205,7 +240,18 @@ async function generateAIResponse(message, sessionId) {
                 }
             }
 
-            let matchedCity = ALLOWED_CITIES.find(c => inputCity.includes(c));
+            // Combine map keys and aliases for comprehensive matching
+            const allMatchable = [...ALLOWED_CITIES, ...Object.keys(CITY_ALIASES)].sort((a, b) => b.length - a.length);
+            let matchedKey = allMatchable.find(k => {
+                const regex = new RegExp(`\\b${k}\\b`, 'i');
+                return regex.test(inputCity);
+            });
+
+            let matchedCity = null;
+            if (matchedKey) {
+                matchedCity = CITY_MAP[matchedKey] ? matchedKey : CITY_ALIASES[matchedKey];
+            }
+
             if (matchedCity) {
                 session.data.city = matchedCity;
                 session.step = STATES.CITY_SELECTED;
@@ -258,7 +304,14 @@ async function generateAIResponse(message, sessionId) {
 
             try {
                 const typeId = PROPERTY_TYPE_MAP[session.data.type] || 1;
-                const cityId = CITY_MAP[session.data.city] || 2;
+                const cityId = CITY_MAP[session.data.city];
+
+                if (!cityId) {
+                    return {
+                        reply: `I'm sorry, I couldn't find project data for ${session.data.city}.\nWould you like to try another city?`,
+                        options: ['Noida', 'Gurugram', 'Ghaziabad', 'Greater Noida', 'Faridabad', 'Delhi', 'Other']
+                    };
+                }
 
                 const response = await axios.get(API_URL, {
                     params: {
@@ -334,9 +387,9 @@ async function generateAIResponse(message, sessionId) {
             if (['yes', 'yes, please', 'sure'].includes(msg)) {
                 const typeId = PROPERTY_TYPE_MAP[session.data.type] || 1;
                 const cityId = CITY_MAP[session.data.city] || 2;
+                const cityName = encodeURIComponent(session.data.city || "");
                 const apiBudget = session.data.budget;
-                const redirectParam = `propertyType=${typeId}&propertyLocation=${cityId}&budget=${encodeURIComponent(apiBudget)}`;
-                const targetUrl = `/projects?${redirectParam}`;
+                const targetUrl = `https://mypropertyfact.in/projects?propertyType=${typeId}&propertyLocation=${cityId}&cityName=${cityName}&budget=${encodeURIComponent(apiBudget)}`;
 
                 return {
                     reply: `Redirecting you to view more projects on our website...`,
@@ -347,7 +400,7 @@ async function generateAIResponse(message, sessionId) {
             if (['no', 'no, thanks'].includes(msg)) {
                 return {
                     reply: `Thank you for your time!\nHave a great day 😊`,
-                    options: []
+                    options: ['Restart']
                 };
             }
 
@@ -364,8 +417,79 @@ async function generateAIResponse(message, sessionId) {
     }
 }
 
+let pool = null;
+try {
+    pool = require('./db');
+} catch (_) {
+    // db module optional – MySQL storage disabled when not present
+}
+
+async function processEnquiry({ name, mobile, email, project, sessionId }) {
+    if (!name || !mobile || !email) {
+        return { status: 400, data: { success: false, message: 'All fields required' } };
+    }
+
+    const session = sessions[sessionId] || { data: {} };
+    const { type, city, budget } = session.data || {};
+
+    // 1. Try to save to local MySQL (when db module is present)
+    if (pool) {
+        try {
+            await pool.execute(
+                'INSERT INTO form_leads (name, phone, email, project_name, property_type, city, budget) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [name, mobile, email, project || 'General', type || 'N/A', city || 'N/A', budget || 'N/A']
+            );
+            console.log('[Lead] Saved to MySQL:', name, mobile);
+        } catch (dbErr) {
+            console.log('[Lead] MySQL unavailable, skipping local storage:', dbErr.code || dbErr.message);
+        }
+    }
+
+    // 2. External API Integration
+    try {
+        const externalResponse = await axios.post('https://apis.mypropertyfact.in/enquiry/post', {
+            name: name,
+            email: email,
+            phone: mobile,
+            message: null,
+            pageName: null,
+            enquiryFrom: null,
+            projectLink: project ? `https://mypropertyfact.in/${project.toLowerCase().replace(/\s+/g, '-')}` : "https://www.mypropertyfact.com/contact-us",
+            status: "PENDING",
+            id: 0
+        });
+
+        console.log(`[Lead] External API Response:`, externalResponse.data);
+
+        if (externalResponse.data && externalResponse.data.isSuccess === 1) {
+            return {
+                status: 200,
+                data: {
+                    success: true,
+                    reply: `Thank you for sharing your details!\nOur consultant will contact you within 24 hours.`,
+                    followUp: `Would you like to explore more projects?`,
+                    options: ['Yes', 'No']
+                }
+            };
+        } else {
+            throw new Error(`External API declined: ${JSON.stringify(externalResponse.data)}`);
+        }
+
+    } catch (apiError) {
+        console.error("External Enquiry API Failed:", apiError.message);
+        return {
+            status: 500,
+            data: {
+                success: false,
+                message: 'Submission failed. Please try again.'
+            }
+        };
+    }
+}
+
 module.exports = {
     generateAIResponse,
+    processEnquiry,
     sessions,
     PROPERTY_TYPE_MAP,
     CITY_MAP,
