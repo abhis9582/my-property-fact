@@ -25,7 +25,7 @@ export default function BlogCard({ blog }) {
                     className="img-fluid"
                     
                 />
-                <div className="card-body d-flex flex-column plus-jakarta-sans-bold">
+                <div className="card-body d-flex flex-column plus-jakarta-sans-semi-bold">
                     <p className="blog-date m-0 mb-2">{new Date(blog.createdAt).toLocaleString('en-US', {
                         dateStyle: 'medium',
                         // timeStyle: 'short'

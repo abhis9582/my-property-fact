@@ -75,7 +75,7 @@ const DreamPropertySection = () => {
         {/* Header Section */}
         <div className="dream-property-header">
           <div className="header-left">
-            <h2 className="dream-property-title">
+            <h2 className="dream-property-title plus-jakarta-sans-semi-bold">
               Find Your Dream Property In The City You Are Searching In
               <button
                 className="nav-arrow-button"

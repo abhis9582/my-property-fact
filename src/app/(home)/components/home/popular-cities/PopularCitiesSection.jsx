@@ -67,7 +67,7 @@ export default function PopularCitiesSection() {
       <div className="popular-cities-wrap">
         <div className="popular-cities-container">
           <div className="popular-cities-header">
-            <h2 className="popular-cities-title">Popular Cities</h2>
+            <h2 className="plus-jakarta-sans-semi-bold">Popular Cities</h2>
             <Link href="/projects" className="popular-cities-cta">
               Explore More
             </Link>

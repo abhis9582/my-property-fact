@@ -32,14 +32,14 @@
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0;
-  font-family: var(--heaing-font, "gotham-bold", sans-serif);
+  font-family: var(--heaing-font) !important;
 }
 
 .privacy-modal-subtitle {
   color: rgba(255, 255, 255, 0.9);
   font-size: 0.85rem;
   margin-top: 0.25rem;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .privacy-modal-body {
@@ -60,14 +60,14 @@
   font-size: 0.9rem;
   color: #495057;
   margin: 0;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .privacy-description {
   font-size: 0.9rem;
   color: #6c757d;
   line-height: 1.6;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 /* Accordion Styles */
@@ -104,7 +104,7 @@
   font-weight: 600;
   color: #212529;
   font-size: 0.95rem;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -126,12 +126,12 @@
   font-weight: 700;
   margin-right: 0.75rem;
   min-width: 30px;
-  font-family: var(--heaing-font, "gotham-bold", sans-serif);
+  font-family: var(--heaing-font) !important;
 }
 
 .privacy-section-title {
   flex: 1;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .privacy-accordion-body {
@@ -144,7 +144,7 @@
   font-size: 0.9rem;
   color: #495057;
   line-height: 1.7;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .privacy-content p {
@@ -165,7 +165,7 @@
 .privacy-footer-info p {
   font-size: 0.9rem;
   color: #495057;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .privacy-footer-info ul {
@@ -194,7 +194,7 @@
   border-radius: 8px;
   font-weight: 600;
   transition: all 0.3s ease;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .privacy-close-btn:hover {

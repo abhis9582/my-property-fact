@@ -303,7 +303,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
               <li className="hasChild">
                 <Link
                   href="#"
-                  className={`text-light text-decoration-none py-3 ${
+                  className={`text-light text-decoration-none py-3 plus-jakarta-sans-semi-bold${
                     isCityRoute ? "header-link-active" : ""
                   }`}
                 >
@@ -317,16 +317,16 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                   ) : (
                     <div className="city-dropdown-content">
                       <div className="city-dropdown-left">
-                        <Link href="/projects/commercial" className="city-dropdown-item" prefetch={true}>
+                        <Link href="/projects/commercial" className="city-dropdown-item plus-jakarta-sans-semi-bold" prefetch={true}>
                           Commercial
                         </Link>
-                        <Link href="/projects/residential" className="city-dropdown-item" prefetch={true}>
+                        <Link href="/projects/residential" className="city-dropdown-item plus-jakarta-sans-semi-bold" prefetch={true}>
                           Residential
                         </Link>
-                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge" prefetch={true}>
+                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold" prefetch={true}>
                           New Launches <span className="city-dropdown-badge">New</span>
                         </Link>
-                        <Link href="/blog" className="city-dropdown-item">
+                        <Link href="/blog" className="city-dropdown-item plus-jakarta-sans-semi-bold">
                           Articles &amp; News
                         </Link>
                       </div>
@@ -335,7 +335,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                           <li key={city.id}>
                             <Link
                               href={`/city/${city.slugURL}`}
-                              className={`text-light text-decoration-none ${
+                              className={`text-light text-decoration-none plus-jakarta-sans-semi-bold ${
                                 pathname === "/city/" + city.URL
                                   ? "header-link-active"
                                   : ""
@@ -353,7 +353,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
               <li className="hasChild">
                 <Link
                   href="#"
-                  className={`text-light py-3 text-decoration-none ${
+                  className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold ${
                     isBuilderRoute ? "header-link-active" : ""
                   }`}
                 >
@@ -367,16 +367,16 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                   ) : (
                     <div className="city-dropdown-content">
                       <div className="city-dropdown-left">
-                        <Link href="/commercial" className="city-dropdown-item">
+                        <Link href="/commercial" className="city-dropdown-item plus-jakarta-sans-semi-bold">
                           Commercial
                         </Link>
-                        <Link href="/residential" className="city-dropdown-item">
+                        <Link href="/residential" className="city-dropdown-item plus-jakarta-sans-semi-bold">
                           Residential
                         </Link>
-                        <Link href="/new-launches" className="city-dropdown-item with-badge">
+                        <Link href="/new-launches" className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold">
                           New Launches <span className="city-dropdown-badge">New</span>
                         </Link>
-                        <Link href="/blog" className="city-dropdown-item">
+                        <Link href="/blog" className="city-dropdown-item plus-jakarta-sans-semi-bold">
                           Articles &amp; News
                         </Link>
                       </div>
@@ -385,13 +385,13 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                           <li key={builder.id}>
                             <Link
                               href={`/builder/${builder.slugUrl}`}
-                              className={`text-light text-decoration-none ${
+                              className={`text-light text-decoration-none plus-jakarta-sans-semi-bold ${
                                 pathname === "/builder/" + builder.slugUrl
                                   ? "header-link-active"
                                   : ""
                               }`}
                             >
-                              {builder.builderName}
+                              {builder.builderName.toLowerCase()}
                             </Link>
                           </li>
                         ))}
@@ -403,7 +403,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
               <li className="hasChild">
                 <Link
                   href="/about-us"
-                  className={`text-light py-3  text-decoration-none ${
+                  className={`text-light py-3  text-decoration-none plus-jakarta-sans-semi-bold${
                     pathname === "/about-us" ? "header-link-active" : ""
                   }`}
                 >
@@ -413,7 +413,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
               <li className="hasChild">
                 <Link
                   href="/projects"
-                  className={`text-light py-3 text-decoration-none ${
+                  className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold${
                     isProjectTypeRoute ? "header-link-active" : ""
                   }`}
                 >
@@ -430,22 +430,22 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                   ) : (
                     <div className="city-dropdown-content">
                       <div className="city-dropdown-left">
-                        <Link href="/projects/commercial" className="city-dropdown-item" prefetch={true}>
+                        <Link href="/projects/commercial" className="city-dropdown-item plus-jakarta-sans-semi-bold" prefetch={true}>
                           Commercial
                         </Link>
-                        <Link href="/projects/residential" className="city-dropdown-item" prefetch={true}>
+                        <Link href="/projects/residential" className="city-dropdown-item plus-jakarta-sans-semi-bold" prefetch={true}>
                           Residential
                         </Link>
-                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge" prefetch={true}>
+                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold" prefetch={true}>
                           New Launches <span className="city-dropdown-badge">New</span>
                         </Link>
-                        <Link href="/blog" className="city-dropdown-item">
+                        <Link href="/blog" className="city-dropdown-item plus-jakarta-sans-semi-bold">
                           Articles &amp; News
                         </Link>
                       </div>
                       <div className="city-dropdown-right projects-search-section">
                         <div className="projects-search-wrapper">
-                          <h3 className="projects-search-title">Search Your Dream Home</h3>
+                          <h3 className="projects-search-title plus-jakarta-sans-semi-bold">Search Your Dream Home</h3>
                           <div className="projects-search-container">
                             <div className="projects-search-input-wrapper">
                               <FontAwesomeIcon icon={faSearch} className="projects-search-icon" />
@@ -528,7 +528,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
               <li className="hasChild">
                 <Link
                   href="/blog"
-                  className={`text-light py-3  text-decoration-none ${
+                  className={`text-light py-3  text-decoration-none plus-jakarta-sans-semi-bold${
                     isBlogTypeRoute ? "header-link-active" : ""
                   }`}
                 >
@@ -538,7 +538,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
               <li className="hasChild">
                 <Link
                   href="/career"
-                  className={`text-light py-3 text-decoration-none ${
+                  className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold${
                     pathname === "/career" ? "header-link-active" : ""
                   }`}
                 >
@@ -548,7 +548,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
               <li className="hasChild">
                 <Link
                   href="/contact-us"
-                  className={`text-light py-3 text-decoration-none ${
+                  className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold${
                     pathname === "/contact-us" ? "header-link-active" : ""
                   }`}
                 >

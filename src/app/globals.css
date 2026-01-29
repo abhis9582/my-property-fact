@@ -1,6 +1,6 @@
 /* adding font library  starts*/
 @font-face {
-  font-family: "gotham-bold";
+  font-family: "plus-jakarta";
   src: url("/fonts/plus_jakarta_sans/PlusJakartaSans-VariableFont_wght.ttf") format("truetype");
   font-style: normal;
   font-display: swap;
@@ -14,22 +14,14 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: "gotham-light";
-  src: url("/fonts/montserrat/Montserrat-VariableFont_wght.ttf") format("truetype");
-  font-style: normal;
-  font-display: swap;
-}
-
 
 :root {
   --bg-color: #68ac78;
   --menu-color: #ffffff;
   --text-color: #cfab5a;
   --bg-with-gradient: radial-gradient(circle at center, #0d5834, #0c2e23);
-  --heaing-font: "gotham-bold", "sans-serif";
+  --heaing-font: "plus-jakarta", "sans-serif";
   --headeing-bolded: "heading-pro";
-  --text-font: "gotham-light", "sans-serif";
   /* --btn-background: linear-gradient(to right, #d1ad5b, #a07e38); */
   --btn-background: linear-gradient(180deg, #453106 0%, #E6A315 100%);
   --btn-background-hover: linear-gradient(to right, #b8934d, #8a6b2f);
@@ -41,6 +33,10 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+h1, h2, h3, h4, h5, h6, button, a {
+  font-family: var(--heaing-font) !important;
 }
 
 .golden-border {
@@ -73,9 +69,6 @@ html {
   background: var(--btn-background-hover);
 }
 
-.font-gotham-light {
-  font-family: var(--text-font);
-}
 
 .footer-bg {
   background: var(--footer-bg);
@@ -88,10 +81,21 @@ html {
 .text-golden {
   color: var(--text-color);
 }
+.plus-jakarta-sans-regular {
+  font-family: var(--text-font) !important;
+  font-weight: 500 !important;
+}
+
+.plus-jakarta-sans-semi-bold {
+  font-family: var(--heaing-font) !important;
+  font-weight: 600 !important;
+}
 
 .plus-jakarta-sans-bold {
-  font-family: var(--heaing-font);
+  font-family: var(--heaing-font) !important;
+  font-weight: 700 !important;
 }
+
 /* Webkit Browsers starts (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
   width: 5px;
@@ -193,10 +197,12 @@ html {
   border: 1px solid rgb(194, 194, 194);
   border-radius: 10px !important;
 }
+
 .blog-content table tr td {
   border: 1px solid rgb(209, 209, 209);
   padding: 5px !important;
 }
+
 .job-description ul {
   list-style-type: disc;
   margin: 20px 0px;
@@ -205,6 +211,7 @@ html {
 .job-description ul li {
   margin: 10px 0px;
 }
+
 @keyframes slideDown {
   from {
     transform: translateY(-100%);
@@ -371,7 +378,7 @@ textarea.form-input-custom {
     border-bottom: none;
     border-right: 1px solid rgba(255, 255, 255, 0.6);
   }
-  
+
   .stats-card:last-child {
     border-right: none;
   }
@@ -434,8 +441,10 @@ textarea.form-input-custom {
 
 /* scroll-smooth aur elementclass dono ke sath */
 .elementclass {
-  overflow-y: scroll; /* ya auto */
-  scrollbar-width: none; /* Firefox */
+  overflow-y: scroll;
+  /* ya auto */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 /* Chrome, Safari, Edge */
@@ -445,7 +454,8 @@ textarea.form-input-custom {
 }
 
 
-html, body {
+html,
+body {
   width: 100%;
   max-width: 100%;
   overflow-x: hidden !important;
@@ -455,4 +465,11 @@ body.menu-open {
   position: fixed;
   overflow: hidden;
   width: 100%;
+}
+
+/* Desktop h2 font size */
+@media (min-width: 1024px) {
+  h2 {
+    font-size: 36px;
+  }
 }

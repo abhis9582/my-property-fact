@@ -8,7 +8,7 @@ export default function WhyMyPropertyFact() {
       <div className="container-fluid position-relative why-mpf-section">
         <div className="why-mpf-section-top-imgae"></div>
         <div>
-          <h2 className="text-center about-us-h2 plus-jakarta-sans-bold">
+          <h2 className="text-center about-us-h2 plus-jakarta-sans-semi-bold">
             Why My Property Fact?
           </h2>
         </div>
@@ -73,7 +73,7 @@ export default function WhyMyPropertyFact() {
           </div>
           <div className="our-commitment-container">
             <div className="our-commitment-content-container">
-              <h2 className="our-commitment-heading about-us-h2 plus-jakarta-sans-bold">
+              <h2 className="our-commitment-heading about-us-h2 plus-jakarta-sans-semi-bold">
                 Our Commitment
               </h2>
               <div className="our-commitment-text-container">

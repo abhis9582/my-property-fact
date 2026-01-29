@@ -76,7 +76,7 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
 
       return (
         <div
-          className="home-featured-status-badge"
+          className="home-featured-status-badge plus-jakarta-sans-semi-bold"
           style={{
             "--badge-color": backgroundColor,
             "--badge-text-color": textColor,
@@ -92,7 +92,7 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
     return (
       <div className="position-absolute top-0 end-0 m-2 status-badge-container">
         <span
-          className="status-badge-pill"
+          className="status-badge-pill plus-jakarta-sans-semi-bold"
           style={{
             backgroundColor,
             color: textColor,
@@ -126,10 +126,10 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
         </div>
         {renderStatusBadge()}
         <div className="mt-3 ms-3">
-          <h5 className="mb-2 fw-bold">{data.projectName}</h5>
-          <p className="mb-2">{data.propertyTypeName}</p>
+          <h5 className="mb-2 plus-jakarta-sans-semi-bold">{data.projectName}</h5>
+          <p className="mb-2 plus-jakarta-sans-semi-bold">{data.propertyTypeName}</p>
           <h5 className="text-success d-flex gap-2 mb-0">
-            <span className="fw-bold"> {generatePrice(data.projectPrice)}</span>
+            <span className="plus-jakarta-sans-semi-bold"> {generatePrice(data.projectPrice)}</span>
           </h5>
         </div>
 
@@ -140,7 +140,7 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
               className="me-2 text-success"
             />
           </span>
-          <p className="p-0 m-0 fw-bold">{data.projectAddress}</p>
+          <p className="p-0 m-0 plus-jakarta-sans-semi-bold">{data.projectAddress}</p>
         </div>
       </Link>
     </>

@@ -62,7 +62,7 @@ Curious how this one number can change the entire value of land? Understand FAR 
     {
       text: "From Shah Rukh khan to Hritik Roshan, Bollywood celebs are now the face of Dubai’s premium real estate launches. Reason? strategy 🔥",
       position: "top",
-      video: "/static/social-media/social4.mp4"
+      video: "/static/social-media/social5.mp4"
     }
   ];
 
@@ -102,7 +102,7 @@ Curious how this one number can change the entire value of land? Understand FAR 
       <div className="social-feeds-section my-4 my-lg-5">
         <div className="container-fluid">
           <div className="section-header-wrapper mb-lg-5">
-            <h2 className="text-center mb-0 plus-jakarta-sans-bold fw-bold">
+            <h2 className="text-center mb-0 plus-jakarta-sans-semi-bold">
               Social Feeds from MPF on Instagram
             </h2>
 
@@ -224,7 +224,7 @@ Curious how this one number can change the entire value of land? Understand FAR 
                         <div className={`post-text-overlay ${post.position} ${hoveredIndex === index ? 'show-text' : ''}`}>
                           <div className="post-text-background">
                             <div className="text-content-wrapper">
-                              <p className="post-text">{post.text}</p>
+                              <p className="post-text plus-jakarta-sans-semi-bold">{post.text}</p>
                             </div>
                           </div>
                         </div>

@@ -63,12 +63,11 @@ const CITY_CARDS = [
 export default function NoidaProjectsSection() {
 
   return (
-    <section className="noida-projects-section">
+    <section className="container noida-projects-section">
       <div className="noida-projects-container">
         <div className="noida-projects-content">
           <div className="noida-projects-header">
-            <p className="noida-projects-eyebrow">Most</p>
-            <h2 className="noida-projects-title">
+            <h2 className="plus-jakarta-sans-semi-bold text-center my-5">
               Popular Real Estate Destinations
             </h2>
           </div>
@@ -90,7 +89,7 @@ export default function NoidaProjectsSection() {
                 768: { slidesPerView: 2, spaceBetween: 8 },
                 992: { slidesPerView: 2.9, spaceBetween: 8 },
                 1200: { slidesPerView: 2.9, spaceBetween: 8 },
-                1440: { slidesPerView: 2.9, spaceBetween: 8 },
+                1440: { slidesPerView: 2.9, spaceBetween: 0 },
               }}
               // watchOverflow={true}
               preventClicks={true}

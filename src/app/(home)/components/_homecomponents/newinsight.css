@@ -2,14 +2,6 @@
   width: 100%;
 }
 
-.insight-section-title {
-  font-weight: 600;
-  font-size: 32px;
-  line-height: 120%;
-  color: #1a1a1a;
-  margin-bottom: 28px;
-}
-
 .insight-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
@@ -75,6 +67,7 @@
   font-size: 14px;
   line-height: 1.5;
   color: #6b6b6b;
+  font-weight: 500 !important;
 }
 
 .insight-link {
@@ -155,10 +148,6 @@
     align-items: center;
   }
 
-  .insight-section-title {
-    text-align: center;
-  }
-
   .insight-layout {
     width: 100%;
     display: flex;
@@ -218,11 +207,6 @@
     align-items: center;
   }
 
-  .insight-section-title {
-    font-size: 26px;
-    text-align: center;
-  }
-
   .insight-layout {
     width: 100%;
     display: flex;
@@ -264,9 +248,6 @@
 }
 
 @media (max-width: 480px) {
-  .insight-section-title {
-    font-size: 22px;
-  }
 
   .insight-card {
     align-items: center;
@@ -324,10 +305,6 @@
 
 
 @media (max-width: 1100px) {
-  .insight-section-title {
-    text-align: center;
-  }
-
   .insight-layout {
     display: flex;
     flex-direction: column;

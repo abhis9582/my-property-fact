@@ -86,7 +86,7 @@ export default function Featured({
 
   return (
     <div className="container">
-      <h2 className="text-center my-4 my-lg-5 fw-bold plus-jakarta-sans-bold">{title}</h2>
+      <h2 className="text-center my-4 my-lg-5 plus-jakarta-sans-semi-bold">{title}</h2>
       {allProjects?.length > 0 && (
         <div className="featured-page-slider">
           <Slider {...settings}>

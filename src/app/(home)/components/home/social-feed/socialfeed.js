@@ -7,7 +7,7 @@ export default function SocialFeed({ data }) {
   return (
     <div className="blog-section-container mt-4 my-lg-5 py-4">
       <div className="container">
-        <h2 className="text-center mb-3 fw-bold plus-jakarta-sans-bold">Investor Education Blog</h2>
+        <h2 className="text-center mb-3 plus-jakarta-sans-semi-bold">Investor Education Blog</h2>
         {data?.length < 0 ? (
           <div
             className="d-flex justify-content-center align-items-center"

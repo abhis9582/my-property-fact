@@ -6,7 +6,6 @@
     z-index: 1;
     padding: 60px 0 15px;
 }
-
 .new-footer-design-container-fluid::before {
     content: '';
     position: absolute;

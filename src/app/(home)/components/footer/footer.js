@@ -78,7 +78,7 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
   ];
 
   return (
-    <footer className="font-gotham-light footer-bg">
+    <footer className="plus-jakarta-sans-regular footer-bg">
       <div className="container">
         <div className="container-fluid pt-5">
           <div className="inner">
