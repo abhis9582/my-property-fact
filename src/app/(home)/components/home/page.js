@@ -15,6 +15,7 @@ import DreamPropertySection from "./dream-project/DreamPropertySection";
 import NewMpfMetaDataContainer from "../_homecomponents/NewMpfMetaDataContainer";
 import SocialFeedsOfMPF from "../_homecomponents/SocialFeedsOfMPF";
 import PopularCitiesSection from "./popular-cities/PopularCitiesSection";
+import NoidaProjectsSection from "./noida-projects/NoidaProjectsSection";
 // import NoidaProjectsSection from "./noida-projects/NoidaProjectsSection";
 
 export default async function HomePage() {

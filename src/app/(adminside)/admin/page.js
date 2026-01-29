@@ -24,7 +24,9 @@ function AdminPageContent() {
   // Set mounted to true after component mounts (client-side only)
   useEffect(() => {
     setMounted(true);
-  }, []);
+    // Prefetch dashboard route for faster navigation
+    router.prefetch("/admin/dashboard");
+  }, [router]);
 
   // Check for access denied query parameter and show toast (only after mount)
   useEffect(() => {
@@ -51,15 +53,14 @@ function AdminPageContent() {
       setShowLoading(true);
       setButtonName("");
       const response = await axios.post(
-        process.env.NEXT_PUBLIC_API_URL + "auth/login",
+        `${process.env.NEXT_PUBLIC_API_URL}auth/login`,
         formData,
         { withCredentials: true } // Ensure cookies are included in the request
       );
       if (response.status === 200) {
         const { token, refreshToken } = response.data;
-        console.log(response);
         
-        // Store token (24 hours)
+        // Store cookies synchronously (fast operation)
         Cookies.set("token", token, {
           expires: 1, // 1 day = 24 hours
           secure: process.env.NODE_ENV === "production",
@@ -67,7 +68,6 @@ function AdminPageContent() {
           path: "/",
         });
 
-        // Store refresh token (7 days)
         Cookies.set("refreshToken", refreshToken, {
           expires: 7, // 7 days
           secure: process.env.NODE_ENV === "production",
@@ -75,13 +75,16 @@ function AdminPageContent() {
           path: "/",
         });
 
-        // Redirect to admin dashboard
-        router.push("/admin/dashboard");
+        // Navigate immediately using replace (faster than push, no history entry)
+        // Prefetching already done in useEffect for instant navigation
+        router.replace("/admin/dashboard");
+        
+        // Don't wait for navigation - let it happen immediately
+        return; // Exit early to skip finally block
       }
     } catch (error) {
       toast.error("Invalid username or password!");
       console.log(error);
-    } finally {
       setShowLoading(false);
       setButtonName("Go to dashboard");
     }

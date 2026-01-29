@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import "./PopularCitiesComponent.css";
+import { RiArrowRightSLine } from "react-icons/ri";
 
 export default function PopularCitiesComponent({ cities = [] }) {
   const scrollContainerRef = useRef(null);
@@ -54,7 +55,8 @@ export default function PopularCitiesComponent({ cities = [] }) {
 
   const checkScrollability = () => {
     if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+      const { scrollLeft, scrollWidth, clientWidth } =
+        scrollContainerRef.current;
       setCanScrollLeft(scrollLeft > 0);
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1);
     }
@@ -115,7 +117,11 @@ export default function PopularCitiesComponent({ cities = [] }) {
 
           <div className="popular-cities-scroll" ref={scrollContainerRef}>
             {citiesToDisplay.map((city, index) => (
-              <Link key={index} href={city.link || "#"} className="city-card-link">
+              <Link
+                key={index}
+                href={city.link || "#"}
+                className="city-card-link"
+              >
                 <div className="popular-city-card">
                   <div className="city-card-image">
                     <Image
@@ -138,7 +144,7 @@ export default function PopularCitiesComponent({ cities = [] }) {
             aria-label="Scroll right"
             disabled={!canScrollRight}
           >
-            <FaArrowRight />
+            <RiArrowRightSLine />
           </button>
         </div>
       </div>

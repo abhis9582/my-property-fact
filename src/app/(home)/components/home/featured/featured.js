@@ -18,7 +18,7 @@ function NextArrow(props) {
       aria-label="Next slide"
     >
       <Image
-        src="/icon/right-arrow.svg"
+        src="/icon/arrow-right-s-line.svg"
         alt="Next"
         width={32}
         height={32}
@@ -38,7 +38,7 @@ function PrevArrow(props) {
       aria-label="Previous slide"
     >
       <Image
-        src="/icon/left-arrow.svg"
+        src="/icon/arrow-left-s-line.svg"
         alt="Previous"
         width={32}
         height={32}

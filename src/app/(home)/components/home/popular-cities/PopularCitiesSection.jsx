@@ -6,6 +6,7 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "./PopularCitiesSection.css";
+import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 
 // Defining popular cities data with name, link, image and alt text
 const cities = [
@@ -77,7 +78,7 @@ export default function PopularCitiesSection() {
               className="popular-cities-nav popular-cities-prev"
               aria-label="Previous cities"
             >
-              ‹
+              <RiArrowLeftSLine />
             </button>
             <Swiper
               className="popular-cities-slider"
@@ -119,7 +120,7 @@ export default function PopularCitiesSection() {
               className="popular-cities-nav popular-cities-next"
               aria-label="Next cities"
             >
-              ›
+              <RiArrowRightSLine />
             </button>
           </div>
         </div>

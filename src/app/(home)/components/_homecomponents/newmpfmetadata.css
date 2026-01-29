@@ -140,7 +140,11 @@
 .property-search-card-content {
   max-width: 500px;
   width: 500px;
-  height: 75px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
 }
 
 /* Responsive Design */
@@ -176,8 +180,13 @@
     padding: 30px 20px;
   }
 
+  .property-search-card-content {
+    padding: 10px 0px !important;
+  }
+
   .property-search-title {
     font-size: 18px;
+    margin: 0px !important;
   }
 
   .property-type-buttons {
