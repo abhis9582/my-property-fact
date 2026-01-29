@@ -914,6 +914,15 @@
   transform: scale(1.05);
 }
 
+/* Ensure the red 'New' badge does NOT inherit gradient/text-fill on hover */
+.city-dropdown-left .city-dropdown-item.with-badge:hover .city-dropdown-badge {
+  background: #e53935;
+  color: #ffffff;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-text-fill-color: #ffffff;
+}
+
 /* mobile menu style starts */
 .menuBtn {
   width: 30px;

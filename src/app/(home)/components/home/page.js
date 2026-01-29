@@ -99,7 +99,7 @@ export default async function HomePage() {
           <NewsViews title="Realty Updates Web Stories" />
 
           {/* Top projects container on home page */}
-          {/* <NoidaProjectsSection /> */}
+          <NoidaProjectsSection cities={cityList} />
 
           {/* Latest blogs from our blog section */}
           <SocialFeedPage />

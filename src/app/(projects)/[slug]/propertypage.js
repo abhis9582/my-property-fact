@@ -47,6 +47,8 @@ export default function Property({ projectDetail }) {
   const [amenities, setAllAmenities] = useState([]);
   const [amenityButtonName, setAmenityButtonName] = useState("VIEW MORE");
   const [amenityButtonStatus, setAmenityButtonStatus] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -313,12 +315,12 @@ export default function Property({ projectDetail }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  //Handle opening and closing of menu bar
+  //Handle opening and closing of the property detail page mobile menu
   const openMenu = (e, targetId) => {
     e.preventDefault(); // Prevent default anchor behavior
-    const menuButtons = document.querySelectorAll(".menuBtn");
-    const menu = document.getElementById("mbdiv");
-    const header = document.querySelector(".header");
+    const menuButtons = document.querySelectorAll(".project-menuBtn");
+    const menu = document.getElementById("property-mbdiv");
+    const header = document.querySelector(".project-detail-header");
 
     if (!menu) return;
 
@@ -330,6 +332,8 @@ export default function Property({ projectDetail }) {
       btn.classList.toggle("closeMenuBtn", isMenuOpen)
     );
 
+    setMenuOpen(isMenuOpen);
+
     // Toggle display
     menu.style.display = isMenuOpen ? "block" : "none";
 
@@ -337,7 +341,7 @@ export default function Property({ projectDetail }) {
     header?.classList.toggle("notfixed", isMenuOpen);
 
     // Toggle body scroll lock
-    document.body.classList.toggle("overflow-hidden", isMenuOpen);
+    document.body.classList.toggle("menu-open", isMenuOpen);
 
     // Handle scrolling when clicking a menu link
     if (targetId) {
@@ -466,66 +470,102 @@ export default function Property({ projectDetail }) {
               </div>
             </nav>
             {/* Defining header for small devices */}
-            <div className="mbMenuContainer" id="mbdiv">
-              <ul className="mb-list d-block d-md-none d-flex gap-4">
-                <li>
-                  <Link
-                    href="#"
-                    className="text-decoration-none text-light fs-5 fw-bold"
-                    onClick={(e) => openMenu(e, "home")}
-                  >
-                    Home
+            <div
+              className="project-mbMenuContainer"
+              id="property-mbdiv"
+              onClick={(e) => {
+                // close when clicking on dark backdrop only
+                if (e.target.id === "property-mbdiv") {
+                  openMenu(e);
+                }
+              }}
+            >
+              <div className="mbMenu" onClick={(e) => e.stopPropagation()}>
+                {/* Mobile menu header with logo + close */}
+                <div className="project-mbMenu-header d-flex align-items-center justify-content-between mb-4">
+                  <Link href="/">
+                    <Image
+                      src="/logo.png"
+                      alt="My Property Fact"
+                      width={50}
+                      height={55}
+                      className="img-fluid"
+                    />
                   </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#overview"
-                    className="text-decoration-none text-light fs-5 fw-bold"
-                    onClick={(e) => openMenu(e, "overview")}
+                  {/* <button
+                    type="button"
+                    className="project-mbMenu-close"
+                    onClick={(e) => openMenu(e)}
+                    aria-label="Close menu"
                   >
-                    Overview
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#amenities"
-                    className="text-decoration-none text-light fs-5 fw-bold"
-                    onClick={(e) => openMenu(e, "amenities")}
-                  >
-                    Amenities
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#floorplan"
-                    className="text-decoration-none text-light fs-5 fw-bold"
-                    onClick={(e) => openMenu(e, "floorplan")}
-                  >
-                    Plans &amp; Price
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#gallery"
-                    className="text-decoration-none text-light fs-5 fw-bold"
-                    onClick={(e) => openMenu(e, "gallery")}
-                  >
-                    Gallery
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#location"
-                    className="text-decoration-none text-light fs-5 fw-bold"
-                    onClick={(e) => openMenu(e, "location")}
-                  >
-                    Location
-                  </Link>
-                </li>
-              </ul>
+                    <span></span>
+                    <span></span>
+                  </button> */}
+                </div>
+
+                <ul className="project-mb-list d-lg-none">
+                  <li>
+                    <Link
+                      href="#"
+                      className="text-decoration-none"
+                      onClick={(e) => openMenu(e, "home")}
+                    >
+                      Home
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="#overview"
+                      className="text-decoration-none"
+                      onClick={(e) => openMenu(e, "overview")}
+                    >
+                      Overview
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="#amenities"
+                      className="text-decoration-none"
+                      onClick={(e) => openMenu(e, "amenities")}
+                    >
+                      Amenities
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="#floorplan"
+                      className="text-decoration-none"
+                      onClick={(e) => openMenu(e, "floorplan")}
+                    >
+                      Plans &amp; Price
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="#gallery"
+                      className="text-decoration-none"
+                      onClick={(e) => openMenu(e, "gallery")}
+                    >
+                      Gallery
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="#location"
+                      className="text-decoration-none"
+                      onClick={(e) => openMenu(e, "location")}
+                    >
+                      Location
+                    </Link>
+                  </li>
+                </ul>
+              </div>
             </div>
-            {/* Defining hamburger button */}
-            <div className="menuBtn d-flex d-lg-none " onClick={openMenu}>
+            {/* Defining hamburger button for property detail page (mobile) */}
+            <div
+              className="project-menuBtn d-flex d-lg-none"
+              onClick={openMenu}
+            >
               <span id="menuLine1"></span>
               <span id="menuLine2"></span>
               <span id="menuLine3"></span>
