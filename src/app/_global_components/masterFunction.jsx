@@ -25,10 +25,6 @@ export const fetchAllProjects = cache(async () => {
   });
   if (!res.ok) throw new Error("Failed to fetch projects");
   const data = await res.json();
-  console.log(
-    `Called fetchAllProjects and length is ${Array.isArray(data) ? data.length : "unknown"
-    }`,
-  );
   return data;
 });
 
@@ -43,7 +39,6 @@ export const getAllProjects = cache(async () => {
   });
   if (!res.ok) throw new Error("Failed to fetch projects");
   const data = await res.json();
-  console.log(`Called getAllProjects and length is ${Array.isArray(data) ? data.length : "unknown"}`);
   return data;
 });
 
@@ -58,7 +53,6 @@ export const fetchCityData = cache(async () => {
   });
   if (!res.ok) throw new Error("Failed to fetch cities");
   const data = await res.json();
-  console.log(`Called fetchCityData and length is ${Array.isArray(data) ? data.length : "unknown"}`);
   return data;
 });
 
@@ -100,7 +94,6 @@ export const fetchProjectDetailsBySlug = cache(async (slug) => {
       next: { revalidate: 60 },
     }
   );
-  console.log(`Called fetchProjectDetailsBySlug`);
   if (!projectBySlug.ok) throw new Error("Failed to fetch project details");
   return projectBySlug.json();
 });
@@ -154,13 +147,11 @@ export const fetchBlogs = cache(async (page, size) => {
       next: { revalidate: 60 },
     }
   );
-  console.log("res", res);
   if (!res.ok) throw new Error("Failed to fetch blogs");
   const blogsData = await res.json();
   // Handle different response structures: could be array, object with data array, or object with total
   const blogsArray = Array.isArray(blogsData) ? blogsData : (blogsData?.data || blogsData?.blogs || []);
   const total = blogsData?.total || blogsData?.totalCount || blogsArray.length;
-  console.log(`Fetched blogs and total is ${total}`); // runs only once per cache
   return blogsData;
 });
 
@@ -174,9 +165,6 @@ export const getProjectsInPart = cache(async (page, size, category = "All") => {
   );
   if (!project.ok) throw new Error("Failed to fetch blogs");
   const projectPartData = await project.json();
-  console.log(
-    `Fetched project through pagination of page ${page} and size ${size} and length is ${projectPartData.length}`
-  );
   switch (category) {
     case "Commercial":
       projectPartData.filter((item) => item.propertyTypeName === category);
@@ -201,7 +189,6 @@ export const fetchAllBenefits = cache(async () => {
   });
   if (!benefits.ok) throw new Error("Failed to fetch benefits");
   const benefitData = await benefits.json();
-  console.log("Fetched all benefits", benefitData.length);
   return benefitData;
 });
 
@@ -215,7 +202,6 @@ export const fetchAllStories = cache(async () => {
   );
   if (!stories.ok) throw new Error("Failed to fetch stories");
   const storiesData = await stories.json();
-  console.log("Fetched all stories", storiesData.length);
   return storiesData.reverse();
 });
 

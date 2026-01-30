@@ -73,10 +73,10 @@ const DreamPropertySection = () => {
     <section className="dream-property-section my-4 my-lg-5">
       <div className="dream-property-container">
         {/* Header Section */}
-        <div className="dream-property-header">
+        <div className="container dream-property-header">
           <div className="header-left">
             <h2 className="dream-property-title plus-jakarta-sans-semi-bold">
-              Find Your Dream Property In The City You Are Searching In
+              Find Your Dream Property In The City<br/> You Are Searching In
               <button
                 className="nav-arrow-button"
                 aria-label="Navigate to cities"

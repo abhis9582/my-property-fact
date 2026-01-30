@@ -125,9 +125,9 @@ export default function Featured({
   };
 
   return (
-    <div className="container my-3 my-lg-2">
+    <div className="container">
       {autoPlay && (
-        <div className={`d-flex justify-content-left gap-3`}>
+        <div className={`d-flex justify-content-center justify-content-lg-start mt-4 mt-lg-2 gap-3`}>
           <button
             className={`mpf-btn-primary ${projectType === "Residential" ? "active" : ""}`}
             onClick={() => handleProjectType("Residential")}
