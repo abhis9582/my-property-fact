@@ -154,6 +154,7 @@ export const fetchBlogs = cache(async (page, size) => {
       next: { revalidate: 60 },
     }
   );
+  console.log("res", res);
   if (!res.ok) throw new Error("Failed to fetch blogs");
   const blogsData = await res.json();
   // Handle different response structures: could be array, object with data array, or object with total

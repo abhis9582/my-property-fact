@@ -53,7 +53,7 @@ export default function Featured({
   allProjects,
   type,
   badgeVariant = "default",
-  title
+  title,
 }) {
   const settings = {
     dots: false,
@@ -86,7 +86,21 @@ export default function Featured({
 
   return (
     <div className="container">
-      <h2 className="text-center my-4 my-lg-5 plus-jakarta-sans-semi-bold">{title}</h2>
+      <div className="d-flex justify-content-between align-items-center">
+        <h2 className="text-left my-4 my-lg-5 plus-jakarta-sans-semi-bold">
+          {title}
+        </h2>
+        {autoPlay && type !== "Similar" && (
+          <div className="text-center pt-3">
+            <Link
+              className="btn text-white btn-normal-color border-0"
+              href={`/projects/${url}`}
+            >
+              View all
+            </Link>
+          </div>
+        )}
+      </div>
       {allProjects?.length > 0 && (
         <div className="featured-page-slider">
           <Slider {...settings}>
@@ -96,17 +110,6 @@ export default function Featured({
               </div>
             ))}
           </Slider>
-        </div>
-      )}
-
-      {autoPlay && type !== 'Similar' && (
-        <div className="text-center pt-3">
-          <Link
-            className="btn text-white btn-normal-color border-0"
-            href={`/projects/${url}`}
-          >
-            View all
-          </Link>
         </div>
       )}
     </div>

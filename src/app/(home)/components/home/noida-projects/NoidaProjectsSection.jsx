@@ -81,15 +81,11 @@ export default function NoidaProjectsSection() {
               }}
               loop={CITY_CARDS.length > 3}
               spaceBetween={8}
-              slidesPerView={1}
+              slidesPerView={3}
               breakpoints={{
                 0: { slidesPerView: 1, spaceBetween: 8 },
-                480: { slidesPerView: 1.2, spaceBetween: 8 },
-                640: { slidesPerView: 1.5, spaceBetween: 8 },
                 768: { slidesPerView: 2, spaceBetween: 8 },
-                992: { slidesPerView: 2.9, spaceBetween: 8 },
-                1200: { slidesPerView: 2.9, spaceBetween: 8 },
-                1440: { slidesPerView: 2.9, spaceBetween: 0 },
+                992: { slidesPerView: 3, spaceBetween: 8 },
               }}
               // watchOverflow={true}
               preventClicks={true}

@@ -107,7 +107,7 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
     <>
       <Link 
         href={`/${data.slugURL}`}
-        className="rounded-4 custom-shadow d-flex flex-column justify-content-between bg-light text-decoration-none text-dark project-container overflow-hidden position-relative"
+        className="rounded-4 custom-shadow d-flex flex-column justify-content-between bg-white text-decoration-none text-dark project-container overflow-hidden position-relative"
         target="_blank"
         rel="noopener noreferrer"
         aria-label={`View details about ${data.projectName}`}

@@ -10,9 +10,6 @@
 }
 
 .insight-cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
   width: 100%;
   max-width: 602px;
 }
@@ -90,6 +87,7 @@
   transition: transform 0.2s ease;
   animation: insight-arrow-pulse 1.2s ease-in-out infinite;
   color: #1f6f46;
+  margin-top: 5px;
 }
 
 .insight-link:hover .insight-link-arrow {
@@ -132,10 +130,6 @@
   .insight-layout {
     grid-template-columns: 1fr;
   }
-
-  .insight-cards {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* Tablet specific (768px - 1023px) */
@@ -157,9 +151,6 @@
   }
 
   .insight-cards {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 20px !important;
     width: 100% !important;
     max-width: 100% !important;
     justify-content: center;
