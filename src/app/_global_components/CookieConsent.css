@@ -60,7 +60,7 @@
   font-weight: 700;
   margin: 0 0 0.25rem 0;
   color: #ffffff;
-  font-family: var(--heaing-font, "gotham-bold", sans-serif);
+  font-family: var(--heaing-font) !important;
 }
 
 .cookie-description {
@@ -68,7 +68,7 @@
   margin: 0;
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.95);
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .cookie-actions {
@@ -86,7 +86,7 @@
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
   white-space: nowrap;
 }
 
@@ -212,14 +212,14 @@
   font-weight: 700;
   margin: 0 0 0.5rem 0;
   color: #ffffff;
-  font-family: var(--heaing-font, "gotham-bold", sans-serif);
+  font-family: var(--heaing-font) !important;
 }
 
 .cookie-settings-subtitle {
   font-size: 0.9rem;
   margin: 0;
   color: rgba(255, 255, 255, 0.9);
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .cookie-close-btn {
@@ -270,7 +270,7 @@
   font-weight: 600;
   margin: 0 0 0.5rem 0;
   color: #212529;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .cookie-category-desc {
@@ -278,7 +278,7 @@
   color: #6c757d;
   margin: 0;
   line-height: 1.5;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 /* Toggle Switch */
@@ -375,7 +375,7 @@
   font-weight: 600;
   font-size: 0.9rem;
   transition: all 0.3s ease;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .cookie-manage-btn:hover {

@@ -71,7 +71,7 @@ html {
   margin: 0;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   letter-spacing: -0.5px;
-  font-family: var(--heaing-font, "gotham-bold", sans-serif);
+  font-family: var(--heaing-font) !important;
 }
 
 .property-header-price {
@@ -83,7 +83,7 @@ html {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: var(--heaing-font, "gotham-bold", sans-serif);
+  font-family: var(--heaing-font) !important;
 }
 
 .property-header-location {
@@ -93,7 +93,7 @@ html {
   align-items: center;
   gap: 0.5rem;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .rera-status {
@@ -106,7 +106,7 @@ html {
   display: inline-block;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(207, 171, 90, 0.3);
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .rera-status a {
@@ -130,7 +130,7 @@ html {
   backdrop-filter: blur(10px);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .contact-dealer-btn:hover {
@@ -185,7 +185,7 @@ html {
   white-space: nowrap;
   backdrop-filter: blur(10px);
   font-weight: 500;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .property-nav-tabs button:hover {
@@ -241,7 +241,7 @@ html {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-bottom: 3px solid transparent;
   position: relative;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .media-tab::after {
@@ -377,7 +377,7 @@ html {
   font-weight: 700;
   color: #212529;
   margin-bottom: 1rem;
-  font-family: var(--heaing-font, "gotham-bold", sans-serif);
+  font-family: var(--heaing-font) !important;
   background: linear-gradient(135deg, #0d5834 0%, #68ac78 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -410,21 +410,21 @@ html {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .price-amount {
   font-size: 1.5rem;
   font-weight: 700;
   color: #cfab5a;
-  font-family: var(--heaing-font, "gotham-bold", sans-serif);
+  font-family: var(--heaing-font) !important;
 }
 
 .price-per-sqft {
   font-size: 0.95rem;
   color: #495057;
   margin-bottom: 0.5rem;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .price-note {
@@ -443,7 +443,7 @@ html {
   gap: 0.25rem;
   margin-top: 0.5rem;
   transition: all 0.3s ease;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .price-details-link:hover {
@@ -485,7 +485,7 @@ html {
   font-size: 0.85rem;
   width: 40%;
   vertical-align: middle;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -504,7 +504,7 @@ html {
   font-weight: 500;
   font-size: 0.85rem;
   vertical-align: middle;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
   line-height: 1.4;
 }
 
@@ -545,7 +545,7 @@ html {
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .detail-value {
@@ -553,7 +553,7 @@ html {
   color: #212529;
   font-weight: 600;
   line-height: 1.6;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .dropdown-arrow {
@@ -599,7 +599,7 @@ html {
   color: #212529;
   margin-bottom: 1.5rem;
   letter-spacing: -0.5px;
-  font-family: var(--heaing-font, "gotham-bold", sans-serif);
+  font-family: var(--heaing-font) !important;
   background: linear-gradient(135deg, #0d5834 0%, #68ac78 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -614,7 +614,7 @@ html {
   letter-spacing: -0.3px;
   position: relative;
   padding-bottom: 0.75rem;
-  font-family: var(--heaing-font, "gotham-bold", sans-serif);
+  font-family: var(--heaing-font) !important;
 }
 
 .section-subtitle::after {
@@ -633,7 +633,7 @@ html {
   font-weight: 600;
   color: #6c757d;
   margin-bottom: 1rem;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .property-address {
@@ -643,14 +643,14 @@ html {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .property-description {
   color: #495057;
   line-height: 1.8;
   font-size: 1.05rem;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 /* Features Grid - Theme Colors */
@@ -671,7 +671,7 @@ html {
   border: 1px solid rgba(104, 172, 120, 0.15);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-weight: 500;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .feature-item:hover {
@@ -706,7 +706,7 @@ html {
   border-radius: 16px;
   /* transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); */
   text-align: center;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
   cursor: pointer;
   justify-content: space-around;
 }
@@ -774,7 +774,7 @@ html {
   color: #212529;
   line-height: 1.4;
   transition: color 0.3s ease;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .amenity-item:hover .amenity-title {
@@ -820,7 +820,7 @@ html {
   color: #212529;
   margin-bottom: 0.75rem;
   letter-spacing: -0.3px;
-  font-family: var(--heaing-font, "gotham-bold", sans-serif);
+  font-family: var(--heaing-font) !important;
 }
 
 .society-details {
@@ -829,7 +829,7 @@ html {
   gap: 0.75rem;
   color: #6c757d;
   font-size: 1rem;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 /* Property Details Grid */
@@ -849,7 +849,7 @@ html {
   background: rgba(104, 172, 120, 0.03);
   border: 1px solid rgba(104, 172, 120, 0.1);
   transition: all 0.3s ease;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .detail-item:hover {
@@ -905,7 +905,7 @@ html {
   border-radius: 12px;
   border: 1px solid rgba(104, 172, 120, 0.15);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .contact-item:hover {
@@ -940,7 +940,7 @@ html {
   display: inline-block;
   border: 1px solid rgba(104, 172, 120, 0.15);
   font-weight: 600;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 /* Owner Properties - Theme Colors */
@@ -1019,14 +1019,14 @@ html {
   font-size: 1.3rem;
   font-weight: 700;
   color: #cfab5a;
-  font-family: var(--heaing-font, "gotham-bold", sans-serif);
+  font-family: var(--heaing-font) !important;
 }
 
 .location-text {
   color: #6c757d;
   margin: 0.5rem 0;
   font-size: 0.95rem;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 /* Sponsored Properties */
@@ -1058,7 +1058,7 @@ html {
   font-weight: 700;
   color: #212529;
   margin-bottom: 0.5rem;
-  font-family: var(--heaing-font, "gotham-bold", sans-serif);
+  font-family: var(--heaing-font) !important;
 }
 
 .sponsored-property-info .price-text {
@@ -1066,7 +1066,7 @@ html {
   font-weight: 700;
   color: #cfab5a;
   margin-top: 0.75rem;
-  font-family: var(--heaing-font, "gotham-bold", sans-serif);
+  font-family: var(--heaing-font) !important;
 }
 
 /* Responsive Design */
@@ -1197,7 +1197,7 @@ html {
   font-size: 1.1rem;
   font-weight: 700;
   margin: 0;
-  font-family: var(--heaing-font, "gotham-bold", sans-serif);
+  font-family: var(--heaing-font) !important;
   display: flex;
   align-items: center;
 }
@@ -1244,13 +1244,13 @@ html {
 .success-message-compact h5 {
   color: #212529;
   font-weight: 700;
-  font-family: var(--heaing-font, "gotham-bold", sans-serif);
+  font-family: var(--heaing-font) !important;
 }
 
 .success-message-compact p {
   color: #6c757d;
   font-size: 0.95rem;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 /* Compact Form Styles */
@@ -1272,7 +1272,7 @@ html {
   margin-bottom: 0.4rem;
   font-size: 0.8rem;
   display: block;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .required-star {
@@ -1287,7 +1287,7 @@ html {
   font-size: 0.9rem;
   transition: all 0.3s ease;
   background: #ffffff;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
 }
 
 .modern-form-control-compact:focus {
@@ -1333,7 +1333,7 @@ html {
   border: 2px solid #dee2e6;
   color: #6c757d;
   transition: all 0.3s ease;
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
   font-size: 0.875rem;
 }
 
@@ -1352,7 +1352,7 @@ html {
   color: #ffffff;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(209, 173, 91, 0.3);
-  font-family: var(--text-font, "gotham-light", sans-serif);
+  font-family: var(--text-font) !important;
   font-size: 0.875rem;
 }
 

@@ -56,7 +56,7 @@ export default function SearchFilter({ projectTypeList, cityList }) {
       {/* <div className="container bg-white border rounded-2 custom-shadow">*/}
       <div className="container border rounded-1 search-filter-shadow">
         <form method="Get" action="projects">
-          <div className="d-flex flex-wrap flex-md-row flex-column p-3 p-md-4 gap-2 gap-md-3 font-gotham-light">
+          <div className="d-flex flex-wrap flex-md-row flex-column p-3 p-md-4 gap-2 gap-md-3 plus-jakarta-sans-regular">
             <div className="col">
               {/* <label className="mb-2 fw-bold">Property Type</label> */}
               <select

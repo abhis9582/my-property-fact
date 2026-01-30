@@ -7,7 +7,7 @@ export default async function NewsViews() {
   const homePageStories = stories.slice(0, 4);
   return (
     <>
-      <h2 className="text-center my-4 my-lg-5 fw-bold plus-jakarta-sans-bold">Realty Updates Web Stories</h2>
+      <h2 className="text-center my-4 my-lg-5 plus-jakarta-sans-semi-bold">Realty Updates Web Stories</h2>
       <NewsAndViews webStoryList={homePageStories} />
     </>
   );

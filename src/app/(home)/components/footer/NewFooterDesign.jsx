@@ -169,7 +169,7 @@ export default function NewFooterDesign({ cityList = [] }) {
   };
 
   return (
-    <div className="new-footer-design-container-fluid plus-jakarta-sans-regular">
+    <div className="new-footer-design-container-fluid">
       <div className="new-design-container">
         {/* Top Section */}
         <div className="new-design-footer-top">
@@ -212,7 +212,7 @@ export default function NewFooterDesign({ cityList = [] }) {
           {/* Right Section - Newsletter */}
           <div className="new-design-footer-top-right">
             <div className="new-design-footer-top-right-newsletter">
-              <h3 className="newsletter-heading plus-jakarta-sans-bold">Newsletter Signup</h3>
+              <h3 className="newsletter-heading plus-jakarta-sans-semi-bold">Newsletter Signup</h3>
               <div className="newsletter-form">
                 <input
                   type="email"

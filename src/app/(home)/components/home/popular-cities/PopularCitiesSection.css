@@ -32,17 +32,6 @@
   flex-wrap: wrap;
 }
 
-.popular-cities-title {
-  margin: 0;
-  font-size: clamp(20px, 2.2vw, 32px);
-  font-weight: 600;
-  color: #1a1a1a;
-  line-height: 1.3;
-  word-wrap: break-word;
-  flex: 1;
-  min-width: 0;
-}
-
 .popular-cities-cta {
   background: linear-gradient(90deg, #CDA958 0%, #67552C 100%);
   color: #fff;
@@ -149,11 +138,6 @@
   box-sizing: border-box;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-}
-
-.popular-city-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
 }
 
 .popular-city-image {

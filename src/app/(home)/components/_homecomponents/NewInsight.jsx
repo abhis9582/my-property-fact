@@ -29,7 +29,7 @@ export default function NewInsight() {
   return (
     <div className="container-fluid bg-white new-insight-container my-4 my-lg-5">
       <div className="container insight-content-wrapper">
-        <h2 className="insight-section-title">Expert Insights & Resources</h2>
+        <h2 className="plus-jakarta-sans-semi-bold mb-3 mb-lg-5">Expert Insights & Resources</h2>
         <div className="insight-layout">
           <div className="insight-cards">
             {insights.map((insight) => (
@@ -44,9 +44,9 @@ export default function NewInsight() {
                   />
                 </div>
                 <div className="insight-content">
-                  <h3 className="insight-title">{insight.heading}</h3>
-                  <p className="insight-description">{insight.sub_heading}</p>
-                  <Link className="insight-link" href={insight.href}>
+                  <h3 className="insight-title plus-jakarta-sans-semi-bold">{insight.heading}</h3>
+                  <p className="insight-description plus-jakarta-sans-semi-bold">{insight.sub_heading}</p>
+                  <Link className="insight-link plus-jakarta-sans-semi-bold" href={insight.href}>
                     Explore Now
                     <span className="insight-link-arrow">
                       <FontAwesomeIcon icon={faArrowRight} />
