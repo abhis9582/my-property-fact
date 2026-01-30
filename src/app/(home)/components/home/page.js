@@ -62,7 +62,12 @@ export default async function HomePage() {
         <HeroSection projectTypeList={projectTypeList} cityList={cityList} />
 
         {/* My property fact meta data container component */}
-        <NewMpfMetaDataContainer propertyTypes={projectTypeList} projects={projects} builders={builders.builders} cities={cityList} />
+        <NewMpfMetaDataContainer
+          propertyTypes={projectTypeList}
+          projects={projects}
+          builders={builders.builders}
+          cities={cityList}
+        />
 
         {/* MPF-top pick section  */}
         <MpfTopPicks topProject={mpfTopPicProject} />
@@ -83,18 +88,20 @@ export default async function HomePage() {
           <DreamPropertySection />
 
           {/* residential projects section  */}
-          <FeaturedPage
-            title="Explore Our Premier Residential Projects"
-            autoPlay={true}
-            allFeaturedProperties={residentalProjects}
-          />
+          <div className="container">
+            <FeaturedPage
+              title="Explore Our Premier Residential Projects"
+              autoPlay={true}
+              allFeaturedProperties={projects}
+            />
 
-          {/* commertial projects section  */}
-          <FeaturedPage
-            title="Explore Top Commercial Spaces for Growth"
-            autoPlay={true}
-            allFeaturedProperties={commercialProjects}
-          />
+            {/* commertial projects section  */}
+            {/* <FeaturedPage
+              title="Explore Top Commercial Spaces for Growth"
+              autoPlay={true}
+              allFeaturedProperties={commercialProjects}
+            /> */}
+          </div>
 
           {/* web story section  */}
           <NewsViews title="Realty Updates Web Stories" />

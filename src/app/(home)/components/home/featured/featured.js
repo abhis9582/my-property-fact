@@ -6,6 +6,7 @@ import "./featured.css";
 import Image from "next/image";
 import Link from "next/link";
 import PropertyContainer from "../../common/page";
+import { useMemo, useState, useEffect } from "react";
 
 function NextArrow(props) {
   const { className, style, onClick } = props;
@@ -55,9 +56,31 @@ export default function Featured({
   badgeVariant = "default",
   title,
 }) {
-  const settings = {
+  const [projectType, setProjectType] = useState("Residential");
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Memoized filtered projects for faster tab switching
+  const filteredProjects = useMemo(() => {
+    if (!allProjects || allProjects.length === 0) return [];
+    return allProjects.filter(
+      (project) => project.propertyTypeName === projectType,
+    ).slice(0, 9);
+  }, [allProjects, projectType]);
+
+  // Clear loading state when filtered projects are ready
+  useEffect(() => {
+    if (isLoading) {
+      // Small delay to ensure smooth transition
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [filteredProjects, isLoading]);
+
+  const settings = useMemo(() => ({
     dots: false,
-    infinite: allProjects.length > 1,
+    infinite: filteredProjects.length > 1,
     speed: 500,
     autoplay: autoPlay,
     autoplaySpeed: 5000,
@@ -82,18 +105,51 @@ export default function Featured({
         },
       },
     ],
+  }), [filteredProjects.length, autoPlay]);
+
+  // Memoized section title
+  const sectionTitle = useMemo(() => {
+    if (!autoPlay) return title;
+    if (projectType === "Commercial") {
+      return `Explore Top Commercial Spaces for Growth`;
+    }
+    return `Explore Our Premier Residential Projects`;
+  }, [projectType, autoPlay, title]);
+
+  // Fast tab switching handler with loading state
+  const handleProjectType = (type) => {
+    if (type !== projectType) {
+      setIsLoading(true);
+      setProjectType(type);
+    }
   };
 
   return (
-    <div className="container">
+    <div className="container my-3 my-lg-2">
+      {autoPlay && (
+        <div className={`d-flex justify-content-left gap-3`}>
+          <button
+            className={`mpf-btn-primary ${projectType === "Residential" ? "active" : ""}`}
+            onClick={() => handleProjectType("Residential")}
+          >
+            Residential
+          </button>
+          <button
+            className={`mpf-btn-primary ${projectType === "Commercial" ? "active" : ""}`}
+            onClick={() => handleProjectType("Commercial")}
+          >
+            Commercial
+          </button>
+        </div>
+      )}
       <div className="d-flex justify-content-between align-items-center">
         <h2 className="text-left my-4 my-lg-5 plus-jakarta-sans-semi-bold">
-          {title}
+          {sectionTitle}
         </h2>
         {autoPlay && type !== "Similar" && (
           <div className="text-center pt-3">
             <Link
-              className="btn text-white btn-normal-color border-0"
+              className="btn text-white projects-view-all-btn btn-normal-color border-0"
               href={`/projects/${url}`}
             >
               View all
@@ -101,15 +157,24 @@ export default function Featured({
           </div>
         )}
       </div>
-      {allProjects?.length > 0 && (
+      {isLoading ? (
+        <div className="featured-loading-container">
+          <div className="featured-loading-spinner"></div>
+          <p className="featured-loading-text">Loading projects...</p>
+        </div>
+      ) : filteredProjects?.length > 0 ? (
         <div className="featured-page-slider">
           <Slider {...settings}>
-            {allProjects.map((item) => (
+            {filteredProjects.map((item) => (
               <div key={item.id} className="px-2 pb-3">
                 <PropertyContainer data={item} badgeVariant={badgeVariant} />
               </div>
             ))}
           </Slider>
+        </div>
+      ) : (
+        <div className="featured-no-projects">
+          <p>No projects available for this category.</p>
         </div>
       )}
     </div>

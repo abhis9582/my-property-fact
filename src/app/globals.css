@@ -58,6 +58,9 @@ h1, h2, h3, h4, h5, h6, button, a {
 .btn-normal-color {
   background: var(--btn-normal-color);
 }
+.projects-view-all-btn {
+  min-width: 80px;
+}
 
 .btn-normal-color:hover {
   background: #0d5834;
