@@ -22,6 +22,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
   const isBuilderRoute = pathname.startsWith("/builder");
   const isProjectTypeRoute = pathname.startsWith("/projects");
   const isBlogTypeRoute = pathname.startsWith("/blog");
+  const isPropertiesRoute = pathname === "/properties";
   //Defining scroll variable
   const [isScrolled, setIsScrolled] = useState(false);
   
@@ -284,7 +285,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
       <div
         className={`d-flex justify-content-between align-items-center px-2 px-lg-4 header ${
           isScrolled ? "fixed-header" : ""
-        }`}
+        } ${isPropertiesRoute ? "properties-header" : ""}`}
       >
         <div className="mpf-logo d-flex align-items-center gap-4">
           <Link href="/">
@@ -559,10 +560,21 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
           </div>
         </nav>
         <div className="d-none d-lg-flex align-items-center">
-          {/* <div className="post-property-btn" onClick={openSignUpModal}>
-            <span className="post-property-text">Post Property</span>
-            <span className="free-tag">Free</span>
-          </div> */}
+          <Link href="/post-property" className="post-property-btn-wrapper">
+            <div className="post-property-btn">
+              <span className="post-property-text">Post Your Property</span>
+              <div className="post-property-tag-wrapper">
+                <span className="post-property-pin"></span>
+                <Image 
+                  src="/icon/image 81.svg" 
+                  alt="Free tag" 
+                  width={38} 
+                  height={48} 
+                  className="post-property-tag"
+                />
+              </div>
+            </div>
+          </Link>
         </div>
         <div className="menuBtn d-flex d-lg-none " onClick={openMenu}>
           <span id="menuLine1"></span>
