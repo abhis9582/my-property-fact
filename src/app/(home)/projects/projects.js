@@ -36,7 +36,7 @@ export default function Projects() {
   const observer = useRef(null);
   const loadMoreRef = useRef(null);
   const [isActive, setIsActive] = useState("");
-  const PAGE_SIZE = 15;
+  const PAGE_SIZE = 150;
   const { setProjectData } = useProjectContext();
   const [fadeKey, setFadeKey] = useState(0);
   const [filteredProjectData, setFilteredProjectData] = useState([]);
