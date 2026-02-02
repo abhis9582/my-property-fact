@@ -332,10 +332,16 @@
 .menu ul li.hasChild::after {
   content: "";
   position: absolute;
-  left: -24px;
-  right: -24px;
+  left: 0;
+  right: 0;
   top: 100%;
-  height: 72px;
+  height: 20px;
+  pointer-events: none;
+}
+
+.menu ul li.hasChild:hover::after {
+  pointer-events: auto;
+  height: 40px;
 }
 
 .menu ul li.hasChild .dropdown.dropdown-lg {
@@ -375,10 +381,10 @@
 .menu ul li.hasChild .dropdown.dropdown-lg::before {
   content: "";
   position: absolute;
-  top: -60px;
+  top: -30px;
   left: 0;
   right: 0;
-  height: 60px;
+  height: 30px;
 }
 
 .menu ul li.hasChild:hover .dropdown.dropdown-lg {

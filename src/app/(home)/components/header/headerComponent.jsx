@@ -111,15 +111,51 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
       }
     };
 
+    // Handle resize to close mobile menu on desktop
+    const handleResize = () => {
+      if (window.innerWidth >= 992) {
+        const menu = document.getElementById("mbdiv");
+        const menuButtons = document.getElementsByClassName("menuBtn");
+        if (menu && menu.classList.contains("active")) {
+          // Close the menu
+          for (let i = 0; i < menuButtons.length; i++) {
+            menuButtons[i].classList.remove("closeMenuBtn");
+          }
+          menu.style.display = "none";
+          menu.classList.remove("active");
+
+          // Remove notfixed class from header
+          const header = document.querySelector(".header");
+          if (header) {
+            header.classList.remove("notfixed");
+          }
+
+          // Restore body scroll
+          document.body.style.overflow = "";
+          document.body.style.position = "";
+          document.body.style.top = "";
+          document.body.style.width = "";
+          document.body.style.height = "";
+          document.documentElement.style.overflow = "";
+          document.documentElement.style.height = "";
+          
+          // Restore scroll position
+          window.scrollTo(0, scrollPositionRef.current);
+        }
+      }
+    };
+
     window.addEventListener("scroll", handleScroll, { passive: false });
     window.addEventListener("wheel", preventScroll, { passive: false });
     // Use capture phase to check before other handlers
     window.addEventListener("touchmove", preventScroll, { passive: false, capture: true });
+    window.addEventListener("resize", handleResize);
     
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("wheel", preventScroll);
       window.removeEventListener("touchmove", preventScroll);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -368,13 +404,13 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                   ) : (
                     <div className="city-dropdown-content">
                       <div className="city-dropdown-left">
-                        <Link href="/commercial" className="city-dropdown-item plus-jakarta-sans-semi-bold">
+                        <Link href="/projects/commercial" className="city-dropdown-item plus-jakarta-sans-semi-bold" prefetch={true}>
                           Commercial
                         </Link>
-                        <Link href="/residential" className="city-dropdown-item plus-jakarta-sans-semi-bold">
+                        <Link href="/projects/residential" className="city-dropdown-item plus-jakarta-sans-semi-bold" prefetch={true}>
                           Residential
                         </Link>
-                        <Link href="/new-launches" className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold">
+                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold" prefetch={true}>
                           New Launches <span className="city-dropdown-badge">New</span>
                         </Link>
                         <Link href="/blog" className="city-dropdown-item plus-jakarta-sans-semi-bold">
@@ -560,7 +596,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
           </div>
         </nav>
         <div className="d-none d-lg-flex align-items-center">
-          <Link href="/post-property" className="post-property-btn-wrapper">
+          <div className="post-property-btn-wrapper" style={{ cursor: 'default' }}>
             <div className="post-property-btn">
               <span className="post-property-text">Post Your Property</span>
               <div className="post-property-tag-wrapper">
@@ -574,7 +610,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                 />
               </div>
             </div>
-          </Link>
+          </div>
         </div>
         <div className="menuBtn d-flex d-lg-none " onClick={openMenu}>
           <span id="menuLine1"></span>

@@ -312,7 +312,28 @@ export default function Property({ projectDetail }) {
       header.style.background = `rgb(13, 88, 52, ${opacity})`;
     };
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    // Close mobile menu when resizing to desktop view
+    const handleResize = () => {
+      if (window.innerWidth >= 992) {
+        const menu = document.getElementById("property-mbdiv");
+        const menuButtons = document.querySelectorAll(".project-menuBtn");
+        if (menu && menu.classList.contains("active")) {
+          menu.classList.remove("active");
+          menu.style.display = "none";
+          menuButtons.forEach((btn) => btn.classList.remove("closeMenuBtn"));
+          setMenuOpen(false);
+          header?.classList.remove("notfixed");
+          document.body.classList.remove("menu-open");
+        }
+      }
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   //Handle opening and closing of the property detail page mobile menu

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -29,6 +29,10 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005";
 export default function Properties() {
   const [activeTab, setActiveTab] = useState("All Properties");
   const [sortBy, setSortBy] = useState("");
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
+  const [isMobileSortDropdownOpen, setIsMobileSortDropdownOpen] = useState(false);
+  const sortDropdownRef = useRef(null);
+  const mobileSortDropdownRef = useRef(null);
   const [budgetMin, setBudgetMin] = useState("");
   const [budgetMax, setBudgetMax] = useState("");
   const [likedProperties, setLikedProperties] = useState([]);
@@ -734,6 +738,34 @@ export default function Properties() {
   const bedroomOptions = ["1 RK/1 BHK", "2 BHK", "3 BHK", "4 BHK", "5 BHK"];
   const constructionStatuses = ["New Launched", "Under Construction", "Ready to move"];
 
+  const sortOptions = [
+    { value: "Relevance", label: "Relevance" },
+    { value: "Price: Low to High", label: "Price: Low to High" },
+    { value: "Price: High to Low", label: "Price: High to Low" },
+    { value: "Newest First", label: "Newest First" },
+  ];
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sortDropdownRef.current && !sortDropdownRef.current.contains(event.target)) {
+        setIsSortDropdownOpen(false);
+      }
+      if (mobileSortDropdownRef.current && !mobileSortDropdownRef.current.contains(event.target)) {
+        setIsMobileSortDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSortSelect = (value) => {
+    setSortBy(value);
+    setIsSortDropdownOpen(false);
+    setIsMobileSortDropdownOpen(false);
+  };
+
   const generatePrice = (price) => {
     return `₹${price}`;
   };
@@ -743,15 +775,18 @@ export default function Properties() {
       {/* Breadcrumbs and Tabs Section */}
       <div className="container-fluid bg-white properties-header-section">
         <div className="container">
-          {/* Breadcrumbs */}
-          <div className="properties-breadcrumb">
-            <nav aria-label="breadcrumb">
-              <div className="d-flex align-items-center gap-2">
-                <Link href="/" className="breadcrumb-link">Home</Link>
-                <span className="breadcrumb-separator">/</span>
-                <span className="breadcrumb-active">Properties</span>
-              </div>
-            </nav>
+          {/* Breadcrumbs Row with Title */}
+          <div className="properties-header-row">
+            <div className="properties-breadcrumb">
+              <nav aria-label="breadcrumb">
+                <div className="d-flex align-items-center gap-2">
+                  <Link href="/" className="breadcrumb-link">Home</Link>
+                  <span className="breadcrumb-separator">/</span>
+                  <span className="breadcrumb-active">Properties</span>
+                </div>
+              </nav>
+            </div>
+            <h1 className="properties-page-title">3 BHK Flats In Noida</h1>
           </div>
 
           {/* Property Category Tabs */}
@@ -803,19 +838,43 @@ export default function Properties() {
                     <span className="properties-mobile-filter-count">{appliedFilters.length}</span>
                   )}
                 </button>
-                <div className="properties-mobile-sort">
+                <div className="properties-mobile-sort" ref={mobileSortDropdownRef}>
                   <label className="sort-label">Sort by:</label>
-                  <select 
-                    className="sort-select"
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                  >
-                    <option value="" disabled hidden>Select</option>
-                    <option value="Relevance">Relevance</option>
-                    <option value="Price: Low to High">Price: Low to High</option>
-                    <option value="Price: High to Low">Price: High to Low</option>
-                    <option value="Newest First">Newest First</option>
-                  </select>
+                  <div className="custom-sort-dropdown">
+                    <button 
+                      className={`custom-sort-trigger ${isMobileSortDropdownOpen ? 'active' : ''}`}
+                      onClick={() => setIsMobileSortDropdownOpen(!isMobileSortDropdownOpen)}
+                    >
+                      <span className="custom-sort-value">{sortBy || "Select"}</span>
+                      <svg 
+                        className={`custom-sort-arrow ${isMobileSortDropdownOpen ? 'rotated' : ''}`}
+                        width="14" 
+                        height="14" 
+                        viewBox="0 0 24 24" 
+                        fill="none"
+                      >
+                        <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                    {isMobileSortDropdownOpen && (
+                      <div className="custom-sort-options">
+                        {sortOptions.map((option) => (
+                          <button
+                            key={option.value}
+                            className={`custom-sort-option ${sortBy === option.value ? 'selected' : ''}`}
+                            onClick={() => handleSortSelect(option.value)}
+                          >
+                            {option.label}
+                            {sortBy === option.value && (
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17L4 12" stroke="#0d5834" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -1689,19 +1748,43 @@ export default function Properties() {
                     Find your perfect property from our curated listings
                   </p>
                 </div>
-                <div className="properties-list-header-right">
+                <div className="properties-list-header-right" ref={sortDropdownRef}>
                   <label className="sort-label">Sort by:</label>
-                  <select 
-                    className="sort-select"
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                  >
-                    <option value="" disabled hidden></option>
-                    <option value="Relevance">Relevance</option>
-                    <option value="Price: Low to High">Price: Low to High</option>
-                    <option value="Price: High to Low">Price: High to Low</option>
-                    <option value="Newest First">Newest First</option>
-                  </select>
+                  <div className="custom-sort-dropdown custom-sort-dropdown-desktop">
+                    <button 
+                      className={`custom-sort-trigger ${isSortDropdownOpen ? 'active' : ''}`}
+                      onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
+                    >
+                      <span className="custom-sort-value">{sortBy || "Select"}</span>
+                      <svg 
+                        className={`custom-sort-arrow ${isSortDropdownOpen ? 'rotated' : ''}`}
+                        width="14" 
+                        height="14" 
+                        viewBox="0 0 24 24" 
+                        fill="none"
+                      >
+                        <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                    {isSortDropdownOpen && (
+                      <div className="custom-sort-options">
+                        {sortOptions.map((option) => (
+                          <button
+                            key={option.value}
+                            className={`custom-sort-option ${sortBy === option.value ? 'selected' : ''}`}
+                            onClick={() => handleSortSelect(option.value)}
+                          >
+                            {option.label}
+                            {sortBy === option.value && (
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="M20 6L9 17L4 12" stroke="#0d5834" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
