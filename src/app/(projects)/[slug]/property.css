@@ -358,6 +358,15 @@ ease;
   }
 }
 
+/* Hide mobile menu on desktop screens (lg and above) */
+@media (min-width: 992px) {
+  .project-mbMenuContainer {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+}
+
 .bg-root-color {
   background: var(--bg-with-gradient);
 }
