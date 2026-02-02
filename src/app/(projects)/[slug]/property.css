@@ -66,8 +66,8 @@ ease;
 
 @media (max-width: 576px) {
   .back-to-home-floating {
-    left: 0.75rem;
-    padding: 1.25rem 0.6rem 1rem;
+    left: 2px;
+    padding: 0.6rem 0.25rem;
     gap: 0.6rem;
   }
 
@@ -236,15 +236,11 @@ ease;
   right: 0;
   top: 2px;
   bottom: 0;
+  /* background: rgb(0 0 0 / 82%); */
+  /* -webkit-backdrop-filter: blur(4px) brightness(1.3);
+  backdrop-filter: blur(4px) brightness(1.3);
   z-index: 99;
-  display: none;
-  pointer-events: none;
-}
-
-.project-mbMenuContainer.active {
-  display: block;
-  pointer-events: auto;
-  background: rgb(0 0 0 / 50%);
+  display: none; */
 }
 
 #amenities {
@@ -289,12 +285,6 @@ ease;
   padding-bottom: 10px;
   color: var(--bg-color);
   transition: all 300ms ease-in-out;
-}
-
-.bigMenuList ul li.active > a,
-.project-mbMenuContainer .mbMenu ul li:hover > a,
-.project-mbMenuContainer .mbMenu ul li a:focus {
-  /* color: var(--menu-color); */
 }
 
 /* Property detail page mobile menu list styling */
@@ -355,15 +345,6 @@ ease;
   .project-mbMenuContainer .mbMenu {
     width: 100%;
     padding: 40px 24px;
-  }
-}
-
-/* Hide mobile menu on desktop screens (lg and above) */
-@media (min-width: 992px) {
-  .project-mbMenuContainer {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
   }
 }
 
@@ -612,6 +593,16 @@ textarea.form-control::placeholder {
 
 a {
   text-decoration: none !important;
+}
+
+
+/* Hide mobile menu on desktop screens (lg and above) */
+@media (min-width: 992px) {
+  .project-mbMenuContainer {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
 }
 
 @media (max-width: 768px) {

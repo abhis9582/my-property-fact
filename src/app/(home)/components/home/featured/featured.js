@@ -58,14 +58,16 @@ export default function Featured({
 }) {
   const [projectType, setProjectType] = useState("Residential");
   const [isLoading, setIsLoading] = useState(false);
-  
+
   // Memoized filtered projects for faster tab switching
   const filteredProjects = useMemo(() => {
     if (!allProjects || allProjects.length === 0) return [];
-    return allProjects.filter(
-      (project) => project.propertyTypeName === projectType,
-    ).slice(0, 9);
-  }, [allProjects, projectType]);
+    if (type === "Similar") {
+      return allProjects;
+    } else {
+      return allProjects.filter((project) => project.propertyTypeName === projectType).slice(0, 9);
+    }
+  }, [allProjects, projectType, type]);
 
   // Clear loading state when filtered projects are ready
   useEffect(() => {
@@ -78,42 +80,50 @@ export default function Featured({
     }
   }, [filteredProjects, isLoading]);
 
-  const settings = useMemo(() => ({
-    dots: false,
-    infinite: filteredProjects.length > 1,
-    speed: 500,
-    autoplay: autoPlay,
-    autoplaySpeed: 5000,
-    arrows: autoPlay,
-    nextArrow: autoPlay ? <NextArrow /> : null,
-    prevArrow: autoPlay ? <PrevArrow /> : null,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
+  const settings = useMemo(
+    () => ({
+      dots: false,
+      infinite: filteredProjects.length > 1,
+      speed: 500,
+      autoplay: autoPlay,
+      autoplaySpeed: 5000,
+      arrows: autoPlay,
+      nextArrow: autoPlay ? <NextArrow /> : null,
+      prevArrow: autoPlay ? <PrevArrow /> : null,
+      slidesToShow: 3,
+      slidesToScroll: 1,
+      responsive: [
+        {
+          breakpoint: 1024,
+          settings: {
+            slidesToShow: 2,
+            slidesToScroll: 1,
+          },
         },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
+        {
+          breakpoint: 600,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1,
+          },
         },
-      },
-    ],
-  }), [filteredProjects.length, autoPlay]);
+      ],
+    }),
+    [filteredProjects.length, autoPlay],
+  );
 
   // Memoized section title
   const sectionTitle = useMemo(() => {
     if (!autoPlay) return title;
-    if (projectType === "Commercial") {
+    if (projectType === "Commercial" && type !== "Similar") {
       return `Explore Top Commercial Spaces for Growth`;
+    } else if (projectType === "Residential" && type !== "Similar") {
+      return `Explore Our Premier Residential Projects`;
+    } else if (type === "Similar") {
+      return "";
+    } else {
+      return title;
     }
-    return `Explore Our Premier Residential Projects`;
   }, [projectType, autoPlay, title]);
 
   // Fast tab switching handler with loading state
@@ -125,58 +135,80 @@ export default function Featured({
   };
 
   return (
-    <div className="container">
-      {autoPlay && (
-        <div className={`d-flex justify-content-center justify-content-lg-start mt-4 mt-lg-2 gap-3`}>
-          <button
-            className={`mpf-btn-primary ${projectType === "Residential" ? "active" : ""}`}
-            onClick={() => handleProjectType("Residential")}
-          >
-            Residential
-          </button>
-          <button
-            className={`mpf-btn-primary ${projectType === "Commercial" ? "active" : ""}`}
-            onClick={() => handleProjectType("Commercial")}
-          >
-            Commercial
-          </button>
-        </div>
-      )}
-      <div className="d-flex justify-content-between align-items-center">
-        <h2 className="text-left my-4 my-lg-5 plus-jakarta-sans-semi-bold">
-          {sectionTitle}
-        </h2>
-        {autoPlay && type !== "Similar" && (
-          <div className="text-center pt-3">
-            <Link
-              className="btn text-white projects-view-all-btn btn-normal-color border-0"
-              href={`/projects/${url}`}
+    <>
+      {type !== "Similar" && (
+        <div className="container">
+          {autoPlay && type !== "Similar" && (
+            <div
+              className={`d-flex justify-content-center justify-content-lg-start mt-4 mt-lg-2 gap-3`}
             >
-              View all
-            </Link>
-          </div>
-        )}
-      </div>
-      {isLoading ? (
-        <div className="featured-loading-container">
-          <div className="featured-loading-spinner"></div>
-          <p className="featured-loading-text">Loading projects...</p>
-        </div>
-      ) : filteredProjects?.length > 0 ? (
-        <div className="featured-page-slider">
-          <Slider {...settings}>
-            {filteredProjects.map((item) => (
-              <div key={item.id} className="px-2 pb-3">
-                <PropertyContainer data={item} badgeVariant={badgeVariant} />
+              <button
+                className={`mpf-btn-primary ${projectType === "Residential" ? "active" : ""}`}
+                onClick={() => handleProjectType("Residential")}
+              >
+                Residential
+              </button>
+              <button
+                className={`mpf-btn-primary ${projectType === "Commercial" ? "active" : ""}`}
+                onClick={() => handleProjectType("Commercial")}
+              >
+                Commercial
+              </button>
+            </div>
+          )}
+          <div className="d-flex justify-content-between align-items-center">
+            <h2 className="text-left my-4 my-lg-5 plus-jakarta-sans-semi-bold">
+              {sectionTitle}
+            </h2>
+            {autoPlay && type !== "Similar" && (
+              <div className="text-center pt-3">
+                <Link
+                  className="btn text-white projects-view-all-btn btn-normal-color border-0"
+                  href={`/projects/${url}`}
+                >
+                  View all
+                </Link>
               </div>
-            ))}
-          </Slider>
-        </div>
-      ) : (
-        <div className="featured-no-projects">
-          <p>No projects available for this category.</p>
+            )}
+          </div>
+          {isLoading ? (
+            <div className="featured-loading-container">
+              <div className="featured-loading-spinner"></div>
+              <p className="featured-loading-text">Loading projects...</p>
+            </div>
+          ) : filteredProjects?.length > 0 ? (
+            <div className="featured-page-slider">
+              <Slider {...settings}>
+                {filteredProjects.map((item) => (
+                  <div key={item.id} className="px-2 pb-3">
+                    <PropertyContainer
+                      data={item}
+                      badgeVariant={badgeVariant}
+                    />
+                  </div>
+                ))}
+              </Slider>
+            </div>
+          ) : (
+            <div className="featured-no-projects">
+              <p>No projects available for this category.</p>
+            </div>
+          )}
         </div>
       )}
-    </div>
+      {type === "Similar" && (
+        <>
+          <div className="container">
+            <Slider {...settings}>
+              {filteredProjects.map((item) => (
+                <div key={item.id} className="px-2 pb-3">
+                  <PropertyContainer data={item} />
+                </div>
+              ))}
+            </Slider>
+          </div>
+        </>
+      )}
+    </>
   );
 }

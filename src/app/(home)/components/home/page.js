@@ -42,16 +42,6 @@ export default async function HomePage() {
     return allowedSlugs.includes(project.slugURL);
   });
 
-  // Filtering residential projects from projects list
-  const residentalProjects = projects
-    .filter((project) => project.propertyTypeName === "Residential")
-    .slice(0, 9);
-
-  // Filtering commercial projects from projects list
-  const commercialProjects = projects
-    .filter((project) => project.propertyTypeName === "Commercial")
-    .slice(0, 9);
-
   // Getting weekly project from projects list
   const mpfTopPicProject = await getWeeklyProject(projects);
 
