@@ -62,10 +62,14 @@ export default function Featured({
   // Memoized filtered projects for faster tab switching
   const filteredProjects = useMemo(() => {
     if (!allProjects || allProjects.length === 0) return [];
-    if (type === "Similar") {
+    if (type === "Similar" || type === "Featured") {
+      console.log("allProjects", allProjects);
+      
       return allProjects;
     } else {
-      return allProjects.filter((project) => project.propertyTypeName === projectType).slice(0, 9);
+      return allProjects
+        .filter((project) => project.propertyTypeName === projectType)
+        .slice(0, 9);
     }
   }, [allProjects, projectType, type]);
 
@@ -83,13 +87,13 @@ export default function Featured({
   const settings = useMemo(
     () => ({
       dots: false,
-      infinite: filteredProjects.length > 1,
+      infinite: filteredProjects.length > 2,
       speed: 500,
       autoplay: autoPlay,
       autoplaySpeed: 5000,
       arrows: autoPlay,
-      nextArrow: autoPlay ? <NextArrow /> : null,
-      prevArrow: autoPlay ? <PrevArrow /> : null,
+      nextArrow: autoPlay && filteredProjects.length > 1 ? <NextArrow /> : null,
+      prevArrow: autoPlay && filteredProjects.length > 1 ? <PrevArrow /> : null,
       slidesToShow: 3,
       slidesToScroll: 1,
       responsive: [

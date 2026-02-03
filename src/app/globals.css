@@ -31,6 +31,10 @@
   --btn-normal-color: #C9A24D;
 }
 
+.sidebar-brand {
+  text-decoration: none !important;
+}
+
 html {
   scroll-behavior: smooth;
 }

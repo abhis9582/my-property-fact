@@ -25,6 +25,7 @@ export default async function FeaturedPage({
           url={url}
           allProjects={allFeaturedProperties}
           autoPlay={autoPlay}
+          type={type}
           badgeVariant="home-featured"
           title={title}
         />

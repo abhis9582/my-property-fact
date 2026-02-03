@@ -1215,7 +1215,7 @@ gsap.ticker.lagSmoothing(0);
         </div>
 
         <div className={styles.footerBottomRow}>
-          © 2025 Eldeco Group. All rights reserved.
+          © 2026 Eldeco Group. All rights reserved.
         </div>
       </footer>
     </div>

@@ -95,7 +95,6 @@ export default function PortalSignInPage() {
   };
 
   const handleEmailAuth = async (isSignup = false) => {
-    debugger;
     if (!formData.email) {
       setError("Please enter your email address");
       return;

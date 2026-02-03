@@ -206,11 +206,15 @@ export const fetchAllStories = cache(async () => {
 });
 
 // Getting top project
-export const getWeeklyProject = async (projects) => {
+export const getWeeklyProject = (projects) => {
+  const residentialProjects = projects.filter(project => project.propertyTypeName === "Residential");
+  if (residentialProjects.length === 0) {
+    return null;
+  }
   const now = new Date();
   const weekNumber = Math.floor(now.getTime() / (7 * 24 * 60 * 60 * 1000));
-  const index = weekNumber % projects.length;
-  return projects[index];
+  const index = weekNumber % residentialProjects.length;
+  return residentialProjects[index];
 };
 
 // Getting top project

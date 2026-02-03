@@ -24,9 +24,9 @@ export default async function HomePage() {
 
   // Allowed slugs for featured projects
   const allowedSlugs = [
-    "m3m-jacob-and-co-residences",
-    "eldeco-whispers-of-wonder",
-    "ace-edit",
+    "birla-arika",
+    "dlf-privana-west",
+    "trump-residences-gurgaon",
   ];
 
   // Fetching citylist and project types and storing in variables

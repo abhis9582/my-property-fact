@@ -198,7 +198,7 @@ export default function NewFooterDesign({ cityList = [] }) {
               <div className="contact-item-row">
                 <div className="contact-item">
                   <span className="contact-label">PHONE:</span>
-                  <span className="contact-value">+(91)8920024793</span>
+                  <span className="contact-value">+91 8920024793</span>
                 </div>
                 <div className="contact-item">
                   <span className="contact-label">EMAIL:</span>
@@ -308,7 +308,7 @@ export default function NewFooterDesign({ cityList = [] }) {
               <FontAwesomeIcon icon={faFacebook} />
             </a>
             <a
-              href="https://twitter.com/mypropertyfact"
+              href="https://x.com/my_propertyfact"
               target="_blank"
               rel="noopener noreferrer"
               className="social-icon"
@@ -353,7 +353,7 @@ export default function NewFooterDesign({ cityList = [] }) {
           purchase-related decisions.
         </p>
         <p className="copyright-text">
-          © 2025 – mypropertyfact. All rights reserved.
+          © 2026 – mypropertyfact. All rights reserved.
         </p>
       </div>
 

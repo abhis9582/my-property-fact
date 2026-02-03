@@ -115,7 +115,7 @@ function Footer() {
               color: "rgba(0, 0, 0, 0.4)",
             }}
           >
-            © 2025. dholera township | All right reserved. Digital Media Planned
+            © 2026. dholera township | All right reserved. Digital Media Planned
             By Ritz Media World
           </p>
         </div>
