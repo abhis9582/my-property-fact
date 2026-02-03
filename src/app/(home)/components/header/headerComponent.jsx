@@ -595,7 +595,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
             </ul>
           </div>
         </nav>
-        <div className="d-none d-lg-flex align-items-center">
+        {/* <div className="d-none d-lg-flex align-items-center">
           <div className="post-property-btn-wrapper" style={{ cursor: 'default' }}>
             <div className="post-property-btn">
               <span className="post-property-text">Post Your Property</span>
@@ -611,7 +611,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="menuBtn d-flex d-lg-none " onClick={openMenu}>
           <span id="menuLine1"></span>
           <span id="menuLine2"></span>
