@@ -181,9 +181,11 @@ export default function Chatbot() {
                 <div className={styles.messages}>
                     {messages.map((msg, index) => (
                         <React.Fragment key={msg.id}>
-                            <div className={`${styles.message} ${msg.type === 'user' ? styles.userMessage : styles.botMessage}`}>
-                                {msg.text.split('\n').map((line, i) => <div key={i}>{line}</div>)}
-                            </div>
+                            {msg.text && (
+                                <div className={`${styles.message} ${msg.type === 'user' ? styles.userMessage : styles.botMessage}`}>
+                                    {msg.text.split('\n').map((line, i) => <div key={i}>{line}</div>)}
+                                </div>
+                            )}
 
                             {msg.projectCards && msg.projectCards.length > 0 && (
                                 <ProjectSlider
