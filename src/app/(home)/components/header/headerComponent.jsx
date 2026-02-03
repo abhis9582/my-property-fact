@@ -814,7 +814,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                 <li>
                   <Link
                     className="text-decoration-none"
-                    href="https://www.facebook.com/starestate.in"
+                    href="https://www.facebook.com/mypropertyfact1/"
                     target="_blank"
                   >
                     <FontAwesomeIcon icon={faFacebook} />
@@ -823,7 +823,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                 <li>
                   <Link
                     className="text-decoration-none"
-                    href="https://www.instagram.com/starestate_official/"
+                    href="https://www.instagram.com/my.property.fact/"
                     target="_blank"
                   >
                     <FontAwesomeIcon icon={faInstagram} />
@@ -832,7 +832,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                 <li>
                   <Link
                     className="text-decoration-none"
-                    href="https://www.linkedin.com/company/star-estate"
+                    href="https://www.linkedin.com/company/my-property-fact/"
                     target="_blank"
                   >
                     <FontAwesomeIcon icon={faLinkedin} />
@@ -841,7 +841,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                 <li>
                   <Link
                     className="text-decoration-none"
-                    href="https://www.youtube.com/channel/UCwfDf7Ut8jrkjiBeRnbZUPw"
+                    href="https://www.youtube.com/@my.propertyfact/"
                     target="_blank"
                   >
                     <FontAwesomeIcon icon={faYoutube} />

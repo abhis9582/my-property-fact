@@ -332,7 +332,7 @@ export default function NewFooterDesign({ cityList = [] }) {
               <FontAwesomeIcon icon={faLinkedin} />
             </a>
             <a
-              href="https://www.youtube.com/@mypropertyfact"
+              href="https://www.youtube.com/@my.propertyfact/"
               target="_blank"
               rel="noopener noreferrer"
               className="social-icon"
