@@ -1,21 +1,24 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 
 export default function ThankYouPage() {
   const router = useRouter()
+  const params = useParams()
+  const pathParam = params?.path || '1'
   const [countdown, setCountdown] = useState(7)
+  const backUrl = `/landing-pages/eldeco-camelot/${pathParam}`
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timer)
-          router.push('/')
+          router.push(backUrl)
           return 0
         }
         return prev - 1
@@ -23,7 +26,7 @@ export default function ThankYouPage() {
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [router])
+  }, [router, backUrl])
 
   return (
     <div className="thankyou-page">
@@ -38,14 +41,14 @@ export default function ThankYouPage() {
         </p>
 
         <div className="countdown-timer">
-          <span>Redirecting to home in </span>
+          <span>Redirecting back to Eldeco Camelot in </span>
           <span className="countdown-number">{countdown}</span>
           <span> seconds</span>
         </div>
 
-        <Link href="/" className="home-button">
-          <i className="fa-solid fa-home"></i>
-          Go Back Home
+        <Link href={backUrl} className="home-button">
+          <i className="fa-solid fa-arrow-left"></i>
+          Back to Eldeco Camelot
         </Link>
       </div>
 

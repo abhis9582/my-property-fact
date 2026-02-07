@@ -5,7 +5,7 @@ import ContactForm from './ContactForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
-export default function ContactModal({ isOpen, onClose }) {
+export default function ContactModal({ isOpen, onClose, pathParam = '1' }) {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
@@ -70,7 +70,7 @@ export default function ContactModal({ isOpen, onClose }) {
                     <FontAwesomeIcon icon={faXmark} />
                   </button>
                 </div>
-                <ContactForm formType="modal" />
+                <ContactForm formType="modal" pathParam={pathParam} />
               </div>
             </div>
           </div>

@@ -229,7 +229,7 @@ export default function EldecoCamelotPage() {
     return (
         <>
             <Navbar onEnquireClick={openModal} />
-            <ContactModal isOpen={isModalOpen} onClose={closeModal} />
+            <ContactModal isOpen={isModalOpen} onClose={closeModal} pathParam={pathParam} />
 
             {/* Hero Section */}
             <section id="hero-section">
@@ -260,7 +260,7 @@ export default function EldecoCamelotPage() {
                                 </div>
                             </div>
                         </div>
-                        <ContactForm formType="hero" />
+                        <ContactForm formType="hero" pathParam={pathParam} />
                     </div>
                 </div>
             </section>
@@ -269,7 +269,7 @@ export default function EldecoCamelotPage() {
             <section id="about-section">
                 <div className="container">
                     <div className="hero-form-wrapper d-block d-lg-none mb-4">
-                        <ContactForm formType="hero" />
+                        <ContactForm formType="hero" pathParam={pathParam} />
                     </div>
                     <div className="row align-items-center flex-row-reverse">
                         <div className="col-lg-6">

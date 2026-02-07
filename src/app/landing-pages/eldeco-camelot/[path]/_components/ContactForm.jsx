@@ -1,13 +1,15 @@
 'use client'
 
 import { useState, FormEvent } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons'
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzPGcu-_n28K8ZrRudpWfoZJ6a2F2EtvDq_Vlnin9RCTfw_A6lx986V-66fE-VyVRDZ7A/exec'
 
 export default function ContactForm({ formType = 'hero', className = '' }) {
   const router = useRouter()
+  const params = useParams()
+  const pathParam = params?.path || '1'
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     FIRSTNAME: '',
@@ -20,8 +22,11 @@ export default function ContactForm({ formType = 'hero', className = '' }) {
     setIsSubmitting(true)
 
     try {
+      // Use pathParam to set sheet name dynamically (Sheet1, Sheet2, Sheet3, Sheet4)
+      const sheetName = `Sheet${pathParam}`
+      console.log('Path Param:', pathParam, 'Sheet Name:', sheetName) // Debug log
       const submitData = {
-        sheetName: 'Sheet1',
+        sheetName: pathParam,
         Name: formData.FIRSTNAME,
         Email: formData.EMAIL,
         Phone: formData.PHONE,
@@ -51,7 +56,7 @@ export default function ContactForm({ formType = 'hero', className = '' }) {
             }
           }
         }
-        router.push('/thankyou')
+        router.push(`/landing-pages/eldeco-camelot/${pathParam}/thankyou`)
       } else {
         alert('Error: ' + (result.error?.message || 'Failed to submit form'))
         setIsSubmitting(false)
