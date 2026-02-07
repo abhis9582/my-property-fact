@@ -51,11 +51,11 @@ export default function Navbar() {
                   Price
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a className="nav-link" href="#amenities-section" onClick={(e) => handleNavClick(e, '#amenities-section')}>
                   Amenities
                 </a>
-              </li>
+              </li> */}
               <li>
                 <a className="nav-link" href="#gallery-section" onClick={(e) => handleNavClick(e, '#gallery-section')}>
                   Gallery

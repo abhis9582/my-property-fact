@@ -330,7 +330,7 @@ export default function EldecoCamelotPage() {
                                         <p className="price-amount">₹ On Request</p>
                                         <p className="unit-size">Size: 3,600 Sq.Ft</p>
                                     </div>
-                                    <div className="price-box price-box-lower">
+                                    {/* <div className="price-box price-box-lower">
                                         <h3 className="unit-type">3 BHK + Servant</h3>
                                         <p className="project-name-text">Eldeco Camelot</p>
                                         <div className="divider-line"></div>
@@ -343,7 +343,7 @@ export default function EldecoCamelotPage() {
                                         <div className="divider-line"></div>
                                         <p className="price-amount">₹ On Request</p>
                                         <p className="unit-size">Size: 3,600 Sq.Ft</p>
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <div
                                     className="price-box-footer"
