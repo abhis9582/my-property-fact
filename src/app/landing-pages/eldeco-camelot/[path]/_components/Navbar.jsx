@@ -3,11 +3,16 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faEnvelope } from '@fortawesome/free-solid-svg-icons'
+import ContactModal from './ContactModal'
 
 export default function Navbar() {
   const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const params = useParams()
+  const pathParam = params?.path || '1'
 
   const handleNavClick = (e, targetId) => {
     e.preventDefault()
@@ -16,6 +21,14 @@ export default function Navbar() {
       targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
       setShowMobileMenu(false)
     }
+  }
+
+  const onEnquireClick = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
   }
 
   return (
@@ -74,9 +87,7 @@ export default function Navbar() {
             className="custom-call-btn d-none d-lg-flex"
             onClick={(e) => {
               e.preventDefault();
-              if (onEnquireClick) {
-                onEnquireClick();
-              }
+              onEnquireClick();
             }}
           >
             <FontAwesomeIcon icon={faEnvelope} />
@@ -126,6 +137,13 @@ export default function Navbar() {
           </ul>
         </div>
       </div>
+
+      {/* Contact Modal */}
+      <ContactModal 
+        isOpen={isModalOpen} 
+        onClose={closeModal} 
+        pathParam={pathParam} 
+      />
     </>
   )
 }

@@ -28,7 +28,12 @@ export default function EldecoCamelotPage() {
       pathParam !== "1" &&
       pathParam !== "2" &&
       pathParam !== "3" &&
-      pathParam !== "4"
+      pathParam !== "4" &&
+      pathParam !== "5" &&
+      pathParam !== "6" &&
+      pathParam !== "7" &&
+      pathParam !== "8" &&
+      pathParam !== "9"
     ) {
       // Redirect to 404 or show not found
       setIsNotFound(true);
