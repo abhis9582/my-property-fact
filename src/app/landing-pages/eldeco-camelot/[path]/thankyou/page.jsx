@@ -1,37 +1,37 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { useRouter, useParams } from 'next/navigation'
-import Link from 'next/link'
-import Script from 'next/script'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck } from '@fortawesome/free-solid-svg-icons'
+import { useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
+import Link from "next/link";
+import Script from "next/script";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 export default function ThankYouPage() {
-  const router = useRouter()
-  const params = useParams()
-  const pathParam = params?.path || '1'
-  const [countdown, setCountdown] = useState(7)
-  const backUrl = `/landing-pages/eldeco-camelot/${pathParam}`
+  const router = useRouter();
+  const params = useParams();
+  const pathParam = params?.path || "1";
+  const [countdown, setCountdown] = useState(7);
+  const backUrl = `/landing-pages/eldeco-camelot/${pathParam}`;
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
-          clearInterval(timer)
-          router.push(backUrl)
-          return 0
+          clearInterval(timer);
+          router.push(backUrl);
+          return 0;
         }
-        return prev - 1
-      })
-    }, 1000)
+        return prev - 1;
+      });
+    }, 1000);
 
-    return () => clearInterval(timer)
-  }, [router, backUrl])
+    return () => clearInterval(timer);
+  }, [router, backUrl]);
 
   return (
     <div className="thankyou-page">
-      {pathParam === '2' && (
+      {pathParam === "2" && (
         <>
           <Script
             src="https://www.googletagmanager.com/gtag/js?id=AW-17892647835"
@@ -39,11 +39,16 @@ export default function ThankYouPage() {
           />
           <Script id="google-analytics" strategy="afterInteractive">
             {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'AW-17892647835');
-            `}
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'AW-17892647835');
+              `}
+          </Script>
+          <Script id="google-analytics-conversion" strategy="afterInteractive">
+            {`
+                gtag('event', 'conversion', {'send_to': 'AW-17892647835/c3iuCN2QoPUbEJvH8NNC'});
+              `}
           </Script>
         </>
       )}
@@ -54,7 +59,8 @@ export default function ThankYouPage() {
 
         <h1 className="thankyou-title">Thank You!</h1>
         <p className="thankyou-message">
-          Your enquiry has been submitted successfully. Our team will get back to you shortly.
+          Your enquiry has been submitted successfully. Our team will get back
+          to you shortly.
         </p>
 
         <div className="countdown-timer">
@@ -71,7 +77,7 @@ export default function ThankYouPage() {
 
       <style jsx>{`
         body {
-          font-family: 'Open Sans', sans-serif;
+          font-family: "Open Sans", sans-serif;
           background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
           margin: 0;
           padding: 0;
@@ -124,7 +130,7 @@ export default function ThankYouPage() {
         }
 
         .thankyou-title {
-          font-family: 'Montserrat', sans-serif;
+          font-family: "Montserrat", sans-serif;
           font-size: 2.5rem;
           font-weight: 700;
           color: #222;
@@ -132,7 +138,7 @@ export default function ThankYouPage() {
         }
 
         .thankyou-message {
-          font-family: 'Open Sans', sans-serif;
+          font-family: "Open Sans", sans-serif;
           font-size: 1.1rem;
           color: #666;
           line-height: 1.7;
@@ -140,7 +146,7 @@ export default function ThankYouPage() {
         }
 
         .countdown-timer {
-          font-family: 'Montserrat', sans-serif;
+          font-family: "Montserrat", sans-serif;
           font-size: 1.2rem;
           color: #17693d;
           font-weight: 600;
@@ -170,7 +176,7 @@ export default function ThankYouPage() {
           font-size: 1.1rem;
           text-decoration: none;
           transition: all 0.3s ease;
-          font-family: 'Open Sans', sans-serif;
+          font-family: "Open Sans", sans-serif;
         }
 
         .home-button:hover {
@@ -203,5 +209,5 @@ export default function ThankYouPage() {
         }
       `}</style>
     </div>
-  )
+  );
 }
