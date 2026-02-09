@@ -23,10 +23,21 @@ export default function ContactForm({ formType = 'hero', className = '' }) {
 
     try {
       // Use pathParam to set sheet name dynamically (Sheet1, Sheet2, Sheet3, Sheet4)
-      const sheetName = `Sheet${pathParam}`
+      const sheetNameMap = {
+        1: "1-TOI",
+        2: "2-NDTV",
+        3: "3-HT",
+        4: "4-DISPLAY",
+        5: "5-P-MAX",
+        6: "6-YOU-TUBE",
+        7: "7-PPC",
+        8: "8-TABOOLA",
+        9: "9",
+      }
+      const sheetName = sheetNameMap[pathParam];
       console.log('Path Param:', pathParam, 'Sheet Name:', sheetName) // Debug log
       const submitData = {
-        sheetName: pathParam,
+        sheetName: sheetName,
         Name: formData.FIRSTNAME,
         Email: formData.EMAIL,
         Phone: formData.PHONE,
