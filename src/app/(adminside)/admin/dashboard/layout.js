@@ -38,10 +38,6 @@ export default function AdminLayout({ children }) {
         if (response.data.valid) {
           const roles = response.data.roles || [];
           
-          // Debug: Log roles to console
-          console.log("User roles from token:", roles);
-          console.log("Full response data:", response.data);
-          
           // Check if user has SUPERADMIN role (handles both formats)
           const hasSuperAdmin = roles.some((role) => {
             if (!role) return false;
@@ -50,12 +46,8 @@ export default function AdminLayout({ children }) {
               normalizedRole === "SUPERADMIN" ||
               normalizedRole === "ROLE_SUPERADMIN"
             );
-            console.log(`Checking role: ${role} (normalized: ${normalizedRole}) -> ${isSuperAdmin}`);
             return isSuperAdmin;
           });
-
-          console.log("Has SUPERADMIN role:", hasSuperAdmin);
-
           if (hasSuperAdmin) {
             setIsAuthorized(true);
           } else {

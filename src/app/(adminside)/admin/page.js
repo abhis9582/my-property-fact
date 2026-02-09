@@ -84,7 +84,6 @@ function AdminPageContent() {
       }
     } catch (error) {
       toast.error("Invalid username or password!");
-      console.log(error);
       setShowLoading(false);
       setButtonName("Go to dashboard");
     }

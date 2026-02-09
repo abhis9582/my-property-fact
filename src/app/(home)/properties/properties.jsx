@@ -268,7 +268,6 @@ export default function Properties() {
       const listingId = pathParts[1];
       const filename = pathParts.slice(2).join('/');
       const finalUrl = `${apiUrl}/get/images/property-listings/${listingId}/${filename}`;
-      console.log('Constructed image URL:', finalUrl);
       return finalUrl;
     } else if (pathParts.length === 2) {
       return `${apiUrl}/get/images/${pathParts[0]}/${pathParts[1]}`;

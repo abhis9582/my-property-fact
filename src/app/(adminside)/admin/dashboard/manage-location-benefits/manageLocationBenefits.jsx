@@ -66,7 +66,6 @@ export default function ManageLocationBenefits({ allBenefits }) {
       }
     } catch (error) {
       toast.error(error?.response?.data?.message || error?.message || "Error saving nearby benefits");
-      console.log("Error submitting data", error);
     } finally {
       setShowLoading(false);
       setButtonName("Add Nearby Benefits");

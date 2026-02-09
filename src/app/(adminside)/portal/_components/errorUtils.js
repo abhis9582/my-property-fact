@@ -126,15 +126,6 @@ export const logErrorToService = async (error, context = {}) => {
       url: window.location.href,
       context
     };
-
-    // Example: Send to your logging service
-    // await fetch('/api/log-error', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(errorData)
-    // });
-
-    console.log('Error logged:', errorData);
   } catch (loggingError) {
     console.error('Failed to log error:', loggingError);
   }

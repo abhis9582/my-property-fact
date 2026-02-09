@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
+import Script from 'next/script'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 
@@ -30,6 +31,22 @@ export default function ThankYouPage() {
 
   return (
     <div className="thankyou-page">
+      {pathParam === '2' && (
+        <>
+          <Script
+            src="https://www.googletagmanager.com/gtag/js?id=AW-17892647835"
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'AW-17892647835');
+            `}
+          </Script>
+        </>
+      )}
       <div className="thankyou-container">
         <div className="thankyou-icon">
           <FontAwesomeIcon icon={faCheck} />

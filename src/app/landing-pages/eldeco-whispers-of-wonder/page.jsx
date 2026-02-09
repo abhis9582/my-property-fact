@@ -250,12 +250,10 @@ gsap.ticker.lagSmoothing(0);
                 second: "2-digit",
               })
             );
-            params.append("Date", date.toLocaleDateString("en-US")); 
+            params.append("Date", date.toLocaleDateString("en-US"));
             if (sourceValue) {
               params.append("source", sourceValue);
             }
-            console.log("Submitting form data:", params.toString());
-            
             // Prepare Sell.do API data
             const sellDoParams = new URLSearchParams();
             sellDoParams.append("sell_do[form][lead][name]", name);
@@ -282,18 +280,15 @@ gsap.ticker.lagSmoothing(0);
             // Check Google Sheets response (primary)
             if (sheetsResponse.status === "fulfilled") {
               const result = await sheetsResponse.value.json();
-              console.log("Response from Google Script:", result);
 
               if (result.result === "success") {
                 // Log Sell.do response (secondary)
                 if (sellDoResponse.status === "fulfilled") {
                   try {
                     const sellDoResult = await sellDoResponse.value.json();
-                    console.log("Response from Sell.do API:", sellDoResult);
                     
                     // Check if Sell.do submission was successful
                     if (sellDoResult.sell_do_lead_id && (!sellDoResult.error || sellDoResult.error.length === 0)) {
-                      console.log(`✅ Lead created in Sell.do with ID: ${sellDoResult.sell_do_lead_id}`);
                       if (sellDoResult.selldo_lead_details) {
                         console.log("Lead details:", {
                           stage: sellDoResult.selldo_lead_details.stage,
@@ -302,7 +297,7 @@ gsap.ticker.lagSmoothing(0);
                         });
                       }
                     } else {
-                      console.warn("⚠️ Sell.do API response indicates issues:", sellDoResult);
+                      console.warn("Sell.do API response indicates issues:", sellDoResult);
                     }
                   } catch (err) {
                     console.error("Failed to parse Sell.do API response:", err);
@@ -310,7 +305,7 @@ gsap.ticker.lagSmoothing(0);
                     console.log("Sell.do API raw response:", textResponse);
                   }
                 } else {
-                  console.warn("⚠️ Sell.do API request failed:", sellDoResponse.reason);
+                  console.warn("Sell.do API request failed:", sellDoResponse.reason);
                 }
 
                 status.textContent = "Your query has been submitted successfully!";

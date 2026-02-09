@@ -62,11 +62,8 @@ export default async function PropertyPage({ params, searchParams }) {
       fetchAllProjects(),
     ]);
   const isFloorTypeSlug = await isFloorTypeUrl(slug);
-  console.log("floor type", isFloorTypeSlug);
   const isProjectSlug = await checkIfProjectSlug(slug);
-  console.log("project type", isProjectSlug);
   const isCitySlug = await isCityTypeUrl(slug);
-  console.log("city type", isCitySlug);
 
   const similarProject = featuredProjects.filter(
               (item) =>

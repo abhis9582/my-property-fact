@@ -439,7 +439,6 @@ async function processEnquiry({ name, mobile, email, project, sessionId }) {
                 'INSERT INTO form_leads (name, phone, email, project_name, property_type, city, budget) VALUES (?, ?, ?, ?, ?, ?, ?)',
                 [name, mobile, email, project || 'General', type || 'N/A', city || 'N/A', budget || 'N/A']
             );
-            console.log('[Lead] Saved to MySQL:', name, mobile);
         } catch (dbErr) {
             console.log('[Lead] MySQL unavailable, skipping local storage:', dbErr.code || dbErr.message);
         }
@@ -458,8 +457,6 @@ async function processEnquiry({ name, mobile, email, project, sessionId }) {
             status: "PENDING",
             id: 0
         });
-
-        console.log(`[Lead] External API Response:`, externalResponse.data);
 
         if (externalResponse.data && externalResponse.data.isSuccess === 1) {
             return {

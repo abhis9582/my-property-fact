@@ -1215,51 +1215,6 @@ export default function Home() {
                     Submitting your response...
                   </div>
                 )}
-                {/* <script>
-                const scriptURL2 =
-                  "https://script.google.com/macros/s/AKfycbyP670paikqZHr-Kl0sMzslmEJTs8k3K7yw2cUFMl0mMaKetH3KE_gvEx1B6HyR_Yty/exec";
-                const form2 = document.forms["submit-to-google-sheet-form-2"];
-                const loader2 = document.getElementById("loader2");
-                form2.addEventListener("submit", (e) => {
-                  e.preventDefault();
-                  const mobileNo =
-                    form2.querySelector("#qMobileNomodal1").value;
-                  const email = form2.querySelector("#qEmailIDmodal1").value;
-
-                  const mobileRegex = /^[6-9]\d{9}$/; // Starts with 6-9 and followed by 9 digits
-
-                  if (!mobileRegex.test(mobileNo)) {
-                    alert(
-                      "Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9."
-                    );
-                    return;
-                  }
-                  if (!isValidEmail(email)) {
-                    alert("Please enter a valid email address.");
-                    return;
-                  }
-                  loader2.style.display = "block";
-                  fetch(scriptURL2, {
-                    method: "POST",
-                    body: new FormData(form2),
-                  })
-                    .then((response) => {
-                      console.log("Success!", response);
-                      form2.reset();
-                      window.location.href = "thankyou.html";
-                    })
-                    .catch((error) => console.error("Error!", error.message))
-                    .finally(() => {
-                      loader2.style.display = "none";
-                    });
-                });
-
-                function isValidEmail(email) {
-                  // Regular expression for basic email validation
-                  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                  return emailRegex.test(email);
-                }
-              </script> */}
               </div>
             </div>
           </div>

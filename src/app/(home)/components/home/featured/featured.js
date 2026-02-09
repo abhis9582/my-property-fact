@@ -63,8 +63,6 @@ export default function Featured({
   const filteredProjects = useMemo(() => {
     if (!allProjects || allProjects.length === 0) return [];
     if (type === "Similar" || type === "Featured") {
-      console.log("allProjects", allProjects);
-      
       return allProjects;
     } else {
       return allProjects
