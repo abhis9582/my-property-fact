@@ -65,7 +65,7 @@ export default function ModernDashboard() {
   // Fetch user properties
   const fetchProperties = async () => {
     try {
-      const token = Cookies.get("token") || Cookies.get("authToken");
+      const token = Cookies.get("token");
       if (!token) {
         setError("Authentication required");
         setLoading(false);
@@ -272,7 +272,7 @@ export default function ModernDashboard() {
   // Fetch user profile
   const fetchUserProfile = async () => {
     try {
-      const token = Cookies.get("token") || Cookies.get("authToken");
+      const token = Cookies.get("token");
       if (!token) {
         // If no token, use userData from context as fallback
         if (userData) {

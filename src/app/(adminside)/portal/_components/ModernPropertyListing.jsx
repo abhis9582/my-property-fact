@@ -772,7 +772,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       setIsEditMode(true);
       
       try {
-        const token = Cookies.get("authToken") || Cookies.get("token");
+        const token = Cookies.get("token");
         if (!token) {
           console.error("No authentication token found");
           setLoadingProperty(false);
@@ -945,7 +945,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
 
     try {
       // Get authentication token
-      const token = Cookies.get("authToken") || Cookies.get("token");
+      const token = Cookies.get("token");
 
       if (!token) {
         alert("You must be logged in to submit a property");
@@ -1192,7 +1192,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     setDraftSaved(false);
 
     try {
-      const token = Cookies.get("authToken") || Cookies.get("token");
+      const token = Cookies.get("token");
 
       if (!token) {
         alert("You must be logged in to save a draft");

@@ -24,7 +24,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
   const isBlogTypeRoute = pathname.startsWith("/blog");
   //Defining scroll variable
   const [isScrolled, setIsScrolled] = useState(false);
-  
+  const [isConditionalHeader, setIsConditionalHeader] = useState(false);
   // Project search state
   const [projectSearchQuery, setProjectSearchQuery] = useState("");
   const [projectSearchResults, setProjectSearchResults] = useState([]);
@@ -284,7 +284,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
       <div
         className={`d-flex justify-content-between align-items-center px-2 px-lg-4 header ${
           isScrolled ? "fixed-header" : ""
-        }`}
+        } ${isPropertiesRoute ? "properties-header" : ""} ${pathname.includes("/properties/") ? "conditional-header" : ""} `}
       >
         <div className="mpf-logo d-flex align-items-center gap-4">
           <Link href="/">

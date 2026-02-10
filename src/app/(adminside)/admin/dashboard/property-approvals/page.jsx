@@ -1,7 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Card, Button, Badge, Spinner, Alert, Table, Modal, Form } from "react-bootstrap";
+import {
+  Card,
+  Button,
+  Badge,
+  Spinner,
+  Alert,
+  Modal,
+  Form,
+} from "react-bootstrap";
 import NextImage from "next/image";
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -14,94 +22,39 @@ export default function PropertyApprovalsPage() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [checkingRole, setCheckingRole] = useState(true);
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
   const [processing, setProcessing] = useState(null);
 
-  useEffect(() => {
-    checkAdminRole();
-  }, []);
-
-  useEffect(() => {
-    if (isAdmin) {
-      fetchPendingProperties();
-    }
-  }, [isAdmin]);
-
-  const checkAdminRole = async () => {
-    try {
-      const token = Cookies.get("authToken") || Cookies.get("token");
-      if (!token) {
-        setError("Please login to access this page");
-        setCheckingRole(false);
-        return;
-      }
-
-      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      const response = await fetch(`${apiUrl}/users/me`, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch user data");
-      }
-
-      const user = await response.json();
-      // Check if user has SUPERADMIN role
-      const hasSuperAdminRole = user.authorities?.some(role => 
-        role.authority === "ROLE_SUPERADMIN"
-      );
-
-      if (!hasSuperAdminRole) {
-        setError("Access Denied: You do not have permission to access this page. Only Super Administrators can access the admin dashboard.");
-        setIsAdmin(false);
-      } else {
-        setIsAdmin(true);
-      }
-    } catch (err) {
-      console.error("Error checking admin role:", err);
-      setError("Failed to verify admin access. Please try again.");
-    } finally {
-      setCheckingRole(false);
-    }
-  };
-
   const fetchPendingProperties = async () => {
     try {
       setLoading(true);
       setError(null);
-      const token = Cookies.get("authToken") || Cookies.get("token");
-      
-      if (!token) {
-        setError("Please login to view properties");
-        setLoading(false);
-        return;
-      }
 
-      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      const response = await fetch(`${apiUrl}/api/admin/property-listings/pending`, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
-      });
+      const apiUrl = API_BASE_URL.endsWith("/")
+        ? API_BASE_URL.slice(0, -1)
+        : API_BASE_URL;
+      const response = await fetch(
+        `${apiUrl}/api/admin/property-listings/pending`,
+        {
+          credentials: "include",
+        },
+      );
 
       if (!response.ok) {
         if (response.status === 403) {
           throw new Error("Access Denied: Super admin role required");
         }
         const errorResult = await response.json();
-        throw new Error(errorResult.message || `Failed to fetch properties: ${response.status}`);
+        throw new Error(
+          errorResult.message ||
+            `Failed to fetch properties: ${response.status}`,
+        );
       }
 
       const result = await response.json();
-      
+
       if (result.success && result.properties) {
         setProperties(result.properties);
       } else {
@@ -116,24 +69,28 @@ export default function PropertyApprovalsPage() {
   };
 
   const handleApprove = async (propertyId) => {
-    if (!window.confirm("Are you sure you want to approve this property listing?")) {
+    if (
+      !window.confirm("Are you sure you want to approve this property listing?")
+    ) {
       return;
     }
 
     try {
       setProcessing(propertyId);
-      const token = Cookies.get("authToken") || Cookies.get("token");
-      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      
+      const token = Cookies.get("token");
+      const apiUrl = API_BASE_URL.endsWith("/")
+        ? API_BASE_URL.slice(0, -1)
+        : API_BASE_URL;
+
       const response = await axios.post(
         `${apiUrl}/api/admin/property-listings/${propertyId}/approve`,
         {},
         {
           headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
-        }
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        },
       );
 
       if (response.data.success) {
@@ -144,7 +101,11 @@ export default function PropertyApprovalsPage() {
       }
     } catch (err) {
       console.error("Error approving property:", err);
-      alert(err.response?.data?.message || err.message || "Failed to approve property. Please try again.");
+      alert(
+        err.response?.data?.message ||
+          err.message ||
+          "Failed to approve property. Please try again.",
+      );
     } finally {
       setProcessing(null);
     }
@@ -152,7 +113,7 @@ export default function PropertyApprovalsPage() {
 
   const handleReject = async () => {
     if (!selectedProperty) return;
-    
+
     if (!rejectReason.trim()) {
       alert("Please provide a reason for rejection");
       return;
@@ -160,18 +121,20 @@ export default function PropertyApprovalsPage() {
 
     try {
       setProcessing(selectedProperty.id);
-      const token = Cookies.get("authToken") || Cookies.get("token");
-      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      
+      const token = Cookies.get("token");
+      const apiUrl = API_BASE_URL.endsWith("/")
+        ? API_BASE_URL.slice(0, -1)
+        : API_BASE_URL;
+
       const response = await axios.post(
         `${apiUrl}/api/admin/property-listings/${selectedProperty.id}/reject`,
         { reason: rejectReason },
         {
           headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
-        }
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        },
       );
 
       if (response.data.success) {
@@ -185,11 +148,19 @@ export default function PropertyApprovalsPage() {
       }
     } catch (err) {
       console.error("Error rejecting property:", err);
-      alert(err.response?.data?.message || err.message || "Failed to reject property. Please try again.");
+      alert(
+        err.response?.data?.message ||
+          err.message ||
+          "Failed to reject property. Please try again.",
+      );
     } finally {
       setProcessing(null);
     }
   };
+
+  useEffect(() => {
+    fetchPendingProperties();
+  }, []);
 
   const openRejectModal = (property) => {
     setSelectedProperty(property);
@@ -199,36 +170,43 @@ export default function PropertyApprovalsPage() {
 
   const getImageUrl = (imageUrl) => {
     if (!imageUrl) return null;
-    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+    if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
       return imageUrl;
     }
-    const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-    
+    const apiUrl = API_BASE_URL.endsWith("/")
+      ? API_BASE_URL.slice(0, -1)
+      : API_BASE_URL;
+
     let cleanImageUrl = imageUrl;
-    
-    if (cleanImageUrl.match(/^[A-Za-z]:[\/\\]/) || (cleanImageUrl.startsWith('/') && !cleanImageUrl.startsWith('/get/'))) {
-      const propertyListingsIndex = cleanImageUrl.toLowerCase().indexOf("property-listings");
+
+    if (
+      cleanImageUrl.match(/^[A-Za-z]:[\/\\]/) ||
+      (cleanImageUrl.startsWith("/") && !cleanImageUrl.startsWith("/get/"))
+    ) {
+      const propertyListingsIndex = cleanImageUrl
+        .toLowerCase()
+        .indexOf("property-listings");
       if (propertyListingsIndex !== -1) {
         cleanImageUrl = cleanImageUrl.substring(propertyListingsIndex);
       } else {
         return null;
       }
     }
-    
-    cleanImageUrl = cleanImageUrl.replace(/\\/g, '/');
-    
-    if (cleanImageUrl.startsWith('/')) {
+
+    cleanImageUrl = cleanImageUrl.replace(/\\/g, "/");
+
+    if (cleanImageUrl.startsWith("/")) {
       cleanImageUrl = cleanImageUrl.slice(1);
     }
-    
-    if (cleanImageUrl.startsWith('uploads/')) {
-      cleanImageUrl = cleanImageUrl.replace('uploads/', '');
+
+    if (cleanImageUrl.startsWith("uploads/")) {
+      cleanImageUrl = cleanImageUrl.replace("uploads/", "");
     }
-    
-    const pathParts = cleanImageUrl.split('/');
-    if (pathParts.length >= 3 && pathParts[0] === 'property-listings') {
+
+    const pathParts = cleanImageUrl.split("/");
+    if (pathParts.length >= 3 && pathParts[0] === "property-listings") {
       const listingId = pathParts[1];
-      const filename = pathParts.slice(2).join('/');
+      const filename = pathParts.slice(2).join("/");
       return `${apiUrl}/get/images/property-listings/${listingId}/${filename}`;
     }
     return `${apiUrl}/get/images/${cleanImageUrl}`;
@@ -236,45 +214,15 @@ export default function PropertyApprovalsPage() {
 
   const formatPrice = (price) => {
     if (!price && price !== 0) return "Price on request";
-    const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+    const numPrice = typeof price === "string" ? parseFloat(price) : price;
     if (isNaN(numPrice)) return "Price on request";
     if (numPrice >= 10000000) {
       return `₹${(numPrice / 10000000).toFixed(2)} Cr`;
     } else if (numPrice >= 100000) {
       return `₹${(numPrice / 100000).toFixed(2)} L`;
     }
-    return `₹${Math.round(numPrice).toLocaleString('en-IN')}`;
+    return `₹${Math.round(numPrice).toLocaleString("en-IN")}`;
   };
-
-  if (checkingRole) {
-    return (
-      <div className="text-center py-5">
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-        <p className="mt-3 text-muted">Verifying access...</p>
-      </div>
-    );
-  }
-
-  if (!isAdmin) {
-    return (
-      <div className="container-fluid py-5">
-        <Alert variant="danger" className="m-4">
-          <Alert.Heading>Access Denied</Alert.Heading>
-          <p>{error || "You do not have permission to access this page. Only Super Administrators can access the admin dashboard."}</p>
-          <div className="d-flex gap-2">
-            <Button variant="outline-danger" onClick={() => router.push("/admin/dashboard")}>
-              Go to Dashboard
-            </Button>
-            <Button variant="outline-secondary" onClick={() => router.push("/")}>
-              Go to Home
-            </Button>
-          </div>
-        </Alert>
-      </div>
-    );
-  }
 
   if (loading) {
     return (
@@ -292,7 +240,9 @@ export default function PropertyApprovalsPage() {
       <Alert variant="danger" className="m-4">
         <Alert.Heading>Error Loading Properties</Alert.Heading>
         <p>{error}</p>
-        <Button variant="outline-danger" onClick={fetchPendingProperties}>Retry</Button>
+        <Button variant="outline-danger" onClick={fetchPendingProperties}>
+          Retry
+        </Button>
       </Alert>
     );
   }
@@ -314,23 +264,36 @@ export default function PropertyApprovalsPage() {
       ) : (
         <div className="row">
           {properties.map((property) => (
-            <div key={property.id} className="col-12 col-sm-6 col-md-6 col-lg-4 mb-4">
-              <Card style={{ width: '100%' }}>
+            <div
+              key={property.id}
+              className="col-12 col-sm-6 col-md-6 col-lg-4 mb-4"
+            >
+              <Card style={{ width: "100%" }}>
                 {property.imageUrls && property.imageUrls.length > 0 && (
-                  <div style={{ height: '200px', position: 'relative', overflow: 'hidden' }}>
+                  <div
+                    style={{
+                      height: "200px",
+                      position: "relative",
+                      overflow: "hidden",
+                    }}
+                  >
                     <NextImage
-                      src={getImageUrl(property.imageUrls[0]) || '/placeholder.jpg'}
-                      alt={property.title || 'Property'}
+                      src={
+                        getImageUrl(property.imageUrls[0]) || "/placeholder.jpg"
+                      }
+                      alt={property.title || "Property"}
                       fill
-                      style={{ objectFit: 'cover' }}
+                      style={{ objectFit: "cover" }}
                       unoptimized
                     />
                   </div>
                 )}
                 <Card.Body>
-                  <Card.Title>{property.title || 'Untitled Property'}</Card.Title>
+                  <Card.Title>
+                    {property.title || "Untitled Property"}
+                  </Card.Title>
                   <Card.Text className="text-muted small">
-                    {property.city || 'N/A'} • {property.locality || 'N/A'}
+                    {property.city || "N/A"} • {property.locality || "N/A"}
                   </Card.Text>
                   <div className="mb-2">
                     <strong>{formatPrice(property.totalPrice)}</strong>
@@ -342,7 +305,7 @@ export default function PropertyApprovalsPage() {
                   </div>
                   <div className="mb-2">
                     <Badge bg="secondary" className="me-1">
-                      {property.bedrooms || 'N/A'} BHK
+                      {property.bedrooms || "N/A"} BHK
                     </Badge>
                     {property.listingType && (
                       <Badge bg="info" className="me-1">
@@ -356,13 +319,16 @@ export default function PropertyApprovalsPage() {
                     )}
                   </div>
                   {property.description && (
-                    <Card.Text className="small text-muted" style={{
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical'
-                    }}>
+                    <Card.Text
+                      className="small text-muted"
+                      style={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                      }}
+                    >
                       {property.description}
                     </Card.Text>
                   )}
@@ -376,11 +342,15 @@ export default function PropertyApprovalsPage() {
                     >
                       {processing === property.id ? (
                         <>
-                          <Spinner animation="border" size="sm" className="me-2" />
+                          <Spinner
+                            animation="border"
+                            size="sm"
+                            className="me-2"
+                          />
                           Processing...
                         </>
                       ) : (
-                        'Approve'
+                        "Approve"
                       )}
                     </Button>
                     <Button
@@ -395,7 +365,11 @@ export default function PropertyApprovalsPage() {
                     <Button
                       variant="outline-primary"
                       size="sm"
-                      onClick={() => router.push(`/admin/dashboard/property-approvals/${property.id}`)}
+                      onClick={() =>
+                        router.push(
+                          `/admin/dashboard/property-approvals/${property.id}`,
+                        )
+                      }
                       className="flex-fill flex-sm-grow-0"
                     >
                       View Details
@@ -416,7 +390,9 @@ export default function PropertyApprovalsPage() {
         <Modal.Body>
           <p>Are you sure you want to reject this property listing?</p>
           {selectedProperty && (
-            <p><strong>{selectedProperty.title || 'Untitled Property'}</strong></p>
+            <p>
+              <strong>{selectedProperty.title || "Untitled Property"}</strong>
+            </p>
           )}
           <Form.Group className="mb-3">
             <Form.Label>Rejection Reason</Form.Label>
@@ -436,7 +412,9 @@ export default function PropertyApprovalsPage() {
           <Button
             variant="danger"
             onClick={handleReject}
-            disabled={!rejectReason.trim() || processing === selectedProperty?.id}
+            disabled={
+              !rejectReason.trim() || processing === selectedProperty?.id
+            }
           >
             {processing === selectedProperty?.id ? (
               <>
@@ -444,7 +422,7 @@ export default function PropertyApprovalsPage() {
                 Processing...
               </>
             ) : (
-              'Reject Property'
+              "Reject Property"
             )}
           </Button>
         </Modal.Footer>
@@ -452,4 +430,3 @@ export default function PropertyApprovalsPage() {
     </div>
   );
 }
-

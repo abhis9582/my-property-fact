@@ -58,33 +58,15 @@ function AdminPageContent() {
         { withCredentials: true } // Ensure cookies are included in the request
       );
       if (response.status === 200) {
-        const { token, refreshToken } = response.data;
-        
-        // Store cookies synchronously (fast operation)
-        Cookies.set("token", token, {
-          expires: 1, // 1 day = 24 hours
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "Strict",
-          path: "/",
-        });
-
-        Cookies.set("refreshToken", refreshToken, {
-          expires: 7, // 7 days
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "Strict",
-          path: "/",
-        });
-
-        // Navigate immediately using replace (faster than push, no history entry)
-        // Prefetching already done in useEffect for instant navigation
         router.replace("/admin/dashboard");
-        
-        // Don't wait for navigation - let it happen immediately
-        return; // Exit early to skip finally block
+        return;
       }
     } catch (error) {
       toast.error("Invalid username or password!");
       console.log(error);
+      setShowLoading(false);
+      setButtonName("Go to dashboard");
+    }finally{
       setShowLoading(false);
       setButtonName("Go to dashboard");
     }

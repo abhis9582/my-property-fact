@@ -1,6 +1,5 @@
 "use client";
 import axios from "axios";
-import CommonBreadCrum from "../../components/common/breadcrum";
 import CommonHeaderBanner from "../../components/common/commonheaderbanner";
 import { useState } from "react";
 import Image from "next/image";
@@ -8,7 +7,6 @@ import styles from "./../page.module.css";
 import { Button, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { LoadingSpinner } from "../../contact-us/page";
-import { sanitizeHtml } from "@/app/_global_components/sanitize";
 import { usePathname } from "next/navigation";
 export default function BlogDetail({ blogDetail }) {
   const [showLoading, setShowLoading] = useState(false);

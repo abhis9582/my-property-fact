@@ -142,7 +142,7 @@ export default function Profile() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const token = Cookies.get("authToken") || Cookies.get("token");
+        const token = Cookies.get("token");
         if (!token) {
           setError("No auth token found. Please login again.");
           setLoading(false);
@@ -213,7 +213,7 @@ export default function Profile() {
     setSuccess(null);
     
     try {
-      const token = Cookies.get("authToken") || Cookies.get("token");
+      const token = Cookies.get("token");
       if (!token) {
         setError("No auth token found. Please login again.");
         setSaving(false);

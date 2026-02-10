@@ -75,7 +75,7 @@ export default function RERAPage() {
     try {
       setLoading(true);
       setError(null);
-      const token = Cookies.get("authToken") || Cookies.get("token");
+      const token = Cookies.get("token");
       
       if (!token) {
         setError("Please login to view RERA credentials");
@@ -171,7 +171,7 @@ export default function RERAPage() {
     setSuccess(null);
 
     try {
-      const token = Cookies.get("authToken") || Cookies.get("token");
+      const token = Cookies.get("token");
       
       if (!token) {
         setError("Please login to save RERA credentials");
@@ -226,7 +226,7 @@ export default function RERAPage() {
     setError(null);
 
     try {
-      const token = Cookies.get("authToken") || Cookies.get("token");
+      const token = Cookies.get("token");
       
       if (!token) {
         setError("Please login to delete RERA credentials");

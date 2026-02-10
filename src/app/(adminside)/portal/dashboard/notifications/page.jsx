@@ -105,7 +105,7 @@ export default function NotificationsPage() {
       setLoading(true);
       setError(null);
       const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      const token = Cookies.get("authToken") || Cookies.get("token") || 
+      const token = Cookies.get("token") || 
                     document.cookie.split('; ').find(row => row.startsWith('token='))?.split('=')[1];
       
       if (!token) {
@@ -225,7 +225,7 @@ export default function NotificationsPage() {
     if (notification && notification.leadData) {
       try {
         const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-        const token = Cookies.get("authToken") || Cookies.get("token") || 
+        const token = Cookies.get("token") || 
                       document.cookie.split('; ').find(row => row.startsWith('token='))?.split('=')[1];
         
         if (notification.leadData.status && notification.leadData.status.toLowerCase() === 'new') {
@@ -250,7 +250,7 @@ export default function NotificationsPage() {
       if (notification.leadData && notification.leadData.status && notification.leadData.status.toLowerCase() === 'new') {
         try {
           const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-          const token = Cookies.get("authToken") || Cookies.get("token") || 
+          const token = Cookies.get("token") || 
                         document.cookie.split('; ').find(row => row.startsWith('token='))?.split('=')[1];
           
           await axios.put(`${apiUrl}/enquiry/update-status/${notification.leadData.id}`, 

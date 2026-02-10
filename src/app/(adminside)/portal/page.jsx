@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, startTransition } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Form, Alert, Spinner } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -20,15 +20,16 @@ export default function PortalSignInPage() {
   const [receivedOTP, setReceivedOTP] = useState("");
   const [error, setError] = useState("");
   const [googleLoginEnabled, setGoogleLoginEnabled] = useState(true);
-
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
   useEffect(() => {
-    const token = Cookies.get("token") || Cookies.get("authToken");
+    const token = Cookies.get("token");
     if (token) {
       // Use router for existing sessions to maintain SPA behavior
       router.replace("/portal/dashboard");
     }
   }, [router]);
 
+  // Handling google login
   const handleSuccess = async (credentialResponse) => {
     const token = credentialResponse.credential;
     setIsLoading(true);
@@ -37,20 +38,14 @@ export default function PortalSignInPage() {
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}auth/google`,
-        { token: token }
+        { token: token },
       );
-      
+
       if (response.data.token) {
         const authToken = response.data.token;
-        
+
         Cookies.set("token", authToken, {
-          expires: 7,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-          path: "/",
-        });
-        Cookies.set("authToken", authToken, {
-          expires: 7,
+          expires: 1,
           secure: process.env.NODE_ENV === "production",
           sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
           path: "/",
@@ -67,7 +62,7 @@ export default function PortalSignInPage() {
 
         if (response.data.user) {
           Cookies.set("userData", JSON.stringify(response.data.user), {
-            expires: 7,
+            expires: 1,
             secure: process.env.NODE_ENV === "production",
             sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
             path: "/",
@@ -78,20 +73,31 @@ export default function PortalSignInPage() {
         window.location.href = "/portal/dashboard";
       }
     } catch (error) {
-      setError(error.response?.data?.message || "Google login failed. Please try again.");
+      setError(
+        error.response?.data?.message ||
+          "Google login failed. Please try again.",
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Handling google login error
   const handleError = () => {
     setError("Google login failed. Please try again.");
     setGoogleLoginEnabled(false);
   };
 
-  const handlePhoneAuth = async (isSignup = false) => {
-    if (!formData.phoneNumber) {
-      setError("Please enter your phone number");
+  // Validating email address
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // Handling login or signup with email
+  const handleEmailAuth = async (isSignup = false) => {
+    if (!formData.email) {
+      setError("Please enter your email address");
       return;
     }
 
@@ -112,7 +118,7 @@ export default function PortalSignInPage() {
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}auth/send-otp`,
-        { phoneNumber: formData.phoneNumber }
+        { email: formData.email },
       );
 
       if (response.data.success) {
@@ -122,15 +128,17 @@ export default function PortalSignInPage() {
         }
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 
-                          error.response?.data?.error || 
-                          "Failed to send OTP. Please check your phone number and try again.";
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Failed to send OTP. Please check your email address and try again.";
       setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Handling OTP verification
   const handleOTPVerify = async (isSignup = false) => {
     if (!formData.otp) {
       setError("Please enter the OTP");
@@ -152,19 +160,13 @@ export default function PortalSignInPage() {
 
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}auth/verify-otp`,
-        requestData
+        requestData,
       );
 
       if (response.data.token) {
         const authToken = response.data.token;
-        
+
         Cookies.set("token", authToken, {
-          expires: 7,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-          path: "/",
-        });
-        Cookies.set("authToken", authToken, {
           expires: 7,
           secure: process.env.NODE_ENV === "production",
           sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
@@ -192,21 +194,23 @@ export default function PortalSignInPage() {
         setFormData({ phoneNumber: "", otp: "", fullName: "" });
         setShowOTP(false);
         setReceivedOTP("");
-        
+
         // Use window.location for immediate navigation (bypasses Next.js router delay)
         // This is faster than router.push/replace because it doesn't wait for middleware verification
         window.location.href = "/portal/dashboard";
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 
-                          error.response?.data?.error || 
-                          "Invalid OTP. Please check the code and try again.";
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Invalid OTP. Please check the code and try again.";
       setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Handling input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     
@@ -226,14 +230,13 @@ export default function PortalSignInPage() {
     setError("");
   };
 
+  // Switching tabs
   const switchTab = (tab) => {
     setActiveTab(tab);
     setError("");
     setShowOTP(false);
     setFormData({ phoneNumber: "", otp: "", fullName: "" });
   };
-
-  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
 
   useEffect(() => {
     const originalError = console.error;
@@ -260,7 +263,9 @@ export default function PortalSignInPage() {
         {/* Left Side - Features List */}
         <div className="auth-features-panel">
           <div className="features-content">
-            <h2 className="features-title">Features of a My Property Fact Account</h2>
+            <h2 className="features-title">
+              Features of a My Property Fact Account
+            </h2>
             <ul className="features-list">
               <li className="feature-item">
                 <span className="feature-icon">✓</span>
@@ -284,11 +289,16 @@ export default function PortalSignInPage() {
               </li>
               <li className="feature-item">
                 <span className="feature-icon">✓</span>
-                <span>Track search performance and monitor responses and views online</span>
+                <span>
+                  Track search performance and monitor responses and views
+                  online
+                </span>
               </li>
               <li className="feature-item">
                 <span className="feature-icon">✓</span>
-                <span>Add extensive property details and multiple photos per listing</span>
+                <span>
+                  Add extensive property details and multiple photos per listing
+                </span>
               </li>
             </ul>
           </div>
@@ -321,16 +331,32 @@ export default function PortalSignInPage() {
               {error && (
                 <div className="error-message-box">
                   <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-                    <path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z" stroke="currentColor" strokeWidth="2"/>
-                    <path d="M10 6V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                    <path d="M10 14H10.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    <path
+                      d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
+                    <path
+                      d="M10 6V10"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M10 14H10.01"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
                   </svg>
                   {error}
                 </div>
               )}
 
               {/* Sign In Panel */}
-              <div className={`form-panel-wrapper ${activeTab === "signin" ? "active" : ""}`}>
+              <div
+                className={`form-panel-wrapper ${activeTab === "signin" ? "active" : ""}`}
+              >
                 {!showOTP ? (
                   <>
                     <div className="phone-input-group">
@@ -372,15 +398,36 @@ export default function PortalSignInPage() {
                   <>
                     {receivedOTP && (
                       <div className="info-message-box">
-                        <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-                          <path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z" stroke="currentColor" strokeWidth="2"/>
-                          <path d="M10 6V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                          <path d="M10 14H10.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                        >
+                          <path
+                            d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M10 6V10"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                          />
+                          <path
+                            d="M10 14H10.01"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                          />
                         </svg>
-                        <span>Development OTP: <strong>{receivedOTP}</strong></span>
+                        <span>
+                          Development OTP: <strong>{receivedOTP}</strong>
+                        </span>
                       </div>
                     )}
-                    
+
                     <div className="phone-input-group">
                       <label className="input-label-text">Enter OTP</label>
                       <input
@@ -444,7 +491,9 @@ export default function PortalSignInPage() {
               </div>
 
               {/* Sign Up Panel */}
-              <div className={`form-panel-wrapper ${activeTab === "signup" ? "active" : ""}`}>
+              <div
+                className={`form-panel-wrapper ${activeTab === "signup" ? "active" : ""}`}
+              >
                 {!showOTP ? (
                   <>
                     <div className="phone-input-group">
@@ -499,15 +548,36 @@ export default function PortalSignInPage() {
                   <>
                     {receivedOTP && (
                       <div className="info-message-box">
-                        <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-                          <path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z" stroke="currentColor" strokeWidth="2"/>
-                          <path d="M10 6V10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                          <path d="M10 14H10.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                        >
+                          <path
+                            d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M10 6V10"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                          />
+                          <path
+                            d="M10 14H10.01"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                          />
                         </svg>
-                        <span>Development OTP: <strong>{receivedOTP}</strong></span>
+                        <span>
+                          Development OTP: <strong>{receivedOTP}</strong>
+                        </span>
                       </div>
                     )}
-                    
+
                     <div className="phone-input-group">
                       <label className="input-label-text">Enter OTP</label>
                       <input
@@ -571,9 +641,16 @@ export default function PortalSignInPage() {
               </div>
 
               <p className="terms-text">
-                By clicking &quot;continue with Google or Phone number&quot; above, you acknowledge that you have read and understood, and agree to{" "}
-                <a href="#" className="terms-link">Privacy Policy</a> and{" "}
-                <a href="#" className="terms-link">Terms and Conditions</a>.
+                By clicking &quot;continue with Google or Email&quot; above, you
+                acknowledge that you have read and understood, and agree to{" "}
+                <a href="#" className="terms-link">
+                  Privacy Policy
+                </a>{" "}
+                and{" "}
+                <a href="#" className="terms-link">
+                  Terms and Conditions
+                </a>
+                .
               </p>
             </div>
           </div>

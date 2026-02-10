@@ -28,7 +28,7 @@ const processQueue = (error, token = null) => {
 // Request interceptor - Add token to requests
 apiClient.interceptors.request.use(
   (config) => {
-    const token = Cookies.get('token') || Cookies.get('authToken');
+    const token = Cookies.get('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -107,13 +107,6 @@ apiClient.interceptors.response.use(
             path: '/',
           });
           
-          Cookies.set('authToken', newToken, {
-            expires: 1,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Strict',
-            path: '/',
-          });
-
           if (newRefreshToken) {
             Cookies.set('refreshToken', newRefreshToken, {
               expires: 7, // 7 days
@@ -141,7 +134,6 @@ apiClient.interceptors.response.use(
         
         // Clear cookies and redirect to login
         Cookies.remove('token', { path: '/' });
-        Cookies.remove('authToken', { path: '/' });
         Cookies.remove('refreshToken', { path: '/' });
 
         if (typeof window !== 'undefined') {

@@ -33,7 +33,7 @@ export default function ManageUsers({ users: initialUsers }) {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const token = Cookies.get("token") || Cookies.get("authToken");
+        const token = Cookies.get("token");
         if (!token) {
           console.warn("No authentication token found for fetching roles");
           setRolesLoading(false);
@@ -134,7 +134,7 @@ export default function ManageUsers({ users: initialUsers }) {
     setShowLoading(true);
 
     try {
-      const token = Cookies.get("token") || Cookies.get("authToken");
+      const token = Cookies.get("token");
       if (!token) {
         toast.error("Authentication required");
         return;
@@ -185,7 +185,7 @@ export default function ManageUsers({ users: initialUsers }) {
 
   const handleActivate = async (userId) => {
     try {
-      const token = Cookies.get("token") || Cookies.get("authToken");
+      const token = Cookies.get("token");
       if (!token) {
         toast.error("Authentication required");
         return;
@@ -212,7 +212,7 @@ export default function ManageUsers({ users: initialUsers }) {
 
   const handleDeactivate = async (userId) => {
     try {
-      const token = Cookies.get("token") || Cookies.get("authToken");
+      const token = Cookies.get("token");
       if (!token) {
         toast.error("Authentication required");
         return;

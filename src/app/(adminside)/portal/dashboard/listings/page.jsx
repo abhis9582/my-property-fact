@@ -74,7 +74,7 @@ export default function ListingPage() {
     try {
       setLoading(true);
       setError(null);
-      const token = Cookies.get("authToken") || Cookies.get("token");
+      const token = Cookies.get("token");
       
       if (!token) {
         setError("Please login to view your properties");
@@ -83,7 +83,6 @@ export default function ListingPage() {
       }
 
       const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      console.log(`${apiUrl}/api/user/property-listings`);
       const response = await fetch(`${apiUrl}/api/user/property-listings`, {
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -238,7 +237,7 @@ export default function ListingPage() {
 
     try {
       setDeletingId(listingId);
-      const token = Cookies.get("authToken") || Cookies.get("token");
+      const token = Cookies.get("token");
       
       if (!token) {
         alert("Please login to delete properties");

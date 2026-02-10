@@ -4,38 +4,36 @@ import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay, Zoom } from "swiper/modules";
+import { Navigation, Pagination, Zoom } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/zoom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faHeart,
-  faShare,
   faPhone,
-  faEnvelope,
   faMapMarkerAlt,
   faCheck,
   faXmark,
-  faMagnifyingGlass,
-  faStar,
-  faChevronLeft,
-  faChevronRight,
   faHome,
   faBuilding,
   faCompass,
-  faWindowMaximize,
   faBirthdayCake,
   faRocket,
   faVolumeMute,
-  faChevronDown,
-  faChevronUp,
   faCircleInfo,
 } from "@fortawesome/free-solid-svg-icons";
-import { Spinner, Alert, Badge, Button, Modal, Form, OverlayTrigger, Tooltip } from "react-bootstrap";
+import {
+  Spinner,
+  Alert,
+  Badge,
+  Button,
+  Modal,
+  Form,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
 import axios from "axios";
-import VirtualTour from "./VirtualTour";
 import "./property-detail.css";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005";
@@ -50,14 +48,14 @@ export default function PropertyDetailPage() {
   const [activeTab, setActiveTab] = useState("Overview");
   const [relatedProperties, setRelatedProperties] = useState([]);
   const [imageIndex, setImageIndex] = useState(0);
-  const [mediaTab, setMediaTab] = useState("Property"); // "Videos" or "Property"
+  const [mediaTab, setMediaTab] = useState("Property");
   const [showPriceDetails, setShowPriceDetails] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
   const [contactForm, setContactForm] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    message: ''
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
   });
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -67,44 +65,56 @@ export default function PropertyDetailPage() {
   const [allNearbyBenefits, setAllNearbyBenefits] = useState([]);
   const [projectDetails, setProjectDetails] = useState(null);
   const [loadingProject, setLoadingProject] = useState(false);
-  
+  // Tooltips for nearby benefits
   const NearbyBenefitsTooltip = (props) => (
     <Tooltip id="nearby-benefits-tooltip" {...props} className="custom-tooltip">
-      <div style={{ textAlign: 'left', maxWidth: '300px' }}>
-        All nearby landmarks that are mentioned on this page are done so at the sole discretion of the publisher of this listing. Distances mentioned for all landmarks are to be considered approximate values at best. We recommend that you do your own research before making any purchase decisions.
+      <div style={{ textAlign: "left", maxWidth: "300px" }}>
+        All nearby landmarks that are mentioned on this page are done so at the
+        sole discretion of the publisher of this listing. Distances mentioned
+        for all landmarks are to be considered approximate values at best. We
+        recommend that you do your own research before making any purchase
+        decisions.
       </div>
     </Tooltip>
   );
 
+  // Tooltips for amenities
   const AmenitiesTooltip = (props) => (
     <Tooltip id="amenities-tooltip" {...props} className="custom-tooltip">
-      <div style={{ textAlign: 'left', maxWidth: '300px' }}>
-        All amenities that are mentioned on this page are done so at the sole discretion of the publisher of this listing. We recommend that you do your own research before making any purchase decisions.
+      <div style={{ textAlign: "left", maxWidth: "300px" }}>
+        All amenities that are mentioned on this page are done so at the sole
+        discretion of the publisher of this listing. We recommend that you do
+        your own research before making any purchase decisions.
       </div>
     </Tooltip>
   );
 
+  // Tooltpips for projects features
   const FeaturesTooltip = (props) => (
     <Tooltip id="features-tooltip" {...props} className="custom-tooltip">
-      <div style={{ textAlign: 'left', maxWidth: '300px' }}>
-        All furnishings that are mentioned on this page are done so at the sole discretion of the publisher of this listing. We recommend that you do your own research before making any purchase decisions.
+      <div style={{ textAlign: "left", maxWidth: "300px" }}>
+        All furnishings that are mentioned on this page are done so at the sole
+        discretion of the publisher of this listing. We recommend that you do
+        your own research before making any purchase decisions.
       </div>
     </Tooltip>
   );
 
   // Extract ID from slug (slug format: title-id or just id)
-  const propertyId = slug ? (() => {
-    const slugStr = slug.toString();
-    // Try to extract ID from end of slug (after last hyphen)
-    const parts = slugStr.split('-');
-    const lastPart = parts[parts.length - 1];
-    // Check if last part is a number
-    if (!isNaN(lastPart) && lastPart !== '') {
-      return parseInt(lastPart);
-    }
-    // If not, try parsing the whole slug as ID
-    return !isNaN(slugStr) ? parseInt(slugStr) : null;
-  })() : null;
+  const propertyId = slug
+    ? (() => {
+        const slugStr = slug.toString();
+        // Try to extract ID from end of slug (after last hyphen)
+        const parts = slugStr.split("-");
+        const lastPart = parts[parts.length - 1];
+        // Check if last part is a number
+        if (!isNaN(lastPart) && lastPart !== "") {
+          return parseInt(lastPart);
+        }
+        // If not, try parsing the whole slug as ID
+        return !isNaN(slugStr) ? parseInt(slugStr) : null;
+      })()
+    : null;
 
   useEffect(() => {
     if (propertyId) {
@@ -125,7 +135,7 @@ export default function PropertyDetailPage() {
 
   // Smooth scroll behavior
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [propertyId]);
 
   // Scroll to section function
@@ -134,11 +144,12 @@ export default function PropertyDetailPage() {
     if (element) {
       const headerOffset = 100; // Offset for fixed header if any
       const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      const offsetPosition =
+        elementPosition + window.pageYOffset - headerOffset;
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     }
   };
@@ -147,11 +158,11 @@ export default function PropertyDetailPage() {
   useEffect(() => {
     const handleScroll = () => {
       const sections = [
-        { id: 'overview-section', tab: 'Overview' },
-        { id: 'society-section', tab: 'Society' },
-        { id: 'price-trends-section', tab: 'Price Trends' },
-        { id: 'locality-section', tab: 'Explore Locality' },
-        { id: 'recommendation-section', tab: 'Recommendation' }
+        { id: "overview-section", tab: "Overview" },
+        { id: "society-section", tab: "Society" },
+        { id: "price-trends-section", tab: "Price Trends" },
+        { id: "locality-section", tab: "Explore Locality" },
+        { id: "recommendation-section", tab: "Recommendation" },
       ];
 
       const scrollPosition = window.scrollY + 150; // Offset for better detection
@@ -168,10 +179,11 @@ export default function PropertyDetailPage() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [property]);
 
+  // Function for handle submit contact form
   const handleContactSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
@@ -179,47 +191,64 @@ export default function PropertyDetailPage() {
     setSubmitSuccess(false);
 
     try {
-      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      const response = await axios.post(`${apiUrl}/api/public/properties/lead`, {
-        name: contactForm.name,
-        email: contactForm.email,
-        phone: contactForm.phone,
-        message: contactForm.message,
-        propertyId: propertyId
-      });
+      const apiUrl = API_BASE_URL.endsWith("/")
+        ? API_BASE_URL.slice(0, -1)
+        : API_BASE_URL;
+      const response = await axios.post(
+        `${apiUrl}/api/public/properties/lead`,
+        {
+          name: contactForm.name,
+          email: contactForm.email,
+          phone: contactForm.phone,
+          message: contactForm.message,
+          propertyId: propertyId,
+        },
+      );
 
       if (response.data.success) {
         setSubmitSuccess(true);
-        setContactForm({ name: '', email: '', phone: '', message: '' });
+        setContactForm({ name: "", email: "", phone: "", message: "" });
         setTimeout(() => {
           setShowContactModal(false);
           setSubmitSuccess(false);
         }, 2000);
       } else {
-        setSubmitError(response.data.message || 'Failed to submit inquiry. Please try again.');
+        setSubmitError(
+          response.data.message ||
+            "Failed to submit inquiry. Please try again.",
+        );
       }
     } catch (err) {
       console.error("Error submitting contact form:", err);
-      setSubmitError(err.response?.data?.message || "Failed to submit inquiry. Please try again.");
+      setSubmitError(
+        err.response?.data?.message ||
+          "Failed to submit inquiry. Please try again.",
+      );
     } finally {
       setSubmitting(false);
     }
   };
 
+  // Setting form data from input fields
   const handleContactFormChange = (e) => {
     const { name, value } = e.target;
-    setContactForm(prev => ({
+    setContactForm((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
+  // Fetching property details from API
   const fetchPropertyDetails = async () => {
     try {
       setLoading(true);
       setError(null);
-      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      const response = await axios.get(`${apiUrl}/api/public/properties/${propertyId}`);
+      const apiUrl = API_BASE_URL.endsWith("/")
+        ? API_BASE_URL.slice(0, -1)
+        : API_BASE_URL;
+      const response = await axios.get(
+        `${apiUrl}/api/public/properties/${propertyId}`,
+      );
 
       if (response.data.success && response.data.property) {
         setProperty(response.data.property);
@@ -228,21 +257,29 @@ export default function PropertyDetailPage() {
       }
     } catch (err) {
       console.error("Error fetching property details:", err);
-      setError(err.response?.data?.message || "Failed to load property details. Please try again.");
+      setError(
+        err.response?.data?.message ||
+          "Failed to load property details. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
   };
 
+  // Fetching related properties from API
   const fetchRelatedProperties = async () => {
     try {
-      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      const response = await axios.get(`${apiUrl}/api/public/properties?limit=4`);
-      
+      const apiUrl = API_BASE_URL.endsWith("/")
+        ? API_BASE_URL.slice(0, -1)
+        : API_BASE_URL;
+      const response = await axios.get(
+        `${apiUrl}/api/public/properties?limit=4`,
+      );
+
       if (response.data.success && Array.isArray(response.data.properties)) {
         // Filter out current property and limit to 4
         const related = response.data.properties
-          .filter(p => p.id.toString() !== propertyId)
+          .filter((p) => p.id.toString() !== propertyId)
           .slice(0, 4);
         setRelatedProperties(related);
       }
@@ -251,82 +288,93 @@ export default function PropertyDetailPage() {
     }
   };
 
+  // Function for getting image URL
   const getImageUrl = (imageUrl) => {
     if (!imageUrl) return null;
-    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+    if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
       return imageUrl;
     }
-    const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-    
+    const apiUrl = API_BASE_URL.endsWith("/")
+      ? API_BASE_URL.slice(0, -1)
+      : API_BASE_URL;
+
     let cleanImageUrl = imageUrl;
     if (cleanImageUrl.match(/^[A-Za-z]:[\/\\]/)) {
-      const propertyListingsIndex = cleanImageUrl.toLowerCase().indexOf("property-listings");
+      const propertyListingsIndex = cleanImageUrl
+        .toLowerCase()
+        .indexOf("property-listings");
       if (propertyListingsIndex !== -1) {
         cleanImageUrl = cleanImageUrl.substring(propertyListingsIndex);
       } else {
         return null;
       }
     }
-    
-    cleanImageUrl = cleanImageUrl.replace(/\\/g, '/');
-    if (cleanImageUrl.startsWith('/')) {
+
+    cleanImageUrl = cleanImageUrl.replace(/\\/g, "/");
+    if (cleanImageUrl.startsWith("/")) {
       cleanImageUrl = cleanImageUrl.slice(1);
     }
-    if (cleanImageUrl.startsWith('uploads/')) {
-      cleanImageUrl = cleanImageUrl.replace('uploads/', '');
+    if (cleanImageUrl.startsWith("uploads/")) {
+      cleanImageUrl = cleanImageUrl.replace("uploads/", "");
     }
-    
-    const pathParts = cleanImageUrl.split('/');
-    if (pathParts.length >= 3 && pathParts[0] === 'property-listings') {
+
+    const pathParts = cleanImageUrl.split("/");
+    if (pathParts.length >= 3 && pathParts[0] === "property-listings") {
       const listingId = pathParts[1];
-      const filename = pathParts.slice(2).join('/');
+      const filename = pathParts.slice(2).join("/");
       return `${apiUrl}/get/images/property-listings/${listingId}/${filename}`;
     }
     return null;
   };
 
+  // Function for formatting price
   const formatPrice = (price) => {
     if (!price && price !== 0) return "Price on request";
-    const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+    const numPrice = typeof price === "string" ? parseFloat(price) : price;
     if (isNaN(numPrice)) return "Price on request";
     if (numPrice >= 10000000) {
       return `₹${(numPrice / 10000000).toFixed(2)} Cr`;
     } else if (numPrice >= 100000) {
       return `₹${(numPrice / 100000).toFixed(2)} L`;
     }
-    return `₹${Math.round(numPrice).toLocaleString('en-IN')}`;
+    return `₹${Math.round(numPrice).toLocaleString("en-IN")}`;
   };
 
+  // Function for formatting area
   const formatArea = (area, showSqM = false) => {
     if (area === null || area === undefined || area === "") return null;
-    const numericArea = typeof area === 'string' ? parseFloat(area) : area;
+    const numericArea = typeof area === "string" ? parseFloat(area) : area;
     if (Number.isNaN(numericArea)) return null;
     if (showSqM) {
       const sqM = (numericArea * 0.092903).toFixed(2);
-      return `${numericArea.toLocaleString('en-IN')} sq.ft. (${sqM} sq.m.)`;
+      return `${numericArea.toLocaleString("en-IN")} sq.ft. (${sqM} sq.m.)`;
     }
-    return `${numericArea.toLocaleString('en-IN')} sq.ft.`;
+    return `${numericArea.toLocaleString("en-IN")} sq.ft.`;
   };
 
+  // Function for formatting price per square foot
   const formatPricePerSqft = (price, perSqM = false) => {
     if (!price) return null;
     if (perSqM) {
       const pricePerSqM = (price * 10.764).toFixed(0);
       return `₹${pricePerSqM}`;
     }
-    return `₹${Math.round(price).toLocaleString('en-IN')} per sq.ft.`;
+    return `₹${Math.round(price).toLocaleString("en-IN")} per sq.ft.`;
   };
 
+  // Function for getting bedroom label
   const getBedroomLabel = (bedrooms) => {
     if (!bedrooms) return null;
     if (bedrooms === 1) return "1 RK/1 BHK";
     return `${bedrooms} BHK`;
   };
 
-  // Fetch all amenities with images
+  // Fetching all amenities with images
   const fetchAllAmenities = async () => {
     try {
-      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+      const apiUrl = API_BASE_URL.endsWith("/")
+        ? API_BASE_URL.slice(0, -1)
+        : API_BASE_URL;
       const response = await axios.get(`${apiUrl}/amenity/get-all`);
       if (Array.isArray(response.data)) {
         setAllAmenities(response.data);
@@ -336,15 +384,20 @@ export default function PropertyDetailPage() {
     }
   };
 
-  // Get amenity image URL
+  // Function for getting amenity image URL
   const getAmenityImageUrl = (amenityImageUrl) => {
     if (!amenityImageUrl) return null;
-    if (amenityImageUrl.startsWith('http://') || amenityImageUrl.startsWith('https://')) {
+    if (
+      amenityImageUrl.startsWith("http://") ||
+      amenityImageUrl.startsWith("https://")
+    ) {
       return amenityImageUrl;
     }
-    const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+    const apiUrl = API_BASE_URL.endsWith("/")
+      ? API_BASE_URL.slice(0, -1)
+      : API_BASE_URL;
     let cleanImageUrl = amenityImageUrl;
-    
+
     // Handle Windows paths
     if (cleanImageUrl.match(/^[A-Za-z]:[\/\\]/)) {
       const amenityIndex = cleanImageUrl.toLowerCase().indexOf("amenity");
@@ -352,26 +405,28 @@ export default function PropertyDetailPage() {
         cleanImageUrl = cleanImageUrl.substring(amenityIndex);
       }
     }
-    
-    cleanImageUrl = cleanImageUrl.replace(/\\/g, '/');
-    
+
+    cleanImageUrl = cleanImageUrl.replace(/\\/g, "/");
+
     // Remove leading slashes
-    if (cleanImageUrl.startsWith('/')) {
+    if (cleanImageUrl.startsWith("/")) {
       cleanImageUrl = cleanImageUrl.slice(1);
     }
-    
+
     // Extract just the filename if there's a path
-    const pathParts = cleanImageUrl.split('/');
+    const pathParts = cleanImageUrl.split("/");
     const filename = pathParts[pathParts.length - 1];
-    
+
     // Use the amenity image endpoint
     return `${apiUrl}/fetch-image/amenity/${filename}`;
   };
 
-  // Fetch all features with images
+  // Fetching all features with images
   const fetchAllFeatures = async () => {
     try {
-      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+      const apiUrl = API_BASE_URL.endsWith("/")
+        ? API_BASE_URL.slice(0, -1)
+        : API_BASE_URL;
       const response = await axios.get(`${apiUrl}/feature/get-all`);
       if (Array.isArray(response.data)) {
         setAllFeatures(response.data);
@@ -381,10 +436,12 @@ export default function PropertyDetailPage() {
     }
   };
 
-  // Fetch all nearby benefits with images
+  // Fetching all nearby benefits with images
   const fetchAllNearbyBenefits = async () => {
     try {
-      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+      const apiUrl = API_BASE_URL.endsWith("/")
+        ? API_BASE_URL.slice(0, -1)
+        : API_BASE_URL;
       const response = await axios.get(`${apiUrl}/nearby-benefit/get-all`);
       if (Array.isArray(response.data)) {
         setAllNearbyBenefits(response.data);
@@ -394,15 +451,20 @@ export default function PropertyDetailPage() {
     }
   };
 
-  // Get feature image URL
+  // Function for getting feature image URL
   const getFeatureImageUrl = (featureImageUrl) => {
     if (!featureImageUrl) return null;
-    if (featureImageUrl.startsWith('http://') || featureImageUrl.startsWith('https://')) {
+    if (
+      featureImageUrl.startsWith("http://") ||
+      featureImageUrl.startsWith("https://")
+    ) {
       return featureImageUrl;
     }
-    const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+    const apiUrl = API_BASE_URL.endsWith("/")
+      ? API_BASE_URL.slice(0, -1)
+      : API_BASE_URL;
     let cleanImageUrl = featureImageUrl;
-    
+
     // Handle Windows paths
     if (cleanImageUrl.match(/^[A-Za-z]:[\/\\]/)) {
       const featureIndex = cleanImageUrl.toLowerCase().indexOf("feature");
@@ -410,97 +472,104 @@ export default function PropertyDetailPage() {
         cleanImageUrl = cleanImageUrl.substring(featureIndex);
       }
     }
-    
-    cleanImageUrl = cleanImageUrl.replace(/\\/g, '/');
-    
+
+    cleanImageUrl = cleanImageUrl.replace(/\\/g, "/");
+
     // Remove leading slashes
-    if (cleanImageUrl.startsWith('/')) {
+    if (cleanImageUrl.startsWith("/")) {
       cleanImageUrl = cleanImageUrl.slice(1);
     }
-    
+
     // Extract just the filename if there's a path
-    const pathParts = cleanImageUrl.split('/');
+    const pathParts = cleanImageUrl.split("/");
     const filename = pathParts[pathParts.length - 1];
-    
+
     // Use the feature image endpoint
     return `${apiUrl}/fetch-image/feature/${filename}`;
   };
 
-  // Get nearby benefit image URL
+  // Function for getting nearby benefit image URL
   const getNearbyBenefitImageUrl = (benefitImageUrl) => {
     if (!benefitImageUrl) return null;
-    if (benefitImageUrl.startsWith('http://') || benefitImageUrl.startsWith('https://')) {
+    if (
+      benefitImageUrl.startsWith("http://") ||
+      benefitImageUrl.startsWith("https://")
+    ) {
       return benefitImageUrl;
     }
-    const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+    const apiUrl = API_BASE_URL.endsWith("/")
+      ? API_BASE_URL.slice(0, -1)
+      : API_BASE_URL;
     let cleanImageUrl = benefitImageUrl;
-    
+
     // Handle Windows paths
     if (cleanImageUrl.match(/^[A-Za-z]:[\/\\]/)) {
-      const benefitIndex = cleanImageUrl.toLowerCase().indexOf("nearby-benefit");
+      const benefitIndex = cleanImageUrl
+        .toLowerCase()
+        .indexOf("nearby-benefit");
       if (benefitIndex !== -1) {
         cleanImageUrl = cleanImageUrl.substring(benefitIndex);
       }
     }
-    
-    cleanImageUrl = cleanImageUrl.replace(/\\/g, '/');
-    
+
+    cleanImageUrl = cleanImageUrl.replace(/\\/g, "/");
+
     // Remove leading slashes
-    if (cleanImageUrl.startsWith('/')) {
+    if (cleanImageUrl.startsWith("/")) {
       cleanImageUrl = cleanImageUrl.slice(1);
     }
-    
+
     // Extract just the filename if there's a path
-    const pathParts = cleanImageUrl.split('/');
+    const pathParts = cleanImageUrl.split("/");
     const filename = pathParts[pathParts.length - 1];
-    
+
     // Use the nearby benefit image endpoint
     return `${apiUrl}/fetch-image/nearby-benefit/${filename}`;
   };
 
-  // Get amenities with images for the property
+  // Function for getting amenities with images for the property
   const getPropertyAmenities = () => {
     if (!property || !allAmenities.length) return [];
-    
+
     // Try to match by IDs first
     if (property.amenityIds && property.amenityIds.length > 0) {
-      return allAmenities.filter(amenity => 
-        property.amenityIds.includes(amenity.id)
+      return allAmenities.filter((amenity) =>
+        property.amenityIds.includes(amenity.id),
       );
     }
-    
+
     // Fallback to matching by names
     if (property.amenityNames && property.amenityNames.length > 0) {
-      return allAmenities.filter(amenity => 
-        property.amenityNames.some(name => 
-          name.toLowerCase() === amenity.title?.toLowerCase()
-        )
+      return allAmenities.filter((amenity) =>
+        property.amenityNames.some(
+          (name) => name.toLowerCase() === amenity.title?.toLowerCase(),
+        ),
       );
     }
-    
+
     return [];
   };
 
-  // Get features with images for the property
+  // Function for getting features with images for the property
   const getPropertyFeatures = () => {
     if (!property || !allFeatures.length) return [];
-    
+
     // Try to match by IDs first
     if (property.featureIds && property.featureIds.length > 0) {
-      return allFeatures.filter(feature => 
-        property.featureIds.includes(feature.id)
+      return allFeatures.filter((feature) =>
+        property.featureIds.includes(feature.id),
       );
     }
-    
+
     // Fallback to matching by names
     if (property.featureNames && property.featureNames.length > 0) {
-      return allFeatures.filter(feature => 
-        property.featureNames.some(name => 
-          name.toLowerCase() === feature.title?.toLowerCase()
-        )
+      return allFeatures.filter((feature) =>
+        property.featureNames.some(
+          (name) => name.toLowerCase() === feature.title?.toLowerCase(),
+        ),
       );
     }
-    
+
     return [];
   };
 
@@ -515,26 +584,28 @@ export default function PropertyDetailPage() {
     if (!projectName) return null;
     return projectName
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
   };
 
   // Fetch project details by project name
   const fetchProjectDetails = async () => {
     if (!property || !property.projectName) return;
-    
+
     try {
       setLoadingProject(true);
-      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+      const apiUrl = API_BASE_URL.endsWith("/")
+        ? API_BASE_URL.slice(0, -1)
+        : API_BASE_URL;
       const projectSlug = convertProjectNameToSlug(property.projectName);
-      
+
       if (!projectSlug) {
         setLoadingProject(false);
         return;
       }
 
       const response = await axios.get(`${apiUrl}/projects/get/${projectSlug}`);
-      
+
       if (response.data && response.data.projectName) {
         setProjectDetails(response.data);
       }
@@ -564,8 +635,14 @@ export default function PropertyDetailPage() {
       <div className="container my-5">
         <Alert variant="danger">
           <Alert.Heading>Property Not Found</Alert.Heading>
-          <p>{error || "The property you are looking for does not exist or is not available."}</p>
-          <Button variant="outline-danger" onClick={() => router.push("/properties")}>
+          <p>
+            {error ||
+              "The property you are looking for does not exist or is not available."}
+          </p>
+          <Button
+            variant="outline-danger"
+            onClick={() => router.push("/properties")}
+          >
             Back to Properties
           </Button>
         </Alert>
@@ -573,9 +650,10 @@ export default function PropertyDetailPage() {
     );
   }
 
-  const allImageUrls = property.imageUrls && property.imageUrls.length > 0
-    ? property.imageUrls.map(img => getImageUrl(img)).filter(Boolean)
-    : [];
+  const allImageUrls =
+    property.imageUrls && property.imageUrls.length > 0
+      ? property.imageUrls.map((img) => getImageUrl(img)).filter(Boolean)
+      : [];
 
   const locationParts = [];
   // Address removed - will be viewed elsewhere
@@ -591,15 +669,14 @@ export default function PropertyDetailPage() {
           <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 py-3">
             <div className="flex-grow-1">
               {property.title && (
-                <h1 className="property-header-title mb-2">
-                  {property.title}
-                </h1>
+                <h1 className="property-header-title mb-2">{property.title}</h1>
               )}
               <div className="d-flex align-items-center flex-wrap gap-3 mb-2">
                 <h2 className="property-header-price mb-0">
-                  {formatPrice(property.totalPrice)} 
-                  {getBedroomLabel(property.bedrooms) && ` • ${getBedroomLabel(property.bedrooms)}`}
-                  {property.bathrooms ? ` • ${property.bathrooms} Baths` : ''}
+                  {formatPrice(property.totalPrice)}
+                  {getBedroomLabel(property.bedrooms) &&
+                    ` • ${getBedroomLabel(property.bedrooms)}`}
+                  {property.bathrooms ? ` • ${property.bathrooms} Baths` : ""}
                 </h2>
               </div>
               {locationParts.filter(Boolean).length > 0 && (
@@ -612,50 +689,65 @@ export default function PropertyDetailPage() {
                 {property.reraId && (
                   <div className="rera-status">
                     <span>RERA: </span>
-                    <a href={property.reraState ? `http://${property.reraState.toLowerCase()}-rera.in/projects` : '#'} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={
+                        property.reraState
+                          ? `http://${property.reraState.toLowerCase()}-rera.in/projects`
+                          : "#"
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       {property.reraId}
                     </a>
                   </div>
                 )}
                 {property.status && (
-                  <Badge 
-                    bg={property.status.toLowerCase().includes('ready') ? 'success' : 'warning'}
+                  <Badge
+                    bg={
+                      property.status.toLowerCase().includes("ready")
+                        ? "success"
+                        : "warning"
+                    }
                     className="modern-badge"
                     style={{
-                      background: property.status.toLowerCase().includes('ready') 
-                        ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' 
-                        : 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-                      border: 'none',
-                      padding: '0.5rem 1rem',
-                      borderRadius: '20px',
-                      fontWeight: '600',
-                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                      background: property.status
+                        .toLowerCase()
+                        .includes("ready")
+                        ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
+                        : "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
+                      border: "none",
+                      padding: "0.5rem 1rem",
+                      borderRadius: "20px",
+                      fontWeight: "600",
+                      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
                     }}
                   >
                     {property.status}
                   </Badge>
                 )}
                 {property.transaction && (
-                  <Badge 
+                  <Badge
                     bg="info"
                     className="modern-badge"
                     style={{
-                      background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-                      border: 'none',
-                      padding: '0.5rem 1rem',
-                      borderRadius: '20px',
-                      fontWeight: '600',
-                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                      background:
+                        "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
+                      border: "none",
+                      padding: "0.5rem 1rem",
+                      borderRadius: "20px",
+                      fontWeight: "600",
+                      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
                     }}
                   >
-                    for {property.transaction}
+                    For {property.transaction}
                   </Badge>
                 )}
               </div>
             </div>
             <div className="d-flex flex-column gap-2">
-              <Button 
-                variant="primary" 
+              <Button
+                variant="primary"
                 className="contact-dealer-btn"
                 onClick={() => setShowContactModal(true)}
               >
@@ -664,10 +756,10 @@ export default function PropertyDetailPage() {
               </Button>
             </div>
           </div>
-          
+
           {/* Navigation Tabs */}
           <div className="property-nav-tabs">
-            <button 
+            <button
               className={activeTab === "Overview" ? "active" : ""}
               onClick={() => {
                 setActiveTab("Overview");
@@ -677,7 +769,7 @@ export default function PropertyDetailPage() {
               Overview
             </button>
             {property.projectName && (
-              <button 
+              <button
                 className={activeTab === "Society" ? "active" : ""}
                 onClick={() => {
                   setActiveTab("Society");
@@ -687,7 +779,7 @@ export default function PropertyDetailPage() {
                 Society
               </button>
             )}
-            <button 
+            <button
               className={activeTab === "Price Trends" ? "active" : ""}
               onClick={() => {
                 setActiveTab("Price Trends");
@@ -696,7 +788,7 @@ export default function PropertyDetailPage() {
             >
               Price Trends
             </button>
-            <button 
+            <button
               className={activeTab === "Explore Locality" ? "active" : ""}
               onClick={() => {
                 setActiveTab("Explore Locality");
@@ -705,7 +797,7 @@ export default function PropertyDetailPage() {
             >
               Explore Locality
             </button>
-            <button 
+            <button
               className={activeTab === "Recommendation" ? "active" : ""}
               onClick={() => {
                 setActiveTab("Recommendation");
@@ -748,23 +840,25 @@ export default function PropertyDetailPage() {
                     spaceBetween={0}
                     slidesPerView={1}
                     navigation={allImageUrls.length > 1}
-                    pagination={{ 
+                    pagination={{
                       clickable: true,
-                      type: 'fraction'
+                      type: "fraction",
                     }}
                     zoom={true}
                     className="main-property-swiper"
-                    onSlideChange={(swiper) => setImageIndex(swiper.activeIndex)}
+                    onSlideChange={(swiper) =>
+                      setImageIndex(swiper.activeIndex)
+                    }
                   >
                     {allImageUrls.map((imageUrl, index) => (
                       <SwiperSlide key={index}>
                         <div className="swiper-zoom-container">
                           <Image
                             src={imageUrl}
-                            alt={`${property.title || 'Property'} - Image ${index + 1}`}
+                            alt={`${property.title || "Property"} - Image ${index + 1}`}
                             fill
                             className="property-main-image"
-                            style={{ objectFit: 'cover' }}
+                            style={{ objectFit: "cover" }}
                             unoptimized
                           />
                         </div>
@@ -798,105 +892,113 @@ export default function PropertyDetailPage() {
           <div className="col-lg-7 col-md-12">
             <div className="property-details-hero">
               <h3 className="details-hero-title">Property Details</h3>
-              
+
               {/* Price Section - Highlighted */}
-              <div className="price-highlight-section">
-                <div className="price-main">
-                  <span className="price-label">Price</span>
-                  <span className="price-amount">{formatPrice(property.totalPrice)}{property.totalPrice && property.totalPrice >= 10000000 && '+'}</span>
-                </div>
-                {property.pricePerSqft && (
-                  <div className="price-per-sqft">
-                    {formatPricePerSqft(property.pricePerSqft, true)} per sq.m.
-                    {property.totalPrice && <span className="price-note"> </span>}
+              <div className="card shadow-sm p-3 p-md-4 price-highlight-section">
+                <div className="row g-3 align-items-center">
+                  {/* -------- LEFT: PRICE SECTION -------- */}
+                  <div className="col-md-5">
+                    <div className="mb-2">
+                      <small className="text-muted">Price</small>
+                      <h4 className="fw-bold text-primary mb-1">
+                        {formatPrice(property.totalPrice)}
+                        {property.totalPrice &&
+                          property.totalPrice >= 10000000 &&
+                          "+"}
+                      </h4>
+
+                      {property.pricePerSqft && (
+                        <p className="mb-0 text-secondary">
+                          {formatPricePerSqft(property.pricePerSqft, true)} per
+                          sq.m.
+                        </p>
+                      )}
+                    </div>
                   </div>
-                )}
-                <a href="#" className="price-details-link" onClick={(e) => { e.preventDefault(); setShowPriceDetails(!showPriceDetails); }}>
-                  View Price Details
-                </a>
+
+                  {/* -------- RIGHT: DETAILS SECTION -------- */}
+                  <div className="col-md-7">
+                    <div className="d-flex flex-column gap-2">
+                      {/* Row 1: Area + Configuration */}
+                      <div className="row g-2">
+                        <div className="col-md-6">
+                          <div className="border rounded p-2 bg-light h-100">
+                            <strong>Area</strong>
+                            <div>
+                              {property.plotArea
+                                ? `Plot area ${formatArea(property.plotArea, true)}`
+                                : property.superBuiltUpArea
+                                  ? `Super Built up area ${formatArea(property.superBuiltUpArea, true)}`
+                                  : property.builtUpArea
+                                    ? `Built up area ${formatArea(property.builtUpArea, true)}`
+                                    : property.carpetArea
+                                      ? `Carpet area ${formatArea(property.carpetArea, true)}`
+                                      : "Area not specified"}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="col-md-6">
+                          <div className="border rounded p-2 bg-light h-100">
+                            <strong>Configuration</strong>
+                            <div>
+                              {property.bedrooms || 0} Bedrooms,{" "}
+                              {property.bathrooms || 0} Bathrooms,{" "}
+                              {property.balconies || 0} Balcony
+                              {property.studyRoom && ", Study Room"}
+                              {property.storeRoom && ", Store Room"}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Row 2: Floor + Facing */}
+                      <div className="row g-2">
+                        {property.floorNumber && (
+                          <div className="col-md-6">
+                            <div className="border rounded p-2 bg-light">
+                              <strong>Floor</strong>
+                              <div>
+                                {property.floorNumber}
+                                {property.totalFloors
+                                  ? ` of ${property.totalFloors}`
+                                  : ""}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {property.facing && (
+                          <div className="col-md-6">
+                            <div className="border rounded p-2 bg-light">
+                              <strong>Facing</strong>
+                              <div>{property.facing}</div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Compact Details Table */}
               <div className="details-table-container">
                 <table className="details-table">
                   <tbody>
-                    {/* Area */}
-                    <tr>
-                      <td className="detail-label-cell">
-                        <FontAwesomeIcon icon={faHome} className="detail-table-icon" />
-                        <span>Area</span>
-                      </td>
-                      <td className="detail-value-cell">
-                        {property.plotArea 
-                          ? `Plot area ${formatArea(property.plotArea, true)}`
-                          : property.superBuiltUpArea 
-                          ? `Super Built up area ${formatArea(property.superBuiltUpArea, true)}`
-                          : property.builtUpArea
-                          ? `Built up area ${formatArea(property.builtUpArea, true)}`
-                          : property.carpetArea
-                          ? `Carpet area ${formatArea(property.carpetArea, true)}`
-                          : 'Area not specified'}
-                      </td>
-                    </tr>
-
-                    {/* Configuration */}
-                    <tr>
-                      <td className="detail-label-cell">
-                        <FontAwesomeIcon icon={faBuilding} className="detail-table-icon" />
-                        <span>Configuration</span>
-                      </td>
-                      <td className="detail-value-cell">
-                        {property.bedrooms || 0} Bedrooms, {property.bathrooms || 0} Bathrooms, {property.balconies || 0} Balcony
-                        {property.studyRoom && ', Study Room'}
-                        {property.storeRoom && ', Store Room'}
-                      </td>
-                    </tr>
-
-                    {/* Floor Number */}
-                    {property.floorNumber && (
-                      <tr>
-                        <td className="detail-label-cell">
-                          <FontAwesomeIcon icon={faBuilding} className="detail-table-icon" />
-                          <span>Floor Number</span>
-                        </td>
-                        <td className="detail-value-cell">
-                          {property.floorNumber} {property.totalFloors ? `of ${property.totalFloors}` : ''}
-                        </td>
-                      </tr>
-                    )}
-
-                    {/* Total Floors */}
-                    {property.totalFloors && (
-                      <tr>
-                        <td className="detail-label-cell">
-                          <FontAwesomeIcon icon={faBuilding} className="detail-table-icon" />
-                          <span>Total Floors</span>
-                        </td>
-                        <td className="detail-value-cell">
-                          {property.totalFloors} {property.totalFloors === 1 ? 'Floor' : 'Floors'}
-                        </td>
-                      </tr>
-                    )}
-
-                    {/* Facing */}
-                    {property.facing && (
-                      <tr>
-                        <td className="detail-label-cell">
-                          <FontAwesomeIcon icon={faCompass} className="detail-table-icon" />
-                          <span>Facing</span>
-                        </td>
-                        <td className="detail-value-cell">{property.facing}</td>
-                      </tr>
-                    )}
-
                     {/* Parking */}
                     {property.parking && (
                       <tr>
                         <td className="detail-label-cell">
-                          <FontAwesomeIcon icon={faBuilding} className="detail-table-icon" />
+                          <FontAwesomeIcon
+                            icon={faBuilding}
+                            className="detail-table-icon"
+                          />
                           <span>Parking</span>
                         </td>
-                        <td className="detail-value-cell">{property.parking}</td>
+                        <td className="detail-value-cell">
+                          {property.parking}
+                        </td>
                       </tr>
                     )}
 
@@ -904,11 +1006,15 @@ export default function PropertyDetailPage() {
                     {property.status && (
                       <tr>
                         <td className="detail-label-cell">
-                          <FontAwesomeIcon icon={faBirthdayCake} className="detail-table-icon" />
+                          <FontAwesomeIcon
+                            icon={faBirthdayCake}
+                            className="detail-table-icon"
+                          />
                           <span>Property Status</span>
                         </td>
                         <td className="detail-value-cell">
-                          {property.ageOfConstruction !== null && property.ageOfConstruction !== undefined
+                          {property.ageOfConstruction !== null &&
+                          property.ageOfConstruction !== undefined
                             ? `${property.ageOfConstruction} to ${property.ageOfConstruction + 1} Year Old`
                             : property.status}
                         </td>
@@ -919,10 +1025,15 @@ export default function PropertyDetailPage() {
                     {property.possession && (
                       <tr>
                         <td className="detail-label-cell">
-                          <FontAwesomeIcon icon={faHome} className="detail-table-icon" />
+                          <FontAwesomeIcon
+                            icon={faHome}
+                            className="detail-table-icon"
+                          />
                           <span>Possession</span>
                         </td>
-                        <td className="detail-value-cell">{property.possession}</td>
+                        <td className="detail-value-cell">
+                          {property.possession}
+                        </td>
                       </tr>
                     )}
 
@@ -930,10 +1041,15 @@ export default function PropertyDetailPage() {
                     {property.occupancy && (
                       <tr>
                         <td className="detail-label-cell">
-                          <FontAwesomeIcon icon={faHome} className="detail-table-icon" />
+                          <FontAwesomeIcon
+                            icon={faHome}
+                            className="detail-table-icon"
+                          />
                           <span>Occupancy</span>
                         </td>
-                        <td className="detail-value-cell">{property.occupancy}</td>
+                        <td className="detail-value-cell">
+                          {property.occupancy}
+                        </td>
                       </tr>
                     )}
 
@@ -941,10 +1057,15 @@ export default function PropertyDetailPage() {
                     {property.transaction && (
                       <tr>
                         <td className="detail-label-cell">
-                          <FontAwesomeIcon icon={faRocket} className="detail-table-icon" />
+                          <FontAwesomeIcon
+                            icon={faRocket}
+                            className="detail-table-icon"
+                          />
                           <span>Transaction Type</span>
                         </td>
-                        <td className="detail-value-cell">{property.transaction}</td>
+                        <td className="detail-value-cell">
+                          {property.transaction}
+                        </td>
                       </tr>
                     )}
 
@@ -952,10 +1073,16 @@ export default function PropertyDetailPage() {
                     {property.listingType && (
                       <tr>
                         <td className="detail-label-cell">
-                          <FontAwesomeIcon icon={faBuilding} className="detail-table-icon" />
+                          <FontAwesomeIcon
+                            icon={faBuilding}
+                            className="detail-table-icon"
+                          />
                           <span>Property Type</span>
                         </td>
-                        <td className="detail-value-cell">{property.listingType} {property.subType ? `- ${property.subType}` : ''}</td>
+                        <td className="detail-value-cell">
+                          {property.listingType}{" "}
+                          {property.subType ? `- ${property.subType}` : ""}
+                        </td>
                       </tr>
                     )}
                   </tbody>
@@ -979,9 +1106,7 @@ export default function PropertyDetailPage() {
                 </div>
               )}
               <div className="property-description">
-                <p>
-                  {property.description || "No description available."}
-                </p>
+                <p>{property.description || "No description available."}</p>
               </div>
               {property.additionalNotes && (
                 <div className="mt-3">
@@ -1002,7 +1127,10 @@ export default function PropertyDetailPage() {
                     {property.listingType && (
                       <div className="detail-item">
                         <strong>Property Type:</strong>
-                        <span>{property.listingType} {property.subType ? `- ${property.subType}` : ''}</span>
+                        <span>
+                          {property.listingType}{" "}
+                          {property.subType ? `- ${property.subType}` : ""}
+                        </span>
                       </div>
                     )}
                     {property.transaction && (
@@ -1047,12 +1175,16 @@ export default function PropertyDetailPage() {
                         <span>{property.parking}</span>
                       </div>
                     )}
-                    {property.noticePeriod !== null && property.noticePeriod !== undefined && (
-                      <div className="detail-item">
-                        <strong>Notice Period:</strong>
-                        <span>{property.noticePeriod} {property.noticePeriod === 1 ? 'Month' : 'Months'}</span>
-                      </div>
-                    )}
+                    {property.noticePeriod !== null &&
+                      property.noticePeriod !== undefined && (
+                        <div className="detail-item">
+                          <strong>Notice Period:</strong>
+                          <span>
+                            {property.noticePeriod}{" "}
+                            {property.noticePeriod === 1 ? "Month" : "Months"}
+                          </span>
+                        </div>
+                      )}
                   </div>
                 </div>
                 <div className="col-md-6">
@@ -1060,7 +1192,12 @@ export default function PropertyDetailPage() {
                     {property.floorNumber && (
                       <div className="detail-item">
                         <strong>Floor Number:</strong>
-                        <span>{property.floorNumber} {property.totalFloors ? `of ${property.totalFloors}` : ''}</span>
+                        <span>
+                          {property.floorNumber}{" "}
+                          {property.totalFloors
+                            ? `of ${property.totalFloors}`
+                            : ""}
+                        </span>
                       </div>
                     )}
                     {property.facing && (
@@ -1069,12 +1206,16 @@ export default function PropertyDetailPage() {
                         <span>{property.facing}</span>
                       </div>
                     )}
-                    {property.ageOfConstruction !== null && property.ageOfConstruction !== undefined && (
-                      <div className="detail-item">
-                        <strong>Property Age:</strong>
-                        <span>{property.ageOfConstruction} to {property.ageOfConstruction + 1} Year Old</span>
-                      </div>
-                    )}
+                    {property.ageOfConstruction !== null &&
+                      property.ageOfConstruction !== undefined && (
+                        <div className="detail-item">
+                          <strong>Property Age:</strong>
+                          <span>
+                            {property.ageOfConstruction} to{" "}
+                            {property.ageOfConstruction + 1} Year Old
+                          </span>
+                        </div>
+                      )}
                     {property.maintenanceCharges && (
                       <div className="detail-item">
                         <strong>Maintenance Charges:</strong>
@@ -1096,7 +1237,12 @@ export default function PropertyDetailPage() {
                     {property.virtualTour && (
                       <div className="detail-item">
                         <strong>Virtual Tour:</strong>
-                        <a href={property.virtualTour} target="_blank" rel="noopener noreferrer" className="text-primary">
+                        <a
+                          href={property.virtualTour}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary"
+                        >
                           View Virtual Tour
                         </a>
                       </div>
@@ -1109,57 +1255,75 @@ export default function PropertyDetailPage() {
             {/* Amenities Section */}
             {(() => {
               const propertyAmenities = getPropertyAmenities();
-              return propertyAmenities.length > 0 || (property.amenityNames && property.amenityNames.length > 0) ? (
+              return propertyAmenities.length > 0 ||
+                (property.amenityNames && property.amenityNames.length > 0) ? (
                 <div className="property-section mt-4">
                   <div className="d-flex align-items-center justify-content-between mb-3">
                     <h4 className="section-subtitle mb-0">Amenities</h4>
-                    <OverlayTrigger
-                      placement="top"
-                      overlay={AmenitiesTooltip}
-                    >
-                      <FontAwesomeIcon 
-                        icon={faCircleInfo} 
+                    <OverlayTrigger placement="top" overlay={AmenitiesTooltip}>
+                      <FontAwesomeIcon
+                        icon={faCircleInfo}
                         className="info-icon-section"
-                        style={{ cursor: 'help', color: '#6c757d', fontSize: '0.85rem' }}
+                        style={{
+                          cursor: "help",
+                          color: "#6c757d",
+                          fontSize: "0.85rem",
+                        }}
                       />
                     </OverlayTrigger>
                   </div>
                   <div className="amenities-grid">
-                    {propertyAmenities.length > 0 ? (
-                      propertyAmenities.map((amenity, index) => {
-                        const imageUrl = getAmenityImageUrl(amenity.amenityImageUrl);
-                        return (
-                          <div key={amenity.id || index} className="amenity-item">
-                            {imageUrl ? (
-                              <div className="amenity-image-wrapper">
-                                <Image
-                                  src={imageUrl}
-                                  alt={amenity.altTag || amenity.title || 'Amenity'}
-                                  width={30}
-                                  height={30}
-                                  className="amenity-image"
-                                  unoptimized
-                                />
-                              </div>
-                            ) : (
-                              <div className="amenity-icon-wrapper">
-                                <FontAwesomeIcon icon={faCheck} className="amenity-icon" />
-                              </div>
-                            )}
-                            <span className="amenity-title">{amenity.title || property.amenityNames?.[index]}</span>
+                    {propertyAmenities.length > 0
+                      ? propertyAmenities.map((amenity, index) => {
+                          const imageUrl = getAmenityImageUrl(
+                            amenity.amenityImageUrl,
+                          );
+                          return (
+                            <div
+                              key={amenity.id || index}
+                              className="amenity-item"
+                            >
+                              {imageUrl ? (
+                                <div className="amenity-image-wrapper">
+                                  <Image
+                                    src={imageUrl}
+                                    alt={
+                                      amenity.altTag ||
+                                      amenity.title ||
+                                      "Amenity"
+                                    }
+                                    width={30}
+                                    height={30}
+                                    className="amenity-image"
+                                    unoptimized
+                                  />
+                                </div>
+                              ) : (
+                                <div className="amenity-icon-wrapper">
+                                  <FontAwesomeIcon
+                                    icon={faCheck}
+                                    className="amenity-icon"
+                                  />
+                                </div>
+                              )}
+                              <span className="amenity-title">
+                                {amenity.title ||
+                                  property.amenityNames?.[index]}
+                              </span>
+                            </div>
+                          );
+                        })
+                      : property.amenityNames.map((amenity, index) => (
+                          <div key={index} className="amenity-item">
+                            <div className="amenity-icon-wrapper">
+                              <FontAwesomeIcon
+                                icon={faCheck}
+                                className="amenity-icon"
+                              />
+                            </div>
+                            <span className="amenity-title">{amenity}</span>
                           </div>
-                        );
-                      })
-                    ) : (
-                      property.amenityNames.map((amenity, index) => (
-                        <div key={index} className="amenity-item">
-                          <div className="amenity-icon-wrapper">
-                            <FontAwesomeIcon icon={faCheck} className="amenity-icon" />
-                          </div>
-                          <span className="amenity-title">{amenity}</span>
-                        </div>
-                      ))
-                    )}
+                        ))}
                   </div>
                 </div>
               ) : null;
@@ -1168,57 +1332,77 @@ export default function PropertyDetailPage() {
             {/* Features Section */}
             {(() => {
               const propertyFeatures = getPropertyFeatures();
-              return propertyFeatures.length > 0 || (property.featureNames && property.featureNames.length > 0) ? (
+              return propertyFeatures.length > 0 ||
+                (property.featureNames && property.featureNames.length > 0) ? (
                 <div className="property-section mt-4">
                   <div className="d-flex align-items-center justify-content-between mb-3">
-                    <h4 className="section-subtitle mb-0">Residential Features</h4>
-                    <OverlayTrigger
-                      placement="top"
-                      overlay={FeaturesTooltip}
-                    >
-                      <FontAwesomeIcon 
-                        icon={faCircleInfo} 
+                    <h4 className="section-subtitle mb-0">
+                      Residential Features
+                    </h4>
+                    <OverlayTrigger placement="top" overlay={FeaturesTooltip}>
+                      <FontAwesomeIcon
+                        icon={faCircleInfo}
                         className="info-icon-section"
-                        style={{ cursor: 'help', color: '#6c757d', fontSize: '0.85rem' }}
+                        style={{
+                          cursor: "help",
+                          color: "#6c757d",
+                          fontSize: "0.85rem",
+                        }}
                       />
                     </OverlayTrigger>
                   </div>
                   <div className="amenities-grid">
-                    {propertyFeatures.length > 0 ? (
-                      propertyFeatures.map((feature, index) => {
-                        const imageUrl = getFeatureImageUrl(feature.iconImageUrl);
-                        return (
-                          <div key={feature.id || index} className="amenity-item">
-                            {imageUrl ? (
-                              <div className="amenity-image-wrapper">
-                                <Image
-                                  src={imageUrl}
-                                  alt={feature.altTag || feature.title || 'Feature'}
-                                  width={60}
-                                  height={60}
-                                  className="amenity-image"
-                                  unoptimized
-                                />
-                              </div>
-                            ) : (
-                              <div className="amenity-icon-wrapper">
-                                <FontAwesomeIcon icon={faCheck} className="amenity-icon" />
-                              </div>
-                            )}
-                            <span className="amenity-title">{feature.title || property.featureNames?.[index]}</span>
+                    {propertyFeatures.length > 0
+                      ? propertyFeatures.map((feature, index) => {
+                          const imageUrl = getFeatureImageUrl(
+                            feature.iconImageUrl,
+                          );
+                          return (
+                            <div
+                              key={feature.id || index}
+                              className="amenity-item"
+                            >
+                              {imageUrl ? (
+                                <div className="amenity-image-wrapper">
+                                  <Image
+                                    src={imageUrl}
+                                    alt={
+                                      feature.altTag ||
+                                      feature.title ||
+                                      "Feature"
+                                    }
+                                    width={60}
+                                    height={60}
+                                    className="amenity-image"
+                                    unoptimized
+                                  />
+                                </div>
+                              ) : (
+                                <div className="amenity-icon-wrapper">
+                                  <FontAwesomeIcon
+                                    icon={faCheck}
+                                    className="amenity-icon"
+                                  />
+                                </div>
+                              )}
+                              <span className="amenity-title">
+                                {feature.title ||
+                                  property.featureNames?.[index]}
+                              </span>
+                            </div>
+                          );
+                        })
+                      : property.featureNames.map((feature, index) => (
+                          <div key={index} className="amenity-item">
+                            <div className="amenity-icon-wrapper">
+                              <FontAwesomeIcon
+                                icon={faCheck}
+                                className="amenity-icon"
+                              />
+                            </div>
+                            <span className="amenity-title">{feature}</span>
                           </div>
-                        );
-                      })
-                    ) : (
-                      property.featureNames.map((feature, index) => (
-                        <div key={index} className="amenity-item">
-                          <div className="amenity-icon-wrapper">
-                            <FontAwesomeIcon icon={faCheck} className="amenity-icon" />
-                          </div>
-                          <span className="amenity-title">{feature}</span>
-                        </div>
-                      ))
-                    )}
+                        ))}
                   </div>
                 </div>
               ) : null;
@@ -1235,23 +1419,38 @@ export default function PropertyDetailPage() {
                       placement="top"
                       overlay={NearbyBenefitsTooltip}
                     >
-                      <FontAwesomeIcon 
-                        icon={faCircleInfo} 
+                      <FontAwesomeIcon
+                        icon={faCircleInfo}
                         className="info-icon-section"
-                        style={{ cursor: 'help', color: '#6c757d', fontSize: '0.85rem' }}
+                        style={{
+                          cursor: "help",
+                          color: "#6c757d",
+                          fontSize: "0.85rem",
+                        }}
                       />
                     </OverlayTrigger>
                   </div>
                   <div className="amenities-grid">
                     {propertyNearbyBenefits.map((benefit, index) => {
                       // Get the full benefit details from allNearbyBenefits
-                      const fullBenefit = allNearbyBenefits.find(b => b.id === benefit.id);
-                      const benefitIcon = benefit.benefitIcon || fullBenefit?.benefitIcon;
-                      const imageUrl = benefitIcon ? getNearbyBenefitImageUrl(benefitIcon) : null;
-                      const benefitName = benefit.benefitName || fullBenefit?.benefitName || 'Nearby Benefit';
-                      const distance = benefit.distance ? `~ ${benefit.distance} KM` : '';
-                      const altTag = benefit.altTag || fullBenefit?.altTag || benefitName;
-                      
+                      const fullBenefit = allNearbyBenefits.find(
+                        (b) => b.id === benefit.id,
+                      );
+                      const benefitIcon =
+                        benefit.benefitIcon || fullBenefit?.benefitIcon;
+                      const imageUrl = benefitIcon
+                        ? getNearbyBenefitImageUrl(benefitIcon)
+                        : null;
+                      const benefitName =
+                        benefit.benefitName ||
+                        fullBenefit?.benefitName ||
+                        "Nearby Benefit";
+                      const distance = benefit.distance
+                        ? `~ ${benefit.distance} KM`
+                        : "";
+                      const altTag =
+                        benefit.altTag || fullBenefit?.altTag || benefitName;
+
                       return (
                         <div key={benefit.id || index} className="amenity-item">
                           {imageUrl ? (
@@ -1267,13 +1466,19 @@ export default function PropertyDetailPage() {
                             </div>
                           ) : (
                             <div className="amenity-icon-wrapper">
-                              <FontAwesomeIcon icon={faMapMarkerAlt} className="amenity-icon" />
+                              <FontAwesomeIcon
+                                icon={faMapMarkerAlt}
+                                className="amenity-icon"
+                              />
                             </div>
                           )}
                           <div className="d-flex flex-column align-items-center">
                             <span className="amenity-title">{benefitName}</span>
                             {distance && (
-                              <span className="text-muted small mt-1" style={{ fontSize: '0.75rem' }}>
+                              <span
+                                className="text-muted small mt-1"
+                                style={{ fontSize: "0.75rem" }}
+                              >
                                 {distance}
                               </span>
                             )}
@@ -1301,14 +1506,17 @@ export default function PropertyDetailPage() {
                     {/* Display builder from project details if available, otherwise from property */}
                     {(projectDetails?.builderName || property.builderName) && (
                       <span className="ms-2">
-                        Developed / built by {projectDetails?.builderName || property.builderName}
+                        Developed / built by{" "}
+                        {projectDetails?.builderName || property.builderName}
                       </span>
                     )}
                     {/* Display builder details if available from project */}
                     {projectDetails?.builderDetails && (
                       <div className="mt-2">
                         <p className="text-muted small mb-1">
-                          <strong>Builder:</strong> {projectDetails.builderDetails.builderName || projectDetails.builderName}
+                          <strong>Builder:</strong>{" "}
+                          {projectDetails.builderDetails.builderName ||
+                            projectDetails.builderName}
                         </p>
                         {projectDetails.builderDetails.builderDescription && (
                           <p className="text-muted small mb-0">
@@ -1332,22 +1540,28 @@ export default function PropertyDetailPage() {
                     <div className="mt-3">
                       {projectDetails.projectType && (
                         <p className="text-muted small mb-1">
-                          <strong>Project Type:</strong> {projectDetails.projectType}
+                          <strong>Project Type:</strong>{" "}
+                          {projectDetails.projectType}
                         </p>
                       )}
                       {projectDetails.totalUnits && (
                         <p className="text-muted small mb-1">
-                          <strong>Total Units:</strong> {projectDetails.totalUnits}
+                          <strong>Total Units:</strong>{" "}
+                          {projectDetails.totalUnits}
                         </p>
                       )}
                       {projectDetails.constructionStatus && (
                         <p className="text-muted small mb-1">
-                          <strong>Construction Status:</strong> {projectDetails.constructionStatus}
+                          <strong>Construction Status:</strong>{" "}
+                          {projectDetails.constructionStatus}
                         </p>
                       )}
                       {projectDetails.possessionDate && (
                         <p className="text-muted small mb-1">
-                          <strong>Possession Date:</strong> {new Date(projectDetails.possessionDate).toLocaleDateString()}
+                          <strong>Possession Date:</strong>{" "}
+                          {new Date(
+                            projectDetails.possessionDate,
+                          ).toLocaleDateString()}
                         </p>
                       )}
                     </div>
@@ -1355,7 +1569,9 @@ export default function PropertyDetailPage() {
                   {loadingProject && (
                     <div className="mt-2">
                       <Spinner size="sm" animation="border" />
-                      <span className="ms-2 text-muted small">Loading project details...</span>
+                      <span className="ms-2 text-muted small">
+                        Loading project details...
+                      </span>
                     </div>
                   )}
                 </div>
@@ -1372,37 +1588,39 @@ export default function PropertyDetailPage() {
 
             {/* Contact Information Section */}
 
-
             {/* Sponsored Properties Section */}
             {relatedProperties.length > 0 && (
               <div className="property-section mt-4">
                 <h4 className="section-subtitle">Sponsored Properties</h4>
                 <div className="sponsored-properties">
                   {relatedProperties.slice(0, 2).map((related) => {
-                    const relatedImageUrl = related.imageUrls && related.imageUrls.length > 0
-                      ? getImageUrl(related.imageUrls[0])
-                      : null;
+                    const relatedImageUrl =
+                      related.imageUrls && related.imageUrls.length > 0
+                        ? getImageUrl(related.imageUrls[0])
+                        : null;
                     return (
                       <div key={related.id} className="sponsored-property-card">
                         {relatedImageUrl && (
                           <Image
                             src={relatedImageUrl}
-                            alt={related.title || 'Property'}
+                            alt={related.title || "Property"}
                             width={200}
                             height={150}
-                            style={{ objectFit: 'cover', borderRadius: '8px' }}
+                            style={{ objectFit: "cover", borderRadius: "8px" }}
                             unoptimized
                           />
                         )}
                         <div className="sponsored-property-info">
-                          <h6>{related.title || 'Property'}</h6>
+                          <h6>{related.title || "Property"}</h6>
                           <p className="text-muted small">
-                            {related.locality || ''} {related.city || ''}
+                            {related.locality || ""} {related.city || ""}
                           </p>
                           <p className="text-muted small">
                             {getBedroomLabel(related.bedrooms)} Flats
                           </p>
-                          <p className="price-text">{formatPrice(related.totalPrice)} onwards</p>
+                          <p className="price-text">
+                            {formatPrice(related.totalPrice)} onwards
+                          </p>
                         </div>
                       </div>
                     );
@@ -1418,17 +1636,22 @@ export default function PropertyDetailPage() {
               </div>
               <div className="price-trends-info">
                 <p className="text-muted">
-                  Price trends and market analysis for this property will be displayed here.
+                  Price trends and market analysis for this property will be
+                  displayed here.
                 </p>
                 {property.totalPrice && property.pricePerSqft && (
                   <div className="price-info-card mt-3">
                     <div className="d-flex justify-content-between align-items-center mb-2">
                       <span className="text-muted">Current Price:</span>
-                      <strong className="text-primary">{formatPrice(property.totalPrice)}</strong>
+                      <strong className="text-primary">
+                        {formatPrice(property.totalPrice)}
+                      </strong>
                     </div>
                     <div className="d-flex justify-content-between align-items-center">
                       <span className="text-muted">Price per sq.ft:</span>
-                      <strong>{formatPricePerSqft(property.pricePerSqft)}</strong>
+                      <strong>
+                        {formatPricePerSqft(property.pricePerSqft)}
+                      </strong>
                     </div>
                   </div>
                 )}
@@ -1444,44 +1667,60 @@ export default function PropertyDetailPage() {
                 {locationParts.filter(Boolean).length > 0 && (
                   <div className="locality-details mb-3">
                     <p className="mb-2">
-                      <strong>Location:</strong> {locationParts.filter(Boolean).join(", ")}
+                      <strong>Location:</strong>{" "}
+                      {locationParts.filter(Boolean).join(", ")}
                     </p>
                     {property.latitude && property.longitude && (
-                      <a 
+                      <a
                         href={`https://www.google.com/maps?q=${property.latitude},${property.longitude}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn btn-outline-primary btn-sm"
                       >
-                        <FontAwesomeIcon icon={faMapMarkerAlt} className="me-2" />
+                        <FontAwesomeIcon
+                          icon={faMapMarkerAlt}
+                          className="me-2"
+                        />
                         View on Map
                       </a>
                     )}
                   </div>
                 )}
                 <p className="text-muted">
-                  Explore the locality, nearby amenities, schools, hospitals, and other facilities in this area.
+                  Explore the locality, nearby amenities, schools, hospitals,
+                  and other facilities in this area.
                 </p>
               </div>
             </div>
 
             {/* Owner Properties Section - Recommendation */}
             {relatedProperties.length > 0 && (
-              <div id="recommendation-section" className="property-section mt-4">
+              <div
+                id="recommendation-section"
+                className="property-section mt-4"
+              >
                 <div className="d-flex align-items-center justify-content-between mb-3">
-                  <h4 className="section-subtitle mb-0">Owner Properties Available Only on MPF</h4>
+                  <h4 className="section-subtitle mb-0">
+                    Owner Properties Available Only on MPF
+                  </h4>
                 </div>
                 <div className="owner-properties-grid">
                   {relatedProperties.map((related) => {
-                    const relatedImageUrl = related.imageUrls && related.imageUrls.length > 0
-                      ? getImageUrl(related.imageUrls[0])
-                      : null;
+                    const relatedImageUrl =
+                      related.imageUrls && related.imageUrls.length > 0
+                        ? getImageUrl(related.imageUrls[0])
+                        : null;
                     const relatedSlug = related.title
-                      ? related.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + related.id
+                      ? related.title
+                          .toLowerCase()
+                          .replace(/[^a-z0-9]+/g, "-")
+                          .replace(/(^-|-$)/g, "") +
+                        "-" +
+                        related.id
                       : related.id.toString();
                     return (
-                      <Link 
-                        key={related.id} 
+                      <Link
+                        key={related.id}
                         href={`/properties/${relatedSlug}`}
                         className="owner-property-card"
                       >
@@ -1489,29 +1728,37 @@ export default function PropertyDetailPage() {
                           {relatedImageUrl ? (
                             <Image
                               src={relatedImageUrl}
-                              alt={related.title || 'Property'}
+                              alt={related.title || "Property"}
                               fill
-                              style={{ objectFit: 'cover' }}
+                              style={{ objectFit: "cover" }}
                               unoptimized
                             />
                           ) : (
-                            <div className="placeholder-image-small">No Image</div>
-                          )}
-                          {related.imageUrls && related.imageUrls.length > 0 && (
-                            <div className="image-count-badge">
-                              {related.imageUrls.length}+ Photos
+                            <div className="placeholder-image-small">
+                              No Image
                             </div>
                           )}
+                          {related.imageUrls &&
+                            related.imageUrls.length > 0 && (
+                              <div className="image-count-badge">
+                                {related.imageUrls.length}+ Photos
+                              </div>
+                            )}
                         </div>
                         <div className="owner-property-details">
                           <p className="price-text mb-1">
-                            {formatPrice(related.totalPrice)} | {formatArea(related.carpetArea || related.builtUpArea)}
+                            {formatPrice(related.totalPrice)} |{" "}
+                            {formatArea(
+                              related.carpetArea || related.builtUpArea,
+                            )}
                           </p>
                           <p className="location-text small">
-                            {related.locality || ''} {related.city || ''}
+                            {related.locality || ""} {related.city || ""}
                           </p>
                           {related.status && (
-                            <Badge bg="success" className="mt-1">{related.status}</Badge>
+                            <Badge bg="success" className="mt-1">
+                              {related.status}
+                            </Badge>
                           )}
                         </div>
                       </Link>
@@ -1525,8 +1772,8 @@ export default function PropertyDetailPage() {
       </div>
 
       {/* Contact Form Modal - Compact Modern Design */}
-      <Modal 
-        show={showContactModal} 
+      <Modal
+        show={showContactModal}
         onHide={() => {
           setShowContactModal(false);
           setSubmitError(null);
@@ -1551,17 +1798,28 @@ export default function PropertyDetailPage() {
                 <FontAwesomeIcon icon={faCheck} />
               </div>
               <h5 className="mb-2">Thank You!</h5>
-              <p className="mb-0">Your inquiry has been submitted. The owner will contact you soon.</p>
+              <p className="mb-0">
+                Your inquiry has been submitted. The owner will contact you
+                soon.
+              </p>
             </div>
           ) : (
-            <Form onSubmit={handleContactSubmit} className="modern-contact-form-compact">
+            <Form
+              onSubmit={handleContactSubmit}
+              className="modern-contact-form-compact"
+            >
               {submitError && (
-                <Alert variant="danger" dismissible onClose={() => setSubmitError(null)} className="modern-alert-compact mb-3">
+                <Alert
+                  variant="danger"
+                  dismissible
+                  onClose={() => setSubmitError(null)}
+                  className="modern-alert-compact mb-3"
+                >
                   <FontAwesomeIcon icon={faXmark} className="me-2" />
                   {submitError}
                 </Alert>
               )}
-              
+
               <Form.Group className="modern-form-group-compact">
                 <Form.Label className="modern-form-label-compact">
                   Name <span className="required-star">*</span>
@@ -1608,7 +1866,9 @@ export default function PropertyDetailPage() {
               </Form.Group>
 
               <Form.Group className="modern-form-group-compact">
-                <Form.Label className="modern-form-label-compact">Message</Form.Label>
+                <Form.Label className="modern-form-label-compact">
+                  Message
+                </Form.Label>
                 <Form.Control
                   as="textarea"
                   rows={2}
@@ -1621,8 +1881,8 @@ export default function PropertyDetailPage() {
               </Form.Group>
 
               <div className="form-footer-compact">
-                <Button 
-                  variant="outline-secondary" 
+                <Button
+                  variant="outline-secondary"
                   onClick={() => {
                     setShowContactModal(false);
                     setSubmitError(null);
@@ -1634,8 +1894,8 @@ export default function PropertyDetailPage() {
                 >
                   Cancel
                 </Button>
-                <Button 
-                  variant="primary" 
+                <Button
+                  variant="primary"
                   type="submit"
                   disabled={submitting}
                   className="modern-submit-btn-compact"
@@ -1661,4 +1921,3 @@ export default function PropertyDetailPage() {
     </div>
   );
 }
-

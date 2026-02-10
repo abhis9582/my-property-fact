@@ -14,6 +14,14 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+.header.properties-header {
+  background: linear-gradient(90deg, #071E13 0%, #15231C 50%, #0B613D 100%);
+}
+
+.conditional-header {
+  background: linear-gradient(90deg, #071E13 0%, #15231C 50%, #0B613D 100%) !important;
+}
+
 .fixed-header {
   position: fixed;
   backdrop-filter: blur(500px) saturate(140%);

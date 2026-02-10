@@ -51,7 +51,7 @@ export default function LeadsPage() {
       const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
       const token = document.cookie.split('; ').find(row => row.startsWith('token='))?.split('=')[1];
       
-      const response = await axios.get(`${apiUrl}/enquiry/get-all`, {
+      const response = await axios.get(`${apiUrl}/enquiry/get-user-leads`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
 

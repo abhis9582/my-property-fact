@@ -33,7 +33,7 @@ export default function ListingDetailPage() {
     try {
       setLoading(true);
       setError(null);
-      const token = Cookies.get("authToken") || Cookies.get("token");
+      const token = Cookies.get("token");
       
       if (!token) {
         setError("Please login to view property details");

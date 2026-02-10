@@ -85,12 +85,10 @@ export const UserProvider = ({ children }) => {
     Cookies.remove("userData", { path: "/" });
     Cookies.remove("token", { path: "/" });
     Cookies.remove("refreshToken", { path: "/" });
-    Cookies.remove("authToken", { path: "/" });
     // Clear any localStorage data if present
     if (typeof window !== "undefined") {
       localStorage.removeItem("userData");
       localStorage.removeItem("token");
-      localStorage.removeItem("authToken");
     }
   };
 

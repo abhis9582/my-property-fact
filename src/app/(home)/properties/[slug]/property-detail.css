@@ -3,6 +3,7 @@
   background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
   min-height: 100vh;
   padding-bottom: 3rem;
+  margin-top: 75px;
 }
 
 /* Smooth Animations */
@@ -191,7 +192,6 @@ html {
 .property-nav-tabs button:hover {
   color: #ffffff;
   background: rgba(207, 171, 90, 0.25);
-  transform: translateY(-2px);
 }
 
 .property-nav-tabs button.active {
@@ -394,6 +394,7 @@ html {
   margin-bottom: 1rem;
   text-align: center;
   flex-shrink: 0;
+  display: flex;
 }
 
 .price-main {
@@ -483,7 +484,6 @@ html {
   font-weight: 600;
   color: #495057;
   font-size: 0.85rem;
-  width: 40%;
   vertical-align: middle;
   font-family: var(--text-font, "gotham-light", sans-serif);
   display: flex;

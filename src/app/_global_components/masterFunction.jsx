@@ -147,9 +147,9 @@ export const isCityTypeUrl = async (slug) => {
 };
 
 // fetching blogs list from api
-export const fetchBlogs = cache(async (page, size) => {
+export const fetchBlogs = cache(async (page, size, search="") => {
   const res = await fetch(
-    `${apiUrl}blog/get?page=${page}&size=${size}&from=${"blog"}`,
+    `${apiUrl}blog/get?page=${page}&size=${size}&from=${"blog"}&search=${search}`,
     {
       next: { revalidate: 60 },
     }

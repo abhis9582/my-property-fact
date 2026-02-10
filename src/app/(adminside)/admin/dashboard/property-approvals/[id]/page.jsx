@@ -44,7 +44,7 @@ export default function AdminPropertyDetailPage() {
     try {
       setLoading(true);
       setError(null);
-      const token = Cookies.get("authToken") || Cookies.get("token");
+      const token = Cookies.get("token");
       
       if (!token) {
         setError("Please login to view property details");
@@ -125,7 +125,7 @@ export default function AdminPropertyDetailPage() {
 
     try {
       setProcessing(true);
-      const token = Cookies.get("authToken") || Cookies.get("token");
+      const token = Cookies.get("token");
       const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
       
       const response = await axios.post(
@@ -161,7 +161,7 @@ export default function AdminPropertyDetailPage() {
 
     try {
       setProcessing(true);
-      const token = Cookies.get("authToken") || Cookies.get("token");
+      const token = Cookies.get("token");
       const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
       
       const response = await axios.post(
