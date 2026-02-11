@@ -584,9 +584,9 @@ export default function PropertyDetailPage() {
   if (property.pincode) locationParts.push(property.pincode);
 
   return (
-    <div className="property-detail-page">
+    <div className="property-detail-page mt-5">
       {/* Header Section */}
-      <div className="property-header-section">
+      <div className="property-header-section mt-5 pt-4">
         <div className="container">
           <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 py-3">
             <div className="flex-grow-1">

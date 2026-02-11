@@ -252,7 +252,10 @@ export default function EldecoCamelotPage() {
 
   return (
     <>
-      {pathParam === "2" && (
+      {(pathParam === "4" ||
+        pathParam === "5" ||
+        pathParam === "6" ||
+        pathParam === "7") && (
         <>
           <Script
             src="https://www.googletagmanager.com/gtag/js?id=AW-17892647835"
