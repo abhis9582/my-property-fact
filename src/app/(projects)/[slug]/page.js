@@ -13,6 +13,7 @@ import MasterBHKProjectsPage from "@/app/_global_components/bhk-components/maste
 import ProjectListByFloorType from "@/app/_global_components/floor-type/projectListByFloorType";
 import NotFound from "@/app/not-found";
 import FeaturedPage from "@/app/(home)/components/home/featured/page";
+import NewFooterDesign from "@/app/(home)/components/footer/NewFooterDesign";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
@@ -61,11 +62,8 @@ export default async function PropertyPage({ params, searchParams }) {
       fetchAllProjects(),
     ]);
   const isFloorTypeSlug = await isFloorTypeUrl(slug);
-  console.log("floor type", isFloorTypeSlug);
   const isProjectSlug = await checkIfProjectSlug(slug);
-  console.log("project type", isProjectSlug);
   const isCitySlug = await isCityTypeUrl(slug);
-  console.log("city type", isCitySlug);
 
   const similarProject = featuredProjects.filter(
               (item) =>
@@ -92,7 +90,8 @@ export default async function PropertyPage({ params, searchParams }) {
             type={'Similar'}
           />
         </div>
-        <Footer cityList={cityList} projectTypes={projectTypesList} />
+        {/* <Footer cityList={cityList} projectTypes={projectTypesList} /> */}
+        <NewFooterDesign cityList={cityList} />
       </>
     );
   } else {

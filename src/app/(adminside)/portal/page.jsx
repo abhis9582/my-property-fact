@@ -11,7 +11,7 @@ export default function PortalSignInPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("signin");
   const [formData, setFormData] = useState({
-    phoneNumber: "",
+    email: "",
     otp: "",
     fullName: "",
   });
@@ -101,9 +101,8 @@ export default function PortalSignInPage() {
       return;
     }
 
-    const phoneDigits = formData.phoneNumber.replace(/\D/g, "");
-    if (phoneDigits.length !== 10) {
-      setError("Phone number must be exactly 10 digits");
+    if (!validateEmail(formData.email)) {
+      setError("Please enter a valid email address");
       return;
     }
 
@@ -150,7 +149,7 @@ export default function PortalSignInPage() {
 
     try {
       const requestData = {
-        phoneNumber: formData.phoneNumber,
+        email: formData.email,
         otp: formData.otp,
       };
 
@@ -191,7 +190,7 @@ export default function PortalSignInPage() {
           });
         }
 
-        setFormData({ phoneNumber: "", otp: "", fullName: "" });
+        setFormData({ email: "", otp: "", fullName: "" });
         setShowOTP(false);
         setReceivedOTP("");
 
@@ -213,20 +212,10 @@ export default function PortalSignInPage() {
   // Handling input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
-    if (name === "phoneNumber") {
-      const digitsOnly = value.replace(/\D/g, "");
-      const limitedValue = digitsOnly.slice(0, 10);
-      setFormData((prev) => ({
-        ...prev,
-        [name]: limitedValue,
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
     setError("");
   };
 
@@ -235,7 +224,7 @@ export default function PortalSignInPage() {
     setActiveTab(tab);
     setError("");
     setShowOTP(false);
-    setFormData({ phoneNumber: "", otp: "", fullName: "" });
+    setFormData({ email: "", otp: "", fullName: "" });
   };
 
   useEffect(() => {
@@ -360,28 +349,21 @@ export default function PortalSignInPage() {
                 {!showOTP ? (
                   <>
                     <div className="phone-input-group">
-                      <label className="input-label-text">Phone Number</label>
-                      <div className="phone-input-wrapper">
-                        <div className="country-code">
-                          <span className="flag-icon">🇮🇳</span>
-                          <span className="code-text">(91)</span>
-                        </div>
-                        <input
-                          type="tel"
-                          name="phoneNumber"
-                          value={formData.phoneNumber}
-                          onChange={handleInputChange}
-                          placeholder="10 digit phone number"
-                          maxLength={10}
-                          disabled={isLoading}
-                          className="phone-input-field"
-                        />
-                      </div>
+                      <label className="input-label-text">Email Address</label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="Enter your email address"
+                        disabled={isLoading}
+                        className="phone-input-field"
+                      />
                     </div>
 
                     <button
                       className="primary-action-button"
-                      onClick={() => handlePhoneAuth(false)}
+                      onClick={() => handleEmailAuth(false)}
                       disabled={isLoading}
                     >
                       {isLoading ? (
@@ -466,7 +448,7 @@ export default function PortalSignInPage() {
                       }}
                       disabled={isLoading}
                     >
-                      Change Phone Number
+                      Change Email Address
                     </button>
                   </>
                 )}
@@ -510,28 +492,21 @@ export default function PortalSignInPage() {
                     </div>
 
                     <div className="phone-input-group">
-                      <label className="input-label-text">Phone Number</label>
-                      <div className="phone-input-wrapper">
-                        <div className="country-code">
-                          <span className="flag-icon">🇮🇳</span>
-                          <span className="code-text">(91)</span>
-                        </div>
-                        <input
-                          type="tel"
-                          name="phoneNumber"
-                          value={formData.phoneNumber}
-                          onChange={handleInputChange}
-                          placeholder="10 digit phone number"
-                          maxLength={10}
-                          disabled={isLoading}
-                          className="phone-input-field"
-                        />
-                      </div>
+                      <label className="input-label-text">Email Address</label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="Enter your email address"
+                        disabled={isLoading}
+                        className="phone-input-field"
+                      />
                     </div>
 
                     <button
                       className="primary-action-button"
-                      onClick={() => handlePhoneAuth(true)}
+                      onClick={() => handleEmailAuth(true)}
                       disabled={isLoading}
                     >
                       {isLoading ? (
@@ -616,7 +591,7 @@ export default function PortalSignInPage() {
                       }}
                       disabled={isLoading}
                     >
-                      Change Phone Number
+                      Change Email Address
                     </button>
                   </>
                 )}

@@ -22,6 +22,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
   const isBuilderRoute = pathname.startsWith("/builder");
   const isProjectTypeRoute = pathname.startsWith("/projects");
   const isBlogTypeRoute = pathname.startsWith("/blog");
+  const isPropertiesRoute = pathname === "/properties";
   //Defining scroll variable
   const [isScrolled, setIsScrolled] = useState(false);
   const [isConditionalHeader, setIsConditionalHeader] = useState(false);
@@ -110,15 +111,51 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
       }
     };
 
+    // Handle resize to close mobile menu on desktop
+    const handleResize = () => {
+      if (window.innerWidth >= 992) {
+        const menu = document.getElementById("mbdiv");
+        const menuButtons = document.getElementsByClassName("menuBtn");
+        if (menu && menu.classList.contains("active")) {
+          // Close the menu
+          for (let i = 0; i < menuButtons.length; i++) {
+            menuButtons[i].classList.remove("closeMenuBtn");
+          }
+          menu.style.display = "none";
+          menu.classList.remove("active");
+
+          // Remove notfixed class from header
+          const header = document.querySelector(".header");
+          if (header) {
+            header.classList.remove("notfixed");
+          }
+
+          // Restore body scroll
+          document.body.style.overflow = "";
+          document.body.style.position = "";
+          document.body.style.top = "";
+          document.body.style.width = "";
+          document.body.style.height = "";
+          document.documentElement.style.overflow = "";
+          document.documentElement.style.height = "";
+          
+          // Restore scroll position
+          window.scrollTo(0, scrollPositionRef.current);
+        }
+      }
+    };
+
     window.addEventListener("scroll", handleScroll, { passive: false });
     window.addEventListener("wheel", preventScroll, { passive: false });
     // Use capture phase to check before other handlers
     window.addEventListener("touchmove", preventScroll, { passive: false, capture: true });
+    window.addEventListener("resize", handleResize);
     
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("wheel", preventScroll);
       window.removeEventListener("touchmove", preventScroll);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -303,7 +340,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
               <li className="hasChild">
                 <Link
                   href="#"
-                  className={`text-light text-decoration-none py-3 ${
+                  className={`text-light text-decoration-none py-3 plus-jakarta-sans-semi-bold${
                     isCityRoute ? "header-link-active" : ""
                   }`}
                 >
@@ -317,16 +354,16 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                   ) : (
                     <div className="city-dropdown-content">
                       <div className="city-dropdown-left">
-                        <Link href="/projects/commercial" className="city-dropdown-item" prefetch={true}>
+                        <Link href="/projects/commercial" className="city-dropdown-item plus-jakarta-sans-semi-bold" prefetch={true}>
                           Commercial
                         </Link>
-                        <Link href="/projects/residential" className="city-dropdown-item" prefetch={true}>
+                        <Link href="/projects/residential" className="city-dropdown-item plus-jakarta-sans-semi-bold" prefetch={true}>
                           Residential
                         </Link>
-                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge" prefetch={true}>
+                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold" prefetch={true}>
                           New Launches <span className="city-dropdown-badge">New</span>
                         </Link>
-                        <Link href="/blog" className="city-dropdown-item">
+                        <Link href="/blog" className="city-dropdown-item plus-jakarta-sans-semi-bold">
                           Articles &amp; News
                         </Link>
                       </div>
@@ -335,7 +372,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                           <li key={city.id}>
                             <Link
                               href={`/city/${city.slugURL}`}
-                              className={`text-light text-decoration-none ${
+                              className={`text-light text-decoration-none plus-jakarta-sans-semi-bold ${
                                 pathname === "/city/" + city.URL
                                   ? "header-link-active"
                                   : ""
@@ -353,7 +390,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
               <li className="hasChild">
                 <Link
                   href="#"
-                  className={`text-light py-3 text-decoration-none ${
+                  className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold ${
                     isBuilderRoute ? "header-link-active" : ""
                   }`}
                 >
@@ -367,16 +404,16 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                   ) : (
                     <div className="city-dropdown-content">
                       <div className="city-dropdown-left">
-                        <Link href="/commercial" className="city-dropdown-item">
+                        <Link href="/projects/commercial" className="city-dropdown-item plus-jakarta-sans-semi-bold" prefetch={true}>
                           Commercial
                         </Link>
-                        <Link href="/residential" className="city-dropdown-item">
+                        <Link href="/projects/residential" className="city-dropdown-item plus-jakarta-sans-semi-bold" prefetch={true}>
                           Residential
                         </Link>
-                        <Link href="/new-launches" className="city-dropdown-item with-badge">
+                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold" prefetch={true}>
                           New Launches <span className="city-dropdown-badge">New</span>
                         </Link>
-                        <Link href="/blog" className="city-dropdown-item">
+                        <Link href="/blog" className="city-dropdown-item plus-jakarta-sans-semi-bold">
                           Articles &amp; News
                         </Link>
                       </div>
@@ -385,13 +422,13 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                           <li key={builder.id}>
                             <Link
                               href={`/builder/${builder.slugUrl}`}
-                              className={`text-light text-decoration-none ${
+                              className={`text-light text-decoration-none plus-jakarta-sans-semi-bold ${
                                 pathname === "/builder/" + builder.slugUrl
                                   ? "header-link-active"
                                   : ""
                               }`}
                             >
-                              {builder.builderName}
+                              {builder.builderName.toLowerCase()}
                             </Link>
                           </li>
                         ))}
@@ -403,7 +440,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
               <li className="hasChild">
                 <Link
                   href="/about-us"
-                  className={`text-light py-3  text-decoration-none ${
+                  className={`text-light py-3  text-decoration-none plus-jakarta-sans-semi-bold${
                     pathname === "/about-us" ? "header-link-active" : ""
                   }`}
                 >
@@ -413,7 +450,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
               <li className="hasChild">
                 <Link
                   href="/projects"
-                  className={`text-light py-3 text-decoration-none ${
+                  className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold${
                     isProjectTypeRoute ? "header-link-active" : ""
                   }`}
                 >
@@ -430,22 +467,22 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                   ) : (
                     <div className="city-dropdown-content">
                       <div className="city-dropdown-left">
-                        <Link href="/projects/commercial" className="city-dropdown-item" prefetch={true}>
+                        <Link href="/projects/commercial" className="city-dropdown-item plus-jakarta-sans-semi-bold" prefetch={true}>
                           Commercial
                         </Link>
-                        <Link href="/projects/residential" className="city-dropdown-item" prefetch={true}>
+                        <Link href="/projects/residential" className="city-dropdown-item plus-jakarta-sans-semi-bold" prefetch={true}>
                           Residential
                         </Link>
-                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge" prefetch={true}>
+                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold" prefetch={true}>
                           New Launches <span className="city-dropdown-badge">New</span>
                         </Link>
-                        <Link href="/blog" className="city-dropdown-item">
+                        <Link href="/blog" className="city-dropdown-item plus-jakarta-sans-semi-bold">
                           Articles &amp; News
                         </Link>
                       </div>
                       <div className="city-dropdown-right projects-search-section">
                         <div className="projects-search-wrapper">
-                          <h3 className="projects-search-title">Search Your Dream Home</h3>
+                          <h3 className="projects-search-title plus-jakarta-sans-semi-bold">Search Your Dream Home</h3>
                           <div className="projects-search-container">
                             <div className="projects-search-input-wrapper">
                               <FontAwesomeIcon icon={faSearch} className="projects-search-icon" />
@@ -528,7 +565,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
               <li className="hasChild">
                 <Link
                   href="/blog"
-                  className={`text-light py-3  text-decoration-none ${
+                  className={`text-light py-3  text-decoration-none plus-jakarta-sans-semi-bold${
                     isBlogTypeRoute ? "header-link-active" : ""
                   }`}
                 >
@@ -538,7 +575,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
               <li className="hasChild">
                 <Link
                   href="/career"
-                  className={`text-light py-3 text-decoration-none ${
+                  className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold${
                     pathname === "/career" ? "header-link-active" : ""
                   }`}
                 >
@@ -548,7 +585,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
               <li className="hasChild">
                 <Link
                   href="/contact-us"
-                  className={`text-light py-3 text-decoration-none ${
+                  className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold${
                     pathname === "/contact-us" ? "header-link-active" : ""
                   }`}
                 >
@@ -558,12 +595,23 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
             </ul>
           </div>
         </nav>
-        <div className="d-none d-lg-flex align-items-center">
-          {/* <div className="post-property-btn" onClick={openSignUpModal}>
-            <span className="post-property-text">Post Property</span>
-            <span className="free-tag">Free</span>
-          </div> */}
-        </div>
+        {/* <div className="d-none d-lg-flex align-items-center">
+          <div className="post-property-btn-wrapper" style={{ cursor: 'default' }}>
+            <div className="post-property-btn">
+              <span className="post-property-text">Post Your Property</span>
+              <div className="post-property-tag-wrapper">
+                <span className="post-property-pin"></span>
+                <Image 
+                  src="/icon/image 81.svg" 
+                  alt="Free tag" 
+                  width={38} 
+                  height={48} 
+                  className="post-property-tag"
+                />
+              </div>
+            </div>
+          </div>
+        </div> */}
         <div className="menuBtn d-flex d-lg-none " onClick={openMenu}>
           <span id="menuLine1"></span>
           <span id="menuLine2"></span>
@@ -766,7 +814,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                 <li>
                   <Link
                     className="text-decoration-none"
-                    href="https://www.facebook.com/starestate.in"
+                    href="https://www.facebook.com/mypropertyfact1/"
                     target="_blank"
                   >
                     <FontAwesomeIcon icon={faFacebook} />
@@ -775,7 +823,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                 <li>
                   <Link
                     className="text-decoration-none"
-                    href="https://www.instagram.com/starestate_official/"
+                    href="https://www.instagram.com/my.property.fact/"
                     target="_blank"
                   >
                     <FontAwesomeIcon icon={faInstagram} />
@@ -784,7 +832,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                 <li>
                   <Link
                     className="text-decoration-none"
-                    href="https://www.linkedin.com/company/star-estate"
+                    href="https://www.linkedin.com/company/my-property-fact/"
                     target="_blank"
                   >
                     <FontAwesomeIcon icon={faLinkedin} />
@@ -793,7 +841,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                 <li>
                   <Link
                     className="text-decoration-none"
-                    href="https://www.youtube.com/channel/UCwfDf7Ut8jrkjiBeRnbZUPw"
+                    href="https://www.youtube.com/@my.propertyfact/"
                     target="_blank"
                   >
                     <FontAwesomeIcon icon={faYoutube} />

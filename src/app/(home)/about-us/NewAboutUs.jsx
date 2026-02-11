@@ -219,7 +219,7 @@ export default function NewAboutUs() {
             variants={slideInRight}
           >
             <motion.h2 
-              className="new-about-us-container-content-heading plus-jakarta-sans-bold"
+              className="new-about-us-container-content-heading plus-jakarta-sans-semi-bold"
               variants={headingFadeIn}
             >
               About Us
@@ -306,7 +306,7 @@ export default function NewAboutUs() {
           variants={containerVariants}
         >
           <motion.h2 
-            className="new-about-us-section-2-heading text-center plus-jakarta-sans-bold"
+            className="new-about-us-section-2-heading text-center plus-jakarta-sans-semi-bold"
             variants={headingFadeIn}
           >
             Our Story & Vision
@@ -379,7 +379,7 @@ export default function NewAboutUs() {
           variants={containerVariants}
         >
           <motion.h2 
-            className="new-about-us-section-3-heading text-center plus-jakarta-sans-bold"
+            className="new-about-us-section-3-heading text-center plus-jakarta-sans-semi-bold"
             variants={headingFadeIn}
           >
             What We Offer
@@ -415,7 +415,7 @@ export default function NewAboutUs() {
                     maxWidth: `calc((100% - ${(cardsPerView - 1) * 24}px) / ${cardsPerView})`,
                   }}
                 >
-                  <h3 className="new-about-us-section-3-card-title plus-jakarta-sans-bold">
+                  <h3 className="new-about-us-section-3-card-title plus-jakarta-sans-semi-bold">
                     {slide.title}
                   </h3>
                   <p className="new-about-us-section-3-card-text">

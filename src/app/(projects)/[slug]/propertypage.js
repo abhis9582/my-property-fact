@@ -312,20 +312,76 @@ export default function Property({ projectDetail }) {
       header.style.background = `rgb(13, 88, 52, ${opacity})`;
     };
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    // Close mobile menu when resizing to desktop view
+    const handleResize = () => {
+      if (window.innerWidth >= 992) {
+        const menu = document.getElementById("property-mbdiv");
+        const menuButtons = document.querySelectorAll(".project-menuBtn");
+        if (menu && menu.classList.contains("active")) {
+          menu.classList.remove("active");
+          menu.style.display = "none";
+          menuButtons.forEach((btn) => btn.classList.remove("closeMenuBtn"));
+          setMenuOpen(false);
+          header?.classList.remove("notfixed");
+          document.body.classList.remove("menu-open");
+        }
+      }
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
+
+  // Cleanup scroll lock when component unmounts or menu closes
+  useEffect(() => {
+    return () => {
+      // Ensure scroll lock is removed on unmount
+      document.body.classList.remove("menu-open");
+      document.body.classList.remove("overflow-hidden");
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+    };
+  }, []);
+
+  // Ensure scroll lock is properly managed when menu state changes
+  useEffect(() => {
+    if (!menuOpen) {
+      // Ensure scroll is restored when menu closes
+      document.body.classList.remove("menu-open");
+      document.body.classList.remove("overflow-hidden");
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+    }
+  }, [menuOpen]);
 
   //Handle opening and closing of the property detail page mobile menu
   const openMenu = (e, targetId) => {
-    e.preventDefault(); // Prevent default anchor behavior
+    // Only prevent default for menu link clicks (when targetId is provided)
+    // Don't prevent default for hamburger button or backdrop clicks
+    if (e && targetId && e.preventDefault) {
+      e.preventDefault();
+    }
+    
     const menuButtons = document.querySelectorAll(".project-menuBtn");
     const menu = document.getElementById("property-mbdiv");
     const header = document.querySelector(".project-detail-header");
 
     if (!menu) return;
 
-    // Toggle menu state
-    const isMenuOpen = menu.classList.toggle("active");
+    // Determine if menu should be open or closed
+    let isMenuOpen;
+    if (targetId) {
+      // If clicking a menu link, close the menu
+      isMenuOpen = false;
+      menu.classList.remove("active");
+    } else {
+      // Otherwise toggle the menu
+      isMenuOpen = menu.classList.toggle("active");
+    }
 
     // Toggle menu button classes
     menuButtons.forEach((btn) =>
@@ -340,29 +396,36 @@ export default function Property({ projectDetail }) {
     // Toggle header class
     header?.classList.toggle("notfixed", isMenuOpen);
 
-    // Toggle body scroll lock
-    document.body.classList.toggle("menu-open", isMenuOpen);
+    // Toggle body scroll lock - ensure it's properly removed when menu closes
+    if (isMenuOpen) {
+      document.body.classList.add("menu-open");
+    } else {
+      document.body.classList.remove("menu-open");
+      document.body.classList.remove("overflow-hidden");
+      // Ensure body can scroll again
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+    }
 
     // Handle scrolling when clicking a menu link
     if (targetId) {
-      const targetElement = document.getElementById(targetId);
-      if (targetElement) {
-        const headerHeight = header ? header.offsetHeight : 0;
-        const targetPosition =
-          targetElement.getBoundingClientRect().top +
-          window.scrollY -
-          headerHeight -
-          50;
+      // Use setTimeout to ensure menu is closed and scroll lock is removed before scrolling
+      setTimeout(() => {
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          const headerHeight = header ? header.offsetHeight : 0;
+          const targetPosition =
+            targetElement.getBoundingClientRect().top +
+            window.scrollY -
+            headerHeight -
+            50;
 
-        window.scrollTo({
-          top: targetPosition,
-          behavior: "smooth",
-        });
-
-        // Close menu after clicking
-        menu.classList.remove("active");
-        document.body.classList.remove("overflow-hidden");
-      }
+          window.scrollTo({
+            top: targetPosition,
+            behavior: "smooth",
+          });
+        }
+      }, 150);
     }
   };
 
@@ -475,7 +538,7 @@ export default function Property({ projectDetail }) {
               id="property-mbdiv"
               onClick={(e) => {
                 // close when clicking on dark backdrop only
-                if (e.target.id === "property-mbdiv") {
+                if (e.target.id === "property-mbdiv" && menuOpen) {
                   openMenu(e);
                 }
               }}

@@ -2,8 +2,6 @@
 import { useState } from "react";
 
 export default function FormPopup({ setFormPopup, frmName }) {
-  console.log(frmName);
-  
   const [isLoading, setIsLoading] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
 

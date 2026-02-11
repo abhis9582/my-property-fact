@@ -65,7 +65,7 @@
 //                     </nav>
 
 //                     <div className="mt-auto pt-4 border-top">
-//                         <p className="small text-muted">© 2025 Your Company</p>
+//                         <p className="small text-muted">© 2026 Your Company</p>
 //                     </div>
 //                 </div>
 //             </div>
@@ -172,7 +172,7 @@ export default function RightSidebar() {
                     </nav>
 
                     <div className="mt-auto pt-4 border-top">
-                        <p className="small text-muted">© 2025 Your Company</p>
+                        <p className="small text-muted">© 2026 Your Company</p>
                     </div>
                 </div>
             </div>

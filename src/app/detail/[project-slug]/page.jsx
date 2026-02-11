@@ -50,7 +50,6 @@ export default function ProjectDetailPage() {
 
       const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
       const url = `${apiUrl}/projects/get/${slug}`;
-      console.log("Fetching project from:", url);
       
       // Add timeout to prevent infinite loading
       const controller = new AbortController();
@@ -61,7 +60,6 @@ export default function ProjectDetailPage() {
       });
       
       clearTimeout(timeoutId);
-      console.log("Response status:", response.status, response.statusText);
       
       if (!response.ok) {
         const errorText = await response.text();
@@ -73,10 +71,6 @@ export default function ProjectDetailPage() {
       }
 
       const projectData = await response.json();
-      console.log("Project data received:", projectData);
-      console.log("Project data type:", typeof projectData);
-      console.log("Project data keys:", projectData ? Object.keys(projectData) : "null/undefined");
-      console.log("Project data length:", projectData ? Object.keys(projectData).length : 0);
       
       // Check if we got an empty object or no data
       // Backend returns empty ProjectDetailDto {} when project not found

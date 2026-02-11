@@ -47,17 +47,6 @@
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
-.social-feeds-section h2 {
-  color: #1a1a1a;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  background: #1a1a1a;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -0.5px;
-}
-
 .section-subtitle {
   color: #6b7280;
   font-size: 1rem;
@@ -81,12 +70,11 @@
 /* Swiper Navigation Arrows - Modern Design */
 .social-feeds-swiper-wrapper .swiper-button-next,
 .social-feeds-swiper-wrapper .swiper-button-prev {
-  color: #fff;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #000;
+  background: #ffffff !important;
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 10;
   backdrop-filter: blur(10px);
@@ -94,8 +82,7 @@
 
 .social-feeds-swiper-wrapper .swiper-button-next:hover,
 .social-feeds-swiper-wrapper .swiper-button-prev:hover {
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5);
+  background: #ffffff !important;
   transform: scale(1.1) translateY(-2px);
 }
 
@@ -134,7 +121,7 @@
 .social-feeds-swiper-wrapper .swiper-pagination-bullet {
   width: 12px;
   height: 12px;
-  background: rgba(102, 126, 234, 0.3);
+  background: #ffffff !important;
   opacity: 1;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   margin: 0 6px;
@@ -142,11 +129,10 @@
 }
 
 .social-feeds-swiper-wrapper .swiper-pagination-bullet-active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #ffffff !important;
   transform: scale(1.3);
   width: 32px;
   border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
 }
 
 /* Dynamic Bullets */
@@ -387,10 +373,6 @@
 }
 
 @media (max-width: 1199px) {
-  .social-feeds-section h2 {
-    font-size: 2rem;
-  }
-  
   .instagram-post-card {
     height: 420px;
     max-width: 280px;
@@ -410,11 +392,6 @@
     width: 56px;
     height: 56px;
     border-radius: 16px;
-  }
-  
-  .social-feeds-section h2 {
-    font-size: 1.875rem;
-    margin-bottom: 0.5rem;
   }
   
   .section-subtitle {
@@ -473,12 +450,6 @@
     height: 48px;
     border-radius: 14px;
     margin-bottom: 0.75rem;
-  }
-  
-  .social-feeds-section h2 {
-    font-size: 1.625rem;
-    margin-bottom: 0.5rem;
-    padding: 0 15px;
   }
   
   .section-subtitle {
@@ -555,12 +526,6 @@
     width: 44px;
     height: 44px;
     border-radius: 12px;
-  }
-  
-  .social-feeds-section h2 {
-    font-size: 1.375rem;
-    margin-bottom: 0.5rem;
-    padding: 0 10px;
   }
   
   .section-subtitle {
@@ -641,10 +606,6 @@
 }
 
 @media (max-width: 479px) {
-  .social-feeds-section h2 {
-    font-size: 1.25rem;
-  }
-  
   .instagram-post-card {
     height: 340px;
   }
@@ -669,7 +630,7 @@
   
   .social-feeds-swiper-wrapper .swiper-button-next,
   .social-feeds-swiper-wrapper .swiper-button-prev {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #ffffff !important;
   }
   
   .card-border-gradient {

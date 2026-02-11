@@ -169,7 +169,7 @@ export default function NewFooterDesign({ cityList = [] }) {
   };
 
   return (
-    <div className="new-footer-design-container-fluid plus-jakarta-sans-regular">
+    <div className="new-footer-design-container-fluid">
       <div className="new-design-container">
         {/* Top Section */}
         <div className="new-design-footer-top">
@@ -189,7 +189,7 @@ export default function NewFooterDesign({ cityList = [] }) {
               </p>
             </div>
             <div className="contact-details">
-              <div className="contact-item contact-item-full">
+              <div className="contact-item-footer contact-item-full">
                 <span className="contact-label">ADDRESS:</span>
                 <span className="contact-value">
                   6th Floor Tower A1, Corporate Park Noida-142, India
@@ -198,7 +198,7 @@ export default function NewFooterDesign({ cityList = [] }) {
               <div className="contact-item-row">
                 <div className="contact-item">
                   <span className="contact-label">PHONE:</span>
-                  <span className="contact-value">+(91)8920024793</span>
+                  <span className="contact-value">+91 8920024793</span>
                 </div>
                 <div className="contact-item">
                   <span className="contact-label">EMAIL:</span>
@@ -212,7 +212,7 @@ export default function NewFooterDesign({ cityList = [] }) {
           {/* Right Section - Newsletter */}
           <div className="new-design-footer-top-right">
             <div className="new-design-footer-top-right-newsletter">
-              <h3 className="newsletter-heading plus-jakarta-sans-bold">Newsletter Signup</h3>
+              <h3 className="newsletter-heading plus-jakarta-sans-semi-bold">Newsletter Signup</h3>
               <div className="newsletter-form">
                 <input
                   type="email"
@@ -308,7 +308,7 @@ export default function NewFooterDesign({ cityList = [] }) {
               <FontAwesomeIcon icon={faFacebook} />
             </a>
             <a
-              href="https://twitter.com/mypropertyfact"
+              href="https://x.com/my_propertyfact"
               target="_blank"
               rel="noopener noreferrer"
               className="social-icon"
@@ -332,7 +332,7 @@ export default function NewFooterDesign({ cityList = [] }) {
               <FontAwesomeIcon icon={faLinkedin} />
             </a>
             <a
-              href="https://www.youtube.com/@mypropertyfact"
+              href="https://www.youtube.com/@my.propertyfact/"
               target="_blank"
               rel="noopener noreferrer"
               className="social-icon"
@@ -353,7 +353,7 @@ export default function NewFooterDesign({ cityList = [] }) {
           purchase-related decisions.
         </p>
         <p className="copyright-text">
-          © 2025 – mypropertyfact. All rights reserved.
+          © 2026 – mypropertyfact. All rights reserved.
         </p>
       </div>
 

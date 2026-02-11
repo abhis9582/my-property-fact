@@ -6,6 +6,7 @@ import "./featured.css";
 import Image from "next/image";
 import Link from "next/link";
 import PropertyContainer from "../../common/page";
+import { useMemo, useState, useEffect } from "react";
 
 function NextArrow(props) {
   const { className, style, onClick } = props;
@@ -53,62 +54,163 @@ export default function Featured({
   allProjects,
   type,
   badgeVariant = "default",
-  title
+  title,
 }) {
-  const settings = {
-    dots: false,
-    infinite: allProjects.length > 1,
-    speed: 500,
-    autoplay: autoPlay,
-    autoplaySpeed: 5000,
-    arrows: autoPlay,
-    nextArrow: autoPlay ? <NextArrow /> : null,
-    prevArrow: autoPlay ? <PrevArrow /> : null,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
+  const [projectType, setProjectType] = useState("Residential");
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Memoized filtered projects for faster tab switching
+  const filteredProjects = useMemo(() => {
+    if (!allProjects || allProjects.length === 0) return [];
+    if (type === "Similar" || type === "Featured") {
+      return allProjects;
+    } else {
+      return allProjects
+        .filter((project) => project.propertyTypeName === projectType)
+        .slice(0, 9);
+    }
+  }, [allProjects, projectType, type]);
+
+  // Clear loading state when filtered projects are ready
+  useEffect(() => {
+    if (isLoading) {
+      // Small delay to ensure smooth transition
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [filteredProjects, isLoading]);
+
+  const settings = useMemo(
+    () => ({
+      dots: false,
+      infinite: filteredProjects.length > 2,
+      speed: 500,
+      autoplay: autoPlay,
+      autoplaySpeed: 5000,
+      arrows: autoPlay,
+      nextArrow: autoPlay && filteredProjects.length > 1 ? <NextArrow /> : null,
+      prevArrow: autoPlay && filteredProjects.length > 1 ? <PrevArrow /> : null,
+      slidesToShow: 3,
+      slidesToScroll: 1,
+      responsive: [
+        {
+          breakpoint: 1024,
+          settings: {
+            slidesToShow: 2,
+            slidesToScroll: 1,
+          },
         },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
+        {
+          breakpoint: 600,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1,
+          },
         },
-      },
-    ],
+      ],
+    }),
+    [filteredProjects.length, autoPlay],
+  );
+
+  // Memoized section title
+  const sectionTitle = useMemo(() => {
+    if (!autoPlay) return title;
+    if (projectType === "Commercial" && type !== "Similar") {
+      return `Explore Top Commercial Spaces for Growth`;
+    } else if (projectType === "Residential" && type !== "Similar") {
+      return `Explore Our Premier Residential Projects`;
+    } else if (type === "Similar") {
+      return "";
+    } else {
+      return title;
+    }
+  }, [projectType, autoPlay, title]);
+
+  // Fast tab switching handler with loading state
+  const handleProjectType = (type) => {
+    if (type !== projectType) {
+      setIsLoading(true);
+      setProjectType(type);
+    }
   };
 
   return (
-    <div className="container">
-      <h2 className="text-center my-4 my-lg-5 fw-bold plus-jakarta-sans-bold">{title}</h2>
-      {allProjects?.length > 0 && (
-        <div className="featured-page-slider">
-          <Slider {...settings}>
-            {allProjects.map((item) => (
-              <div key={item.id} className="px-2 pb-3">
-                <PropertyContainer data={item} badgeVariant={badgeVariant} />
+    <>
+      {type !== "Similar" && (
+        <div className="container">
+          {autoPlay && type !== "Similar" && (
+            <div
+              className={`d-flex justify-content-center justify-content-lg-start mt-4 mt-lg-2 gap-3`}
+            >
+              <button
+                className={`mpf-btn-primary ${projectType === "Residential" ? "active" : ""}`}
+                onClick={() => handleProjectType("Residential")}
+              >
+                Residential
+              </button>
+              <button
+                className={`mpf-btn-primary ${projectType === "Commercial" ? "active" : ""}`}
+                onClick={() => handleProjectType("Commercial")}
+              >
+                Commercial
+              </button>
+            </div>
+          )}
+          <div className="d-flex justify-content-between align-items-center">
+            <h2 className="text-left my-4 my-lg-5 plus-jakarta-sans-semi-bold">
+              {sectionTitle}
+            </h2>
+            {autoPlay && type !== "Similar" && (
+              <div className="text-center pt-3">
+                <Link
+                  className="btn text-white projects-view-all-btn btn-normal-color border-0"
+                  href={`/projects/${url}`}
+                >
+                  View all
+                </Link>
               </div>
-            ))}
-          </Slider>
+            )}
+          </div>
+          {isLoading ? (
+            <div className="featured-loading-container">
+              <div className="featured-loading-spinner"></div>
+              <p className="featured-loading-text">Loading projects...</p>
+            </div>
+          ) : filteredProjects?.length > 0 ? (
+            <div className="featured-page-slider">
+              <Slider {...settings}>
+                {filteredProjects.map((item) => (
+                  <div key={item.id} className="px-2 pb-3">
+                    <PropertyContainer
+                      data={item}
+                      badgeVariant={badgeVariant}
+                    />
+                  </div>
+                ))}
+              </Slider>
+            </div>
+          ) : (
+            <div className="featured-no-projects">
+              <p>No projects available for this category.</p>
+            </div>
+          )}
         </div>
       )}
-
-      {autoPlay && type !== 'Similar' && (
-        <div className="text-center pt-3">
-          <Link
-            className="btn text-white btn-normal-color border-0"
-            href={`/projects/${url}`}
-          >
-            View all
-          </Link>
-        </div>
+      {type === "Similar" && (
+        <>
+          <div className="container">
+            <Slider {...settings}>
+              {filteredProjects.map((item) => (
+                <div key={item.id} className="px-2 pb-3">
+                  <PropertyContainer data={item} />
+                </div>
+              ))}
+            </Slider>
+          </div>
+        </>
       )}
-    </div>
+    </>
   );
 }

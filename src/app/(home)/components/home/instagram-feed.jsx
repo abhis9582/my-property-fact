@@ -34,7 +34,7 @@ export default function InstagramFeed() {
 
   return (
     <div ref={containerRef} className="container">
-      <h2 className="text-center my-5 fw-bold">
+      <h2 className="text-center my-5 plus-jakarta-sans-semi-bold">
         Social Feeds from MPF on Instagram
       </h2>
       <Script src="https://elfsightcdn.com/platform.js" strategy="lazyOnload" />

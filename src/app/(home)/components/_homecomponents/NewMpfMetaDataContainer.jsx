@@ -154,10 +154,10 @@ export default function NewMpfMetaDataContainer({ propertyTypes, projects, build
           </div>
         </div>
         <div className="property-search-card-content">
-          <h2 className="property-search-title plus-jakarta-sans-bold mt-3 mt-md-0">
+          <h1 className="property-search-title plus-jakarta-sans-semi-bold mt-3 mt-md-0">
             Find The Best Property
-          </h2>
-          <div className="property-buttons-overlay d-flex flex-wrap justify-content-center gap-3">
+          </h1>
+          <div className="property-buttons-overlay d-flex flex-wrap justify-content-center gap-4 gap-lg-3">
 
             {propertyTypes && propertyTypes.map((item, index) => (
               <div key={`row-${index}`}>

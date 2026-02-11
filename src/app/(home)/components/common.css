@@ -2,6 +2,19 @@
   margin-top: 0rem !important;
 }
 
+.hover-underline {
+  font-size: 14px !important;
+  color: #475569;
+  font-weight: 500 !important;
+}
+
+.hover-underline:hover {
+  text-decoration: none;
+  color: #7c7878;
+  transition: all 0.3s ease;
+  transform: translateY(-1px) !important;
+}
+
 @media (max-width: 576px) {
   .top-space {
     margin-top: 1rem !important;
@@ -27,21 +40,6 @@
   justify-content: space-between;
   gap: clamp(16px, 3vw, 48px);
   flex-wrap: wrap;
-}
-
-.mpf-top-picks-eyebrow {
-  font-size: clamp(0.875rem, 2vw, 1.125rem);
-  font-weight: 500;
-  color: rgb(148, 148, 148);
-  margin-top: clamp(8px, 2vw, 16px);
-}
-
-.mpf-top-picks-title {
-  font-size: clamp(1.25rem, 4vw, 1.75rem);
-  font-weight: 600;
-  margin: 0;
-  color: #0f172a;
-  line-height: 1.3;
 }
 
 .mpf-top-picks-banner {
@@ -193,32 +191,12 @@
 }
 
 .mpf-top-pic-project-name {
-  font-weight: 400;
-  font-style: Regular;
-  font-size: clamp(14px, 2vw, 16px);
-  line-height: clamp(20px, 3vw, 24px);
-  letter-spacing: 0px;
-  margin: 0;
-  word-wrap: break-word;
-}
-
-.mpf-top-picks-card__link {
-  font-weight: 400;
-  font-style: Regular;
-  font-size: clamp(12px, 1.8vw, 14px);
-  line-height: clamp(18px, 2.5vw, 20px);
-  letter-spacing: 0px;
-  text-decoration: none;
-  color: #2563eb;
-  word-break: break-word;
-  display: inline-block;
-  transition: color 0.2s ease;
-}
-
-.mpf-top-picks-card__link:hover,
-.mpf-top-picks-card__link:focus-visible {
-  text-decoration: underline;
-  color: #1d4ed8;
+  font-size: 16px !important;
+  line-height: 24px !important;
+  letter-spacing: 0px !important;
+  margin: 0 !important;
+  word-wrap: break-word !important;
+  font-weight: 500 !important;
 }
 
 .mpf-top-picks-card__project {
@@ -665,11 +643,6 @@
 
   .mpf-top-picks-card__builder-info {
     width: 100%;
-  }
-
-  .mpf-top-picks-card__link {
-    font-size: clamp(11px, 2vw, 13px);
-    word-break: break-all;
   }
 
   .mpf-top-picks-card__meta-value1 {

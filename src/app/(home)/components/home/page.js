@@ -24,9 +24,9 @@ export default async function HomePage() {
 
   // Allowed slugs for featured projects
   const allowedSlugs = [
-    "m3m-jacob-and-co-residences",
-    "eldeco-whispers-of-wonder",
-    "ace-edit",
+    "birla-arika",
+    "dlf-privana-west",
+    "trump-residences-gurgaon",
   ];
 
   // Fetching citylist and project types and storing in variables
@@ -42,16 +42,6 @@ export default async function HomePage() {
     return allowedSlugs.includes(project.slugURL);
   });
 
-  // Filtering residential projects from projects list
-  const residentalProjects = projects
-    .filter((project) => project.propertyTypeName === "Residential")
-    .slice(0, 9);
-
-  // Filtering commercial projects from projects list
-  const commercialProjects = projects
-    .filter((project) => project.propertyTypeName === "Commercial")
-    .slice(0, 9);
-
   // Getting weekly project from projects list
   const mpfTopPicProject = await getWeeklyProject(projects);
 
@@ -62,7 +52,12 @@ export default async function HomePage() {
         <HeroSection projectTypeList={projectTypeList} cityList={cityList} />
 
         {/* My property fact meta data container component */}
-        <NewMpfMetaDataContainer propertyTypes={projectTypeList} projects={projects} builders={builders.builders} cities={cityList} />
+        <NewMpfMetaDataContainer
+          propertyTypes={projectTypeList}
+          projects={projects}
+          builders={builders.builders}
+          cities={cityList}
+        />
 
         {/* MPF-top pick section  */}
         <MpfTopPicks topProject={mpfTopPicProject} />
@@ -83,18 +78,20 @@ export default async function HomePage() {
           <DreamPropertySection />
 
           {/* residential projects section  */}
-          <FeaturedPage
-            title="Explore Our Premier Residential Projects"
-            autoPlay={true}
-            allFeaturedProperties={residentalProjects}
-          />
+          <div className="container">
+            <FeaturedPage
+              title="Explore Our Premier Residential Projects"
+              autoPlay={true}
+              allFeaturedProperties={projects}
+            />
 
-          {/* commertial projects section  */}
-          <FeaturedPage
-            title="Explore Top Commercial Spaces for Growth"
-            autoPlay={true}
-            allFeaturedProperties={commercialProjects}
-          />
+            {/* commertial projects section  */}
+            {/* <FeaturedPage
+              title="Explore Top Commercial Spaces for Growth"
+              autoPlay={true}
+              allFeaturedProperties={commercialProjects}
+            /> */}
+          </div>
 
           {/* web story section  */}
           <NewsViews title="Realty Updates Web Stories" />

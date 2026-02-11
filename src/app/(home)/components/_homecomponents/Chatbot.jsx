@@ -1,15 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import Image from 'next/image';
 import styles from './Chatbot.module.css';
 
-const IMAGE_BASE_URL = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/`;
+const IMAGE_BASE_URL = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties`;
 
 export default function Chatbot() {
-    const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
@@ -20,7 +16,6 @@ export default function Chatbot() {
     const [placeholder, setPlaceholder] = useState("Please select an option");
 
     const messagesEndRef = useRef(null);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // Initialize session and welcome message
     useEffect(() => {
@@ -36,64 +31,12 @@ export default function Chatbot() {
         setMessages([initialBotMessage]);
     }, []);
 
-    // Watch for mobile menu state changes
-    useEffect(() => {
-        const checkMobileMenu = () => {
-            const mobileMenu = document.getElementById('mbdiv');
-            if (mobileMenu) {
-                setIsMobileMenuOpen(mobileMenu.classList.contains('active'));
-            }
-        };
-
-        // Check initially
-        checkMobileMenu();
-
-        // Watch for changes using MutationObserver
-        const mobileMenu = document.getElementById('mbdiv');
-        if (mobileMenu) {
-            const observer = new MutationObserver(checkMobileMenu);
-            observer.observe(mobileMenu, {
-                attributes: true,
-                attributeFilter: ['class']
-            });
-
-            return () => observer.disconnect();
-        }
-    }, []);
-
     // Scroll to bottom whenever messages change
     useEffect(() => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
         }
     }, [messages, isTyping]);
-
-    // ============================================
-    // COMMENTED OUT: Prevent body scroll when chatbot is open (especially on mobile)
-    // ============================================
-    // useEffect(() => {
-    //     if (isOpen) {
-    //         // Save current scroll position
-    //         const scrollY = window.scrollY;
-    //         // Disable body scroll
-    //         document.body.style.position = 'fixed';
-    //         document.body.style.top = `-${scrollY}px`;
-    //         document.body.style.width = '100%';
-    //         document.body.style.overflow = 'hidden';
-            
-    //         return () => {
-    //             // Restore scroll position when closing
-    //             const scrollY = document.body.style.top;
-    //             document.body.style.position = '';
-    //             document.body.style.top = '';
-    //             document.body.style.width = '';
-    //             document.body.style.overflow = '';
-    //             if (scrollY) {
-    //                 window.scrollTo(0, parseInt(scrollY || '0') * -1);
-    //             }
-    //         };
-    //     }
-    // }, [isOpen]);
 
     const toggleChat = () => setIsOpen(!isOpen);
 
@@ -114,14 +57,18 @@ export default function Chatbot() {
         const userText = text || inputValue.trim();
         if (!userText) return;
 
-        // Reset Logic
+        // Restart Logic: Clear history and start a new session
         if (['restart', 'reset'].includes(userText.toLowerCase())) {
+            const newSessionId = Math.random().toString(36).substring(2) + Date.now().toString(36);
+            setSessionId(newSessionId);
+
             const initialBotMessage = {
                 id: Date.now(),
                 type: 'bot',
                 text: "Hi 👋\nWelcome to My Property Fact!\n\nReady to find the perfect property? 🏡✨\n\nPlease select your property type to get started.",
                 options: ['Commercial', 'Residential', 'New Launch']
             };
+
             setMessages([initialBotMessage]);
             setConversationHistory([]);
             setInputValue('');
@@ -129,6 +76,7 @@ export default function Chatbot() {
             setPlaceholder("Please select an option");
             return;
         }
+
 
         // Add user message
         addMessage(userText, 'user');
@@ -140,6 +88,14 @@ export default function Chatbot() {
         setIsTyping(true);
 
         try {
+            // Frontend Intercept for "Other" city or unknown cities
+            const isCityPrompt = messages[messages.length - 1]?.text?.toLowerCase().includes('which city');
+            const lowText = userText.toLowerCase();
+
+            if (isCityPrompt && lowText === 'other') {
+                // Allow "other" to pass to backend for manual input prompt
+            }
+
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -154,7 +110,7 @@ export default function Chatbot() {
             if (data.redirectUrl) {
                 if (data.reply) addMessage(data.reply, 'bot');
                 setTimeout(() => {
-                    router.push(data.redirectUrl);
+                    window.location.href = data.redirectUrl;
                 }, 1500);
             } else if (data.reply) {
                 addMessage(data.reply, 'bot', data.options || [], data.projectCards || [], data.followUp);
@@ -189,12 +145,9 @@ export default function Chatbot() {
 
     return (
         <>
-            {/* Backdrop overlay for mobile */}
-            {isOpen && <div className={styles.backdrop} onClick={toggleChat}></div>}
-
             {/* Launcher */}
             <button
-                className={`${styles.launcher} ${isMobileMenuOpen ? styles.hidden : ''}`}
+                className={styles.launcher}
                 onClick={toggleChat}
                 aria-label="Open Chatbot"
             >
@@ -209,7 +162,7 @@ export default function Chatbot() {
                 <div className={styles.header}>
                     <div className={styles.headerInfo}>
                         <div className={styles.avatar}>
-                            <Image src="/logo.png" alt="MPF Logo" width={40} height={40} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                            <img src="/logo.png" alt="MPF Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                         </div>
                         <div>
                             <h3>MyPropertyFact</h3>
@@ -226,7 +179,7 @@ export default function Chatbot() {
                 </div>
 
                 <div className={styles.messages}>
-                    {messages.map((msg) => (
+                    {messages.map((msg, index) => (
                         <React.Fragment key={msg.id}>
                             {msg.text && (
                                 <div className={`${styles.message} ${msg.type === 'user' ? styles.userMessage : styles.botMessage}`}>
@@ -235,16 +188,27 @@ export default function Chatbot() {
                             )}
 
                             {msg.projectCards && msg.projectCards.length > 0 && (
-                                <ProjectSlider 
-                                    cards={msg.projectCards} 
-                                    styles={styles}
+                                <ProjectSlider
+                                    cards={msg.projectCards}
+                                    followUp={msg.followUp || "Would you like to see more projects?"}
+                                    options={msg.options}
+                                    disabled={index !== messages.length - 1}
+                                    onOptionClick={(opt) => {
+                                        const lowOpt = opt.toLowerCase();
+                                        if (lowOpt === 'yes' || lowOpt === 'yes, please' || lowOpt === 'sure') {
+                                            // Redirection handled by backend or manual dynamic link implementation if needed
+                                            sendMessage(opt);
+                                        } else {
+                                            sendMessage(opt);
+                                        }
+                                    }}
                                     onEnquire={(name) => {
                                         setMessages(prev => [...prev, { id: 'form-' + Date.now(), type: 'form', projectName: name }]);
-                                    }} 
+                                    }}
                                 />
                             )}
 
-                            {msg.followUp && (
+                            {msg.followUp && (!msg.projectCards || msg.projectCards.length === 0) && (
                                 <div className={`${styles.message} ${styles.botMessage}`}>
                                     {msg.followUp}
                                 </div>
@@ -254,18 +218,18 @@ export default function Chatbot() {
                                 <LeadForm
                                     projectName={msg.projectName}
                                     sessionId={sessionId}
-                                    styles={styles}
                                     onSuccess={handleEnquirySuccess}
                                 />
                             )}
 
-                            {msg.options && msg.options.length > 0 && (
+                            {msg.options && msg.options.length > 0 && (!msg.projectCards || msg.projectCards.length === 0) && (
                                 <div className={styles.chatOptions}>
                                     {msg.options.map((opt, i) => (
                                         <button
                                             key={i}
                                             className={styles.optionBtn}
                                             onClick={() => sendMessage(opt)}
+                                            disabled={index !== messages.length - 1}
                                         >
                                             {opt}
                                         </button>
@@ -311,43 +275,7 @@ export default function Chatbot() {
     );
 }
 
-function ProjectCard({ card, onEnquire, styles }) {
-    const [imageError, setImageError] = useState(false);
-    const DEFAULT_IMAGE = '/static/no_image.png';
-    
-    const getImageSrc = () => {
-        if (imageError || !card.image) {
-            return DEFAULT_IMAGE;
-        }
-        return card.image;
-    };
-
-    return (
-        <div className={styles.projectCard}>
-            <Image
-                src={getImageSrc()}
-                alt={card.name}
-                width={280}
-                height={200}
-                onError={() => setImageError(true)}
-                unoptimized={imageError || !card.image}
-            />
-            <div className={styles.pCardContent}>
-                <h4>{card.name}</h4>
-                <p className={styles.pLoc}>📍 {card.location}</p>
-                <div className={styles.pDetails}>
-                    <span className={styles.pPrice}>{card.price}</span>
-                    <span className={styles.pStatus}>{card.status}</span>
-                </div>
-                <p className={styles.pBuilder}>By {card.builder}</p>
-                <Link href={card.link} target="_blank" rel="noopener noreferrer" className={styles.pCta} style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}>View Details</Link>
-                <button className={styles.pEnquire} onClick={() => onEnquire(card.name)}>Enquire</button>
-            </div>
-        </div>
-    );
-}
-
-function ProjectSlider({ cards, onEnquire, styles }) {
+function ProjectSlider({ cards, onEnquire, followUp, options, onOptionClick, disabled }) {
     const sliderRef = useRef(null);
     const [showArrow, setShowArrow] = useState(false);
 
@@ -375,7 +303,24 @@ function ProjectSlider({ cards, onEnquire, styles }) {
                 onScroll={checkScroll}
             >
                 {cards.map((card, i) => (
-                    <ProjectCard key={i} card={card} onEnquire={onEnquire} styles={styles} />
+                    <div key={i} className={styles.projectCard}>
+                        <img
+                            src={card.image}
+                            alt={card.name}
+                            onError={(e) => e.target.src = 'https://via.placeholder.com/300x200?text=No+Image'}
+                        />
+                        <div className={styles.pCardContent}>
+                            <h4>{card.name}</h4>
+                            <p className={styles.pLoc}>📍 {card.location}</p>
+                            <div className={styles.pDetails}>
+                                <span className={styles.pPrice}>{card.price}</span>
+                                <span className={styles.pStatus}>{card.status}</span>
+                            </div>
+                            <p className={styles.pBuilder}>By {card.builder}</p>
+                            <button className={styles.pCta} onClick={() => window.open(card.link, '_blank')}>View Details</button>
+                            <button className={styles.pEnquire} onClick={() => onEnquire(card.name)}>Enquire</button>
+                        </div>
+                    </div>
                 ))}
             </div>
             <button
@@ -384,11 +329,46 @@ function ProjectSlider({ cards, onEnquire, styles }) {
             >
                 &#8594;
             </button>
+
+            {(followUp || (cards && cards.length > 0)) && (
+                <div
+                    className={`${styles.message} ${styles.botMessage}`}
+                    style={{
+                        marginTop: '16px',
+                        marginLeft: '0',
+                        alignSelf: 'flex-start',
+                        display: 'inline-block',
+                        width: 'auto',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                        backgroundColor: '#ffffff',
+                        padding: '10px 14px',
+                        borderRadius: '12px',
+                        fontSize: '0.95rem'
+                    }}
+                >
+                    {followUp || "Would you like to see more projects?"}
+                </div>
+            )}
+
+            {options && options.length > 0 && (
+                <div className={styles.chatOptions} style={{ marginLeft: '0', marginTop: '8px', display: 'flex' }}>
+                    {options.map((opt, i) => (
+                        <button
+                            key={i}
+                            className={styles.optionBtn}
+                            onClick={() => onOptionClick(opt)}
+                            disabled={disabled}
+                        >
+                            {opt}
+                        </button>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }
 
-function LeadForm({ projectName, sessionId, onSuccess, styles }) {
+function LeadForm({ projectName, sessionId, onSuccess }) {
     const [name, setName] = useState('');
     const [mobile, setMobile] = useState('');
     const [email, setEmail] = useState('');

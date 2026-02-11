@@ -30,7 +30,6 @@
 
 .dream-property-container {
   position: relative;
-  max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
   z-index: 1;
@@ -44,32 +43,8 @@
 .dream-property-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 50px;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.header-left {
-  display: flex;
   align-items: center;
-  gap: 20px;
-  flex: 1;
-  min-width: 300px;
-}
-
-.dream-property-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin: 0;
-  line-height: 1.2;
-  font-family: var(
-    --heaing-font,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif
-  );
+  flex-wrap: wrap;
 }
 
 .nav-arrow-button {
@@ -138,9 +113,9 @@
   width: 250px;
 }
 
-.city-card:hover {
+/* .city-card:hover {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-}
+} */
 
 .city-image-wrapper {
   position: relative;
@@ -208,35 +183,28 @@
 }
 
 @media (max-width: 992px) {
-  .dream-property-title {
-    font-size: 2rem;
-  }
-
   .city-cards-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
   }
 
-  .dream-property-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
   .see-all-button {
-    align-self: flex-end;
+    padding: 10px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    white-space: nowrap;
   }
 }
 
 @media (max-width: 768px) {
-
-  .dream-property-title {
-    font-size: 1.75rem;
-  }
-
   .header-left {
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
+    margin-bottom: 10px;
   }
 
   .nav-arrow-button {
@@ -262,10 +230,6 @@
 }
 
 @media (max-width: 576px) {
-  .dream-property-title {
-    font-size: 1.5rem;
-  }
-
   .city-image-wrapper {
     left: -30px !important;
   }

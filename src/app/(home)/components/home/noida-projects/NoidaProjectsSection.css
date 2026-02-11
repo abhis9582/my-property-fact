@@ -1,31 +1,17 @@
-.noida-projects-section {
-  padding-top: 40px;
-  background: #ffffff;
-  width: 100%;
-  overflow-x: hidden;
-  box-sizing: border-box;
-  position: relative;
-  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
-}
-
 .noida-projects-container {
   width: 100%;
-  max-width: 1550px;
   margin-inline: auto;
-  padding-left: 16px;
   padding-right: 0;
   box-sizing: border-box;
 }
 
 .noida-projects-content {
   width: 100%;
-  max-width: 1200px;
-  margin-left: auto; /* push content to the right within 1550px container */
+  margin-left: auto;
+  /* push content to the right within 1550px container */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  overflow: hidden;
 }
 
 @media (min-width: 1200px) {
@@ -47,29 +33,12 @@
   text-align: left;
 }
 
-.noida-projects-eyebrow {
-  font-size: 14px;
-  font-weight: 500;
-  color: #000000;
-  margin: 0 0 6px;
-}
-
-.noida-projects-title {
-  font-size: 24px;
-  font-weight: 500;
-  margin: 0 0 clamp(32px, 4vw, 48px);
-  line-height: 1.3;
-  color: #0f0f0f;
-  text-align: left;
-}
-
 /* City Cards Slider Wrapper */
 .noida-projects-section .city-cards-slider-wrapper {
   position: relative;
   width: 100%;
   max-width: 100%;
   padding: 0;
-  overflow: hidden;
   margin: 0 auto;
   box-sizing: border-box;
 }
@@ -77,8 +46,6 @@
 .noida-projects-section .city-cards-swiper {
   width: 100%;
   max-width: 100%;
-
-  overflow: hidden;
   margin: 0 auto;
   box-sizing: border-box;
 }
@@ -98,7 +65,7 @@
   border: none;
   background: #ffffff;
   color: #111;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  /* box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -107,13 +74,6 @@
   z-index: 10;
   transition: all 0.3s ease;
 }
-
-/* .noida-projects-section .noida-projects-nav:hover {
-  transform: translateY(-50%) scale(1.1);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
-  background: #1b5e20;
-  color: #ffffff;
-} */
 
 .noida-projects-section .noida-projects-prev {
   left: 0;
@@ -140,22 +100,19 @@
   background: rgb(255, 246, 228);
   border-radius: 6px;
   padding: 0;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-top: 2px solid #1b5e20;
   display: flex;
   flex-direction: column;
-  gap: 10px;
   transition: all 0.3s ease;
-  border-top: 2px solid #1b5e20;
   height: 264px;
-  width: 408px;
-  max-width: 100%;
+  width: 96%;
   box-sizing: border-box;
   flex-shrink: 0;
   min-width: 0;
-  overflow: hidden;
   position: relative;
   text-decoration: none;
   color: inherit;
+  gap: 10px;
 }
 
 .noida-projects-section .city-card-link {
@@ -163,15 +120,9 @@
   color: inherit;
 }
 
-/* .noida-projects-section .city-card-link:hover {
-  text-decoration: none;
-  color: inherit;
-}
-
 .noida-projects-section .city-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-} */
+  border-top: 2px solid #1b5e20;
+}
 
 /* City Card Header Section */
 .noida-projects-section .city-card-header {
@@ -221,7 +172,7 @@
   padding: 0;
   padding-left: clamp(16px, 2vw, 20px);
   padding-right: 0;
-  
+
   text-align: left;
   width: 100%;
 }
@@ -271,10 +222,6 @@
   flex-shrink: 0;
 }
 
-/* .noida-projects-section .city-card:hover .count-text {
-  text-decoration: underline;
-} */
-
 /* Projects Slider Container */
 .noida-projects-section .city-projects-slider-container {
   width: 100%;
@@ -296,19 +243,12 @@
 
 .noida-projects-section .project-image-wrapper {
   position: relative;
-  width: 371px;
+  width: 100%;
   height: 120px;
-  padding-top: 0px; 
-  overflow: hidden;
+  padding-top: 0px;
   border-radius: 10px;
   background: #f5f5f5;
-}
-
-@media (min-width: 1024px) {
-  .noida-projects-section .city-card {
-    width: 408px;
-    /* max-width: 408px; */
-  }
+  overflow: hidden;
 }
 
 /* Project Details Box Below Image */
@@ -327,7 +267,7 @@
 }
 
 .noida-projects-section .project-slider-image {
- object-fit: cover;
+  object-fit: cover;
   object-position: center center;
   transition: transform 0.6s ease;
 }
@@ -379,6 +319,7 @@
     opacity: 0;
     transform: translateX(20px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -478,14 +419,6 @@
   }
 }
 
-@media (min-width: 1440px) {
-  .noida-projects-section .city-cards-slider-wrapper {
-    padding: 0 0px;
-    width: 100%;
-    max-width: calc(1400px - 96px);
-  }
-}
-
 /* Touch Device Optimizations */
 /* @media (hover: none) and (pointer: coarse) {
   .noida-projects-section .city-card:active {
@@ -498,7 +431,7 @@
 } */
 
 /* Print Styles */
-@media print {
+/* @media print {
   .noida-projects-section .city-card {
     break-inside: avoid;
     page-break-inside: avoid;
@@ -507,7 +440,7 @@
   .noida-projects-section .city-projects-slider-container {
     height: 200px;
   }
-}
+} */
 
 /* Loading State */
 .noida-projects-section .loading-state {

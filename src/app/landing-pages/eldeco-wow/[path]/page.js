@@ -109,7 +109,6 @@ export default function Home() {
       const segment = path.split("/")[3];
       if (segment) {
         const filtered = pathArr.filter((obj) => obj.num == segment);
-        console.log(filtered);
 
         if (filtered.length === 0) {
           return router.push(`/landing-pages/eldeco-wow/1`);

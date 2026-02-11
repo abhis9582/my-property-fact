@@ -8,7 +8,6 @@ export default function MasterBHKProjectsPage({ slug }) {
   const title = slug
     .replace(/-/g, " ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
-  console.log("title:", title);
 
   return (
     <>

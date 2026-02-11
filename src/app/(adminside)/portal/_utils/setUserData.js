@@ -19,7 +19,6 @@ export const setDemoUserData = () => {
 
   try {
     Cookies.set("userData", JSON.stringify(demoUserData), { expires: 7 });
-    console.log("Demo user data set successfully!");
     return true;
   } catch (error) {
     console.error("Error setting demo user data:", error);
@@ -30,7 +29,6 @@ export const setDemoUserData = () => {
 export const clearUserData = () => {
   try {
     Cookies.remove("userData");
-    console.log("User data cleared successfully!");
     return true;
   } catch (error) {
     console.error("Error clearing user data:", error);

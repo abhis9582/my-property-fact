@@ -27,34 +27,45 @@ export default function NewInsight() {
 
   // Returning the new insight section
   return (
-    <div className="container-fluid bg-white new-insight-container my-4 my-lg-5">
+    <div className="container-fluid bg-light new-insight-container py-3 py-lg-5">
       <div className="container insight-content-wrapper">
-        <h2 className="insight-section-title">Expert Insights & Resources</h2>
         <div className="insight-layout">
           <div className="insight-cards">
-            {insights.map((insight) => (
-              <div className="insight-card" key={insight.id}>
-                <div className="insight-icon-wrapper">
-                  <Image
-                    src={insight.iconSrc}
-                    alt={`${insight.heading} icon`}
-                    width={32}
-                    height={32}
-                    className="insight-icon"
-                  />
+            <h2 className="plus-jakarta-sans-semi-bold mb-3 mb-lg-4">
+              Expert Insights & Resources
+            </h2>
+            <div className="d-flex flex-column flex-md-row gap-3">
+              {insights.map((insight) => (
+                <div className="insight-card" key={insight.id}>
+                  <div className="insight-icon-wrapper">
+                    <Image
+                      src={insight.iconSrc}
+                      alt={`${insight.heading} icon`}
+                      width={32}
+                      height={32}
+                      className="insight-icon"
+                    />
+                  </div>
+                  <div className="insight-content">
+                    <h3 className="insight-title plus-jakarta-sans-semi-bold">
+                      {insight.heading}
+                    </h3>
+                    <p className="insight-description plus-jakarta-sans-semi-bold">
+                      {insight.sub_heading}
+                    </p>
+                    <Link
+                      className="insight-link plus-jakarta-sans-semi-bold"
+                      href={insight.href}
+                    >
+                      Explore Now
+                      <span className="insight-link-arrow">
+                        <FontAwesomeIcon icon={faArrowRight} />
+                      </span>
+                    </Link>
+                  </div>
                 </div>
-                <div className="insight-content">
-                  <h3 className="insight-title">{insight.heading}</h3>
-                  <p className="insight-description">{insight.sub_heading}</p>
-                  <Link className="insight-link" href={insight.href}>
-                    Explore Now
-                    <span className="insight-link-arrow">
-                      <FontAwesomeIcon icon={faArrowRight} />
-                    </span>
-                  </Link>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
           <div className="insight-image-wrapper">
             <Image

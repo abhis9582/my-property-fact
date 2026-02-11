@@ -223,7 +223,7 @@ export default function NewContactUs() {
                       height={36}
                     />
                   </div>
-                  <h3 className="plus-jakarta-sans-bold">Address</h3>
+                  <h3 className="plus-jakarta-sans-semi-bold">Address</h3>
                   <p>6th Floor Tower A1, Corporate Park, Noida-142, India</p>
                 </div>
               </div>
@@ -239,7 +239,7 @@ export default function NewContactUs() {
                       height={31}
                     />
                   </div>
-                  <h3 className="plus-jakarta-sans-bold">Phone Number</h3>
+                  <h3 className="plus-jakarta-sans-semi-bold">Phone Number</h3>
                   <p>8920024793</p>
                 </div>
               </div>
@@ -255,7 +255,7 @@ export default function NewContactUs() {
                       height={27}
                     />
                   </div>
-                  <h3 className="plus-jakarta-sans-bold">Email Address</h3>
+                  <h3 className="plus-jakarta-sans-semi-bold">Email Address</h3>
                   <p>social@mypropertyfact.com</p>
                 </div>
               </div>
@@ -272,7 +272,7 @@ export default function NewContactUs() {
         <div className="container py-5">
           <div className="row justify-content-center">
             <div className="col-lg-8 col-md-10">
-              <h2 className="get-quote-heading plus-jakarta-sans-bold text-center mb-4">
+              <h2 className="get-quote-heading plus-jakarta-sans-semi-bold text-center mb-4">
                 Get A Quote
               </h2>
               <form
@@ -385,7 +385,7 @@ export default function NewContactUs() {
           />
         </div>
         <div className="looking-for-dream-home-section-content">
-          <h2 className="plus-jakarta-sans-bold">Looking For A Dream Home?</h2>
+          <h2 className="plus-jakarta-sans-semi-bold">Looking For A Dream Home?</h2>
           <p>We can help you realize your dream of a new home</p>
           <div>
             <button

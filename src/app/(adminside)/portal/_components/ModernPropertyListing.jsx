@@ -795,12 +795,6 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
         
         if (result.success && result.property) {
           const property = result.property;
-          
-          // Debug: Log the property data to see what we're receiving
-          console.log("Property data received:", property);
-          console.log("truthfulDeclaration from API:", property.truthfulDeclaration);
-          console.log("dpdpConsent from API:", property.dpdpConsent);
-          
           // Get initial form state first, then override with property data
           const initialFormState = getInitialFormState();
           
@@ -907,9 +901,6 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
             state: property.state || "",
             localityId: property.localityId || null,
           });
-          
-          // Debug: Log the populated form data
-          console.log("Form data populated successfully");
         } else {
           console.error("Property data not found in API response:", result);
         }
@@ -1261,8 +1252,6 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       // If property was created/updated, update listingId and isEditMode for future saves
       if (result.property && result.property.id) {
         const savedId = result.property.id;
-        console.log(`${isEditMode ? 'Draft updated' : 'Draft saved'} with ID:`, savedId);
-        
         // Update savedListingId state so future saves use PUT instead of POST
         setSavedListingId(savedId);
         

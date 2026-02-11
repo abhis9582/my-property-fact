@@ -3,6 +3,7 @@ import Link from "next/link";
 import "./common.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { RiArrowRightSLine } from "react-icons/ri";
 
 export default function MpfTopPicks({ topProject }) {
   // If no top project is provided, return null
@@ -50,10 +51,10 @@ export default function MpfTopPicks({ topProject }) {
           <div className="mpf-top-picks-section">
             <div className="mpf-top-picks-header">
               <div>
-                <h2 className="mpf-top-picks-title">
+                <h2 className="plus-jakarta-sans-semi-bold">
                   My Property Fact&apos;s Top Picks
                 </h2>
-                <p className="mpf-top-picks-eyebrow">
+                <p className="plus-jakarta-sans-semi-bold text-muted">
                   Explore Top Living Options With Us
                 </p>
               </div>
@@ -73,14 +74,14 @@ export default function MpfTopPicks({ topProject }) {
                     />
                   </div>
                   <div className="mpf-top-picks-card__builder-info">
-                    <h4 className="mpf-top-pic-project-name">{builderName}</h4>
+                    <h4 className="mpf-top-pic-project-name plus-jakarta-sans-semi-bold">{builderName}</h4>
                     {builderSlug && (
                       <Link
                         href={`/builder/${builderSlug}`}
-                        className="mpf-top-picks-card__link"
+                        className="text-decoration-none plus-jakarta-sans-semi-bold fs-6 d-flex gap-2 align-items-center hover-underline"
                         aria-label={`View projects by ${builderName}`}
                       >
-                        View Projects by {builderName} &gt;
+                        View Projects by {builderName} <RiArrowRightSLine />
                       </Link>
                     )}
                   </div>
@@ -105,7 +106,7 @@ export default function MpfTopPicks({ topProject }) {
                     </p>
                   </div>
                   <div className="mpf-top-picks-card__meta-block2">
-                    <p className="mpf-top-picks-card__meta-value2 text-uppercase d-flex gap-2 align-items-center">
+                    <p className="mpf-top-picks-card__meta-value2 text-uppercase plus-jakarta-sans-semi-bold d-flex gap-2 align-items-center">
                     <Image src="/static/icon/home.png" alt="Starting From" width={20} height={20} />
                       {projectConfiguration}
                     </p>
@@ -114,7 +115,7 @@ export default function MpfTopPicks({ topProject }) {
 
                 <Link
                   href={`/${slugURL}`}
-                  className="mpf-top-picks-card__cta btn-normal-color"
+                  className="mpf-top-picks-card__cta btn-normal-color plus-jakarta-sans-semi-bold"
                   aria-label={`More about ${projectName}`}
                 >
                   More About {projectName}

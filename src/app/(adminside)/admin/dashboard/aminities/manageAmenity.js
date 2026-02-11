@@ -84,7 +84,6 @@ export default function ManageAminity({ list }) {
         }
       } catch (error) {
         toast.error(error?.data?.message);
-        console.log("Error submitting data", error);
       } finally {
         setShowLoading(false);
         setButtonName("Add Amenities");

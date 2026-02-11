@@ -32,7 +32,6 @@ export default function ProjectListByFloorTypeClient({ title }) {
   useEffect(() => {
     const bhkType = title.split(" In ")[0];
     const city = title.split(" In ")[1];
-    console.log("cityname", city);
     async function fetchData() {
       const data = await fetchAllProjects();
       const filteredData = await getListOfProjectFromBkType(

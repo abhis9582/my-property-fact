@@ -7,7 +7,6 @@ export const dynamic = 'force-dynamic';
 const fetchFeatures = async () => {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    console.log(`${apiUrl}feature/get-all`);
     const response = await axios.get(`${apiUrl}feature/get-all`);
     const list = response.data.map((item, index) => ({
       ...item,
