@@ -12,8 +12,9 @@ const protectedRoutes = [
 async function checkSession(req) {
   try {
     const cookieHeader = req.headers.get("cookie");
-
-    console.log("👉 Cookies sent to Spring:", cookieHeader);
+    for(const cookie of cookieHeader.split(";")) {
+      console.log("[", cookie.split("=")[0], "] = [", cookie.split("=")[1], "]");
+    };
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}auth/session`, {
       headers: {
         "Cookie": cookieHeader || "",

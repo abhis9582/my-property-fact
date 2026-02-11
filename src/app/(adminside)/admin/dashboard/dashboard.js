@@ -48,9 +48,14 @@ export default function Dashboard({
     noOfWebStories,
     noOfProjectTypes
 }) {
-    const [currentTime, setCurrentTime] = useState(new Date());
+    const [currentTime, setCurrentTime] = useState(null);
+    const [mounted, setMounted] = useState(false);
     
     useEffect(() => {
+        // Set mounted flag and initial time on client side only
+        setMounted(true);
+        setCurrentTime(new Date());
+        
         const timer = setInterval(() => {
             setCurrentTime(new Date());
         }, 1000);
@@ -58,6 +63,7 @@ export default function Dashboard({
     }, []);
 
     const getGreeting = () => {
+        if (!currentTime) return "Hello";
         const hour = currentTime.getHours();
         if (hour < 12) return "Good Morning";
         if (hour < 17) return "Good Afternoon";
@@ -65,6 +71,7 @@ export default function Dashboard({
     };
 
     const formatDate = (date) => {
+        if (!date) return "";
         return date.toLocaleDateString('en-US', { 
             weekday: 'long', 
             year: 'numeric', 
@@ -74,6 +81,7 @@ export default function Dashboard({
     };
 
     const formatTime = (date) => {
+        if (!date) return "";
         return date.toLocaleTimeString('en-US', { 
             hour: '2-digit', 
             minute: '2-digit',
@@ -97,7 +105,11 @@ export default function Dashboard({
                             Here&apos;s what&apos;s happening with your platform today
                         </p>
                         <p className="text-muted mb-0" style={{ fontSize: '0.9rem' }}>
-                            {formatDate(currentTime)} • {formatTime(currentTime)}
+                            {mounted && currentTime ? (
+                                `${formatDate(currentTime)} • ${formatTime(currentTime)}`
+                            ) : (
+                                <span style={{ opacity: 0 }}>Loading...</span>
+                            )}
                         </p>
                     </div>
                     <div style={{
