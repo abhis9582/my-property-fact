@@ -92,8 +92,21 @@ h1, h2, h3, h4, h5, h6 {
   background-image: url("/landing-pages/eldeco-camelot/img/line-bg.webp");
 }
 
+textarea {
+    resize: vertical;
+    outline: none;
+    border: none;
+    border-color: none;
+}
 
+textarea:focus {
+    border: none;
+    border-color: none;
+}
 
+.model-text-area {
+    border: none !important;
+}
 .navbar-nav .nav-link {
     font-weight: 600;
     color: #000000;
