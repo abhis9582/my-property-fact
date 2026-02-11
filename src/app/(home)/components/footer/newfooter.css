@@ -68,7 +68,7 @@
     gap: 12px;
 }
 
-.contact-item {
+.contact-item-footer {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -85,7 +85,7 @@
     flex-wrap: wrap;
 }
 
-.contact-item-row .contact-item {
+.contact-item-row .contact-item-footer {
     flex: 1;
     min-width: 150px;
 }
@@ -505,7 +505,7 @@
         gap: 20px;
     }
     
-    .contact-item-row .contact-item {
+    .contact-item-row .contact-item-footer {
         min-width: 200px;
     }
     
@@ -571,7 +571,7 @@
         gap: 15px;
     }
     
-    .contact-item-row .contact-item {
+    .contact-item-row .contact-item-footer {
         min-width: 100%;
     }
     
@@ -719,7 +719,7 @@
         gap: 15px;
     }
     
-    .contact-item {
+    .contact-item-footer {
         gap: 4px;
     }
     

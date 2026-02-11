@@ -189,7 +189,7 @@ export default function NewFooterDesign({ cityList = [] }) {
               </p>
             </div>
             <div className="contact-details">
-              <div className="contact-item contact-item-full">
+              <div className="contact-item-footer contact-item-full">
                 <span className="contact-label">ADDRESS:</span>
                 <span className="contact-value">
                   6th Floor Tower A1, Corporate Park Noida-142, India
