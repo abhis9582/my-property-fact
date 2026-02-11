@@ -102,7 +102,7 @@ export default function SideNav({ onLinkClick }) {
     try {
       const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005/").replace(/\/?$/, "/");
       const response = await axios.post(
-        `${baseUrl}auth/logout`,
+        `${baseUrl}api/v1/auth/logout`,
         {},
         {
           withCredentials: true,

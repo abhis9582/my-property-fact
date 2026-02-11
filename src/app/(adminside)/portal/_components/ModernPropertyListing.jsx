@@ -651,7 +651,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     const loadCities = async () => {
       setLoadingCities(true);
       try {
-        const response = await axios.get(`${baseUrl}/city/all`);
+        const response = await axios.get(`${baseUrl}/api/v1/city/all`);
         // Handle different response formats
         const cityData = response.data?.data || response.data || [];
         setCities(Array.isArray(cityData) ? cityData : []);
@@ -666,7 +666,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     const loadBuilders = async () => {
       setLoadingBuilders(true);
       try {
-        const response = await axios.get(`${baseUrl}/builder/get-all-builders`);
+        const response = await axios.get(`${baseUrl}/api/v1/builder/get-all-builders`);
         // Handle different response formats
         const builderData = response.data?.data || response.data || [];
         setBuilders(Array.isArray(builderData) ? builderData : []);
@@ -688,7 +688,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     const loadProjects = async () => {
       setLoadingProjects(true);
       try {
-        const response = await axios.get(`${baseUrl}/projects/get-all-projects-list`);
+        const response = await axios.get(`${baseUrl}/api/v1/projects/get-all-projects-list`);
         // Handle different response formats
         const projectData = response.data || [];
         setProjects(Array.isArray(projectData) ? projectData : []);
@@ -703,7 +703,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     const loadAmenities = async () => {
       setLoadingAmenities(true);
       try {
-        const response = await axios.get(`${baseUrl}/amenity/get-all`);
+        const response = await axios.get(`${baseUrl}/api/v1/amenity/get-all`);
         const amenityData = response.data || [];
         setAmenities(Array.isArray(amenityData) ? amenityData : []);
       } catch (error) {
@@ -717,7 +717,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     const loadFeatures = async () => {
       setLoadingFeatures(true);
       try {
-        const response = await axios.get(`${baseUrl}/feature/get-all`);
+        const response = await axios.get(`${baseUrl}/api/v1/feature/get-all`);
         const featureData = response.data || [];
         setFeatures(Array.isArray(featureData) ? featureData : []);
       } catch (error) {
@@ -731,7 +731,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     const loadNearbyBenefits = async () => {
       setLoadingNearbyBenefits(true);
       try {
-        const response = await axios.get(`${baseUrl}/nearby-benefit/get-all`);
+        const response = await axios.get(`${baseUrl}/api/v1/nearby-benefit/get-all`);
         const benefitData = response.data || [];
         setNearbyBenefits(Array.isArray(benefitData) ? benefitData : []);
       } catch (error) {
@@ -780,7 +780,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
         }
 
         const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005").replace(/\/$/, "");
-        const response = await axios.get(`${baseUrl}/api/user/property-listings/${listingId}`, {
+        const response = await axios.get(`${baseUrl}/api/v1/user/property-listings/${listingId}`, {
           withCredentials: true,
         });
 
@@ -860,12 +860,12 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
                   if (propertyListingsIndex !== -1 && pathParts.length > propertyListingsIndex + 2) {
                     const listingId = pathParts[propertyListingsIndex + 1];
                     const filename = pathParts.slice(propertyListingsIndex + 2).join('/');
-                    imageUrl = `${baseUrl}/get/images/property-listings/${listingId}/${filename}`;
+                    imageUrl = `${baseUrl}/api/v1/get/images/property-listings/${listingId}/${filename}`;
                   } else {
-                    imageUrl = `${baseUrl}/get/images/${url.replace(/\\/g, '/')}`;
+                    imageUrl = `${baseUrl}/api/v1/get/images/${url.replace(/\\/g, '/')}`;
                   }
                 } else {
-                  imageUrl = `${baseUrl}/get/images/${url.replace(/\\/g, '/')}`;
+                  imageUrl = `${baseUrl}/api/v1/get/images/${url.replace(/\\/g, '/')}`;
                 }
               }
               return {
@@ -967,8 +967,8 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
 
       // Use PUT for updates, POST for new listings
       const url = isEditMode && listingId
-        ? `${baseUrl}/api/user/property-listings/${listingId}`
-        : `${baseUrl}/api/user/property-listings`;
+        ? `${baseUrl}/api/v1/user/property-listings/${listingId}`
+        : `${baseUrl}/api/v1/user/property-listings`;
       
       const method = isEditMode && listingId ? "PUT" : "POST";
 
@@ -1209,8 +1209,8 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
 
       // Use PUT for updates, POST for new drafts
       const url = isEditMode && listingId
-        ? `${baseUrl}/api/user/property-listings/${listingId}`
-        : `${baseUrl}/api/user/property-listings`;
+        ? `${baseUrl}/api/v1/user/property-listings/${listingId}`
+        : `${baseUrl}/api/v1/user/property-listings`;
       
       const method = isEditMode && listingId ? "PUT" : "POST";
 
@@ -3347,11 +3347,11 @@ function FeaturesAmenitiesStep({
     if (!filename) return null;
     const baseUrl = apiBaseUrl.replace(/\/$/, "");
     if (type === "amenity") {
-      return `${baseUrl}/fetch-image/amenity/${filename}`;
+      return `${baseUrl}/api/v1/fetch-image/amenity/${filename}`;
     } else if (type === "feature") {
-      return `${baseUrl}/fetch-image/feature/${filename}`;
+      return `${baseUrl}/api/v1/fetch-image/feature/${filename}`;
     } else if (type === "nearby-benefit") {
-      return `${baseUrl}/fetch-image/nearby-benefit/${filename}`;
+      return `${baseUrl}/api/v1/fetch-image/nearby-benefit/${filename}`;
     }
     return null;
   };

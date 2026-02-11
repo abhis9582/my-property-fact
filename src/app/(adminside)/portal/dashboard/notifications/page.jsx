@@ -76,7 +76,7 @@ export default function NotificationsPage() {
 
   const fetchUserProperties = async (token, apiUrl) => {
     try {
-      const response = await axios.get(`${apiUrl}/api/user/property-listings`, {
+      const response = await axios.get(`${apiUrl.replace(/\/?$/, "")}/api/v1/user/property-listings`, {
         withCredentials: true,
       });
 

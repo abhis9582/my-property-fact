@@ -195,7 +195,7 @@ export default function PropertyDetailPage() {
         ? API_BASE_URL.slice(0, -1)
         : API_BASE_URL;
       const response = await axios.post(
-        `${apiUrl}/api/public/properties/lead`,
+        `${apiUrl.replace(/\/?$/, "")}/api/v1/public/properties/lead`,
         {
           name: contactForm.name,
           email: contactForm.email,
@@ -247,7 +247,7 @@ export default function PropertyDetailPage() {
         ? API_BASE_URL.slice(0, -1)
         : API_BASE_URL;
       const response = await axios.get(
-        `${apiUrl}/api/public/properties/${propertyId}`,
+        `${apiUrl.replace(/\/?$/, "")}/api/v1/public/properties/${propertyId}`,
       );
 
       if (response.data.success && response.data.property) {
@@ -273,7 +273,7 @@ export default function PropertyDetailPage() {
         ? API_BASE_URL.slice(0, -1)
         : API_BASE_URL;
       const response = await axios.get(
-        `${apiUrl}/api/public/properties?limit=4`,
+        `${apiUrl.replace(/\/?$/, "")}/api/v1/public/properties?limit=4`,
       );
 
       if (response.data.success && Array.isArray(response.data.properties)) {

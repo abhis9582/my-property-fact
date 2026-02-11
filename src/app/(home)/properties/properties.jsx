@@ -113,7 +113,7 @@ export default function Properties() {
         setLoading(true);
         setError(null);
         const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-        const response = await axios.get(`${apiUrl}/api/public/properties`);
+        const response = await axios.get(`${apiUrl.replace(/\/?$/, "")}/api/v1/public/properties`);
         
         if (response.data.success && Array.isArray(response.data.properties)) {
           const transformedProperties = response.data.properties.map((property) => {

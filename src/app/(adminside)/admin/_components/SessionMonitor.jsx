@@ -5,7 +5,7 @@ export default function SessionMonitor() {
     const checkExpiry = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}auth/session`,
+          `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/auth/session`,
           { credentials: "include" },
         );
         if (!res.ok) return;
@@ -21,7 +21,7 @@ export default function SessionMonitor() {
           );
 
           if (continueSession) {
-            await fetch(`${process.env.NEXT_PUBLIC_API_URL}auth/refresh-token`, {
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/auth/refresh-token`, {
               method: "POST",
               credentials: "include",
             });

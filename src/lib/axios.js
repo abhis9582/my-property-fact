@@ -1,9 +1,10 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { API_V1 } from './apiConfig';
 
-// Create axios instance
+// Create axios instance (all APIs are versioned under /api/v1)
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: API_V1,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -87,7 +88,7 @@ apiClient.interceptors.response.use(
 
       try {
         const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}auth/refresh`,
+          `${API_V1}auth/refresh`,
           { refreshToken },
           {
             headers: {

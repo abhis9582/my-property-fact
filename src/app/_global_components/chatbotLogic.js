@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const API_URL = `${process.env.NEXT_PUBLIC_API_URL}projects/search-by-type-city-budget`;
+const API_URL = `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/projects/search-by-type-city-budget`;
 const IMAGE_BASE_URL = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/`;
 
 const PROPERTY_TYPE_MAP = {

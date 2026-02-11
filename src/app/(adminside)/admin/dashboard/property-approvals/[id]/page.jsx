@@ -53,7 +53,7 @@ export default function AdminPropertyDetailPage() {
       }
 
       const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      const response = await axios.get(`${apiUrl}/api/admin/property-listings/${propertyId}`, {
+      const response = await axios.get(`${apiUrl.replace(/\/?$/, "")}/api/v1/admin/property-listings/${propertyId}`, {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
@@ -129,7 +129,7 @@ export default function AdminPropertyDetailPage() {
       const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
       
       const response = await axios.post(
-        `${apiUrl}/api/admin/property-listings/${propertyId}/approve`,
+        `${apiUrl.replace(/\/?$/, "")}/api/v1/admin/property-listings/${propertyId}/approve`,
         {},
         {
           headers: {
@@ -165,7 +165,7 @@ export default function AdminPropertyDetailPage() {
       const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
       
       const response = await axios.post(
-        `${apiUrl}/api/admin/property-listings/${propertyId}/reject`,
+        `${apiUrl.replace(/\/?$/, "")}/api/v1/admin/property-listings/${propertyId}/reject`,
         { reason: rejectReason },
         {
           headers: {

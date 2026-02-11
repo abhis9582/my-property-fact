@@ -36,7 +36,7 @@ export default function PropertyApprovalsPage() {
         ? API_BASE_URL.slice(0, -1)
         : API_BASE_URL;
       const response = await fetch(
-        `${apiUrl}/api/admin/property-listings/pending`,
+        `${apiUrl.replace(/\/?$/, "")}/api/v1/admin/property-listings/pending`,
         {
           credentials: "include",
         },
@@ -83,7 +83,7 @@ export default function PropertyApprovalsPage() {
         : API_BASE_URL;
 
       const response = await axios.post(
-        `${apiUrl}/api/admin/property-listings/${propertyId}/approve`,
+        `${apiUrl.replace(/\/?$/, "")}/api/v1/admin/property-listings/${propertyId}/approve`,
         {},
         {
           headers: {
@@ -127,7 +127,7 @@ export default function PropertyApprovalsPage() {
         : API_BASE_URL;
 
       const response = await axios.post(
-        `${apiUrl}/api/admin/property-listings/${selectedProperty.id}/reject`,
+        `${apiUrl.replace(/\/?$/, "")}/api/v1/admin/property-listings/${selectedProperty.id}/reject`,
         { reason: rejectReason },
         {
           headers: {

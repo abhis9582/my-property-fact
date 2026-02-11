@@ -76,7 +76,7 @@ export default function ModernDashboard() {
   const fetchProperties = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}api/user/property-listings`,
+        `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/user/property-listings`,
         {
           withCredentials: true,
         },
@@ -183,7 +183,7 @@ export default function ModernDashboard() {
               // Replace backslashes with forward slashes for URL
               const normalizedPath = relativePath.replace(/\\/g, "/");
               // Construct full URL: API_URL + get/images/ + normalized path
-              imageUrl = `${process.env.NEXT_PUBLIC_API_URL || ""}get/images/${normalizedPath}`;
+              imageUrl = `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/get/images/${normalizedPath}`;
             } else if (property.projectThumbnail) {
               // Fallback to projectThumbnail if available (for legacy data)
               const slugURL =
@@ -319,7 +319,7 @@ export default function ModernDashboard() {
   const fetchUserProfile = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}users/me`,
+        `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/users/me`,
         {
           withCredentials: true
         },

@@ -43,7 +43,7 @@ export default function ListingDetailPage() {
       }
 
       const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      const response = await axios.get(`${apiUrl}/api/user/property-listings/${listingId}`, {
+      const response = await axios.get(`${apiUrl.replace(/\/?$/, "")}/api/v1/user/property-listings/${listingId}`, {
         withCredentials: true,
       });
 

@@ -41,7 +41,7 @@ export default function ManageUsers({ users: initialUsers }) {
         }
 
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}api/admin/roles`,
+          `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/admin/roles`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -142,7 +142,7 @@ export default function ManageUsers({ users: initialUsers }) {
 
       // Update user details
       const updateResponse = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}users/${formData.id}`,
+        `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/users/${formData.id}`,
         {
           fullName: formData.fullName,
           phone: formData.phone,
@@ -160,7 +160,7 @@ export default function ManageUsers({ users: initialUsers }) {
 
       // Update user roles
       await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}users/${formData.id}/roles`,
+        `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/users/${formData.id}/roles`,
         formData.roleIds,
         {
           headers: {
@@ -192,7 +192,7 @@ export default function ManageUsers({ users: initialUsers }) {
       }
 
       await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}users/${userId}/activate`,
+        `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/users/${userId}/activate`,
         {},
         {
           headers: {
@@ -219,7 +219,7 @@ export default function ManageUsers({ users: initialUsers }) {
       }
 
       await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}users/${userId}/deactivate`,
+        `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/users/${userId}/deactivate`,
         {},
         {
           headers: {

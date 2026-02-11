@@ -5,7 +5,7 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 // Function to check if a given slug corresponds to a valid project
 export async function checkIfProjectSlug(slug) {
   const projects = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}projects/get/${slug}`
+    `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/projects/get/${slug}`
   );
   if (projects.data.slugURL === slug) {
     return true;
@@ -60,7 +60,7 @@ export const fetchCityData = cache(async () => {
 export const fetchProjectTypes = cache(async () => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`,
+      `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/project-types/get-all`,
       {
         next: { revalidate: 60 },
       }
@@ -79,7 +79,7 @@ export const fetchProjectTypes = cache(async () => {
 
 // Fetching builder data
 export const fetchBuilderData = cache(async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}builder/get-all`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/builder/get-all`, {
     next: { revalidate: 60 },
   });
   if (!res.ok) throw new Error("Failed to fetch builders");
@@ -89,7 +89,7 @@ export const fetchBuilderData = cache(async () => {
 // Fetching project details by slug
 export const fetchProjectDetailsBySlug = cache(async (slug) => {
   const projectBySlug = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}projects/get/${slug}`,
+    `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/projects/get/${slug}`,
     {
       next: { revalidate: 60 },
     }
@@ -195,7 +195,7 @@ export const fetchAllBenefits = cache(async () => {
 //Fetch all webstories from server
 export const fetchAllStories = cache(async () => {
   const stories = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}web-story-category/get-all`,
+    `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/web-story-category/get-all`,
     {
       next: { revalidate: 60 },
     }
