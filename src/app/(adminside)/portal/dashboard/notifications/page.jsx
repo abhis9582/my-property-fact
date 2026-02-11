@@ -76,11 +76,8 @@ export default function NotificationsPage() {
 
   const fetchUserProperties = async (token, apiUrl) => {
     try {
-      const response = await fetch(`${apiUrl}/api/user/property-listings`, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
+      const response = await axios.get(`${apiUrl}/api/user/property-listings`, {
+        withCredentials: true,
       });
 
       if (!response.ok) {

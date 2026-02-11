@@ -780,11 +780,8 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
         }
 
         const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005").replace(/\/$/, "");
-        const response = await fetch(`${baseUrl}/api/user/property-listings/${listingId}`, {
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
+        const response = await axios.get(`${baseUrl}/api/user/property-listings/${listingId}`, {
+          withCredentials: true,
         });
 
         if (!response.ok) {
@@ -975,13 +972,9 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       
       const method = isEditMode && listingId ? "PUT" : "POST";
 
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          // Don't set Content-Type, browser will set it with boundary
-        },
-        body: formDataObj,
+      const response = await axios.post(url, {
+        property: formDataObj,
+        withCredentials: true,
       });
 
       const responseText = await response.text();
@@ -1221,12 +1214,9 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       
       const method = isEditMode && listingId ? "PUT" : "POST";
 
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formDataObj,
+      const response = await axios.post(url, {
+        property: formDataObj,
+        withCredentials: true,
       });
 
       const responseText = await response.text();

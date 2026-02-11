@@ -100,11 +100,13 @@ export default function SideNav({ onLinkClick }) {
     const confirmed = window.confirm("Are you sure you want to log out?");
     if (!confirmed) return;
     try {
+      const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005/").replace(/\/?$/, "/");
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}auth/logout`,
-        {}, 
+        `${baseUrl}auth/logout`,
+        {},
         {
           withCredentials: true,
+          headers: { "Content-Type": "application/json" },
         },
       );
 

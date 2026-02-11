@@ -1,11 +1,19 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Card, Row, Col, Button, ProgressBar, Badge, Spinner, Alert } from "react-bootstrap";
+import {
+  Card,
+  Row,
+  Col,
+  Button,
+  ProgressBar,
+  Badge,
+  Spinner,
+  Alert,
+} from "react-bootstrap";
 import {
   cilHome,
   cilUser,
   cilChart,
-  cilBell,
   cilCalendar,
   cilPlus,
   cilSettings,
@@ -17,7 +25,6 @@ import {
   cilBuilding,
   cilLayers,
   cilCarAlt,
-  cilMoney,
 } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import Image from "next/image";
@@ -54,30 +61,25 @@ export default function ModernDashboard() {
     const date = new Date(dateString);
     const now = new Date();
     const diffInSeconds = Math.floor((now - date) / 1000);
-    
+
     if (diffInSeconds < 60) return "Just now";
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
-    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+    if (diffInSeconds < 3600)
+      return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+    if (diffInSeconds < 86400)
+      return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+    if (diffInSeconds < 604800)
+      return `${Math.floor(diffInSeconds / 86400)} days ago`;
     return date.toLocaleDateString();
   };
 
   // Fetch user properties
   const fetchProperties = async () => {
     try {
-      const token = Cookies.get("token");
-      if (!token) {
-        setError("Authentication required");
-        setLoading(false);
-        return;
-      }
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}api/user/property-listings`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+          withCredentials: true,
+        },
       );
       if (response.data.success && response.data.properties) {
         const propertiesData = response.data.properties;
@@ -86,16 +88,16 @@ export default function ModernDashboard() {
         // Calculate statistics
         const totalListings = propertiesData.length;
         const activeListings = propertiesData.filter(
-          (p) => p.approvalStatus === "APPROVED"
+          (p) => p.approvalStatus === "APPROVED",
         ).length;
         const pendingListings = propertiesData.filter(
-          (p) => p.approvalStatus === "PENDING"
+          (p) => p.approvalStatus === "PENDING",
         ).length;
         const draftListings = propertiesData.filter(
-          (p) => p.approvalStatus === "DRAFT"
+          (p) => p.approvalStatus === "DRAFT",
         ).length;
         const rejectedListings = propertiesData.filter(
-          (p) => p.approvalStatus === "REJECTED"
+          (p) => p.approvalStatus === "REJECTED",
         ).length;
 
         // Calculate revenue (sum of all property prices - simplified)
@@ -121,7 +123,11 @@ export default function ModernDashboard() {
 
         // Generate recent activities from properties
         const activities = propertiesData
-          .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))
+          .sort(
+            (a, b) =>
+              new Date(b.updatedAt || b.createdAt) -
+              new Date(a.updatedAt || a.createdAt),
+          )
           .slice(0, 4)
           .map((property, index) => {
             let message = "";
@@ -160,57 +166,74 @@ export default function ModernDashboard() {
         // Get top properties (approved properties, sorted by most recent)
         const topProps = propertiesData
           .filter((p) => p.approvalStatus === "APPROVED")
-          .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))
+          .sort(
+            (a, b) =>
+              new Date(b.updatedAt || b.createdAt) -
+              new Date(a.updatedAt || a.createdAt),
+          )
           .slice(0, 3)
           .map((property) => {
             // Get the first image from imageUrls array if available
             let imageUrl = "/static/generic-floorplan.jpg";
-            
+
             if (property.imageUrls && property.imageUrls.length > 0) {
               // imageUrls contains relative paths like "property-listings/{id}/{filename}"
               // Construct full URL using the API endpoint
               const relativePath = property.imageUrls[0];
               // Replace backslashes with forward slashes for URL
-              const normalizedPath = relativePath.replace(/\\/g, '/');
+              const normalizedPath = relativePath.replace(/\\/g, "/");
               // Construct full URL: API_URL + get/images/ + normalized path
-              imageUrl = `${process.env.NEXT_PUBLIC_API_URL || ''}get/images/${normalizedPath}`;
+              imageUrl = `${process.env.NEXT_PUBLIC_API_URL || ""}get/images/${normalizedPath}`;
             } else if (property.projectThumbnail) {
               // Fallback to projectThumbnail if available (for legacy data)
-              const slugURL = property.slugURL || property.projectName?.toLowerCase().replace(/\s+/g, '-');
-              imageUrl = `${process.env.NEXT_PUBLIC_IMAGE_URL || ''}properties/${slugURL}/${property.projectThumbnail}`;
+              const slugURL =
+                property.slugURL ||
+                property.projectName?.toLowerCase().replace(/\s+/g, "-");
+              imageUrl = `${process.env.NEXT_PUBLIC_IMAGE_URL || ""}properties/${slugURL}/${property.projectThumbnail}`;
             } else if (property.projectLogo) {
               // Fallback to projectLogo if available
-              const slugURL = property.slugURL || property.projectName?.toLowerCase().replace(/\s+/g, '-');
-              imageUrl = `${process.env.NEXT_PUBLIC_IMAGE_URL || ''}properties/${slugURL}/${property.projectLogo}`;
+              const slugURL =
+                property.slugURL ||
+                property.projectName?.toLowerCase().replace(/\s+/g, "-");
+              imageUrl = `${process.env.NEXT_PUBLIC_IMAGE_URL || ""}properties/${slugURL}/${property.projectLogo}`;
             }
-            
+
             // Format area
             const formatArea = (area) => {
               if (!area) return null;
-              const numArea = typeof area === 'string' ? parseFloat(area) : area;
+              const numArea =
+                typeof area === "string" ? parseFloat(area) : area;
               if (isNaN(numArea)) return null;
-              return `${numArea.toLocaleString('en-IN')} sq ft`;
+              return `${numArea.toLocaleString("en-IN")} sq ft`;
             };
 
-            const area = formatArea(property.carpetArea || property.builtUpArea || property.superBuiltUpArea || property.plotArea);
-            
+            const area = formatArea(
+              property.carpetArea ||
+                property.builtUpArea ||
+                property.superBuiltUpArea ||
+                property.plotArea,
+            );
+
             // Format price per sq ft
             const formatPricePerSqFt = () => {
               if (property.pricePerSqFt) {
-                const price = typeof property.pricePerSqFt === 'string' 
-                  ? parseFloat(property.pricePerSqFt.replace(/[^0-9.]/g, "")) 
-                  : property.pricePerSqFt;
-                if (!isNaN(price)) return `₹${price.toLocaleString('en-IN')}/sq ft`;
+                const price =
+                  typeof property.pricePerSqFt === "string"
+                    ? parseFloat(property.pricePerSqFt.replace(/[^0-9.]/g, ""))
+                    : property.pricePerSqFt;
+                if (!isNaN(price))
+                  return `₹${price.toLocaleString("en-IN")}/sq ft`;
               }
               // Calculate from total price and area
               if (property.totalPrice && area) {
-                const totalPrice = typeof property.totalPrice === 'string' 
-                  ? parseFloat(property.totalPrice.replace(/[^0-9.]/g, "")) 
-                  : property.totalPrice;
+                const totalPrice =
+                  typeof property.totalPrice === "string"
+                    ? parseFloat(property.totalPrice.replace(/[^0-9.]/g, ""))
+                    : property.totalPrice;
                 const areaNum = parseFloat(area.replace(/[^0-9.]/g, ""));
                 if (!isNaN(totalPrice) && !isNaN(areaNum) && areaNum > 0) {
                   const pricePerSqFt = Math.round(totalPrice / areaNum);
-                  return `₹${pricePerSqFt.toLocaleString('en-IN')}/sq ft`;
+                  return `₹${pricePerSqFt.toLocaleString("en-IN")}/sq ft`;
                 }
               }
               return null;
@@ -218,16 +241,29 @@ export default function ModernDashboard() {
 
             return {
               id: property.id,
-              title: property.projectName || property.title || "Untitled Property",
-              location: property.projectLocality || property.locality || property.address || "Location not specified",
+              title:
+                property.projectName || property.title || "Untitled Property",
+              location:
+                property.projectLocality ||
+                property.locality ||
+                property.address ||
+                "Location not specified",
               city: property.city || null,
-              price: property.projectPrice || (property.totalPrice ? `₹${property.totalPrice.toLocaleString('en-IN')}` : "Price not available"),
+              price:
+                property.projectPrice ||
+                (property.totalPrice
+                  ? `₹${property.totalPrice.toLocaleString("en-IN")}`
+                  : "Price not available"),
               pricePerSqFt: formatPricePerSqFt(),
               area: area,
               bedrooms: property.bedrooms || null,
               bathrooms: property.bathrooms || null,
               builderName: property.builderName || null,
-              projectType: property.listingType || property.subType || property.projectType || null,
+              projectType:
+                property.listingType ||
+                property.subType ||
+                property.projectType ||
+                null,
               floor: property.floor || null,
               totalFloors: property.totalFloors || null,
               furnished: property.furnished || null,
@@ -245,17 +281,27 @@ export default function ModernDashboard() {
 
         // Generate tasks from pending properties
         const tasks = propertiesData
-          .filter((p) => p.approvalStatus === "PENDING" || p.approvalStatus === "REQUIRES_CHANGES")
+          .filter(
+            (p) =>
+              p.approvalStatus === "PENDING" ||
+              p.approvalStatus === "REQUIRES_CHANGES",
+          )
           .slice(0, 3)
           .map((property, index) => {
-            const taskType = property.approvalStatus === "PENDING" ? "Review" : "Update";
-            const priority = property.approvalStatus === "REQUIRES_CHANGES" ? "high" : "medium";
-            
+            const taskType =
+              property.approvalStatus === "PENDING" ? "Review" : "Update";
+            const priority =
+              property.approvalStatus === "REQUIRES_CHANGES"
+                ? "high"
+                : "medium";
+
             return {
               id: property.id || index,
               title: `${taskType} property: ${property.projectName || "Untitled"}`,
               type: taskType,
-              time: new Date(property.updatedAt || property.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              time: new Date(
+                property.updatedAt || property.createdAt,
+              ).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
               priority,
             };
           });
@@ -272,22 +318,11 @@ export default function ModernDashboard() {
   // Fetch user profile
   const fetchUserProfile = async () => {
     try {
-      const token = Cookies.get("token");
-      if (!token) {
-        // If no token, use userData from context as fallback
-        if (userData) {
-          setUserProfile(userData);
-        }
-        return;
-      }
-
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}users/me`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+          withCredentials: true
+        },
       );
 
       if (response.data) {
@@ -353,15 +388,15 @@ export default function ModernDashboard() {
           fill
           className="property-image"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          style={{ objectFit: 'cover' }}
+          style={{ objectFit: "cover" }}
         />
         <Badge
           bg={
             property.status === "active"
               ? "success"
               : property.status === "sold"
-              ? "warning"
-              : "secondary"
+                ? "warning"
+                : "secondary"
           }
           className="property-status"
         >
@@ -370,7 +405,7 @@ export default function ModernDashboard() {
       </div>
       <Card.Body>
         <h6 className="property-title mb-2">{property.title}</h6>
-        
+
         {/* Location */}
         <p className="property-location text-muted small mb-2">
           <CIcon icon={cilLocationPin} className="me-1" />
@@ -390,7 +425,9 @@ export default function ModernDashboard() {
         <div className="property-price mb-2">
           <strong className="text-primary">{property.price}</strong>
           {property.pricePerSqFt && (
-            <small className="text-muted d-block">{property.pricePerSqFt}</small>
+            <small className="text-muted d-block">
+              {property.pricePerSqFt}
+            </small>
           )}
         </div>
 
@@ -412,7 +449,7 @@ export default function ModernDashboard() {
               )}
             </div>
           )}
-          
+
           {property.area && (
             <div className="detail-item">
               <CIcon icon={cilViewModule} className="me-1" />
@@ -453,7 +490,9 @@ export default function ModernDashboard() {
         {/* Property Type Badge */}
         {property.projectType && (
           <div className="mb-2">
-            <Badge bg="info" className="me-1">{property.projectType}</Badge>
+            <Badge bg="info" className="me-1">
+              {property.projectType}
+            </Badge>
           </div>
         )}
 
@@ -500,8 +539,8 @@ export default function ModernDashboard() {
             task.priority === "high"
               ? "danger"
               : task.priority === "medium"
-              ? "warning"
-              : "info"
+                ? "warning"
+                : "info"
           }
         >
           {task.priority}
@@ -542,7 +581,10 @@ export default function ModernDashboard() {
 
   if (loading || userLoading) {
     return (
-      <div className="modern-dashboard d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+      <div
+        className="modern-dashboard d-flex justify-content-center align-items-center"
+        style={{ minHeight: "100vh" }}
+      >
         <Spinner animation="border" role="status">
           <span className="visually-hidden">Loading...</span>
         </Spinner>
@@ -564,7 +606,10 @@ export default function ModernDashboard() {
       <div className="dashboard-header">
         <div className="header-content">
           <div className="header-title">
-            <h2>Welcome back, {userProfile?.fullName || userData?.fullName || 'User'}</h2>
+            <h2>
+              Welcome back,{" "}
+              {userProfile?.fullName || userData?.fullName || "User"}
+            </h2>
             <p>Here&apos;s what&apos;s happening with your properties today.</p>
           </div>
           <div className="header-actions">
@@ -612,7 +657,11 @@ export default function ModernDashboard() {
             value={stats.pendingListings}
             icon={cilViewModule}
             color="info"
-            change={stats.pendingListings > 0 ? `${stats.pendingListings} pending` : null}
+            change={
+              stats.pendingListings > 0
+                ? `${stats.pendingListings} pending`
+                : null
+            }
             changeType="warning"
           />
         </Col>
@@ -622,7 +671,9 @@ export default function ModernDashboard() {
             value={stats.totalListings}
             icon={cilStar}
             color="warning"
-            change={stats.totalListings > 0 ? `${stats.activeListings} active` : null}
+            change={
+              stats.totalListings > 0 ? `${stats.activeListings} active` : null
+            }
             changeType="success"
           />
         </Col>
@@ -651,7 +702,9 @@ export default function ModernDashboard() {
                   ))}
                 </Row>
               ) : (
-                <p className="text-muted text-center py-4">No approved properties yet</p>
+                <p className="text-muted text-center py-4">
+                  No approved properties yet
+                </p>
               )}
             </Card.Body>
           </Card>
@@ -674,7 +727,9 @@ export default function ModernDashboard() {
                   ))}
                 </div>
               ) : (
-                <p className="text-muted text-center py-4">No recent activities</p>
+                <p className="text-muted text-center py-4">
+                  No recent activities
+                </p>
               )}
             </Card.Body>
           </Card>

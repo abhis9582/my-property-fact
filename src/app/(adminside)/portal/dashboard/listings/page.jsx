@@ -22,6 +22,7 @@ import {
   cilViewModule
 } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
+import axios from "axios";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005";
 
@@ -74,30 +75,17 @@ export default function ListingPage() {
     try {
       setLoading(true);
       setError(null);
-      const token = Cookies.get("token");
-      
-      if (!token) {
-        setError("Please login to view your properties");
-        setLoading(false);
-        return;
-      }
-
       const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      const response = await fetch(`${apiUrl}/api/user/property-listings`, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
+      const response = await axios.get(`${apiUrl}/api/user/property-listings`, {
+        withCredentials: true,
       });
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error(`Failed to fetch properties: ${response.status}`);
       }
 
-      const result = await response.json();
-      
-      if (result.success && Array.isArray(result.properties)) {
-        const transformedListings = result.properties.map(property => {
+      if (response.data.success && Array.isArray(response.data.properties)) {
+        const transformedListings = response.data.properties.map(property => {
           const locationParts = [];
           if (property.address) locationParts.push(property.address);
           if (property.locality) locationParts.push(property.locality);
@@ -245,12 +233,8 @@ export default function ListingPage() {
       }
 
       const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      const response = await fetch(`${apiUrl}/api/user/property-listings/${listingId}`, {
-        method: 'DELETE',
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
+      const response = await axios.delete(`${apiUrl}/api/user/property-listings/${listingId}`, {
+        withCredentials: true,
       });
 
       const result = await response.json();

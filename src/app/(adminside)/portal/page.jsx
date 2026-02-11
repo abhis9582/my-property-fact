@@ -21,64 +21,27 @@ export default function PortalSignInPage() {
   const [error, setError] = useState("");
   const [googleLoginEnabled, setGoogleLoginEnabled] = useState(true);
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
-  useEffect(() => {
-    const token = Cookies.get("token");
-    if (token) {
-      // Use router for existing sessions to maintain SPA behavior
-      router.replace("/portal/dashboard");
-    }
-  }, [router]);
 
   // Handling google login
   const handleSuccess = async (credentialResponse) => {
     const token = credentialResponse.credential;
     setIsLoading(true);
     setError("");
-
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}auth/google`,
         { token: token },
+        { withCredentials: true }
       );
 
-      if (response.data.token) {
-        const authToken = response.data.token;
-
-        Cookies.set("token", authToken, {
-          expires: 1,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-          path: "/",
-        });
-
-        if (response.data.refreshToken) {
-          Cookies.set("refreshToken", response.data.refreshToken, {
-            expires: 7,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-            path: "/",
-          });
-        }
-
-        if (response.data.user) {
-          Cookies.set("userData", JSON.stringify(response.data.user), {
-            expires: 1,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-            path: "/",
-          });
-        }
-
-        // Use window.location for immediate navigation (bypasses Next.js router delay)
-        window.location.href = "/portal/dashboard";
+      if (response.status === 200) {
+        router.replace("/portal/dashboard");
+        return;
+      } else {
+        toast.error("Google login failed. Please try again.");
       }
     } catch (error) {
-      setError(
-        error.response?.data?.message ||
-          "Google login failed. Please try again.",
-      );
-    } finally {
-      setIsLoading(false);
+      toast.error("Google login failed. Please try again.");
     }
   };
 

@@ -1,23 +1,23 @@
 "use client";
 import { useState, useEffect } from "react";
-import { 
-  Card, 
-  Row, 
-  Col, 
-  Button, 
-  Form, 
-  Tab, 
+import {
+  Card,
+  Row,
+  Col,
+  Button,
+  Form,
+  Tab,
   Tabs,
   Badge,
   ProgressBar,
   Alert,
-  Spinner
+  Spinner,
 } from "react-bootstrap";
-import { 
-  cilUser, 
-  cilLocationPin, 
-  cilPhone, 
-  cilEnvelopeOpen, 
+import {
+  cilUser,
+  cilLocationPin,
+  cilPhone,
+  cilEnvelopeOpen,
   cilCalendar,
   cilShieldAlt,
   cilSettings,
@@ -25,7 +25,7 @@ import {
   cilCheck,
   cilPencil,
   cilAccountLogout,
-  cilInfo
+  cilInfo,
 } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import Image from "next/image";
@@ -33,13 +33,15 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useUser } from "../../_contexts/UserContext";
 import "../../_components/PortalCommonStyles.css";
+import axios from "axios";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005/";
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005/";
 
 // Helper function to get initials from full name
 const getInitials = (fullName) => {
   if (!fullName || !fullName.trim()) return "U";
-  
+
   const names = fullName.trim().split(/\s+/);
   if (names.length >= 2) {
     return (names[0][0] + names[names.length - 1][0]).toUpperCase();
@@ -51,39 +53,40 @@ const getInitials = (fullName) => {
 const calculateProfileCompletion = (profile) => {
   let filledFields = 0;
   const totalFields = 7; // fullName, email, phone, location, bio, experience, avatar
-  
+
   if (profile.name && profile.name.trim()) filledFields++;
   if (profile.email && profile.email.trim()) filledFields++;
   if (profile.phone && profile.phone.trim()) filledFields++;
   if (profile.location && profile.location.trim()) filledFields++;
   if (profile.bio && profile.bio.trim()) filledFields++;
   if (profile.experience && profile.experience.trim()) filledFields++;
-  if (profile.avatar && profile.avatar.trim() && profile.avatar !== "/logo.png") filledFields++;
-  
+  if (profile.avatar && profile.avatar.trim() && profile.avatar !== "/logo.png")
+    filledFields++;
+
   return Math.round((filledFields / totalFields) * 100);
 };
 
 // Helper function to extract role from roles array
 const getRoleFromRoles = (roles) => {
   if (!roles || roles.length === 0) return "Member";
-  
+
   // Get the first active role
-  const activeRole = Array.isArray(roles) 
-    ? roles.find(role => role && role.isActive !== false)
+  const activeRole = Array.isArray(roles)
+    ? roles.find((role) => role && role.isActive !== false)
     : null;
-  
+
   if (activeRole) {
     return activeRole.roleName || "Member";
   }
-  
+
   // Fallback: check if roles is an array of strings
   if (Array.isArray(roles) && roles.length > 0) {
     const firstRole = roles[0];
-    if (typeof firstRole === 'string') {
-      return firstRole.replace('ROLE_', '').replace(/_/g, ' ');
+    if (typeof firstRole === "string") {
+      return firstRole.replace("ROLE_", "").replace(/_/g, " ");
     }
   }
-  
+
   return "Member";
 };
 
@@ -107,11 +110,11 @@ export default function Profile() {
     verified: false,
     rating: 0,
     totalDeals: 0,
-    joinDate: ""
+    joinDate: "",
   });
 
   const [stats, setStats] = useState({
-    profileCompletion: 0
+    profileCompletion: 0,
   });
 
   const [recentAchievements] = useState([
@@ -120,44 +123,34 @@ export default function Profile() {
       title: "Top Performer",
       description: "Achieved highest sales in Q3 2024",
       date: "2024-10-15",
-      type: "performance"
+      type: "performance",
     },
     {
       id: 2,
       title: "Client Satisfaction",
       description: "Maintained 95% satisfaction rate",
       date: "2024-10-10",
-      type: "satisfaction"
+      type: "satisfaction",
     },
     {
       id: 3,
       title: "Quick Response",
       description: "Average response time under 2 minutes",
       date: "2024-10-05",
-      type: "response"
-    }
+      type: "response",
+    },
   ]);
 
   // Fetch user profile from API
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const token = Cookies.get("token");
-        if (!token) {
-          setError("No auth token found. Please login again.");
-          setLoading(false);
-          return;
-        }
-
-        const response = await fetch(`${API_BASE_URL}users/me`, {
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
+        const response = await axios.get(`${API_BASE_URL}users/me`, {
+          withCredentials: true,
         });
 
-        if (response.ok) {
-          const userData = await response.json();
+        if (response.status === 200) {
+          const userData = response.data;
           const updatedProfile = {
             name: userData.fullName || "",
             email: userData.email || "",
@@ -170,15 +163,17 @@ export default function Profile() {
             verified: userData.verified || false,
             rating: userData.rating || 0,
             totalDeals: userData.totalDeals || 0,
-            joinDate: userData.createdAt ? new Date(userData.createdAt).toISOString().split('T')[0] : ""
+            joinDate: userData.createdAt
+              ? new Date(userData.createdAt).toISOString().split("T")[0]
+              : "",
           };
-          
+
           setProfile(updatedProfile);
-          
+
           // Calculate profile completion
           const completion = calculateProfileCompletion(updatedProfile);
           setStats({ profileCompletion: completion });
-          
+
           setError(null);
         } else {
           if (response.status === 401) {
@@ -201,9 +196,9 @@ export default function Profile() {
   }, [router, logout]);
 
   const handleInputChange = (field, value) => {
-    setProfile(prev => ({
+    setProfile((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -211,7 +206,7 @@ export default function Profile() {
     setSaving(true);
     setError(null);
     setSuccess(null);
-    
+
     try {
       const token = Cookies.get("token");
       if (!token) {
@@ -226,16 +221,11 @@ export default function Profile() {
         location: profile.location || null,
         bio: profile.bio || null,
         avatar: profile.avatar || null,
-        experience: profile.experience || null
+        experience: profile.experience || null,
       };
 
-      const response = await fetch(`${API_BASE_URL}users/me`, {
-        method: "PUT",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(updateData)
+      const response = await axios.put(`${API_BASE_URL}users/me`, updateData, {
+        withCredentials: true,
       });
 
       if (response.ok) {
@@ -249,26 +239,37 @@ export default function Profile() {
           location: updatedUser.location || profile.location,
           bio: updatedUser.bio || profile.bio,
           avatar: updatedUser.avatar || null,
-          verified: updatedUser.verified !== undefined ? updatedUser.verified : profile.verified,
-          rating: updatedUser.rating !== undefined ? updatedUser.rating : profile.rating,
-          totalDeals: updatedUser.totalDeals !== undefined ? updatedUser.totalDeals : profile.totalDeals,
-          joinDate: profile.joinDate
+          verified:
+            updatedUser.verified !== undefined
+              ? updatedUser.verified
+              : profile.verified,
+          rating:
+            updatedUser.rating !== undefined
+              ? updatedUser.rating
+              : profile.rating,
+          totalDeals:
+            updatedUser.totalDeals !== undefined
+              ? updatedUser.totalDeals
+              : profile.totalDeals,
+          joinDate: profile.joinDate,
         };
-        
+
         setProfile(updatedProfile);
-        
+
         // Recalculate profile completion
         const completion = calculateProfileCompletion(updatedProfile);
         setStats({ profileCompletion: completion });
-        
+
         setSuccess("Profile updated successfully!");
         setEditMode(false);
-        
+
         // Clear success message after 3 seconds
         setTimeout(() => setSuccess(null), 3000);
       } else {
         const errorData = await response.json().catch(() => ({}));
-        setError(errorData.message || "Failed to update profile. Please try again.");
+        setError(
+          errorData.message || "Failed to update profile. Please try again.",
+        );
       }
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -293,7 +294,9 @@ export default function Profile() {
             <span className="visually-hidden">Loading...</span>
           </Spinner>
           <h3 className="mt-3">Loading Profile...</h3>
-          <p className="text-muted">Please wait while we load your profile data</p>
+          <p className="text-muted">
+            Please wait while we load your profile data
+          </p>
         </div>
       </div>
     );
@@ -306,7 +309,10 @@ export default function Profile() {
         <div className="header-content">
           <div className="header-title">
             <h2>My Profile</h2>
-            <p>Welcome back, {profile.name || 'User'}! Manage your account settings and preferences</p>
+            <p>
+              Welcome back, {profile.name || "User"}! Manage your account
+              settings and preferences
+            </p>
           </div>
         </div>
       </div>
@@ -337,7 +343,7 @@ export default function Profile() {
                 </div>
                 <div className="stat-info">
                   <h6 className="stat-title">Experience</h6>
-                  <h3 className="stat-value">{profile.experience || '0'}</h3>
+                  <h3 className="stat-value">{profile.experience || "0"}</h3>
                 </div>
               </div>
             </Card.Body>
@@ -352,7 +358,9 @@ export default function Profile() {
                 </div>
                 <div className="stat-info">
                   <h6 className="stat-title">Profile</h6>
-                  <h3 className="stat-value">{stats.profileCompletion || 0}%</h3>
+                  <h3 className="stat-value">
+                    {stats.profileCompletion || 0}%
+                  </h3>
                 </div>
               </div>
             </Card.Body>
@@ -391,14 +399,19 @@ export default function Profile() {
                         height={140}
                         className="avatar-image"
                         onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.nextSibling.style.display = 'flex';
+                          e.target.style.display = "none";
+                          e.target.nextSibling.style.display = "flex";
                         }}
                       />
                     ) : null}
-                    <div 
+                    <div
                       className="avatar-initials"
-                      style={{ display: profile.avatar && profile.avatar.trim() ? 'none' : 'flex' }}
+                      style={{
+                        display:
+                          profile.avatar && profile.avatar.trim()
+                            ? "none"
+                            : "flex",
+                      }}
                     >
                       {getInitials(profile.name)}
                     </div>
@@ -411,15 +424,15 @@ export default function Profile() {
                   )}
                 </div>
               </div>
-              <h4 className="profile-name">{profile.name || 'User'}</h4>
-              <p className="profile-role">{profile.role || 'Member'}</p>
+              <h4 className="profile-name">{profile.name || "User"}</h4>
+              <p className="profile-role">{profile.role || "Member"}</p>
               <div className="profile-rating">
                 <div className="rating-stars">
                   {[1, 2, 3, 4, 5].map((star) => (
-                    <CIcon 
+                    <CIcon
                       key={star}
-                      icon={cilStar} 
-                      className={`star-icon ${star <= Math.round(profile.rating) ? 'star-filled' : 'star-empty'}`}
+                      icon={cilStar}
+                      className={`star-icon ${star <= Math.round(profile.rating) ? "star-filled" : "star-empty"}`}
                     />
                   ))}
                 </div>
@@ -429,17 +442,14 @@ export default function Profile() {
                 </div>
               </div>
               <div className="d-grid gap-2 mt-3">
-                <Button 
-                  variant="primary" 
+                <Button
+                  variant="primary"
                   onClick={() => setEditMode(!editMode)}
                 >
                   <CIcon icon={cilPencil} className="me-2" />
-                  {editMode ? 'Cancel Edit' : 'Edit Profile'}
+                  {editMode ? "Cancel Edit" : "Edit Profile"}
                 </Button>
-                <Button 
-                  variant="outline-danger" 
-                  onClick={handleLogout}
-                >
+                <Button variant="outline-danger" onClick={handleLogout}>
                   <CIcon icon={cilAccountLogout} className="me-2" />
                   Logout
                 </Button>
@@ -462,17 +472,20 @@ export default function Profile() {
                     <CIcon icon={cilUser} className="me-2" />
                     Profile Info
                   </span>
-                  <span className="text-primary fw-bold">{stats.profileCompletion || 0}%</span>
+                  <span className="text-primary fw-bold">
+                    {stats.profileCompletion || 0}%
+                  </span>
                 </div>
-                <ProgressBar 
-                  now={stats.profileCompletion || 0} 
+                <ProgressBar
+                  now={stats.profileCompletion || 0}
                   variant="success"
-                  style={{ height: '10px', borderRadius: '10px' }}
+                  style={{ height: "10px", borderRadius: "10px" }}
                 />
               </div>
               <Alert variant="info" className="mb-0">
                 <CIcon icon={cilInfo} className="me-2" />
-                Complete your profile to get better visibility and more opportunities.
+                Complete your profile to get better visibility and more
+                opportunities.
               </Alert>
             </Card.Body>
           </Card>
@@ -489,16 +502,26 @@ export default function Profile() {
             </Card.Header>
             <Card.Body>
               {error && (
-                <Alert variant="danger" dismissible onClose={() => setError(null)} className="mb-3">
+                <Alert
+                  variant="danger"
+                  dismissible
+                  onClose={() => setError(null)}
+                  className="mb-3"
+                >
                   {error}
                 </Alert>
               )}
               {success && (
-                <Alert variant="success" dismissible onClose={() => setSuccess(null)} className="mb-3">
+                <Alert
+                  variant="success"
+                  dismissible
+                  onClose={() => setSuccess(null)}
+                  className="mb-3"
+                >
                   {success}
                 </Alert>
               )}
-              
+
               {!editMode ? (
                 // Read-only view
                 <div className="profile-info-view">
@@ -509,7 +532,9 @@ export default function Profile() {
                           <CIcon icon={cilUser} className="me-2" />
                           Full Name
                         </div>
-                        <div className="info-value">{profile.name || "Not provided"}</div>
+                        <div className="info-value">
+                          {profile.name || "Not provided"}
+                        </div>
                       </div>
                     </Col>
                     <Col xs={12} sm={6}>
@@ -518,7 +543,9 @@ export default function Profile() {
                           <CIcon icon={cilEnvelopeOpen} className="me-2" />
                           Email Address
                         </div>
-                        <div className="info-value">{profile.email || "Not provided"}</div>
+                        <div className="info-value">
+                          {profile.email || "Not provided"}
+                        </div>
                       </div>
                     </Col>
                     <Col xs={12} sm={6}>
@@ -527,7 +554,9 @@ export default function Profile() {
                           <CIcon icon={cilPhone} className="me-2" />
                           Phone Number
                         </div>
-                        <div className="info-value">{profile.phone || "Not provided"}</div>
+                        <div className="info-value">
+                          {profile.phone || "Not provided"}
+                        </div>
                       </div>
                     </Col>
                     <Col xs={12} sm={6}>
@@ -536,7 +565,9 @@ export default function Profile() {
                           <CIcon icon={cilLocationPin} className="me-2" />
                           Location
                         </div>
-                        <div className="info-value">{profile.location || "Not provided"}</div>
+                        <div className="info-value">
+                          {profile.location || "Not provided"}
+                        </div>
                       </div>
                     </Col>
                     <Col xs={12} sm={6}>
@@ -545,7 +576,9 @@ export default function Profile() {
                           <CIcon icon={cilSettings} className="me-2" />
                           Experience
                         </div>
-                        <div className="info-value">{profile.experience || "Not provided"}</div>
+                        <div className="info-value">
+                          {profile.experience || "Not provided"}
+                        </div>
                       </div>
                     </Col>
                     <Col xs={12} sm={6}>
@@ -555,12 +588,15 @@ export default function Profile() {
                           Member Since
                         </div>
                         <div className="info-value">
-                          {profile.joinDate 
-                            ? new Date(profile.joinDate).toLocaleDateString('en-US', { 
-                                year: 'numeric', 
-                                month: 'long', 
-                                day: 'numeric' 
-                              })
+                          {profile.joinDate
+                            ? new Date(profile.joinDate).toLocaleDateString(
+                                "en-US",
+                                {
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                                },
+                              )
                             : "Not available"}
                         </div>
                       </div>
@@ -572,7 +608,8 @@ export default function Profile() {
                           Bio
                         </div>
                         <div className="info-value bio-text">
-                          {profile.bio || "No bio provided yet. Click 'Edit Profile' to add one."}
+                          {profile.bio ||
+                            "No bio provided yet. Click 'Edit Profile' to add one."}
                         </div>
                       </div>
                     </Col>
@@ -581,122 +618,134 @@ export default function Profile() {
               ) : (
                 // Editable form
                 <Form className="profile-form">
-                <Row className="g-3">
-                  <Col xs={12} sm={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Label className="fw-semibold d-flex align-items-center">
-                        <CIcon icon={cilUser} className="me-2" />
-                        Full Name
-                      </Form.Label>
-                      <Form.Control
-                        type="text"
-                        value={profile.name}
-                        onChange={(e) => handleInputChange('name', e.target.value)}
-                        placeholder="Enter your full name"
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col xs={12} sm={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Label className="fw-semibold d-flex align-items-center">
-                        <CIcon icon={cilEnvelopeOpen} className="me-2" />
-                        Email Address
-                      </Form.Label>
-                      <Form.Control
-                        type="email"
-                        value={profile.email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
-                        placeholder="your.email@example.com"
-                        disabled
-                      />
-                      <Form.Text className="text-muted small">
-                        Email cannot be changed
-                      </Form.Text>
-                    </Form.Group>
-                  </Col>
-                  <Col xs={12} sm={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Label className="fw-semibold d-flex align-items-center">
-                        <CIcon icon={cilPhone} className="me-2" />
-                        Phone Number
-                      </Form.Label>
-                      <Form.Control
-                        type="tel"
-                        value={profile.phone}
-                        onChange={(e) => handleInputChange('phone', e.target.value)}
-                        placeholder="+1 234 567 8900"
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col xs={12} sm={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Label className="fw-semibold d-flex align-items-center">
-                        <CIcon icon={cilLocationPin} className="me-2" />
-                        Location
-                      </Form.Label>
-                      <Form.Control
-                        type="text"
-                        value={profile.location}
-                        onChange={(e) => handleInputChange('location', e.target.value)}
-                        placeholder="City, State, Country"
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col xs={12} sm={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Label className="fw-semibold d-flex align-items-center">
-                        <CIcon icon={cilSettings} className="me-2" />
-                        Experience
-                      </Form.Label>
-                      <Form.Control
-                        type="text"
-                        value={profile.experience}
-                        onChange={(e) => handleInputChange('experience', e.target.value)}
-                        placeholder="e.g., 5 years, Senior Agent"
-                      />
-                      <Form.Text className="text-muted small">
-                        Your professional experience
-                      </Form.Text>
-                    </Form.Group>
-                  </Col>
-                  <Col xs={12} sm={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Label className="fw-semibold d-flex align-items-center">
-                        <CIcon icon={cilCalendar} className="me-2" />
-                        Member Since
-                      </Form.Label>
-                      <Form.Control
-                        type="date"
-                        value={profile.joinDate}
-                        disabled
-                      />
-                      <Form.Text className="text-muted small">
-                        Account creation date
-                      </Form.Text>
-                    </Form.Group>
-                  </Col>
-                  <Col xs={12}>
-                    <Form.Group className="mb-3">
-                      <Form.Label className="fw-semibold d-flex align-items-center">
-                        <CIcon icon={cilUser} className="me-2" />
-                        Bio
-                      </Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        rows={5}
-                        value={profile.bio}
-                        onChange={(e) => handleInputChange('bio', e.target.value)}
-                        placeholder="Tell us about yourself..."
-                      />
-                      <Form.Text className="text-muted small">
-                        Write a short bio to help others know you better
-                      </Form.Text>
-                    </Form.Group>
-                  </Col>
-                </Row>
+                  <Row className="g-3">
+                    <Col xs={12} sm={6}>
+                      <Form.Group className="mb-3">
+                        <Form.Label className="fw-semibold d-flex align-items-center">
+                          <CIcon icon={cilUser} className="me-2" />
+                          Full Name
+                        </Form.Label>
+                        <Form.Control
+                          type="text"
+                          value={profile.name}
+                          onChange={(e) =>
+                            handleInputChange("name", e.target.value)
+                          }
+                          placeholder="Enter your full name"
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col xs={12} sm={6}>
+                      <Form.Group className="mb-3">
+                        <Form.Label className="fw-semibold d-flex align-items-center">
+                          <CIcon icon={cilEnvelopeOpen} className="me-2" />
+                          Email Address
+                        </Form.Label>
+                        <Form.Control
+                          type="email"
+                          value={profile.email}
+                          onChange={(e) =>
+                            handleInputChange("email", e.target.value)
+                          }
+                          placeholder="your.email@example.com"
+                          disabled
+                        />
+                        <Form.Text className="text-muted small">
+                          Email cannot be changed
+                        </Form.Text>
+                      </Form.Group>
+                    </Col>
+                    <Col xs={12} sm={6}>
+                      <Form.Group className="mb-3">
+                        <Form.Label className="fw-semibold d-flex align-items-center">
+                          <CIcon icon={cilPhone} className="me-2" />
+                          Phone Number
+                        </Form.Label>
+                        <Form.Control
+                          type="tel"
+                          value={profile.phone}
+                          onChange={(e) =>
+                            handleInputChange("phone", e.target.value)
+                          }
+                          placeholder="+1 234 567 8900"
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col xs={12} sm={6}>
+                      <Form.Group className="mb-3">
+                        <Form.Label className="fw-semibold d-flex align-items-center">
+                          <CIcon icon={cilLocationPin} className="me-2" />
+                          Location
+                        </Form.Label>
+                        <Form.Control
+                          type="text"
+                          value={profile.location}
+                          onChange={(e) =>
+                            handleInputChange("location", e.target.value)
+                          }
+                          placeholder="City, State, Country"
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col xs={12} sm={6}>
+                      <Form.Group className="mb-3">
+                        <Form.Label className="fw-semibold d-flex align-items-center">
+                          <CIcon icon={cilSettings} className="me-2" />
+                          Experience
+                        </Form.Label>
+                        <Form.Control
+                          type="text"
+                          value={profile.experience}
+                          onChange={(e) =>
+                            handleInputChange("experience", e.target.value)
+                          }
+                          placeholder="e.g., 5 years, Senior Agent"
+                        />
+                        <Form.Text className="text-muted small">
+                          Your professional experience
+                        </Form.Text>
+                      </Form.Group>
+                    </Col>
+                    <Col xs={12} sm={6}>
+                      <Form.Group className="mb-3">
+                        <Form.Label className="fw-semibold d-flex align-items-center">
+                          <CIcon icon={cilCalendar} className="me-2" />
+                          Member Since
+                        </Form.Label>
+                        <Form.Control
+                          type="date"
+                          value={profile.joinDate}
+                          disabled
+                        />
+                        <Form.Text className="text-muted small">
+                          Account creation date
+                        </Form.Text>
+                      </Form.Group>
+                    </Col>
+                    <Col xs={12}>
+                      <Form.Group className="mb-3">
+                        <Form.Label className="fw-semibold d-flex align-items-center">
+                          <CIcon icon={cilUser} className="me-2" />
+                          Bio
+                        </Form.Label>
+                        <Form.Control
+                          as="textarea"
+                          rows={5}
+                          value={profile.bio}
+                          onChange={(e) =>
+                            handleInputChange("bio", e.target.value)
+                          }
+                          placeholder="Tell us about yourself..."
+                        />
+                        <Form.Text className="text-muted small">
+                          Write a short bio to help others know you better
+                        </Form.Text>
+                      </Form.Group>
+                    </Col>
+                  </Row>
                   <div className="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-4 pt-3 border-top">
-                    <Button 
-                      variant="secondary" 
+                    <Button
+                      variant="secondary"
                       className="w-100 w-sm-auto"
                       onClick={() => {
                         setEditMode(false);
@@ -706,15 +755,19 @@ export default function Profile() {
                     >
                       Cancel
                     </Button>
-                    <Button 
-                      variant="primary" 
+                    <Button
+                      variant="primary"
                       className="w-100 w-sm-auto"
-                      onClick={handleSave} 
+                      onClick={handleSave}
                       disabled={saving}
                     >
                       {saving ? (
                         <>
-                          <Spinner animation="border" size="sm" className="me-2" />
+                          <Spinner
+                            animation="border"
+                            size="sm"
+                            className="me-2"
+                          />
                           Saving...
                         </>
                       ) : (
@@ -729,7 +782,6 @@ export default function Profile() {
               )}
             </Card.Body>
           </Card>
-
         </Col>
       </Row>
 
@@ -745,22 +797,31 @@ export default function Profile() {
             </Card.Header>
             <Card.Body>
               <Row className="g-3">
-                {recentAchievements.map(achievement => (
+                {recentAchievements.map((achievement) => (
                   <Col xs={12} sm={6} lg={4} key={achievement.id}>
                     <div className="achievement-item-modern h-100">
-                      <div className={`achievement-icon-modern achievement-${achievement.type}`}>
+                      <div
+                        className={`achievement-icon-modern achievement-${achievement.type}`}
+                      >
                         <CIcon icon={cilStar} />
                       </div>
                       <div className="achievement-content-modern">
-                        <h6 className="achievement-title-modern">{achievement.title}</h6>
-                        <p className="achievement-description-modern">{achievement.description}</p>
+                        <h6 className="achievement-title-modern">
+                          {achievement.title}
+                        </h6>
+                        <p className="achievement-description-modern">
+                          {achievement.description}
+                        </p>
                         <div className="achievement-date-modern">
                           <CIcon icon={cilCalendar} className="me-1" />
-                          {new Date(achievement.date).toLocaleDateString('en-US', { 
-                            year: 'numeric', 
-                            month: 'long', 
-                            day: 'numeric' 
-                          })}
+                          {new Date(achievement.date).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            },
+                          )}
                         </div>
                       </div>
                     </div>
@@ -789,7 +850,11 @@ export default function Profile() {
           width: 140px;
           height: 140px;
           border-radius: 50%;
-          background: linear-gradient(135deg, var(--portal-primary, #68ac78) 0%, var(--portal-primary-dark, #0d5834) 100%);
+          background: linear-gradient(
+            135deg,
+            var(--portal-primary, #68ac78) 0%,
+            var(--portal-primary-dark, #0d5834) 100%
+          );
           padding: 5px;
           box-shadow: 0 8px 25px rgba(104, 172, 120, 0.3);
           animation: pulse 2s ease-in-out infinite;
@@ -797,8 +862,13 @@ export default function Profile() {
         }
 
         @keyframes pulse {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.05); }
+          0%,
+          100% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.05);
+          }
         }
 
         :global(.avatar-image) {
@@ -813,7 +883,11 @@ export default function Profile() {
           width: 100%;
           height: 100%;
           border-radius: 50%;
-          background: linear-gradient(135deg, var(--portal-primary, #68ac78) 0%, var(--portal-primary-dark, #0d5834) 100%);
+          background: linear-gradient(
+            135deg,
+            var(--portal-primary, #68ac78) 0%,
+            var(--portal-primary-dark, #0d5834) 100%
+          );
           color: white;
           display: flex;
           align-items: center;
@@ -943,7 +1017,11 @@ export default function Profile() {
           align-items: flex-start;
           gap: 1rem;
           padding: 1.25rem;
-          background: linear-gradient(135deg, var(--portal-gray-50, #f8f9fa) 0%, #ffffff 100%);
+          background: linear-gradient(
+            135deg,
+            var(--portal-gray-50, #f8f9fa) 0%,
+            #ffffff 100%
+          );
           border-radius: 12px;
           border-left: 4px solid var(--portal-primary, #68ac78);
           transition: all 0.3s;
@@ -978,7 +1056,11 @@ export default function Profile() {
         }
 
         .achievement-response {
-          background: linear-gradient(135deg, #17a2b8 0%, var(--portal-primary, #68ac78) 100%);
+          background: linear-gradient(
+            135deg,
+            #17a2b8 0%,
+            var(--portal-primary, #68ac78) 100%
+          );
           color: white;
         }
 

@@ -43,8 +43,6 @@ export default function ModernPortalSidenav({ onNavigate }) {
   const handleLogout = () => {
     if (window.confirm("Are you sure you want to logout?")) {
       logout();
-      router.push('/');
-      if (onNavigate) onNavigate();
     }
   };
 

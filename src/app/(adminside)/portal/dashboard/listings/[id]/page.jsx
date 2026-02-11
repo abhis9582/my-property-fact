@@ -5,6 +5,7 @@ import ModernPropertyListing from "../../../_components/ModernPropertyListing";
 import { Card, Button, Badge, Spinner, Alert, Row, Col } from "react-bootstrap";
 import NextImage from "next/image";
 import Cookies from "js-cookie";
+import axios from "axios";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005";
 
@@ -42,11 +43,8 @@ export default function ListingDetailPage() {
       }
 
       const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      const response = await fetch(`${apiUrl}/api/user/property-listings/${listingId}`, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
+      const response = await axios.get(`${apiUrl}/api/user/property-listings/${listingId}`, {
+        withCredentials: true,
       });
 
       if (!response.ok) {
