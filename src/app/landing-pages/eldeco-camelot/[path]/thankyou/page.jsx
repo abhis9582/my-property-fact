@@ -55,6 +55,30 @@ export default function ThankYouPage() {
           </Script>
         </>
       )}
+      {pathParam === "8" && (
+        <Script
+          id="taboola-pixel-eldeco-camelot-thankyou"
+          strategy="afterInteractive"
+        >
+          {`
+            window._tfa = window._tfa || [];
+            window._tfa.push({ notify: 'event', name: 'page_view', id: 1776057 });
+            (function(t, f, a, x) {
+              if (!document.getElementById(x)) {
+                t.async = 1;
+                t.src = a;
+                t.id = x;
+                f.parentNode.insertBefore(t, f);
+              }
+            })(
+              document.createElement('script'),
+              document.getElementsByTagName('script')[0],
+              'https://cdn.taboola.com/libtrc/unip/1776057/tfa.js',
+              'tb_tfa_script'
+            );
+          `}
+        </Script>
+      )}
       <div className="thankyou-container">
         <div className="thankyou-icon">
           <FontAwesomeIcon icon={faCheck} />
