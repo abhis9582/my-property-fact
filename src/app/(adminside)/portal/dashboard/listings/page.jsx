@@ -24,7 +24,7 @@ import {
 import CIcon from "@coreui/icons-react";
 import axios from "axios";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function ListingPage() {
   const router = useRouter();
@@ -75,8 +75,7 @@ export default function ListingPage() {
     try {
       setLoading(true);
       setError(null);
-      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      const response = await axios.get(`${apiUrl.replace(/\/?$/, "")}/api/v1/user/property-listings`, {
+      const response = await axios.get(`${API_BASE_URL}user/property-listings`, {
         withCredentials: true,
       });
 
@@ -232,8 +231,7 @@ export default function ListingPage() {
         return;
       }
 
-      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      const response = await axios.delete(`${apiUrl.replace(/\/?$/, "")}/api/v1/user/property-listings/${listingId}`, {
+      const response = await axios.delete(`${API_BASE_URL}user/property-listings/${listingId}`, {
         withCredentials: true,
       });
 

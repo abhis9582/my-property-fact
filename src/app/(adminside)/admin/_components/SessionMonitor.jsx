@@ -5,13 +5,12 @@ export default function SessionMonitor() {
     const checkExpiry = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/auth/session`,
+          `${process.env.NEXT_PUBLIC_API_URL}auth/session`,
           { credentials: "include" },
         );
         if (!res.ok) return;
         const data = await res.json();
         const expiresAt = new Date(data.expiresAt);
-        console.log(expiresAt);
 
         const now = new Date();
         const minutesLeft = (expiresAt - now) / (1000 * 60);
@@ -21,7 +20,7 @@ export default function SessionMonitor() {
           );
 
           if (continueSession) {
-            await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/auth/refresh-token`, {
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL}auth/refresh-token`, {
               method: "POST",
               credentials: "include",
             });

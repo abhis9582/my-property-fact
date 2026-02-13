@@ -1,14 +1,13 @@
 import axios from "axios";
 import Dashboard from "./dashboard";
+import { fetchAllProjects } from "@/app/_global_components/masterFunction";
 export const dynamic = 'force-dynamic';
 
 //Getting all projects count
 const countAllProjects = async () => {
   try {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/projects/get-all-projects-list`
-    );
-    return response.data.length || 0;
+    const response = await fetchAllProjects();
+    return response.length || 0;
   } catch (error) {
     console.error("Error fetching projects:", error);
     return 0;
@@ -19,7 +18,7 @@ const countAllProjects = async () => {
 const countAllUsers = async () => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/users`
+      `${process.env.NEXT_PUBLIC_API_URL}users`
     );
     return Array.isArray(response.data) ? response.data.length : 0;
   } catch (error) {
@@ -32,7 +31,7 @@ const countAllUsers = async () => {
 const countAllBlogs = async () => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/blog/get-all`
+      `${process.env.NEXT_PUBLIC_API_URL}blog/get-all`
     );
     return Array.isArray(response.data) ? response.data.length : 0;
   } catch (error) {
@@ -45,7 +44,7 @@ const countAllBlogs = async () => {
 const countAllEnquiries = async () => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/enquiry/get-all`
+      `${process.env.NEXT_PUBLIC_API_URL}enquiry/get-all`
     );
     return Array.isArray(response.data) ? response.data.length : 0;
   } catch (error) {
@@ -58,7 +57,7 @@ const countAllEnquiries = async () => {
 const countAllCities = async () => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/city/all`
+      `${process.env.NEXT_PUBLIC_API_URL}city/all`
     );
     return Array.isArray(response.data) ? response.data.length : 0;
   } catch (error) {
@@ -71,7 +70,7 @@ const countAllCities = async () => {
 const countAllBuilders = async () => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/builder/get-all-builders`
+      `${process.env.NEXT_PUBLIC_API_URL}builder/get-all-builders`
     );
     return Array.isArray(response.data) ? response.data.length : 0;
   } catch (error) {
@@ -84,7 +83,7 @@ const countAllBuilders = async () => {
 const countAllAmenities = async () => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/amenity/get-all`
+      `${process.env.NEXT_PUBLIC_API_URL}amenity/get-all`
     );
     return Array.isArray(response.data) ? response.data.length : 0;
   } catch (error) {
@@ -97,7 +96,7 @@ const countAllAmenities = async () => {
 const countAllWebStoryCategories = async () => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/web-story-category/get-all`
+      `${process.env.NEXT_PUBLIC_API_URL}web-story-category/get-all`
     );
     return Array.isArray(response.data) ? response.data.length : 0;
   } catch (error) {
@@ -110,7 +109,7 @@ const countAllWebStoryCategories = async () => {
 const countAllWebStories = async () => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/web-story/get-all`
+      `${process.env.NEXT_PUBLIC_API_URL}web-story/get-all`
     );
     return Array.isArray(response.data) ? response.data.length : 0;
   } catch (error) {
@@ -123,7 +122,7 @@ const countAllWebStories = async () => {
 const countAllProjectTypes = async () => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/project-types/get-all`
+      `${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`
     );
     return Array.isArray(response.data) ? response.data.length : 0;
   } catch (error) {

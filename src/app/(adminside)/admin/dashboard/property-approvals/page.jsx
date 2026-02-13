@@ -11,11 +11,11 @@ import {
   Form,
 } from "react-bootstrap";
 import NextImage from "next/image";
-import Cookies from "js-cookie";
 import axios from "axios";
 import "./property-approvals.css";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005";
+//variable for API base URL
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function PropertyApprovalsPage() {
   const router = useRouter();
@@ -31,12 +31,8 @@ export default function PropertyApprovalsPage() {
     try {
       setLoading(true);
       setError(null);
-
-      const apiUrl = API_BASE_URL.endsWith("/")
-        ? API_BASE_URL.slice(0, -1)
-        : API_BASE_URL;
       const response = await fetch(
-        `${apiUrl.replace(/\/?$/, "")}/api/v1/admin/property-listings/pending`,
+        `${API_BASE_URL}admin/property-listings/pending`,
         {
           credentials: "include",
         },
@@ -76,28 +72,16 @@ export default function PropertyApprovalsPage() {
     }
 
     try {
-      setProcessing(propertyId);
-      const token = Cookies.get("token");
-      const apiUrl = API_BASE_URL.endsWith("/")
-        ? API_BASE_URL.slice(0, -1)
-        : API_BASE_URL;
-
       const response = await axios.post(
-        `${apiUrl.replace(/\/?$/, "")}/api/v1/admin/property-listings/${propertyId}/approve`,
-        {},
+        `${API_BASE_URL}admin/property-listings/${propertyId}/approve`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+          withCredentials: true,
         },
       );
 
-      if (response.data.success) {
+      if (response.status === 200) {
         alert("Property approved successfully!");
         fetchPendingProperties(); // Refresh the list
-      } else {
-        throw new Error(response.data.message || "Failed to approve property");
       }
     } catch (err) {
       console.error("Error approving property:", err);
@@ -121,30 +105,20 @@ export default function PropertyApprovalsPage() {
 
     try {
       setProcessing(selectedProperty.id);
-      const token = Cookies.get("token");
-      const apiUrl = API_BASE_URL.endsWith("/")
-        ? API_BASE_URL.slice(0, -1)
-        : API_BASE_URL;
-
       const response = await axios.post(
-        `${apiUrl.replace(/\/?$/, "")}/api/v1/admin/property-listings/${selectedProperty.id}/reject`,
+        `${API_BASE_URL}admin/property-listings/${selectedProperty.id}/reject`,
         { reason: rejectReason },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+          withCredentials: true,
         },
       );
 
-      if (response.data.success) {
+      if (response.status === 200) {
         alert("Property rejected successfully!");
         setShowRejectModal(false);
         setRejectReason("");
         setSelectedProperty(null);
         fetchPendingProperties(); // Refresh the list
-      } else {
-        throw new Error(response.data.message || "Failed to reject property");
       }
     } catch (err) {
       console.error("Error rejecting property:", err);
@@ -173,15 +147,12 @@ export default function PropertyApprovalsPage() {
     if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
       return imageUrl;
     }
-    const apiUrl = API_BASE_URL.endsWith("/")
-      ? API_BASE_URL.slice(0, -1)
-      : API_BASE_URL;
-
     let cleanImageUrl = imageUrl;
 
     if (
       cleanImageUrl.match(/^[A-Za-z]:[\/\\]/) ||
-      (cleanImageUrl.startsWith("/") && !cleanImageUrl.startsWith("/get/"))
+      (cleanImageUrl.startsWith("/") &&
+        !cleanImageUrl.startsWith(`${API_BASE_URL}get/`))
     ) {
       const propertyListingsIndex = cleanImageUrl
         .toLowerCase()
@@ -207,9 +178,9 @@ export default function PropertyApprovalsPage() {
     if (pathParts.length >= 3 && pathParts[0] === "property-listings") {
       const listingId = pathParts[1];
       const filename = pathParts.slice(2).join("/");
-      return `${apiUrl}/get/images/property-listings/${listingId}/${filename}`;
+      return `${API_BASE_URL}get/images/property-listings/${listingId}/${filename}`;
     }
-    return `${apiUrl}/get/images/${cleanImageUrl}`;
+    return `${API_BASE_URL}get/images/${cleanImageUrl}`;
   };
 
   const formatPrice = (price) => {

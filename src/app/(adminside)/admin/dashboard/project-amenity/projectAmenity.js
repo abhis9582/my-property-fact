@@ -121,7 +121,7 @@ export default function ProjectsAmenity({ projectList, amenityList }) {
                 heading={"Manage Project & Amenity"}
             />
             <div className="table-container">
-                <DataTable columns={columns} list={projectList.filter(item => item.projectAmenityList.length > 0)} />
+                <DataTable columns={columns} list={projectList} />
             </div>
             {/* Modal for adding a new city */}
             <Modal show={showModal} onHide={() => setShowModal(false)} centered>

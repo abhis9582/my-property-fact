@@ -30,7 +30,6 @@ export default function Blog() {
   const getBlogsList = async () => {
     const blogsList = await fetchBlogs(page, size, "");
     setBlogsList(blogsList.content);
-    setSearchBlogs(blogsList.content);
     setTotalPages(blogsList.totalPages);
     setLoading(false);
   };
@@ -64,7 +63,6 @@ export default function Blog() {
     const filteredBlogs = blogs.content.filter((blog) =>
       blog.blogTitle.toLowerCase().includes(searchQuery.toLowerCase()),
     );
-    setSearchBlogs(filteredBlogs);
     setLoading(false);
   };
 

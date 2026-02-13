@@ -1,3 +1,6 @@
+const { fetchAllProjects } = require('@/app/_global_components/masterFunction');
+const { get } = require('jodit/esm/core/helpers');
+
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
   siteUrl: process.env.NEXT_PUBLIC_UI_URL,
@@ -35,10 +38,7 @@ module.exports = {
     let allPaths = [];
 
     // Projects
-    const projectsRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
-    );
-    const projects = await projectsRes.json();
+    const projects = await fetchAllProjects();
 
     allPaths = allPaths.concat(
       projects.map((p) => ({

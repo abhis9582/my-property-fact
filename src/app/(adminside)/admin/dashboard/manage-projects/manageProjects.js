@@ -197,7 +197,7 @@ export default function ManageProjects({
 
     data.append(
       "addUpdateProjectDto",
-      new Blob([JSON.stringify(dto)], { type: "application/json" })
+      new Blob([JSON.stringify(dto)], { type: "application/json" }),
     );
 
     try {
@@ -209,7 +209,7 @@ export default function ManageProjects({
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       if (response.data.isSuccess === 1) {
@@ -221,7 +221,7 @@ export default function ManageProjects({
     } catch (error) {
       toast.error(
         error.response?.data?.error ||
-          "An error occurred while submitting the form."
+          "An error occurred while submitting the form.",
       );
     } finally {
       setShowLoading(false);
@@ -510,139 +510,177 @@ export default function ManageProjects({
   };
 
   const exportAllProjectToExcel = async () => {
-  let projects = [...projectDetailList]; // clone to avoid mutation
+    let projects = [...projectDetailList]; // clone to avoid mutation
 
-  if (!projects || projects.length === 0) {
-    return;
-  }
+    if (!projects || projects.length === 0) {
+      return;
+    }
 
-  // 🔹 Remove keys ending with "_id"
-  let headers = Object.keys(projects[0]).filter(
-    (key) => !key.toLowerCase().endsWith("id") || key.toLowerCase() === "id"
-  );
+    // 🔹 Remove keys ending with "_id"
+    let headers = Object.keys(projects[0]).filter(
+      (key) => !key.toLowerCase().endsWith("id") || key.toLowerCase() === "id",
+    );
 
-  // 🔹 Ensure "id" is first and "project_name" is second
-  headers = headers.sort((a, b) => {
-    if (a === "id") return -1;
-    if (b === "id") return 1;
-    if (a === "projectName") return headers.includes("id") ? -1 : 1;
-    if (b === "projectName") return headers.includes("id") ? 1 : -1;
-    return 0;
-  });
+    // 🔹 Ensure "id" is first and "project_name" is second
+    headers = headers.sort((a, b) => {
+      if (a === "id") return -1;
+      if (b === "id") return 1;
+      if (a === "projectName") return headers.includes("id") ? -1 : 1;
+      if (b === "projectName") return headers.includes("id") ? 1 : -1;
+      return 0;
+    });
 
-  // 🔹 Sort projects by id
-  projects.sort((a, b) => (a.id || 0) - (b.id || 0));
+    // 🔹 Sort projects by id
+    projects.sort((a, b) => (a.id || 0) - (b.id || 0));
 
-  const workbook = new ExcelJS.Workbook();
-  const worksheet = workbook.addWorksheet("Projects");
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Projects");
 
-  // 🔹 Format headers (capitalize + replace underscores with spaces)
-  const formattedHeaders = headers.map((h) =>
-    h.replace(/_/g, " ").toUpperCase()
-  );
+    // 🔹 Format headers (capitalize + replace underscores with spaces)
+    const formattedHeaders = headers.map((h) =>
+      h.replace(/_/g, " ").toUpperCase(),
+    );
 
-  // 🔹 Add headers row
-  worksheet.addRow(formattedHeaders);
+    // 🔹 Add headers row
+    worksheet.addRow(formattedHeaders);
 
-  // 🔹 Style headers
-  const headerRow = worksheet.getRow(1);
-  headerRow.font = { bold: true, color: { argb: "FFFFFFFF" } };
-  headerRow.fill = {
-    type: "pattern",
-    pattern: "solid",
-    fgColor: { argb: "FF228B22" }, // green
-  };
-  headerRow.alignment = { vertical: "middle", horizontal: "center" };
+    // 🔹 Style headers
+    const headerRow = worksheet.getRow(1);
+    headerRow.font = { bold: true, color: { argb: "FFFFFFFF" } };
+    headerRow.fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "FF228B22" }, // green
+    };
+    headerRow.alignment = { vertical: "middle", horizontal: "center" };
 
-  // 🔹 Add filter on headers
-  worksheet.autoFilter = {
-    from: { row: 1, column: 1 },
-    to: { row: 1, column: headers.length },
-  };
+    // 🔹 Add filter on headers
+    worksheet.autoFilter = {
+      from: { row: 1, column: 1 },
+      to: { row: 1, column: headers.length },
+    };
 
-  // 🔹 Iterate over projects and add rows
-  for (let rowIndex = 0; rowIndex < projects.length; rowIndex++) {
-    const project = projects[rowIndex];
-    const rowValues = [];
+    // 🔹 Iterate over projects and add rows
+    for (let rowIndex = 0; rowIndex < projects.length; rowIndex++) {
+      const project = projects[rowIndex];
+      const rowValues = [];
 
-    headers.forEach((key) => {
-      if (
-        key === "project_image" ||
-        key === "project_logo" ||
-        key === "project_thumbnail"
-      ) {
-        rowValues.push(""); // placeholder for image
-      } else if (key === "projectPrice") {
-        const price = parseFloat(project[key]);
-        if (!isNaN(price)) {
-          if (price >= 1) {
-            rowValues.push(`${parseFloat(price.toFixed(2))} Cr`);
+      headers.forEach((key) => {
+        if (
+          key === "project_image" ||
+          key === "project_logo" ||
+          key === "project_thumbnail"
+        ) {
+          rowValues.push(""); // placeholder for image
+        } else if (key === "projectPrice") {
+          const price = parseFloat(project[key]);
+          if (!isNaN(price)) {
+            if (price >= 1) {
+              rowValues.push(`${parseFloat(price.toFixed(2))} Cr`);
+            } else {
+              rowValues.push(`${parseFloat((price * 100).toFixed(2))} Lac`);
+            }
           } else {
-            rowValues.push(`${parseFloat((price * 100).toFixed(2))} Lac`);
+            rowValues.push(project[key] || "");
           }
         } else {
           rowValues.push(project[key] || "");
         }
-      } else {
-        rowValues.push(project[key] || "");
-      }
-    });
+      });
 
-    const row = worksheet.addRow(rowValues);
+      const row = worksheet.addRow(rowValues);
 
-    // 🔹 Insert images
-    headers.forEach((key, colIndex) => {
-      if (
-        key === "project_image" ||
-        key === "project_logo" ||
-        key === "project_thumbnail"
-      ) {
-        const imagePath = project[key]; // Can be public path or base64
-        if (imagePath) {
-          try {
-            const imageId = workbook.addImage({
-              filename: imagePath,
-              extension: imagePath.split(".").pop(),
-            });
+      // 🔹 Insert images
+      headers.forEach((key, colIndex) => {
+        if (
+          key === "project_image" ||
+          key === "project_logo" ||
+          key === "project_thumbnail"
+        ) {
+          const imagePath = project[key]; // Can be public path or base64
+          if (imagePath) {
+            try {
+              const imageId = workbook.addImage({
+                filename: imagePath,
+                extension: imagePath.split(".").pop(),
+              });
 
-            worksheet.addImage(imageId, {
-              tl: { col: colIndex, row: rowIndex + 1 }, // 0-based
-              ext: { width: 80, height: 80 },
-            });
+              worksheet.addImage(imageId, {
+                tl: { col: colIndex, row: rowIndex + 1 }, // 0-based
+                ext: { width: 80, height: 80 },
+              });
 
-            worksheet.getColumn(colIndex + 1).width = 20;
-            row.height = 80;
-          } catch (e) {
-            // Image loading error - skip this image
+              worksheet.getColumn(colIndex + 1).width = 20;
+              row.height = 80;
+            } catch (e) {
+              // Image loading error - skip this image
+            }
           }
         }
+      });
+    }
+
+    // 🔹 Auto size all columns with max width cap (≈30 chars ~ 200px)
+    worksheet.columns.forEach((col) => {
+      let maxLength = 15; // min width
+      col.eachCell({ includeEmpty: true }, (cell) => {
+        const len = cell.value ? cell.value.toString().length : 0;
+        if (len > maxLength) maxLength = len;
+      });
+      col.width = Math.min(maxLength + 2, 30); // cap at 30
+    });
+
+    // 🔹 Unique file name with date-time
+    const now = new Date();
+    const timestamp = now
+      .toISOString()
+      .replace(/[-:]/g, "")
+      .replace("T", "_")
+      .split(".")[0];
+    const fileName = `projects_list_${timestamp}.xlsx`;
+
+    // 🔹 Export as Excel
+    const buffer = await workbook.xlsx.writeBuffer();
+    saveAs(new Blob([buffer]), fileName);
+  };
+  // Handling upload projects (Excel with optional embedded images)
+  const handleUploadProjects = async () => {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = ".xlsx,.xls";
+    fileInput.style.display = "none";
+    fileInput.onchange = async (event) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const formData = new FormData();
+      formData.append("file", file);
+      try {
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}excel-upload/projects`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+            withCredentials: true,
+          },
+        );
+        if (response.data?.isSuccess === 1) {
+          toast.success(response.data.message ?? "Projects uploaded successfully");
+          router.refresh();
+        } else {
+          toast.error(response.data?.message ?? "Upload failed");
+        }
+      } catch (error) {
+        const message =
+          error.response?.data?.message ?? error.message ?? "Upload failed";
+        toast.error(message);
+      } finally {
+        fileInput.value = "";
+        if (fileInput.parentNode) fileInput.parentNode.removeChild(fileInput);
       }
-    });
-  }
-
-  // 🔹 Auto size all columns with max width cap (≈30 chars ~ 200px)
-  worksheet.columns.forEach((col) => {
-    let maxLength = 15; // min width
-    col.eachCell({ includeEmpty: true }, (cell) => {
-      const len = cell.value ? cell.value.toString().length : 0;
-      if (len > maxLength) maxLength = len;
-    });
-    col.width = Math.min(maxLength + 2, 30); // cap at 30
-  });
-
-  // 🔹 Unique file name with date-time
-  const now = new Date();
-  const timestamp = now
-    .toISOString()
-    .replace(/[-:]/g, "")
-    .replace("T", "_")
-    .split(".")[0];
-  const fileName = `projects_list_${timestamp}.xlsx`;
-
-  // 🔹 Export as Excel
-  const buffer = await workbook.xlsx.writeBuffer();
-  saveAs(new Blob([buffer]), fileName);
-};
+    };
+    document.body.appendChild(fileInput);
+    fileInput.click();
+  };
 
   return (
     <>
@@ -653,6 +691,9 @@ export default function ManageProjects({
         exportExcel={"Export to excel"}
         exportFunction={exportAllProjectToExcel}
       />
+      <Button className="btn btn-success mb-3" onClick={handleUploadProjects}>
+        Upload Projects
+      </Button>
       <div className="table-container">
         <DataTable list={projectDetailList} columns={columns} />
       </div>

@@ -36,7 +36,7 @@ import {
 import axios from "axios";
 import "./property-detail.css";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function PropertyDetailPage() {
   const params = useParams();
@@ -191,11 +191,8 @@ export default function PropertyDetailPage() {
     setSubmitSuccess(false);
 
     try {
-      const apiUrl = API_BASE_URL.endsWith("/")
-        ? API_BASE_URL.slice(0, -1)
-        : API_BASE_URL;
       const response = await axios.post(
-        `${apiUrl.replace(/\/?$/, "")}/api/v1/public/properties/lead`,
+        `${API_BASE_URL}public/properties/lead`,
         {
           name: contactForm.name,
           email: contactForm.email,
@@ -243,11 +240,8 @@ export default function PropertyDetailPage() {
     try {
       setLoading(true);
       setError(null);
-      const apiUrl = API_BASE_URL.endsWith("/")
-        ? API_BASE_URL.slice(0, -1)
-        : API_BASE_URL;
       const response = await axios.get(
-        `${apiUrl.replace(/\/?$/, "")}/api/v1/public/properties/${propertyId}`,
+        `${API_BASE_URL}public/properties/${propertyId}`,
       );
 
       if (response.data.success && response.data.property) {
@@ -269,11 +263,8 @@ export default function PropertyDetailPage() {
   // Fetching related properties from API
   const fetchRelatedProperties = async () => {
     try {
-      const apiUrl = API_BASE_URL.endsWith("/")
-        ? API_BASE_URL.slice(0, -1)
-        : API_BASE_URL;
       const response = await axios.get(
-        `${apiUrl.replace(/\/?$/, "")}/api/v1/public/properties?limit=4`,
+        `${API_BASE_URL}public/properties?limit=4`,
       );
 
       if (response.data.success && Array.isArray(response.data.properties)) {
@@ -294,9 +285,6 @@ export default function PropertyDetailPage() {
     if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
       return imageUrl;
     }
-    const apiUrl = API_BASE_URL.endsWith("/")
-      ? API_BASE_URL.slice(0, -1)
-      : API_BASE_URL;
 
     let cleanImageUrl = imageUrl;
     if (cleanImageUrl.match(/^[A-Za-z]:[\/\\]/)) {
@@ -322,7 +310,7 @@ export default function PropertyDetailPage() {
     if (pathParts.length >= 3 && pathParts[0] === "property-listings") {
       const listingId = pathParts[1];
       const filename = pathParts.slice(2).join("/");
-      return `${apiUrl}/get/images/property-listings/${listingId}/${filename}`;
+      return `${API_BASE_URL}get/images/property-listings/${listingId}/${filename}`;
     }
     return null;
   };
@@ -372,10 +360,7 @@ export default function PropertyDetailPage() {
   // Fetching all amenities with images
   const fetchAllAmenities = async () => {
     try {
-      const apiUrl = API_BASE_URL.endsWith("/")
-        ? API_BASE_URL.slice(0, -1)
-        : API_BASE_URL;
-      const response = await axios.get(`${apiUrl}/amenity/get-all`);
+      const response = await axios.get(`${API_BASE_URL}amenity/get-all`);
       if (Array.isArray(response.data)) {
         setAllAmenities(response.data);
       }
@@ -393,9 +378,6 @@ export default function PropertyDetailPage() {
     ) {
       return amenityImageUrl;
     }
-    const apiUrl = API_BASE_URL.endsWith("/")
-      ? API_BASE_URL.slice(0, -1)
-      : API_BASE_URL;
     let cleanImageUrl = amenityImageUrl;
 
     // Handle Windows paths
@@ -418,16 +400,13 @@ export default function PropertyDetailPage() {
     const filename = pathParts[pathParts.length - 1];
 
     // Use the amenity image endpoint
-    return `${apiUrl}/fetch-image/amenity/${filename}`;
+    return `${API_BASE_URL}fetch-image/amenity/${filename}`;
   };
 
   // Fetching all features with images
   const fetchAllFeatures = async () => {
     try {
-      const apiUrl = API_BASE_URL.endsWith("/")
-        ? API_BASE_URL.slice(0, -1)
-        : API_BASE_URL;
-      const response = await axios.get(`${apiUrl}/feature/get-all`);
+      const response = await axios.get(`${API_BASE_URL}feature/get-all`);
       if (Array.isArray(response.data)) {
         setAllFeatures(response.data);
       }
@@ -460,9 +439,6 @@ export default function PropertyDetailPage() {
     ) {
       return featureImageUrl;
     }
-    const apiUrl = API_BASE_URL.endsWith("/")
-      ? API_BASE_URL.slice(0, -1)
-      : API_BASE_URL;
     let cleanImageUrl = featureImageUrl;
 
     // Handle Windows paths
@@ -485,7 +461,7 @@ export default function PropertyDetailPage() {
     const filename = pathParts[pathParts.length - 1];
 
     // Use the feature image endpoint
-    return `${apiUrl}/fetch-image/feature/${filename}`;
+    return `${API_BASE_URL}fetch-image/feature/${filename}`;
   };
 
   // Function for getting nearby benefit image URL
@@ -497,9 +473,6 @@ export default function PropertyDetailPage() {
     ) {
       return benefitImageUrl;
     }
-    const apiUrl = API_BASE_URL.endsWith("/")
-      ? API_BASE_URL.slice(0, -1)
-      : API_BASE_URL;
     let cleanImageUrl = benefitImageUrl;
 
     // Handle Windows paths
@@ -524,7 +497,7 @@ export default function PropertyDetailPage() {
     const filename = pathParts[pathParts.length - 1];
 
     // Use the nearby benefit image endpoint
-    return `${apiUrl}/fetch-image/nearby-benefit/${filename}`;
+    return `${API_BASE_URL}fetch-image/nearby-benefit/${filename}`;
   };
 
   // Function for getting amenities with images for the property
@@ -594,9 +567,6 @@ export default function PropertyDetailPage() {
 
     try {
       setLoadingProject(true);
-      const apiUrl = API_BASE_URL.endsWith("/")
-        ? API_BASE_URL.slice(0, -1)
-        : API_BASE_URL;
       const projectSlug = convertProjectNameToSlug(property.projectName);
 
       if (!projectSlug) {
@@ -604,7 +574,7 @@ export default function PropertyDetailPage() {
         return;
       }
 
-      const response = await axios.get(`${apiUrl}/projects/get/${projectSlug}`);
+      const response = await axios.get(`${API_BASE_URL}projects/get/${projectSlug}`);
 
       if (response.data && response.data.projectName) {
         setProjectDetails(response.data);

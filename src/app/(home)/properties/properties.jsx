@@ -24,7 +24,7 @@ import { Spinner } from "react-bootstrap";
 import axios from "axios";
 import "./properties.css";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function Properties() {
   const [activeTab, setActiveTab] = useState("All Properties");
@@ -112,8 +112,7 @@ export default function Properties() {
       try {
         setLoading(true);
         setError(null);
-        const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-        const response = await axios.get(`${apiUrl.replace(/\/?$/, "")}/api/v1/public/properties`);
+        const response = await axios.get(`${API_BASE_URL}public/properties`);
         
         if (response.data.success && Array.isArray(response.data.properties)) {
           const transformedProperties = response.data.properties.map((property) => {
@@ -234,8 +233,6 @@ export default function Properties() {
       return imageUrl;
     }
     
-    const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-    
     // Handle absolute Windows paths (e.g., D:\path\to\file or D:/path/to/file)
     let cleanImageUrl = imageUrl;
     if (cleanImageUrl.match(/^[A-Za-z]:[\/\\]/)) {
@@ -267,10 +264,10 @@ export default function Properties() {
     if (pathParts.length >= 3 && pathParts[0] === 'property-listings') {
       const listingId = pathParts[1];
       const filename = pathParts.slice(2).join('/');
-      const finalUrl = `${apiUrl}/get/images/property-listings/${listingId}/${filename}`;
+      const finalUrl = `${API_BASE_URL}get/images/property-listings/${listingId}/${filename}`;
       return finalUrl;
     } else if (pathParts.length === 2) {
-      return `${apiUrl}/get/images/${pathParts[0]}/${pathParts[1]}`;
+      return `${API_BASE_URL}get/images/${pathParts[0]}/${pathParts[1]}`;
     }
     
     console.warn('Could not parse image URL:', imageUrl);

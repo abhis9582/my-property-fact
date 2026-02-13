@@ -26,7 +26,7 @@ export default function ManageUsers({ users: initialUsers }) {
     location: "",
     enabled: true,
     verified: false,
-    roleIds: []
+    roleIds: [],
   });
 
   // Fetch roles on client side with authentication
@@ -41,12 +41,12 @@ export default function ManageUsers({ users: initialUsers }) {
         }
 
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/admin/roles`,
+          `${process.env.NEXT_PUBLIC_API_URL}admin/roles`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
 
         if (response.data && response.data.success && response.data.roles) {
@@ -68,7 +68,7 @@ export default function ManageUsers({ users: initialUsers }) {
 
   const openEditModal = (user) => {
     setEditingUser(user);
-    const userRoleIds = user.roles ? user.roles.map(role => role.id) : [];
+    const userRoleIds = user.roles ? user.roles.map((role) => role.id) : [];
     setFormData({
       id: user.id,
       fullName: user.fullName || "",
@@ -77,7 +77,7 @@ export default function ManageUsers({ users: initialUsers }) {
       location: user.location || "",
       enabled: user.enabled !== undefined ? user.enabled : true,
       verified: user.verified !== undefined ? user.verified : false,
-      roleIds: userRoleIds
+      roleIds: userRoleIds,
     });
     setShowModal(true);
   };
@@ -93,7 +93,7 @@ export default function ManageUsers({ users: initialUsers }) {
       location: "",
       enabled: true,
       verified: false,
-      roleIds: []
+      roleIds: [],
     });
   };
 
@@ -118,12 +118,12 @@ export default function ManageUsers({ users: initialUsers }) {
       if (roleIds.includes(roleId)) {
         return {
           ...prev,
-          roleIds: roleIds.filter(id => id !== roleId)
+          roleIds: roleIds.filter((id) => id !== roleId),
         };
       } else {
         return {
           ...prev,
-          roleIds: [...roleIds, roleId]
+          roleIds: [...roleIds, roleId],
         };
       }
     });
@@ -134,40 +134,31 @@ export default function ManageUsers({ users: initialUsers }) {
     setShowLoading(true);
 
     try {
-      const token = Cookies.get("token");
-      if (!token) {
-        toast.error("Authentication required");
-        return;
-      }
-
       // Update user details
       const updateResponse = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/users/${formData.id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}users/${formData.id}`,
         {
           fullName: formData.fullName,
           phone: formData.phone,
           location: formData.location,
           verified: formData.verified,
-          enabled: formData.enabled
+          enabled: formData.enabled,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
-        }
+          withCredentials: true,
+        },
       );
 
       // Update user roles
       await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/users/${formData.id}/roles`,
+        `${process.env.NEXT_PUBLIC_API_URL}users/${formData.id}/roles`,
         formData.roleIds,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
-        }
+            "Content-Type": "application/json",
+          },
+        },
       );
 
       toast.success("User updated successfully");
@@ -175,9 +166,7 @@ export default function ManageUsers({ users: initialUsers }) {
       handleClose();
     } catch (error) {
       console.error("Error updating user:", error);
-      toast.error(
-        error.response?.data?.message || "Failed to update user"
-      );
+      toast.error(error.response?.data?.message || "Failed to update user");
     } finally {
       setShowLoading(false);
     }
@@ -185,21 +174,12 @@ export default function ManageUsers({ users: initialUsers }) {
 
   const handleActivate = async (userId) => {
     try {
-      const token = Cookies.get("token");
-      if (!token) {
-        toast.error("Authentication required");
-        return;
-      }
-
       await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/users/${userId}/activate`,
+        `${process.env.NEXT_PUBLIC_API_URL}users/${userId}/activate`,
         {},
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
-        }
+          withCredentials: true,
+        },
       );
 
       toast.success("User activated successfully");
@@ -212,34 +192,26 @@ export default function ManageUsers({ users: initialUsers }) {
 
   const handleDeactivate = async (userId) => {
     try {
-      const token = Cookies.get("token");
-      if (!token) {
-        toast.error("Authentication required");
-        return;
-      }
-
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL || ""}api/v1/users/${userId}/deactivate`,
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}users/${userId}/deactivate`,
         {},
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
-        }
+          withCredentials: true,
+        },
       );
-
-      toast.success("User deactivated successfully");
-      router.refresh();
+      if (response.status === 200) {
+        toast.success("User deactivated successfully");
+        router.refresh();
+      }
     } catch (error) {
       console.error("Error deactivating user:", error);
-      toast.error("Failed to deactivate user");
+      toast.error(error.response?.data?.message || "Failed to deactivate user");
     }
   };
 
   const getRoleNames = (userRoles) => {
     if (!userRoles || userRoles.length === 0) return "No roles";
-    return userRoles.map(role => role.roleName).join(", ");
+    return userRoles.map((role) => role.roleName).join(", ");
   };
 
   const columns = [
@@ -373,7 +345,7 @@ export default function ManageUsers({ users: initialUsers }) {
   return (
     <div className="container-fluid">
       <DashboardHeader heading="Manage Users" />
-      
+
       <div>
         <DataTable list={tableData} columns={columns} />
       </div>
@@ -467,14 +439,25 @@ export default function ManageUsers({ users: initialUsers }) {
               <Col md={12}>
                 <Form.Group className="mb-3">
                   <Form.Label>Roles</Form.Label>
-                  <div style={{ maxHeight: "200px", overflowY: "auto", border: "1px solid #dee2e6", padding: "10px", borderRadius: "4px" }}>
+                  <div
+                    style={{
+                      maxHeight: "200px",
+                      overflowY: "auto",
+                      border: "1px solid #dee2e6",
+                      padding: "10px",
+                      borderRadius: "4px",
+                    }}
+                  >
                     {rolesLoading ? (
                       <div className="text-center py-3">
                         <small className="text-muted">Loading roles...</small>
                       </div>
                     ) : roles.length === 0 ? (
                       <div className="text-center py-3">
-                        <small className="text-muted">No roles available. You may not have permission to view roles.</small>
+                        <small className="text-muted">
+                          No roles available. You may not have permission to
+                          view roles.
+                        </small>
                       </div>
                     ) : (
                       roles.map((role) => (
@@ -506,4 +489,3 @@ export default function ManageUsers({ users: initialUsers }) {
     </div>
   );
 }
-

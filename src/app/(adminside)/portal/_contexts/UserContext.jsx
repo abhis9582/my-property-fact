@@ -3,7 +3,6 @@ import { createContext, useContext, useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { API_V1 } from "@/lib/apiConfig";
 
 const UserContext = createContext();
 
@@ -86,7 +85,7 @@ export const UserProvider = ({ children }) => {
     setUserData(null);
     try {
       await axios.post(
-        `${API_V1}auth/logout`,
+        `${process.env.NEXT_PUBLIC_API_URL}auth/logout`,
         {},
         { withCredentials: true },
       );

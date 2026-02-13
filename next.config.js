@@ -6,18 +6,18 @@ const nextConfig = {
         protocol: "http",
         hostname: "localhost",
         port: "8005",
-        pathname: "/get/images/**",
+        pathname: "/api/v1/get/images/**",
       },
       {
         protocol: "http",
         hostname: "localhost",
         port: "8005",
-        pathname: "/fetch-image/**",
+        pathname: "/api/v1/fetch-image/**",
       },
       {
         protocol: "https",
         hostname: "apis.mypropertyfact.in",
-        pathname: "/get/images/**",
+        pathname: "/api/v1/get/images/**",
       },
       {
         protocol: "https",

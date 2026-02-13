@@ -53,7 +53,7 @@ function AdminPageContent() {
       setShowLoading(true);
       setButtonName("");
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005/"}api/v1/auth/login`,
+        `${process.env.NEXT_PUBLIC_API_URL}auth/login`,
         formData,
         { withCredentials: true } // Ensure cookies are included in the request
       );

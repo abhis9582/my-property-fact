@@ -1,5 +1,6 @@
 import axios from "axios";
 import LocationBenefit from "./locationBenefit";
+import { fetchAllProjects } from "@/app/_global_components/masterFunction";
 export const dynamic = 'force-dynamic';
 
 //Fetching all benefits list
@@ -18,10 +19,8 @@ const fetchAllBenefits = async () => {
 
 //Fetching all projects list
 const fetchProjects = async () => {
-  const projectResponse = await axios.get(
-    process.env.NEXT_PUBLIC_API_URL + "projects/get-all-projects-list"
-  );  
-  return projectResponse.data;
+  const projectResponse = await fetchAllProjects();
+  return projectResponse;
 };
 export default async function LocationBenefitPage() {
   const [list, projectsList] = await Promise.all([

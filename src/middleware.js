@@ -21,7 +21,7 @@ async function checkSession(req) {
         console.log("Refresh Token: ", value);
       }
     }
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005/"}api/v1/auth/session`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}auth/session`, {
       headers: {
         Cookie: cookieHeader || "",
       },

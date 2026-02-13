@@ -1,22 +1,21 @@
 "use client";
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { 
-  Card, 
-  Row, 
-  Col, 
-  Button, 
-  Badge, 
+import {
+  Card,
+  Row,
+  Col,
+  Button,
+  Badge,
   Form,
-  InputGroup,
   Modal,
   Alert,
   Spinner,
   Dropdown,
-  Pagination
+  Pagination,
 } from "react-bootstrap";
-import { 
-  cilBell, 
-  cilCheck, 
+import {
+  cilBell,
+  cilCheck,
   cilTrash,
   cilViewModule,
   cilEnvelopeOpen,
@@ -24,22 +23,17 @@ import {
   cilWarning,
   cilSearch,
   cilPeople,
-  cilFilter,
   cilOptions,
   cilUser,
   cilHome,
   cilClock,
   cilChevronRight,
-  cilChevronLeft,
-  cilArrowLeft,
-  cilArrowRight
 } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
-import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function NotificationsPage() {
   const router = useRouter();
@@ -74,20 +68,17 @@ export default function NotificationsPage() {
     setCurrentPage(1);
   }, [filter]);
 
-  const fetchUserProperties = async (token, apiUrl) => {
+  const fetchUserProperties = async () => {
     try {
-      const response = await axios.get(`${apiUrl.replace(/\/?$/, "")}/api/v1/user/property-listings`, {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${API_BASE_URL}user/property-listings`,
+        {
+          withCredentials: true,
+        },
+      );
 
-      if (!response.ok) {
-        throw new Error(`Failed to fetch properties: ${response.status}`);
-      }
-
-      const result = await response.json();
-      
-      if (result.success && Array.isArray(result.properties)) {
-        const propertyIds = result.properties.map(property => property.id);
+      if (response.status === 200 && Array.isArray(response.data)) {
+        const propertyIds = response.data.map((property) => property.id);
         return propertyIds;
       }
       return [];
@@ -101,17 +92,7 @@ export default function NotificationsPage() {
     try {
       setLoading(true);
       setError(null);
-      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      const token = Cookies.get("token") || 
-                    document.cookie.split('; ').find(row => row.startsWith('token='))?.split('=')[1];
-      
-      if (!token) {
-        setError("Please login to view notifications");
-        setLoading(false);
-        return;
-      }
-
-      const propertyIds = await fetchUserProperties(token, apiUrl);
+      const propertyIds = await fetchUserProperties();
       setUserPropertyIds(propertyIds);
 
       if (propertyIds.length === 0) {
@@ -120,38 +101,47 @@ export default function NotificationsPage() {
         return;
       }
 
-      const leadsResponse = await axios.get(`${apiUrl}/enquiry/get-all`, {
-        headers: { Authorization: `Bearer ${token}` }
+      const leadsResponse = await axios.get(`${API_BASE_URL}enquiry/get-all`, {
+        withCredentials: true,
       });
 
       if (Array.isArray(leadsResponse.data)) {
-        const filteredLeads = leadsResponse.data.filter(lead => {
+        const filteredLeads = leadsResponse.data.filter((lead) => {
           if (!lead.propertyId) return false;
           const leadPropertyId = lead.propertyId.toString();
-          return propertyIds.some(userPropId => userPropId.toString() === leadPropertyId);
+          return propertyIds.some(
+            (userPropId) => userPropId.toString() === leadPropertyId,
+          );
         });
 
         const leadNotifications = filteredLeads.map((lead, index) => ({
           id: lead.id || index + 1,
           type: "email",
-          title: lead.name || 'Unknown',
-          message: lead.message || `Inquiry for ${lead.propertyName || 'property'}`,
-          timestamp: lead.createdAt || lead.created_at || new Date().toISOString(),
-          isRead: lead.status && lead.status.toLowerCase() !== 'new',
+          title: lead.name || "Unknown",
+          message:
+            lead.message || `Inquiry for ${lead.propertyName || "property"}`,
+          timestamp:
+            lead.createdAt || lead.created_at || new Date().toISOString(),
+          isRead: lead.status && lead.status.toLowerCase() !== "new",
           priority: getLeadPriority(lead.status),
           category: "leads",
           actionUrl: `/portal/dashboard/leads`,
-          leadData: lead
+          leadData: lead,
         }));
 
-        leadNotifications.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        leadNotifications.sort(
+          (a, b) => new Date(b.timestamp) - new Date(a.timestamp),
+        );
         setNotifications(leadNotifications);
       } else {
         setNotifications([]);
       }
     } catch (err) {
       console.error("Error fetching leads:", err);
-      setError(err.response?.data?.message || "Failed to load notifications. Please try again.");
+      setError(
+        err.response?.data?.message ||
+          "Failed to load notifications. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
@@ -160,36 +150,42 @@ export default function NotificationsPage() {
   const getLeadPriority = (status) => {
     if (!status) return "high";
     const statusLower = status.toLowerCase();
-    if (statusLower === 'new' || statusLower === 'hot') return "high";
-    if (statusLower === 'warm' || statusLower === 'contacted') return "medium";
+    if (statusLower === "new" || statusLower === "hot") return "high";
+    if (statusLower === "warm" || statusLower === "contacted") return "medium";
     return "low";
   };
 
   const getStatusBadge = (status) => {
     if (!status) return "danger";
     const statusLower = status.toLowerCase();
-    if (statusLower === 'new' || statusLower === 'hot') return "danger";
-    if (statusLower === 'warm' || statusLower === 'contacted') return "warning";
-    if (statusLower === 'cold') return "secondary";
-    if (statusLower === 'converted' || statusLower === 'closed') return "success";
+    if (statusLower === "new" || statusLower === "hot") return "danger";
+    if (statusLower === "warm" || statusLower === "contacted") return "warning";
+    if (statusLower === "cold") return "secondary";
+    if (statusLower === "converted" || statusLower === "closed")
+      return "success";
     return "info";
   };
 
   // Memoize filtered notifications for performance
   const filteredNotifications = useMemo(() => {
-    return notifications.filter(notification => {
-      const matchesFilter = filter === "all" || 
-                           (filter === "unread" && !notification.isRead) ||
-                           (filter === "read" && notification.isRead);
-      
+    return notifications.filter((notification) => {
+      const matchesFilter =
+        filter === "all" ||
+        (filter === "unread" && !notification.isRead) ||
+        (filter === "read" && notification.isRead);
+
       const searchLower = debouncedSearchTerm.toLowerCase();
-      const matchesSearch = !debouncedSearchTerm || 
-                           notification.title.toLowerCase().includes(searchLower) ||
-                           notification.message.toLowerCase().includes(searchLower) ||
-                           (notification.leadData?.name && notification.leadData.name.toLowerCase().includes(searchLower)) ||
-                           (notification.leadData?.email && notification.leadData.email.toLowerCase().includes(searchLower)) ||
-                           (notification.leadData?.phone && notification.leadData.phone.includes(debouncedSearchTerm));
-      
+      const matchesSearch =
+        !debouncedSearchTerm ||
+        notification.title.toLowerCase().includes(searchLower) ||
+        notification.message.toLowerCase().includes(searchLower) ||
+        (notification.leadData?.name &&
+          notification.leadData.name.toLowerCase().includes(searchLower)) ||
+        (notification.leadData?.email &&
+          notification.leadData.email.toLowerCase().includes(searchLower)) ||
+        (notification.leadData?.phone &&
+          notification.leadData.phone.includes(debouncedSearchTerm));
+
       return matchesFilter && matchesSearch;
     });
   }, [notifications, filter, debouncedSearchTerm]);
@@ -203,68 +199,81 @@ export default function NotificationsPage() {
   }, [filteredNotifications, startIndex, endIndex]);
 
   // Memoize counts for performance
-  const unreadCount = useMemo(() => 
-    notifications.filter(n => !n.isRead).length, 
-    [notifications]
+  const unreadCount = useMemo(
+    () => notifications.filter((n) => !n.isRead).length,
+    [notifications],
   );
-  const highPriorityCount = useMemo(() => 
-    notifications.filter(n => n.priority === "high" && !n.isRead).length,
-    [notifications]
+  const highPriorityCount = useMemo(
+    () =>
+      notifications.filter((n) => n.priority === "high" && !n.isRead).length,
+    [notifications],
   );
 
   const handlePageChange = useCallback((page) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  const handleMarkAsRead = useCallback(async (id) => {
-    const notification = notifications.find(n => n.id === id);
-    if (notification && notification.leadData) {
-      try {
-        const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-        const token = Cookies.get("token") || 
-                      document.cookie.split('; ').find(row => row.startsWith('token='))?.split('=')[1];
-        
-        if (notification.leadData.status && notification.leadData.status.toLowerCase() === 'new') {
-          await axios.put(`${apiUrl}/enquiry/update-status/${notification.leadData.id}`, 
-            { status: 'Contacted' },
-            { headers: { Authorization: `Bearer ${token}` } }
-          );
+  const handleMarkAsRead = useCallback(
+    async (id) => {
+      const notification = notifications.find((n) => n.id === id);
+      if (notification && notification.leadData) {
+        try {
+          if (
+            notification.leadData.status &&
+            notification.leadData.status.toLowerCase() === "new"
+          ) {
+            await axios.put(
+              `${API_BASE_URL}enquiry/update-status/${notification.leadData.id}`,
+              { status: "Contacted" },
+              { withCredentials: true },
+            );
+          }
+        } catch (err) {
+          console.error("Error updating lead status:", err);
         }
-      } catch (err) {
-        console.error("Error updating lead status:", err);
       }
-    }
-    
-    setNotifications(prev => prev.map(notification => 
-      notification.id === id ? { ...notification, isRead: true } : notification
-    ));
-  }, [notifications]);
+
+      setNotifications((prev) =>
+        prev.map((notification) =>
+          notification.id === id
+            ? { ...notification, isRead: true }
+            : notification,
+        ),
+      );
+    },
+    [notifications],
+  );
 
   const handleMarkAllAsRead = async () => {
-    const unreadNotifications = notifications.filter(n => !n.isRead);
+    const unreadNotifications = notifications.filter((n) => !n.isRead);
     for (const notification of unreadNotifications) {
-      if (notification.leadData && notification.leadData.status && notification.leadData.status.toLowerCase() === 'new') {
+      if (
+        notification.leadData &&
+        notification.leadData.status &&
+        notification.leadData.status.toLowerCase() === "new"
+      ) {
         try {
-          const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-          const token = Cookies.get("token") || 
-                        document.cookie.split('; ').find(row => row.startsWith('token='))?.split('=')[1];
-          
-          await axios.put(`${apiUrl}/enquiry/update-status/${notification.leadData.id}`, 
-            { status: 'Contacted' },
-            { headers: { Authorization: `Bearer ${token}` } }
+          await axios.put(
+            `${API_BASE_URL}enquiry/update-status/${notification.leadData.id}`,
+            { status: "Contacted" },
+            { withCredentials: true },
           );
         } catch (err) {
           console.error("Error updating lead status:", err);
         }
       }
     }
-    
-    setNotifications(prev => prev.map(notification => ({ ...notification, isRead: true })));
+
+    setNotifications((prev) =>
+      prev.map((notification) => ({ ...notification, isRead: true })),
+    );
   };
 
   const handleDeleteNotification = (id) => {
-    setNotifications(prev => prev.filter(notification => notification.id !== id));
+    setNotifications((prev) =>
+      prev.filter((notification) => notification.id !== id),
+    );
   };
 
   const handleViewNotification = (notification) => {
@@ -276,11 +285,11 @@ export default function NotificationsPage() {
   };
 
   const handleNotificationAction = () => {
-    router.push('/portal/dashboard/leads');
+    router.push("/portal/dashboard/leads");
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
+    if (!dateString) return "N/A";
     try {
       const date = new Date(dateString);
       const now = new Date();
@@ -289,15 +298,18 @@ export default function NotificationsPage() {
       const diffHours = Math.floor(diffMs / 3600000);
       const diffDays = Math.floor(diffMs / 86400000);
 
-      if (diffMins < 1) return 'Just now';
-      if (diffMins < 60) return `${diffMins} ${diffMins === 1 ? 'minute' : 'minutes'} ago`;
-      if (diffHours < 24) return `${diffHours} ${diffHours === 1 ? 'hour' : 'hours'} ago`;
-      if (diffDays < 7) return `${diffDays} ${diffDays === 1 ? 'day' : 'days'} ago`;
-      
-      return date.toLocaleDateString('en-IN', {
-        month: 'short',
-        day: 'numeric',
-        year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+      if (diffMins < 1) return "Just now";
+      if (diffMins < 60)
+        return `${diffMins} ${diffMins === 1 ? "minute" : "minutes"} ago`;
+      if (diffHours < 24)
+        return `${diffHours} ${diffHours === 1 ? "hour" : "hours"} ago`;
+      if (diffDays < 7)
+        return `${diffDays} ${diffDays === 1 ? "day" : "days"} ago`;
+
+      return date.toLocaleDateString("en-IN", {
+        month: "short",
+        day: "numeric",
+        year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
       });
     } catch {
       return dateString;
@@ -319,15 +331,15 @@ export default function NotificationsPage() {
             <div>
               <h1 className="page-title">Lead Notifications</h1>
               <p className="page-subtitle">
-                {userPropertyIds.length > 0 
-                  ? `${userPropertyIds.length} ${userPropertyIds.length === 1 ? 'property' : 'properties'} • ${notifications.length} ${notifications.length === 1 ? 'lead' : 'leads'}`
-                  : 'No properties yet'}
+                {userPropertyIds.length > 0
+                  ? `${userPropertyIds.length} ${userPropertyIds.length === 1 ? "property" : "properties"} • ${notifications.length} ${notifications.length === 1 ? "lead" : "leads"}`
+                  : "No properties yet"}
               </p>
             </div>
           </div>
           <div className="header-actions">
             {unreadCount > 0 && (
-              <Button 
+              <Button
                 variant="primary"
                 onClick={handleMarkAllAsRead}
                 className="mark-all-read-btn"
@@ -336,7 +348,7 @@ export default function NotificationsPage() {
                 Mark All Read
               </Button>
             )}
-            <Button 
+            <Button
               variant="outline-primary"
               onClick={handleNotificationAction}
             >
@@ -347,7 +359,12 @@ export default function NotificationsPage() {
       </div>
 
       {error && (
-        <Alert variant="danger" dismissible onClose={() => setError(null)} className="mb-4">
+        <Alert
+          variant="danger"
+          dismissible
+          onClose={() => setError(null)}
+          className="mb-4"
+        >
           <CIcon icon={cilWarning} className="me-2" />
           {error}
         </Alert>
@@ -430,7 +447,9 @@ export default function NotificationsPage() {
                     All ({notifications.length})
                   </Button>
                   <Button
-                    variant={filter === "unread" ? "warning" : "outline-warning"}
+                    variant={
+                      filter === "unread" ? "warning" : "outline-warning"
+                    }
                     size="sm"
                     onClick={() => setFilter("unread")}
                     className="filter-btn"
@@ -454,7 +473,7 @@ export default function NotificationsPage() {
                     setCurrentPage(1);
                   }}
                   className="items-per-page-select"
-                  style={{ width: 'auto' }}
+                  style={{ width: "auto" }}
                 >
                   <option value={6}>6 per page</option>
                   <option value={12}>12 per page</option>
@@ -484,12 +503,17 @@ export default function NotificationsPage() {
             </div>
             <h4 className="empty-title">No notifications found</h4>
             <p className="empty-message">
-              {userPropertyIds.length === 0 
+              {userPropertyIds.length === 0
                 ? "You don't have any properties yet. Add properties to start receiving lead notifications."
                 : "No lead notifications match your current filters."}
             </p>
             {userPropertyIds.length === 0 && (
-              <Button variant="primary" onClick={() => router.push('/portal/dashboard/listings?action=add')}>
+              <Button
+                variant="primary"
+                onClick={() =>
+                  router.push("/portal/dashboard/listings?action=add")
+                }
+              >
                 Add Your First Property
               </Button>
             )}
@@ -500,111 +524,136 @@ export default function NotificationsPage() {
           <div className="notifications-info-bar mb-3">
             <div className="d-flex justify-content-between align-items-center">
               <div>
-                <strong>Showing {startIndex + 1}-{Math.min(endIndex, filteredNotifications.length)} of {filteredNotifications.length} notifications</strong>
+                <strong>
+                  Showing {startIndex + 1}-
+                  {Math.min(endIndex, filteredNotifications.length)} of{" "}
+                  {filteredNotifications.length} notifications
+                </strong>
                 {debouncedSearchTerm && (
-                  <span className="text-muted ms-2">(filtered from {notifications.length} total)</span>
+                  <span className="text-muted ms-2">
+                    (filtered from {notifications.length} total)
+                  </span>
                 )}
               </div>
             </div>
           </div>
 
           <Row className="g-4">
-          {paginatedNotifications.map(notification => (
-            <Col lg={6} key={notification.id}>
-              <Card className={`notification-card-modern ${!notification.isRead ? 'unread' : ''}`}>
-                <Card.Body>
-                  <div className="notification-card-header">
-                    <div className="notification-avatar">
-                      <CIcon icon={cilUser} className="avatar-icon" />
-                    </div>
-                    <div className="notification-header-content">
-                      <div className="d-flex align-items-center gap-2 mb-1">
-                        <h6 className="notification-name mb-0">{notification.title}</h6>
-                        {!notification.isRead && (
-                          <Badge bg="primary" className="unread-dot"></Badge>
-                        )}
+            {paginatedNotifications.map((notification) => (
+              <Col lg={6} key={notification.id}>
+                <Card
+                  className={`notification-card-modern ${!notification.isRead ? "unread" : ""}`}
+                >
+                  <Card.Body>
+                    <div className="notification-card-header">
+                      <div className="notification-avatar">
+                        <CIcon icon={cilUser} className="avatar-icon" />
                       </div>
-                      <div className="d-flex align-items-center gap-2 flex-wrap">
-                        {notification.leadData?.status && (
-                          <Badge bg={getStatusBadge(notification.leadData.status)} className="status-badge">
-                            {notification.leadData.status}
-                          </Badge>
-                        )}
-                        <small className="text-muted d-flex align-items-center">
-                          <CIcon icon={cilClock} className="me-1" size="sm" />
-                          {formatDate(notification.timestamp)}
-                        </small>
+                      <div className="notification-header-content">
+                        <div className="d-flex align-items-center gap-2 mb-1">
+                          <h6 className="notification-name mb-0">
+                            {notification.title}
+                          </h6>
+                          {!notification.isRead && (
+                            <Badge bg="primary" className="unread-dot"></Badge>
+                          )}
+                        </div>
+                        <div className="d-flex align-items-center gap-2 flex-wrap">
+                          {notification.leadData?.status && (
+                            <Badge
+                              bg={getStatusBadge(notification.leadData.status)}
+                              className="status-badge"
+                            >
+                              {notification.leadData.status}
+                            </Badge>
+                          )}
+                          <small className="text-muted d-flex align-items-center">
+                            <CIcon icon={cilClock} className="me-1" size="sm" />
+                            {formatDate(notification.timestamp)}
+                          </small>
+                        </div>
                       </div>
-                    </div>
-                    <Dropdown>
-                      <Dropdown.Toggle variant="link" className="notification-menu-btn">
-                        <CIcon icon={cilOptions} />
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu align="end">
-                        <Dropdown.Item onClick={() => handleViewNotification(notification)}>
-                          <CIcon icon={cilViewModule} className="me-2" />
-                          View Details
-                        </Dropdown.Item>
-                        {!notification.isRead && (
-                          <Dropdown.Item onClick={() => handleMarkAsRead(notification.id)}>
-                            <CIcon icon={cilCheck} className="me-2" />
-                            Mark as Read
-                          </Dropdown.Item>
-                        )}
-                        <Dropdown.Divider />
-                        <Dropdown.Item 
-                          className="text-danger"
-                          onClick={() => handleDeleteNotification(notification.id)}
+                      <Dropdown>
+                        <Dropdown.Toggle
+                          variant="link"
+                          className="notification-menu-btn"
                         >
-                          <CIcon icon={cilTrash} className="me-2" />
-                          Remove
-                        </Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </div>
-
-                  <div className="notification-message">
-                    <p className="mb-0">{notification.message}</p>
-                  </div>
-
-                  {notification.leadData && (
-                    <div className="notification-contact-info">
-                      {notification.leadData.email && (
-                        <div className="contact-item">
-                          <CIcon icon={cilEnvelopeOpen} className="contact-icon" />
-                          <span>{notification.leadData.email}</span>
-                        </div>
-                      )}
-                      {notification.leadData.phone && (
-                        <div className="contact-item">
-                          <CIcon icon={cilPhone} className="contact-icon" />
-                          <span>{notification.leadData.phone}</span>
-                        </div>
-                      )}
-                      {notification.leadData.propertyName && (
-                        <div className="contact-item">
-                          <CIcon icon={cilHome} className="contact-icon" />
-                          <span>{notification.leadData.propertyName}</span>
-                        </div>
-                      )}
+                          <CIcon icon={cilOptions} />
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu align="end">
+                          <Dropdown.Item
+                            onClick={() => handleViewNotification(notification)}
+                          >
+                            <CIcon icon={cilViewModule} className="me-2" />
+                            View Details
+                          </Dropdown.Item>
+                          {!notification.isRead && (
+                            <Dropdown.Item
+                              onClick={() => handleMarkAsRead(notification.id)}
+                            >
+                              <CIcon icon={cilCheck} className="me-2" />
+                              Mark as Read
+                            </Dropdown.Item>
+                          )}
+                          <Dropdown.Divider />
+                          <Dropdown.Item
+                            className="text-danger"
+                            onClick={() =>
+                              handleDeleteNotification(notification.id)
+                            }
+                          >
+                            <CIcon icon={cilTrash} className="me-2" />
+                            Remove
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
                     </div>
-                  )}
 
-                  <div className="notification-actions">
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      onClick={() => handleViewNotification(notification)}
-                      className="action-btn-primary"
-                    >
-                      View Details
-                      <CIcon icon={cilChevronRight} className="ms-1" />
-                    </Button>
-                  </div>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
+                    <div className="notification-message">
+                      <p className="mb-0">{notification.message}</p>
+                    </div>
+
+                    {notification.leadData && (
+                      <div className="notification-contact-info">
+                        {notification.leadData.email && (
+                          <div className="contact-item">
+                            <CIcon
+                              icon={cilEnvelopeOpen}
+                              className="contact-icon"
+                            />
+                            <span>{notification.leadData.email}</span>
+                          </div>
+                        )}
+                        {notification.leadData.phone && (
+                          <div className="contact-item">
+                            <CIcon icon={cilPhone} className="contact-icon" />
+                            <span>{notification.leadData.phone}</span>
+                          </div>
+                        )}
+                        {notification.leadData.propertyName && (
+                          <div className="contact-item">
+                            <CIcon icon={cilHome} className="contact-icon" />
+                            <span>{notification.leadData.propertyName}</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    <div className="notification-actions">
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() => handleViewNotification(notification)}
+                        className="action-btn-primary"
+                      >
+                        View Details
+                        <CIcon icon={cilChevronRight} className="ms-1" />
+                      </Button>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
           </Row>
         </>
       )}
@@ -616,19 +665,23 @@ export default function NotificationsPage() {
             <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
               <div className="pagination-info">
                 <span className="text-muted">
-                  Page {currentPage} of {totalPages} • {filteredNotifications.length} {filteredNotifications.length === 1 ? 'notification' : 'notifications'}
+                  Page {currentPage} of {totalPages} •{" "}
+                  {filteredNotifications.length}{" "}
+                  {filteredNotifications.length === 1
+                    ? "notification"
+                    : "notifications"}
                 </span>
               </div>
               <Pagination className="mb-0">
-                <Pagination.First 
+                <Pagination.First
                   onClick={() => handlePageChange(1)}
                   disabled={currentPage === 1}
                 />
-                <Pagination.Prev 
+                <Pagination.Prev
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
                 />
-                
+
                 {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                   let pageNum;
                   if (totalPages <= 5) {
@@ -640,7 +693,7 @@ export default function NotificationsPage() {
                   } else {
                     pageNum = currentPage - 2 + i;
                   }
-                  
+
                   return (
                     <Pagination.Item
                       key={pageNum}
@@ -651,12 +704,12 @@ export default function NotificationsPage() {
                     </Pagination.Item>
                   );
                 })}
-                
-                <Pagination.Next 
+
+                <Pagination.Next
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
                 />
-                <Pagination.Last 
+                <Pagination.Last
                   onClick={() => handlePageChange(totalPages)}
                   disabled={currentPage === totalPages}
                 />
@@ -667,9 +720,9 @@ export default function NotificationsPage() {
       )}
 
       {/* Modern Detail Modal */}
-      <Modal 
-        show={showNotificationModal} 
-        onHide={() => setShowNotificationModal(false)} 
+      <Modal
+        show={showNotificationModal}
+        onHide={() => setShowNotificationModal(false)}
         size="lg"
         className="notification-modal-modern"
       >
@@ -683,7 +736,10 @@ export default function NotificationsPage() {
                 {selectedNotification?.title}
               </Modal.Title>
               {selectedNotification?.leadData?.status && (
-                <Badge bg={getStatusBadge(selectedNotification.leadData.status)} className="mt-1">
+                <Badge
+                  bg={getStatusBadge(selectedNotification.leadData.status)}
+                  className="mt-1"
+                >
                   {selectedNotification.leadData.status}
                 </Badge>
               )}
@@ -699,11 +755,11 @@ export default function NotificationsPage() {
                   {formatDate(selectedNotification.timestamp)}
                 </small>
               </div>
-              
+
               <div className="modal-message">
                 <p>{selectedNotification.message}</p>
               </div>
-              
+
               {selectedNotification.leadData && (
                 <div className="modal-details-card">
                   <h6 className="details-title">Lead Information</h6>
@@ -736,7 +792,9 @@ export default function NotificationsPage() {
                       <Col md={6}>
                         <div className="detail-item">
                           <strong>Property:</strong>
-                          <span>{selectedNotification.leadData.propertyName}</span>
+                          <span>
+                            {selectedNotification.leadData.propertyName}
+                          </span>
                         </div>
                       </Col>
                     )}
@@ -744,7 +802,9 @@ export default function NotificationsPage() {
                       <Col md={6}>
                         <div className="detail-item">
                           <strong>Property ID:</strong>
-                          <span>{selectedNotification.leadData.propertyId}</span>
+                          <span>
+                            {selectedNotification.leadData.propertyId}
+                          </span>
                         </div>
                       </Col>
                     )}
@@ -763,7 +823,10 @@ export default function NotificationsPage() {
           )}
         </Modal.Body>
         <Modal.Footer className="modal-footer-modern">
-          <Button variant="secondary" onClick={() => setShowNotificationModal(false)}>
+          <Button
+            variant="secondary"
+            onClick={() => setShowNotificationModal(false)}
+          >
             Close
           </Button>
           <Button variant="primary" onClick={handleNotificationAction}>
@@ -776,7 +839,7 @@ export default function NotificationsPage() {
       <style jsx global>{`
         /* Common styles are now in PortalCommonStyles.css */
         /* Only page-specific styles below */
-        
+
         .notifications-header {
           padding: 2.5rem;
           border-radius: 16px;
@@ -1014,7 +1077,11 @@ export default function NotificationsPage() {
         .notification-avatar {
           width: 48px;
           height: 48px;
-          background: linear-gradient(135deg, var(--portal-primary) 0%, var(--portal-primary-dark) 100%);
+          background: linear-gradient(
+            135deg,
+            var(--portal-primary) 0%,
+            var(--portal-primary-dark) 100%
+          );
           border-radius: 12px;
           display: flex;
           align-items: center;
@@ -1147,7 +1214,11 @@ export default function NotificationsPage() {
         .modal-avatar {
           width: 56px;
           height: 56px;
-          background: linear-gradient(135deg, var(--portal-primary) 0%, var(--portal-primary-dark) 100%);
+          background: linear-gradient(
+            135deg,
+            var(--portal-primary) 0%,
+            var(--portal-primary-dark) 100%
+          );
           border-radius: 12px;
           display: flex;
           align-items: center;

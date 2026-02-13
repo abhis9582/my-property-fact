@@ -1,5 +1,6 @@
 import axios from "axios";
 import ManageGallery from "./manageGallery";
+import { fetchAllProjects } from "@/app/_global_components/masterFunction";
 export const dynamic = 'force-dynamic';
 //Fetching all gallery images
 const fetchGalleryImage = async () => {
@@ -17,10 +18,8 @@ const fetchGalleryImage = async () => {
 
 //Fetching all projects list
 const fetchProjects = async () => {
-  const projectResponse = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
-  );
-  return projectResponse.data;
+  const projectResponse = await fetchAllProjects();
+  return projectResponse;
 };
 
 export default async function ManageGalleryPage() {

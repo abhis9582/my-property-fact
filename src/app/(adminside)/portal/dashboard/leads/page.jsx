@@ -27,7 +27,7 @@ import CIcon from "@coreui/icons-react";
 import axios from "axios";
 import { useUser } from "../../_contexts/UserContext";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function LeadsPage() {
   const { userData } = useUser();
@@ -48,14 +48,11 @@ export default function LeadsPage() {
     try {
       setLoading(true);
       setError(null);
-      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      const token = document.cookie.split('; ').find(row => row.startsWith('token='))?.split('=')[1];
-      
-      const response = await axios.get(`${apiUrl}/enquiry/get-user-leads`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {}
+      const response = await axios.get(`${API_BASE_URL}enquiry/get-user-leads`, {
+        withCredentials: true,
       });
 
-      if (Array.isArray(response.data)) {
+      if (response.status === 200 && Array.isArray(response.data)) {
         // Filter leads based on user role
         let filteredLeads = response.data;
         

@@ -1,12 +1,11 @@
 import axios from "axios";
 import ManageFaqs from "./manageFaq";
+import { fetchAllProjects } from "@/app/_global_components/masterFunction";
 //fetching all projects list
 export const dynamic = 'force-dynamic';
 const fetchProjects = async () => {
-  const projectResponse = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
-  );
-  return projectResponse.data;
+  const projectResponse = await fetchAllProjects();
+  return projectResponse;
 };
 //Fetch all faq list
 const fetchFaqs = async () => {

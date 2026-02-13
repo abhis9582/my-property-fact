@@ -1,5 +1,6 @@
 import axios from "axios";
 import ManageFloorPlans from "./manageFloorPlans";
+import { fetchAllProjects } from "@/app/_global_components/masterFunction";
 export const dynamic = 'force-dynamic';
 //Fetching all floor plans from api
 const fetchAllFloorPlans = async () => {
@@ -15,9 +16,7 @@ const fetchAllFloorPlans = async () => {
 
 //Fetching all projects list from api
 const fetchProjects = async () => {
-  const projectResponse = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}projects/get-all-projects-list`
-  );
+  const projectResponse = await fetchAllProjects();
 
   const sortedProjects = projectResponse.data.sort((a, b) => {
     const nameA = a.projectName?.toLowerCase();

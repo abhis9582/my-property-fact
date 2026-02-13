@@ -37,6 +37,7 @@ import {
 } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import {
+  fetchAllProjects,
   fetchBuilderData,
   fetchProjectStatus,
   fetchProjectTypes,
@@ -48,17 +49,17 @@ import NextImage from "next/image";
 const getFieldVisibility = (listingType, subType, status) => {
   const isResidential = listingType === "Residential";
   const isCommercial = listingType === "Commercial";
-  const isUnderConstruction = status && (
-    status.toLowerCase().includes("under") || 
-    status.toLowerCase().includes("construction") ||
-    status.toLowerCase().includes("upcoming")
-  );
-  const isReadyToMove = status && (
-    status.toLowerCase().includes("ready") || 
-    status.toLowerCase().includes("move") ||
-    status.toLowerCase().includes("possession")
-  );
-  
+  const isUnderConstruction =
+    status &&
+    (status.toLowerCase().includes("under") ||
+      status.toLowerCase().includes("construction") ||
+      status.toLowerCase().includes("upcoming"));
+  const isReadyToMove =
+    status &&
+    (status.toLowerCase().includes("ready") ||
+      status.toLowerCase().includes("move") ||
+      status.toLowerCase().includes("possession"));
+
   // Subtype checks
   const isVilla = subType === "Villa";
   const isApartment = subType === "Apartment";
@@ -69,37 +70,40 @@ const getFieldVisibility = (listingType, subType, status) => {
   const isIndependentHouse = subType === "Independent House";
   const isFarmhouse = subType === "Farmhouse";
   const isPenthouse = subType === "Penthouse";
-  
+
   return {
     // Basic Information fields
     showPossession: isUnderConstruction && isResidential,
     showOccupancy: isReadyToMove && isResidential,
     showNoticePeriod: isReadyToMove && (isResidential || isCommercial),
-    
+
     // Location & Area fields
     showPlotArea: isPlot || isVilla || isFarmhouse || isIndependentHouse,
     showCarpetArea: !isPlot && (isResidential || isCommercial),
     showBuiltUpArea: !isPlot && (isResidential || isCommercial),
     showSuperBuiltUpArea: isApartment || isOffice || isRetail,
-    
+
     // Pricing fields
     showBookingAmount: isUnderConstruction,
     showMaintenanceCharges: (isApartment || isOffice || isRetail) && !isPlot,
     showPricePerSqFt: !isPlot,
     showAgeOfConstruction: isReadyToMove && !isPlot,
-    
+
     // Floor details
     showFloor: !isPlot && !isWarehouse && !isFarmhouse,
     showTotalFloors: !isPlot && !isWarehouse && !isFarmhouse,
-    showFacing: isResidential && !isPlot && (isApartment || isVilla || isIndependentHouse || isPenthouse),
-    
+    showFacing:
+      isResidential &&
+      !isPlot &&
+      (isApartment || isVilla || isIndependentHouse || isPenthouse),
+
     // Features & Amenities
     showBedrooms: isResidential && !isPlot,
     showBathrooms: !isPlot,
     showBalconies: isResidential && (isApartment || isVilla || isPenthouse),
     showFurnishing: isResidential && !isPlot && isReadyToMove,
     showParking: !isPlot,
-    
+
     // Commercial specific
     showWashrooms: isCommercial && !isPlot,
     showFloorsLevels: isCommercial && (isOffice || isRetail),
@@ -115,7 +119,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
   const [createdProperty, setCreatedProperty] = useState(null);
   const [draftSaved, setDraftSaved] = useState(false);
   const [savedListingId, setSavedListingId] = useState(propListingId || null);
-  
+
   // Use savedListingId if available, otherwise use propListingId
   const listingId = savedListingId || propListingId;
   const [propertyStatus, setPropertyStatus] = useState([]);
@@ -248,7 +252,10 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     status: { required: true, message: "Please select property status" },
 
     // Step 2 validations
-    projectName: { required: true, message: "Project/Building name is required" },
+    projectName: {
+      required: true,
+      message: "Project/Building name is required",
+    },
     address: { required: true, message: "Address is required" },
     locality: { required: true, message: "Locality is required" },
     city: { required: true, message: "City is required" },
@@ -273,15 +280,16 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     totalFloors: { required: true, message: "Total floors is required" },
 
     // Step 4 validations (conditional based on listing type)
-    bedrooms: { 
-      required: true, 
+    bedrooms: {
+      required: true,
       message: "Number of bedrooms is required",
-      conditional: (data) => data.listingType === "Residential"
+      conditional: (data) => data.listingType === "Residential",
     },
-    bathrooms: { 
-      required: true, 
+    bathrooms: {
+      required: true,
       message: "Number of bathrooms is required",
-      conditional: (data) => data.listingType === "Residential" || data.listingType === "Commercial"
+      conditional: (data) =>
+        data.listingType === "Residential" || data.listingType === "Commercial",
     },
 
     // Step 5 validations
@@ -317,10 +325,24 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     // Define which fields belong to which step (with conditional logic)
     const stepFields = {
       1: ["listingType", "transaction", "subType", "description", "status"],
-      2: ["projectName", "address", "locality", "city", "pincode", "carpetArea"],
+      2: [
+        "projectName",
+        "address",
+        "locality",
+        "city",
+        "pincode",
+        "carpetArea",
+      ],
       3: ["totalPrice", "floor", "totalFloors"],
       4: [], // Will be populated conditionally
-      5: ["contactName", "contactPhone", "contactEmail", "truthfulDeclaration", "dpdpConsent", "images"],
+      5: [
+        "contactName",
+        "contactPhone",
+        "contactEmail",
+        "truthfulDeclaration",
+        "dpdpConsent",
+        "images",
+      ],
     };
 
     // Conditionally add Step 4 fields based on listing type
@@ -337,7 +359,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     fieldsToValidate.forEach((field) => {
       const rule = validationRules[field];
       if (!rule) return; // Skip if rule doesn't exist
-      
+
       // Check conditional requirement
       if (rule.conditional && !rule.conditional(formData)) {
         return; // Skip validation if condition not met
@@ -354,7 +376,10 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
         }
         // Handle image array
         else if (field === "images") {
-          if (!formData.imagePreviews || formData.imagePreviews.length < (rule.minCount || 1)) {
+          if (
+            !formData.imagePreviews ||
+            formData.imagePreviews.length < (rule.minCount || 1)
+          ) {
             stepErrors[field] = rule.message;
           }
         }
@@ -382,7 +407,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     if (step === 3) {
       const floor = Number(formData.floor);
       const totalFloors = Number(formData.totalFloors);
-      
+
       // Check for negative values
       if (formData.floor && floor < 0) {
         stepErrors.floor = "Floor number cannot be negative";
@@ -390,7 +415,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       if (formData.totalFloors && totalFloors < 0) {
         stepErrors.totalFloors = "Total floors cannot be negative";
       }
-      
+
       // Check if floor is greater than total floors
       if (floor && totalFloors && floor > totalFloors) {
         stepErrors.floor = `Floor number cannot be greater than total floors (${totalFloors})`;
@@ -398,10 +423,16 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     }
 
     // Virtual tour URL validation (if provided)
-    if (step === 5 && formData.virtualTour && formData.virtualTour.trim() !== "") {
-      const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+    if (
+      step === 5 &&
+      formData.virtualTour &&
+      formData.virtualTour.trim() !== ""
+    ) {
+      const urlPattern =
+        /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
       if (!urlPattern.test(formData.virtualTour)) {
-        stepErrors.virtualTour = "Please enter a valid URL (e.g., https://example.com)";
+        stepErrors.virtualTour =
+          "Please enter a valid URL (e.g., https://example.com)";
       }
     }
 
@@ -483,43 +514,44 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       // Use window.Image to explicitly use browser's native Image constructor
       const img = new window.Image();
       const url = URL.createObjectURL(file);
-      
+
       img.onload = () => {
         URL.revokeObjectURL(url);
         const width = img.naturalWidth || img.width;
         const height = img.naturalHeight || img.height;
         const aspectRatio = width / height;
-        
+
         // Check if image is square (aspect ratio close to 1:1)
         const isSquare = Math.abs(aspectRatio - 1) < 0.1;
-        
+
         // Check if image is too extreme (more than 3:1 or less than 1:3)
-        const isTooExtreme = aspectRatio > 3 || aspectRatio < 1/3;
-        
+        const isTooExtreme = aspectRatio > 3 || aspectRatio < 1 / 3;
+
         // Valid rectangular ratio: not square and not too extreme
         const isValid = !isSquare && !isTooExtreme;
-        
+
         resolve({
           isValid,
           width,
           height,
           aspectRatio,
-          error: isSquare 
-            ? "Image must be rectangular, not square" 
-            : isTooExtreme 
-            ? "Image aspect ratio is too extreme. Please use rectangular images (between 3:1 and 1:3)" 
-            : null
+          error: isSquare
+            ? "Image must be rectangular, not square"
+            : isTooExtreme
+              ? "Image aspect ratio is too extreme. Please use rectangular images (between 3:1 and 1:3)"
+              : null,
         });
       };
-      
+
       img.onerror = () => {
         URL.revokeObjectURL(url);
-        resolve({ 
-          isValid: false, 
-          error: "Failed to load image. Please ensure the file is a valid image." 
+        resolve({
+          isValid: false,
+          error:
+            "Failed to load image. Please ensure the file is a valid image.",
         });
       };
-      
+
       img.src = url;
     });
   };
@@ -539,7 +571,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
 
     if (typeAndSizeValidFiles.length !== files.length) {
       alert(
-        "Some files were skipped. Please select only image files under 5MB."
+        "Some files were skipped. Please select only image files under 5MB.",
       );
     }
 
@@ -556,7 +588,9 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     // Show error for invalid aspect ratio files
     if (invalidFiles.length > 0) {
       const errorMessages = invalidFiles.map(({ error }) => error).join("\n");
-      alert(`Some images were rejected due to invalid aspect ratio:\n${errorMessages}`);
+      alert(
+        `Some images were rejected due to invalid aspect ratio:\n${errorMessages}`,
+      );
     }
 
     if (validFiles.length === 0) {
@@ -589,12 +623,15 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
   const handleImageRemove = (imageId) => {
     setFormData((prev) => {
       const imageToRemove = prev.imagePreviews.find(
-        (img) => img.id === imageId
+        (img) => img.id === imageId,
       );
       if (imageToRemove) {
         // Only revoke object URLs (not HTTP URLs for existing images)
         // Object URLs start with 'blob:' or are created via URL.createObjectURL
-        if (imageToRemove.preview && imageToRemove.preview.startsWith('blob:')) {
+        if (
+          imageToRemove.preview &&
+          imageToRemove.preview.startsWith("blob:")
+        ) {
           URL.revokeObjectURL(imageToRemove.preview);
         }
       }
@@ -604,7 +641,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
         imagePreviews: prev.imagePreviews.filter((img) => img.id !== imageId),
         images: prev.images.filter((_, index) => {
           const previewIndex = prev.imagePreviews.findIndex(
-            (img) => img.id === imageId
+            (img) => img.id === imageId,
           );
           return index !== previewIndex;
         }),
@@ -617,7 +654,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     return () => {
       formData.imagePreviews.forEach((imageData) => {
         // Only revoke object URLs (blob URLs), not HTTP URLs for existing images
-        if (imageData.preview && imageData.preview.startsWith('blob:')) {
+        if (imageData.preview && imageData.preview.startsWith("blob:")) {
           URL.revokeObjectURL(imageData.preview);
         }
       });
@@ -626,7 +663,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
 
   // Load project status, types, cities, builders, and states on component mount
   useEffect(() => {
-    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005").replace(/\/$/, "");
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
     const loadProjectStatus = async () => {
       try {
@@ -651,7 +688,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     const loadCities = async () => {
       setLoadingCities(true);
       try {
-        const response = await axios.get(`${baseUrl}/api/v1/city/all`);
+        const response = await axios.get(`${baseUrl}city/all`);
         // Handle different response formats
         const cityData = response.data?.data || response.data || [];
         setCities(Array.isArray(cityData) ? cityData : []);
@@ -666,7 +703,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     const loadBuilders = async () => {
       setLoadingBuilders(true);
       try {
-        const response = await axios.get(`${baseUrl}/api/v1/builder/get-all-builders`);
+        const response = await axios.get(`${baseUrl}builder/get-all-builders`);
         // Handle different response formats
         const builderData = response.data?.data || response.data || [];
         setBuilders(Array.isArray(builderData) ? builderData : []);
@@ -688,9 +725,9 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     const loadProjects = async () => {
       setLoadingProjects(true);
       try {
-        const response = await axios.get(`${baseUrl}/api/v1/projects/get-all-projects-list`);
+        const response = await fetchAllProjects();
         // Handle different response formats
-        const projectData = response.data || [];
+        const projectData = response || [];
         setProjects(Array.isArray(projectData) ? projectData : []);
       } catch (error) {
         console.error("Error loading projects:", error);
@@ -703,7 +740,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     const loadAmenities = async () => {
       setLoadingAmenities(true);
       try {
-        const response = await axios.get(`${baseUrl}/api/v1/amenity/get-all`);
+        const response = await axios.get(`${baseUrl}amenity/get-all`);
         const amenityData = response.data || [];
         setAmenities(Array.isArray(amenityData) ? amenityData : []);
       } catch (error) {
@@ -717,7 +754,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     const loadFeatures = async () => {
       setLoadingFeatures(true);
       try {
-        const response = await axios.get(`${baseUrl}/api/v1/feature/get-all`);
+        const response = await axios.get(`${baseUrl}feature/get-all`);
         const featureData = response.data || [];
         setFeatures(Array.isArray(featureData) ? featureData : []);
       } catch (error) {
@@ -731,7 +768,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     const loadNearbyBenefits = async () => {
       setLoadingNearbyBenefits(true);
       try {
-        const response = await axios.get(`${baseUrl}/api/v1/nearby-benefit/get-all`);
+        const response = await axios.get(`${baseUrl}nearby-benefit/get-all`);
         const benefitData = response.data || [];
         setNearbyBenefits(Array.isArray(benefitData) ? benefitData : []);
       } catch (error) {
@@ -770,7 +807,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     const fetchPropertyData = async () => {
       setLoadingProperty(true);
       setIsEditMode(true);
-      
+
       try {
         const token = Cookies.get("token");
         if (!token) {
@@ -779,22 +816,24 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
           return;
         }
 
-        const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005").replace(/\/$/, "");
-        const response = await axios.get(`${baseUrl}/api/v1/user/property-listings/${listingId}`, {
-          withCredentials: true,
-        });
+        const response = await axios.get(
+          `${baseUrl}user/property-listings/${listingId}`,
+          {
+            withCredentials: true,
+          },
+        );
 
         if (!response.ok) {
           throw new Error(`Failed to fetch property: ${response.status}`);
         }
 
         const result = await response.json();
-        
+
         if (result.success && result.property) {
           const property = result.property;
           // Get initial form state first, then override with property data
           const initialFormState = getInitialFormState();
-          
+
           // Populate form with existing property data
           setFormData({
             ...initialFormState, // Start with all initial fields (checkboxes default to false)
@@ -819,82 +858,185 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
             city: property.city || "",
             cityId: property.cityId || null,
             pincode: property.pincode || property.pinCode || "",
-            carpetArea: property.carpetArea !== null && property.carpetArea !== undefined ? property.carpetArea.toString() : "",
-            builtUpArea: property.builtUpArea !== null && property.builtUpArea !== undefined ? property.builtUpArea.toString() : "",
-            superBuiltUpArea: property.superBuiltUpArea !== null && property.superBuiltUpArea !== undefined ? property.superBuiltUpArea.toString() : "",
-            plotArea: property.plotArea !== null && property.plotArea !== undefined ? property.plotArea.toString() : "",
-            latitude: property.latitude !== null && property.latitude !== undefined ? property.latitude.toString() : "",
-            longitude: property.longitude !== null && property.longitude !== undefined ? property.longitude.toString() : "",
+            carpetArea:
+              property.carpetArea !== null && property.carpetArea !== undefined
+                ? property.carpetArea.toString()
+                : "",
+            builtUpArea:
+              property.builtUpArea !== null &&
+              property.builtUpArea !== undefined
+                ? property.builtUpArea.toString()
+                : "",
+            superBuiltUpArea:
+              property.superBuiltUpArea !== null &&
+              property.superBuiltUpArea !== undefined
+                ? property.superBuiltUpArea.toString()
+                : "",
+            plotArea:
+              property.plotArea !== null && property.plotArea !== undefined
+                ? property.plotArea.toString()
+                : "",
+            latitude:
+              property.latitude !== null && property.latitude !== undefined
+                ? property.latitude.toString()
+                : "",
+            longitude:
+              property.longitude !== null && property.longitude !== undefined
+                ? property.longitude.toString()
+                : "",
 
             // Pricing & Floor Details
-            totalPrice: property.totalPrice !== null && property.totalPrice !== undefined ? property.totalPrice.toString() : "",
-            pricePerSqFt: property.pricePerSqft !== null && property.pricePerSqft !== undefined ? property.pricePerSqft.toString() : (property.pricePerSqFt !== null && property.pricePerSqFt !== undefined ? property.pricePerSqFt.toString() : ""),
-            maintenanceCharges: property.maintenanceCharges !== null && property.maintenanceCharges !== undefined ? property.maintenanceCharges.toString() : (property.maintenanceCam !== null && property.maintenanceCam !== undefined ? property.maintenanceCam.toString() : ""),
-            bookingAmount: property.bookingAmount !== null && property.bookingAmount !== undefined ? property.bookingAmount.toString() : "",
-            floor: property.floorNumber !== null && property.floorNumber !== undefined ? property.floorNumber.toString() : (property.floorNo !== null && property.floorNo !== undefined ? property.floorNo.toString() : ""),
-            totalFloors: property.totalFloors !== null && property.totalFloors !== undefined ? property.totalFloors.toString() : "",
+            totalPrice:
+              property.totalPrice !== null && property.totalPrice !== undefined
+                ? property.totalPrice.toString()
+                : "",
+            pricePerSqFt:
+              property.pricePerSqft !== null &&
+              property.pricePerSqft !== undefined
+                ? property.pricePerSqft.toString()
+                : property.pricePerSqFt !== null &&
+                    property.pricePerSqFt !== undefined
+                  ? property.pricePerSqFt.toString()
+                  : "",
+            maintenanceCharges:
+              property.maintenanceCharges !== null &&
+              property.maintenanceCharges !== undefined
+                ? property.maintenanceCharges.toString()
+                : property.maintenanceCam !== null &&
+                    property.maintenanceCam !== undefined
+                  ? property.maintenanceCam.toString()
+                  : "",
+            bookingAmount:
+              property.bookingAmount !== null &&
+              property.bookingAmount !== undefined
+                ? property.bookingAmount.toString()
+                : "",
+            floor:
+              property.floorNumber !== null &&
+              property.floorNumber !== undefined
+                ? property.floorNumber.toString()
+                : property.floorNo !== null && property.floorNo !== undefined
+                  ? property.floorNo.toString()
+                  : "",
+            totalFloors:
+              property.totalFloors !== null &&
+              property.totalFloors !== undefined
+                ? property.totalFloors.toString()
+                : "",
             facing: property.facing || property.unitFacing || "",
-            ageOfConstruction: property.ageOfConstruction !== null && property.ageOfConstruction !== undefined ? property.ageOfConstruction.toString() : (property.ageOfProperty !== null && property.ageOfProperty !== undefined ? property.ageOfProperty.toString() : ""),
+            ageOfConstruction:
+              property.ageOfConstruction !== null &&
+              property.ageOfConstruction !== undefined
+                ? property.ageOfConstruction.toString()
+                : property.ageOfProperty !== null &&
+                    property.ageOfProperty !== undefined
+                  ? property.ageOfProperty.toString()
+                  : "",
 
             // Features & Amenities
-            bedrooms: (property.bedrooms !== null && property.bedrooms !== undefined) ? property.bedrooms.toString() : "",
-            bathrooms: (property.bathrooms !== null && property.bathrooms !== undefined) ? property.bathrooms.toString() : "",
-            balconies: (property.balconies !== null && property.balconies !== undefined) ? property.balconies.toString() : "",
+            bedrooms:
+              property.bedrooms !== null && property.bedrooms !== undefined
+                ? property.bedrooms.toString()
+                : "",
+            bathrooms:
+              property.bathrooms !== null && property.bathrooms !== undefined
+                ? property.bathrooms.toString()
+                : "",
+            balconies:
+              property.balconies !== null && property.balconies !== undefined
+                ? property.balconies.toString()
+                : "",
             parking: property.parking || property.parkingType || "",
             furnished: property.furnished || property.furnishingLevel || "",
-            amenityIds: Array.isArray(property.amenityIds) ? property.amenityIds : (Array.isArray(property.amenities) ? property.amenities.map(a => typeof a === 'object' ? a.id : a) : []),
-            featureIds: Array.isArray(property.featureIds) ? property.featureIds : (Array.isArray(property.features) ? property.features.map(f => typeof f === 'object' ? f.id : f) : []),
-            nearbyBenefits: Array.isArray(property.nearbyBenefits) ? property.nearbyBenefits : [],
+            amenityIds: Array.isArray(property.amenityIds)
+              ? property.amenityIds
+              : Array.isArray(property.amenities)
+                ? property.amenities.map((a) =>
+                    typeof a === "object" ? a.id : a,
+                  )
+                : [],
+            featureIds: Array.isArray(property.featureIds)
+              ? property.featureIds
+              : Array.isArray(property.features)
+                ? property.features.map((f) =>
+                    typeof f === "object" ? f.id : f,
+                  )
+                : [],
+            nearbyBenefits: Array.isArray(property.nearbyBenefits)
+              ? property.nearbyBenefits
+              : [],
 
             // Media & Contact
             images: [],
-            imagePreviews: property.imageUrls ? property.imageUrls.map((url, index) => {
-              // Format image URL properly
-              let imageUrl = url;
-              if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                // Handle different URL formats
-                if (url.includes('property-listings')) {
-                  // Extract listing ID and filename from path
-                  const pathParts = url.replace(/\\/g, '/').split('/');
-                  const propertyListingsIndex = pathParts.findIndex(p => p.toLowerCase() === 'property-listings');
-                  if (propertyListingsIndex !== -1 && pathParts.length > propertyListingsIndex + 2) {
-                    const listingId = pathParts[propertyListingsIndex + 1];
-                    const filename = pathParts.slice(propertyListingsIndex + 2).join('/');
-                    imageUrl = `${baseUrl}/api/v1/get/images/property-listings/${listingId}/${filename}`;
-                  } else {
-                    imageUrl = `${baseUrl}/api/v1/get/images/${url.replace(/\\/g, '/')}`;
+            imagePreviews: property.imageUrls
+              ? property.imageUrls.map((url, index) => {
+                  // Format image URL properly
+                  let imageUrl = url;
+                  if (
+                    !url.startsWith("http://") &&
+                    !url.startsWith("https://")
+                  ) {
+                    // Handle different URL formats
+                    if (url.includes("property-listings")) {
+                      // Extract listing ID and filename from path
+                      const pathParts = url.replace(/\\/g, "/").split("/");
+                      const propertyListingsIndex = pathParts.findIndex(
+                        (p) => p.toLowerCase() === "property-listings",
+                      );
+                      if (
+                        propertyListingsIndex !== -1 &&
+                        pathParts.length > propertyListingsIndex + 2
+                      ) {
+                        const listingId = pathParts[propertyListingsIndex + 1];
+                        const filename = pathParts
+                          .slice(propertyListingsIndex + 2)
+                          .join("/");
+                        imageUrl = `${process.env.NEXT_PUBLIC_API_URL}get/images/property-listings/${listingId}/${filename}`;
+                      } else {
+                        imageUrl = `${process.env.NEXT_PUBLIC_API_URL}get/images/${url.replace(/\\/g, "/")}`;
+                      }
+                    } else {
+                      imageUrl = `${process.env.NEXT_PUBLIC_API_URL}get/images/${url.replace(/\\/g, "/")}`;
+                    }
                   }
-                } else {
-                  imageUrl = `${baseUrl}/api/v1/get/images/${url.replace(/\\/g, '/')}`;
-                }
-              }
-              return {
-                id: `existing-${index}`,
-                preview: imageUrl,
-                isExisting: true,
-                url: url
-              };
-            }) : [],
+                  return {
+                    id: `existing-${index}`,
+                    preview: imageUrl,
+                    isExisting: true,
+                    url: url,
+                  };
+                })
+              : [],
             videos: Array.isArray(property.videoUrls) ? property.videoUrls : [],
             virtualTour: property.videoUrl || property.virtualTour || "",
             ownershipType: property.ownershipType || "",
             reraId: property.reraId || "",
             reraState: property.reraState || "",
             contactName: property.contactName || "",
-            contactPhone: property.contactPhone || property.primaryContact || "",
+            contactPhone:
+              property.contactPhone || property.primaryContact || "",
             contactEmail: property.contactEmail || property.primaryEmail || "",
             contactPreference: property.contactPreference || "Phone",
             preferredTime: property.preferredTime || "",
-            additionalNotes: property.additionalNotes || property.renovationHistory || "",
-            truthfulDeclaration: property.truthfulDeclaration !== undefined ? property.truthfulDeclaration : false,
-            dpdpConsent: property.dpdpConsent !== undefined ? property.dpdpConsent : false,
+            additionalNotes:
+              property.additionalNotes || property.renovationHistory || "",
+            truthfulDeclaration:
+              property.truthfulDeclaration !== undefined
+                ? property.truthfulDeclaration
+                : false,
+            dpdpConsent:
+              property.dpdpConsent !== undefined ? property.dpdpConsent : false,
             // Additional fields that might be in the API response
             waterSupply: property.waterSupply || "",
             towerBlock: property.towerBlock || "",
             powerBackup: property.powerBackup || "",
             restrictions: property.restrictions || "",
-            taxesCharges: Array.isArray(property.taxesCharges) ? property.taxesCharges : [],
-            pointsOfInterest: Array.isArray(property.pointsOfInterest) ? property.pointsOfInterest : [],
+            taxesCharges: Array.isArray(property.taxesCharges)
+              ? property.taxesCharges
+              : [],
+            pointsOfInterest: Array.isArray(property.pointsOfInterest)
+              ? property.pointsOfInterest
+              : [],
             state: property.state || "",
             localityId: property.localityId || null,
           });
@@ -953,7 +1095,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
 
       // Prepare property data using shared function
       const propertyData = preparePropertyData();
-      
+
       // Set approval status to PENDING when submitting (not draft)
       // When user clicks "Submit Property", it should be submitted for approval
       propertyData.approvalStatus = "PENDING";
@@ -961,15 +1103,13 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
 
       // Add property data as JSON string (backend will parse it)
       formDataObj.append("property", JSON.stringify(propertyData));
-      const baseUrl = (
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005"
-      ).replace(/\/$/, "");
 
       // Use PUT for updates, POST for new listings
-      const url = isEditMode && listingId
-        ? `${baseUrl}/api/v1/user/property-listings/${listingId}`
-        : `${baseUrl}/api/v1/user/property-listings`;
-      
+      const url =
+        isEditMode && listingId
+          ? `${process.env.NEXT_PUBLIC_API_URL}user/property-listings/${listingId}`
+          : `${process.env.NEXT_PUBLIC_API_URL}user/property-listings`;
+
       const method = isEditMode && listingId ? "PUT" : "POST";
 
       const response = await axios.post(url, {
@@ -989,23 +1129,24 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
 
       if (!response.ok || !(result && result.success)) {
         const message =
-          result?.message || `Failed to ${isEditMode ? 'update' : 'create'} property (status ${response.status})`;
+          result?.message ||
+          `Failed to ${isEditMode ? "update" : "create"} property (status ${response.status})`;
         throw new Error(message);
       }
 
       setCreatedProperty(result.property || null);
-      
+
       // Update savedListingId if property was created
       if (result.property && result.property.id) {
         setSavedListingId(result.property.id);
       }
-      
+
       if (isEditMode) {
         // For edit mode, show success and redirect or refresh
         alert("Property updated successfully!");
         // Optionally redirect back to listings page
-        if (typeof window !== 'undefined') {
-          window.location.href = '/portal/dashboard/listings';
+        if (typeof window !== "undefined") {
+          window.location.href = "/portal/dashboard/listings";
         }
       } else {
         // For new listings, reset form and show success modal
@@ -1050,7 +1191,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     // Generate title from property details if not provided
     const generateTitle = () => {
       const parts = [];
-      
+
       if (formData.listingType === "Commercial") {
         // Commercial property title format: "1200 sq ft Office Space in Sector 45, Gurgaon" (space first, then type)
         if (formData.carpetArea) {
@@ -1067,7 +1208,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
         if (formData.locality) parts.push(`in ${formData.locality}`);
         if (formData.city) parts.push(formData.city);
       }
-      
+
       return parts.length > 0 ? parts.join(" ") : "Property Listing";
     };
 
@@ -1112,8 +1253,14 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       floorNo: toInteger(formData.floor),
       totalFloors: toInteger(formData.totalFloors),
       // Facing is only for residential properties
-      facing: formData.listingType === "Residential" ? emptyToNull(formData.facing) : null,
-      unitFacing: formData.listingType === "Residential" ? emptyToNull(formData.facing) : null,
+      facing:
+        formData.listingType === "Residential"
+          ? emptyToNull(formData.facing)
+          : null,
+      unitFacing:
+        formData.listingType === "Residential"
+          ? emptyToNull(formData.facing)
+          : null,
       ageOfConstruction: toInteger(formData.ageOfConstruction),
       // Remove duplicate ageOfProperty field
       carParkingSlots: extractParkingSlots(formData.parking),
@@ -1121,9 +1268,15 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       powerBackup: emptyToNull(formData.powerBackup),
 
       // Configuration - residential-specific fields set to null for commercial
-      bedrooms: formData.listingType === "Residential" ? toInteger(formData.bedrooms) : null,
+      bedrooms:
+        formData.listingType === "Residential"
+          ? toInteger(formData.bedrooms)
+          : null,
       bathrooms: toInteger(formData.bathrooms),
-      balconies: formData.listingType === "Residential" ? toInteger(formData.balconies) : null,
+      balconies:
+        formData.listingType === "Residential"
+          ? toInteger(formData.balconies)
+          : null,
       furnishingLevel: emptyToNull(formData.furnished),
       additionalRooms:
         formData.features && formData.features.length
@@ -1146,8 +1299,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       ownershipType: emptyToNull(formData.ownershipType),
       reraId: emptyToNull(formData.reraId),
       reraState: emptyToNull(formData.reraState),
-      contactPreference:
-        emptyToNull(formData.contactPreference) || "Phone",
+      contactPreference: emptyToNull(formData.contactPreference) || "Phone",
       contactName: emptyToNull(formData.contactName),
       contactPhone: emptyToNull(formData.contactPhone),
       contactEmail: emptyToNull(formData.contactEmail),
@@ -1196,7 +1348,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
 
       // Prepare property data
       const propertyData = preparePropertyData();
-      
+
       // Set approval status to DRAFT when saving as draft
       propertyData.approvalStatus = "DRAFT";
       propertyData.isUserSubmitted = false; // Draft is not yet submitted for approval
@@ -1208,10 +1360,11 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       ).replace(/\/$/, "");
 
       // Use PUT for updates, POST for new drafts
-      const url = isEditMode && listingId
-        ? `${baseUrl}/api/v1/user/property-listings/${listingId}`
-        : `${baseUrl}/api/v1/user/property-listings`;
-      
+      const url =
+        isEditMode && listingId
+          ? `${process.env.NEXT_PUBLIC_API_URL}user/property-listings/${listingId}`
+          : `${process.env.NEXT_PUBLIC_API_URL}user/property-listings`;
+
       const method = isEditMode && listingId ? "PUT" : "POST";
 
       const response = await axios.post(url, {
@@ -1231,7 +1384,8 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
 
       if (!response.ok || !(result && result.success)) {
         const message =
-          result?.message || `Failed to ${isEditMode ? 'update' : 'save draft'} (status ${response.status})`;
+          result?.message ||
+          `Failed to ${isEditMode ? "update" : "save draft"} (status ${response.status})`;
         throw new Error(message);
       }
 
@@ -1244,13 +1398,13 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
         const savedId = result.property.id;
         // Update savedListingId state so future saves use PUT instead of POST
         setSavedListingId(savedId);
-        
+
         // If this was a new draft (not edit mode), update URL and edit mode
         if (!isEditMode && !propListingId) {
           // Update the URL to include the ID for future edits
-          if (typeof window !== 'undefined') {
+          if (typeof window !== "undefined") {
             const newUrl = `/portal/dashboard/listings/${savedId}?action=edit`;
-            window.history.replaceState({}, '', newUrl);
+            window.history.replaceState({}, "", newUrl);
           }
           // Update state so future saves use PUT instead of POST
           setIsEditMode(true);
@@ -1310,7 +1464,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
             loadingAmenities={loadingAmenities}
             loadingFeatures={loadingFeatures}
             loadingNearbyBenefits={loadingNearbyBenefits}
-            apiBaseUrl={(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8005").replace(/\/$/, "")}
+            apiBaseUrl={process.env.NEXT_PUBLIC_API_URL}
           />
         );
       case 5:
@@ -1335,7 +1489,11 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     return (
       <div className="modern-property-listing portal-content">
         <div className="text-center py-5">
-          <Spinner animation="border" role="status" style={{ color: 'var(--portal-primary, #68ac78)' }}>
+          <Spinner
+            animation="border"
+            role="status"
+            style={{ color: "var(--portal-primary, #68ac78)" }}
+          >
             <span className="visually-hidden">Loading...</span>
           </Spinner>
           <p className="mt-3 text-muted">Loading property data...</p>
@@ -1351,10 +1509,14 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
         <div className="header-content">
           <div className="header-title">
             <h2>{isEditMode ? "Edit Property" : "Add New Property"}</h2>
-            <p>{isEditMode ? "Update your property listing information" : "Create a comprehensive property listing in 5 simple steps"}</p>
+            <p>
+              {isEditMode
+                ? "Update your property listing information"
+                : "Create a comprehensive property listing in 5 simple steps"}
+            </p>
           </div>
           <div className="header-actions">
-            <Button 
+            <Button
               variant="light"
               onClick={handleSaveDraft}
               disabled={isSavingDraft}
@@ -1390,8 +1552,8 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
                   currentStep > step.id
                     ? "completed"
                     : currentStep === step.id
-                    ? "active"
-                    : ""
+                      ? "active"
+                      : ""
                 }`}
               >
                 <div className="step-icon">
@@ -1412,9 +1574,15 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       <Card className="dashboard-card form-card">
         <Card.Body>
           {draftSaved && (
-            <Alert variant="success" className="mb-4" dismissible onClose={() => setDraftSaved(false)}>
+            <Alert
+              variant="success"
+              className="mb-4"
+              dismissible
+              onClose={() => setDraftSaved(false)}
+            >
               <CIcon icon={cilCheck} className="me-2" />
-              <strong>Draft saved successfully!</strong> You can continue editing and submit when ready.
+              <strong>Draft saved successfully!</strong> You can continue
+              editing and submit when ready.
             </Alert>
           )}
 
@@ -1480,11 +1648,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       </Card>
 
       {/* Success Modal */}
-      <Modal
-        show={showSuccessModal}
-        onHide={handleCloseSuccessModal}
-        centered
-      >
+      <Modal show={showSuccessModal} onHide={handleCloseSuccessModal} centered>
         <Modal.Header closeButton>
           <Modal.Title>
             <CIcon icon={cilCheck} className="me-2 text-success" />
@@ -1524,7 +1688,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       <style jsx>{`
         /* Common styles are now in PortalCommonStyles.css */
         /* Only component-specific styles below */
-        
+
         .modern-property-listing {
           /* Uses common portal-page-container styles */
         }
@@ -1549,9 +1713,13 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
         .progress-bar-custom {
           background-color: var(--portal-gray-200, #e9ecef);
         }
-        
+
         .progress-bar-custom .progress-bar {
-          background: linear-gradient(135deg, var(--portal-primary, #68ac78) 0%, var(--portal-primary-dark, #0d5834) 100%);
+          background: linear-gradient(
+            135deg,
+            var(--portal-primary, #68ac78) 0%,
+            var(--portal-primary-dark, #0d5834) 100%
+          );
         }
 
         .step-indicators {
@@ -1583,11 +1751,19 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
         }
 
         .step-indicator.completed:not(:last-child)::after {
-          background: linear-gradient(90deg, var(--portal-success, #28a745) 0%, var(--portal-primary, #68ac78) 100%);
+          background: linear-gradient(
+            90deg,
+            var(--portal-success, #28a745) 0%,
+            var(--portal-primary, #68ac78) 100%
+          );
         }
 
         .step-indicator.active:not(:last-child)::after {
-          background: linear-gradient(90deg, var(--portal-success, #28a745) 0%, var(--portal-gray-200, #e9ecef) 50%);
+          background: linear-gradient(
+            90deg,
+            var(--portal-success, #28a745) 0%,
+            var(--portal-gray-200, #e9ecef) 50%
+          );
         }
 
         .step-icon {
@@ -1607,14 +1783,22 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
         }
 
         .step-indicator.active .step-icon {
-          background: linear-gradient(135deg, var(--portal-primary, #68ac78) 0%, var(--portal-primary-dark, #0d5834) 100%);
+          background: linear-gradient(
+            135deg,
+            var(--portal-primary, #68ac78) 0%,
+            var(--portal-primary-dark, #0d5834) 100%
+          );
           color: white;
           box-shadow: 0 4px 12px rgba(104, 172, 120, 0.3);
           transform: scale(1.1);
         }
 
         .step-indicator.completed .step-icon {
-          background: linear-gradient(135deg, var(--portal-success, #28a745) 0%, #1e7e34 100%);
+          background: linear-gradient(
+            135deg,
+            var(--portal-success, #28a745) 0%,
+            #1e7e34 100%
+          );
           color: white;
           box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
         }
@@ -1680,16 +1864,24 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
           border: 1px solid var(--portal-gray-200, #e9ecef);
           border-radius: 16px;
           overflow: hidden;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+          box-shadow:
+            0 4px 12px rgba(0, 0, 0, 0.1),
+            0 2px 4px rgba(0, 0, 0, 0.06);
           transition: box-shadow 0.3s ease;
         }
 
         .image-gallery-container:hover {
-          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12), 0 4px 6px rgba(0, 0, 0, 0.08);
+          box-shadow:
+            0 6px 16px rgba(0, 0, 0, 0.12),
+            0 4px 6px rgba(0, 0, 0, 0.08);
         }
 
         .gallery-header {
-          background: linear-gradient(135deg, var(--portal-primary, #68ac78) 0%, var(--portal-primary-dark, #0d5834) 100%);
+          background: linear-gradient(
+            135deg,
+            var(--portal-primary, #68ac78) 0%,
+            var(--portal-primary-dark, #0d5834) 100%
+          );
           color: white;
           padding: 1rem 1.5rem;
           border-bottom: 1px solid var(--portal-gray-200, #e9ecef);
@@ -1723,7 +1915,9 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
           background: var(--portal-white, #ffffff);
           border-radius: 12px;
           overflow: hidden;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+          box-shadow:
+            0 4px 6px rgba(0, 0, 0, 0.1),
+            0 2px 4px rgba(0, 0, 0, 0.06);
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           border: 2px solid var(--portal-gray-200, #e9ecef);
           width: 300px;
@@ -1734,7 +1928,9 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
 
         .gallery-item:hover {
           transform: translateY(-6px) scale(1.02);
-          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1);
+          box-shadow:
+            0 12px 24px rgba(0, 0, 0, 0.15),
+            0 4px 8px rgba(0, 0, 0, 0.1);
           border-color: var(--portal-primary, #68ac78);
         }
 
@@ -1745,7 +1941,11 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
           min-height: 200px;
           max-height: 200px;
           overflow: hidden;
-          background: linear-gradient(135deg, var(--portal-gray-50, #f8f9fa) 0%, var(--portal-gray-200, #e9ecef) 100%);
+          background: linear-gradient(
+            135deg,
+            var(--portal-gray-50, #f8f9fa) 0%,
+            var(--portal-gray-200, #e9ecef) 100%
+          );
           display: flex;
           align-items: center;
           justify-content: center;
@@ -1772,7 +1972,11 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
           left: 0;
           right: 0;
           bottom: 0;
-          background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
+          background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.4),
+            rgba(0, 0, 0, 0.2)
+          );
           display: flex;
           align-items: center;
           justify-content: center;
@@ -1816,7 +2020,11 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
           position: absolute;
           top: 10px;
           left: 10px;
-          background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+          background: linear-gradient(
+            135deg,
+            rgba(102, 126, 234, 0.9) 0%,
+            rgba(118, 75, 162, 0.9) 100%
+          );
           color: white;
           border-radius: 50%;
           width: 28px;
@@ -1935,9 +2143,19 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
 }
 
 // Step Components
-function BasicInformationStep({ data, onChange, errors, propertyTypes = [], propertyStatus = [] }) {
-  const fieldVisibility = getFieldVisibility(data.listingType, data.subType, data.status);
-  
+function BasicInformationStep({
+  data,
+  onChange,
+  errors,
+  propertyTypes = [],
+  propertyStatus = [],
+}) {
+  const fieldVisibility = getFieldVisibility(
+    data.listingType,
+    data.subType,
+    data.status,
+  );
+
   return (
     <div className="step-content">
       <div className="step-header">
@@ -1965,7 +2183,10 @@ function BasicInformationStep({ data, onChange, errors, propertyTypes = [], prop
                 <option value="">Choose listing type</option>
                 {propertyTypes.length > 0 ? (
                   propertyTypes.map((type) => (
-                    <option key={type.id || type.projectTypeName} value={type.projectTypeName}>
+                    <option
+                      key={type.id || type.projectTypeName}
+                      value={type.projectTypeName}
+                    >
                       {type.projectTypeName}
                     </option>
                   ))
@@ -2081,7 +2302,10 @@ function BasicInformationStep({ data, onChange, errors, propertyTypes = [], prop
                 <option value="">Choose property status</option>
                 {propertyStatus.length > 0 ? (
                   propertyStatus.map((status) => (
-                    <option key={status.id || status.statusName} value={status.statusName || status.status}>
+                    <option
+                      key={status.id || status.statusName}
+                      value={status.statusName || status.status}
+                    >
                       {status.statusName || status.status}
                     </option>
                   ))
@@ -2227,18 +2451,22 @@ function BasicInformationStep({ data, onChange, errors, propertyTypes = [], prop
   );
 }
 
-function LocationAreaStep({ 
-  data, 
-  onChange, 
-  errors, 
-  builderList = [], 
+function LocationAreaStep({
+  data,
+  onChange,
+  errors,
+  builderList = [],
   projectList = [],
-  cities = [], 
+  cities = [],
   loadingCities = false,
   loadingBuilders = false,
-  loadingProjects = false
+  loadingProjects = false,
 }) {
-  const fieldVisibility = getFieldVisibility(data.listingType, data.subType, data.status);
+  const fieldVisibility = getFieldVisibility(
+    data.listingType,
+    data.subType,
+    data.status,
+  );
   const [projectSearchTerm, setProjectSearchTerm] = useState("");
   const [showProjectDropdown, setShowProjectDropdown] = useState(false);
   const [projectInputFocused, setProjectInputFocused] = useState(false);
@@ -2260,28 +2488,42 @@ function LocationAreaStep({
   const cityDropdownRef = useRef(null);
 
   // Filter projects based on search term
-  const filteredProjects = projectList.filter((project) => {
-    if (!projectSearchTerm.trim()) return false; // Don't show all when empty
-    const projectName = (project.projectName || project.name || "").toLowerCase();
-    const searchLower = projectSearchTerm.toLowerCase();
-    return projectName.includes(searchLower);
-  }).slice(0, 10); // Limit to 10 results for better UX
+  const filteredProjects = projectList
+    .filter((project) => {
+      if (!projectSearchTerm.trim()) return false; // Don't show all when empty
+      const projectName = (
+        project.projectName ||
+        project.name ||
+        ""
+      ).toLowerCase();
+      const searchLower = projectSearchTerm.toLowerCase();
+      return projectName.includes(searchLower);
+    })
+    .slice(0, 10); // Limit to 10 results for better UX
 
   // Filter builders based on search term
-  const filteredBuilders = builderList.filter((builder) => {
-    if (!builderSearchTerm.trim()) return false; // Don't show all when empty
-    const builderName = (builder.builderName || builder.name || "").toLowerCase();
-    const searchLower = builderSearchTerm.toLowerCase();
-    return builderName.includes(searchLower);
-  }).slice(0, 10); // Limit to 10 results for better UX
+  const filteredBuilders = builderList
+    .filter((builder) => {
+      if (!builderSearchTerm.trim()) return false; // Don't show all when empty
+      const builderName = (
+        builder.builderName ||
+        builder.name ||
+        ""
+      ).toLowerCase();
+      const searchLower = builderSearchTerm.toLowerCase();
+      return builderName.includes(searchLower);
+    })
+    .slice(0, 10); // Limit to 10 results for better UX
 
   // Filter cities based on search term
-  const filteredCities = cities.filter((city) => {
-    if (!citySearchTerm.trim()) return false; // Don't show all when empty
-    const cityName = (city.cityName || city.name || city).toLowerCase();
-    const searchLower = citySearchTerm.toLowerCase();
-    return cityName.includes(searchLower);
-  }).slice(0, 10); // Limit to 10 results for better UX
+  const filteredCities = cities
+    .filter((city) => {
+      if (!citySearchTerm.trim()) return false; // Don't show all when empty
+      const cityName = (city.cityName || city.name || city).toLowerCase();
+      const searchLower = citySearchTerm.toLowerCase();
+      return cityName.includes(searchLower);
+    })
+    .slice(0, 10); // Limit to 10 results for better UX
 
   // Handle project input change
   const handleProjectInputChange = (value) => {
@@ -2316,8 +2558,8 @@ function LocationAreaStep({
 
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setProjectHighlightedIndex((prev) => 
-        prev < filteredProjects.length - 1 ? prev + 1 : prev
+      setProjectHighlightedIndex((prev) =>
+        prev < filteredProjects.length - 1 ? prev + 1 : prev,
       );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
@@ -2337,8 +2579,8 @@ function LocationAreaStep({
 
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setBuilderHighlightedIndex((prev) => 
-        prev < filteredBuilders.length - 1 ? prev + 1 : prev
+      setBuilderHighlightedIndex((prev) =>
+        prev < filteredBuilders.length - 1 ? prev + 1 : prev,
       );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
@@ -2358,8 +2600,8 @@ function LocationAreaStep({
 
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setCityHighlightedIndex((prev) => 
-        prev < filteredCities.length - 1 ? prev + 1 : prev
+      setCityHighlightedIndex((prev) =>
+        prev < filteredCities.length - 1 ? prev + 1 : prev,
       );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
@@ -2385,7 +2627,7 @@ function LocationAreaStep({
     if (project.id) {
       onChange("projectId", project.id);
     }
-    
+
     // Auto-fill builder, city, and locality from selected project
     if (project.builderName) {
       setBuilderSearchTerm(project.builderName);
@@ -2394,7 +2636,7 @@ function LocationAreaStep({
         onChange("builderId", project.builderId);
       }
     }
-    
+
     if (project.cityName) {
       setCitySearchTerm(project.cityName);
       onChange("city", project.cityName);
@@ -2402,14 +2644,14 @@ function LocationAreaStep({
         onChange("cityId", project.cityId);
       }
     }
-    
+
     if (project.projectLocality) {
       onChange("locality", project.projectLocality);
       if (project.localityId) {
         onChange("localityId", project.localityId);
       }
     }
-    
+
     setShowProjectDropdown(false);
     setProjectInputFocused(false);
   };
@@ -2465,12 +2707,15 @@ function LocationAreaStep({
   // Handle input blur (with delay to allow click on dropdown)
   const handleProjectBlur = (e) => {
     // Check if the related target (where focus is moving) is inside the dropdown
-    if (projectDropdownRef.current && projectDropdownRef.current.contains(e.relatedTarget)) {
+    if (
+      projectDropdownRef.current &&
+      projectDropdownRef.current.contains(e.relatedTarget)
+    ) {
       return; // Don't close if clicking inside dropdown
     }
     setTimeout(() => {
       // Double-check if dropdown is still not being interacted with
-      if (!projectDropdownRef.current?.matches(':hover')) {
+      if (!projectDropdownRef.current?.matches(":hover")) {
         setShowProjectDropdown(false);
         setProjectInputFocused(false);
       }
@@ -2478,11 +2723,14 @@ function LocationAreaStep({
   };
 
   const handleBuilderBlur = (e) => {
-    if (builderDropdownRef.current && builderDropdownRef.current.contains(e.relatedTarget)) {
+    if (
+      builderDropdownRef.current &&
+      builderDropdownRef.current.contains(e.relatedTarget)
+    ) {
       return;
     }
     setTimeout(() => {
-      if (!builderDropdownRef.current?.matches(':hover')) {
+      if (!builderDropdownRef.current?.matches(":hover")) {
         setShowBuilderDropdown(false);
         setBuilderInputFocused(false);
       }
@@ -2490,11 +2738,14 @@ function LocationAreaStep({
   };
 
   const handleCityBlur = (e) => {
-    if (cityDropdownRef.current && cityDropdownRef.current.contains(e.relatedTarget)) {
+    if (
+      cityDropdownRef.current &&
+      cityDropdownRef.current.contains(e.relatedTarget)
+    ) {
       return;
     }
     setTimeout(() => {
-      if (!cityDropdownRef.current?.matches(':hover')) {
+      if (!cityDropdownRef.current?.matches(":hover")) {
         setShowCityDropdown(false);
         setCityInputFocused(false);
       }
@@ -2531,7 +2782,10 @@ function LocationAreaStep({
               Project/Building Name
               <span className="required-indicator">*</span>
             </label>
-            <div className="searchable-select-wrapper" style={{ position: "relative" }}>
+            <div
+              className="searchable-select-wrapper"
+              style={{ position: "relative" }}
+            >
               <Form.Control
                 type="text"
                 value={projectSearchTerm}
@@ -2539,23 +2793,37 @@ function LocationAreaStep({
                 onFocus={handleProjectFocus}
                 onBlur={handleProjectBlur}
                 onKeyDown={handleProjectKeyDown}
-                placeholder={loadingProjects ? "Loading projects..." : "Type to search or enter custom project name"}
+                placeholder={
+                  loadingProjects
+                    ? "Loading projects..."
+                    : "Type to search or enter custom project name"
+                }
                 className="form-control-enhanced"
                 disabled={loadingProjects}
                 autoComplete="off"
                 isInvalid={!!errors.projectName}
               />
               {loadingProjects && (
-                <div className="position-absolute" style={{ right: "15px", top: "50%", transform: "translateY(-50%)" }}>
-                  <div className="spinner-border spinner-border-sm text-primary" role="status">
+                <div
+                  className="position-absolute"
+                  style={{
+                    right: "15px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                  }}
+                >
+                  <div
+                    className="spinner-border spinner-border-sm text-primary"
+                    role="status"
+                  >
                     <span className="visually-hidden">Loading...</span>
                   </div>
                 </div>
               )}
-              
+
               {/* Dropdown with filtered results */}
               {showProjectDropdown && projectInputFocused && (
-                <div 
+                <div
                   ref={projectDropdownRef}
                   className="project-dropdown"
                   style={{
@@ -2597,7 +2865,9 @@ function LocationAreaStep({
                             cursor: "pointer",
                             borderBottom: "1px solid #f1f3f4",
                             transition: "background-color 0.2s",
-                            backgroundColor: isHighlighted ? "#f8f9fa" : "white",
+                            backgroundColor: isHighlighted
+                              ? "#f8f9fa"
+                              : "white",
                             userSelect: "none",
                           }}
                         >
@@ -2605,7 +2875,13 @@ function LocationAreaStep({
                             {projectName}
                           </div>
                           {project.projectLocality && (
-                            <div style={{ fontSize: "0.875rem", color: "#6c757d", marginTop: "0.25rem" }}>
+                            <div
+                              style={{
+                                fontSize: "0.875rem",
+                                color: "#6c757d",
+                                marginTop: "0.25rem",
+                              }}
+                            >
                               {project.projectLocality}
                             </div>
                           )}
@@ -2613,7 +2889,13 @@ function LocationAreaStep({
                       );
                     })
                   ) : projectSearchTerm.trim() ? (
-                    <div style={{ padding: "1rem", textAlign: "center", color: "#6c757d" }}>
+                    <div
+                      style={{
+                        padding: "1rem",
+                        textAlign: "center",
+                        color: "#6c757d",
+                      }}
+                    >
                       No projects found. You can enter a custom name.
                     </div>
                   ) : null}
@@ -2636,7 +2918,10 @@ function LocationAreaStep({
               Builder/Developer Name
               <span className="optional-indicator">(Optional)</span>
             </label>
-            <div className="searchable-select-wrapper" style={{ position: "relative" }}>
+            <div
+              className="searchable-select-wrapper"
+              style={{ position: "relative" }}
+            >
               <Form.Control
                 type="text"
                 value={builderSearchTerm}
@@ -2644,22 +2929,36 @@ function LocationAreaStep({
                 onFocus={handleBuilderFocus}
                 onBlur={handleBuilderBlur}
                 onKeyDown={handleBuilderKeyDown}
-                placeholder={loadingBuilders ? "Loading builders..." : "Type to search or enter custom builder name"}
+                placeholder={
+                  loadingBuilders
+                    ? "Loading builders..."
+                    : "Type to search or enter custom builder name"
+                }
                 className="form-control-enhanced"
                 disabled={loadingBuilders}
                 autoComplete="off"
               />
               {loadingBuilders && (
-                <div className="position-absolute" style={{ right: "15px", top: "50%", transform: "translateY(-50%)" }}>
-                  <div className="spinner-border spinner-border-sm text-primary" role="status">
+                <div
+                  className="position-absolute"
+                  style={{
+                    right: "15px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                  }}
+                >
+                  <div
+                    className="spinner-border spinner-border-sm text-primary"
+                    role="status"
+                  >
                     <span className="visually-hidden">Loading...</span>
                   </div>
                 </div>
               )}
-              
+
               {/* Dropdown with filtered results */}
               {showBuilderDropdown && builderInputFocused && (
-                <div 
+                <div
                   ref={builderDropdownRef}
                   className="builder-dropdown"
                   style={{
@@ -2701,7 +3000,9 @@ function LocationAreaStep({
                             cursor: "pointer",
                             borderBottom: "1px solid #f1f3f4",
                             transition: "background-color 0.2s",
-                            backgroundColor: isHighlighted ? "#f8f9fa" : "white",
+                            backgroundColor: isHighlighted
+                              ? "#f8f9fa"
+                              : "white",
                             userSelect: "none",
                           }}
                           onMouseLeave={() => setBuilderHighlightedIndex(-1)}
@@ -2718,7 +3019,8 @@ function LocationAreaStep({
                         fontWeight: "500",
                       }}
                     >
-                      ✓ Custom builder: &quot;{builderSearchTerm}&quot; will be saved
+                      ✓ Custom builder: &quot;{builderSearchTerm}&quot; will be
+                      saved
                     </div>
                   ) : (
                     <div
@@ -2727,13 +3029,18 @@ function LocationAreaStep({
                         color: "#6c757d",
                       }}
                     >
-                      {loadingBuilders ? "Loading..." : "Start typing to search or enter a custom builder name"}
+                      {loadingBuilders
+                        ? "Loading..."
+                        : "Start typing to search or enter a custom builder name"}
                     </div>
                   )}
                 </div>
               )}
             </div>
-            <Form.Text className="text-muted" style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>
+            <Form.Text
+              className="text-muted"
+              style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}
+            >
               <CIcon icon={cilCheck} className="me-1" />
               Type to search from list or enter a custom builder name
             </Form.Text>
@@ -2796,7 +3103,10 @@ function LocationAreaStep({
               City
               <span className="required-indicator">*</span>
             </label>
-            <div className="searchable-select-wrapper" style={{ position: "relative" }}>
+            <div
+              className="searchable-select-wrapper"
+              style={{ position: "relative" }}
+            >
               <Form.Control
                 type="text"
                 value={citySearchTerm}
@@ -2804,23 +3114,35 @@ function LocationAreaStep({
                 onFocus={handleCityFocus}
                 onBlur={handleCityBlur}
                 onKeyDown={handleCityKeyDown}
-                placeholder={loadingCities ? "Loading cities..." : "Type to search city"}
+                placeholder={
+                  loadingCities ? "Loading cities..." : "Type to search city"
+                }
                 className="form-control-enhanced"
                 disabled={loadingCities}
                 isInvalid={!!errors.city}
                 autoComplete="off"
               />
               {loadingCities && (
-                <div className="position-absolute" style={{ right: "15px", top: "50%", transform: "translateY(-50%)" }}>
-                  <div className="spinner-border spinner-border-sm text-primary" role="status">
+                <div
+                  className="position-absolute"
+                  style={{
+                    right: "15px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                  }}
+                >
+                  <div
+                    className="spinner-border spinner-border-sm text-primary"
+                    role="status"
+                  >
                     <span className="visually-hidden">Loading...</span>
                   </div>
                 </div>
               )}
-              
+
               {/* Dropdown with filtered results */}
               {showCityDropdown && cityInputFocused && (
-                <div 
+                <div
                   ref={cityDropdownRef}
                   className="city-dropdown"
                   style={{
@@ -2862,14 +3184,22 @@ function LocationAreaStep({
                             cursor: "pointer",
                             borderBottom: "1px solid #f1f3f4",
                             transition: "background-color 0.2s",
-                            backgroundColor: isHighlighted ? "#f8f9fa" : "white",
+                            backgroundColor: isHighlighted
+                              ? "#f8f9fa"
+                              : "white",
                             userSelect: "none",
                           }}
                           onMouseLeave={() => setCityHighlightedIndex(-1)}
                         >
                           {cityName}
                           {city.state && (
-                            <span style={{ color: "#6c757d", fontSize: "0.85rem", marginLeft: "0.5rem" }}>
+                            <span
+                              style={{
+                                color: "#6c757d",
+                                fontSize: "0.85rem",
+                                marginLeft: "0.5rem",
+                              }}
+                            >
                               ({city.state})
                             </span>
                           )}
@@ -2893,7 +3223,9 @@ function LocationAreaStep({
                         color: "#6c757d",
                       }}
                     >
-                      {loadingCities ? "Loading..." : "Start typing to search cities"}
+                      {loadingCities
+                        ? "Loading..."
+                        : "Start typing to search cities"}
                     </div>
                   )}
                 </div>
@@ -2905,7 +3237,10 @@ function LocationAreaStep({
                 {errors.city}
               </div>
             )}
-            <Form.Text className="text-muted" style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>
+            <Form.Text
+              className="text-muted"
+              style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}
+            >
               <CIcon icon={cilCheck} className="me-1" />
               Type to search from available cities
             </Form.Text>
@@ -3018,8 +3353,12 @@ function LocationAreaStep({
 }
 
 function PricingDetailsStep({ data, onChange, errors }) {
-  const fieldVisibility = getFieldVisibility(data.listingType, data.subType, data.status);
-  
+  const fieldVisibility = getFieldVisibility(
+    data.listingType,
+    data.subType,
+    data.status,
+  );
+
   // Number formatting functions
   const formatNumberWithCommas = (value) => {
     if (!value) return "";
@@ -3053,7 +3392,7 @@ function PricingDetailsStep({ data, onChange, errors }) {
     if (cleanValue && data.carpetArea) {
       const calculatedPricePerSqFt = calculatePricePerSqFt(
         parseInt(cleanValue),
-        parseInt(data.carpetArea)
+        parseInt(data.carpetArea),
       );
       if (calculatedPricePerSqFt) {
         onChange("pricePerSqFt", calculatedPricePerSqFt.toString());
@@ -3067,7 +3406,7 @@ function PricingDetailsStep({ data, onChange, errors }) {
     if (cleanValue && data.carpetArea) {
       const calculatedTotalPrice = calculateTotalPrice(
         parseInt(cleanValue),
-        parseInt(data.carpetArea)
+        parseInt(data.carpetArea),
       );
       if (calculatedTotalPrice) {
         onChange("totalPrice", calculatedTotalPrice.toString());
@@ -3139,7 +3478,7 @@ function PricingDetailsStep({ data, onChange, errors }) {
                 onChange={(e) =>
                   onChange(
                     "maintenanceCharges",
-                    parseNumberFromFormatted(e.target.value)
+                    parseNumberFromFormatted(e.target.value),
                   )
                 }
                 placeholder="Monthly maintenance charges (e.g., 2,500)"
@@ -3159,7 +3498,7 @@ function PricingDetailsStep({ data, onChange, errors }) {
                 onChange={(e) =>
                   onChange(
                     "bookingAmount",
-                    parseNumberFromFormatted(e.target.value)
+                    parseNumberFromFormatted(e.target.value),
                   )
                 }
                 placeholder="Booking amount (e.g., 1,00,000)"
@@ -3180,7 +3519,10 @@ function PricingDetailsStep({ data, onChange, errors }) {
                 onChange={(e) => {
                   const value = e.target.value;
                   // Allow empty string or positive numbers only
-                  if (value === "" || (!isNaN(value) && parseFloat(value) >= 0)) {
+                  if (
+                    value === "" ||
+                    (!isNaN(value) && parseFloat(value) >= 0)
+                  ) {
                     onChange("floor", value);
                   }
                 }}
@@ -3212,7 +3554,10 @@ function PricingDetailsStep({ data, onChange, errors }) {
                 onChange={(e) => {
                   const value = e.target.value;
                   // Allow empty string or positive numbers only
-                  if (value === "" || (!isNaN(value) && parseFloat(value) >= 0)) {
+                  if (
+                    value === "" ||
+                    (!isNaN(value) && parseFloat(value) >= 0)
+                  ) {
                     onChange("totalFloors", value);
                   }
                 }}
@@ -3274,9 +3619,9 @@ function PricingDetailsStep({ data, onChange, errors }) {
   );
 }
 
-function FeaturesAmenitiesStep({ 
-  data, 
-  onChange, 
+function FeaturesAmenitiesStep({
+  data,
+  onChange,
   errors,
   amenities = [],
   features = [],
@@ -3284,22 +3629,26 @@ function FeaturesAmenitiesStep({
   loadingAmenities = false,
   loadingFeatures = false,
   loadingNearbyBenefits = false,
-  apiBaseUrl = ""
+  apiBaseUrl = "",
 }) {
-  const fieldVisibility = getFieldVisibility(data.listingType, data.subType, data.status);
+  const fieldVisibility = getFieldVisibility(
+    data.listingType,
+    data.subType,
+    data.status,
+  );
   const isResidential = data.listingType === "Residential";
   const isCommercial = data.listingType === "Commercial";
-  
+
   // Search states
   const [amenitySearch, setAmenitySearch] = useState("");
   const [featureSearch, setFeatureSearch] = useState("");
   const [nearbyBenefitSearch, setNearbyBenefitSearch] = useState("");
-  
+
   // Show more states for amenities, features, and nearby benefits
   const [showAllAmenities, setShowAllAmenities] = useState(false);
   const [showAllFeatures, setShowAllFeatures] = useState(false);
   const [showAllNearbyBenefits, setShowAllNearbyBenefits] = useState(false);
-  
+
   // Distance modal state
   const [showDistanceModal, setShowDistanceModal] = useState(false);
   const [selectedBenefit, setSelectedBenefit] = useState(null);
@@ -3315,13 +3664,22 @@ function FeaturesAmenitiesStep({
 
   const filteredFeatures = features.filter((feature) => {
     if (!featureSearch.trim()) return true;
-    const featureName = (feature.title || feature.featureName || feature.name || "").toLowerCase();
+    const featureName = (
+      feature.title ||
+      feature.featureName ||
+      feature.name ||
+      ""
+    ).toLowerCase();
     return featureName.includes(featureSearch.toLowerCase());
   });
 
   const filteredNearbyBenefits = nearbyBenefits.filter((benefit) => {
     if (!nearbyBenefitSearch.trim()) return true;
-    const benefitName = (benefit.benefitName || benefit.name || "").toLowerCase();
+    const benefitName = (
+      benefit.benefitName ||
+      benefit.name ||
+      ""
+    ).toLowerCase();
     return benefitName.includes(nearbyBenefitSearch.toLowerCase());
   });
 
@@ -3330,28 +3688,27 @@ function FeaturesAmenitiesStep({
   const INITIAL_LINES = 3;
   const INITIAL_ITEMS_TO_SHOW = ITEMS_PER_LINE * INITIAL_LINES;
 
-  const displayedAmenities = showAllAmenities 
-    ? filteredAmenities 
+  const displayedAmenities = showAllAmenities
+    ? filteredAmenities
     : filteredAmenities.slice(0, INITIAL_ITEMS_TO_SHOW);
-  
-  const displayedFeatures = showAllFeatures 
-    ? filteredFeatures 
+
+  const displayedFeatures = showAllFeatures
+    ? filteredFeatures
     : filteredFeatures.slice(0, INITIAL_ITEMS_TO_SHOW);
-  
-  const displayedNearbyBenefits = showAllNearbyBenefits 
-    ? filteredNearbyBenefits 
+
+  const displayedNearbyBenefits = showAllNearbyBenefits
+    ? filteredNearbyBenefits
     : filteredNearbyBenefits.slice(0, INITIAL_ITEMS_TO_SHOW);
 
   // Get icon URL helper
   const getIconUrl = (filename, type) => {
     if (!filename) return null;
-    const baseUrl = apiBaseUrl.replace(/\/$/, "");
     if (type === "amenity") {
-      return `${baseUrl}/api/v1/fetch-image/amenity/${filename}`;
+      return `${process.env.NEXT_PUBLIC_API_URL}fetch-image/amenity/${filename}`;
     } else if (type === "feature") {
-      return `${baseUrl}/api/v1/fetch-image/feature/${filename}`;
+      return `${process.env.NEXT_PUBLIC_API_URL}fetch-image/feature/${filename}`;
     } else if (type === "nearby-benefit") {
-      return `${baseUrl}/api/v1/fetch-image/nearby-benefit/${filename}`;
+      return `${process.env.NEXT_PUBLIC_API_URL}fetch-image/nearby-benefit/${filename}`;
     }
     return null;
   };
@@ -3378,7 +3735,7 @@ function FeaturesAmenitiesStep({
   const handleNearbyBenefitClick = (benefit) => {
     const currentBenefits = data.nearbyBenefits || [];
     const existingIndex = currentBenefits.findIndex((b) => b.id === benefit.id);
-    
+
     if (existingIndex >= 0) {
       // Remove if already selected
       const updated = currentBenefits.filter((b) => b.id !== benefit.id);
@@ -3395,19 +3752,22 @@ function FeaturesAmenitiesStep({
   // Handle distance modal submit
   const handleDistanceSubmit = () => {
     const distance = parseFloat(distanceInput);
-    
+
     if (!distanceInput.trim()) {
       setDistanceError("Distance is required");
       return;
     }
-    
+
     if (isNaN(distance) || distance <= 0) {
       setDistanceError("Please enter a valid positive number");
       return;
     }
 
     const currentBenefits = data.nearbyBenefits || [];
-    const updated = [...currentBenefits, { id: selectedBenefit.id, distance: distance }];
+    const updated = [
+      ...currentBenefits,
+      { id: selectedBenefit.id, distance: distance },
+    ];
     onChange("nearbyBenefits", updated);
     setShowDistanceModal(false);
     setSelectedBenefit(null);
@@ -3422,7 +3782,7 @@ function FeaturesAmenitiesStep({
     const benefits = data.nearbyBenefits || [];
     return benefits.some((b) => b.id === id);
   };
-  
+
   const getNearbyBenefitDistance = (id) => {
     const benefits = data.nearbyBenefits || [];
     const benefit = benefits.find((b) => b.id === id);
@@ -3432,7 +3792,12 @@ function FeaturesAmenitiesStep({
   return (
     <div className="step-content">
       <h4 className="step-title mb-4">
-        {isResidential ? "Residential" : isCommercial ? "Commercial" : "Property"} Features & Amenities
+        {isResidential
+          ? "Residential"
+          : isCommercial
+            ? "Commercial"
+            : "Property"}{" "}
+        Features & Amenities
       </h4>
 
       {!data.listingType && (
@@ -3471,18 +3836,30 @@ function FeaturesAmenitiesStep({
           <Col md={6}>
             <Form.Group>
               <Form.Label>
-                {isResidential ? "Number of Bathrooms *" : "Number of Washrooms"}
+                {isResidential
+                  ? "Number of Bathrooms *"
+                  : "Number of Washrooms"}
               </Form.Label>
               <Form.Select
                 value={data.bathrooms}
                 onChange={(e) => onChange("bathrooms", e.target.value)}
                 isInvalid={!!errors.bathrooms}
               >
-                <option value="">Select {isResidential ? "Bathrooms" : "Washrooms"}</option>
-                <option value="1">1 {isResidential ? "Bathroom" : "Washroom"}</option>
-                <option value="2">2 {isResidential ? "Bathrooms" : "Washrooms"}</option>
-                <option value="3">3 {isResidential ? "Bathrooms" : "Washrooms"}</option>
-                <option value="4">4+ {isResidential ? "Bathrooms" : "Washrooms"}</option>
+                <option value="">
+                  Select {isResidential ? "Bathrooms" : "Washrooms"}
+                </option>
+                <option value="1">
+                  1 {isResidential ? "Bathroom" : "Washroom"}
+                </option>
+                <option value="2">
+                  2 {isResidential ? "Bathrooms" : "Washrooms"}
+                </option>
+                <option value="3">
+                  3 {isResidential ? "Bathrooms" : "Washrooms"}
+                </option>
+                <option value="4">
+                  4+ {isResidential ? "Bathrooms" : "Washrooms"}
+                </option>
               </Form.Select>
               <Form.Control.Feedback type="invalid">
                 {errors.bathrooms}
@@ -3582,7 +3959,9 @@ function FeaturesAmenitiesStep({
           </div>
           <Form.Control
             type="text"
-            placeholder={loadingAmenities ? "Loading amenities..." : "Search amenities..."}
+            placeholder={
+              loadingAmenities ? "Loading amenities..." : "Search amenities..."
+            }
             value={amenitySearch}
             onChange={(e) => setAmenitySearch(e.target.value)}
             className="mb-3"
@@ -3595,50 +3974,61 @@ function FeaturesAmenitiesStep({
               </div>
             </div>
           ) : filteredAmenities.length === 0 ? (
-            <Alert variant="info">No amenities found. {amenitySearch && "Try a different search term."}</Alert>
+            <Alert variant="info">
+              No amenities found.{" "}
+              {amenitySearch && "Try a different search term."}
+            </Alert>
           ) : (
             <>
               <div className="amenities-features-grid">
                 {displayedAmenities.map((amenity) => {
-                const iconUrl = getIconUrl(amenity.iconImage || amenity.iconImageUrl || amenity.icon, "amenity");
-                const isSelected = isAmenitySelected(amenity.id);
-                const amenityName = amenity.title || amenity.name || "Amenity";
-                return (
-                  <div
-                    key={amenity.id}
-                    className={`amenity-feature-item ${isSelected ? "selected" : ""}`}
-                    onClick={() => handleAmenityToggle(amenity.id)}
-                    style={{ display: "flex", alignItems: "center", gap: "8px" }}
-                  >
-                    <Form.Check
-                      type="checkbox"
-                      id={`amenity-${amenity.id}`}
-                      checked={isSelected}
-                      onChange={() => handleAmenityToggle(amenity.id)}
-                      onClick={(e) => e.stopPropagation()}
-                      style={{ margin: 0, flexShrink: 0 }}
-                    />
-                    {iconUrl && (
-                      <div className="item-icon" style={{ flexShrink: 0 }}>
-                        <NextImage
-                          src={iconUrl}
-                          alt={amenity.altTag || amenityName}
-                          width={40}
-                          height={40}
-                          style={{ objectFit: "contain" }}
-                        />
-                      </div>
-                    )}
-                    <label 
-                      htmlFor={`amenity-${amenity.id}`}
-                      style={{ margin: 0, cursor: "pointer", flex: 1 }}
-                      onClick={(e) => e.stopPropagation()}
+                  const iconUrl = getIconUrl(
+                    amenity.iconImage || amenity.iconImageUrl || amenity.icon,
+                    "amenity",
+                  );
+                  const isSelected = isAmenitySelected(amenity.id);
+                  const amenityName =
+                    amenity.title || amenity.name || "Amenity";
+                  return (
+                    <div
+                      key={amenity.id}
+                      className={`amenity-feature-item ${isSelected ? "selected" : ""}`}
+                      onClick={() => handleAmenityToggle(amenity.id)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
                     >
-                      {amenityName}
-                    </label>
-                  </div>
-                );
-              })}
+                      <Form.Check
+                        type="checkbox"
+                        id={`amenity-${amenity.id}`}
+                        checked={isSelected}
+                        onChange={() => handleAmenityToggle(amenity.id)}
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ margin: 0, flexShrink: 0 }}
+                      />
+                      {iconUrl && (
+                        <div className="item-icon" style={{ flexShrink: 0 }}>
+                          <NextImage
+                            src={iconUrl}
+                            alt={amenity.altTag || amenityName}
+                            width={40}
+                            height={40}
+                            style={{ objectFit: "contain" }}
+                          />
+                        </div>
+                      )}
+                      <label
+                        htmlFor={`amenity-${amenity.id}`}
+                        style={{ margin: 0, cursor: "pointer", flex: 1 }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {amenityName}
+                      </label>
+                    </div>
+                  );
+                })}
               </div>
               {filteredAmenities.length > INITIAL_ITEMS_TO_SHOW && (
                 <div className="text-center mt-3">
@@ -3654,7 +4044,8 @@ function FeaturesAmenitiesStep({
                       </>
                     ) : (
                       <>
-                        Show More ({filteredAmenities.length - INITIAL_ITEMS_TO_SHOW} more)
+                        Show More (
+                        {filteredAmenities.length - INITIAL_ITEMS_TO_SHOW} more)
                         <CIcon icon={cilChevronBottom} className="ms-1" />
                       </>
                     )}
@@ -3672,7 +4063,12 @@ function FeaturesAmenitiesStep({
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h5 className="mb-0">
               <CIcon icon={cilHome} className="me-2" />
-              {isResidential ? "Residential" : isCommercial ? "Commercial" : "Property"} Features
+              {isResidential
+                ? "Residential"
+                : isCommercial
+                  ? "Commercial"
+                  : "Property"}{" "}
+              Features
               <Badge bg="secondary" className="ms-2">
                 {data.featureIds?.length || 0} selected
               </Badge>
@@ -3680,7 +4076,9 @@ function FeaturesAmenitiesStep({
           </div>
           <Form.Control
             type="text"
-            placeholder={loadingFeatures ? "Loading features..." : "Search features..."}
+            placeholder={
+              loadingFeatures ? "Loading features..." : "Search features..."
+            }
             value={featureSearch}
             onChange={(e) => setFeatureSearch(e.target.value)}
             className="mb-3"
@@ -3693,50 +4091,61 @@ function FeaturesAmenitiesStep({
               </div>
             </div>
           ) : filteredFeatures.length === 0 ? (
-            <Alert variant="info">No features found. {featureSearch && "Try a different search term."}</Alert>
+            <Alert variant="info">
+              No features found.{" "}
+              {featureSearch && "Try a different search term."}
+            </Alert>
           ) : (
             <>
               <div className="amenities-features-grid">
                 {displayedFeatures.map((feature) => {
-                const iconUrl = getIconUrl(feature.iconImageUrl, "feature");
-                const isSelected = isFeatureSelected(feature.id);
-                const featureName = feature.title || feature.featureName || feature.name || "Feature";
-                return (
-                  <div
-                    key={feature.id}
-                    className={`amenity-feature-item ${isSelected ? "selected" : ""}`}
-                    onClick={() => handleFeatureToggle(feature.id)}
-                    style={{ display: "flex", alignItems: "center", gap: "8px" }}
-                  >
-                    <Form.Check
-                      type="checkbox"
-                      id={`feature-${feature.id}`}
-                      checked={isSelected}
-                      onChange={() => handleFeatureToggle(feature.id)}
-                      onClick={(e) => e.stopPropagation()}
-                      style={{ margin: 0, flexShrink: 0 }}
-                    />
-                    {iconUrl && (
-                      <div className="item-icon" style={{ flexShrink: 0 }}>
-                        <NextImage
-                          src={iconUrl}
-                          alt={feature.altTag || featureName}
-                          width={40}
-                          height={40}
-                          style={{ objectFit: "contain" }}
-                        />
-                      </div>
-                    )}
-                    <label 
-                      htmlFor={`feature-${feature.id}`}
-                      style={{ margin: 0, cursor: "pointer", flex: 1 }}
-                      onClick={(e) => e.stopPropagation()}
+                  const iconUrl = getIconUrl(feature.iconImageUrl, "feature");
+                  const isSelected = isFeatureSelected(feature.id);
+                  const featureName =
+                    feature.title ||
+                    feature.featureName ||
+                    feature.name ||
+                    "Feature";
+                  return (
+                    <div
+                      key={feature.id}
+                      className={`amenity-feature-item ${isSelected ? "selected" : ""}`}
+                      onClick={() => handleFeatureToggle(feature.id)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
                     >
-                      {featureName}
-                    </label>
-                  </div>
-                );
-              })}
+                      <Form.Check
+                        type="checkbox"
+                        id={`feature-${feature.id}`}
+                        checked={isSelected}
+                        onChange={() => handleFeatureToggle(feature.id)}
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ margin: 0, flexShrink: 0 }}
+                      />
+                      {iconUrl && (
+                        <div className="item-icon" style={{ flexShrink: 0 }}>
+                          <NextImage
+                            src={iconUrl}
+                            alt={feature.altTag || featureName}
+                            width={40}
+                            height={40}
+                            style={{ objectFit: "contain" }}
+                          />
+                        </div>
+                      )}
+                      <label
+                        htmlFor={`feature-${feature.id}`}
+                        style={{ margin: 0, cursor: "pointer", flex: 1 }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {featureName}
+                      </label>
+                    </div>
+                  );
+                })}
               </div>
               {filteredFeatures.length > INITIAL_ITEMS_TO_SHOW && (
                 <div className="text-center mt-3">
@@ -3752,7 +4161,8 @@ function FeaturesAmenitiesStep({
                       </>
                     ) : (
                       <>
-                        Show More ({filteredFeatures.length - INITIAL_ITEMS_TO_SHOW} more)
+                        Show More (
+                        {filteredFeatures.length - INITIAL_ITEMS_TO_SHOW} more)
                         <CIcon icon={cilChevronBottom} className="ms-1" />
                       </>
                     )}
@@ -3778,7 +4188,11 @@ function FeaturesAmenitiesStep({
           </div>
           <Form.Control
             type="text"
-            placeholder={loadingNearbyBenefits ? "Loading nearby benefits..." : "Search nearby benefits..."}
+            placeholder={
+              loadingNearbyBenefits
+                ? "Loading nearby benefits..."
+                : "Search nearby benefits..."
+            }
             value={nearbyBenefitSearch}
             onChange={(e) => setNearbyBenefitSearch(e.target.value)}
             className="mb-3"
@@ -3791,65 +4205,81 @@ function FeaturesAmenitiesStep({
               </div>
             </div>
           ) : filteredNearbyBenefits.length === 0 ? (
-            <Alert variant="info">No nearby benefits found. {nearbyBenefitSearch && "Try a different search term."}</Alert>
+            <Alert variant="info">
+              No nearby benefits found.{" "}
+              {nearbyBenefitSearch && "Try a different search term."}
+            </Alert>
           ) : (
             <>
               <div className="amenities-features-grid">
                 {displayedNearbyBenefits.map((benefit) => {
-                const iconUrl = getIconUrl(benefit.benefitIcon || benefit.iconImageUrl, "nearby-benefit");
-                const isSelected = isNearbyBenefitSelected(benefit.id);
-                const distance = getNearbyBenefitDistance(benefit.id);
-                return (
-                  <div
-                    key={benefit.id}
-                    className={`amenity-feature-item ${isSelected ? "selected" : ""}`}
-                    onClick={() => handleNearbyBenefitClick(benefit)}
-                    style={{ display: "flex", alignItems: "center", gap: "8px" }}
-                  >
-                    <Form.Check
-                      type="checkbox"
-                      id={`nearby-${benefit.id}`}
-                      checked={isSelected}
-                      onChange={() => handleNearbyBenefitClick(benefit)}
-                      onClick={(e) => e.stopPropagation()}
-                      style={{ margin: 0, flexShrink: 0 }}
-                    />
-                    {iconUrl && (
-                      <div className="item-icon" style={{ flexShrink: 0 }}>
-                        <NextImage
-                          src={iconUrl}
-                          alt={benefit.altTag || benefit.benefitName || "Nearby Benefit"}
-                          width={40}
-                          height={40}
-                          style={{ objectFit: "contain" }}
-                        />
-                      </div>
-                    )}
-                    <div className="flex-grow-1" style={{ flex: 1 }}>
-                      <label 
-                        htmlFor={`nearby-${benefit.id}`}
-                        style={{ margin: 0, cursor: "pointer" }}
+                  const iconUrl = getIconUrl(
+                    benefit.benefitIcon || benefit.iconImageUrl,
+                    "nearby-benefit",
+                  );
+                  const isSelected = isNearbyBenefitSelected(benefit.id);
+                  const distance = getNearbyBenefitDistance(benefit.id);
+                  return (
+                    <div
+                      key={benefit.id}
+                      className={`amenity-feature-item ${isSelected ? "selected" : ""}`}
+                      onClick={() => handleNearbyBenefitClick(benefit)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <Form.Check
+                        type="checkbox"
+                        id={`nearby-${benefit.id}`}
+                        checked={isSelected}
+                        onChange={() => handleNearbyBenefitClick(benefit)}
                         onClick={(e) => e.stopPropagation()}
-                      >
-                        {benefit.benefitName || benefit.name}
-                      </label>
-                      {isSelected && distance && (
-                        <small className="text-muted d-block mt-1">
-                          <CIcon icon={cilLocationPin} className="me-1" />
-                          {distance} KM
-                        </small>
+                        style={{ margin: 0, flexShrink: 0 }}
+                      />
+                      {iconUrl && (
+                        <div className="item-icon" style={{ flexShrink: 0 }}>
+                          <NextImage
+                            src={iconUrl}
+                            alt={
+                              benefit.altTag ||
+                              benefit.benefitName ||
+                              "Nearby Benefit"
+                            }
+                            width={40}
+                            height={40}
+                            style={{ objectFit: "contain" }}
+                          />
+                        </div>
                       )}
+                      <div className="flex-grow-1" style={{ flex: 1 }}>
+                        <label
+                          htmlFor={`nearby-${benefit.id}`}
+                          style={{ margin: 0, cursor: "pointer" }}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {benefit.benefitName || benefit.name}
+                        </label>
+                        {isSelected && distance && (
+                          <small className="text-muted d-block mt-1">
+                            <CIcon icon={cilLocationPin} className="me-1" />
+                            {distance} KM
+                          </small>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
               </div>
               {filteredNearbyBenefits.length > INITIAL_ITEMS_TO_SHOW && (
                 <div className="text-center mt-3">
                   <Button
                     variant="outline-primary"
                     size="sm"
-                    onClick={() => setShowAllNearbyBenefits(!showAllNearbyBenefits)}
+                    onClick={() =>
+                      setShowAllNearbyBenefits(!showAllNearbyBenefits)
+                    }
                   >
                     {showAllNearbyBenefits ? (
                       <>
@@ -3858,7 +4288,9 @@ function FeaturesAmenitiesStep({
                       </>
                     ) : (
                       <>
-                        Show More ({filteredNearbyBenefits.length - INITIAL_ITEMS_TO_SHOW} more)
+                        Show More (
+                        {filteredNearbyBenefits.length - INITIAL_ITEMS_TO_SHOW}{" "}
+                        more)
                         <CIcon icon={cilChevronBottom} className="ms-1" />
                       </>
                     )}
@@ -3871,14 +4303,19 @@ function FeaturesAmenitiesStep({
       </Row>
 
       {/* Distance Modal */}
-      <Modal show={showDistanceModal} onHide={() => setShowDistanceModal(false)} centered>
+      <Modal
+        show={showDistanceModal}
+        onHide={() => setShowDistanceModal(false)}
+        centered
+      >
         <Modal.Header closeButton>
           <Modal.Title>Enter Distance</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group>
             <Form.Label>
-              Distance to {selectedBenefit?.benefitName || selectedBenefit?.name} (in KMs) *
+              Distance to{" "}
+              {selectedBenefit?.benefitName || selectedBenefit?.name} (in KMs) *
             </Form.Label>
             <Form.Control
               type="number"
@@ -3887,7 +4324,7 @@ function FeaturesAmenitiesStep({
               value={distanceInput}
               onChange={(e) => {
                 const value = e.target.value;
-                if (value === "" || (parseFloat(value) > 0)) {
+                if (value === "" || parseFloat(value) > 0) {
                   setDistanceInput(value);
                   setDistanceError("");
                 }
@@ -3896,7 +4333,9 @@ function FeaturesAmenitiesStep({
               isInvalid={!!distanceError}
             />
             {distanceError && (
-              <Form.Control.Feedback type="invalid">{distanceError}</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">
+                {distanceError}
+              </Form.Control.Feedback>
             )}
             <Form.Text className="text-muted">
               Please enter the distance in kilometers (positive numbers only)
@@ -3904,7 +4343,10 @@ function FeaturesAmenitiesStep({
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDistanceModal(false)}>
+          <Button
+            variant="secondary"
+            onClick={() => setShowDistanceModal(false)}
+          >
             Cancel
           </Button>
           <Button variant="primary" onClick={handleDistanceSubmit}>
@@ -4000,11 +4442,13 @@ function MediaContactStep({
               <span className="required-indicator">*</span>
               {data.imagePreviews && data.imagePreviews.length > 0 && (
                 <Badge bg="secondary" className="ms-2">
-                  {data.imagePreviews.length} {data.imagePreviews.length === 1 ? 'image' : 'images'} selected
+                  {data.imagePreviews.length}{" "}
+                  {data.imagePreviews.length === 1 ? "image" : "images"}{" "}
+                  selected
                 </Badge>
               )}
             </Form.Label>
-            
+
             {/* Hidden file input */}
             <Form.Control
               ref={fileInputRef}
@@ -4015,7 +4459,7 @@ function MediaContactStep({
               isInvalid={!!errors.images}
               className="d-none"
             />
-            
+
             {/* Select Images Button */}
             <Button
               variant="outline-primary"
@@ -4026,59 +4470,66 @@ function MediaContactStep({
               <CIcon icon={cilCamera} className="me-2" />
               Select Multiple Images
             </Button>
-            
+
             {errors.images && (
               <div className="text-danger small mb-2">
                 <CIcon icon={cilWarning} className="me-1" />
                 {errors.images}
               </div>
             )}
-            
+
             <Form.Text className="text-muted d-block mb-3">
-              Upload at least one image of your property (JPG, PNG, max 5MB each). Images must be rectangular (not square).
+              Upload at least one image of your property (JPG, PNG, max 5MB
+              each). Images must be rectangular (not square).
             </Form.Text>
 
             {/* Image Previews Grid */}
             {data.imagePreviews && data.imagePreviews.length > 0 && (
-              <div className="property-images-grid" style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-                gap: "1rem",
-                marginTop: "1rem"
-              }}>
+              <div
+                className="property-images-grid"
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                  gap: "1rem",
+                  marginTop: "1rem",
+                }}
+              >
                 {data.imagePreviews.map((imageData, index) => (
-                  <div 
-                    key={imageData.id} 
+                  <div
+                    key={imageData.id}
                     style={{
                       position: "relative",
                       border: "2px solid #e9ecef",
                       borderRadius: "8px",
                       overflow: "hidden",
                       background: "#ffffff",
-                      transition: "all 0.2s"
+                      transition: "all 0.2s",
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = "#68ac78";
-                      e.currentTarget.style.boxShadow = "0 2px 8px rgba(104, 172, 120, 0.15)";
+                      e.currentTarget.style.boxShadow =
+                        "0 2px 8px rgba(104, 172, 120, 0.15)";
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.borderColor = "#e9ecef";
                       e.currentTarget.style.boxShadow = "none";
                     }}
                   >
-                    <div style={{
-                      position: "relative",
-                      width: "200px",
-                      height: "100px",
-                      margin: "0 auto",
-                      overflow: "hidden"
-                    }}>
+                    <div
+                      style={{
+                        position: "relative",
+                        width: "200px",
+                        height: "100px",
+                        margin: "0 auto",
+                        overflow: "hidden",
+                      }}
+                    >
                       <NextImage
                         src={imageData.preview}
                         alt={`Property image ${index + 1}`}
                         fill
                         style={{
-                          objectFit: "cover"
+                          objectFit: "cover",
                         }}
                       />
                       {/* Remove Icon */}
@@ -4101,62 +4552,83 @@ function MediaContactStep({
                           justifyContent: "center",
                           cursor: "pointer",
                           transition: "all 0.2s",
-                          zIndex: 10
+                          zIndex: 10,
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.background = "rgba(220, 53, 69, 1)";
+                          e.currentTarget.style.background =
+                            "rgba(220, 53, 69, 1)";
                           e.currentTarget.style.transform = "scale(1.1)";
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.background = "rgba(220, 53, 69, 0.9)";
+                          e.currentTarget.style.background =
+                            "rgba(220, 53, 69, 0.9)";
                           e.currentTarget.style.transform = "scale(1)";
                         }}
                       >
                         <CIcon icon={cilX} style={{ fontSize: "14px" }} />
                       </button>
                       {/* Image Number Badge */}
-                      <div style={{
-                        position: "absolute",
-                        top: "4px",
-                        left: "4px",
-                        background: "rgba(0, 0, 0, 0.6)",
-                        color: "white",
-                        borderRadius: "4px",
-                        padding: "2px 6px",
-                        fontSize: "12px",
-                        fontWeight: "bold"
-                      }}>
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "4px",
+                          left: "4px",
+                          background: "rgba(0, 0, 0, 0.6)",
+                          color: "white",
+                          borderRadius: "4px",
+                          padding: "2px 6px",
+                          fontSize: "12px",
+                          fontWeight: "bold",
+                        }}
+                      >
                         {index + 1}
                       </div>
                     </div>
                     {/* Image Details */}
-                    <div style={{
-                      padding: "8px",
-                      borderTop: "1px solid #e9ecef"
-                    }}>
-                      <div style={{
-                        fontSize: "12px",
-                        fontWeight: "500",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        marginBottom: "4px"
-                      }} title={imageData.file ? imageData.file.name : (imageData.url || "Existing image")}>
-                        {imageData.file ? imageData.file.name : (imageData.isExisting ? "Existing Image" : "Image")}
+                    <div
+                      style={{
+                        padding: "8px",
+                        borderTop: "1px solid #e9ecef",
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: "12px",
+                          fontWeight: "500",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                          marginBottom: "4px",
+                        }}
+                        title={
+                          imageData.file
+                            ? imageData.file.name
+                            : imageData.url || "Existing image"
+                        }
+                      >
+                        {imageData.file
+                          ? imageData.file.name
+                          : imageData.isExisting
+                            ? "Existing Image"
+                            : "Image"}
                       </div>
                       {imageData.file && (
-                        <div style={{
-                          fontSize: "11px",
-                          color: "#6c757d"
-                        }}>
+                        <div
+                          style={{
+                            fontSize: "11px",
+                            color: "#6c757d",
+                          }}
+                        >
                           {(imageData.file.size / 1024 / 1024).toFixed(1)} MB
                         </div>
                       )}
                       {imageData.isExisting && (
-                        <div style={{
-                          fontSize: "11px",
-                          color: "#28a745"
-                        }}>
+                        <div
+                          style={{
+                            fontSize: "11px",
+                            color: "#28a745",
+                          }}
+                        >
                           ✓ Saved
                         </div>
                       )}
@@ -4184,7 +4656,8 @@ function MediaContactStep({
               </Form.Control.Feedback>
             )}
             <Form.Text className="text-muted">
-              Optional: Enter a valid URL for virtual tour (e.g., YouTube, Matterport)
+              Optional: Enter a valid URL for virtual tour (e.g., YouTube,
+              Matterport)
             </Form.Text>
           </Form.Group>
         </Col>
@@ -4330,7 +4803,9 @@ function MediaContactStep({
               id="truthfulDeclaration"
               label="I confirm that the information provided is true and accurate"
               checked={data.truthfulDeclaration === true}
-              onChange={(e) => onChange("truthfulDeclaration", e.target.checked)}
+              onChange={(e) =>
+                onChange("truthfulDeclaration", e.target.checked)
+              }
               isInvalid={!!errors.truthfulDeclaration}
             />
             {errors.truthfulDeclaration && (

@@ -75,29 +75,17 @@ export default function RERAPage() {
     try {
       setLoading(true);
       setError(null);
-      const token = Cookies.get("token");
-      
-      if (!token) {
-        setError("Please login to view RERA credentials");
-        setLoading(false);
-        return;
-      }
-
-      const apiUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-      
-      // TODO: Replace with actual API endpoint when backend is ready
-      // const response = await fetch(`${apiUrl}/api/user/rera-credentials`, {
-      //   headers: {
-      //     "Authorization": `Bearer ${token}`,
-      //     "Content-Type": "application/json"
-      //   }
+      // const response = await axios.get(`${API_BASE_URL}user/rera-credentials`, {
+      //   withCredentials: true,
       // });
-      
-      // For now, use mock data
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Mock data - replace with actual API response
+
+      // if (response.status === 200 && Array.isArray(response.data)) {
+      //   setReraCredentials(response.data);
+      // } else {
+      //   setReraCredentials([]);
+      // }
+      setLoading(false);
+    } catch (err) {
       setReraCredentials([
         {
           id: 1,
@@ -112,11 +100,8 @@ export default function RERAPage() {
           createdAt: "2023-01-15T10:00:00"
         }
       ]);
-      
-      setLoading(false);
-    } catch (err) {
       console.error("Error fetching RERA credentials:", err);
-      setError(err.message || "Failed to load RERA credentials. Please try again.");
+      // setError(err.message || "Failed to load RERA credentials. Please try again.");
       setLoading(false);
     }
   };
