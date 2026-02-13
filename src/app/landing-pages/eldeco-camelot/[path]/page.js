@@ -387,7 +387,7 @@ export default function EldecoCamelotPage() {
                     <h3 className="unit-type">3 BHK + Servant</h3>
                     <p className="project-name-text">Eldeco Camelot</p>
                     <div className="divider-line"></div>
-                    <p className="price-amount">₹ 7.42 CR* Onwards</p>
+                    <p className="price-amount">₹ 8.26 CR* Onwards</p>
                     <p className="unit-size">Size: 2,800 Sq.Ft</p>
                   </div>
                   <div className="price-box price-box-upper">
