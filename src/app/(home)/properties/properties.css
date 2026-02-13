@@ -135,7 +135,7 @@ html {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 120px;
-  max-height: calc(100vh - 140px);
+  max-height: calc(100vh - 120px);
   overflow: hidden;
   transition: all 0.3s ease;
 }
@@ -161,21 +161,19 @@ html {
   padding: 0.8px;
 }
 
+/* filters body scrollbar */
 .filters-body::-webkit-scrollbar {
   width: 6px;
 }
-
 .filters-body::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 10px;
 }
-
 .filters-body::-webkit-scrollbar-thumb {
   background: #999;
   opacity: 0.99;
   border-radius: 10px;
 }
-
 .filters-body::-webkit-scrollbar-thumb:hover {
   background: #888;
 }
@@ -935,6 +933,59 @@ html {
   bottom: 12px;
   width: 1px;
   background: #E5E7EB;
+}
+
+/* Pagination (match blog page design) */
+.blog-pagination .MuiPaginationItem-root{
+  width: 44px;
+  height: 44px;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  color: #515151;
+  font-weight: 500;
+}
+
+.blog-pagination .MuiPaginationItem-root.Mui-selected{
+  background-color: transparent !important;
+  border-color: #C9A24D;
+  color: #C9A24D;
+}
+
+.blog-pagination .MuiPaginationItem-ellipsis{
+  color: #515151;
+}
+
+.blog-pagination .MuiPaginationItem-root.Mui-disabled{
+  background-color: #F0F0F0;
+  color: #9CA3AF;
+  border-color: transparent;
+}
+
+/* Mobile-friendly pagination scroll */
+.blog-pagination {
+  max-width: 100%;
+}
+.blog-pagination .MuiPagination-ul{
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
+  padding-bottom: 4px;
+}
+.blog-pagination .MuiPagination-ul::-webkit-scrollbar{
+  height: 6px;
+}
+.blog-pagination .MuiPagination-ul::-webkit-scrollbar-thumb{
+  background: #E5E7EB;
+  border-radius: 6px;
+}
+@media (max-width: 480px){
+  .blog-pagination .MuiPaginationItem-root{
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    font-size: 13px;
+  }
 }
 
 .property-detail-items-inline {

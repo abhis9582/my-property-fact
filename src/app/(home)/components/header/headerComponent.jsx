@@ -237,16 +237,8 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
           const query = projectSearchQuery.trim().toLowerCase();
           const filtered = projectList.filter((project) => {
             const projectName = (project.projectName || project.name || "").toLowerCase();
-            const builderName = (project.builderName || "").toLowerCase();
             const cityName = (project.cityName || "").toLowerCase();
-            const location = (project.location || project.projectAddress || "").toLowerCase();
-            
-            return (
-              projectName.includes(query) ||
-              builderName.includes(query) ||
-              cityName.includes(query) ||
-              location.includes(query)
-            );
+            return projectName.includes(query) || cityName.includes(query);
           }).slice(0, 50); // Limit to 50 results
           
           setProjectSearchResults(filtered);
@@ -651,6 +643,68 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
             </button>
           </div>
           <div className="h-100 scroller">
+            {/* Mobile Projects Search */}
+            <div className="mobile-projects-search">
+              <div className="mobile-projects-search-input-wrapper">
+                <FontAwesomeIcon icon={faSearch} className="mobile-projects-search-icon" />
+                <input
+                  type="text"
+                  placeholder="Search Your Dream House"
+                  className="mobile-projects-search-input"
+                  value={projectSearchQuery}
+                  onChange={(e) => setProjectSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      if (projectSearchResults?.[0]) {
+                        handleProjectClick(projectSearchResults[0]);
+                        openMenu();
+                      }
+                    }
+                  }}
+                />
+              </div>
+              {projectSearchQuery.trim().length >= 2 && (
+                <div className="mobile-projects-search-results">
+                  {isSearchingProjects ? (
+                    <div className="mobile-projects-search-loader">
+                      <Spinner animation="border" size="sm" variant="dark" />
+                      <span className="ms-2">Searching...</span>
+                    </div>
+                  ) : projectSearchResults.length > 0 ? (
+                    <ul className="mobile-projects-results-list">
+                      {projectSearchResults.map((project) => (
+                        <li key={project.id || project.slugURL || project.projectName}>
+                          <button
+                            type="button"
+                            className="mobile-project-result-btn"
+                            onClick={() => {
+                              handleProjectClick(project);
+                              openMenu();
+                            }}
+                          >
+                            <div className="mobile-project-result-main">
+                              <div className="mobile-project-name">
+                                {project.projectName || project.name}
+                              </div>
+                              {(project.cityName || project.builderName) && (
+                                <div className="mobile-project-meta">
+                                  {[project.cityName, project.builderName].filter(Boolean).join(' • ')}
+                                </div>
+                              )}
+                            </div>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div className="mobile-projects-no-results">
+                      No projects found matching "{projectSearchQuery}"
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
             <div className="bigMenuList">
               <ul className="list-inline active list-unstyled">
                 <li

@@ -5,7 +5,7 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Spinner } from "react-bootstrap";
 
 export default function SearchFilter({ projectTypeList, cityList }) {
@@ -15,6 +15,7 @@ export default function SearchFilter({ projectTypeList, cityList }) {
   const { setProjectData } = useProjectContext();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [openDropdown, setOpenDropdown] = useState(null);
   //defining project range
   const projectRange = ["Up to 1Cr*", "1-3 Cr*", "3-5 Cr*", "Above 5 Cr*"];
   const handleSubmit = async (e) => {
@@ -51,66 +52,96 @@ export default function SearchFilter({ projectTypeList, cityList }) {
       sessionStorage.removeItem("mpf-querry");
     }
   }, []);
+  useEffect(() => {
+    const onDocClick = (e) => {
+      const inside = e.target.closest && e.target.closest(".custom-sort-dropdown");
+      if (!inside) setOpenDropdown(null);
+    };
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, []);
+  const renderDropdown = (id, value, setValue, placeholder, options, getLabel, getVal) => {
+    const isOpen = openDropdown === id;
+    const currentLabel = (() => {
+      if (!value) return "Select";
+      const found = options.find((o) => (getVal ? getVal(o) : o) === value);
+      return found ? (getLabel ? getLabel(found) : found) : "Select";
+    })();
+    return (
+      <div className="custom-sort-dropdown">
+        <button
+          type="button"
+          className={`custom-sort-trigger custom-select-trigger ${isOpen ? "active" : ""}`}
+          onClick={() => setOpenDropdown(isOpen ? null : id)}
+        >
+          <span className="custom-sort-value">{value ? currentLabel : placeholder}</span>
+          <svg className={`custom-sort-arrow ${isOpen ? "rotated" : ""}`} width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+        {isOpen && (
+          <div className={`custom-sort-options ${id === "location" ? "with-scroll" : ""}`}>
+            {options.map((opt, idx) => {
+              const val = getVal ? getVal(opt) : opt;
+              const label = getLabel ? getLabel(opt) : opt;
+              const selected = value === val;
+              return (
+                <button
+                  key={`${id}-${idx}`}
+                  className={`custom-sort-option ${selected ? "selected" : ""}`}
+                  onClick={() => {
+                    setValue(val);
+                    setOpenDropdown(null);
+                  }}
+                  type="button"
+                >
+                  {label}
+                  {selected && (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <path d="M20 6L9 17L4 12" stroke="#0d5834" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
+  };
   return (
     <div className="home-search-container container">
       {/* <div className="container bg-white border rounded-2 custom-shadow">*/}
       <div className="container border rounded-1 search-filter-shadow">
         <form method="Get" action="projects">
           <div className="d-flex flex-wrap flex-md-row flex-column p-3 p-md-4 gap-2 gap-md-3 plus-jakarta-sans-regular">
-            <div className="col">
-              {/* <label className="mb-2 fw-bold">Property Type</label> */}
-              <select
-                name="category"
-                id="category"
-                className="form-select"
-                title="category"
-                onChange={(e) => setPropertyType(e.target.value)}
-              >
-                <option value="">Property Type</option>
-                {projectTypeList.map((item, index) => (
-                  <option
-                    key={`${item.projectTypeName}-${index}`}
-                    value={item.id}
-                  >
-                    {item.projectTypeName}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="col">
-              {/* <label className="mb-2 fw-bold">Location</label> */}
-              <select
-                name="location"
-                id="location"
-                className="form-select"
-                title="location"
-                onChange={(e) => setPropertyLocation(e.target.value)}
-              >
-                <option value="">Select Location</option>
-                {cityList.map((item, index) => (
-                  <option key={`${item.cityName}-${index}`} value={item.id}>
-                    {item.cityName}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="col">
-              {/* <label className="mb-2 fw-bold">Price Range</label> */}
-              <select
-                name="projectname"
-                id="projectname"
-                className="form-select"
-                title="projectname "
-                onChange={(e) => setBudget(e.target.value)}
-              >
-                <option value="">Price Range</option>
-                {projectRange.map((option, index) => (
-                  <option key={`${option.id}-${index}`} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <div className="col">{renderDropdown(
+              "type",
+              propertType,
+              setPropertyType,
+              "Property Type",
+              projectTypeList,
+              (o) => o.projectTypeName,
+              (o) => o.id
+            )}</div>
+            <div className="col">{renderDropdown(
+              "location",
+              propertyLocation,
+              setPropertyLocation,
+              "Select Location",
+              cityList,
+              (o) => o.cityName,
+              (o) => o.id
+            )}</div>
+            <div className="col">{renderDropdown(
+              "price",
+              budget,
+              setBudget,
+              "Price Range",
+              projectRange,
+              (o) => o,
+              (o) => o
+            )}</div>
 
             <div className="d-flex align-items-end">
               <button

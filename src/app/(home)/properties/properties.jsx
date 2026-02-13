@@ -3,7 +3,7 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Navigation, Pagination as SwiperPagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -21,6 +21,7 @@ import {
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { Spinner } from "react-bootstrap";
+import { Pagination, Stack } from "@mui/material";
 import axios from "axios";
 import "./properties.css";
 
@@ -70,6 +71,8 @@ export default function Properties() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 2;
 
   // Toggle mobile filter modal
   const toggleMobileFilter = () => {
@@ -369,11 +372,7 @@ export default function Properties() {
   };
   
   const toggleCity = (city) => {
-    setSelectedCities((prev) =>
-      prev.includes(city)
-        ? prev.filter((c) => c !== city)
-        : [...prev, city]
-    );
+    setSelectedCities((prev) => (prev.includes(city) ? [] : [city]));
   };
   
   const toggleLocality = (locality) => {
@@ -393,11 +392,7 @@ export default function Properties() {
   };
   
   const toggleBathroom = (bath) => {
-    setSelectedBathrooms((prev) =>
-      prev.includes(bath)
-        ? prev.filter((b) => b !== bath)
-        : [...prev, bath]
-    );
+    setSelectedBathrooms((prev) => (prev.includes(bath) ? [] : [bath]));
   };
   
   const toggleFurnished = (furn) => {
@@ -420,7 +415,7 @@ export default function Properties() {
     setSelectedFacing((prev) =>
       prev.includes(face)
         ? prev.filter((f) => f !== face)
-        : [...prev, face]
+        : [...prev, face].slice(-2)
     );
   };
 
@@ -627,6 +622,19 @@ export default function Properties() {
     enhancedProperties,
   ]);
 
+  const totalPages = useMemo(() => Math.ceil(filteredAndSortedProperties.length / pageSize) || 1, [filteredAndSortedProperties]);
+  const paginatedProperties = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return filteredAndSortedProperties.slice(startIndex, endIndex);
+  }, [filteredAndSortedProperties, currentPage]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(1);
+    }
+  }, [filteredAndSortedProperties]);
+
   // Compute applied filters for display
   const appliedFilters = useMemo(() => {
     const filters = [];
@@ -768,6 +776,31 @@ export default function Properties() {
   const generatePrice = (price) => {
     return `₹${price}`;
   };
+  const dynamicHeading = useMemo(() => {
+    const formatBedroom = (b) => (b === 1 ? "1 RK/1 BHK" : `${b} BHK`);
+    const bedroomText =
+      selectedBedrooms.length === 1
+        ? formatBedroom(selectedBedrooms[0])
+        : selectedBedrooms.length > 1
+        ? selectedBedrooms
+            .slice()
+            .sort((a, b) => a - b)
+            .map((b) => formatBedroom(b))
+            .join(", ")
+        : "";
+    let typeText = "Properties";
+    if (selectedPropertyTypes.length === 1) {
+      typeText =
+        selectedPropertyTypes[0] === "Residential Apartment"
+          ? "Flats"
+          : selectedPropertyTypes[0];
+    } else if (selectedPropertyTypes.includes("Residential Apartment")) {
+      typeText = "Flats";
+    }
+    const cityText =
+      selectedCities.length >= 1 ? `in ${selectedCities[0]}` : "";
+    return `${[bedroomText, typeText].filter(Boolean).join(" ")} ${cityText}`.trim();
+  }, [selectedBedrooms, selectedPropertyTypes, selectedCities]);
 
   return (
     <div className="properties-page">
@@ -785,7 +818,7 @@ export default function Properties() {
                 </div>
               </nav>
             </div>
-            <h1 className="properties-page-title">3 BHK Flats In Noida</h1>
+            <h1 className="properties-page-title">{dynamicHeading || "Properties"}</h1>
           </div>
 
           {/* Property Category Tabs */}
@@ -1741,7 +1774,7 @@ export default function Properties() {
               <div className="properties-list-header">
                 <div className="properties-list-header-left">
                   <h2 className="properties-list-title">
-                    {filteredAndSortedProperties.length} results | 3 BHK Flats in Noida
+                    {filteredAndSortedProperties.length} results | {dynamicHeading || "Properties"}
                   </h2>
                   <p className="properties-list-subtitle">
                     Find your perfect property from our curated listings
@@ -1810,7 +1843,7 @@ export default function Properties() {
                     </button>
                   </div>
                 ) : (
-                  filteredAndSortedProperties.map((property) => (
+                  paginatedProperties.map((property) => (
                   <div 
                     key={property.id} 
                     className="new-property-card"
@@ -1823,7 +1856,7 @@ export default function Properties() {
                       <div className="property-card-image">
                         {property.allImageUrls && property.allImageUrls.length > 0 ? (
                           <Swiper
-                            modules={[Navigation, Pagination, Autoplay]}
+                            modules={[Navigation, SwiperPagination, Autoplay]}
                             spaceBetween={0}
                             slidesPerView={1}
                             navigation={false}
@@ -1993,6 +2026,26 @@ export default function Properties() {
                   ))
                 )}
               </div>
+              {filteredAndSortedProperties.length > pageSize && (
+                <div className="d-flex justify-content-center align-items-center my-5 container">
+                  <Stack spacing={2}>
+                    <Pagination
+                      count={totalPages}
+                      page={currentPage}
+                      variant="outlined"
+                      shape="rounded"
+                      boundaryCount={1}
+                      siblingCount={1}
+                      className="blog-pagination"
+                      onChange={(event, value) => {
+                        event.preventDefault();
+                        setCurrentPage(value);
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                    />
+                  </Stack>
+                </div>
+              )}
             </div>
           </div>
         </div>

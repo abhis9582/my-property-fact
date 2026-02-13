@@ -61,7 +61,7 @@ export default function Blog() {
       pageName={"Blog"}
       />
       <div className="container d-block d-lg-none my-3">
-        <BlogSidebar />
+        <BlogSidebar showSearch={true} showRecentPosts={false} showLatestProperty={false} />
       </div>
       {/* <CommonBreadCrum pageName={"Blog"} /> */}
       <div className="container my-3 my-lg-5">
@@ -85,7 +85,7 @@ export default function Blog() {
           </div>
         </div>
       </div>
-      <div className="d-flex justify-content-start align-items-center my-5 container">
+      <div className="d-flex justify-content-center align-items-center my-5 container">
         <Stack spacing={2}>
           <Pagination
             count={totalPages}
@@ -99,7 +99,10 @@ export default function Blog() {
           />
         </Stack>
       </div>
-      <section className="blog-faq-section">
+      <div className="container d-block d-lg-none my-4">
+        <BlogSidebar showSearch={false} showRecentPosts={true} showLatestProperty={true} />
+      </div>
+      {/* <section className="blog-faq-section">
         <div className="container">
           <h2 className="faq-title">Frequently Asked Question</h2>
           <p className="faq-subtitle">
@@ -127,7 +130,7 @@ export default function Blog() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
       {investorBlogs.length > 0 && <SocialFeed data={investorBlogs} />}
       <SocialFeedsOfMPF />
       <PopularCitiesSection />
