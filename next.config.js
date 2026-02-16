@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Ensure MUI and other packages are transpiled so vendor chunks are generated correctly
+  transpilePackages: ["@mui/material", "@mui/system", "@mui/utils"],
   images: {
     remotePatterns: [
       {

@@ -465,7 +465,8 @@ html,
 body {
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden !important;
+  /* clip (not hidden) so position:sticky works on blog sidebar; horizontal scroll still contained */
+  overflow-x: clip;
 }
 
 body.menu-open {
@@ -479,4 +480,15 @@ body.menu-open {
   h2 {
     font-size: 36px;
   }
+}
+
+
+.sidebar-sticky-wrapper{
+  position: sticky;
+  top: 110px;
+  align-self: flex-start;
+}
+
+.row {
+  align-items: flex-start !important;
 }

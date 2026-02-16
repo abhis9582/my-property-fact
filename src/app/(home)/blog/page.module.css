@@ -1,5 +1,6 @@
 .card {
-  min-width: 425px;
+  min-width: 0;
+  max-width: 100%;
   border-top-left-radius: 2rem;
   border-top-right-radius: 2rem;
   overflow: hidden;
@@ -8,6 +9,43 @@
 .blogContactForm {
   position: sticky !important;
   top: 80px;
+}
+
+.blogSectionWrap {
+  overflow: visible;
+  max-width: 100%;
+}
+
+/* On mobile/tablet: contain horizontal overflow (sidebar not sticky here anyway) */
+@media (max-width: 991px) {
+  .blogSectionWrap {
+    overflow-x: clip;
+  }
+  .blogContentRow {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* Blog row: right column must stretch so sticky sidebar has room to stick on scroll */
+.blogContentRow {
+  align-items: stretch !important;
+}
+
+/* Prevent flex children from overflowing on small screens */
+.blogContentRow > [class*="col-"] {
+  min-width: 0;
+}
+
+/* Sidebar column: stretch to match left column height (required for sticky) */
+.blogSidebarCol {
+  align-self: stretch;
+}
+
+/* Sidebar sticks from below banner; when you scroll past blog section it scrolls up with page */
+.blogRightSticky {
+  position: sticky;
+  top: 100px;
 }
 
 .keywordTag {

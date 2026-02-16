@@ -19,7 +19,7 @@ export default function NewInsight() {
       id: 2,
       heading: "Locate Score",
       sub_heading:
-        "Compute Monthly EMI, Total Interest, Lifetime Cost Instantly; Adjust Loan Amount, Tenure, Rate...",
+        "Assess Location Quality, Growth Potential, and Investment Risk. Check Price Trends, Connectivity, Amenities, and Infrastructure...",
       href: "/locate-score",
       iconSrc: "/static/icon/Graph.svg",
     },
@@ -69,14 +69,14 @@ export default function NewInsight() {
           </div>
           <div className="insight-image-wrapper">
             <Image
-              src="/static/family.svg"
+              src="/static/saya.png"
               alt="Family"
               width={604}
               height={308}
               className="insight-main-image"
               priority
             />
-            <div className="insight-logo-wrapper">
+            {/* <div className="insight-logo-wrapper">
               <Image
                 src="/static/icon/jacob.svg"
                 alt="Jacob & Co"
@@ -84,7 +84,7 @@ export default function NewInsight() {
                 height={82}
                 className="insight-logo"
               />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
