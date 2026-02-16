@@ -24,9 +24,13 @@ export default async function HomePage() {
 
   // Allowed slugs for featured projects
   const allowedSlugs = [
-    "birla-arika",
-    "dlf-privana-west",
-    "trump-residences-gurgaon",
+    // "birla-arika",
+    // "dlf-privana-west",
+    // "trump-residences-gurgaon",
+    "eldeco-7-peaks-residences",
+    "eldeco-whispers-of-wonder",
+    "eldeco-camelot"
+
   ];
 
   // Fetching citylist and project types and storing in variables

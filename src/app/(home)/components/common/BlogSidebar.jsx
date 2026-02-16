@@ -81,7 +81,7 @@ export default function BlogSidebar({ onSearch, showSearch = true, showRecentPos
     };
   }, [query]);
   return (
-    <div>
+    <div className="sidebar-sticky-wrapper">
       {showSearch && (
         <div className="search-container sidebar-align-right mb-4">
           <div className="blog-search-wrapper position-relative">

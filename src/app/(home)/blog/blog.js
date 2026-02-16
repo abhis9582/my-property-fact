@@ -1,5 +1,5 @@
 "use client";
-import "./page.module.css";
+import styles from "./page.module.css";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import CommonBreadCrum from "../components/common/breadcrum";
 import { useEffect, useState } from "react";
@@ -64,9 +64,9 @@ export default function Blog() {
         <BlogSidebar showSearch={true} showRecentPosts={false} showLatestProperty={false} />
       </div>
       {/* <CommonBreadCrum pageName={"Blog"} /> */}
-      <div className="container my-3 my-lg-5">
-        <div className="row gy-4 gx-5">
-          <div className="col-lg-8">
+      <div className={`container my-3 my-lg-5 ${styles.blogSectionWrap}`}>
+        <div className={`row gy-4 gx-2 ${styles.blogContentRow}`}>
+          <div className="col-lg-8 align-items-center">
             {loading ? (
               <div
                 className="d-flex justify-content-center align-items-center"
@@ -80,8 +80,10 @@ export default function Blog() {
               ))
             )}
           </div>
-          <div className="col-lg-4 ps-lg-3 d-none d-lg-block">
-            <BlogSidebar />
+          <div className={`col-lg-4 ps-lg-1 d-none d-lg-block ${styles.blogSidebarCol}`}>
+            <div className={styles.blogRightSticky}>
+              <BlogSidebar />
+            </div>
           </div>
         </div>
       </div>

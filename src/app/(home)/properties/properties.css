@@ -122,7 +122,17 @@ html {
   line-height: 1.2;
 }
 
-/* Filters Sidebar */
+/* Row: stretch so filter column is tall enough for sticky (like blog page) */
+.properties-content-row {
+  align-items: stretch !important;
+}
+
+/* Filter column: stretch to match content height so sticky has room */
+.properties-filter-col {
+  align-self: stretch;
+}
+
+/* Filters Sidebar - sticks until you scroll to pagination (then scrolls up with page) */
 .filters-sidebar {
   display: flex;
   width: 321px;
@@ -134,7 +144,7 @@ html {
   background: #FFF;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
   position: sticky;
-  top: 120px;
+  top: 100px;
   max-height: calc(100vh - 120px);
   overflow: hidden;
   transition: all 0.3s ease;
@@ -961,30 +971,50 @@ html {
   border-color: transparent;
 }
 
-/* Mobile-friendly pagination scroll */
+/* Mobile-friendly pagination: wrap on small screens so it doesn't get cut off */
 .blog-pagination {
   max-width: 100%;
+  width: 100%;
 }
-.blog-pagination .MuiPagination-ul{
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-gutter: stable;
+
+.blog-pagination .MuiPagination-ul {
+  flex-wrap: wrap;
+  justify-content: center;
+  overflow-x: visible;
   padding-bottom: 4px;
+  margin: 0 -4px;
 }
-.blog-pagination .MuiPagination-ul::-webkit-scrollbar{
-  height: 6px;
+
+@media (min-width: 481px) {
+  .blog-pagination .MuiPagination-ul {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-gutter: stable;
+  }
+  .blog-pagination .MuiPagination-ul::-webkit-scrollbar {
+    height: 6px;
+  }
+  .blog-pagination .MuiPagination-ul::-webkit-scrollbar-thumb {
+    background: #E5E7EB;
+    border-radius: 6px;
+  }
 }
-.blog-pagination .MuiPagination-ul::-webkit-scrollbar-thumb{
-  background: #E5E7EB;
-  border-radius: 6px;
-}
-@media (max-width: 480px){
-  .blog-pagination .MuiPaginationItem-root{
-    width: 36px;
-    height: 36px;
+
+@media (max-width: 480px) {
+  .blog-pagination .MuiPaginationItem-root {
+    width: 34px;
+    height: 34px;
     border-radius: 6px;
     font-size: 13px;
+  }
+}
+
+@media (max-width: 360px) {
+  .blog-pagination .MuiPaginationItem-root {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
   }
 }
 

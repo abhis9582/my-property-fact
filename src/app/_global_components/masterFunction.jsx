@@ -212,7 +212,7 @@ export const getWeeklyProject = (projects) => {
     return null;
   }
   const now = new Date();
-  const weekNumber = Math.floor(now.getTime() / (7 * 24 * 60 * 60 * 1000));
+  const weekNumber = Math.floor(now.getTime() / (14 * 24 * 60 * 60 * 1000));
   const index = weekNumber % residentialProjects.length;
   return residentialProjects[index];
 };

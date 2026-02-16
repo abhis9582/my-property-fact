@@ -851,7 +851,7 @@ export default function Properties() {
       {/* Main Content */}
       <div className="container-fluid py-4">
         <div className="container">
-          <div className="row">
+          <div className="row properties-content-row">
             {/* Mobile Filter & Sort Row - Only visible on mobile/tablet */}
             <div className="col-12 properties-mobile-controls-wrapper">
               <div className="properties-mobile-controls">
@@ -1286,7 +1286,7 @@ export default function Properties() {
             )}
 
             {/* Left Sidebar - Filters (Desktop) */}
-            <div className="col-lg-3 mb-4 mb-lg-0 properties-desktop-filters">
+            <div className="col-lg-3 mb-4 mb-lg-0 properties-desktop-filters properties-filter-col">
               <div className="filters-sidebar">
                 {/* Filters Header - Fixed */}
                 <div className="filters-header">
