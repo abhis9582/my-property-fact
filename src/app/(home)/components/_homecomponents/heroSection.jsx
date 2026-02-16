@@ -3,48 +3,40 @@ import SearchFilter from "./searchFIlter";
 import HeroBannerSlider from "./HeroBannerSlider";
 import "../home/home.css";
 export default async function HeroSection({ projectTypeList, cityList }) {
-  // Hero banners sliders meta data
+  // Hero banners sliders meta data (desktop / tablet / mobile per slide)
   const heroSlides = [
-    // {
-    //   id: "hero-primary",
-    //   className: "hero-republic-26",
-    //   desktop: "/static/banners/26_republic.png",
-    //   tablet: "/static/banners/republic_new_tablet.png",
-    //   mobile: "/static/banners/new_repu.jpg",
-    //   alt: "Find the best property with My Property Fact",
-    //   priority: true,
-    //   href: "#",
-    // },
     {
-      id: "hero-secondary",
-      desktop: "/static/banners/new_desktop_banner1.jpg",
-      tablet: "/static/banners/new_tablet_banner1.jpg",
-      mobile: "/static/banners/new_mobile_banner1.jpg",
-      alt: "Discover top real estate projects across India",
+      id: "hero-irish",
+      desktop: "/static/banners/Irish_desktop.jpg",
+      tablet: "/static/banners/Irish_tablet.jpg",
+      mobile: "/static/banners/Irish_mobile.jpg",
+      alt: "Irish - Laying Foundation For Tomorrow",
       href: "#",
     },
-    // {
-    //   id: "hero-secondary",
-    //   desktop: "/static/banners/desktop_banner2.jpg",
-    //   tablet: "/static/banners/tablet_banner2.jpg",
-    //   mobile: "/static/banners/mobile_banner2.jpg",
-    //   alt: "Discover top real estate projects across India",
-    //   href: "#",
-    // },
-    // {
-    //   id: "hero-secondary",
-    //   desktop: "/static/banners/desktop_banner3.jpg",
-    //   tablet: "/static/banners/tablet_banner2.jpg",
-    //   mobile: "/static/banners/mobile_banner2.jpg",
-    //   alt: "Discover top real estate projects across India",
-    // },
-    // {
-    //   id: "hero-secondary",
-    //   desktop: "/static/banners/desktop_banner4.jpg",
-    //   tablet: "/static/banners/tablet_banner4.jpg",
-    //   mobile: "/static/banners/mobile_banner4.jpg",
-    //   alt: "Discover top real estate projects across India",
-    // },
+    {
+      id: "hero-eldeco",
+      desktop: "/static/banners/new_eldeco_desktop.jpg",
+      tablet: "/static/banners/eldeco_tablet.jpg",
+      mobile: "/static/banners/new_eldeco_mobile.jpg",
+      alt: "Eldeco",
+      href: "#",
+    },
+    {
+      id: "hero-ghd",
+      desktop: "/static/banners/new_ghd_desktop.jpg",
+      tablet: "/static/banners/ghd_tablet.jpg",
+      mobile: "/static/banners/new_ghd_mobile.jpg",
+      alt: "GHD Group - Velvet Vista",
+      href: "#",
+    },
+    {
+      id: "hero-saya",
+      desktop: "/static/banners/new_saya_dekstop.jpg",
+      tablet: "/static/banners/saya_tablet.jpg",
+      mobile: "/static/banners/new_saya_mobile.jpg",
+      alt: "Saya - Relationships Forever",
+      href: "#",
+    },
   ];
 
   return (

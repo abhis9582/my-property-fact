@@ -483,12 +483,14 @@ body.menu-open {
 }
 
 
-.sidebar-sticky-wrapper{
+/* Blog sidebar (right): sticky so it stays visible while scrolling the main content */
+.sidebar-sticky-wrapper {
   position: sticky;
   top: 110px;
   align-self: flex-start;
 }
 
+/* Default row alignment (blog page overrides with .blogContentRow for sticky sidebar) */
 .row {
   align-items: flex-start !important;
 }

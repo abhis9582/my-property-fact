@@ -116,6 +116,7 @@ export default function Properties() {
         setLoading(true);
         setError(null);
         const response = await axios.get(`${API_BASE_URL}public/properties`);
+        console.log("Response data:", response.data);
         
         if (response.data.success && Array.isArray(response.data.properties)) {
           const transformedProperties = response.data.properties.map((property) => {

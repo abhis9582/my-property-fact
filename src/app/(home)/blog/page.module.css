@@ -28,6 +28,7 @@
 }
 
 /* Blog row: right column must stretch so sticky sidebar has room to stick on scroll */
+.blogSectionWrap .blogContentRow,
 .blogContentRow {
   align-items: stretch !important;
 }
@@ -40,12 +41,15 @@
 /* Sidebar column: stretch to match left column height (required for sticky) */
 .blogSidebarCol {
   align-self: stretch;
+  min-height: 0; /* allow flex shrink if needed */
 }
 
-/* Sidebar sticks from below banner; when you scroll past blog section it scrolls up with page */
+/* Sidebar sticks from below header; only the content box sticks, not the full column */
 .blogRightSticky {
   position: sticky;
   top: 100px;
+  align-self: flex-start;
+  width: 100%;
 }
 
 .keywordTag {
