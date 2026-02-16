@@ -699,7 +699,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                     </ul>
                   ) : (
                     <div className="mobile-projects-no-results">
-                      No projects found matching "{projectSearchQuery}"
+                      No projects found matching &quot;{projectSearchQuery}&quot;
                     </div>
                   )}
                 </div>
