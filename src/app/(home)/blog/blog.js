@@ -1,19 +1,32 @@
 "use client";
-import "./page.module.css";
+import styles from "./page.module.css";
 import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import CommonBreadCrum from "../components/common/breadcrum";
 import { useEffect, useState } from "react";
 import { LoadingSpinner } from "../contact-us/page";
 import { Pagination, Stack } from "@mui/material";
-import BlogCard from "../components/common/blogcard";
+import Image from "next/image";
+import BlogListItem from "../components/common/BlogListItem";
+import BlogSidebar from "../components/common/BlogSidebar";
+import SocialFeed from "../components/home/social-feed/socialfeed";
+import SocialFeedsOfMPF from "../components/_homecomponents/SocialFeedsOfMPF";
+import PopularCitiesSection from "../components/home/popular-cities/PopularCitiesSection";
 import { fetchBlogs } from "@/app/_global_components/masterFunction";
 export default function Blog() {
   // defining state for list of blogs
   const [blogsList, setBlogsList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
-  const [size, setSize] = useState(9);
+  const [size, setSize] = useState(2);
+  const [investorBlogs, setInvestorBlogs] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
+  const [openFaq, setOpenFaq] = useState(null);
+  const faqItems = [
+    { q: "Lorem Ipsum is simply dummy text of", a: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+    { q: "Lorem Ipsum is simply dummy text of", a: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." },
+    { q: "Lorem Ipsum is simply dummy text of", a: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." },
+    { q: "Lorem Ipsum is simply dummy text of", a: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." },
+  ];
   //fetching all blogs list
   const getBlogsList = async () => {
     const blogsList = await fetchBlogs(page, size);
@@ -24,6 +37,15 @@ export default function Blog() {
   useEffect(() => {
     getBlogsList();
   }, [page]);
+  useEffect(() => {
+    const loadInvestorBlogs = async () => {
+      try {
+        const latest = await fetchBlogs(0, 4);
+        setInvestorBlogs(latest.content || []);
+      } catch {}
+    };
+    loadInvestorBlogs();
+  }, []);
 
   // Handle page change from pagination
   const handlePageChange = (event, value) => {
@@ -38,39 +60,82 @@ export default function Blog() {
       <CommonHeaderBanner image={"blog-banner.jpg"} headerText={"Blog"} 
       pageName={"Blog"}
       />
+      <div className="container d-block d-lg-none my-3">
+        <BlogSidebar showSearch={true} showRecentPosts={false} showLatestProperty={false} />
+      </div>
       {/* <CommonBreadCrum pageName={"Blog"} /> */}
-      <div className="container-fluid my-3 my-lg-5 px-3 px-lg-5">
-        {/* <p className="text-center h2 mt-3">Blog</p> */}
-        <div className="row">
-          {loading ? (
-            <div
-              className="d-flex justify-content-center align-items-center"
-              style={{ height: "250px" }}
-            >
-              <LoadingSpinner show={loading} />
-            </div>
-          ) : (
-            blogsList.map((blog, index) => (
+      <div className={`container my-3 my-lg-5 ${styles.blogSectionWrap}`}>
+        <div className={`row gy-4 gx-2 ${styles.blogContentRow}`}>
+          <div className="col-lg-8 align-items-center">
+            {loading ? (
               <div
-                className="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4 mb-4"
-                key={index}
+                className="d-flex justify-content-center align-items-center"
+                style={{ height: "250px" }}
               >
-                <BlogCard key={index} blog={blog} index={index} />
+                <LoadingSpinner show={loading} />
               </div>
-            ))
-          )}
+            ) : (
+              (blogsList || []).map((blog, index) => (
+                <BlogListItem key={index} blog={blog} />
+              ))
+            )}
+          </div>
+          <div className={`col-lg-4 ps-lg-1 d-none d-lg-block ${styles.blogSidebarCol}`}>
+            <div className={styles.blogRightSticky}>
+              <BlogSidebar />
+            </div>
+          </div>
         </div>
       </div>
-      <div className="d-flex justify-content-center align-items-center my-5">
+      <div className="d-flex justify-content-center align-items-center my-5 container">
         <Stack spacing={2}>
           <Pagination
             count={totalPages}
             page={page + 1}
-            color="secondary"
+            variant="outlined"
+            shape="rounded"
+            boundaryCount={1}
+            siblingCount={1}
+            className="blog-pagination"
             onChange={handlePageChange}
           />
         </Stack>
       </div>
+      <div className="container d-block d-lg-none my-4">
+        <BlogSidebar showSearch={false} showRecentPosts={true} showLatestProperty={true} />
+      </div>
+      {/* <section className="blog-faq-section">
+        <div className="container">
+          <h2 className="faq-title">Frequently Asked Question</h2>
+          <p className="faq-subtitle">
+            Real Success Stories From Professionals Who Transformed Their Careers With Our Performance Marketing Program.
+          </p>
+          <div className="faq-list">
+            {faqItems.map((item, index) => (
+              <div key={index} className="faq-item">
+                <div className="faq-head">
+                  <span className="faq-text">{item.q}</span>
+                  <button
+                    className={`faq-plus-wrap ${openFaq === index ? "open" : ""}`}
+                    type="button"
+                    aria-label={openFaq === index ? "Collapse question" : "Expand question"}
+                    aria-expanded={openFaq === index}
+                    onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                  >
+                    <Image src="/static/icon/plus.svg" alt="Toggle answer" width={18} height={18} />
+                  </button>
+                </div>
+                {openFaq === index && (
+                  <div className="faq-answer">{item.a}</div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section> */}
+      {investorBlogs.length > 0 && <SocialFeed data={investorBlogs} />}
+      <SocialFeedsOfMPF />
+      <PopularCitiesSection />
     </>
   );
 }

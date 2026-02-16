@@ -29,36 +29,41 @@
   gap: 16px;
 }
 
-.contact-info-container-child > div:first-child img {
-  position: absolute;
-  top: 16.5px;
-  left: 3px;
-}
-
-.col-4:nth-of-type(3) .contact-info-container-child > div:first-child img {
-  position: absolute;
-  top: 19.5px;
-  left: 3px;
-}
-
-.contact-info-container-child div {
+/* Icon wrapper: fixed size, flexbox to center icon and circle */
+.contact-info-container-child > div:first-child {
   position: relative;
-  width: 41.99px;
-  height: 56.78px;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.contact-info-container-child div::before {
+/* Yellow circular background - fills the wrapper */
+.contact-info-container-child > div:first-child::before {
   content: "";
   position: absolute;
-  width: 41.39px;
-  height: 41.39px;
-  left: 0.6px;
-  top: 0.6px;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   background: #ea9e23;
   border-radius: 50%;
   z-index: 0;
-  transform: all 0.8s ease;
-  
+  transition: all 0.8s ease;
+}
+
+/* Icon image - centered inside the circle */
+.contact-info-container-child > div:first-child img {
+  position: relative;
+  z-index: 1;
+  width: auto;
+  height: auto;
+  max-width: 26px;
+  max-height: 26px;
+  object-fit: contain;
+  top: -1.5px;
+  /* left: 1px; */
 }
 
 /* Hover States */

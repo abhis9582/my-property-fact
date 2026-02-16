@@ -77,13 +77,16 @@ const DreamPropertySection = () => {
           <div className="header-left">
             <h2 className="dream-property-title plus-jakarta-sans-semi-bold">
               Find Your Dream Property In The City<br/> You Are Searching In
+              <Link href='/projects' >
               <button
+                
                 className="nav-arrow-button"
                 aria-label="Navigate to cities"
-                onClick={scrollToCities}
+                
               >
                 <FaArrowRight />
               </button>
+              </Link>
             </h2>
           </div>
           <Link href="/projects" className="see-all-button text-white btn-normal-color">

@@ -159,7 +159,7 @@ export default function BlogDetail({ blogDetail }) {
                 />
               )}
 
-              <h1 className="fw-bold mb-3">
+              <h1 className="mb-3 blog-typography-title">
                 {blogDetail.blogTitle.replace(/\u00A0/g, " ")}
               </h1>
 
