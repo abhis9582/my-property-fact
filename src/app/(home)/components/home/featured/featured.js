@@ -55,21 +55,25 @@ export default function Featured({
   type,
   badgeVariant = "default",
   title,
+  residentialProjects,
+  commercialProjects,
 }) {
   const [projectType, setProjectType] = useState("Residential");
   const [isLoading, setIsLoading] = useState(false);
 
-  // Memoized filtered projects for faster tab switching
+  // When residentialProjects + commercialProjects are passed, use them per tab (no filter). Else filter allProjects by type.
   const filteredProjects = useMemo(() => {
+    if (residentialProjects && commercialProjects) {
+      return projectType === "Residential" ? residentialProjects : commercialProjects;
+    }
     if (!allProjects || allProjects.length === 0) return [];
     if (type === "Similar" || type === "Featured") {
       return allProjects;
-    } else {
-      return allProjects
-        .filter((project) => project.propertyTypeName === projectType)
-        .slice(0, 9);
     }
-  }, [allProjects, projectType, type]);
+    return allProjects
+      .filter((project) => project.propertyTypeName === projectType)
+      .slice(0, 9);
+  }, [allProjects, projectType, type, residentialProjects, commercialProjects]);
 
   // Clear loading state when filtered projects are ready
   useEffect(() => {

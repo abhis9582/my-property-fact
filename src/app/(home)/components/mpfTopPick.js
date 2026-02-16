@@ -33,15 +33,28 @@ export default function MpfTopPicks({ topProject }) {
       : "₹ " + parseFloat(price) + " Cr* Onwards";
   };
   
-  // Generating banner image source
-  const bannerImageSrc = projectBannerImage
-    ? `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${slugURL}/${projectBannerImage}`
-    : "/static/no_image.png";
+  // Base URL for project images (avoid "undefined" in path)
+  const imageBase =
+    (typeof process.env.NEXT_PUBLIC_IMAGE_URL === "string" &&
+      process.env.NEXT_PUBLIC_IMAGE_URL) ||
+    "";
+  const canBuildImageUrl = imageBase && slugURL;
+
+  // Generating banner image source (use full URL if backend sent one)
+  const bannerImageSrc =
+    projectBannerImage && canBuildImageUrl && !projectBannerImage.startsWith("http")
+      ? `${imageBase}properties/${slugURL}/${projectBannerImage}`
+      : projectBannerImage?.startsWith("http")
+        ? projectBannerImage
+        : "/static/no_image.png";
 
   // Generating logo source
-  const logoSrc = projectLogo
-    ? `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${slugURL}/${projectLogo}`
-    : "/logo.png";
+  const logoSrc =
+    projectLogo && canBuildImageUrl && !projectLogo.startsWith("http")
+      ? `${imageBase}properties/${slugURL}/${projectLogo}`
+      : projectLogo?.startsWith("http")
+        ? projectLogo
+        : "/logo.png";
 
   // Returning the MPF top picks section
   return (

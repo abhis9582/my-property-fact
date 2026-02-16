@@ -205,17 +205,104 @@ export const fetchAllStories = cache(async () => {
   return storiesData.reverse();
 });
 
-// Getting top project
+// Getting top project (weekly rotation from all projects)
 export const getWeeklyProject = (projects) => {
   const residentialProjects = projects.filter(project => project.propertyTypeName === "Residential");
   if (residentialProjects.length === 0) {
     return null;
   }
   const now = new Date();
-  const weekNumber = Math.floor(now.getTime() / (14 * 24 * 60 * 60 * 1000));
+  const weekNumber = Math.floor(now.getTime() / (10 * 24 * 60 * 60 * 1000));
   const index = weekNumber % residentialProjects.length;
   return residentialProjects[index];
 };
+
+
+const TOP_PICKS_BUILDERS = [
+  "saya-homes",
+  "eldeco",
+  "m3m",
+  "smartworld",
+  "ghd-infra",
+];
+
+const TOP_PICKS_PERIOD_MS = 4 * 24 * 60 * 60 * 1000;
+
+function normalizeTopPickProject(project, builderName, builderSlug) {
+  const sortAt =
+    project.updatedAt ?? project.createdAt ?? project.projectId ?? project.id;
+  return {
+    builderName: builderName ?? project.builderName,
+    builderSlug: builderSlug ?? project.builderSlug ?? project.builderSlugURL,
+    projectName: project.projectName,
+    projectAddress: project.projectAddress,
+    projectConfiguration: project.projectConfiguration,
+    projectPrice: project.projectPrice,
+    projectLogo: project.projectLogo ?? project.projectLogoImage,
+    projectBannerImage:
+      project.projectBannerImage ??
+      project.projectThumbnailImage ??
+      project.bannerImage,
+    slugURL: project.slugURL,
+    propertyTypeName: project.propertyTypeName,
+    _sortAt: sortAt ?? 0,
+  };
+}
+
+
+function toSortValue(v) {
+  if (v == null) return 0;
+  if (typeof v === "number") return v;
+  const d = new Date(v).getTime();
+  return Number.isNaN(d) ? 0 : d;
+}
+function sortByLatest(a, b) {
+  return toSortValue(b._sortAt) - toSortValue(a._sortAt);
+}
+
+/** Fetches the current Top Pick. Featured builder rotates every 4 days; we show that builder's latest project only. */
+export const fetchTopPicksProject = cache(async () => {
+  if (!apiUrl) throw new Error("NEXT_PUBLIC_API_URL is not defined");
+  const results = await Promise.allSettled(
+    TOP_PICKS_BUILDERS.map((slug) =>
+      fetch(`${apiUrl}builder/get/${slug}`, { next: { revalidate: 60 } })
+    )
+  );
+  const byBuilder = new Map();
+  for (let i = 0; i < results.length; i++) {
+    const r = results[i];
+    const slug = TOP_PICKS_BUILDERS[i];
+    if (r.status !== "fulfilled" || !r.value.ok) continue;
+    let data;
+    try {
+      data = await r.value.json();
+    } catch {
+      continue;
+    }
+    const builderName = data.builderName ?? data.name;
+    const list = Array.isArray(data.projectList) ? data.projectList : [];
+    const residential = list
+      .filter((p) => p.propertyTypeName === "Residential")
+      .map((p) => normalizeTopPickProject(p, builderName, slug));
+    residential.sort(sortByLatest);
+    byBuilder.set(slug, residential);
+  }
+  // Which builder is at “index 0” this 4-day period (rotates: saya → eldeco → m3m → smartworld → ghd → saya…)
+  const periodIndex =
+    Math.floor(Date.now() / TOP_PICKS_PERIOD_MS) % TOP_PICKS_BUILDERS.length;
+  const featuredSlug = TOP_PICKS_BUILDERS[periodIndex];
+  let pool = byBuilder.get(featuredSlug) ?? [];
+  if (pool.length === 0) {
+    for (const slug of TOP_PICKS_BUILDERS) {
+      pool = byBuilder.get(slug) ?? [];
+      if (pool.length > 0) break;
+    }
+  }
+  if (pool.length === 0) return null;
+  const picked = pool[0];
+  delete picked._sortAt;
+  return picked;
+});
 
 // Getting top project
 export const fetchProjectStatus = cache(async () => {

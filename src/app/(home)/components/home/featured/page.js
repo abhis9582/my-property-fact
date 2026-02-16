@@ -6,6 +6,8 @@ export default async function FeaturedPage({
   allFeaturedProperties = [],
   type,
   title,
+  residentialProjects,
+  commercialProjects,
 }) {
   if (type === "Similar") {
     return (
@@ -18,18 +20,17 @@ export default async function FeaturedPage({
         title={title}
       />
     );
-  } else {
-    return (
-      <>
-        <Featured
-          url={url}
-          allProjects={allFeaturedProperties}
-          autoPlay={autoPlay}
-          type={type}
-          badgeVariant="home-featured"
-          title={title}
-        />
-      </>
-    );
   }
+  return (
+    <Featured
+      url={url}
+      allProjects={allFeaturedProperties}
+      autoPlay={autoPlay}
+      type={type}
+      badgeVariant="home-featured"
+      title={title}
+      residentialProjects={residentialProjects}
+      commercialProjects={commercialProjects}
+    />
+  );
 }
