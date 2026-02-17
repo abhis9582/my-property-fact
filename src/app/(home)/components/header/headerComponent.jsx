@@ -326,7 +326,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
             />
           </Link>
         </div>
-        <nav className="d-none d-lg-flex flex-grow-1 justify-content-center">
+        <nav className="d-none d-lg-flex flex-grow-1 justify-content-end align-items-center">
           <div className="menu position-relative">
             <ul className="d-flex gap-5 m-0 align-items-center header-links list-unstyled fw-bold">
               <li className="hasChild">

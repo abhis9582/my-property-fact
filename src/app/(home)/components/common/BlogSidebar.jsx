@@ -160,9 +160,9 @@ export default function BlogSidebar({ onSearch, showSearch = true, showRecentPos
                     <Image
                       src={`${process.env.NEXT_PUBLIC_IMAGE_URL}blog/${b.blogImage}`}
                       alt={b.blogTitle}
-                      width={64}
-                      height={64}
-                      className="object-cover"
+                      width={94}
+                      height={27}
+                     
                     />
                   )}
                 </div>

@@ -104,7 +104,7 @@ h1, h2, h3, h4, h5, h6, button, a {
 }
 
 /* Webkit Browsers starts (Chrome, Safari, Edge) */
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   width: 5px;
   height: 10px;
 }
@@ -121,7 +121,7 @@ h1, h2, h3, h4, h5, h6, button, a {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
-}
+} */
 
 /* Webkit Browsers ends */
 

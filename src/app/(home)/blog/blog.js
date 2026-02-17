@@ -78,7 +78,7 @@ export default function Blog() {
       </div>
       {/* <CommonBreadCrum pageName={"Blog"} /> */}
       <div className={`container my-3 my-lg-5 ${styles.blogSectionWrap}`}>
-        <div className={`row gy-4 gx-2 ${styles.blogContentRow}`}>
+        <div className={`row gy-4 ${styles.blogContentRow}`}>
           <div className="col-lg-8 align-items-center">
             {loading ? (
               <div
@@ -93,7 +93,7 @@ export default function Blog() {
               ))
             )}
           </div>
-          <div className={`col-lg-4 ps-lg-1 d-none d-lg-block ${styles.blogSidebarCol}`}>
+          <div className={`col-lg-4 d-none d-lg-block ${styles.blogSidebarCol}`}>
             <div className={styles.blogRightSticky}>
               <BlogSidebar />
             </div>
