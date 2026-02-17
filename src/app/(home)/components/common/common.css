@@ -94,6 +94,11 @@
   transform: scale(1.05);
 }
 
+/* Residential / Commercial text inside card */
+.project-property-type-text {
+  color: #00000099 !important;
+}
+
 /* westory css starts*/
 .webstory-container {
   max-width: 500px;

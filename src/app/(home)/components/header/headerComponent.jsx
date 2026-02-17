@@ -35,18 +35,19 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
   const projectsDropdownRef = useRef(null);
   const scrollPositionRef = useRef(0);
 
-  // Get image URL for a project (matching the pattern used in PropertyContainer)
+  // Get image URL for a project (using project banner image)
   const getProjectImageSrc = (project) => {
     const DEFAULT_IMAGE = "/static/no_image.png";
     const projectId = project.id || project.slugURL;
+    const bannerImage = project.projectBannerImage || project.projectThumbnailImage;
     
     // If image failed to load for this project, return default
-    if (imageErrors[projectId] || !project.projectThumbnailImage) {
+    if (imageErrors[projectId] || !bannerImage) {
       return DEFAULT_IMAGE;
     }
     
     // Construct full image URL
-    return `${process.env.NEXT_PUBLIC_IMAGE_URL || ''}properties/${project.slugURL}/${project.projectThumbnailImage}`;
+    return `${process.env.NEXT_PUBLIC_IMAGE_URL || ''}properties/${project.slugURL}/${bannerImage}`;
   };
 
   // Handle image error

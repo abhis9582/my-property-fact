@@ -20,12 +20,13 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
   // Default image path - use generic floorplan or realestate background as fallback
   const DEFAULT_IMAGE = "/static/no_image.png";
   
-  // Get image URL - use default if thumbnail is missing or image failed to load
+  // Get image URL - use project banner image, fallback to thumbnail; default if missing or failed
+  const bannerImage = data.projectBannerImage || data.projectThumbnailImage;
   const getImageSrc = () => {
-    if (imageError || !data.projectThumbnailImage) {
+    if (imageError || !bannerImage) {
       return DEFAULT_IMAGE;
     }
-    return `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${data.slugURL}/${data.projectThumbnailImage}`;
+    return `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${data.slugURL}/${bannerImage}`;
   };
 
   //Generating price in lakh & cr
@@ -119,23 +120,23 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
             width={400}
             height={400}
             onError={() => setImageError(true)}
-            unoptimized={imageError || !data.projectThumbnailImage}
+            unoptimized={imageError || !bannerImage}
           />
         </div>
         {renderStatusBadge()}
         <div className="mt-3 ms-3">
           <h5 className="mb-2 plus-jakarta-sans-semi-bold">{data.projectName}</h5>
-          <p className="mb-2 plus-jakarta-sans-semi-bold">{data.propertyTypeName}</p>
+          <p className="mb-2 plus-jakarta-sans-semi-bold project-property-type-text">{data.propertyTypeName}</p>
           <h5 className="text-success d-flex gap-2 mb-0">
             <span className="plus-jakarta-sans-semi-bold"> {generatePrice(data.projectPrice)}</span>
           </h5>
         </div>
 
-        <div className="ms-3 pb-3 text-truncate small fw-medium mt-2 d-flex align-items-center">
-          <span>
+        <div className="ms-3 pb-3 text-truncate small fw-medium mt-2 d-flex align-items-center gap-2">
+          <span className="flex-shrink-0">
             <FontAwesomeIcon
               icon={faMapMarker}
-              className="me-2 text-success"
+              className="text-success"
             />
           </span>
           <p className="p-0 m-0 plus-jakarta-sans-semi-bold">{data.projectAddress}</p>

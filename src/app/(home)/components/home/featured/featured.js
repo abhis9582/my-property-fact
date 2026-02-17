@@ -86,6 +86,8 @@ export default function Featured({
     }
   }, [filteredProjects, isLoading]);
 
+  // Show arrows on mobile for Featured section (autoPlay false); always for Residential/Commercial (autoPlay true)
+  const showArrows = autoPlay || type === "Featured";
   const settings = useMemo(
     () => ({
       dots: false,
@@ -93,9 +95,9 @@ export default function Featured({
       speed: 500,
       autoplay: autoPlay,
       autoplaySpeed: 5000,
-      arrows: autoPlay,
-      nextArrow: autoPlay && filteredProjects.length > 1 ? <NextArrow /> : null,
-      prevArrow: autoPlay && filteredProjects.length > 1 ? <PrevArrow /> : null,
+      arrows: showArrows,
+      nextArrow: showArrows && filteredProjects.length > 1 ? <NextArrow /> : null,
+      prevArrow: showArrows && filteredProjects.length > 1 ? <PrevArrow /> : null,
       slidesToShow: 3,
       slidesToScroll: 1,
       responsive: [
@@ -115,7 +117,7 @@ export default function Featured({
         },
       ],
     }),
-    [filteredProjects.length, autoPlay],
+    [filteredProjects.length, autoPlay, type, showArrows],
   );
 
   // Memoized section title
@@ -183,7 +185,7 @@ export default function Featured({
               <p className="featured-loading-text">Loading projects...</p>
             </div>
           ) : filteredProjects?.length > 0 ? (
-            <div className="featured-page-slider">
+            <div className={`featured-page-slider ${type === "Featured" && !autoPlay ? "featured-projects-mobile-arrows" : ""}`}>
               <Slider {...settings}>
                 {filteredProjects.map((item) => (
                   <div key={item.id} className="px-2 pb-3">

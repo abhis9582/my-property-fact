@@ -94,7 +94,7 @@ h1, h2, h3, h4, h5, h6, button, a {
 }
 
 .plus-jakarta-sans-semi-bold {
-  font-family: var(--heaing-font) !important;
+  font-family: "plus-jakarta", sans-serif !important;
   font-weight: 600 !important;
 }
 

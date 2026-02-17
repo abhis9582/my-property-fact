@@ -339,9 +339,10 @@ async function generateAIResponse(message, sessionId) {
                             .replace(/[^a-z0-9]+/g, '-')
                             .replace(/(^-|-$)/g, '');
 
-                        const fullImageUrl = (p.projectThumbnailImage && p.projectThumbnailImage.startsWith('http'))
-                            ? p.projectThumbnailImage
-                            : (p.projectThumbnailImage ? `${IMAGE_BASE_URL}${slug}/${p.projectThumbnailImage}` : 'https://via.placeholder.com/300x200?text=No+Image');
+                        const imgFile = p.projectBannerImage || p.projectThumbnailImage;
+                        const fullImageUrl = (imgFile && imgFile.startsWith('http'))
+                            ? imgFile
+                            : (imgFile ? `${IMAGE_BASE_URL}${slug}/${imgFile}` : 'https://via.placeholder.com/300x200?text=No+Image');
 
                         return {
                             id: p.id,
