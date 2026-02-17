@@ -1,6 +1,3 @@
-const { fetchAllProjects } = require('@/app/_global_components/masterFunction');
-const { get } = require('jodit/esm/core/helpers');
-
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
   siteUrl: process.env.NEXT_PUBLIC_UI_URL,
@@ -38,10 +35,11 @@ module.exports = {
     let allPaths = [];
 
     // Projects
-    const projects = await fetchAllProjects();
-
+    const projects = await fetch(`${process.env.NEXT_PUBLIC_API_URL}projects`);
+    if (!projects.ok) throw new Error("Failed to fetch projects");
+    const data = await projects.json();
     allPaths = allPaths.concat(
-      projects.map((p) => ({
+      data.map((p) => ({
         loc: `/${p.slugURL}`, //
         changefreq: "weekly",
         priority: 0.8,

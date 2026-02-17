@@ -24,6 +24,11 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "apis.mypropertyfact.in",
+        pathname: "/get/images/**",
+      },
+      {
+        protocol: "https",
+        hostname: "apis.mypropertyfact.in",
         pathname: "/fetch-image/**",
       },
     ],

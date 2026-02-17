@@ -8,11 +8,25 @@ import { Spinner } from "react-bootstrap";
 import LoginSignupModal from "../_homecomponents/loginSignupModal";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faChevronDown, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSearch,
+  faChevronDown,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
-import { faFacebook, faInstagram, faLinkedin, faYoutube } from "@fortawesome/free-brands-svg-icons";
+import {
+  faFacebook,
+  faInstagram,
+  faLinkedin,
+  faYoutube,
+} from "@fortawesome/free-brands-svg-icons";
 
-const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) => {
+const HeaderComponent = ({
+  cityList,
+  projectTypes,
+  builderList,
+  projectList,
+}) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [showLoginModal, setShowModal] = useState(false);
   const pathname = usePathname();
@@ -39,20 +53,21 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
   const getProjectImageSrc = (project) => {
     const DEFAULT_IMAGE = "/static/no_image.png";
     const projectId = project.id || project.slugURL;
-    const bannerImage = project.projectBannerImage || project.projectThumbnailImage;
-    
+    const bannerImage =
+      project.projectBannerImage || project.projectThumbnailImage;
+
     // If image failed to load for this project, return default
     if (imageErrors[projectId] || !bannerImage) {
       return DEFAULT_IMAGE;
     }
-    
+
     // Construct full image URL
-    return `${process.env.NEXT_PUBLIC_IMAGE_URL || ''}properties/${project.slugURL}/${bannerImage}`;
+    return `${process.env.NEXT_PUBLIC_IMAGE_URL || ""}properties/${project.slugURL}/${bannerImage}`;
   };
 
   // Handle image error
   const handleImageError = (projectId) => {
-    setImageErrors(prev => ({ ...prev, [projectId]: true }));
+    setImageErrors((prev) => ({ ...prev, [projectId]: true }));
   };
   const openMenuMobile = (dropdown) => {
     setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
@@ -64,14 +79,14 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
       // Check if mobile menu is open
       const menu = document.getElementById("mbdiv");
       const isMenuOpen = menu && menu.classList.contains("active");
-      
+
       // Prevent scrolling when menu is open
       if (isMenuOpen) {
         // Restore scroll position if it changed
         window.scrollTo(0, scrollPositionRef.current);
         return;
       }
-      
+
       // Only update scroll state if menu is not open
       if (!isMenuOpen) {
         if (window.scrollY > 100) {
@@ -89,22 +104,26 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
       if (isMenuOpen) {
         // Check if the touch is inside a scrollable dropdown menu
         const target = e.target;
-        const dropdownUl = target.closest('.bigMenuList .dropdown.activeHeader ul');
-        const dropdownContainer = target.closest('.bigMenuList .dropdown.activeHeader');
-        
+        const dropdownUl = target.closest(
+          ".bigMenuList .dropdown.activeHeader ul",
+        );
+        const dropdownContainer = target.closest(
+          ".bigMenuList .dropdown.activeHeader",
+        );
+
         // Allow scrolling inside dropdown menus - don't prevent default
         if (dropdownUl || dropdownContainer) {
           // Don't prevent default - allow natural scrolling
           return; // Exit early without preventing
         }
-        
+
         // Check if touch is inside the main menu scroller or any menu content
-        const isInsideMenu = target.closest('.mbMenuContainer .mbMenu');
+        const isInsideMenu = target.closest(".mbMenuContainer .mbMenu");
         if (isInsideMenu) {
           // Allow scrolling in main menu container and all its children
           return; // Don't prevent - allow scrolling
         }
-        
+
         // Only prevent scrolling on backdrop/container (outside menu)
         e.preventDefault();
         e.stopPropagation();
@@ -139,7 +158,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
           document.body.style.height = "";
           document.documentElement.style.overflow = "";
           document.documentElement.style.height = "";
-          
+
           // Restore scroll position
           window.scrollTo(0, scrollPositionRef.current);
         }
@@ -149,9 +168,12 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
     window.addEventListener("scroll", handleScroll, { passive: false });
     window.addEventListener("wheel", preventScroll, { passive: false });
     // Use capture phase to check before other handlers
-    window.addEventListener("touchmove", preventScroll, { passive: false, capture: true });
+    window.addEventListener("touchmove", preventScroll, {
+      passive: false,
+      capture: true,
+    });
     window.addEventListener("resize", handleResize);
-    
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("wheel", preventScroll);
@@ -188,7 +210,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
       document.body.style.height = "";
       document.documentElement.style.overflow = "";
       document.documentElement.style.height = "";
-      
+
       // Restore scroll position
       window.scrollTo(0, scrollPositionRef.current);
     } else {
@@ -223,9 +245,13 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
 
   // Handle project search
   useEffect(() => {
-    if (projectSearchQuery.trim().length >= 2 && projectList && projectList.length > 0) {
+    if (
+      projectSearchQuery.trim().length >= 2 &&
+      projectList &&
+      projectList.length > 0
+    ) {
       setIsSearchingProjects(true);
-      
+
       // Clear previous timeout
       if (projectSearchTimeoutRef.current) {
         clearTimeout(projectSearchTimeoutRef.current);
@@ -236,12 +262,18 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
         try {
           // Filter projects by search query
           const query = projectSearchQuery.trim().toLowerCase();
-          const filtered = projectList.filter((project) => {
-            const projectName = (project.projectName || project.name || "").toLowerCase();
-            const cityName = (project.cityName || "").toLowerCase();
-            return projectName.includes(query) || cityName.includes(query);
-          }).slice(0, 50); // Limit to 50 results
-          
+          const filtered = projectList
+            .filter((project) => {
+              const projectName = (
+                project.projectName ||
+                project.name ||
+                ""
+              ).toLowerCase();
+              const cityName = (project.cityName || "").toLowerCase();
+              return projectName.includes(query) || cityName.includes(query);
+            })
+            .slice(0, 50); // Limit to 50 results
+
           setProjectSearchResults(filtered);
         } catch (error) {
           console.error("Error searching projects:", error);
@@ -290,9 +322,12 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
     const handleMouseLeave = () => {
       // Reset search when mouse leaves the projects dropdown area
       setTimeout(() => {
-        const projectsLi = document.querySelector('.hasChild:has(.projects-dropdown)');
-        const isHovering = projectsLi?.matches(':hover') || 
-                          projectsDropdownRef.current?.matches(':hover');
+        const projectsLi = document.querySelector(
+          ".hasChild:has(.projects-dropdown)",
+        );
+        const isHovering =
+          projectsLi?.matches(":hover") ||
+          projectsDropdownRef.current?.matches(":hover");
         if (!isHovering) {
           setProjectSearchQuery("");
           setProjectSearchResults([]);
@@ -300,11 +335,13 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
       }, 200);
     };
 
-    const projectsLi = document.querySelector('.hasChild:has(.projects-dropdown)');
+    const projectsLi = document.querySelector(
+      ".hasChild:has(.projects-dropdown)",
+    );
     if (projectsLi) {
-      projectsLi.addEventListener('mouseleave', handleMouseLeave);
+      projectsLi.addEventListener("mouseleave", handleMouseLeave);
       return () => {
-        projectsLi.removeEventListener('mouseleave', handleMouseLeave);
+        projectsLi.removeEventListener("mouseleave", handleMouseLeave);
       };
     }
   }, []);
@@ -316,303 +353,374 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
           isScrolled ? "fixed-header" : ""
         } ${isPropertiesRoute ? "properties-header" : ""} ${pathname.includes("/properties/") ? "conditional-header" : ""} `}
       >
-        <div className="mpf-logo d-flex align-items-center gap-4">
-          <Link href="/">
-            <Image
-              src="/logo.png"
-              alt="My Property fact"
-              height={74}
-              width={80}
-              priority
-            />
-          </Link>
-        </div>
-        <nav className="d-none d-lg-flex flex-grow-1 justify-content-end align-items-center">
-          <div className="menu position-relative">
-            <ul className="d-flex gap-5 m-0 align-items-center header-links list-unstyled fw-bold">
-              <li className="hasChild">
-                <Link
-                  href="#"
-                  className={`text-light text-decoration-none py-3 plus-jakarta-sans-semi-bold${
-                    isCityRoute ? "header-link-active" : ""
-                  }`}
-                >
-                  City
-                </Link>
-                <div className="dropdown dropdown-lg z-3 city-dropdown">
-                  {!cityList ? (
-                    <div className="d-flex align-items-center justify-content-center p-3">
-                      <Spinner animation="border" variant="light" />
-                    </div>
-                  ) : (
-                    <div className="city-dropdown-content">
-                      <div className="city-dropdown-left">
-                        <Link href="/projects/commercial" className="city-dropdown-item plus-jakarta-sans-semi-bold" prefetch={true}>
-                          Commercial
-                        </Link>
-                        <Link href="/projects/residential" className="city-dropdown-item plus-jakarta-sans-semi-bold" prefetch={true}>
-                          Residential
-                        </Link>
-                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold" prefetch={true}>
-                          New Launches <span className="city-dropdown-badge">New</span>
-                        </Link>
-                        <Link href="/blog" className="city-dropdown-item plus-jakarta-sans-semi-bold">
-                          Articles &amp; News
-                        </Link>
+        <div className="container d-flex justify-content-between align-items-center">
+          <div className="mpf-logo d-flex align-items-center gap-4">
+            <Link href="/">
+              <Image
+                src="/logo.png"
+                alt="My Property fact"
+                height={74}
+                width={80}
+                priority
+              />
+            </Link>
+          </div>
+          <nav className="d-none d-lg-flex flex-grow-1 justify-content-end align-items-center">
+            <div className="menu position-relative">
+              <ul className="d-flex gap-5 m-0 align-items-center header-links list-unstyled fw-bold">
+                <li className="hasChild">
+                  <Link
+                    href="#"
+                    className={`text-light text-decoration-none py-3 plus-jakarta-sans-semi-bold${
+                      isCityRoute ? "header-link-active" : ""
+                    }`}
+                  >
+                    City
+                  </Link>
+                  <div className="dropdown dropdown-lg z-3 city-dropdown">
+                    {!cityList ? (
+                      <div className="d-flex align-items-center justify-content-center p-3">
+                        <Spinner animation="border" variant="light" />
                       </div>
-                      <ul className="list-inline city-dropdown-right">
-                        {cityList?.map((city) => (
-                          <li key={city.id}>
-                            <Link
-                              href={`/city/${city.slugURL}`}
-                              className={`text-light text-decoration-none plus-jakarta-sans-semi-bold ${
-                                pathname === "/city/" + city.URL
-                                  ? "header-link-active"
-                                  : ""
-                              }`}
-                            >
-                              {city.cityName}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              </li>
-              <li className="hasChild">
-                <Link
-                  href="#"
-                  className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold ${
-                    isBuilderRoute ? "header-link-active" : ""
-                  }`}
-                >
-                  Builder
-                </Link>
-                <div className="dropdown dropdown-lg z-3 builder-dropdown">
-                  {builderList.length === 0 ? (
-                    <div className="d-flex align-items-center justify-content-center p-3">
-                      <Spinner animation="border" variant="light" />
-                    </div>
-                  ) : (
-                    <div className="city-dropdown-content">
-                      <div className="city-dropdown-left">
-                        <Link href="/projects/commercial" className="city-dropdown-item plus-jakarta-sans-semi-bold" prefetch={true}>
-                          Commercial
-                        </Link>
-                        <Link href="/projects/residential" className="city-dropdown-item plus-jakarta-sans-semi-bold" prefetch={true}>
-                          Residential
-                        </Link>
-                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold" prefetch={true}>
-                          New Launches <span className="city-dropdown-badge">New</span>
-                        </Link>
-                        <Link href="/blog" className="city-dropdown-item plus-jakarta-sans-semi-bold">
-                          Articles &amp; News
-                        </Link>
-                      </div>
-                      <ul className="list-inline city-dropdown-right">
-                        {builderList?.map((builder) => (
-                          <li key={builder.id}>
-                            <Link
-                              href={`/builder/${builder.slugUrl}`}
-                              className={`text-light text-decoration-none plus-jakarta-sans-semi-bold ${
-                                pathname === "/builder/" + builder.slugUrl
-                                  ? "header-link-active"
-                                  : ""
-                              }`}
-                            >
-                              {builder.builderName.toLowerCase()}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              </li>
-              <li className="hasChild">
-                <Link
-                  href="/about-us"
-                  className={`text-light py-3  text-decoration-none plus-jakarta-sans-semi-bold${
-                    pathname === "/about-us" ? "header-link-active" : ""
-                  }`}
-                >
-                  About Us
-                </Link>
-              </li>
-              <li className="hasChild">
-                <Link
-                  href="/projects"
-                  className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold${
-                    isProjectTypeRoute ? "header-link-active" : ""
-                  }`}
-                >
-                  Projects
-                </Link>
-                <div 
-                  className="dropdown dropdown-lg projects-dropdown z-3"
-                  ref={projectsDropdownRef}
-                >
-                  {!projectTypes ? (
-                    <div className="d-flex align-items-center justify-content-center p-3">
-                      <Spinner animation="border" variant="light" />
-                    </div>
-                  ) : (
-                    <div className="city-dropdown-content">
-                      <div className="city-dropdown-left">
-                        <Link href="/projects/commercial" className="city-dropdown-item plus-jakarta-sans-semi-bold" prefetch={true}>
-                          Commercial
-                        </Link>
-                        <Link href="/projects/residential" className="city-dropdown-item plus-jakarta-sans-semi-bold" prefetch={true}>
-                          Residential
-                        </Link>
-                        <Link href="/projects/new-launches" className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold" prefetch={true}>
-                          New Launches <span className="city-dropdown-badge">New</span>
-                        </Link>
-                        <Link href="/blog" className="city-dropdown-item plus-jakarta-sans-semi-bold">
-                          Articles &amp; News
-                        </Link>
-                      </div>
-                      <div className="city-dropdown-right projects-search-section">
-                        <div className="projects-search-wrapper">
-                          <h3 className="projects-search-title plus-jakarta-sans-semi-bold">Search Your Dream Home</h3>
-                          <div className="projects-search-container">
-                            <div className="projects-search-input-wrapper">
-                              <FontAwesomeIcon icon={faSearch} className="projects-search-icon" />
-                              <input
-                                type="text"
-                                placeholder="Search"
-                                className="projects-search-input"
-                                value={projectSearchQuery}
-                                onChange={(e) => setProjectSearchQuery(e.target.value)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') {
-                                    e.preventDefault();
-                                    handleExploreClick();
-                                  }
-                                }}
-                              />
-                              <button 
-                                className="projects-explore-btn"
-                                onClick={handleExploreClick}
+                    ) : (
+                      <div className="city-dropdown-content">
+                        <div className="city-dropdown-left">
+                          <Link
+                            href="/projects/commercial"
+                            className="city-dropdown-item plus-jakarta-sans-semi-bold"
+                            prefetch={true}
+                          >
+                            Commercial
+                          </Link>
+                          <Link
+                            href="/projects/residential"
+                            className="city-dropdown-item plus-jakarta-sans-semi-bold"
+                            prefetch={true}
+                          >
+                            Residential
+                          </Link>
+                          <Link
+                            href="/projects/new-launches"
+                            className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold"
+                            prefetch={true}
+                          >
+                            New Launches{" "}
+                            <span className="city-dropdown-badge">New</span>
+                          </Link>
+                          <Link
+                            href="/blog"
+                            className="city-dropdown-item plus-jakarta-sans-semi-bold"
+                          >
+                            Articles &amp; News
+                          </Link>
+                        </div>
+                        <ul className="list-inline city-dropdown-right">
+                          {cityList?.map((city) => (
+                            <li key={city.id}>
+                              <Link
+                                href={`/city/${city.slugURL}`}
+                                className={`text-light text-decoration-none plus-jakarta-sans-semi-bold ${
+                                  pathname === "/city/" + city.URL
+                                    ? "header-link-active"
+                                    : ""
+                                }`}
                               >
-                                Explore
-                              </button>
+                                {city.cityName}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </li>
+                <li className="hasChild">
+                  <Link
+                    href="#"
+                    className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold ${
+                      isBuilderRoute ? "header-link-active" : ""
+                    }`}
+                  >
+                    Builder
+                  </Link>
+                  <div className="dropdown dropdown-lg z-3 builder-dropdown">
+                    {builderList.length === 0 ? (
+                      <div className="d-flex align-items-center justify-content-center p-3">
+                        <Spinner animation="border" variant="light" />
+                      </div>
+                    ) : (
+                      <div className="city-dropdown-content">
+                        <div className="city-dropdown-left">
+                          <Link
+                            href="/projects/commercial"
+                            className="city-dropdown-item plus-jakarta-sans-semi-bold"
+                            prefetch={true}
+                          >
+                            Commercial
+                          </Link>
+                          <Link
+                            href="/projects/residential"
+                            className="city-dropdown-item plus-jakarta-sans-semi-bold"
+                            prefetch={true}
+                          >
+                            Residential
+                          </Link>
+                          <Link
+                            href="/projects/new-launches"
+                            className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold"
+                            prefetch={true}
+                          >
+                            New Launches{" "}
+                            <span className="city-dropdown-badge">New</span>
+                          </Link>
+                          <Link
+                            href="/blog"
+                            className="city-dropdown-item plus-jakarta-sans-semi-bold"
+                          >
+                            Articles &amp; News
+                          </Link>
+                        </div>
+                        <ul className="list-inline city-dropdown-right">
+                          {builderList?.map((builder) => (
+                            <li key={builder.id}>
+                              <Link
+                                href={`/builder/${builder.slugUrl}`}
+                                className={`text-light text-decoration-none plus-jakarta-sans-semi-bold ${
+                                  pathname === "/builder/" + builder.slugUrl
+                                    ? "header-link-active"
+                                    : ""
+                                }`}
+                              >
+                                {builder.builderName.toLowerCase()}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </li>
+                <li className="hasChild">
+                  <Link
+                    href="/about-us"
+                    className={`text-light py-3  text-decoration-none plus-jakarta-sans-semi-bold${
+                      pathname === "/about-us" ? "header-link-active" : ""
+                    }`}
+                  >
+                    About Us
+                  </Link>
+                </li>
+                <li className="hasChild">
+                  <Link
+                    href="/projects"
+                    className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold${
+                      isProjectTypeRoute ? "header-link-active" : ""
+                    }`}
+                  >
+                    Projects
+                  </Link>
+                  <div
+                    className="dropdown dropdown-lg projects-dropdown z-3"
+                    ref={projectsDropdownRef}
+                  >
+                    {!projectTypes ? (
+                      <div className="d-flex align-items-center justify-content-center p-3">
+                        <Spinner animation="border" variant="light" />
+                      </div>
+                    ) : (
+                      <div className="city-dropdown-content">
+                        <div className="city-dropdown-left">
+                          <Link
+                            href="/projects/commercial"
+                            className="city-dropdown-item plus-jakarta-sans-semi-bold"
+                            prefetch={true}
+                          >
+                            Commercial
+                          </Link>
+                          <Link
+                            href="/projects/residential"
+                            className="city-dropdown-item plus-jakarta-sans-semi-bold"
+                            prefetch={true}
+                          >
+                            Residential
+                          </Link>
+                          <Link
+                            href="/projects/new-launches"
+                            className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold"
+                            prefetch={true}
+                          >
+                            New Launches{" "}
+                            <span className="city-dropdown-badge">New</span>
+                          </Link>
+                          <Link
+                            href="/blog"
+                            className="city-dropdown-item plus-jakarta-sans-semi-bold"
+                          >
+                            Articles &amp; News
+                          </Link>
+                        </div>
+                        <div className="city-dropdown-right projects-search-section">
+                          <div className="projects-search-wrapper">
+                            <h3 className="projects-search-title plus-jakarta-sans-semi-bold">
+                              Search Your Dream Home
+                            </h3>
+                            <div className="projects-search-container">
+                              <div className="projects-search-input-wrapper">
+                                <FontAwesomeIcon
+                                  icon={faSearch}
+                                  className="projects-search-icon"
+                                />
+                                <input
+                                  type="text"
+                                  placeholder="Search"
+                                  className="projects-search-input"
+                                  value={projectSearchQuery}
+                                  onChange={(e) =>
+                                    setProjectSearchQuery(e.target.value)
+                                  }
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                      e.preventDefault();
+                                      handleExploreClick();
+                                    }
+                                  }}
+                                />
+                                <button
+                                  className="projects-explore-btn"
+                                  onClick={handleExploreClick}
+                                >
+                                  Explore
+                                </button>
+                              </div>
                             </div>
-                          </div>
-                          {/* Search Results */}
-                          {projectSearchQuery.trim().length >= 2 && (
-                            <div className="projects-search-results">
-                              {isSearchingProjects ? (
-                                <div className="projects-search-loader">
-                                  <Spinner animation="border" size="sm" variant="light" />
-                                  <span className="ms-2">Searching...</span>
-                                </div>
-                              ) : projectSearchResults.length > 0 ? (
-                                <ul className="projects-results-list">
-                                  {projectSearchResults.map((project) => {
-                                    const projectId = project.id || project.slugURL;
-                                    return (
-                                      <li
-                                        key={projectId}
-                                        className="project-result-item"
-                                        onClick={() => handleProjectClick(project)}
-                                      >
-                                        <div className="project-result-content">
-                                          <div className="project-result-image">
-                                            <Image
-                                              src={getProjectImageSrc(project)}
-                                              alt={project.projectName || project.name || "Project"}
-                                              width={60}
-                                              height={60}
-                                              unoptimized
-                                              onError={() => handleImageError(projectId)}
-                                            />
-                                          </div>
-                                          <div className="project-result-name">
-                                            <div>{project.projectName || project.name}</div>
-                                            {(project.cityName || project.builderName) && (
-                                              <div style={{ fontSize: '12px', opacity: 0.8, marginTop: '4px' }}>
-                                                {[project.cityName, project.builderName].filter(Boolean).join(' • ')}
+                            {/* Search Results */}
+                            {projectSearchQuery.trim().length >= 2 && (
+                              <div className="projects-search-results">
+                                {isSearchingProjects ? (
+                                  <div className="projects-search-loader">
+                                    <Spinner
+                                      animation="border"
+                                      size="sm"
+                                      variant="light"
+                                    />
+                                    <span className="ms-2">Searching...</span>
+                                  </div>
+                                ) : projectSearchResults.length > 0 ? (
+                                  <ul className="projects-results-list">
+                                    {projectSearchResults.map((project) => {
+                                      const projectId =
+                                        project.id || project.slugURL;
+                                      return (
+                                        <li
+                                          key={projectId}
+                                          className="project-result-item"
+                                          onClick={() =>
+                                            handleProjectClick(project)
+                                          }
+                                        >
+                                          <div className="project-result-content">
+                                            <div className="project-result-image">
+                                              <Image
+                                                src={getProjectImageSrc(
+                                                  project,
+                                                )}
+                                                alt={
+                                                  project.projectName ||
+                                                  project.name ||
+                                                  "Project"
+                                                }
+                                                width={60}
+                                                height={60}
+                                                unoptimized
+                                                onError={() =>
+                                                  handleImageError(projectId)
+                                                }
+                                              />
+                                            </div>
+                                            <div className="project-result-name">
+                                              <div>
+                                                {project.projectName ||
+                                                  project.name}
                                               </div>
-                                            )}
+                                              {(project.cityName ||
+                                                project.builderName) && (
+                                                <div
+                                                  style={{
+                                                    fontSize: "12px",
+                                                    opacity: 0.8,
+                                                    marginTop: "4px",
+                                                  }}
+                                                >
+                                                  {[
+                                                    project.cityName,
+                                                    project.builderName,
+                                                  ]
+                                                    .filter(Boolean)
+                                                    .join(" • ")}
+                                                </div>
+                                              )}
+                                            </div>
                                           </div>
-                                        </div>
-                                      </li>
-                                    );
-                                  })}
-                                </ul>
-                              ) : projectSearchQuery.trim().length >= 2 ? (
-                                <div className="projects-no-results">
-                                  No projects found matching &quot;{projectSearchQuery}&quot;
-                                </div>
-                              ) : null}
-                            </div>
-                          )}
+                                        </li>
+                                      );
+                                    })}
+                                  </ul>
+                                ) : projectSearchQuery.trim().length >= 2 ? (
+                                  <div className="projects-no-results">
+                                    No projects found matching &quot;
+                                    {projectSearchQuery}&quot;
+                                  </div>
+                                ) : null}
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              </li>
-              <li className="hasChild">
-                <Link
-                  href="/blog"
-                  className={`text-light py-3  text-decoration-none plus-jakarta-sans-semi-bold${
-                    isBlogTypeRoute ? "header-link-active" : ""
-                  }`}
-                >
-                  Blog
-                </Link>
-              </li>
-              <li className="hasChild">
-                <Link
-                  href="/career"
-                  className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold${
-                    pathname === "/career" ? "header-link-active" : ""
-                  }`}
-                >
-                  Career
-                </Link>
-              </li>
-              <li className="hasChild">
-                <Link
-                  href="/contact-us"
-                  className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold${
-                    pathname === "/contact-us" ? "header-link-active" : ""
-                  }`}
-                >
-                  Contact Us
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </nav>
-        {/* <div className="d-none d-lg-flex align-items-center">
-          <div className="post-property-btn-wrapper" style={{ cursor: 'default' }}>
-            <div className="post-property-btn">
-              <span className="post-property-text">Post Your Property</span>
-              <div className="post-property-tag-wrapper">
-                <span className="post-property-pin"></span>
-                <Image 
-                  src="/icon/image 81.svg" 
-                  alt="Free tag" 
-                  width={38} 
-                  height={48} 
-                  className="post-property-tag"
-                />
-              </div>
+                    )}
+                  </div>
+                </li>
+                <li className="hasChild">
+                  <Link
+                    href="/blog"
+                    className={`text-light py-3  text-decoration-none plus-jakarta-sans-semi-bold${
+                      isBlogTypeRoute ? "header-link-active" : ""
+                    }`}
+                  >
+                    Blog
+                  </Link>
+                </li>
+                <li className="hasChild">
+                  <Link
+                    href="/career"
+                    className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold${
+                      pathname === "/career" ? "header-link-active" : ""
+                    }`}
+                  >
+                    Career
+                  </Link>
+                </li>
+                <li className="hasChild">
+                  <Link
+                    href="/contact-us"
+                    className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold${
+                      pathname === "/contact-us" ? "header-link-active" : ""
+                    }`}
+                  >
+                    Contact Us
+                  </Link>
+                </li>
+              </ul>
             </div>
+          </nav>
+          <div className="menuBtn d-flex d-lg-none " onClick={openMenu}>
+            <span id="menuLine1"></span>
+            <span id="menuLine2"></span>
+            <span id="menuLine3"></span>
           </div>
-        </div> */}
-        <div className="menuBtn d-flex d-lg-none " onClick={openMenu}>
-          <span id="menuLine1"></span>
-          <span id="menuLine2"></span>
-          <span id="menuLine3"></span>
         </div>
       </div>
-      <div 
-        className="mbMenuContainer" 
+      <div
+        className="mbMenuContainer"
         id="mbdiv"
         onClick={(e) => {
           // Close menu if clicking on the backdrop (container), not on the menu panel
@@ -633,8 +741,8 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                 priority
               />
             </Link>
-            <button 
-              className="mobile-menu-close-btn" 
+            <button
+              className="mobile-menu-close-btn"
               onClick={openMenu}
               aria-label="Close menu"
             >
@@ -647,7 +755,10 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
             {/* Mobile Projects Search */}
             <div className="mobile-projects-search">
               <div className="mobile-projects-search-input-wrapper">
-                <FontAwesomeIcon icon={faSearch} className="mobile-projects-search-icon" />
+                <FontAwesomeIcon
+                  icon={faSearch}
+                  className="mobile-projects-search-icon"
+                />
                 <input
                   type="text"
                   placeholder="Search Your Dream House"
@@ -655,7 +766,7 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                   value={projectSearchQuery}
                   onChange={(e) => setProjectSearchQuery(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
+                    if (e.key === "Enter") {
                       e.preventDefault();
                       if (projectSearchResults?.[0]) {
                         handleProjectClick(projectSearchResults[0]);
@@ -675,7 +786,11 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                   ) : projectSearchResults.length > 0 ? (
                     <ul className="mobile-projects-results-list">
                       {projectSearchResults.map((project) => (
-                        <li key={project.id || project.slugURL || project.projectName}>
+                        <li
+                          key={
+                            project.id || project.slugURL || project.projectName
+                          }
+                        >
                           <button
                             type="button"
                             className="mobile-project-result-btn"
@@ -690,7 +805,9 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                               </div>
                               {(project.cityName || project.builderName) && (
                                 <div className="mobile-project-meta">
-                                  {[project.cityName, project.builderName].filter(Boolean).join(' • ')}
+                                  {[project.cityName, project.builderName]
+                                    .filter(Boolean)
+                                    .join(" • ")}
                                 </div>
                               )}
                             </div>
@@ -700,7 +817,8 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                     </ul>
                   ) : (
                     <div className="mobile-projects-no-results">
-                      No projects found matching &quot;{projectSearchQuery}&quot;
+                      No projects found matching &quot;{projectSearchQuery}
+                      &quot;
                     </div>
                   )}
                 </div>
@@ -719,8 +837,8 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                     onClick={() => openMenuMobile("city")}
                   >
                     <span>City</span>
-                    <FontAwesomeIcon 
-                      icon={faChevronDown} 
+                    <FontAwesomeIcon
+                      icon={faChevronDown}
                       className={`mobile-dropdown-icon ${activeDropdown === "city" ? "rotate" : ""}`}
                     />
                   </Link>
@@ -755,8 +873,8 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                     onClick={() => openMenuMobile("builder")}
                   >
                     <span>Builder</span>
-                    <FontAwesomeIcon 
-                      icon={faChevronDown} 
+                    <FontAwesomeIcon
+                      icon={faChevronDown}
                       className={`mobile-dropdown-icon ${activeDropdown === "builder" ? "rotate" : ""}`}
                     />
                   </Link>
@@ -800,8 +918,8 @@ const HeaderComponent = ({ cityList, projectTypes, builderList, projectList }) =
                     onClick={() => openMenuMobile("projects")}
                   >
                     <span>Projects</span>
-                    <FontAwesomeIcon 
-                      icon={faChevronDown} 
+                    <FontAwesomeIcon
+                      icon={faChevronDown}
                       className={`mobile-dropdown-icon ${activeDropdown === "projects" ? "rotate" : ""}`}
                     />
                   </Link>

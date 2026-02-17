@@ -15,22 +15,6 @@
 }
 
 /* Laptop and big screens: align logo with container content below (slightly less shift) */
-@media (min-width: 992px) and (max-width: 1199.98px) {
-  .header .mpf-logo {
-    margin-left: max(0px, calc((100vw - 960px) / 2 * 0.65));
-  }
-}
-@media (min-width: 1200px) and (max-width: 1399.98px) {
-  .header .mpf-logo {
-    margin-left: max(0px, calc((100vw - 1140px) / 2 * 0.65));
-  }
-}
-@media (min-width: 1400px) {
-  .header .mpf-logo {
-    margin-left: max(0px, calc((100vw - 1320px) / 2 * 0.65));
-  }
-}
-
 .header.properties-header {
   background: linear-gradient(90deg, #071E13 0%, #15231C 50%, #0B613D 100%);
 }
