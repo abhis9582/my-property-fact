@@ -35,7 +35,7 @@ export default async function HeroSection({ projectTypeList, cityList }) {
       tablet: "/static/banners/saya_tablet.jpg",
       mobile: "/static/banners/new_saya_mobile.jpg",
       alt: "Saya - Relationships Forever",
-      href: "#",
+      href: "https://mypropertyfact.in/saya-gold-avenue",
     },
   ];
 
