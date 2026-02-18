@@ -11,7 +11,7 @@ export default async function HeroSection({ projectTypeList, cityList }) {
       tablet: "/static/banners/Irish_tablet.jpg",
       mobile: "/static/banners/Irish_phone.jpg",
       alt: "Irish - Laying Foundation For Tomorrow",
-      href: "#",
+      href: "https://mypropertyfact.in/irish-platinum",
     },
     {
       id: "hero-eldeco",
@@ -19,7 +19,7 @@ export default async function HeroSection({ projectTypeList, cityList }) {
       tablet: "/static/banners/eldeco_tablet.jpg",
       mobile: "/static/banners/eldeco_phone.jpg",
       alt: "Eldeco",
-      href: "#",
+      href: "https://mypropertyfact.in/eldeco-7-peaks-residences",
     },
     {
       id: "hero-ghd",
@@ -27,7 +27,7 @@ export default async function HeroSection({ projectTypeList, cityList }) {
       tablet: "/static/banners/ghd_tablet.jpg",
       mobile: "/static/banners/ghd_phone.jpg",
       alt: "GHD Group - Velvet Vista",
-      href: "#",
+      href: "https://mypropertyfact.in/ghd-velvet-vista",
     },
     {
       id: "hero-saya",
