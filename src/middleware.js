@@ -11,7 +11,9 @@ const protectedRoutes = [
 // checking session validity and extracting roles
 async function checkSession(req) {
   try {
-    const cookieHeader = req.headers.get("cookie");
+    // const cookieHeader = req.headers.get("cookie");
+    const cookieHeader = req.cookies.toString();
+
     for(const cookie of cookieHeader.split(";")) {
       const [key, value] = cookie.trim().split("=");
       if(key === "token") {
