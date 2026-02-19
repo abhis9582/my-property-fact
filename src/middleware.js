@@ -29,11 +29,14 @@ async function checkSession(req) {
       },
     });
     const data = await res.json();
-    console.log("data checkSession", data);
-    if(res.expiresAt != null && LocalDateTime.parse(res.expiresAt).isBefore(LocalDateTime.now())) {
-      return { valid: false };
-    }
     if (!res.ok) return { valid: false };
+    // Session expiry: backend sends expiresAt in response body (ISO string)
+    if (data.expiresAt) {
+      const expiresAt = new Date(data.expiresAt);
+      if (Number.isNaN(expiresAt.getTime()) || expiresAt <= new Date()) {
+        return { valid: false };
+      }
+    }
 
     console.log("data", data);
     return {
