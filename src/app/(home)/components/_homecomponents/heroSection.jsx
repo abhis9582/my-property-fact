@@ -2,8 +2,10 @@ import Image from "next/image";
 import SearchFilter from "./searchFIlter";
 import HeroBannerSlider from "./HeroBannerSlider";
 import "../home/home.css";
+
 export default async function HeroSection({ projectTypeList, cityList }) {
-  
+
+  const uiUrl = process.env.NEXT_PUBLIC_UI_URL;
   const heroSlides = [
     {
       id: "hero-irish",
@@ -11,7 +13,7 @@ export default async function HeroSection({ projectTypeList, cityList }) {
       tablet: "/static/banners/Irish_tablet.jpg",
       mobile: "/static/banners/Irish_phone.jpg",
       alt: "Irish - Laying Foundation For Tomorrow",
-      href: "https://mypropertyfact.in/irish-platinum",
+      href: `${uiUrl}/irish-platinum`,
     },
     {
       id: "hero-eldeco",
@@ -19,7 +21,7 @@ export default async function HeroSection({ projectTypeList, cityList }) {
       tablet: "/static/banners/eldeco_tablet.jpg",
       mobile: "/static/banners/eldeco_phone.jpg",
       alt: "Eldeco",
-      href: "https://mypropertyfact.in/eldeco-7-peaks-residences",
+      href: `${uiUrl}/eldeco-7-peaks-residences`,
     },
     {
       id: "hero-ghd",
@@ -27,7 +29,7 @@ export default async function HeroSection({ projectTypeList, cityList }) {
       tablet: "/static/banners/ghd_tablet.jpg",
       mobile: "/static/banners/ghd_phone.jpg",
       alt: "GHD Group - Velvet Vista",
-      href: "https://mypropertyfact.in/ghd-velvet-vista",
+      href: `${uiUrl}/ghd-velvet-vista`,
     },
     {
       id: "hero-saya",
@@ -35,7 +37,7 @@ export default async function HeroSection({ projectTypeList, cityList }) {
       tablet: "/static/banners/saya_tablet.jpg",
       mobile: "/static/banners/new_saya_mobile.jpg",
       alt: "Saya - Relationships Forever",
-      href: "https://mypropertyfact.in/saya-gold-avenue",
+      href: `${uiUrl}/saya-gold-avenue`,
     },
   ];
 
