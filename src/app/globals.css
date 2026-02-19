@@ -1,4 +1,5 @@
 /* adding font library  starts*/
+/* Fonts loaded via next/font in layout.js - these @font-face are fallbacks with swap to prevent FOIT */
 @font-face {
   font-family: "plus-jakarta";
   src: url("/fonts/plus_jakarta_sans/PlusJakartaSans-VariableFont_wght.ttf") format("truetype");

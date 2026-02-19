@@ -3,37 +3,37 @@ import SearchFilter from "./searchFIlter";
 import HeroBannerSlider from "./HeroBannerSlider";
 import "../home/home.css";
 export default async function HeroSection({ projectTypeList, cityList }) {
-  // Hero banners sliders meta data (desktop / tablet / mobile per slide)
+  
   const heroSlides = [
     {
       id: "hero-irish",
-      desktop: "/static/banners/Irish_desktop.jpg",
-      tablet: "/static/banners/Irish_tablet.jpg",
-      mobile: "/static/banners/Irish_phone.jpg",
+      desktop: "/static/banners/Irish_desktop.jpg.jpg",
+      tablet: "/static/banners/Irish_tablet.jpg.jpg",
+      mobile: "/static/banners/Irish_phone.jpg.jpg",
       alt: "Irish - Laying Foundation For Tomorrow",
       href: "https://mypropertyfact.in/irish-platinum",
     },
     {
       id: "hero-eldeco",
-      desktop: "/static/banners/new_eldeco_desktop.jpg",
-      tablet: "/static/banners/eldeco_tablet.jpg",
-      mobile: "/static/banners/eldeco_phone.jpg",
-      alt: "Eldeco",
+      desktop: "/static/banners/new_eldeco_desktop.jpg.jpg",
+      tablet: "/static/banners/eldeco_tablet.jpg.jpg",
+      mobile: "/static/banners/eldeco_phone.jpg.jpg",
+      alt: "Eldeco",  
       href: "https://mypropertyfact.in/eldeco-7-peaks-residences",
     },
     {
       id: "hero-ghd",
-      desktop: "/static/banners/ghd_laptop.jpg",
-      tablet: "/static/banners/ghd_tablet.jpg",
-      mobile: "/static/banners/ghd_phone.jpg",
+      desktop: "/static/banners/ghd_laptop.jpg.jpg",
+      tablet: "/static/banners/ghd_tablet.jpg.jpg",
+      mobile: "/static/banners/ghd_phone.jpg.jpg",
       alt: "GHD Group - Velvet Vista",
       href: "https://mypropertyfact.in/ghd-velvet-vista",
     },
     {
       id: "hero-saya",
       desktop: "/static/banners/new_saya_dekstop.jpg",
-      tablet: "/static/banners/saya_tablet.jpg",
-      mobile: "/static/banners/new_saya_mobile.jpg",
+      tablet: "/static/banners/saya_tablet.jpg.jpg",
+      mobile: "/static/banners/new_saya_mobile.jpg.jpg",
       alt: "Saya - Relationships Forever",
       href: "https://mypropertyfact.in/saya-gold-avenue",
     },

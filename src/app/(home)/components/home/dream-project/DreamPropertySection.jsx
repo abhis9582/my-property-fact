@@ -71,6 +71,17 @@ const DreamPropertySection = () => {
   // Returning the dream property section
   return (
     <section className="dream-property-section my-4 my-lg-5">
+      <div className="dream-property-section-bg" aria-hidden>
+        <Image
+          src="/dream-cities/dream_City_bg.png"
+          alt=""
+          fill
+          sizes="100vw"
+          quality={75}
+          className="object-fit-cover"
+          loading="lazy"
+        />
+      </div>
       <div className="dream-property-container">
         {/* Header Section */}
         <div className="container dream-property-header">
@@ -104,6 +115,8 @@ const DreamPropertySection = () => {
                   alt={city.alt}
                   height={90}
                   width={105}
+                  loading="lazy"
+                  sizes="(max-width: 768px) 50vw, 105px"
                 />
               </div>
               <div className="city-content">

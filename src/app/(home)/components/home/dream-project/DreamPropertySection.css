@@ -8,9 +8,16 @@
     rgba(230, 233, 242, 1) 100%
   );
   overflow: hidden;
-  background: url("/dream-cities/dream_City_bg.png") no-repeat center center;
-  background-size: cover;
-  background-position: center;
+}
+
+.dream-property-section-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.dream-property-section-bg img {
+  object-fit: cover;
 }
 
 .dream-property-section::before {

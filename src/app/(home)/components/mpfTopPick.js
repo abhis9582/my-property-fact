@@ -84,6 +84,7 @@ export default function MpfTopPicks({ topProject }) {
                       height={56}
                       className="img-fluid"
                       priority
+                      sizes="56px"
                     />
                   </div>
                   <div className="mpf-top-picks-card__builder-info">

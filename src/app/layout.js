@@ -7,7 +7,7 @@ import GoogleAnalytics from "./_global_components/googleAnalytics";
 import { ProjectProvider } from "./_global_components/contexts/projectsContext";
 import CookieConsent from "./_global_components/CookieConsent";
 import localFont from "next/font/local";
-import "@fortawesome/fontawesome-svg-core/styles.css"; 
+import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
 
@@ -15,33 +15,45 @@ config.autoAddCss = false;
 export const metadata = {
   title: "Not found",
   description: "page is not found",
+  metadataBase: new URL("https://www.mypropertyfact.in"),
 };
 
-
+// Optimized fonts: display=swap prevents FOIT, preload happens automatically via next/font
 const gothamBold = localFont({
   src: "../../public/fonts/plus_jakarta_sans/PlusJakartaSans-VariableFont_wght.ttf",
   variable: "--heaing-font",
   style: "normal",
+  display: "swap",
+  preload: true,
 });
 
 const headingPro = localFont({
   src: "../../public/fonts/plus_jakarta_sans/PlusJakartaSans-VariableFont_wght.ttf",
   variable: "--headeing-bolded",
   style: "normal",
+  display: "swap",
+  preload: false, // Same font file - avoid duplicate preload
 });
 
 const gothamLight = localFont({
   src: "../../public/fonts/montserrat/Montserrat-VariableFont_wght.ttf",
   variable: "--text-font",
   style: "normal",
+  display: "swap",
+  preload: true,
 });
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        {/* Google Tag Manager */}
-        <Script id="google-tag-manager" strategy="beforeInteractive">
+        {/* Preconnect to external origins for faster third-party loading */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://connect.facebook.net" />
+        <link rel="dns-prefetch" href="https://apis.mypropertyfact.in" />
+        {/* Google Tag Manager - afterInteractive defers until page is interactive */}
+        <Script id="google-tag-manager" strategy="afterInteractive">
           {`
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -51,21 +63,7 @@ export default function RootLayout({ children }) {
           `}
         </Script>
         {/* End Google Tag Manager */}
-        {/* Suppress React DevTools warning */}
-        <Script id="suppress-react-devtools" strategy="beforeInteractive">
-          {`
-            if (typeof window !== 'undefined') {
-              window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {
-                isDisabled: true,
-                supportsFiber: true,
-                inject: () => {},
-                onCommitFiberRoot: () => {},
-                onCommitFiberUnmount: () => {},
-              };
-            }
-          `}
-        </Script>
-        {/* Meta Pixel Script */}
+        {/* Meta Pixel Script - lazyOnload loads after everything else */}
         <Script id="facebook-pixel" strategy="lazyOnload">
           {`
             !function(f,b,e,v,n,t,s)

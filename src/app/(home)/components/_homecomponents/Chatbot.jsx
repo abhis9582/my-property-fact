@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import styles from './Chatbot.module.css';
 
 const IMAGE_BASE_URL = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties`;
@@ -162,7 +163,7 @@ export default function Chatbot() {
                 <div className={styles.header}>
                     <div className={styles.headerInfo}>
                         <div className={styles.avatar}>
-                            <img src="/logo.png" alt="MPF Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                            <Image src="/logo.png" alt="MPF Logo" width={40} height={37} sizes="40px" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                         </div>
                         <div>
                             <h3>MyPropertyFact</h3>
@@ -304,10 +305,14 @@ function ProjectSlider({ cards, onEnquire, followUp, options, onOptionClick, dis
             >
                 {cards.map((card, i) => (
                     <div key={i} className={styles.projectCard}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                             src={card.image}
                             alt={card.name}
-                            onError={(e) => e.target.src = 'https://via.placeholder.com/300x200?text=No+Image'}
+                            loading="lazy"
+                            width={300}
+                            height={200}
+                            onError={(e) => { e.target.src = 'https://via.placeholder.com/300x200?text=No+Image'; }}
                         />
                         <div className={styles.pCardContent}>
                             <h4>{card.name}</h4>

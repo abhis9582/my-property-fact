@@ -72,23 +72,43 @@ const HeroBannerSlider = ({ slides = [] }) => {
           const mobileSrc = mobile || tabletSrc;
           const navigationLink = link || href;
 
+          // Use Next/Image per breakpoint so Next.js can optimize (WebP, correct sizes)
           const imageContent = (
-            <picture className="position-relative home-banner">
-              <source srcSet={mobileSrc} media="(max-width: 767px)" />
-              <source srcSet={tabletSrc} media="(max-width: 1023px)" />
-              <source srcSet={desktopSrc} media="(min-width: 1024px)" />
+            <div className="position-relative home-banner hero-banner-responsive-images">
+              <Image
+                src={mobileSrc}
+                alt={alt}
+                width={768}
+                height={height}
+                className="img-fluid w-100 d-md-none"
+                priority={priority}
+                fetchPriority={priority ? "high" : "auto"}
+                quality={75}
+                sizes="100vw"
+              />
+              <Image
+                src={tabletSrc}
+                alt={alt}
+                width={1024}
+                height={height}
+                className="img-fluid w-100 d-none d-md-block d-lg-none"
+                priority={priority}
+                fetchPriority={priority ? "high" : "auto"}
+                quality={75}
+                sizes="100vw"
+              />
               <Image
                 src={desktopSrc}
                 alt={alt}
                 width={1920}
                 height={height}
-                className="img-fluid w-100"
-                priority
+                className="img-fluid w-100 d-none d-lg-block"
+                priority={priority}
                 fetchPriority={priority ? "high" : "auto"}
-                quality={80}
-                sizes="(max-width: 767px) 100vw, (max-width: 1023px) 100vw, 1920px"
+                quality={75}
+                sizes="100vw"
               />
-            </picture>
+            </div>
           );
 
           return (

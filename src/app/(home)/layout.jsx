@@ -1,9 +1,7 @@
 import "../globals.css";
 import NewFooterDesign from "./components/footer/NewFooterDesign";
-import Footer from "./components/footer/page";
 import Header from "./components/header/header";
-import Chatbot from "./components/_homecomponents/Chatbot";
-import ScrollToTop from "./components/_homecomponents/ScrollToTop";
+import LazyBelowFold from "./components/_homecomponents/LazyBelowFold";
 import { fetchCityData } from "@/app/_global_components/masterFunction";
 
 export const metadata = {
@@ -36,10 +34,8 @@ export default async function RootLayout({ children, params }) {
       {children}
       {/* footer for user side  */}
       <NewFooterDesign cityList={cityList} />
-      {/* Scroll to top button */}
-      <ScrollToTop />
-      {/* Chatbot component for all pages  */}
-      <Chatbot />
+      {/* Scroll to top + Chatbot (lazy loaded, client-only) */}
+      <LazyBelowFold />
     </>
   );
 }

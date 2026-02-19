@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import NewsViews from "./new-views/page";
 import SocialFeedPage from "./social-feed/page";
 import TopPicksWithRotation from "../TopPicksWithRotation";
@@ -11,11 +12,24 @@ import {
   fetchBuilderData,
 } from "@/app/_global_components/masterFunction";
 import NewInsight from "../_homecomponents/NewInsight";
-import DreamPropertySection from "./dream-project/DreamPropertySection";
 import NewMpfMetaDataContainer from "../_homecomponents/NewMpfMetaDataContainer";
-import SocialFeedsOfMPF from "../_homecomponents/SocialFeedsOfMPF";
-import PopularCitiesSection from "./popular-cities/PopularCitiesSection";
-import NoidaProjectsSection from "./noida-projects/NoidaProjectsSection";
+// Lazy load below-the-fold sections to improve LCP and FCP
+const DreamPropertySection = dynamic(
+  () => import("./dream-project/DreamPropertySection"),
+  { loading: () => <section className="dream-property-section my-4 my-lg-5 min-h-[200px]" aria-busy="true" /> }
+);
+const SocialFeedsOfMPF = dynamic(
+  () => import("../_homecomponents/SocialFeedsOfMPF"),
+  { loading: () => <div className="py-4" /> }
+);
+const PopularCitiesSection = dynamic(
+  () => import("./popular-cities/PopularCitiesSection"),
+  { loading: () => <div className="py-4" /> }
+);
+const NoidaProjectsSection = dynamic(
+  () => import("./noida-projects/NoidaProjectsSection"),
+  { loading: () => <div className="py-4" /> }
+);
 // import NoidaProjectsSection from "./noida-projects/NoidaProjectsSection";
 
 export default async function HomePage() {
