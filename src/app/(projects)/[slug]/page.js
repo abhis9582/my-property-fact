@@ -81,7 +81,7 @@ export default async function PropertyPage({ params, searchParams }) {
     return (
       <>
         <Property projectDetail={projectDetail} />
-        <div className="container-fluid mb-3">
+        <div className="container-fluid mb-5">
           {similarProject.length > 0 && <h2 className="text-center mb-4 fw-bold">Similar Projects</h2> }
           <FeaturedPage
             title="Similar Projects"
@@ -91,7 +91,7 @@ export default async function PropertyPage({ params, searchParams }) {
           />
         </div>
         {/* <Footer cityList={cityList} projectTypes={projectTypesList} /> */}
-        <NewFooterDesign cityList={cityList} />
+        <NewFooterDesign cityList={cityList} compactTop={true} />
       </>
     );
   } else {

@@ -14,7 +14,7 @@ import { faArrowUp, faChevronDown, faChevronUp } from "@fortawesome/free-solid-s
 import PrivacyPolicyModal from "../privacy-policy/PrivacyPolicyModal";
 import "./newfooter.css";
 
-export default function NewFooterDesign({ cityList = [] }) {
+export default function NewFooterDesign({ cityList = [], compactTop = false }) {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [visibleCount, setVisibleCount] = useState({
@@ -169,7 +169,7 @@ export default function NewFooterDesign({ cityList = [] }) {
   };
 
   return (
-    <div className="new-footer-design-container-fluid">
+    <div className={`new-footer-design-container-fluid${compactTop ? " compact-top" : ""}`}>
       <div className="new-design-container">
         {/* Top Section */}
         <div className="new-design-footer-top">
@@ -182,6 +182,7 @@ export default function NewFooterDesign({ cityList = [] }) {
                   alt="MPF Logo"
                   width={113}
                   height={103}
+                  sizes="113px"
                 />
               </div>
               <p className="company-description">

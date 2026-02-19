@@ -207,13 +207,15 @@ export default function Featured({
       {type === "Similar" && (
         <>
           <div className="container">
-            <Slider {...settings}>
-              {filteredProjects.map((item) => (
-                <div key={item.id} className="px-2 pb-3">
-                  <PropertyContainer data={item} />
-                </div>
-              ))}
-            </Slider>
+            <div className="featured-page-slider">
+              <Slider {...settings}>
+                {filteredProjects.map((item) => (
+                  <div key={item.id} className="px-2 pb-3">
+                    <PropertyContainer data={item} />
+                  </div>
+                ))}
+              </Slider>
+            </div>
           </div>
         </>
       )}

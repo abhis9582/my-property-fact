@@ -362,6 +362,7 @@ const HeaderComponent = ({
                 height={74}
                 width={80}
                 priority
+              
               />
             </Link>
           </div>
