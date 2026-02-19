@@ -68,6 +68,10 @@ export default function ManageProjects({
   const [formData, setFormData] = useState(initialFormData);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [uploadExcelFile, setUploadExcelFile] = useState(null);
+  const [uploadZipFile, setUploadZipFile] = useState(null);
+  const [uploadLoading, setUploadLoading] = useState(false);
 
   const handleCountryChange = (e) => {
     const countryId = parseInt(e.target.value);
@@ -101,11 +105,12 @@ export default function ManageProjects({
     setStates([]);
   };
 
-  //Handling opening of edit model
-  const openEditModel = (item) => {
-    setTitle("Edit Project Details");
-    setShowModal(true);
-    setButtonName("Update Project");
+  // Fetching project details
+  const fetchProjectDetails = async (slugURL) => {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}projects/get/${slugURL}`,
+    );
+    const item = response.data;
     // Dynamically update the form data with the values from the item
     setFormData({
       ...initialFormData, // You can retain the initial values if needed
@@ -121,6 +126,15 @@ export default function ManageProjects({
     setStates(country ? country?.stateList : []);
     const state = country?.stateList?.find((s) => s.id === item.stateId);
     setCities(state ? state.cityList : []);
+    return response.data;
+  };
+
+  //Handling opening of edit model
+  const openEditModel = async (item) => {
+    await fetchProjectDetails(item.slugURL);
+    setTitle("Edit Project Details");
+    setShowModal(true);
+    setButtonName("Update Project");
   };
 
   //Opening delete confirmation box
@@ -643,43 +657,59 @@ export default function ManageProjects({
     const buffer = await workbook.xlsx.writeBuffer();
     saveAs(new Blob([buffer]), fileName);
   };
-  // Handling upload projects (Excel with optional embedded images)
-  const handleUploadProjects = async () => {
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-    fileInput.accept = ".xlsx,.xls";
-    fileInput.style.display = "none";
-    fileInput.onchange = async (event) => {
-      const file = event.target.files?.[0];
-      if (!file) return;
+  const openUploadModal = () => {
+    setShowUploadModal(true);
+    setUploadExcelFile(null);
+    setUploadZipFile(null);
+  };
+
+  const closeUploadModal = () => {
+    setShowUploadModal(false);
+    setUploadExcelFile(null);
+    setUploadZipFile(null);
+  };
+
+  const handleUploadProjectsSubmit = async (e) => {
+    e?.preventDefault();
+    if (!uploadExcelFile || !uploadZipFile) {
+      toast.error("Please select an Excel file (.xlsx or .xls)");
+      return;
+    }
+    if (uploadZipFile.type !== "application/zip") {
+      toast.error("Please select a zip file");
+      return;
+    }
+    if(uploadExcelFile && uploadZipFile) setUploadLoading(true);
+    try {
       const formData = new FormData();
-      formData.append("file", file);
-      try {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}excel-upload/projects`,
-          formData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-            withCredentials: true,
-          },
-        );
-        if (response.data?.isSuccess === 1) {
-          toast.success(response.data.message ?? "Projects uploaded successfully");
-          router.refresh();
-        } else {
-          toast.error(response.data?.message ?? "Upload failed");
-        }
-      } catch (error) {
-        const message =
-          error.response?.data?.message ?? error.message ?? "Upload failed";
-        toast.error(message);
-      } finally {
-        fileInput.value = "";
-        if (fileInput.parentNode) fileInput.parentNode.removeChild(fileInput);
+      formData.append("file", uploadExcelFile);
+      if (uploadZipFile) {
+        formData.append("imagesZip", uploadZipFile);
       }
-    };
-    document.body.appendChild(fileInput);
-    fileInput.click();
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}excel-upload/projects`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          withCredentials: true,
+        },
+      );
+      if (response.data?.isSuccess === 1) {
+        toast.success(
+          response.data.message ?? "Projects uploaded successfully",
+        );
+        closeUploadModal();
+        router.refresh();
+      } else {
+        toast.error(response.data?.message ?? "Upload failed");
+      }
+    } catch (error) {
+      const message =
+        error.response?.data?.message ?? error.message ?? "Upload failed";
+      toast.error(message);
+    } finally {
+      setUploadLoading(false);
+    }
   };
 
   return (
@@ -691,7 +721,7 @@ export default function ManageProjects({
         exportExcel={"Export to excel"}
         exportFunction={exportAllProjectToExcel}
       />
-      <Button className="btn btn-success mb-3" onClick={handleUploadProjects}>
+      <Button className="btn btn-success mb-3" onClick={openUploadModal}>
         Upload Projects
       </Button>
       <div className="table-container">
@@ -808,6 +838,67 @@ export default function ManageProjects({
               Cancel
             </Button>
             {/* </Row> */}
+          </Form>
+        </Modal.Body>
+      </Modal>
+      {/* Upload Projects Modal (Excel + optional Zip) */}
+      <Modal show={showUploadModal} onHide={closeUploadModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Upload Projects</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleUploadProjectsSubmit}>
+            <Form.Group className="mb-3" controlId="uploadExcel">
+              <Form.Label className="fw-bold">
+                Excel file <span className="text-danger">*</span>
+              </Form.Label>
+              <Form.Control
+                type="file"
+                accept=".xlsx,.xls"
+                onChange={(e) =>
+                  setUploadExcelFile(e.target.files?.[0] ?? null)
+                }
+                required
+              />
+              <Form.Text className="text-muted">
+                .xlsx or .xls with project data
+              </Form.Text>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="uploadZip">
+              <Form.Label className="fw-bold">Images zip</Form.Label>
+              <Form.Control
+                type="file"
+                accept=".zip"
+                onChange={(e) => setUploadZipFile(e.target.files?.[0] ?? null)}
+                required
+              />
+              <Form.Text className="text-muted">
+                .zip with images named like
+                ProjectName_ImageType_My-Property-Fact
+              </Form.Text>
+            </Form.Group>
+            <div className="d-flex gap-2 justify-content-end">
+              <Button
+                variant="secondary"
+                onClick={closeUploadModal}
+                disabled={uploadLoading}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="success"
+                type="submit"
+                disabled={uploadLoading || !uploadExcelFile || !uploadZipFile}
+              >
+                {uploadLoading ? (
+                  <>
+                    <LoadingSpinner show={true} /> Uploading…
+                  </>
+                ) : (
+                  "Upload"
+                )}
+              </Button>
+            </div>
           </Form>
         </Modal.Body>
       </Modal>

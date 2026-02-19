@@ -14,25 +14,11 @@ const fetchAllFloorPlans = async () => {
   return list;
 };
 
-//Fetching all projects list from api
-const fetchProjects = async () => {
-  const projectResponse = await fetchAllProjects();
-
-  const sortedProjects = projectResponse.data.sort((a, b) => {
-    const nameA = a.projectName?.toLowerCase();
-    const nameB = b.projectName?.toLowerCase();
-
-    if (nameA < nameB) return -1;
-    if (nameA > nameB) return 1;
-    return 0;
-  });  
-  return sortedProjects;
-};
 
 export default async function ManageFloorPlansPage() {
   const [list, projectList] = await Promise.all([
     fetchAllFloorPlans(),
-    fetchProjects()
+    fetchAllProjects()
   ]);
   return <ManageFloorPlans list={list} projectsList={projectList} />
 }
