@@ -197,12 +197,12 @@ export default function NewFooterDesign({ cityList = [], compactTop = false }) {
                 </span>
               </div>
               <div className="contact-item-row">
-                <div className="contact-item">
-                  <span className="contact-label">PHONE:</span>
-                  <span className="contact-value">+91 8920024793</span>
+                <div className="contact-item-phone">
+                  <span className="contact-label">PHONE: </span>
+                  <span className="contact-value"> +91 8920024793</span>
                 </div>
-                <div className="contact-item">
-                  <span className="contact-label">EMAIL:</span>
+                <div className="contact-item-phone">
+                  <span className="contact-label">EMAIL: </span>
                   <span className="contact-value">
                     social@mypropertyfact.com
                   </span>

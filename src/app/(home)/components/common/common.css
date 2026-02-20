@@ -88,6 +88,7 @@
 
 .project-image-container img {
   transition: transform 0.5s ease;
+  height: 230px !important;
 }
 
 .project-container:hover .project-image-container img {
