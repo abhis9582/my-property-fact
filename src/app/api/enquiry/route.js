@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://apis.mypropertyfact.in';
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function POST(request) {
     try {
