@@ -21,7 +21,6 @@ import {
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { Spinner } from "react-bootstrap";
-import { Pagination, Stack } from "@mui/material";
 import axios from "axios";
 import "./properties.css";
 
@@ -71,8 +70,6 @@ export default function Properties() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 2;
 
   // Toggle mobile filter modal
   const toggleMobileFilter = () => {
@@ -619,19 +616,6 @@ export default function Properties() {
     sortBy,
     enhancedProperties,
   ]);
-
-  const totalPages = useMemo(() => Math.ceil(filteredAndSortedProperties.length / pageSize) || 1, [filteredAndSortedProperties]);
-  const paginatedProperties = useMemo(() => {
-    const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    return filteredAndSortedProperties.slice(startIndex, endIndex);
-  }, [filteredAndSortedProperties, currentPage]);
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(1);
-    }
-  }, [filteredAndSortedProperties]);
 
   // Compute applied filters for display
   const appliedFilters = useMemo(() => {
@@ -1841,7 +1825,7 @@ export default function Properties() {
                     </button>
                   </div>
                 ) : (
-                  paginatedProperties.map((property) => (
+                  filteredAndSortedProperties.map((property) => (
                   <div 
                     key={property.id} 
                     className="new-property-card"
@@ -2024,26 +2008,6 @@ export default function Properties() {
                   ))
                 )}
               </div>
-              {filteredAndSortedProperties.length > pageSize && (
-                <div className="d-flex justify-content-center align-items-center my-5 container">
-                  <Stack spacing={2}>
-                    <Pagination
-                      count={totalPages}
-                      page={currentPage}
-                      variant="outlined"
-                      shape="rounded"
-                      boundaryCount={1}
-                      siblingCount={1}
-                      className="blog-pagination"
-                      onChange={(event, value) => {
-                        event.preventDefault();
-                        setCurrentPage(value);
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }}
-                    />
-                  </Stack>
-                </div>
-              )}
             </div>
           </div>
         </div>

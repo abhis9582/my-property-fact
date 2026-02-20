@@ -51,7 +51,7 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://connect.facebook.net" />
-        <link rel="dns-prefetch" href="https://apis.mypropertyfact.in" />
+        {/* <link rel="dns-prefetch" href="https://apis.mypropertyfact.in" /> */}
         {/* Google Tag Manager - afterInteractive defers until page is interactive */}
         <Script id="google-tag-manager" strategy="afterInteractive">
           {`

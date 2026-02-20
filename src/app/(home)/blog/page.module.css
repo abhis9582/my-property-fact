@@ -18,6 +18,25 @@
   margin-right: auto;
 }
 
+/* 1024px: tablet/laptop - single column feel, reduced gutters */
+@media (max-width: 1024px) {
+  .blogSectionWrap {
+    max-width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .blogSectionWrap .blogContentRow,
+  .blogContentRow {
+    --bs-gutter-x: 1.5rem;
+  }
+  .blogSidebarCol {
+    padding-left: 0.5rem !important;
+  }
+  .blogRightSticky {
+    top: 90px;
+  }
+}
+
 /* On mobile/tablet: contain horizontal overflow (sidebar not sticky here anyway) */
 @media (max-width: 991px) {
   .blogSectionWrap {
@@ -288,6 +307,13 @@
 
 .clear-search-icon:active {
   transform: scale(0.95);
+}
+
+@media (max-width: 1024px) {
+  .blog-mobile-sidebar-wrap {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
 
 @media (max-width: 768px) {

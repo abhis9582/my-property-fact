@@ -413,7 +413,7 @@
 
 .city-dropdown-content {
   display: flex;
-  gap: 56px;
+  gap: 28px;
   align-items: flex-start;
   position: relative;
   padding-bottom: 60px;
@@ -423,7 +423,7 @@
 
 .projects-dropdown .city-dropdown-content {
   align-items: flex-start;
-  gap: 64px;
+  gap: 28px;
   flex-direction: row;
 }
 
@@ -534,11 +534,11 @@
 
 .city-dropdown .city-dropdown-right {
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px 30px;
+  gap: 5px 26px;
   max-height: 300px;
   overflow-y: auto;
   overflow-x: visible;
-  padding: 8px 16px 8px 0;
+  padding: 0 0 8px 0;
   align-content: start;
   width: 100%;
   max-width: 100%;
@@ -569,12 +569,12 @@
 }
 
 .builder-dropdown .city-dropdown-right {
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px 30px;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 5px 26px;
   max-height: 300px;
   overflow-y: auto;
   overflow-x: visible;
-  padding: 8px 16px 8px 0;
+  padding: 0 0 8px 0;
   align-content: start;
   width: 100%;
   max-width: 100%;
@@ -597,9 +597,11 @@
   text-align: left;
   display: block;
   width: 100%;
-  max-width: none;
-  white-space: normal;
-  word-break: break-word;
+  max-width: 100%;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transition: color 0.3s ease;
   text-transform: capitalize !important;
 }

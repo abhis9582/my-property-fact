@@ -22,6 +22,11 @@ import {
   faRocket,
   faVolumeMute,
   faCircleInfo,
+  faSearchPlus,
+  faSearchMinus,
+  faChevronLeft,
+  faChevronRight,
+  faExpand,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   Spinner,
@@ -49,6 +54,9 @@ export default function PropertyDetailPage() {
   const [relatedProperties, setRelatedProperties] = useState([]);
   const [imageIndex, setImageIndex] = useState(0);
   const [mediaTab, setMediaTab] = useState("Property");
+  const [showImageLightbox, setShowImageLightbox] = useState(false);
+  const [lightboxImageIndex, setLightboxImageIndex] = useState(0);
+  const [lightboxZoom, setLightboxZoom] = useState(1);
   const [showPriceDetails, setShowPriceDetails] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
   const [contactForm, setContactForm] = useState({
@@ -802,39 +810,63 @@ export default function PropertyDetailPage() {
                 </button>
               </div>
 
-              {/* Media Content */}
-              <div className="media-content">
+              {/* Media Content - images like before; hover shows "Click to view", click opens modal */}
+              <div className="media-content property-media-content-with-hover">
                 {mediaTab === "Property" && allImageUrls.length > 0 ? (
-                  <Swiper
-                    modules={[Navigation, Pagination, Zoom]}
-                    spaceBetween={0}
-                    slidesPerView={1}
-                    navigation={allImageUrls.length > 1}
-                    pagination={{
-                      clickable: true,
-                      type: "fraction",
-                    }}
-                    zoom={true}
-                    className="main-property-swiper"
-                    onSlideChange={(swiper) =>
-                      setImageIndex(swiper.activeIndex)
-                    }
-                  >
-                    {allImageUrls.map((imageUrl, index) => (
-                      <SwiperSlide key={index}>
-                        <div className="swiper-zoom-container">
-                          <Image
-                            src={imageUrl}
-                            alt={`${property.title || "Property"} - Image ${index + 1}`}
-                            fill
-                            className="property-main-image"
-                            style={{ objectFit: "cover" }}
-                            unoptimized
-                          />
-                        </div>
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
+                  <>
+                    <Swiper
+                      modules={[Navigation, Pagination, Zoom]}
+                      spaceBetween={0}
+                      slidesPerView={1}
+                      navigation={allImageUrls.length > 1}
+                      pagination={{
+                        clickable: true,
+                        type: "fraction",
+                      }}
+                      zoom={true}
+                      className="main-property-swiper"
+                      onSlideChange={(swiper) =>
+                        setImageIndex(swiper.activeIndex)
+                      }
+                    >
+                      {allImageUrls.map((imageUrl, index) => (
+                        <SwiperSlide key={index}>
+                          <div
+                            className="swiper-zoom-container property-image-click-to-open"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setLightboxImageIndex(index);
+                              setLightboxZoom(1);
+                              setShowImageLightbox(true);
+                            }}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                setLightboxImageIndex(index);
+                                setLightboxZoom(1);
+                                setShowImageLightbox(true);
+                              }
+                            }}
+                            title="Click to view full size with zoom"
+                          >
+                            <Image
+                              src={imageUrl}
+                              alt={`${property.title || "Property"} - Image ${index + 1}`}
+                              fill
+                              className="property-main-image"
+                              style={{ objectFit: "cover" }}
+                              unoptimized
+                            />
+                          </div>
+                        </SwiperSlide>
+                      ))}
+                    </Swiper>
+                    <div className="property-image-hover-hint" aria-hidden>
+                      Click to view
+                    </div>
+                  </>
                 ) : mediaTab === "Videos" ? (
                   <div className="video-placeholder">
                     <div className="placeholder-content">
@@ -858,205 +890,129 @@ export default function PropertyDetailPage() {
             </div>
           </div>
 
-          {/* Right Panel - Property Details (60%) */}
+          {/* Right Panel - Property Details (60%) - Redesigned */}
           <div className="col-lg-7 col-md-12">
-            <div className="property-details-hero">
-              <h3 className="details-hero-title">Property Details</h3>
+            <div className="property-details-hero-v2">
+              <h3 className="details-hero-title-v2">Property Details</h3>
 
-              {/* Price Section - Highlighted */}
-              <div className="card shadow-sm p-3 p-md-4 price-highlight-section">
-                <div className="row g-3 align-items-center">
-                  {/* -------- LEFT: PRICE SECTION -------- */}
-                  <div className="col-md-5">
-                    <div className="mb-2">
-                      <small className="text-muted">Price</small>
-                      <h4 className="fw-bold text-primary mb-1">
-                        {formatPrice(property.totalPrice)}
-                        {property.totalPrice &&
-                          property.totalPrice >= 10000000 &&
-                          "+"}
-                      </h4>
-
-                      {property.pricePerSqft && (
-                        <p className="mb-0 text-secondary">
-                          {formatPricePerSqft(property.pricePerSqft, true)} per
-                          sq.m.
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* -------- RIGHT: DETAILS SECTION -------- */}
-                  <div className="col-md-7">
-                    <div className="d-flex flex-column gap-2">
-                      {/* Row 1: Area + Configuration */}
-                      <div className="row g-2">
-                        <div className="col-md-6">
-                          <div className="border rounded p-2 bg-light h-100">
-                            <strong>Area</strong>
-                            <div>
-                              {property.plotArea
-                                ? `Plot area ${formatArea(property.plotArea, true)}`
-                                : property.superBuiltUpArea
-                                  ? `Super Built up area ${formatArea(property.superBuiltUpArea, true)}`
-                                  : property.builtUpArea
-                                    ? `Built up area ${formatArea(property.builtUpArea, true)}`
-                                    : property.carpetArea
-                                      ? `Carpet area ${formatArea(property.carpetArea, true)}`
-                                      : "Area not specified"}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="col-md-6">
-                          <div className="border rounded p-2 bg-light h-100">
-                            <strong>Configuration</strong>
-                            <div>
-                              {property.bedrooms || 0} Bedrooms,{" "}
-                              {property.bathrooms || 0} Bathrooms,{" "}
-                              {property.balconies || 0} Balcony
-                              {property.studyRoom && ", Study Room"}
-                              {property.storeRoom && ", Store Room"}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Row 2: Floor + Facing */}
-                      <div className="row g-2">
-                        {property.floorNumber && (
-                          <div className="col-md-6">
-                            <div className="border rounded p-2 bg-light">
-                              <strong>Floor</strong>
-                              <div>
-                                {property.floorNumber}
-                                {property.totalFloors
-                                  ? ` of ${property.totalFloors}`
-                                  : ""}
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        {property.facing && (
-                          <div className="col-md-6">
-                            <div className="border rounded p-2 bg-light">
-                              <strong>Facing</strong>
-                              <div>{property.facing}</div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+              {/* Price block - prominent */}
+              <div className="pd-price-block">
+                <div className="pd-price-label">Price</div>
+                <div className="pd-price-amount">
+                  {formatPrice(property.totalPrice)}
+                  {property.totalPrice && property.totalPrice >= 10000000 && "+"}
                 </div>
+                {property.pricePerSqft && (
+                  <div className="pd-price-per-sqft">
+                    {formatPricePerSqft(property.pricePerSqft, true)} per sq.m.
+                  </div>
+                )}
               </div>
 
-              {/* Compact Details Table */}
-              <div className="details-table-container">
-                <table className="details-table">
-                  <tbody>
-                    {/* Parking */}
-                    {property.parking && (
-                      <tr>
-                        <td className="detail-label-cell">
-                          <FontAwesomeIcon
-                            icon={faBuilding}
-                            className="detail-table-icon"
-                          />
-                          <span>Parking</span>
-                        </td>
-                        <td className="detail-value-cell">
-                          {property.parking}
-                        </td>
-                      </tr>
-                    )}
+              {/* Key specs grid */}
+              <div className="pd-specs-grid">
+                <div className="pd-spec-card">
+                  <span className="pd-spec-label">Area</span>
+                  <span className="pd-spec-value">
+                    {property.plotArea
+                      ? `Plot ${formatArea(property.plotArea, true)}`
+                      : property.superBuiltUpArea
+                        ? formatArea(property.superBuiltUpArea, true)
+                        : property.builtUpArea
+                          ? formatArea(property.builtUpArea, true)
+                          : property.carpetArea
+                            ? formatArea(property.carpetArea, true)
+                            : "—"}
+                  </span>
+                </div>
+                <div className="pd-spec-card">
+                  <span className="pd-spec-label">Configuration</span>
+                  <span className="pd-spec-value">
+                    {property.bedrooms || 0} Beds · {property.bathrooms || 0} Bath
+                    {property.balconies ? ` · ${property.balconies} Balcony` : ""}
+                  </span>
+                </div>
+                {(property.floorNumber || property.totalFloors) && (
+                  <div className="pd-spec-card">
+                    <span className="pd-spec-label">Floor</span>
+                    <span className="pd-spec-value">
+                      {property.floorNumber || "—"}
+                      {property.totalFloors ? ` of ${property.totalFloors}` : ""}
+                    </span>
+                  </div>
+                )}
+                {property.facing && (
+                  <div className="pd-spec-card">
+                    <span className="pd-spec-label">Facing</span>
+                    <span className="pd-spec-value">{property.facing}</span>
+                  </div>
+                )}
+              </div>
 
-                    {/* Property Status */}
-                    {property.status && (
-                      <tr>
-                        <td className="detail-label-cell">
-                          <FontAwesomeIcon
-                            icon={faBirthdayCake}
-                            className="detail-table-icon"
-                          />
-                          <span>Property Status</span>
-                        </td>
-                        <td className="detail-value-cell">
-                          {property.ageOfConstruction !== null &&
-                          property.ageOfConstruction !== undefined
-                            ? `${property.ageOfConstruction} to ${property.ageOfConstruction + 1} Year Old`
-                            : property.status}
-                        </td>
-                      </tr>
-                    )}
-
-                    {/* Possession */}
-                    {property.possession && (
-                      <tr>
-                        <td className="detail-label-cell">
-                          <FontAwesomeIcon
-                            icon={faHome}
-                            className="detail-table-icon"
-                          />
-                          <span>Possession</span>
-                        </td>
-                        <td className="detail-value-cell">
-                          {property.possession}
-                        </td>
-                      </tr>
-                    )}
-
-                    {/* Occupancy */}
-                    {property.occupancy && (
-                      <tr>
-                        <td className="detail-label-cell">
-                          <FontAwesomeIcon
-                            icon={faHome}
-                            className="detail-table-icon"
-                          />
-                          <span>Occupancy</span>
-                        </td>
-                        <td className="detail-value-cell">
-                          {property.occupancy}
-                        </td>
-                      </tr>
-                    )}
-
-                    {/* Transaction Type */}
-                    {property.transaction && (
-                      <tr>
-                        <td className="detail-label-cell">
-                          <FontAwesomeIcon
-                            icon={faRocket}
-                            className="detail-table-icon"
-                          />
-                          <span>Transaction Type</span>
-                        </td>
-                        <td className="detail-value-cell">
-                          {property.transaction}
-                        </td>
-                      </tr>
-                    )}
-
-                    {/* Listing Type */}
-                    {property.listingType && (
-                      <tr>
-                        <td className="detail-label-cell">
-                          <FontAwesomeIcon
-                            icon={faBuilding}
-                            className="detail-table-icon"
-                          />
-                          <span>Property Type</span>
-                        </td>
-                        <td className="detail-value-cell">
-                          {property.listingType}{" "}
-                          {property.subType ? `- ${property.subType}` : ""}
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+              {/* More details list */}
+              <div className="pd-more-details">
+                {property.parking && (
+                  <div className="pd-detail-row">
+                    <span className="pd-detail-label">
+                      <FontAwesomeIcon icon={faBuilding} className="pd-detail-icon" />
+                      Parking
+                    </span>
+                    <span className="pd-detail-value">{property.parking}</span>
+                  </div>
+                )}
+                {property.status && (
+                  <div className="pd-detail-row">
+                    <span className="pd-detail-label">
+                      <FontAwesomeIcon icon={faBirthdayCake} className="pd-detail-icon" />
+                      Property Status
+                    </span>
+                    <span className="pd-detail-value">
+                      {property.ageOfConstruction !== null &&
+                      property.ageOfConstruction !== undefined
+                        ? `${property.ageOfConstruction} to ${property.ageOfConstruction + 1} Year Old`
+                        : property.status}
+                    </span>
+                  </div>
+                )}
+                {property.possession && (
+                  <div className="pd-detail-row">
+                    <span className="pd-detail-label">
+                      <FontAwesomeIcon icon={faHome} className="pd-detail-icon" />
+                      Possession
+                    </span>
+                    <span className="pd-detail-value">{property.possession}</span>
+                  </div>
+                )}
+                {property.occupancy && (
+                  <div className="pd-detail-row">
+                    <span className="pd-detail-label">
+                      <FontAwesomeIcon icon={faHome} className="pd-detail-icon" />
+                      Occupancy
+                    </span>
+                    <span className="pd-detail-value">{property.occupancy}</span>
+                  </div>
+                )}
+                {property.transaction && (
+                  <div className="pd-detail-row">
+                    <span className="pd-detail-label">
+                      <FontAwesomeIcon icon={faRocket} className="pd-detail-icon" />
+                      Transaction Type
+                    </span>
+                    <span className="pd-detail-value">{property.transaction}</span>
+                  </div>
+                )}
+                {property.listingType && (
+                  <div className="pd-detail-row">
+                    <span className="pd-detail-label">
+                      <FontAwesomeIcon icon={faBuilding} className="pd-detail-icon" />
+                      Property Type
+                    </span>
+                    <span className="pd-detail-value">
+                      {property.listingType}
+                      {property.subType ? ` · ${property.subType}` : ""}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -1663,7 +1619,7 @@ export default function PropertyDetailPage() {
               </div>
             </div>
 
-            {/* Owner Properties Section - Recommendation */}
+            {/* Owner Properties Section - Recommendation (Slider) */}
             {relatedProperties.length > 0 && (
               <div
                 id="recommendation-section"
@@ -1674,66 +1630,103 @@ export default function PropertyDetailPage() {
                     Owner Properties Available Only on MPF
                   </h4>
                 </div>
-                <div className="owner-properties-grid">
-                  {relatedProperties.map((related) => {
-                    const relatedImageUrl =
-                      related.imageUrls && related.imageUrls.length > 0
-                        ? getImageUrl(related.imageUrls[0])
-                        : null;
-                    const relatedSlug = related.title
-                      ? related.title
-                          .toLowerCase()
-                          .replace(/[^a-z0-9]+/g, "-")
-                          .replace(/(^-|-$)/g, "") +
-                        "-" +
-                        related.id
-                      : related.id.toString();
-                    return (
-                      <Link
-                        key={related.id}
-                        href={`/properties/${relatedSlug}`}
-                        className="owner-property-card"
-                      >
-                        <div className="owner-property-image">
-                          {relatedImageUrl ? (
-                            <Image
-                              src={relatedImageUrl}
-                              alt={related.title || "Property"}
-                              fill
-                              style={{ objectFit: "cover" }}
-                              unoptimized
-                            />
-                          ) : (
-                            <div className="placeholder-image-small">
-                              No Image
+                <div className="owner-properties-slider-wrap">
+                  <Swiper
+                    modules={[Navigation, Pagination]}
+                    spaceBetween={24}
+                    slidesPerView={1}
+                    breakpoints={{
+                      576: { slidesPerView: 2 },
+                      768: { slidesPerView: 2 },
+                      992: { slidesPerView: 3 },
+                      1200: { slidesPerView: 3 },
+                    }}
+                    navigation={{
+                      prevEl: ".owner-properties-slider-prev",
+                      nextEl: ".owner-properties-slider-next",
+                    }}
+                    pagination={{
+                      clickable: true,
+                      dynamicBullets: true,
+                    }}
+                    className="owner-properties-swiper"
+                    loop={relatedProperties.length >= 4}
+                  >
+                    {relatedProperties.map((related) => {
+                      const relatedImageUrl =
+                        related.imageUrls && related.imageUrls.length > 0
+                          ? getImageUrl(related.imageUrls[0])
+                          : null;
+                      const relatedSlug = related.title
+                        ? related.title
+                            .toLowerCase()
+                            .replace(/[^a-z0-9]+/g, "-")
+                            .replace(/(^-|-$)/g, "") +
+                          "-" +
+                          related.id
+                        : related.id.toString();
+                      return (
+                        <SwiperSlide key={related.id}>
+                          <Link
+                            href={`/properties/${relatedSlug}`}
+                            className="owner-property-card"
+                          >
+                            <div className="owner-property-image">
+                              {relatedImageUrl ? (
+                                <Image
+                                  src={relatedImageUrl}
+                                  alt={related.title || "Property"}
+                                  fill
+                                  style={{ objectFit: "cover" }}
+                                  unoptimized
+                                />
+                              ) : (
+                                <div className="placeholder-image-small">
+                                  No Image
+                                </div>
+                              )}
+                              {related.imageUrls &&
+                                related.imageUrls.length > 0 && (
+                                  <div className="image-count-badge">
+                                    {related.imageUrls.length}+ Photos
+                                  </div>
+                                )}
                             </div>
-                          )}
-                          {related.imageUrls &&
-                            related.imageUrls.length > 0 && (
-                              <div className="image-count-badge">
-                                {related.imageUrls.length}+ Photos
-                              </div>
-                            )}
-                        </div>
-                        <div className="owner-property-details">
-                          <p className="price-text mb-1">
-                            {formatPrice(related.totalPrice)} |{" "}
-                            {formatArea(
-                              related.carpetArea || related.builtUpArea,
-                            )}
-                          </p>
-                          <p className="location-text small">
-                            {related.locality || ""} {related.city || ""}
-                          </p>
-                          {related.status && (
-                            <Badge bg="success" className="mt-1">
-                              {related.status}
-                            </Badge>
-                          )}
-                        </div>
-                      </Link>
-                    );
-                  })}
+                            <div className="owner-property-details">
+                              <p className="price-text mb-1">
+                                {formatPrice(related.totalPrice)} |{" "}
+                                {formatArea(
+                                  related.carpetArea || related.builtUpArea,
+                                )}
+                              </p>
+                              <p className="location-text small">
+                                {related.locality || ""} {related.city || ""}
+                              </p>
+                              {related.status && (
+                                <Badge bg="success" className="mt-1">
+                                  {related.status}
+                                </Badge>
+                              )}
+                            </div>
+                          </Link>
+                        </SwiperSlide>
+                      );
+                    })}
+                  </Swiper>
+                  <button
+                    type="button"
+                    className="owner-properties-slider-prev owner-properties-slider-btn"
+                    aria-label="Previous properties"
+                  >
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                  </button>
+                  <button
+                    type="button"
+                    className="owner-properties-slider-next owner-properties-slider-btn"
+                    aria-label="Next properties"
+                  >
+                    <FontAwesomeIcon icon={faChevronRight} />
+                  </button>
                 </div>
               </div>
             )}
@@ -1886,6 +1879,138 @@ export default function PropertyDetailPage() {
               </div>
             </Form>
           )}
+        </Modal.Body>
+      </Modal>
+
+      {/* Image Lightbox Modal - click image to open, zoom in/out */}
+      <Modal
+        show={showImageLightbox}
+        onHide={() => {
+          setShowImageLightbox(false);
+          setLightboxZoom(1);
+        }}
+        centered
+        size="xl"
+        className="property-image-lightbox-modal"
+        backdrop="static"
+        style={{ zIndex: 10000 }}
+        aria-label="Image zoom viewer"
+      >
+        <Modal.Header className="property-lightbox-header">
+          <span className="property-lightbox-title">
+            Image {lightboxImageIndex + 1} of {allImageUrls.length}
+          </span>
+          <Button
+            variant="outline-light"
+            size="sm"
+            className="property-lightbox-close-btn"
+            onClick={() => {
+              setShowImageLightbox(false);
+              setLightboxZoom(1);
+            }}
+            aria-label="Close"
+          >
+            <FontAwesomeIcon icon={faXmark} />
+          </Button>
+        </Modal.Header>
+        <Modal.Body className="property-lightbox-body p-0">
+          <div className="property-lightbox-toolbar">
+            <Button
+              variant="outline-dark"
+              size="sm"
+              className="property-lightbox-zoom-btn"
+              onClick={() => setLightboxZoom((z) => Math.max(0.5, z - 0.25))}
+              aria-label="Zoom out"
+              title="Zoom out"
+            >
+              <FontAwesomeIcon icon={faSearchMinus} className="magnifier-icon" />
+              <span className="d-none d-sm-inline ms-1">Zoom out</span>
+            </Button>
+            <span className="property-lightbox-zoom-value">
+              {Math.round(lightboxZoom * 100)}%
+            </span>
+            <Button
+              variant="outline-dark"
+              size="sm"
+              className="property-lightbox-zoom-btn"
+              onClick={() => setLightboxZoom((z) => Math.min(4, z + 0.25))}
+              aria-label="Zoom in"
+              title="Zoom in"
+            >
+              <FontAwesomeIcon icon={faSearchPlus} className="magnifier-icon" />
+              <span className="d-none d-sm-inline ms-1">Zoom in</span>
+            </Button>
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              onClick={() => setLightboxZoom(1)}
+              aria-label="Reset zoom"
+              title="Reset zoom"
+            >
+              <FontAwesomeIcon icon={faExpand} className="me-1" />
+              Reset
+            </Button>
+          </div>
+          <div className="property-lightbox-content">
+            {allImageUrls.length > 1 && (
+              <>
+                <Button
+                  variant="outline-light"
+                  className="property-lightbox-nav property-lightbox-prev"
+                  onClick={() => {
+                    setLightboxImageIndex((i) =>
+                      i === 0 ? allImageUrls.length - 1 : i - 1
+                    );
+                    setLightboxZoom(1);
+                  }}
+                  aria-label="Previous image"
+                >
+                  <FontAwesomeIcon icon={faChevronLeft} />
+                </Button>
+                <Button
+                  variant="outline-light"
+                  className="property-lightbox-nav property-lightbox-next"
+                  onClick={() => {
+                    setLightboxImageIndex((i) =>
+                      i === allImageUrls.length - 1 ? 0 : i + 1
+                    );
+                    setLightboxZoom(1);
+                  }}
+                  aria-label="Next image"
+                >
+                  <FontAwesomeIcon icon={faChevronRight} />
+                </Button>
+              </>
+            )}
+            <div
+              className="property-lightbox-image-wrap"
+              style={{ overflow: "auto" }}
+              onWheel={(e) => {
+                if (!e.ctrlKey && !e.metaKey) return;
+                e.preventDefault();
+                setLightboxZoom((z) =>
+                  e.deltaY < 0
+                    ? Math.min(4, z + 0.2)
+                    : Math.max(0.5, z - 0.2)
+                );
+              }}
+            >
+              <div
+                className="property-lightbox-image-scaler"
+                style={{
+                  transform: `scale(${lightboxZoom})`,
+                  transformOrigin: "center center",
+                }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={allImageUrls[lightboxImageIndex]}
+                  alt={`${property?.title || "Property"} - Image ${lightboxImageIndex + 1}`}
+                  className="property-lightbox-img-normal"
+                />
+              </div>
+            </div>
+          </div>
         </Modal.Body>
       </Modal>
     </div>

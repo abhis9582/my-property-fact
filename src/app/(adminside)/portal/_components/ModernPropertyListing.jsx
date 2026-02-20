@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import {
   Card,
   Row,
@@ -779,15 +780,15 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       }
     };
 
-    // Load all data in parallel
+    // Load all data in parallel (amenities/features/nearby-benefits APIs disabled for frontend dev)
     loadProjectStatus();
     loadProjectTypes();
     loadCities();
     loadBuilders();
     loadProjects();
-    loadAmenities();
-    loadFeatures();
-    loadNearbyBenefits();
+    // loadAmenities();
+    // loadFeatures();
+    // loadNearbyBenefits();
   }, []);
 
   // Load existing property data when listingId is provided (edit mode)
@@ -933,10 +934,13 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
                   ? property.ageOfProperty.toString()
                   : "",
 
-            // Features & Amenities
+            // Features & Amenities (Studio with 1 room -> 1 RK)
             bedrooms:
               property.bedrooms !== null && property.bedrooms !== undefined
-                ? property.bedrooms.toString()
+                ? (property.subType === "Studio" &&
+                  (property.bedrooms === 1 || property.bedrooms === "1")
+                    ? "1RK"
+                    : property.bedrooms.toString())
                 : "",
             bathrooms:
               property.bathrooms !== null && property.bathrooms !== undefined
@@ -1074,14 +1078,25 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     setIsSubmitting(true);
 
     try {
-      // Get authentication token
+      // Get authentication token (skip check in dev so form can be tested without login)
       const token = Cookies.get("token");
-
-      if (!token) {
+      const isDev = process.env.NODE_ENV === "development";
+      if (!token && !isDev) {
         alert("You must be logged in to submit a property");
         setIsSubmitting(false);
         return;
       }
+
+      // Dev only: bypass API and simulate success so you can verify form resets (no pre-filled data after submit)
+      // if (isDev) {
+      //   setFormData(getInitialFormState());
+      //   setErrors({});
+      //   setCurrentStep(1);
+      //   setCreatedProperty({ id: "dev-mock" });
+      //   setShowSuccessModal(true);
+      //   setIsSubmitting(false);
+      //   return;
+      // }
 
       // Create FormData for file upload
       const formDataObj = new FormData();
@@ -1163,9 +1178,11 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     }
   };
 
+ 
   const handleCloseSuccessModal = () => {
     setShowSuccessModal(false);
     setCreatedProperty(null);
+    
   };
 
   // Helper function to prepare property data (shared between draft and submit)
@@ -1202,8 +1219,10 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
         if (formData.locality) parts.push(`in ${formData.locality}`);
         if (formData.city) parts.push(formData.city);
       } else {
-        // Residential property title format: "3 BHK Apartment in Sector 45, Gurgaon"
-        if (formData.bedrooms) parts.push(`${formData.bedrooms} BHK`);
+        // Residential property title format: "3 BHK Apartment" or "1 RK Studio"
+        if (formData.bedrooms) {
+          parts.push(formData.bedrooms === "1RK" ? "1 RK" : `${formData.bedrooms} BHK`);
+        }
         if (formData.subType) parts.push(formData.subType);
         if (formData.locality) parts.push(`in ${formData.locality}`);
         if (formData.city) parts.push(formData.city);
@@ -1267,10 +1286,10 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
       parkingType: emptyToNull(formData.parking),
       powerBackup: emptyToNull(formData.powerBackup),
 
-      // Configuration - residential-specific fields set to null for commercial
+      // Configuration - residential-specific fields set to null for commercial (1RK sent as 1 for Studio)
       bedrooms:
         formData.listingType === "Residential"
-          ? toInteger(formData.bedrooms)
+          ? (formData.bedrooms === "1RK" ? 1 : toInteger(formData.bedrooms))
           : null,
       bathrooms: toInteger(formData.bathrooms),
       balconies:
@@ -1669,9 +1688,7 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
           <div className="d-flex gap-2">
             <Button
               variant="primary"
-              onClick={() =>
-                (window.location.href = "/portal/dashboard/listings")
-              }
+              onClick={() => router.push("/portal/dashboard/listings")}
             >
               View All Listings
             </Button>
@@ -3812,13 +3829,18 @@ function FeaturesAmenitiesStep({
         {fieldVisibility.showBedrooms && (
           <Col md={6}>
             <Form.Group>
-              <Form.Label>Number of Bedrooms (BHK) *</Form.Label>
+              <Form.Label>
+                Number of Bedrooms (BHK{data.subType === "Studio" ? " / RK" : ""}) *
+              </Form.Label>
               <Form.Select
                 value={data.bedrooms}
                 onChange={(e) => onChange("bedrooms", e.target.value)}
                 isInvalid={!!errors.bedrooms}
               >
                 <option value="">Select Bedrooms</option>
+                {data.subType === "Studio" && (
+                  <option value="1RK">1 RK</option>
+                )}
                 <option value="1">1 BHK</option>
                 <option value="2">2 BHK</option>
                 <option value="3">3 BHK</option>
@@ -3881,25 +3903,6 @@ function FeaturesAmenitiesStep({
                 <option value="1">1 Balcony</option>
                 <option value="2">2 Balconies</option>
                 <option value="3">3+ Balconies</option>
-              </Form.Select>
-            </Form.Group>
-          </Col>
-        )}
-
-        {/* Commercial-specific fields */}
-        {fieldVisibility.showWashrooms && isCommercial && (
-          <Col md={6}>
-            <Form.Group>
-              <Form.Label>Number of Washrooms</Form.Label>
-              <Form.Select
-                value={data.bathrooms}
-                onChange={(e) => onChange("bathrooms", e.target.value)}
-              >
-                <option value="">Select Washrooms</option>
-                <option value="1">1 Washroom</option>
-                <option value="2">2 Washrooms</option>
-                <option value="3">3 Washrooms</option>
-                <option value="4">4+ Washrooms</option>
               </Form.Select>
             </Form.Group>
           </Col>
