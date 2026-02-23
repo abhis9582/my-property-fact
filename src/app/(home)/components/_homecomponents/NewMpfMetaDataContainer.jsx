@@ -163,7 +163,7 @@ export default function NewMpfMetaDataContainer({ propertyTypes, projects, build
               <div key={`row-${index}`}>
                 <Link
                   href={`projects/${item.slugUrl}`}
-                  className="btn-normal-color rounded-5 py-2 px-3 text-white text-decoration-none"
+                  className="btn-normal-color rounded-5 py-2 px-3 text-white text-decoration-none z-3 position-relative"
                 >
                   {item.projectTypeName}
                 </Link>

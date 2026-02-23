@@ -19,9 +19,9 @@ export default function LocateScorePage() {
   const cities = getCitiesFromJSON();
   return (
     <div>
-      <CommonHeaderBanner headerText={"LOCATE Score"} />
-      {/* <LocateScore cities={cities} locateScoreData={locateScoreData} /> */}
-      <NewLocateScore />
+      {/* <CommonHeaderBanner headerText={"LOCATE Score"} /> */}
+      <LocateScore cities={cities} locateScoreData={locateScoreData} />
+      {/* <NewLocateScore /> */}
     </div>
   );
 }
