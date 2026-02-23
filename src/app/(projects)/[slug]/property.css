@@ -938,3 +938,9 @@ a {
 #location {
   scroll-margin-top: 100px;
 }
+
+/* Project name and Project Overview – same font size */
+#overview h1,
+#overview h2 {
+  font-size: 2rem !important;
+}
