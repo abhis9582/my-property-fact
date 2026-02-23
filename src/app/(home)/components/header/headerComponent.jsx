@@ -61,11 +61,18 @@ const NewBadge = ({ isVisible }) => (
 
 const HeaderComponent = () => {
   const { cityList = [], projectTypes = [], builderList = [], projectList = [], searchProjects } = useSiteData();
+  const [isMounted, setIsMounted] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [isDropdownHovered, setIsDropdownHovered] = useState(false);
   const [showLoginModal, setShowModal] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+
+  // Defer dropdown content until after mount to avoid hydration mismatch (data + motion)
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   // Check if the pathname starts with /city/
   const isCityRoute = pathname.startsWith("/city");
   const isBuilderRoute = pathname.startsWith("/builder");
@@ -417,7 +424,7 @@ const HeaderComponent = () => {
                     City
                   </Link>
                   <div className="dropdown dropdown-lg z-3 city-dropdown">
-                    {!cityList ? (
+                    {!isMounted || !cityList?.length ? (
                       <div className="d-flex align-items-center justify-content-center p-3">
                         <Spinner animation="border" variant="light" />
                       </div>
@@ -502,7 +509,7 @@ const HeaderComponent = () => {
                     Builder
                   </Link>
                   <div className="dropdown dropdown-lg z-3 builder-dropdown">
-                    {builderList.length === 0 ? (
+                    {!isMounted || builderList.length === 0 ? (
                       <div className="d-flex align-items-center justify-content-center p-3">
                         <Spinner animation="border" variant="light" />
                       </div>
@@ -598,7 +605,7 @@ const HeaderComponent = () => {
                     className="dropdown dropdown-lg projects-dropdown z-3"
                     ref={projectsDropdownRef}
                   >
-                    {!projectTypes ? (
+                    {!isMounted || !projectTypes?.length ? (
                       <div className="d-flex align-items-center justify-content-center p-3">
                         <Spinner animation="border" variant="light" />
                       </div>
@@ -1083,7 +1090,7 @@ const HeaderComponent = () => {
                       }`}
                   >
                     <ul className="list-inline list-unstyled">
-                      {cityList?.map((city) => (
+                      {(isMounted ? cityList : [])?.map((city) => (
                         <li key={city.id}>
                           <Link
                             href={`/city/${city.slugURL}`}
@@ -1117,7 +1124,7 @@ const HeaderComponent = () => {
                       }`}
                   >
                     <ul className="list-inline list-unstyled">
-                      {builderList?.map((builder) => (
+                      {(isMounted ? builderList : [])?.map((builder) => (
                         <li key={builder.id}>
                           <Link
                             className="text-decoration-none builder-link"
@@ -1160,7 +1167,7 @@ const HeaderComponent = () => {
                       }`}
                   >
                     <ul className="list-inline list-unstyled">
-                      {projectTypes?.map((project) => (
+                      {(isMounted ? projectTypes : [])?.map((project) => (
                         <li key={project.id}>
                           <Link
                             href={`/projects/${project.slugUrl}`}

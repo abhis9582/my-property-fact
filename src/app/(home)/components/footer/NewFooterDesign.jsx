@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -15,9 +15,17 @@ import PrivacyPolicyModal from "../privacy-policy/PrivacyPolicyModal";
 import { useSiteData } from "@/app/_global_components/contexts/SiteDataContext";
 import "./newfooter.css";
 
-export default function NewFooterDesign({ compactTop = false }) {
-  const { cityList = [] } = useSiteData();
+export default function NewFooterDesign({ compactTop = false, cityList: cityListProp }) {
+  const { cityList: contextCityList = [] } = useSiteData();
+  const [isMounted, setIsMounted] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Use prop when provided (e.g. property page) - else context (e.g. home page with SiteDataProvider)
+  const cityList = cityListProp ?? contextCityList;
   const [visibleCount, setVisibleCount] = useState({
     apartments: 5,
     newProjects: 5,
@@ -112,7 +120,12 @@ export default function NewFooterDesign({ compactTop = false }) {
   };
 
   // Filter cities based on category (same logic as old footer), then sort Delhi NCR first
-  const safeCityList = Array.isArray(cityList) ? cityList : [];
+  // Prop from server (property page): use immediately. Context (home): defer until mounted to avoid hydration mismatch.
+  const safeCityList = Array.isArray(cityListProp)
+    ? cityListProp
+    : isMounted && Array.isArray(cityList)
+      ? cityList
+      : [];
   const apartmentsCities = sortCitiesDelhiNCRFirst(safeCityList);
   const newProjectsCities = sortCitiesDelhiNCRFirst(
     safeCityList.filter((item) => item?.cityName && !["Agra"].includes(item.cityName))

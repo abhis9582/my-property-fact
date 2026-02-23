@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import Providers from "./_global_components/providers/Providers";
+import { SiteDataProvider } from "./_global_components/contexts/SiteDataContext";
 import ThirdPartyScripts from "./(home)/components/_homecomponents/ThirdPartyScripts";
 config.autoAddCss = false;
 
@@ -80,7 +81,9 @@ export default function RootLayout({ children }) {
         </noscript>
 
         <Providers>
-          {children}
+          <SiteDataProvider>
+            {children}
+          </SiteDataProvider>
         </Providers>
 
         {/* third party scripts are loaded here */}
