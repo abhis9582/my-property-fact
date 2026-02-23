@@ -140,7 +140,7 @@ export const isCityTypeUrl = async (slug) => {
 };
 
 // fetching blogs list from api
-export const fetchBlogs = cache(async (page, size, search="") => {
+export const fetchBlogs = cache(async (page, size, search = "") => {
   const res = await fetch(
     `${apiUrl}blog/get?page=${page}&size=${size}&from=${"blog"}&search=${search}`,
     {
@@ -337,4 +337,13 @@ export const fetchAllProjectsByProjectType = cache(async (projectType) => {
   if (!projects.ok) throw new Error("Failed to fetch projects");
   const projectsData = await projects.json();
   return projectsData;
+});
+
+// fetching builder details by slug
+export const fetchBuilderDetails = cache(async (slug) => {
+  const response = await fetch(`${apiUrl}builder/get/${slug}`, {
+    next: { revalidate: 60 },
+  });
+  if (!response.ok) throw new Error("Failed to fetch builder details");
+  return response.json();
 });

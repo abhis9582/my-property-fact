@@ -70,7 +70,8 @@ export default async function HomePage() {
     if (!project.slugURL) return false;
     return allowedSlugs.includes(project.slugURL);
   });
-
+  // top cities
+  const topCities = ["Noida", "Delhi", "Ghaziabad"];
   // Residential: slug-ordered first, then rest from getAllProjects (Residential type)
   const residentialFirst = residentialSlugs
     .map((slug) => projects.find((p) => p.slugURL === slug))
@@ -79,8 +80,12 @@ export default async function HomePage() {
     (p) =>
       p.propertyTypeName === "Residential" &&
       p.slugURL &&
-      !residentialSlugs.includes(p.slugURL)
-  );
+      !residentialSlugs.includes(p.slugURL) &&
+      p.cityName &&
+      topCities.includes(p.cityName)
+  ).slice(0, 20);
+  console.log(residentialRest.length);
+  
   const residentialProjects = [...residentialFirst, ...residentialRest];
 
   // Commercial: slug-ordered first, then rest from getAllProjects (Commercial type)
@@ -91,8 +96,10 @@ export default async function HomePage() {
     (p) =>
       p.propertyTypeName === "Commercial" &&
       p.slugURL &&
-      !commercialSlugs.includes(p.slugURL)
-  );
+      !commercialSlugs.includes(p.slugURL) &&
+      p.cityName &&
+      topCities.includes(p.cityName)
+  ).slice(0, 20);
   const commercialProjects = [...commercialFirst, ...commercialRest];
 
   // Top Picks: projects from selected builders only, rotates every 30s (testing)

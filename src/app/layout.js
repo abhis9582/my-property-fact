@@ -1,38 +1,25 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import "react-toastify/dist/ReactToastify.css";
-import Script from "next/script";
 import "./globals.css";
-import { ToastContainer } from "react-toastify";
-import GoogleAnalytics from "./_global_components/googleAnalytics";
-import { ProjectProvider } from "./_global_components/contexts/projectsContext";
-import CookieConsent from "./_global_components/CookieConsent";
 import localFont from "next/font/local";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
+import Providers from "./_global_components/providers/Providers";
+import ThirdPartyScripts from "./(home)/components/_homecomponents/ThirdPartyScripts";
 config.autoAddCss = false;
 
 // app/layout.js
 export const metadata = {
-  title: "Not found",
-  description: "page is not found",
-  metadataBase: new URL("https://www.mypropertyfact.in"),
+  title: "My Property Fact | A valuable platform for buyers and sellers",
+  description: "MPF provides accurate information about project and properties with verified details.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_UI_URL ?? "https://www.mypropertyfact.in")
 };
 
-// Optimized fonts: display=swap prevents FOIT, preload happens automatically via next/font
+// local fonts are loaded here
 const gothamBold = localFont({
   src: "../../public/fonts/plus_jakarta_sans/PlusJakartaSans-VariableFont_wght.ttf",
   variable: "--heaing-font",
   style: "normal",
   display: "swap",
   preload: true,
-});
-
-const headingPro = localFont({
-  src: "../../public/fonts/plus_jakarta_sans/PlusJakartaSans-VariableFont_wght.ttf",
-  variable: "--headeing-bolded",
-  style: "normal",
-  display: "swap",
-  preload: false, // Same font file - avoid duplicate preload
 });
 
 const gothamLight = localFont({
@@ -45,50 +32,18 @@ const gothamLight = localFont({
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en-IN">
       <head>
-        {/* Preconnect to external origins for faster third-party loading */}
         <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://connect.facebook.net" />
-        {/* <link rel="dns-prefetch" href="https://apis.mypropertyfact.in" /> */}
-        {/* Google Tag Manager - afterInteractive defers until page is interactive */}
-        <Script id="google-tag-manager" strategy="afterInteractive">
-          {`
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-WL4BBZM8');
-          `}
-        </Script>
-        {/* End Google Tag Manager */}
-        {/* Meta Pixel Script - lazyOnload loads after everything else */}
-        <Script id="facebook-pixel" strategy="lazyOnload">
-          {`
-            !function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}(window, document,'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '994098169297958');
-            fbq('track', 'PageView');
-          `}
-        </Script>
-        <Script
-          id="schema-org"
+        <script
           type="application/ld+json"
-          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "My Property Fact",
-              url: "https://www.mypropertyfact.in",
-              logo: "https://www.mypropertyfact.in/logo.png", // optional
+              url: process.env.NEXT_PUBLIC_UI_URL,
+              logo: `${process.env.NEXT_PUBLIC_UI_URL}/logo.png`,
               description:
                 "Discover top property insights, LOCATE scores, and real estate trends across India.",
               sameAs: [
@@ -99,10 +54,8 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body 
-        className={`${gothamBold.variable} ${headingPro.variable} ${gothamLight.variable}`}
-        suppressHydrationWarning
-      >
+      <body
+        className={`${gothamBold.variable} ${gothamLight.variable}`}>
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
@@ -112,13 +65,6 @@ export default function RootLayout({ children }) {
             style={{ display: "none", visibility: "hidden" }}
           ></iframe>
         </noscript>
-        {/* End Google Tag Manager (noscript) */}
-        <GoogleAnalytics />
-        <main>
-          <ProjectProvider>{children}</ProjectProvider>
-        </main>
-        <ToastContainer />
-        {/* <CookieConsent /> */}
         {/* Meta Pixel noscript fallback */}
         <noscript>
           <img
@@ -128,6 +74,16 @@ export default function RootLayout({ children }) {
             src="https://www.facebook.com/tr?id=994098169297958&ev=PageView&noscript=1"
           />
         </noscript>
+
+        <Providers>
+          {children}
+        </Providers>
+
+        {/* third party scripts are loaded here */}
+        <ThirdPartyScripts />
+
+        {/* Accept or reject cookies component  */}
+        {/* <CookieConsent /> */}
       </body>
     </html>
   );

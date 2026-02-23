@@ -1,3 +1,4 @@
+import { ToastContainer } from "react-toastify";
 import SessionMonitor from "./_components/SessionMonitor";
 
 export const metadata = {
@@ -10,6 +11,7 @@ export default function AdminLayout({ children }) {
     <>
       {children}
       <SessionMonitor />
+      <ToastContainer />
     </>
   );
 }
