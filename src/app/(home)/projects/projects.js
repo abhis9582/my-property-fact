@@ -32,7 +32,7 @@ export default function Projects() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
-  const { projectData } = useProjectContext();
+  const { projectData, setProjectData } = useProjectContext();
   const observer = useRef(null);
   const loadMoreRef = useRef(null);
   const [isActive, setIsActive] = useState("");
