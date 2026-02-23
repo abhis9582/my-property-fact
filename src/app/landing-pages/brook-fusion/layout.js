@@ -26,9 +26,7 @@ export default function RootLayout({ children }) {
       <div
         className={`${inter.variable} ${playfair.variable} antialiased`}
       >
-        {/* <Header /> */}
         {children}
-        {/* <Footer /> */}
       </div>
   );
 }

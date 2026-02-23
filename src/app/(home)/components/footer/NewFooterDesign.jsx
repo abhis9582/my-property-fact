@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -10,12 +10,11 @@ import {
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowUp, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import PrivacyPolicyModal from "../privacy-policy/PrivacyPolicyModal";
 import "./newfooter.css";
 
 export default function NewFooterDesign({ cityList = [], compactTop = false }) {
-  const [showScrollTop, setShowScrollTop] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [visibleCount, setVisibleCount] = useState({
     apartments: 5,
@@ -29,26 +28,6 @@ export default function NewFooterDesign({ cityList = [], compactTop = false }) {
     commercial: [],
     flats: [],
   });
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 300) {
-        setShowScrollTop(true);
-      } else {
-        setShowScrollTop(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
 
   // Helper function to generate URL slug from prefix
   const generateSlug = (prefix) => {
@@ -197,12 +176,12 @@ export default function NewFooterDesign({ cityList = [], compactTop = false }) {
                 </span>
               </div>
               <div className="contact-item-row">
-                <div className="contact-item">
-                  <span className="contact-label">PHONE:</span>
-                  <span className="contact-value">+91 8920024793</span>
+                <div className="contact-item-phone">
+                  <span className="contact-label">PHONE: </span>
+                  <span className="contact-value"> +91 8920024793</span>
                 </div>
-                <div className="contact-item">
-                  <span className="contact-label">EMAIL:</span>
+                <div className="contact-item-phone">
+                  <span className="contact-label">EMAIL: </span>
                   <span className="contact-value">
                     social@mypropertyfact.com
                   </span>

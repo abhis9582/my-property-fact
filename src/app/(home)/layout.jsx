@@ -1,8 +1,12 @@
-import "../globals.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import NewFooterDesign from "./components/footer/NewFooterDesign";
-import Header from "./components/header/header";
 import LazyBelowFold from "./components/_homecomponents/LazyBelowFold";
-import { fetchCityData } from "@/app/_global_components/masterFunction";
+import {
+  fetchBuilderData,
+  fetchCityData,
+  fetchProjectTypes,
+} from "@/app/_global_components/masterFunction";
+import HeaderComponent from "./components/header/headerComponent";
 
 export const metadata = {
   title: "My Property Fact | Smarter Real Estate Decisions Start Here",
@@ -19,17 +23,23 @@ export const metadata = {
     "real estate guide India",
   ],
   alternates: {
-    canonical: "https://www.mypropertyfact.in", // Replace with your actual domain
+    canonical: process.env.NEXT_PUBLIC_UI_URL + "/",
   },
 };
 
-export default async function RootLayout({ children, params }) {
+export default async function RootLayout({ children }) {
   const cityList = await fetchCityData();
-  
+  const builderList = await fetchBuilderData();
+  const projectTypes = await fetchProjectTypes();
   return (
     <>
       {/* header for the user side  */}
-      <Header />
+      <HeaderComponent
+        cityList={cityList}
+        projectTypes={projectTypes}
+        builderList={builderList.builders}
+        projectList={[]}
+      />
       {/* dynamic render all its child components  */}
       {children}
       {/* footer for user side  */}

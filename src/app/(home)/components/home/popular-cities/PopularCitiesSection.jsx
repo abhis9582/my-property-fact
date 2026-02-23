@@ -81,7 +81,6 @@ export default function PopularCitiesSection() {
               <RiArrowLeftSLine />
             </button>
             <Swiper
-              className="popular-cities-slider"
               modules={[Navigation]}
               navigation={{
                 prevEl: ".popular-cities-prev",
@@ -90,12 +89,11 @@ export default function PopularCitiesSection() {
               spaceBetween={24}
               slidesPerView={6}
               breakpoints={{
-                0: { slidesPerView: 1.1, spaceBetween: 12 },
-                375: { slidesPerView: 1.2, spaceBetween: 14 },
-                480: { slidesPerView: 1.5, spaceBetween: 16 },
-                576: { slidesPerView: 1.8, spaceBetween: 18 },
-                768: { slidesPerView: 2.5, spaceBetween: 20 },
-                992: { slidesPerView: 3.5, spaceBetween: 22 },
+                0: { slidesPerView: 1, spaceBetween: 12 },
+                480: { slidesPerView: 2, spaceBetween: 16 },
+                576: { slidesPerView: 3, spaceBetween: 18 },
+                768: { slidesPerView: 4, spaceBetween: 20 },
+                992: { slidesPerView: 5, spaceBetween: 22 },
                 1200: { slidesPerView: 5, spaceBetween: 24 },
                 1440: { slidesPerView: 6, spaceBetween: 24 },
               }}

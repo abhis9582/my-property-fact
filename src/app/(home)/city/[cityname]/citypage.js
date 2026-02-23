@@ -4,7 +4,6 @@ import "../../components/home/home.css";
 import Link from "next/link";
 import PropertyContainer from "@/app/(home)/components/common/page";
 import CommonHeaderBanner from "../../components/common/commonheaderbanner";
-import CommonBreadCrum from "../../components/common/breadcrum";
 import { LoadingSpinner } from "../../contact-us/page";
 import Image from "next/image";
 

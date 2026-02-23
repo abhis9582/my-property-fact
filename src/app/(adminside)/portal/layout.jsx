@@ -5,6 +5,7 @@ import './_components/PortalCommonStyles.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
 import { UserProvider } from './_contexts/UserContext';
 import SessionMonitor from '../admin/_components/SessionMonitor';
+import { ToastContainer } from 'react-toastify';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -114,6 +115,7 @@ export default function PortalLayout({ children }) {
           {children}
         </div>
       </div>
+      <ToastContainer />
     </UserProvider>
   );
 }

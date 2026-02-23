@@ -12,7 +12,6 @@ export default function SearchFilter({ projectTypeList, cityList }) {
   const [propertType, setPropertyType] = useState("");
   const [propertyLocation, setPropertyLocation] = useState("");
   const [budget, setBudget] = useState("");
-  const { setProjectData } = useProjectContext();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [openDropdown, setOpenDropdown] = useState(null);
