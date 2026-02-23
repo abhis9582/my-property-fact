@@ -48,6 +48,7 @@ export default function Property({ projectDetail }) {
   const [amenityButtonName, setAmenityButtonName] = useState("VIEW MORE");
   const [amenityButtonStatus, setAmenityButtonStatus] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [backToHomeExpanded, setBackToHomeExpanded] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -344,6 +345,21 @@ export default function Property({ projectDetail }) {
     }
   };
 
+  // Back to home: show text while scrolling, icon only when scroll stopped
+  useEffect(() => {
+    let scrollEndTimer = null;
+    const handleBackToHomeScroll = () => {
+      setBackToHomeExpanded(true);
+      if (scrollEndTimer) clearTimeout(scrollEndTimer);
+      scrollEndTimer = setTimeout(() => setBackToHomeExpanded(false), 1200);
+    };
+    window.addEventListener("scroll", handleBackToHomeScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleBackToHomeScroll);
+      if (scrollEndTimer) clearTimeout(scrollEndTimer);
+    };
+  }, []);
+
   useEffect(() => {
     setAllAmenities(projectDetail.projectAmenityList.slice(0, 18));
 
@@ -499,7 +515,7 @@ export default function Property({ projectDetail }) {
     <>
       <Link
         href="/"
-        className="back-to-home-floating"
+        className={`back-to-home-floating ${backToHomeExpanded ? "back-to-home-floating--expanded" : ""}`}
         aria-label="Back to MyPropertyFact home page"
       >
         <span className="back-to-home-floating__text">
