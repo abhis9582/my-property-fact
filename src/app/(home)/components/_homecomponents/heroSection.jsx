@@ -1,10 +1,52 @@
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import SearchFilter from "./searchFIlter";
-import HeroBannerSlider from "./HeroBannerSlider";
 import "../home/home.css";
 
+const HeroBannerSlider = dynamic(() => import("./HeroBannerSlider"), {
+  ssr: true,
+  loading: () => (
+    <div className="hero-banner-slider hero-lcp-fallback" aria-busy="true">
+      <div className="position-relative home-banner hero-banner-responsive-images">
+        <Image
+          src="/static/banners/Irish_phone.jpg"
+          alt="Irish - Laying Foundation For Tomorrow"
+          width={768}
+          height={430}
+          className="img-fluid w-100 d-md-none"
+          priority
+          fetchPriority="high"
+          quality={75}
+          sizes="100vw"
+        />
+        <Image
+          src="/static/banners/Irish_tablet.jpg"
+          alt="Irish - Laying Foundation For Tomorrow"
+          width={1024}
+          height={576}
+          className="img-fluid w-100 d-none d-md-block d-lg-none"
+          priority
+          fetchPriority="high"
+          quality={75}
+          sizes="100vw"
+        />
+        <Image
+          src="/static/banners/Irish_desktop.jpg"
+          alt="Irish - Laying Foundation For Tomorrow"
+          width={1920}
+          height={600}
+          className="img-fluid w-100 d-none d-lg-block"
+          priority
+          fetchPriority="high"
+          quality={75}
+          sizes="100vw"
+        />
+      </div>
+    </div>
+  ),
+});
+
 export default async function HeroSection({ projectTypeList, cityList }) {
-  
   const heroSlides = [
     {
       id: "hero-irish",
@@ -45,11 +87,7 @@ export default async function HeroSection({ projectTypeList, cityList }) {
       <div className="position-relative">
         <div className="mpf-hero-banner position-relative">
           <div className="position-relative">
-            {/* Snow effect component on hero banner   */}
-            {/* <SnowEffect /> */}
-            {/* New year effect component on hero banner  */}
-            {/* <NewYearEffect /> */}
-            {/* Banners conatiner component on hero section*/}
+            {/* LCP: first slide rendered as priority image; slider loads after */}
             <HeroBannerSlider slides={heroSlides} />
             {/* Republic day emblem component on hero section*/}
             {/* <div className="hero-center-emblem">

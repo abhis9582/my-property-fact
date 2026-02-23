@@ -1,12 +1,31 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import NewFooterDesign from "./components/footer/NewFooterDesign";
-import LazyBelowFold from "./components/_homecomponents/LazyBelowFold";
-import {
-  fetchBuilderData,
-  fetchCityData,
-  fetchProjectTypes,
-} from "@/app/_global_components/masterFunction";
-import HeaderComponent from "./components/header/headerComponent";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { SiteDataProvider } from "@/app/_global_components/contexts/SiteDataContext";
+
+const LazyBelowFold = dynamic(
+  () => import("./components/_homecomponents/LazyBelowFold"),
+  { loading: () => null }
+);
+
+const HeaderComponent = dynamic(
+  () => import("./components/header/headerComponent").then((m) => m.default),
+  {
+    ssr: true,
+    loading: () => (
+      <header className="d-flex justify-content-between align-items-center px-2 px-lg-4 header" style={{ minHeight: 74 }}>
+        <Link href="/" aria-label="My Property Fact Home">
+          <img src="/logo.png" alt="" width={80} height={74} decoding="async" fetchPriority="high" />
+        </Link>
+      </header>
+    ),
+  }
+);
+
+const NewFooterDesign = dynamic(
+  () => import("./components/footer/NewFooterDesign").then((m) => m.default),
+  { ssr: true, loading: () => <footer style={{ minHeight: 200 }} aria-busy="true" /> }
+);
 
 export const metadata = {
   title: "My Property Fact | Smarter Real Estate Decisions Start Here",
@@ -27,25 +46,13 @@ export const metadata = {
   },
 };
 
-export default async function RootLayout({ children }) {
-  const cityList = await fetchCityData();
-  const builderList = await fetchBuilderData();
-  const projectTypes = await fetchProjectTypes();
+export default function RootLayout({ children }) {
   return (
-    <>
-      {/* header for the user side  */}
-      <HeaderComponent
-        cityList={cityList}
-        projectTypes={projectTypes}
-        builderList={builderList.builders}
-        projectList={[]}
-      />
-      {/* dynamic render all its child components  */}
+    <SiteDataProvider>
+      <HeaderComponent />
       {children}
-      {/* footer for user side  */}
-      <NewFooterDesign cityList={cityList} />
-      {/* Scroll to top + Chatbot (lazy loaded, client-only) */}
+      <NewFooterDesign />
       <LazyBelowFold />
-    </>
+    </SiteDataProvider>
   );
 }

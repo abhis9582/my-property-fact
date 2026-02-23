@@ -12,6 +12,7 @@ import {
   faSearch,
   faChevronDown,
   faChevronRight,
+  faChevronLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 import {
@@ -20,14 +21,48 @@ import {
   faLinkedin,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
+import { useSiteData } from "@/app/_global_components/contexts/SiteDataContext";
+import { motion } from "framer-motion";
 
-const HeaderComponent = ({
-  cityList,
-  projectTypes,
-  builderList,
-  projectList,
-}) => {
+const NewBadge = ({ isVisible }) => (
+  <span className="city-dropdown-badge">
+    {["N", "e", "w"].map((char, i) => (
+      <motion.span
+        key={i}
+        className="new-char"
+        initial={{ opacity: 0, y: 6, scale: 0.8 }}
+        animate={
+          isVisible
+            ? {
+                opacity: [0, 1, 1, 0],
+                y: [6, 0, 0, 6],
+                scale: [0.8, 1, 1, 0.8],
+              }
+            : { opacity: 0, y: 6, scale: 0.8 }
+        }
+        transition={
+          isVisible
+            ? {
+                duration: 2.5,
+                repeat: Infinity,
+                repeatDelay: 0.5,
+                delay: i * 0.15,
+                times: [0, 0.12, 0.75, 0.9],
+                ease: "easeInOut",
+              }
+            : { duration: 0.2 }
+        }
+      >
+        {char}
+      </motion.span>
+    ))}
+  </span>
+);
+
+const HeaderComponent = () => {
+  const { cityList = [], projectTypes = [], builderList = [], projectList = [], searchProjects } = useSiteData();
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [isDropdownHovered, setIsDropdownHovered] = useState(false);
   const [showLoginModal, setShowModal] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -45,9 +80,21 @@ const HeaderComponent = ({
   const [projectSearchResults, setProjectSearchResults] = useState([]);
   const [isSearchingProjects, setIsSearchingProjects] = useState(false);
   const [imageErrors, setImageErrors] = useState({}); // Track image errors per project
-  const projectSearchTimeoutRef = useRef(null);
+  const [searchResultsSlideIndex, setSearchResultsSlideIndex] = useState(0);
+  const [mobileSearchSlideIndex, setMobileSearchSlideIndex] = useState(0);
   const projectsDropdownRef = useRef(null);
   const scrollPositionRef = useRef(0);
+  const projectSearchInputRef = useRef(null);
+
+  // Format price for display (lakh/cr) - same as PropertyContainer
+  const formatProjectPrice = (price) => {
+    if (price == null || price === "") return "";
+    if (/[a-zA-Z]/.test(String(price))) return price;
+    const num = parseFloat(price);
+    return num < 1
+      ? "₹ " + Math.round(num * 100) + " Lakh*"
+      : "₹ " + num + " Cr+*";
+  };
 
   // Get image URL for a project (using project banner image)
   const getProjectImageSrc = (project) => {
@@ -243,56 +290,32 @@ const HeaderComponent = ({
     setShowModal(true);
   };
 
-  // Handle project search
+  // Handle Project Search - debounced: run when user stops typing, show loader until results
   useEffect(() => {
-    if (
-      projectSearchQuery.trim().length >= 2 &&
-      projectList &&
-      projectList.length > 0
-    ) {
-      setIsSearchingProjects(true);
-
-      // Clear previous timeout
-      if (projectSearchTimeoutRef.current) {
-        clearTimeout(projectSearchTimeoutRef.current);
-      }
-
-      // Debounce search
-      projectSearchTimeoutRef.current = setTimeout(async () => {
-        try {
-          // Filter projects by search query
-          const query = projectSearchQuery.trim().toLowerCase();
-          const filtered = projectList
-            .filter((project) => {
-              const projectName = (
-                project.projectName ||
-                project.name ||
-                ""
-              ).toLowerCase();
-              const cityName = (project.cityName || "").toLowerCase();
-              return projectName.includes(query) || cityName.includes(query);
-            })
-            .slice(0, 50); // Limit to 50 results
-
-          setProjectSearchResults(filtered);
-        } catch (error) {
-          console.error("Error searching projects:", error);
-          setProjectSearchResults([]);
-        } finally {
-          setIsSearchingProjects(false);
-        }
-      }, 300);
-    } else {
+    const query = projectSearchQuery.trim();
+    if (query.length < 2) {
       setProjectSearchResults([]);
       setIsSearchingProjects(false);
+      return;
     }
-
-    return () => {
-      if (projectSearchTimeoutRef.current) {
-        clearTimeout(projectSearchTimeoutRef.current);
+    // Show loading as soon as user has typed enough
+    setIsSearchingProjects(true);
+    const timeoutId = setTimeout(() => {
+      const q = projectSearchQuery.trim();
+      if (q.length < 2) {
+        setIsSearchingProjects(false);
+        return;
       }
-    };
-  }, [projectSearchQuery, projectList]);
+      Promise.resolve(searchProjects(q)).then((filtered) => {
+        setProjectSearchResults(filtered || []);
+        setIsSearchingProjects(false);
+      }).catch(() => {
+        setProjectSearchResults([]);
+        setIsSearchingProjects(false);
+      });
+    }, 400);
+    return () => clearTimeout(timeoutId);
+  }, [projectSearchQuery, searchProjects]);
 
   // Handle project click navigation
   const handleProjectClick = (project) => {
@@ -315,6 +338,19 @@ const HeaderComponent = ({
       setProjectSearchQuery("");
       setProjectSearchResults([]);
     }
+  };
+
+  // Reset search results slide when results change
+  useEffect(() => {
+    setSearchResultsSlideIndex(0);
+    setMobileSearchSlideIndex(0);
+  }, [projectSearchResults]);
+
+  // Back to search: 
+  const handleBackToSearch = () => {
+    setProjectSearchResults([]);
+    setSearchResultsSlideIndex(0);
+    setTimeout(() => projectSearchInputRef.current?.focus(), 100);
   };
 
   // Reset search when dropdown closes
@@ -349,9 +385,8 @@ const HeaderComponent = ({
   return (
     <>
       <div
-        className={`d-flex justify-content-between align-items-center px-2 px-lg-4 header ${
-          isScrolled ? "fixed-header" : ""
-        } ${isPropertiesRoute ? "properties-header" : ""} ${pathname.includes("/properties/") ? "conditional-header" : ""} `}
+        className={`d-flex justify-content-between align-items-center px-2 px-lg-4 header ${isScrolled ? "fixed-header" : ""
+          } ${isPropertiesRoute ? "properties-header" : ""} ${pathname.includes("/properties/") ? "conditional-header" : ""}`}
       >
         <div className="container d-flex justify-content-between align-items-center">
           <div className="mpf-logo d-flex align-items-center gap-4">
@@ -362,19 +397,22 @@ const HeaderComponent = ({
                 height={74}
                 width={80}
                 priority
-              
+
               />
             </Link>
           </div>
           <nav className="d-none d-lg-flex flex-grow-1 justify-content-end align-items-center">
             <div className="menu position-relative">
               <ul className="d-flex gap-5 m-0 align-items-center header-links list-unstyled fw-bold">
-                <li className="hasChild">
+                <li
+                  className="hasChild"
+                  onMouseEnter={() => setIsDropdownHovered(true)}
+                  onMouseLeave={() => setIsDropdownHovered(false)}
+                >
                   <Link
                     href="#"
-                    className={`text-light text-decoration-none py-3 plus-jakarta-sans-semi-bold${
-                      isCityRoute ? "header-link-active" : ""
-                    }`}
+                    className={`text-light text-decoration-none py-3 plus-jakarta-sans-semi-bold${isCityRoute ? "header-link-active" : ""
+                      }`}
                   >
                     City
                   </Link>
@@ -384,63 +422,82 @@ const HeaderComponent = ({
                         <Spinner animation="border" variant="light" />
                       </div>
                     ) : (
-                      <div className="city-dropdown-content">
-                        <div className="city-dropdown-left">
-                          <Link
-                            href="/projects/commercial"
-                            className="city-dropdown-item plus-jakarta-sans-semi-bold"
-                            prefetch={true}
-                          >
-                            Commercial
-                          </Link>
-                          <Link
-                            href="/projects/residential"
-                            className="city-dropdown-item plus-jakarta-sans-semi-bold"
-                            prefetch={true}
-                          >
-                            Residential
-                          </Link>
-                          <Link
-                            href="/projects/new-launches"
-                            className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold"
-                            prefetch={true}
-                          >
-                            New Launches{" "}
-                            <span className="city-dropdown-badge">New</span>
-                          </Link>
-                          <Link
-                            href="/blog"
-                            className="city-dropdown-item plus-jakarta-sans-semi-bold"
-                          >
-                            Articles &amp; News
-                          </Link>
+                      <>
+                        <div className="city-dropdown-content">
+                          <div className="city-dropdown-left">
+                            <Link
+                              href="/projects/commercial"
+                              className="city-dropdown-item plus-jakarta-sans-semi-bold"
+                              prefetch={true}
+                            >
+                              Commercial
+                            </Link>
+                            <Link
+                              href="/projects/residential"
+                              className="city-dropdown-item plus-jakarta-sans-semi-bold"
+                              prefetch={true}
+                            >
+                              Residential
+                            </Link>
+                            <Link
+                              href="/projects/new-launches"
+                              className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold"
+                              prefetch={true}
+                            >
+                              New Launches{" "}
+                              <NewBadge isVisible={isDropdownHovered} />
+                            </Link>
+                            <Link
+                              href="/blog"
+                              className="city-dropdown-item plus-jakarta-sans-semi-bold"
+                            >
+                              Articles &amp; News
+                            </Link>
+                          </div>
+                          <ul className="list-inline city-dropdown-right">
+                            {cityList?.map((city) => (
+                              <li key={city.id}>
+                                <Link
+                                  href={`/city/${city.slugURL}`}
+                                  className={`text-light text-decoration-none plus-jakarta-sans-semi-bold ${pathname === "/city/" + city.URL
+                                      ? "header-link-active"
+                                      : ""
+                                    }`}
+                                >
+                                  {city.cityName}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
-                        <ul className="list-inline city-dropdown-right">
-                          {cityList?.map((city) => (
-                            <li key={city.id}>
-                              <Link
-                                href={`/city/${city.slugURL}`}
-                                className={`text-light text-decoration-none plus-jakarta-sans-semi-bold ${
-                                  pathname === "/city/" + city.URL
-                                    ? "header-link-active"
-                                    : ""
-                                }`}
-                              >
-                                {city.cityName}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
+                        <div className="dropdown-footer-bar">
+                          <div className="dropdown-footer-left">
+                            <span className="dropdown-footer-label">Contact Us toll free on</span>
+                            <span className="dropdown-footer-phone">
+                              <img src="/static/icon/Vector (1).svg" alt="Phone" className="dropdown-footer-phone-icon" />
+                              8920024793
+                            </span>
+                          </div>
+                          <div className="dropdown-footer-right-wrapper">
+
+                            <p className="dropdown-footer-right">
+                              Email us at services@social@mypropertyfact.com. or call us at 8920024793 (IND Toll-Free)
+                            </p>
+                          </div>
+                        </div>
+                      </>
                     )}
                   </div>
                 </li>
-                <li className="hasChild">
+                <li
+                  className="hasChild"
+                  onMouseEnter={() => setIsDropdownHovered(true)}
+                  onMouseLeave={() => setIsDropdownHovered(false)}
+                >
                   <Link
                     href="#"
-                    className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold ${
-                      isBuilderRoute ? "header-link-active" : ""
-                    }`}
+                    className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold ${isBuilderRoute ? "header-link-active" : ""
+                      }`}
                   >
                     Builder
                   </Link>
@@ -450,73 +507,90 @@ const HeaderComponent = ({
                         <Spinner animation="border" variant="light" />
                       </div>
                     ) : (
-                      <div className="city-dropdown-content">
-                        <div className="city-dropdown-left">
-                          <Link
-                            href="/projects/commercial"
-                            className="city-dropdown-item plus-jakarta-sans-semi-bold"
-                            prefetch={true}
-                          >
-                            Commercial
-                          </Link>
-                          <Link
-                            href="/projects/residential"
-                            className="city-dropdown-item plus-jakarta-sans-semi-bold"
-                            prefetch={true}
-                          >
-                            Residential
-                          </Link>
-                          <Link
-                            href="/projects/new-launches"
-                            className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold"
-                            prefetch={true}
-                          >
-                            New Launches{" "}
-                            <span className="city-dropdown-badge">New</span>
-                          </Link>
-                          <Link
-                            href="/blog"
-                            className="city-dropdown-item plus-jakarta-sans-semi-bold"
-                          >
-                            Articles &amp; News
-                          </Link>
+                      <>
+                        <div className="city-dropdown-content">
+                          <div className="city-dropdown-left">
+                            <Link
+                              href="/projects/commercial"
+                              className="city-dropdown-item plus-jakarta-sans-semi-bold"
+                              prefetch={true}
+                            >
+                              Commercial
+                            </Link>
+                            <Link
+                              href="/projects/residential"
+                              className="city-dropdown-item plus-jakarta-sans-semi-bold"
+                              prefetch={true}
+                            >
+                              Residential
+                            </Link>
+                            <Link
+                              href="/projects/new-launches"
+                              className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold"
+                              prefetch={true}
+                            >
+                              New Launches{" "}
+                              <NewBadge isVisible={isDropdownHovered} />
+                            </Link>
+                            <Link
+                              href="/blog"
+                              className="city-dropdown-item plus-jakarta-sans-semi-bold"
+                            >
+                              Articles &amp; News
+                            </Link>
+                          </div>
+                          <ul className="list-inline city-dropdown-right">
+                            {builderList?.map((builder) => (
+                              <li key={builder.id}>
+                                <Link
+                                  href={`/builder/${builder.slugUrl}`}
+                                  className={`text-light text-decoration-none plus-jakarta-sans-semi-bold ${pathname === "/builder/" + builder.slugUrl
+                                      ? "header-link-active"
+                                      : ""
+                                    }`}
+                                >
+                                  {builder.builderName.toLowerCase()}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
-                        <ul className="list-inline city-dropdown-right">
-                          {builderList?.map((builder) => (
-                            <li key={builder.id}>
-                              <Link
-                                href={`/builder/${builder.slugUrl}`}
-                                className={`text-light text-decoration-none plus-jakarta-sans-semi-bold ${
-                                  pathname === "/builder/" + builder.slugUrl
-                                    ? "header-link-active"
-                                    : ""
-                                }`}
-                              >
-                                {builder.builderName.toLowerCase()}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
+                        <div className="dropdown-footer-bar">
+                          <div className="dropdown-footer-left">
+                            <span className="dropdown-footer-label">Contact Us toll free on</span>
+                            <span className="dropdown-footer-phone">
+                              <img src="/static/icon/Vector (1).svg" alt="Phone" className="dropdown-footer-phone-icon" />
+                              8920024793
+                            </span>
+                          </div>
+                          <div className="dropdown-footer-right-wrapper">
+                            <p className="dropdown-footer-right">
+                              Email us at services@social@mypropertyfact.com. or call us at 8920024793 (IND Toll-Free)
+                            </p>
+                          </div>
+                        </div>
+                      </>
                     )}
                   </div>
                 </li>
                 <li className="hasChild">
                   <Link
                     href="/about-us"
-                    className={`text-light py-3  text-decoration-none plus-jakarta-sans-semi-bold${
-                      pathname === "/about-us" ? "header-link-active" : ""
-                    }`}
+                    className={`text-light py-3  text-decoration-none plus-jakarta-sans-semi-bold${pathname === "/about-us" ? "header-link-active" : ""
+                      }`}
                   >
                     About Us
                   </Link>
                 </li>
-                <li className="hasChild">
+                <li
+                  className="hasChild"
+                  onMouseEnter={() => setIsDropdownHovered(true)}
+                  onMouseLeave={() => setIsDropdownHovered(false)}
+                >
                   <Link
                     href="/projects"
-                    className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold${
-                      isProjectTypeRoute ? "header-link-active" : ""
-                    }`}
+                    className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold${isProjectTypeRoute ? "header-link-active" : ""
+                      }`}
                   >
                     Projects
                   </Link>
@@ -529,163 +603,237 @@ const HeaderComponent = ({
                         <Spinner animation="border" variant="light" />
                       </div>
                     ) : (
-                      <div className="city-dropdown-content">
-                        <div className="city-dropdown-left">
-                          <Link
-                            href="/projects/commercial"
-                            className="city-dropdown-item plus-jakarta-sans-semi-bold"
-                            prefetch={true}
-                          >
-                            Commercial
-                          </Link>
-                          <Link
-                            href="/projects/residential"
-                            className="city-dropdown-item plus-jakarta-sans-semi-bold"
-                            prefetch={true}
-                          >
-                            Residential
-                          </Link>
-                          <Link
-                            href="/projects/new-launches"
-                            className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold"
-                            prefetch={true}
-                          >
-                            New Launches{" "}
-                            <span className="city-dropdown-badge">New</span>
-                          </Link>
-                          <Link
-                            href="/blog"
-                            className="city-dropdown-item plus-jakarta-sans-semi-bold"
-                          >
-                            Articles &amp; News
-                          </Link>
-                        </div>
-                        <div className="city-dropdown-right projects-search-section">
-                          <div className="projects-search-wrapper">
-                            <h3 className="projects-search-title plus-jakarta-sans-semi-bold">
-                              Search Your Dream Home
-                            </h3>
-                            <div className="projects-search-container">
-                              <div className="projects-search-input-wrapper">
-                                <FontAwesomeIcon
-                                  icon={faSearch}
-                                  className="projects-search-icon"
-                                />
-                                <input
-                                  type="text"
-                                  placeholder="Search"
-                                  className="projects-search-input"
-                                  value={projectSearchQuery}
-                                  onChange={(e) =>
-                                    setProjectSearchQuery(e.target.value)
-                                  }
-                                  onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                      e.preventDefault();
-                                      handleExploreClick();
-                                    }
-                                  }}
-                                />
-                                <button
-                                  className="projects-explore-btn"
-                                  onClick={handleExploreClick}
-                                >
-                                  Explore
-                                </button>
-                              </div>
-                            </div>
-                            {/* Search Results */}
-                            {projectSearchQuery.trim().length >= 2 && (
-                              <div className="projects-search-results">
-                                {isSearchingProjects ? (
-                                  <div className="projects-search-loader">
-                                    <Spinner
-                                      animation="border"
-                                      size="sm"
-                                      variant="light"
-                                    />
-                                    <span className="ms-2">Searching...</span>
-                                  </div>
-                                ) : projectSearchResults.length > 0 ? (
-                                  <ul className="projects-results-list">
-                                    {projectSearchResults.map((project) => {
-                                      const projectId =
-                                        project.id || project.slugURL;
-                                      return (
-                                        <li
-                                          key={projectId}
-                                          className="project-result-item"
-                                          onClick={() =>
-                                            handleProjectClick(project)
+                      <>
+                        <div className="city-dropdown-content">
+                          <div className="city-dropdown-left">
+                            <Link
+                              href="/projects/commercial"
+                              className="city-dropdown-item plus-jakarta-sans-semi-bold"
+                              prefetch={true}
+                            >
+                              Commercial
+                            </Link>
+                            <Link
+                              href="/projects/residential"
+                              className="city-dropdown-item plus-jakarta-sans-semi-bold"
+                              prefetch={true}
+                            >
+                              Residential
+                            </Link>
+                            <Link
+                              href="/projects/new-launches"
+                              className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold"
+                              prefetch={true}
+                            >
+                              New Launches{" "}
+                              <NewBadge isVisible={isDropdownHovered} />
+                            </Link>
+                            <Link
+                              href="/blog"
+                              className="city-dropdown-item plus-jakarta-sans-semi-bold"
+                            >
+                              Articles &amp; News
+                            </Link>
+                          </div>
+                          <div className="city-dropdown-right projects-search-section">
+                            <div className="projects-search-wrapper">
+                              {!(projectSearchQuery.trim().length >= 2 && projectSearchResults.length > 0 && !isSearchingProjects) && (
+                                <>
+                                  <h3 className="projects-search-title plus-jakarta-sans-semi-bold">
+                                    Search Your Dream Home
+                                  </h3>
+                                  <div className="projects-search-container">
+                                    <div className="projects-search-input-wrapper">
+                                      <FontAwesomeIcon
+                                        icon={faSearch}
+                                        className="projects-search-icon"
+                                      />
+                                      <input
+                                        ref={projectSearchInputRef}
+                                        type="text"
+                                        placeholder="Search"
+                                        className="projects-search-input"
+                                        value={projectSearchQuery}
+                                        onChange={(e) =>
+                                          setProjectSearchQuery(e.target.value)
+                                        }
+                                        onKeyDown={(e) => {
+                                          if (e.key === "Enter") {
+                                            e.preventDefault();
+                                            handleExploreClick();
                                           }
-                                        >
-                                          <div className="project-result-content">
-                                            <div className="project-result-image">
-                                              <Image
-                                                src={getProjectImageSrc(
-                                                  project,
-                                                )}
-                                                alt={
-                                                  project.projectName ||
-                                                  project.name ||
-                                                  "Project"
-                                                }
-                                                width={60}
-                                                height={60}
-                                                unoptimized
-                                                onError={() =>
-                                                  handleImageError(projectId)
-                                                }
-                                              />
-                                            </div>
-                                            <div className="project-result-name">
-                                              <div>
-                                                {project.projectName ||
-                                                  project.name}
-                                              </div>
-                                              {(project.cityName ||
-                                                project.builderName) && (
-                                                <div
-                                                  style={{
-                                                    fontSize: "12px",
-                                                    opacity: 0.8,
-                                                    marginTop: "4px",
-                                                  }}
-                                                >
-                                                  {[
-                                                    project.cityName,
-                                                    project.builderName,
-                                                  ]
-                                                    .filter(Boolean)
-                                                    .join(" • ")}
-                                                </div>
-                                              )}
-                                            </div>
-                                          </div>
-                                        </li>
-                                      );
-                                    })}
-                                  </ul>
-                                ) : projectSearchQuery.trim().length >= 2 ? (
-                                  <div className="projects-no-results">
-                                    No projects found matching &quot;
-                                    {projectSearchQuery}&quot;
+                                        }}
+                                      />
+                                      <button
+                                        className="projects-explore-btn"
+                                        onClick={handleExploreClick}
+                                      >
+                                        Explore
+                                      </button>
+                                    </div>
                                   </div>
-                                ) : null}
-                              </div>
-                            )}
+                                </>
+                              )}
+                              {/* Search Results - loader, horizontal slider, back to search */}
+                              {projectSearchQuery.trim().length >= 2 && (
+                                <div className="projects-search-results-wrapper">
+                                  {isSearchingProjects ? (
+                                    <div className="projects-search-loader-box">
+                                      <Spinner
+                                        animation="border"
+                                        variant="light"
+                                        className="projects-search-loader-spinner"
+                                      />
+                                      <span className="projects-search-loader-text">
+                                        Searching projects...
+                                      </span>
+                                    </div>
+                                  ) : projectSearchResults.length > 0 ? (
+                                    <>
+                                      <div className="projects-search-results-header">
+                                        <span className="projects-search-results-label">
+                                          Projects
+                                        </span>
+                                        <button
+                                          type="button"
+                                          className="projects-search-back-link"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleBackToSearch();
+                                          }}
+                                        >
+                                          Back to search
+                                        </button>
+                                      </div>
+                                      <div className="projects-search-horizontal-slider">
+                                        {projectSearchResults.length > 2 && (
+                                          <button
+                                            type="button"
+                                            className="projects-search-arrow projects-search-arrow-left"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              setSearchResultsSlideIndex((i) =>
+                                                Math.max(0, i - 1)
+                                              );
+                                            }}
+                                            disabled={searchResultsSlideIndex === 0}
+                                            aria-label="Previous projects"
+                                          >
+                                            <FontAwesomeIcon icon={faChevronLeft} />
+                                          </button>
+                                        )}
+                                        <div
+                                          className="projects-search-cards-track"
+                                          style={{
+                                            "--slide-index": searchResultsSlideIndex,
+                                          }}
+                                        >
+                                          {projectSearchResults.map((project) => {
+                                            const projectId = project.id || project.slugURL;
+                                            return (
+                                              <div
+                                                key={projectId}
+                                                className="project-search-card"
+                                                onClick={() => handleProjectClick(project)}
+                                                role="button"
+                                                tabIndex={0}
+                                                onKeyDown={(e) => {
+                                                  if (e.key === "Enter" || e.key === " ") {
+                                                    e.preventDefault();
+                                                    handleProjectClick(project);
+                                                  }
+                                                }}
+                                                aria-label={`View ${project.projectName || project.name}`}
+                                              >
+                                                <div className="project-search-card-image">
+                                                  <Image
+                                                    src={getProjectImageSrc(project)}
+                                                    alt={project.projectName || project.name || "Project"}
+                                                    width={200}
+                                                    height={140}
+                                                    unoptimized
+                                                    onError={() => handleImageError(projectId)}
+                                                  />
+                                                </div>
+                                                <div className="project-search-card-body">
+                                                  <h6 className="project-search-card-title plus-jakarta-sans-semi-bold">
+                                                    {[project.projectName || project.name, project.cityName]
+                                                      .filter(Boolean)
+                                                      .join(" ")}
+                                                  </h6>
+                                                  {(project.projectAddress || project.cityName) && (
+                                                    <p className="project-search-card-location">
+                                                      {project.projectAddress || project.cityName}
+                                                    </p>
+                                                  )}
+                                                  {project.projectPrice != null && project.projectPrice !== "" && (
+                                                    <p className="project-search-card-price text-success plus-jakarta-sans-semi-bold">
+                                                      {formatProjectPrice(project.projectPrice)}
+                                                    </p>
+                                                  )}
+                                                </div>
+                                              </div>
+                                            );
+                                          })}
+                                        </div>
+                                        {projectSearchResults.length > 2 && (
+                                          <button
+                                            type="button"
+                                            className="projects-search-arrow projects-search-arrow-right"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              const maxSlide = Math.ceil(
+                                                projectSearchResults.length / 2
+                                              ) - 1;
+                                              setSearchResultsSlideIndex((i) =>
+                                                Math.min(maxSlide, i + 1)
+                                              );
+                                            }}
+                                            disabled={
+                                              searchResultsSlideIndex >=
+                                              Math.ceil(projectSearchResults.length / 2) - 1
+                                            }
+                                            aria-label="Next projects"
+                                          >
+                                            <FontAwesomeIcon icon={faChevronRight} />
+                                          </button>
+                                        )}
+                                      </div>
+                                    </>
+                                  ) : projectSearchQuery.trim().length >= 2 ? (
+                                    <div className="projects-no-results">
+                                      No projects found matching &quot;
+                                      {projectSearchQuery}&quot;
+                                    </div>
+                                  ) : null}
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
+                        <div className="dropdown-footer-bar">
+                          <div className="dropdown-footer-left">
+                            <span className="dropdown-footer-label">Contact Us toll free on</span>
+                            <span className="dropdown-footer-phone">
+                              <img src="/static/icon/Vector (1).svg" alt="Phone" className="dropdown-footer-phone-icon" />
+                              8920024793
+                            </span>
+                          </div>
+                          <div className="dropdown-footer-right-wrapper">
+                            <p className="dropdown-footer-right">
+                              Email us at services@social@mypropertyfact.com. or call us at 8920024793 (IND Toll-Free)
+                            </p>
+                          </div>
+                        </div>
+                      </>
                     )}
                   </div>
                 </li>
                 <li className="hasChild">
                   <Link
                     href="/blog"
-                    className={`text-light py-3  text-decoration-none plus-jakarta-sans-semi-bold${
-                      isBlogTypeRoute ? "header-link-active" : ""
-                    }`}
+                    className={`text-light py-3  text-decoration-none plus-jakarta-sans-semi-bold${isBlogTypeRoute ? "header-link-active" : ""
+                      }`}
                   >
                     Blog
                   </Link>
@@ -693,9 +841,8 @@ const HeaderComponent = ({
                 <li className="hasChild">
                   <Link
                     href="/career"
-                    className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold${
-                      pathname === "/career" ? "header-link-active" : ""
-                    }`}
+                    className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold${pathname === "/career" ? "header-link-active" : ""
+                      }`}
                   >
                     Career
                   </Link>
@@ -703,9 +850,8 @@ const HeaderComponent = ({
                 <li className="hasChild">
                   <Link
                     href="/contact-us"
-                    className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold${
-                      pathname === "/contact-us" ? "header-link-active" : ""
-                    }`}
+                    className={`text-light py-3 text-decoration-none plus-jakarta-sans-semi-bold${pathname === "/contact-us" ? "header-link-active" : ""
+                      }`}
                   >
                     Contact Us
                   </Link>
@@ -755,67 +901,157 @@ const HeaderComponent = ({
           <div className="h-100 scroller">
             {/* Mobile Projects Search */}
             <div className="mobile-projects-search">
-              <div className="mobile-projects-search-input-wrapper">
-                <FontAwesomeIcon
-                  icon={faSearch}
-                  className="mobile-projects-search-icon"
-                />
-                <input
-                  type="text"
-                  placeholder="Search Your Dream House"
-                  className="mobile-projects-search-input"
-                  value={projectSearchQuery}
-                  onChange={(e) => setProjectSearchQuery(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      if (projectSearchResults?.[0]) {
-                        handleProjectClick(projectSearchResults[0]);
-                        openMenu();
+              {!(projectSearchQuery.trim().length >= 2 && projectSearchResults.length > 0 && !isSearchingProjects) && (
+                <div className="mobile-projects-search-input-wrapper">
+                  <FontAwesomeIcon
+                    icon={faSearch}
+                    className="mobile-projects-search-icon"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Search Your Dream House"
+                    className="mobile-projects-search-input"
+                    value={projectSearchQuery}
+                    onChange={(e) => setProjectSearchQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        if (projectSearchResults?.[0]) {
+                          handleProjectClick(projectSearchResults[0]);
+                          openMenu();
+                        }
                       }
-                    }
-                  }}
-                />
-              </div>
+                    }}
+                  />
+                </div>
+              )}
               {projectSearchQuery.trim().length >= 2 && (
                 <div className="mobile-projects-search-results">
                   {isSearchingProjects ? (
-                    <div className="mobile-projects-search-loader">
-                      <Spinner animation="border" size="sm" variant="dark" />
-                      <span className="ms-2">Searching...</span>
+                    <div className="mobile-projects-search-loader-box">
+                      <Spinner
+                        animation="border"
+                        variant="dark"
+                        className="mobile-projects-search-loader-spinner"
+                      />
+                      <span className="mobile-projects-search-loader-text">
+                        Searching projects...
+                      </span>
                     </div>
                   ) : projectSearchResults.length > 0 ? (
-                    <ul className="mobile-projects-results-list">
-                      {projectSearchResults.map((project) => (
-                        <li
-                          key={
-                            project.id || project.slugURL || project.projectName
-                          }
+                    <div className="mobile-projects-search-results-inner">
+                      <div className="mobile-projects-search-results-header">
+                        <span className="mobile-projects-search-results-label">
+                          Projects
+                        </span>
+                        <button
+                          type="button"
+                          className="mobile-projects-search-back-link"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleBackToSearch();
+                          }}
                         >
+                          Back to search
+                        </button>
+                      </div>
+                      <div className="mobile-projects-search-cards">
+                        {(() => {
+                          const PER_SLIDE = 2;
+                          const start = mobileSearchSlideIndex * PER_SLIDE;
+                          const visible = projectSearchResults.slice(
+                            start,
+                            start + PER_SLIDE
+                          );
+                          return visible.map((project) => {
+                            const projectId = project.id || project.slugURL;
+                            return (
+                              <div
+                                key={projectId}
+                                className="mobile-project-search-card"
+                                onClick={() => {
+                                  handleProjectClick(project);
+                                  openMenu();
+                                }}
+                                role="button"
+                                tabIndex={0}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter" || e.key === " ") {
+                                    e.preventDefault();
+                                    handleProjectClick(project);
+                                    openMenu();
+                                  }
+
+                                }}
+                              >
+                                <div className="mobile-project-search-card-image">
+                                  <Image
+                                    src={getProjectImageSrc(project)}
+                                    alt={project.projectName || project.name || "Project"}
+                                    width={100}
+                                    height={80}
+                                    unoptimized
+                                    onError={() => handleImageError(projectId)}
+                                  />
+                                </div>
+                                <div className="mobile-project-search-card-body">
+                                  <div className="mobile-project-search-card-title plus-jakarta-sans-semi-bold">
+                                    {[project.projectName || project.name, project.cityName]
+                                      .filter(Boolean)
+                                      .join(" ")}
+                                  </div>
+                                  {(project.projectAddress || project.cityName) && (
+                                    <div className="mobile-project-search-card-location">
+                                      {project.projectAddress || project.cityName}
+                                    </div>
+                                  )}
+                                  {project.projectPrice != null && project.projectPrice !== "" && (
+                                    <div className="mobile-project-search-card-price text-success plus-jakarta-sans-semi-bold">
+                                      {formatProjectPrice(project.projectPrice)}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          });
+                        })()}
+                      </div>
+                      {projectSearchResults.length > 2 && (
+                        <div className="mobile-projects-search-slider-controls">
                           <button
                             type="button"
-                            className="mobile-project-result-btn"
-                            onClick={() => {
-                              handleProjectClick(project);
-                              openMenu();
+                            className="mobile-projects-search-slider-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setMobileSearchSlideIndex((i) => Math.max(0, i - 1));
                             }}
+                            disabled={mobileSearchSlideIndex === 0}
+                            aria-label="Previous"
                           >
-                            <div className="mobile-project-result-main">
-                              <div className="mobile-project-name">
-                                {project.projectName || project.name}
-                              </div>
-                              {(project.cityName || project.builderName) && (
-                                <div className="mobile-project-meta">
-                                  {[project.cityName, project.builderName]
-                                    .filter(Boolean)
-                                    .join(" • ")}
-                                </div>
-                              )}
-                            </div>
+                            <FontAwesomeIcon icon={faChevronLeft} />
                           </button>
-                        </li>
-                      ))}
-                    </ul>
+                          <span className="mobile-projects-search-slider-dots">
+                            {mobileSearchSlideIndex + 1} / {Math.ceil(projectSearchResults.length / 2)}
+                          </span>
+                          <button
+                            type="button"
+                            className="mobile-projects-search-slider-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const maxSlide = Math.ceil(projectSearchResults.length / 2) - 1;
+                              setMobileSearchSlideIndex((i) => Math.min(maxSlide, i + 1));
+                            }}
+                            disabled={
+                              mobileSearchSlideIndex >=
+                              Math.ceil(projectSearchResults.length / 2) - 1
+                            }
+                            aria-label="Next"
+                          >
+                            <FontAwesomeIcon icon={faChevronRight} />
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   ) : (
                     <div className="mobile-projects-no-results">
                       No projects found matching &quot;{projectSearchQuery}
@@ -828,9 +1064,8 @@ const HeaderComponent = ({
             <div className="bigMenuList">
               <ul className="list-inline active list-unstyled">
                 <li
-                  className={`mb-hasChild ${
-                    activeDropdown === "city" ? "active" : ""
-                  }`}
+                  className={`mb-hasChild ${activeDropdown === "city" ? "active" : ""
+                    }`}
                 >
                   <Link
                     href="#"
@@ -844,9 +1079,8 @@ const HeaderComponent = ({
                     />
                   </Link>
                   <div
-                    className={`dropdown mobile-dropdown ${
-                      activeDropdown === "city" ? "activeHeader" : ""
-                    }`}
+                    className={`dropdown mobile-dropdown ${activeDropdown === "city" ? "activeHeader" : ""
+                      }`}
                   >
                     <ul className="list-inline list-unstyled">
                       {cityList?.map((city) => (
@@ -864,9 +1098,8 @@ const HeaderComponent = ({
                   </div>
                 </li>
                 <li
-                  className={`mb-hasChild ${
-                    activeDropdown === "builder" ? "active" : ""
-                  }`}
+                  className={`mb-hasChild ${activeDropdown === "builder" ? "active" : ""
+                    }`}
                 >
                   <Link
                     className="text-decoration-none mobile-menu-item"
@@ -880,9 +1113,8 @@ const HeaderComponent = ({
                     />
                   </Link>
                   <div
-                    className={`dropdown mobile-dropdown ${
-                      activeDropdown === "builder" ? "activeHeader" : ""
-                    }`}
+                    className={`dropdown mobile-dropdown ${activeDropdown === "builder" ? "activeHeader" : ""
+                      }`}
                   >
                     <ul className="list-inline list-unstyled">
                       {builderList?.map((builder) => (
@@ -909,9 +1141,8 @@ const HeaderComponent = ({
                   </Link>
                 </li>
                 <li
-                  className={`mb-hasChild ${
-                    activeDropdown === "projects" ? "active" : ""
-                  }`}
+                  className={`mb-hasChild ${activeDropdown === "projects" ? "active" : ""
+                    }`}
                 >
                   <Link
                     href="#"
@@ -925,9 +1156,8 @@ const HeaderComponent = ({
                     />
                   </Link>
                   <div
-                    className={`dropdown mobile-dropdown ${
-                      activeDropdown === "projects" ? "activeHeader" : ""
-                    }`}
+                    className={`dropdown mobile-dropdown ${activeDropdown === "projects" ? "activeHeader" : ""
+                      }`}
                   >
                     <ul className="list-inline list-unstyled">
                       {projectTypes?.map((project) => (

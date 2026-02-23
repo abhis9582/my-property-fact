@@ -2,31 +2,6 @@
 const nextConfig = {
   // Ensure MUI and other packages are transpiled so vendor chunks are generated correctly
   transpilePackages: ["@mui/material", "@mui/system", "@mui/utils"],
-  // Performance: optimize production build
-  compress: true,
-  poweredByHeader: false,
-  reactStrictMode: true,
-  // Reduce bundle size - tree-shake icon libraries (MUI already optimized by default)
-  experimental: {
-    optimizePackageImports: [
-      "@fortawesome/free-solid-svg-icons",
-      "@fortawesome/free-brands-svg-icons",
-    ],
-  },
-  // Headers for static asset caching
-  async headers() {
-    return [
-      {
-        source: "/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif|woff2|woff|ttf)",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
-    ];
-  },
   images: {
     remotePatterns: [
       {

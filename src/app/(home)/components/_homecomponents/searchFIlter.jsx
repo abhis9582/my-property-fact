@@ -8,7 +8,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Spinner } from "react-bootstrap";
 
-export default function SearchFilter({ projectTypeList, cityList }) {
+export default function SearchFilter({ projectTypeList = [], cityList = [] }) {
+  const { setProjectData } = useProjectContext();
   const [propertType, setPropertyType] = useState("");
   const [propertyLocation, setPropertyLocation] = useState("");
   const [budget, setBudget] = useState("");
@@ -112,7 +113,14 @@ export default function SearchFilter({ projectTypeList, cityList }) {
     <div className="home-search-container container">
       {/* <div className="container bg-white border rounded-2 custom-shadow">*/}
       <div className="container border rounded-1 search-filter-shadow">
-        <form method="Get" action="projects">
+        <form
+          method="get"
+          action="/projects"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit(e);
+          }}
+        >
           <div className="d-flex flex-wrap flex-md-row flex-column p-3 p-md-4 gap-2 gap-md-3 plus-jakarta-sans-regular">
             <div className="col">{renderDropdown(
               "type",
@@ -146,7 +154,6 @@ export default function SearchFilter({ projectTypeList, cityList }) {
               <button
                 type="submit"
                 className="py-1 px-4 text-light m-0 border rounded-pill btn-normal-color search-btn-home-page"
-                onClick={handleSubmit}
                 aria-label="Search"
               >
                 {/* <button

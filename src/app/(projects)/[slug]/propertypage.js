@@ -138,6 +138,46 @@ export default function Property({ projectDetail }) {
     autoplaySpeed: 3000,
   };
 
+  // Gallery arrows: same style as Similar Projects (featured) – white circle + SVG icons
+  const GalleryPrevArrow = (props) => {
+    const { className, style, onClick } = props;
+    return (
+      <button
+        type="button"
+        className={`${className || ""} custom-featured-arrow custom-featured-arrow-prev gallery-featured-arrow`}
+        style={style}
+        onClick={onClick}
+        aria-label="Previous slide"
+      >
+        <Image
+          src="/icon/arrow-left-s-line.svg"
+          alt="Previous"
+          width={32}
+          height={32}
+        />
+      </button>
+    );
+  };
+  const GalleryNextArrow = (props) => {
+    const { className, style, onClick } = props;
+    return (
+      <button
+        type="button"
+        className={`${className || ""} custom-featured-arrow custom-featured-arrow-next gallery-featured-arrow`}
+        style={style}
+        onClick={onClick}
+        aria-label="Next slide"
+      >
+        <Image
+          src="/icon/arrow-right-s-line.svg"
+          alt="Next"
+          width={32}
+          height={32}
+        />
+      </button>
+    );
+  };
+
   //Setting for gallery slider
   const settings1 = {
     dots: false,
@@ -146,6 +186,8 @@ export default function Property({ projectDetail }) {
     autoplay: projectDetail.projectGalleryImageList.length > 1,
     slidesToShow: 2, // Default for large screens
     arrows: true,
+    prevArrow: <GalleryPrevArrow />,
+    nextArrow: <GalleryNextArrow />,
     slidesToScroll: 1,
     responsive: [
       {

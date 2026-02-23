@@ -12,6 +12,21 @@
 }
 
 
+/* Reserve space for LCP hero to prevent CLS (mobile ~56vw, desktop smaller) */
+.mpf-hero-banner {
+  min-height: 56vw;
+}
+@media (min-width: 768px) {
+  .mpf-hero-banner {
+    min-height: 42vw;
+  }
+}
+@media (min-width: 992px) {
+  .mpf-hero-banner {
+    min-height: 400px;
+  }
+}
+
 .hero-banner-slider {
   width: 100%;
   overflow: hidden;
@@ -28,6 +43,20 @@
 
 .hero-banner-slider .slick-slide>div {
   width: 100%;
+}
+
+.hero-lcp-fallback {
+  min-height: 56vw;
+}
+@media (min-width: 768px) {
+  .hero-lcp-fallback {
+    min-height: 42vw;
+  }
+}
+@media (min-width: 992px) {
+  .hero-lcp-fallback {
+    min-height: 400px;
+  }
 }
 
 .hero-banner-slider .slick-dots {
@@ -148,6 +177,34 @@
   -webkit-backdrop-filter: blur(10px) !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Hero search: align dropdown text in one line, same start position, space from divider */
+.home-search-container .d-flex.flex-wrap {
+  align-items: stretch;
+}
+.home-search-container .d-flex.flex-wrap > .col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+}
+.home-search-container .custom-sort-dropdown {
+  width: 100%;
+  min-width: 0;
+}
+.home-search-container .custom-select-trigger {
+  width: 100%;
+  padding-left: 16px;
+  padding-right: 36px;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+}
+.home-search-container .custom-select-trigger .custom-sort-value {
+  text-align: left;
+  flex: 1;
+  min-width: 0;
+  padding-right: 8px;
 }
 
 .home-search-container label {

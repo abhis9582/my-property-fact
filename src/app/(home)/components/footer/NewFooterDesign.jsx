@@ -12,9 +12,11 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import PrivacyPolicyModal from "../privacy-policy/PrivacyPolicyModal";
+import { useSiteData } from "@/app/_global_components/contexts/SiteDataContext";
 import "./newfooter.css";
 
-export default function NewFooterDesign({ cityList = [], compactTop = false }) {
+export default function NewFooterDesign({ compactTop = false }) {
+  const { cityList = [] } = useSiteData();
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [visibleCount, setVisibleCount] = useState({
     apartments: 5,
@@ -32,6 +34,37 @@ export default function NewFooterDesign({ cityList = [], compactTop = false }) {
   // Helper function to generate URL slug from prefix
   const generateSlug = (prefix) => {
     return `/${prefix.replace(/ /g, "-").toLowerCase().trim()}`;
+  };
+
+  // Delhi NCR cities to show first (order preserved)
+  const DELHI_NCR_CITY_NAMES = [
+    "Delhi",
+    "Noida",
+    "Gurugram",
+    "Faridabad",
+    "Ghaziabad",
+    "Greater Noida",
+    "Noida Extension",
+    "Sonipat",
+  ];
+
+  const sortCitiesDelhiNCRFirst = (cities) => {
+    if (!Array.isArray(cities) || cities.length === 0) return cities;
+    const ncrSet = new Set(DELHI_NCR_CITY_NAMES.map((n) => n.toLowerCase().trim()));
+    return [...cities].sort((a, b) => {
+      const aName = (a?.cityName || "").trim();
+      const bName = (b?.cityName || "").trim();
+      const aNCR = ncrSet.has(aName.toLowerCase());
+      const bNCR = ncrSet.has(bName.toLowerCase());
+      if (aNCR && !bNCR) return -1;
+      if (!aNCR && bNCR) return 1;
+      if (aNCR && bNCR) {
+        const aIdx = DELHI_NCR_CITY_NAMES.findIndex((n) => n.toLowerCase() === aName.toLowerCase());
+        const bIdx = DELHI_NCR_CITY_NAMES.findIndex((n) => n.toLowerCase() === bName.toLowerCase());
+        return (aIdx === -1 ? 999 : aIdx) - (bIdx === -1 ? 999 : bIdx);
+      }
+      return aName.localeCompare(bName);
+    });
   };
 
   // Load more cities (5 at a time) for each category
@@ -78,12 +111,16 @@ export default function NewFooterDesign({ cityList = [], compactTop = false }) {
     }));
   };
 
-  // Filter cities based on category (same logic as old footer)
+  // Filter cities based on category (same logic as old footer), then sort Delhi NCR first
   const safeCityList = Array.isArray(cityList) ? cityList : [];
-  const apartmentsCities = safeCityList;
-  const newProjectsCities = safeCityList.filter(item => item?.cityName && !["Agra"].includes(item.cityName));
-  const flatsCities = safeCityList;
-  const commercialCities = safeCityList.filter(item => item?.cityName && !["Agra", "Bareilly", "Chennai", "Dehradun", "Kochi", "Thiruvananthapuram", "Vrindavan"].includes(item.cityName));
+  const apartmentsCities = sortCitiesDelhiNCRFirst(safeCityList);
+  const newProjectsCities = sortCitiesDelhiNCRFirst(
+    safeCityList.filter((item) => item?.cityName && !["Agra"].includes(item.cityName))
+  );
+  const flatsCities = sortCitiesDelhiNCRFirst(safeCityList);
+  const commercialCities = sortCitiesDelhiNCRFirst(
+    safeCityList.filter((item) => item?.cityName && !["Agra", "Bareilly", "Chennai", "Dehradun", "Kochi", "Thiruvananthapuram", "Vrindavan"].includes(item.cityName))
+  );
 
   // Helper function to render city list with Load More
   const renderCityList = (cities, category, prefix, generateSlugFn) => {

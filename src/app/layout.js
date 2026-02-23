@@ -35,6 +35,8 @@ export default function RootLayout({ children }) {
     <html lang="en-IN">
       <head>
         <link rel="preconnect" href="https://www.googletagmanager.com" />
+        {/* Preload LCP hero image for home (mobile-first) */}
+        <link rel="preload" as="image" href="/static/banners/Irish_phone.jpg" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -55,7 +57,12 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body
-        className={`${gothamBold.variable} ${gothamLight.variable}`}>
+<<<<<<< Updated upstream
+        className={`${gothamBold.variable} ${gothamLight.variable}`} suppressHydrationWarning={true}>
+=======
+        className={`${gothamBold.variable} ${gothamLight.variable}`}
+        suppressHydrationWarning>
+>>>>>>> Stashed changes
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
@@ -65,13 +72,15 @@ export default function RootLayout({ children }) {
             style={{ display: "none", visibility: "hidden" }}
           ></iframe>
         </noscript>
-        {/* Meta Pixel noscript fallback */}
+        {/* Meta Pixel noscript fallback - img required for no-JS tracking */}
         <noscript>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             height="1"
             width="1"
             style={{ display: "none" }}
             src="https://www.facebook.com/tr?id=994098169297958&ev=PageView&noscript=1"
+            alt=""
           />
         </noscript>
 

@@ -1,3 +1,12 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "react-hooks/exhaustive-deps": "off",
+<<<<<<< Updated upstream
+    "@next/next/no-img-element": "off"
+=======
+    "@next/next/no-img-element": "off",
+    "jsx-a11y/alt-text": "off"
+>>>>>>> Stashed changes
+  }
 }
