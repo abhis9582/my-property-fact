@@ -13,15 +13,7 @@ import {
   Spinner
 } from "react-bootstrap";
 import { 
-<<<<<<< HEAD
-<<<<<<< Updated upstream
   cilBadge, 
-=======
-  cilAddressBook, 
->>>>>>> Stashed changes
-=======
-  cilBadge, 
->>>>>>> 00a80471436058d7367c7dc35effafe3b650499e
   cilShieldAlt, 
   cilCheck,
   cilX,
@@ -307,15 +299,7 @@ export default function RERAPage() {
             <Card.Body>
               <div className="stat-content">
                 <div className="stat-icon primary">
-<<<<<<< HEAD
-<<<<<<< Updated upstream
                   <CIcon icon={cilBadge} />
-=======
-                  <CIcon icon={cilAddressBook} />
->>>>>>> Stashed changes
-=======
-                  <CIcon icon={cilBadge} />
->>>>>>> 00a80471436058d7367c7dc35effafe3b650499e
                 </div>
                 <div className="stat-info">
                   <h6 className="stat-title">Total Credentials</h6>
@@ -416,15 +400,7 @@ export default function RERAPage() {
       ) : reraCredentials.length === 0 ? (
         <Card className="dashboard-card">
           <Card.Body className="text-center py-5">
-<<<<<<< HEAD
-<<<<<<< Updated upstream
             <CIcon icon={cilBadge} size="3xl" className="text-muted mb-3" />
-=======
-            <CIcon icon={cilAddressBook} size="3xl" className="text-muted mb-3" />
->>>>>>> Stashed changes
-=======
-            <CIcon icon={cilBadge} size="3xl" className="text-muted mb-3" />
->>>>>>> 00a80471436058d7367c7dc35effafe3b650499e
             <h5 className="mb-2">No RERA Credentials Found</h5>
             <p className="text-muted mb-4">
               Add your RERA registration credentials to ensure compliance and build trust with clients.
@@ -556,15 +532,7 @@ export default function RERAPage() {
       >
         <Modal.Header closeButton className="border-bottom">
           <Modal.Title className="d-flex align-items-center">
-<<<<<<< HEAD
-<<<<<<< Updated upstream
             <CIcon icon={cilBadge} className="me-2" />
-=======
-            <CIcon icon={cilAddressBook} className="me-2" />
->>>>>>> Stashed changes
-=======
-            <CIcon icon={cilBadge} className="me-2" />
->>>>>>> 00a80471436058d7367c7dc35effafe3b650499e
             {selectedRera ? "Edit RERA Credential" : "Add RERA Credential"}
           </Modal.Title>
         </Modal.Header>
@@ -574,15 +542,7 @@ export default function RERAPage() {
               <Col md={6}>
                 <Form.Group className="mb-3">
                   <Form.Label className="fw-semibold d-flex align-items-center">
-<<<<<<< HEAD
-<<<<<<< Updated upstream
                     <CIcon icon={cilBadge} className="me-2" />
-=======
-                    <CIcon icon={cilAddressBook} className="me-2" />
->>>>>>> Stashed changes
-=======
-                    <CIcon icon={cilBadge} className="me-2" />
->>>>>>> 00a80471436058d7367c7dc35effafe3b650499e
                     RERA ID <span className="text-danger ms-1">*</span>
                   </Form.Label>
                   <Form.Control

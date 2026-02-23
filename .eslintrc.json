@@ -2,15 +2,7 @@
   "extends": "next/core-web-vitals",
   "rules": {
     "react-hooks/exhaustive-deps": "off",
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-    "@next/next/no-img-element": "off"
-=======
     "@next/next/no-img-element": "off",
     "jsx-a11y/alt-text": "off"
->>>>>>> Stashed changes
-=======
-    "@next/next/no-img-element": "off"
->>>>>>> 00a80471436058d7367c7dc35effafe3b650499e
   }
 }
