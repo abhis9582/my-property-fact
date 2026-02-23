@@ -36,7 +36,8 @@ export default function Projects() {
   const observer = useRef(null);
   const loadMoreRef = useRef(null);
   const [isActive, setIsActive] = useState("");
-  const PAGE_SIZE = 150;
+  // Smaller page size for fast first load on mobile (was 150); load more on scroll
+  const pageSize = 150;
   const [fadeKey, setFadeKey] = useState(0);
   const [filteredProjectData, setFilteredProjectData] = useState([]);
   const [hasUrlParams, setHasUrlParams] = useState(false);
@@ -80,7 +81,7 @@ export default function Projects() {
           {
             params: {
               page: pageNum,
-              size: PAGE_SIZE,
+              size: pageSize,
             },
           }
         );
@@ -91,10 +92,10 @@ export default function Projects() {
           setAllProjectsList((prev) => {
             return [...prev, ...newProjects];
           });
-          setHasMore(newProjects.length === PAGE_SIZE);
+          setHasMore(newProjects.length === pageSize);
         } else {
           setAllProjectsList(newProjects);
-          setHasMore(newProjects.length === PAGE_SIZE);
+          setHasMore(newProjects.length === pageSize);
           setIsActive("All"); // Always set to "All" after initial load
         }
       } catch (error) {
@@ -106,7 +107,7 @@ export default function Projects() {
         setInitialLoad(false);
       }
     },
-    [setProjectData, PAGE_SIZE]
+    [setProjectData, pageSize]
   );
 
   // Fetch filtered projects
@@ -464,7 +465,7 @@ export default function Projects() {
     setHasMore(true);
     setIsActive("All");
     const totalLoaded = allProjectsList.length;
-    setHasMore(totalLoaded >= PAGE_SIZE && totalLoaded % PAGE_SIZE === 0);
+    setHasMore(totalLoaded >= pageSize && totalLoaded % pageSize === 0);
     setFadeKey((prev) => prev + 1);
   };
 
@@ -492,7 +493,7 @@ export default function Projects() {
       // (quick filters handle their own filteredProjectData)
       setFilteredProjectData([]);
       const totalLoaded = allProjectsList.length;
-      setHasMore(totalLoaded >= PAGE_SIZE && totalLoaded % PAGE_SIZE === 0);
+      setHasMore(totalLoaded >= pageSize && totalLoaded % pageSize === 0);
     }
   }, [filters, allProjectsList, applyFilters, isActive]);
 
@@ -519,7 +520,7 @@ export default function Projects() {
       if (tabName === "All") {
         filtered = allProjectsList;
         const totalLoaded = allProjectsList.length;
-        setHasMore(totalLoaded >= PAGE_SIZE && totalLoaded % PAGE_SIZE === 0);
+        setHasMore(totalLoaded >= pageSize && totalLoaded % pageSize === 0);
       } else if (tabName === "Commercial") {
         filtered = allProjectsList.filter(
           (item) => item.propertyTypeName === "Commercial"
@@ -869,7 +870,10 @@ export default function Projects() {
                       key={item.id + "_" + index}
                       className="project-card-wrapper"
                     >
-                      <PropertyContainer data={item} />
+                      <PropertyContainer
+                        data={item}
+                        imagePriority={index < 6}
+                      />
                     </div>
                   ))}
                 </div>
@@ -889,7 +893,7 @@ export default function Projects() {
                   )}
                 {!hasMore &&
                   !initialLoad &&
-                  allProjectsList.length >= PAGE_SIZE &&
+                  allProjectsList.length >= pageSize &&
                   isActive === "All" && (
                     <div className="load-complete">
                       <div className="divider-line"></div>

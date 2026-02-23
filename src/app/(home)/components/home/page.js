@@ -1,7 +1,6 @@
 import dynamic from "next/dynamic";
 import NewsViews from "./new-views/page";
 import SocialFeedPage from "./social-feed/page";
-import TopPicksWithRotation from "../TopPicksWithRotation";
 import HeroSection from "../_homecomponents/heroSection";
 import FeaturedPage from "./featured/page";
 import {
@@ -11,9 +10,17 @@ import {
   fetchTopPicksProject,
   fetchBuilderData,
 } from "@/app/_global_components/masterFunction";
-import NewInsight from "../_homecomponents/NewInsight";
 import NewMpfMetaDataContainer from "../_homecomponents/NewMpfMetaDataContainer";
-// Lazy load below-the-fold sections to improve LCP and FCP
+
+const TopPicksWithRotation = dynamic(() => import("../TopPicksWithRotation"), {
+  ssr: true,
+  loading: () => <section className="py-5" style={{ minHeight: 180 }} aria-busy="true" />,
+});
+const NewInsight = dynamic(() => import("../_homecomponents/NewInsight"), {
+  ssr: true,
+  loading: () => <section className="py-4" style={{ minHeight: 120 }} aria-busy="true" />,
+});
+
 const DreamPropertySection = dynamic(
   () => import("./dream-project/DreamPropertySection"),
   { loading: () => <section className="dream-property-section my-4 my-lg-5 min-h-[200px]" aria-busy="true" /> }
@@ -84,8 +91,7 @@ export default async function HomePage() {
       p.cityName &&
       topCities.includes(p.cityName)
   ).slice(0, 20);
-  console.log(residentialRest.length);
-  
+
   const residentialProjects = [...residentialFirst, ...residentialRest];
 
   // Commercial: slug-ordered first, then rest from getAllProjects (Commercial type)

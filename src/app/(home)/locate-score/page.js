@@ -1,5 +1,7 @@
+import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import LocateScore from "./locateScore";
 import locateScoreData from "./LocateScore.json";
+import NewLocateScore from "./NewLocateScore";
 
 // Extract cities from JSON data
 const getCitiesFromJSON = () => {
@@ -17,7 +19,9 @@ export default function LocateScorePage() {
   const cities = getCitiesFromJSON();
   return (
     <div>
-      <LocateScore cities={cities} locateScoreData={locateScoreData} />
+      <CommonHeaderBanner headerText={"LOCATE Score"} />
+      {/* <LocateScore cities={cities} locateScoreData={locateScoreData} /> */}
+      <NewLocateScore />
     </div>
   );
 }

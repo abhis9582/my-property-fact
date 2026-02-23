@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -12,10 +12,20 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import PrivacyPolicyModal from "../privacy-policy/PrivacyPolicyModal";
+import { useSiteData } from "@/app/_global_components/contexts/SiteDataContext";
 import "./newfooter.css";
 
-export default function NewFooterDesign({ cityList = [], compactTop = false }) {
+export default function NewFooterDesign({ compactTop = false, cityList: cityListProp }) {
+  const { cityList: contextCityList = [] } = useSiteData();
+  const [isMounted, setIsMounted] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Use prop when provided (e.g. property page) - else context (e.g. home page with SiteDataProvider)
+  const cityList = cityListProp ?? contextCityList;
   const [visibleCount, setVisibleCount] = useState({
     apartments: 5,
     newProjects: 5,
@@ -32,6 +42,37 @@ export default function NewFooterDesign({ cityList = [], compactTop = false }) {
   // Helper function to generate URL slug from prefix
   const generateSlug = (prefix) => {
     return `/${prefix.replace(/ /g, "-").toLowerCase().trim()}`;
+  };
+
+  // Delhi NCR cities to show first (order preserved)
+  const DELHI_NCR_CITY_NAMES = [
+    "Delhi",
+    "Noida",
+    "Gurugram",
+    "Faridabad",
+    "Ghaziabad",
+    "Greater Noida",
+    "Noida Extension",
+    "Sonipat",
+  ];
+
+  const sortCitiesDelhiNCRFirst = (cities) => {
+    if (!Array.isArray(cities) || cities.length === 0) return cities;
+    const ncrSet = new Set(DELHI_NCR_CITY_NAMES.map((n) => n.toLowerCase().trim()));
+    return [...cities].sort((a, b) => {
+      const aName = (a?.cityName || "").trim();
+      const bName = (b?.cityName || "").trim();
+      const aNCR = ncrSet.has(aName.toLowerCase());
+      const bNCR = ncrSet.has(bName.toLowerCase());
+      if (aNCR && !bNCR) return -1;
+      if (!aNCR && bNCR) return 1;
+      if (aNCR && bNCR) {
+        const aIdx = DELHI_NCR_CITY_NAMES.findIndex((n) => n.toLowerCase() === aName.toLowerCase());
+        const bIdx = DELHI_NCR_CITY_NAMES.findIndex((n) => n.toLowerCase() === bName.toLowerCase());
+        return (aIdx === -1 ? 999 : aIdx) - (bIdx === -1 ? 999 : bIdx);
+      }
+      return aName.localeCompare(bName);
+    });
   };
 
   // Load more cities (5 at a time) for each category
@@ -78,12 +119,21 @@ export default function NewFooterDesign({ cityList = [], compactTop = false }) {
     }));
   };
 
-  // Filter cities based on category (same logic as old footer)
-  const safeCityList = Array.isArray(cityList) ? cityList : [];
-  const apartmentsCities = safeCityList;
-  const newProjectsCities = safeCityList.filter(item => item?.cityName && !["Agra"].includes(item.cityName));
-  const flatsCities = safeCityList;
-  const commercialCities = safeCityList.filter(item => item?.cityName && !["Agra", "Bareilly", "Chennai", "Dehradun", "Kochi", "Thiruvananthapuram", "Vrindavan"].includes(item.cityName));
+  // Filter cities based on category (same logic as old footer), then sort Delhi NCR first
+  // Prop from server (property page): use immediately. Context (home): defer until mounted to avoid hydration mismatch.
+  const safeCityList = Array.isArray(cityListProp)
+    ? cityListProp
+    : isMounted && Array.isArray(cityList)
+      ? cityList
+      : [];
+  const apartmentsCities = sortCitiesDelhiNCRFirst(safeCityList);
+  const newProjectsCities = sortCitiesDelhiNCRFirst(
+    safeCityList.filter((item) => item?.cityName && !["Agra"].includes(item.cityName))
+  );
+  const flatsCities = sortCitiesDelhiNCRFirst(safeCityList);
+  const commercialCities = sortCitiesDelhiNCRFirst(
+    safeCityList.filter((item) => item?.cityName && !["Agra", "Bareilly", "Chennai", "Dehradun", "Kochi", "Thiruvananthapuram", "Vrindavan"].includes(item.cityName))
+  );
 
   // Helper function to render city list with Load More
   const renderCityList = (cities, category, prefix, generateSlugFn) => {

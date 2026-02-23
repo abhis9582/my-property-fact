@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useState } from "react";
 import "./common.css";
 
-export default function PropertyContainer({ data, badgeVariant = "default" }) {
+export default function PropertyContainer({ data, badgeVariant = "default", imagePriority = false }) {
   const [imageError, setImageError] = useState(false);
 
   // Ensure data is defined before accessing its properties
@@ -116,7 +116,7 @@ export default function PropertyContainer({ data, badgeVariant = "default" }) {
             src={getImageSrc()}
             alt={data.projectName || "Project image"}
             className="img-fluid w-100 rounded-top-4 object-fit-cover"
-            priority
+            priority={imagePriority}
             width={400}
             height={400}
             onError={() => setImageError(true)}

@@ -13,7 +13,7 @@ import {
   Spinner
 } from "react-bootstrap";
 import { 
-  cilIdCard, 
+  cilBadge, 
   cilShieldAlt, 
   cilCheck,
   cilX,
@@ -299,7 +299,7 @@ export default function RERAPage() {
             <Card.Body>
               <div className="stat-content">
                 <div className="stat-icon primary">
-                  <CIcon icon={cilIdCard} />
+                  <CIcon icon={cilBadge} />
                 </div>
                 <div className="stat-info">
                   <h6 className="stat-title">Total Credentials</h6>
@@ -400,7 +400,7 @@ export default function RERAPage() {
       ) : reraCredentials.length === 0 ? (
         <Card className="dashboard-card">
           <Card.Body className="text-center py-5">
-            <CIcon icon={cilIdCard} size="3xl" className="text-muted mb-3" />
+            <CIcon icon={cilBadge} size="3xl" className="text-muted mb-3" />
             <h5 className="mb-2">No RERA Credentials Found</h5>
             <p className="text-muted mb-4">
               Add your RERA registration credentials to ensure compliance and build trust with clients.
@@ -532,7 +532,7 @@ export default function RERAPage() {
       >
         <Modal.Header closeButton className="border-bottom">
           <Modal.Title className="d-flex align-items-center">
-            <CIcon icon={cilIdCard} className="me-2" />
+            <CIcon icon={cilBadge} className="me-2" />
             {selectedRera ? "Edit RERA Credential" : "Add RERA Credential"}
           </Modal.Title>
         </Modal.Header>
@@ -542,7 +542,7 @@ export default function RERAPage() {
               <Col md={6}>
                 <Form.Group className="mb-3">
                   <Form.Label className="fw-semibold d-flex align-items-center">
-                    <CIcon icon={cilIdCard} className="me-2" />
+                    <CIcon icon={cilBadge} className="me-2" />
                     RERA ID <span className="text-danger ms-1">*</span>
                   </Form.Label>
                   <Form.Control
