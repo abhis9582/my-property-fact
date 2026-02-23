@@ -49,7 +49,7 @@ export default function Property({ projectDetail }) {
   const [amenityButtonStatus, setAmenityButtonStatus] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [backToHomeExpanded, setBackToHomeExpanded] = useState(false);
-
+  const [allNearbyBenefits, setAllNearbyBenefits] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -311,7 +311,7 @@ export default function Property({ projectDetail }) {
 
       const response = await axios.post(
         process.env.NEXT_PUBLIC_API_URL + "enquiry/post",
-        submitData
+        submitData,
       );
       // Check if response is successful
       if (response.data.isSuccess === 1) {
@@ -339,7 +339,9 @@ export default function Property({ projectDetail }) {
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      toast.error(error.response?.data?.message || "An error occurred. Please try again.");
+      toast.error(
+        error.response?.data?.message || "An error occurred. Please try again.",
+      );
     } finally {
       setShowLoading(false);
     }
@@ -360,9 +362,55 @@ export default function Property({ projectDetail }) {
     };
   }, []);
 
+// Add nearby image icon to the nearby benefits
+const addNearbyImageIcon = (benefit) => {
+  const name = typeof benefit === "string" ? benefit.trim() : "";
+  if (!name || !allNearbyBenefits?.length) return null;
+  const lower = name.toLowerCase();
+  const nearbyBenefit = allNearbyBenefits.find(
+    (b) =>
+      b.benefitName &&
+      (b.benefitName.toLowerCase() === lower ||
+        b.benefitName.toLowerCase().includes(lower) ||
+        lower.includes(b.benefitName.toLowerCase()))
+  );
+  return nearbyBenefit?.benefitIcon
+    ? `${process.env.NEXT_PUBLIC_IMAGE_URL}nearby-benefit/${nearbyBenefit.benefitIcon}`
+    : null;
+};
+  // Back to home: show text while scrolling, icon only when scroll stopped
+  useEffect(() => {
+    let scrollEndTimer = null;
+    const handleBackToHomeScroll = () => {
+      setBackToHomeExpanded(true);
+      if (scrollEndTimer) clearTimeout(scrollEndTimer);
+      scrollEndTimer = setTimeout(() => setBackToHomeExpanded(false), 1200);
+    };
+    window.addEventListener("scroll", handleBackToHomeScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleBackToHomeScroll);
+      if (scrollEndTimer) clearTimeout(scrollEndTimer);
+    };
+  }, []);
+
+  // Fetching all nearby benefits
+  useEffect(() => {
+    const fetchBenefits = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}nearby-benefit/get-all`
+        );
+        setAllNearbyBenefits(res.data);
+      } catch (err) {
+        console.error("Failed to fetch nearby benefits", err);
+      }
+    };
+  
+    fetchBenefits();
+  }, []);
+
   useEffect(() => {
     setAllAmenities(projectDetail.projectAmenityList.slice(0, 18));
-
     const header = document.querySelector(".project-detail-header");
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -387,7 +435,6 @@ export default function Property({ projectDetail }) {
       }
     };
     window.addEventListener("resize", handleResize);
-
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
@@ -423,7 +470,7 @@ export default function Property({ projectDetail }) {
     if (e && targetId && e.preventDefault) {
       e.preventDefault();
     }
-    
+
     const menuButtons = document.querySelectorAll(".project-menuBtn");
     const menu = document.getElementById("property-mbdiv");
     const header = document.querySelector(".project-detail-header");
@@ -443,7 +490,7 @@ export default function Property({ projectDetail }) {
 
     // Toggle menu button classes
     menuButtons.forEach((btn) =>
-      btn.classList.toggle("closeMenuBtn", isMenuOpen)
+      btn.classList.toggle("closeMenuBtn", isMenuOpen),
     );
 
     setMenuOpen(isMenuOpen);
@@ -507,7 +554,7 @@ export default function Property({ projectDetail }) {
     });
 
     setAmenityButtonName((prev) =>
-      prev === "VIEW MORE" ? "VIEW LESS" : "VIEW MORE"
+      prev === "VIEW MORE" ? "VIEW LESS" : "VIEW MORE",
     );
   };
 
@@ -518,9 +565,7 @@ export default function Property({ projectDetail }) {
         className={`back-to-home-floating ${backToHomeExpanded ? "back-to-home-floating--expanded" : ""}`}
         aria-label="Back to MyPropertyFact home page"
       >
-        <span className="back-to-home-floating__text">
-          Back To Home
-        </span>
+        <span className="back-to-home-floating__text">Back To Home</span>
         <span className="back-to-home-floating__icon">
           <FontAwesomeIcon icon={faArrowLeft} />
         </span>
@@ -757,7 +802,9 @@ export default function Property({ projectDetail }) {
                   onChange={(e) => handleChange(e)}
                   onBlur={handleBlur}
                   name="name"
-                  isInvalid={!!errors.name || (validated && !formData.name.trim())}
+                  isInvalid={
+                    !!errors.name || (validated && !formData.name.trim())
+                  }
                   required
                 />
                 <Form.Control.Feedback type="invalid">
@@ -772,7 +819,9 @@ export default function Property({ projectDetail }) {
                   onChange={(e) => handleChange(e)}
                   onBlur={handleBlur}
                   name="email"
-                  isInvalid={!!errors.email || (validated && !formData.email.trim())}
+                  isInvalid={
+                    !!errors.email || (validated && !formData.email.trim())
+                  }
                   required
                 />
                 <Form.Control.Feedback type="invalid">
@@ -787,7 +836,9 @@ export default function Property({ projectDetail }) {
                   onChange={(e) => handleChange(e)}
                   onBlur={handleBlur}
                   name="phone"
-                  isInvalid={!!errors.phone || (validated && !formData.phone.trim())}
+                  isInvalid={
+                    !!errors.phone || (validated && !formData.phone.trim())
+                  }
                   required
                 />
                 <Form.Control.Feedback type="invalid">
@@ -1057,12 +1108,21 @@ export default function Property({ projectDetail }) {
                 {projectDetail.projectLocationBenefitList.map((item, index) => (
                   <div key={index} className="col-6">
                     <div className="border rounded-4 p-3 h-100 d-flex align-items-center gap-3 bg-light shadow-sm">
-                      <Image
-                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.image}`}
-                        alt={item.benefitName || ""}
-                        width={40}
-                        height={40}
-                      />
+                      {item.benefitName != null ? (
+                        <Image
+                          src={addNearbyImageIcon(item.benefitName) || `/icon/fallback-icon.png`}
+                          alt={item.benefitName || ""}
+                          width={40}
+                          height={40}
+                        />
+                      ) : (
+                        <Image
+                          src={`/icon/fallback-icon.png`}
+                          alt="fallback-icon"
+                          width={40}
+                          height={40}
+                        />
+                      )}
                       <div>
                         <p className="mb-1 fw-semibold text-dark">
                           {item.benefitName}
@@ -1215,7 +1275,10 @@ export default function Property({ projectDetail }) {
                           onChange={(e) => handleChange(e)}
                           onBlur={handleBlur}
                           name="name"
-                          isInvalid={!!errors.name || (validated1 && !formData.name.trim())}
+                          isInvalid={
+                            !!errors.name ||
+                            (validated1 && !formData.name.trim())
+                          }
                           required
                         />
                         <Form.Control.Feedback type="invalid">
@@ -1232,7 +1295,9 @@ export default function Property({ projectDetail }) {
                       onChange={(e) => handleChange(e)}
                       onBlur={handleBlur}
                       name="email"
-                      isInvalid={!!errors.email || (validated1 && !formData.email.trim())}
+                      isInvalid={
+                        !!errors.email || (validated1 && !formData.email.trim())
+                      }
                       required
                     />
                     <Form.Control.Feedback type="invalid">
@@ -1247,7 +1312,9 @@ export default function Property({ projectDetail }) {
                       onChange={(e) => handleChange(e)}
                       onBlur={handleBlur}
                       name="phone"
-                      isInvalid={!!errors.phone || (validated1 && !formData.phone.trim())}
+                      isInvalid={
+                        !!errors.phone || (validated1 && !formData.phone.trim())
+                      }
                       required
                     />
                     <Form.Control.Feedback type="invalid">
@@ -1318,7 +1385,12 @@ export default function Property({ projectDetail }) {
         </div>
       </div>
 
-      <CommonPopUpform show={showPopUp} handleClose={setShowPopUp} from={"Project Detail"} data={projectDetail} />
+      <CommonPopUpform
+        show={showPopUp}
+        handleClose={setShowPopUp}
+        from={"Project Detail"}
+        data={projectDetail}
+      />
     </>
   );
 }
