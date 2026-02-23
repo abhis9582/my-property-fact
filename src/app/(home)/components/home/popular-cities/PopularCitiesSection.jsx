@@ -11,6 +11,31 @@ import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 // Defining popular cities data with name, link, image and alt text
 const cities = [
   {
+    name: "Delhi",
+    link: "/city/delhi",
+    image: "/dream-cities/delhi_new.png",
+    alt: "Delhi city",
+  },
+
+  {
+    name: "Noida",
+    link: "/city/noida",
+    image: "/dream-cities/noida_new.png",
+    alt: "Noida city",
+  },
+  {
+    name: "Ghaziabad",
+    link: "/city/ghaziabad",
+    image: "/dream-cities/ghaziabad_new.png",
+    alt: "Ghaziabad city",
+  },
+  {
+    name: "Gurugram",
+    link: "/city/gurugram",
+    image: "/dream-cities/gurugram_new.png",
+    alt: "Gurugram city",
+  },
+  {
     name: "Agra",
     link: "/city/agra",
     image: "/dream-cities/agra_new.png",
@@ -22,24 +47,9 @@ const cities = [
     image: "/dream-cities/bangalore_new.png",
     alt: "Bangalore city",
   },
-  {
-    name: "Noida",
-    link: "/city/noida",
-    image: "/dream-cities/noida_new.png",
-    alt: "Noida city",
-  },
-  {
-    name: "Delhi",
-    link: "/city/delhi",
-    image: "/dream-cities/delhi_new.png",
-    alt: "Delhi city",
-  },
-  {
-    name: "Ghaziabad",
-    link: "/city/ghaziabad",
-    image: "/dream-cities/ghaziabad_new.png",
-    alt: "Ghaziabad city",
-  },
+  
+  
+  
   {
     name: "Jaipur",
     link: "/city/jaipur",
@@ -52,12 +62,7 @@ const cities = [
     image: "/dream-cities/mumbai_new.png",
     alt: "Mumbai city",
   },
-  {
-    name: "Gurugram",
-    link: "/city/gurugram",
-    image: "/dream-cities/gurugram_new.png",
-    alt: "Gurugram city",
-  },
+  
 ];
 
 // Returning the popular cities section

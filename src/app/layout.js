@@ -57,12 +57,9 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body
-<<<<<<< Updated upstream
-        className={`${gothamBold.variable} ${gothamLight.variable}`} suppressHydrationWarning={true}>
-=======
         className={`${gothamBold.variable} ${gothamLight.variable}`}
-        suppressHydrationWarning>
->>>>>>> Stashed changes
+        suppressHydrationWarning
+      >
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
