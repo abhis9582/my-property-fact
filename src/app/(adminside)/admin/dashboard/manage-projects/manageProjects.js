@@ -72,7 +72,11 @@ export default function ManageProjects({
   const [uploadExcelFile, setUploadExcelFile] = useState(null);
   const [uploadZipFile, setUploadZipFile] = useState(null);
   const [uploadLoading, setUploadLoading] = useState(false);
-
+  const allowedTypes = [
+    "application/zip",
+    "application/x-zip-compressed",
+    "multipart/x-zip"
+  ];
   const handleCountryChange = (e) => {
     const countryId = parseInt(e.target.value);
     setFormData((prev) => ({
@@ -675,7 +679,7 @@ export default function ManageProjects({
       toast.error("Please select an Excel file (.xlsx or .xls)");
       return;
     }
-    if (uploadZipFile.type !== "application/zip") {
+    if (!allowedTypes.includes(uploadZipFile.type)) {
       toast.error("Please select a zip file");
       return;
     }
@@ -704,6 +708,8 @@ export default function ManageProjects({
         toast.error(response.data?.message ?? "Upload failed");
       }
     } catch (error) {
+      console.log(error);
+      
       const message =
         error.response?.data?.message ?? error.message ?? "Upload failed";
       toast.error(message);
