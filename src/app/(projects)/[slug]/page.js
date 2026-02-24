@@ -1,11 +1,8 @@
 import Property from "./propertypage";
-import Footer from "../../(home)/components/footer/page";
 import {
-  checkIfProjectSlug,
   fetchAllProjects,
   fetchCityData,
   fetchProjectDetailsBySlug,
-  fetchProjectTypes,
   isCityTypeUrl,
   isFloorTypeUrl,
 } from "@/app/_global_components/masterFunction";
@@ -18,8 +15,15 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const isProjectSlug = await checkIfProjectSlug(slug);
-  if (!isProjectSlug) {
+  const response = await fetchProjectDetailsBySlug(slug);
+  if (!response) {
+    return {
+      title: "Property Not Found",
+      description: "The property you are looking for does not exist.",
+      keywords: ["Property Not Found"],
+    };
+  }
+  if (!(response.slugURL === slug)) {
     // Case 1: Master BHK listing page
     return {
       title:
@@ -27,7 +31,7 @@ export async function generateMetadata({ params }) {
         " Flats in India",
       description:
         "Browse apartments, villas, and plots categorized by BHK type. Get detailed price lists, floor plans, and location maps.",
-        keywords: [
+      keywords: [
         slug.replace(/-/g, " ") + " flats",
         "apartments",
         "villas",
@@ -37,7 +41,6 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const response = await fetchProjectDetailsBySlug(slug);
   if (!response.projectAddress) {
     response.projectAddress = "";
   }
@@ -48,29 +51,28 @@ export async function generateMetadata({ params }) {
       response.projectAddress +
       " | Price List & Brochure, Floor Plan, Location Map & Reviews",
     description: response.metaDescription,
-    keywords: response.metaKeyword
+    keywords: response.metaKeyword,
   };
 }
 
-export default async function PropertyPage({ params, searchParams }) {
+export default async function PropertyPage({ params }) {
   const { slug } = await params;
-  const [cityList, projectTypesList, projectDetail, featuredProjects] =
-    await Promise.all([
-      fetchCityData(),
-      fetchProjectTypes(),
-      fetchProjectDetailsBySlug(slug),
-      fetchAllProjects(),
-    ]);
+  const [cityList, projectDetail, featuredProjects] = await Promise.all([
+    fetchCityData(),
+    fetchProjectDetailsBySlug(slug),
+    fetchAllProjects(),
+  ]);
   const isFloorTypeSlug = await isFloorTypeUrl(slug);
-  const isProjectSlug = await checkIfProjectSlug(slug);
+  const isProjectSlug = projectDetail.slugURL === slug;
   const isCitySlug = await isCityTypeUrl(slug);
 
   const similarProject = featuredProjects.filter(
-              (item) =>
-                item.cityName === projectDetail.cityName &&
-                item.propertyTypeName === projectDetail.propertyTypeName
-                && item.id !== projectDetail.id                
-            );
+    (item) =>
+      item.cityName === projectDetail.city &&
+      item.propertyTypeName === projectDetail.propertyTypeName &&
+      item.id !== projectDetail.id,
+  );
+  
   if (isCitySlug) {
     return <MasterBHKProjectsPage slug={slug} />;
   } else if (isFloorTypeSlug) {
@@ -82,12 +84,14 @@ export default async function PropertyPage({ params, searchParams }) {
       <>
         <Property projectDetail={projectDetail} />
         <div className="container-fluid mb-5">
-          {similarProject.length > 0 && <h2 className="text-center mb-4 fw-bold">Similar Projects</h2> }
+          {similarProject.length > 0 && (
+            <h2 className="text-center mb-4 fw-bold">Similar Projects</h2>
+          )}
           <FeaturedPage
             title="Similar Projects"
             autoPlay={true}
             allFeaturedProperties={similarProject}
-            type={'Similar'}
+            type={"Similar"}
           />
         </div>
         {/* <Footer cityList={cityList} projectTypes={projectTypesList} /> */}

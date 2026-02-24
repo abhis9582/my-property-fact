@@ -13,16 +13,6 @@ async function checkSession(req) {
   try {
     // const cookieHeader = req.headers.get("cookie");
     const cookieHeader = req.cookies.toString();
-
-    for(const cookie of cookieHeader.split(";")) {
-      const [key, value] = cookie.trim().split("=");
-      if(key === "token") {
-        console.log("Access Token: ", value);
-        
-      }else if(key === "refreshToken") {
-        console.log("Refresh Token: ", value);
-      }
-    }
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}auth/session`, {
       headers: {
         Cookie: cookieHeader || "",
@@ -37,8 +27,6 @@ async function checkSession(req) {
         return { valid: false };
       }
     }
-
-    console.log("data", data);
     return {
       valid: true,
       roles: data.roles || [],
@@ -74,7 +62,6 @@ export async function middleware(req) {
     const accessDenied = req.nextUrl.searchParams.get("accessDenied");
 
     const session = await checkSession(req);
-    console.log("session", session);
     if (session.valid) {
       // Check if user has SUPERADMIN role
       if (hasRole(session.roles, "SUPERADMIN")) {

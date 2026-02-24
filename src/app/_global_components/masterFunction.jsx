@@ -5,7 +5,7 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 // Function to check if a given slug corresponds to a valid project
 export async function checkIfProjectSlug(slug) {
   const projects = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}projects/get/${slug}`
+    `${process.env.NEXT_PUBLIC_API_URL}projects/get/${slug}`,
   );
   if (projects.data.slugURL === slug) {
     return true;
@@ -63,7 +63,7 @@ export const fetchProjectTypes = cache(async () => {
       `${process.env.NEXT_PUBLIC_API_URL}project-types/get-all`,
       {
         next: { revalidate: 60 },
-      }
+      },
     );
     if (!res.ok) throw new Error("Failed to fetch project types");
     return res.json();
@@ -88,11 +88,15 @@ export const fetchBuilderData = cache(async () => {
 
 // Fetching project details by slug
 export const fetchProjectDetailsBySlug = cache(async (slug) => {
+  const projects = await fetchAllProjects();
+  const res = projects?.filter((item) => item.slugURL === slug);
+  if (res.length === 0) return "";
+
   const projectBySlug = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}projects/get/${slug}`,
     {
       next: { revalidate: 60 },
-    }
+    },
   );
   if (!projectBySlug.ok) throw new Error("Failed to fetch project details");
   return projectBySlug.json();
@@ -100,6 +104,7 @@ export const fetchProjectDetailsBySlug = cache(async (slug) => {
 
 //Fetch all floor plans
 export const isFloorTypeUrl = async (slug) => {
+  debugger;
   const res = await fetch(`${apiUrl}floor-plans/get-all`, {
     next: { revalidate: 60 },
   });
@@ -125,6 +130,7 @@ export const isFloorTypeUrl = async (slug) => {
 
 //Checking is ctiy slug
 export const isCityTypeUrl = async (slug) => {
+  debugger;
   const cities = await fetchCityData();
   const slugParts = slug.split("-in-");
   const isFloorUrl = await isFloorTypeUrl(slug);
@@ -134,7 +140,7 @@ export const isCityTypeUrl = async (slug) => {
   const exists = cities.some(
     (item) =>
       item.cityName.toLowerCase().replace(/\s+/g, "-") === citySlug &&
-      !isFloorUrl
+      !isFloorUrl,
   );
   return exists;
 };
@@ -145,12 +151,14 @@ export const fetchBlogs = cache(async (page, size, search = "") => {
     `${apiUrl}blog/get?page=${page}&size=${size}&from=${"blog"}&search=${search}`,
     {
       next: { revalidate: 60 },
-    }
+    },
   );
   if (!res.ok) throw new Error("Failed to fetch blogs");
   const blogsData = await res.json();
   // Handle different response structures: could be array, object with data array, or object with total
-  const blogsArray = Array.isArray(blogsData) ? blogsData : (blogsData?.data || blogsData?.blogs || []);
+  const blogsArray = Array.isArray(blogsData)
+    ? blogsData
+    : blogsData?.data || blogsData?.blogs || [];
   const total = blogsData?.total || blogsData?.totalCount || blogsArray.length;
   return blogsData;
 });
@@ -161,7 +169,7 @@ export const getProjectsInPart = cache(async (page, size, category = "All") => {
     `${apiUrl}projects/get-projects-in-parts?page=${page}&size=${size}`,
     {
       next: { revalidate: 60 },
-    }
+    },
   );
   if (!project.ok) throw new Error("Failed to fetch blogs");
   const projectPartData = await project.json();
@@ -198,7 +206,7 @@ export const fetchAllStories = cache(async () => {
     `${process.env.NEXT_PUBLIC_API_URL}web-story-category/get-all`,
     {
       next: { revalidate: 60 },
-    }
+    },
   );
   if (!stories.ok) throw new Error("Failed to fetch stories");
   const storiesData = await stories.json();
@@ -207,7 +215,9 @@ export const fetchAllStories = cache(async () => {
 
 // Getting top project (weekly rotation from all projects)
 export const getWeeklyProject = (projects) => {
-  const residentialProjects = projects.filter(project => project.propertyTypeName === "Residential");
+  const residentialProjects = projects.filter(
+    (project) => project.propertyTypeName === "Residential",
+  );
   if (residentialProjects.length === 0) {
     return null;
   }
@@ -216,7 +226,6 @@ export const getWeeklyProject = (projects) => {
   const index = weekNumber % residentialProjects.length;
   return residentialProjects[index];
 };
-
 
 const TOP_PICKS_BUILDERS = [
   "saya-homes",
@@ -249,7 +258,6 @@ function normalizeTopPickProject(project, builderName, builderSlug) {
   };
 }
 
-
 function toSortValue(v) {
   if (v == null) return 0;
   if (typeof v === "number") return v;
@@ -265,8 +273,8 @@ export const fetchTopPicksProject = cache(async () => {
   if (!apiUrl) throw new Error("NEXT_PUBLIC_API_URL is not defined");
   const results = await Promise.allSettled(
     TOP_PICKS_BUILDERS.map((slug) =>
-      fetch(`${apiUrl}builder/get/${slug}`, { next: { revalidate: 60 } })
-    )
+      fetch(`${apiUrl}builder/get/${slug}`, { next: { revalidate: 60 } }),
+    ),
   );
   const byBuilder = new Map();
   for (let i = 0; i < results.length; i++) {
@@ -314,7 +322,7 @@ export const fetchProjectStatus = cache(async () => {
       },
       {
         next: { revalidate: 60 },
-      }
+      },
     );
     if (!res.ok) throw new Error("Failed to fetch project status");
     const data = await res.json();
