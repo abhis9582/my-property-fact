@@ -1,3 +1,4 @@
+import "./critical.css";
 import "./globals.css";
 import localFont from "next/font/local";
 import "@fortawesome/fontawesome-svg-core/styles.css";

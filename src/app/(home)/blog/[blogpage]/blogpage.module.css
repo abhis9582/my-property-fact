@@ -1,0 +1,694 @@
+/* Blog detail page – design-aligned: forest green #0D5834, gold #A18C6F, clean sans-serif */
+
+/* Override any rgb(56, 118, 29) from CMS/inline to brand green */
+.blogDetailWrap [style*="56, 118, 29"],
+.blogDetailWrap [style*="56,118,29"] {
+  color: #0D5834 !important;
+ 
+}
+
+/* Page wrapper */
+.blogDetailWrap {
+  background: #f8f8f6;
+  min-height: 60vh;
+}
+
+/* Article column */
+.articleCol {
+  padding-right: 2rem;
+}
+
+@media (max-width: 991px) {
+  .articleCol {
+    padding-right: 0;
+  }
+}
+
+/* Hero image – full width, slightly rounded */
+.articleImageWrap {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(13, 88, 52, 0.08);
+  margin-bottom: 2rem;
+}
+
+.articleImageWrap img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Article title – large, bold, forest green */
+.articleTitle {
+  font-family: "plus-jakarta", sans-serif !important;
+  font-weight: 700 !important;
+  font-size: clamp(1.75rem, 4vw, 2.25rem) !important;
+  line-height: 1.25 !important;
+  color: #0D5834 !important;
+  margin-top: 0;
+  margin-bottom: 1.25rem !important;
+  letter-spacing: -0.02em;
+}
+
+/* Article body – dark grey, justified, readable */
+.articleContent {
+  font-family: "plus-jakarta", sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 1rem !important;
+  line-height: 1.75 !important;
+  color: #333 !important;
+  text-align: justify;
+}
+
+/* Override inline font-family from CMS (Poppins, Calibri, etc.) so all body text uses Plus Jakarta */
+.articleContent * {
+  font-family: "plus-jakarta", sans-serif !important;
+}
+
+/* Content cards – each project/section in a box for easier reading */
+.contentCard {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 12px rgba(13, 88, 52, 0.06);
+  border: 1px solid #e8eee9;
+}
+
+.contentCard:last-child {
+  margin-bottom: 0;
+}
+
+.contentCardIntro {
+  background: #fafaf8;
+  border-left: 4px solid #0D5834;
+}
+
+.contentCard h2:first-child {
+  margin-top: 0 !important;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(13, 88, 52, 0.15);
+}
+
+.contentCard h3 {
+  margin-top: 1.25em !important;
+  font-size: 1.1rem !important;
+  color: #0D5834 !important;
+}
+
+@media (max-width: 767px) {
+  .contentCard {
+    padding: 1.25rem 1rem;
+    margin-bottom: 1.25rem;
+  }
+}
+
+.articleContent h1,
+.articleContent h2,
+.articleContent h3,
+.articleContent h4,
+.articleContent h5,
+.articleContent h6 {
+  font-family: "plus-jakarta", sans-serif !important;
+  color: #0D5834 !important;
+  font-weight: 700 !important;
+  margin-top: 1.5em !important;
+  margin-bottom: 0.5em !important;
+}
+
+.articleContent h2 { font-size: 1.5rem !important; }
+.articleContent h3 { font-size: 1.25rem !important; }
+
+.articleContent p {
+  margin-bottom: 1em !important;
+}
+
+.articleContent a {
+  color: #0D5834 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 2px;
+}
+
+.articleContent a:hover {
+  color: #144232 !important;
+}
+
+/* Bullet lists (e.g. Location Advantages) – stylish #0D5834 arrow icon */
+.articleContent ul {
+  list-style: none !important;
+  margin-left: 0;
+  margin-bottom: 1.25em;
+  padding-left: 0;
+}
+
+.articleContent ul li {
+  position: relative;
+  padding-left: 1.75rem;
+  margin-bottom: 0.6rem;
+  line-height: 1.6;
+}
+
+.articleContent ul li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.25em;
+  width: 1rem;
+  height: 1rem;
+  background-image: url("/static/icon/arrow-right-0d5834.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.articleContent ol {
+  margin-left: 1.25rem;
+  margin-bottom: 1em;
+  padding-left: 0.5rem;
+}
+
+.articleContent ol li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.articleContent table {
+  border: 1px solid #e0e6e2;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1em 0;
+}
+
+.articleContent table td,
+.articleContent table th {
+  border: 1px solid #e0e6e2;
+  padding: 0.75rem 1rem !important;
+}
+
+.articleContent blockquote {
+  border-left: 4px solid #0D5834;
+  margin: 1.5em 0;
+  padding-left: 1.25rem;
+  color: #555;
+  font-style: italic;
+}
+
+/* Keywords – forest green tags */
+.keywordsWrap {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e8eee9;
+}
+
+.keywordTagDetail {
+  font-family: "plus-jakarta", sans-serif !important;
+  background: rgba(13, 88, 52, 0.08);
+  border: 1px solid rgba(13, 88, 52, 0.25);
+  color: #0D5834;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+  cursor: default;
+  text-transform: capitalize;
+}
+
+.keywordTagDetail:hover {
+  background: #0D5834;
+  color: #fff;
+  border-color: #0D5834;
+}
+
+/* Sidebar form card – off-white, rounded, forest green heading */
+.formCard {
+  /* position: sticky !important; */
+  top: 100px;
+  background: #fafaf8 !important;
+  border-radius: 10px !important;
+  padding: 1.75rem !important;
+  box-shadow: 0 4px 20px rgba(13, 88, 52, 0.06) !important;
+  border: 1px solid #e8eee9 !important;
+}
+
+.formCardTitle {
+  font-family: "plus-jakarta", sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 1.35rem !important;
+  color: #0D5834 !important;
+  margin-bottom: 1.25rem !important;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid rgba(13, 88, 52, 0.15);
+}
+
+.formCard .form-control {
+  font-family: "plus-jakarta", sans-serif !important;
+  font-size: 1rem !important;
+  padding: 0.75rem 1rem !important;
+  border: 1px solid #dee2e6 !important;
+  border-radius: 6px !important;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.formCard .form-control:focus {
+  border-color: #0D5834 !important;
+  box-shadow: 0 0 0 3px rgba(13, 88, 52, 0.12) !important;
+  outline: 0 !important;
+}
+
+.formCard .form-control::placeholder {
+  color: #6c757d;
+}
+
+/* Submit button – #0d5834 */
+.blogDetailSubmitBtn {
+  width: 100% !important;
+  background: #0d5834 !important;
+  color: #fff !important;
+  border: none !important;
+  font-family: "plus-jakarta", sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  padding: 0.875rem 1.5rem !important;
+  border-radius: 8px !important;
+  transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.blogDetailSubmitBtn:hover:not(:disabled) {
+  background: #0a4528 !important;
+  color: #fff !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(13, 88, 52, 0.35) !important;
+}
+
+.blogDetailSubmitBtn:disabled {
+  opacity: 0.85;
+  cursor: not-allowed;
+}
+
+/* Sidebar card (Recent Posts, Blog Categories) – same look as form card */
+.sidebarCard {
+  background: #fafaf8 !important;
+  border-radius: 10px !important;
+  padding: 1.75rem !important;
+  box-shadow: 0 4px 20px rgba(13, 88, 52, 0.06) !important;
+  border: 1px solid #e8eee9 !important;
+  margin-top: 1.5rem !important;
+}
+
+.sidebarCard:first-of-type {
+  margin-top: 1.5rem;
+}
+
+.sidebarCard .recent-posts-container {
+  background: transparent !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+}
+
+.sidebarCard h6 {
+  font-family: "plus-jakarta", sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 1.35rem !important;
+  color: #0D5834 !important;
+  margin-bottom: 1rem !important;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(13, 88, 52, 0.15);
+}
+
+.sidebarCard .recent-posts-list {
+  gap: 0.75rem;
+}
+
+.sidebarCard .recent-post-item {
+  padding: 0.5rem 0;
+  border-radius: 8px;
+}
+
+.sidebarCard .recent-title {
+  font-family: "plus-jakarta", sans-serif !important;
+  color: #333 !important;
+  font-size: 0.95rem !important;
+}
+
+.sidebarCard .recent-title:hover {
+  color: #0D5834 !important;
+}
+
+.sidebarCard .recent-date {
+  font-size: 0.8rem !important;
+  color: #6c757d !important;
+}
+
+.sidebarCardTitle {
+  font-family: "plus-jakarta", sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 1.35rem !important;
+  color: #0D5834 !important;
+  margin-bottom: 1rem !important;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid rgba(13, 88, 52, 0.15);
+}
+
+.sidebarCategoriesWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.sidebarCategoryTag {
+  font-family: "plus-jakarta", sans-serif !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  color: #0D5834 !important;
+  background: rgba(13, 88, 52, 0.08) !important;
+  border: 1px solid rgba(13, 88, 52, 0.2) !important;
+  padding: 0.4rem 0.75rem !important;
+  border-radius: 8px !important;
+  cursor: pointer;
+  text-transform: capitalize;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.sidebarCategoryTag:hover {
+  background: rgba(13, 88, 52, 0.12) !important;
+  border-color: rgba(13, 88, 52, 0.35) !important;
+}
+
+.readMoreCategoriesBtn {
+  margin-top: 0.75rem;
+  padding: 0.4rem 0;
+  font-family: "plus-jakarta", sans-serif !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  color: #0D5834 !important;
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+
+.readMoreCategoriesBtn:hover {
+  color: #144232 !important;
+}
+
+/* ========== Responsive: all devices ========== */
+
+/* Container & row spacing */
+.blogDetailWrap .blogDetailContainer,
+.blogDetailWrap .container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 576px) {
+  .blogDetailWrap .blogDetailContainer,
+  .blogDetailWrap .container {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .blogDetailWrap .blogDetailContainer,
+  .blogDetailWrap .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .blogDetailWrap .blogDetailContainer,
+  .blogDetailWrap .container {
+    padding-left: var(--bs-gutter-x, 0.75rem);
+    padding-right: var(--bs-gutter-x, 0.75rem);
+  }
+}
+
+/* Reduce vertical spacing on small screens */
+@media (max-width: 767px) {
+  .blogDetailWrap .blogDetailContainer,
+  .blogDetailWrap .container {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+}
+
+@media (max-width: 575px) {
+  .blogDetailWrap .blogDetailContainer,
+  .blogDetailWrap .container {
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
+    padding-left: 0.875rem;
+    padding-right: 0.875rem;
+  }
+}
+
+/* Row gap: smaller on mobile for tighter layout */
+.blogDetailWrap .blogDetailRow,
+.blogDetailWrap .row.g-5 {
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 1.5rem;
+}
+
+@media (max-width: 767px) {
+  .blogDetailWrap .blogDetailRow,
+  .blogDetailWrap .row.g-5 {
+    --bs-gutter-x: 1rem;
+    --bs-gutter-y: 1.25rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .blogDetailWrap .blogDetailRow,
+  .blogDetailWrap .row.g-5 {
+    --bs-gutter-x: 0.75rem;
+    --bs-gutter-y: 1rem;
+  }
+}
+
+/* Article column: padding on all sides for small screens */
+@media (max-width: 991px) {
+  .articleCol {
+    padding-left: 0;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 575px) {
+  .articleCol {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* Hero image – smaller margin on mobile */
+@media (max-width: 767px) {
+  .articleImageWrap {
+    margin-bottom: 1.25rem;
+    border-radius: 6px;
+  }
+}
+
+@media (max-width: 575px) {
+  .articleImageWrap {
+    margin-bottom: 1rem;
+    border-radius: 6px;
+  }
+}
+
+/* Article title – scale down on very small screens */
+@media (max-width: 575px) {
+  .articleTitle {
+    font-size: 1.5rem !important;
+    margin-bottom: 1rem !important;
+  }
+}
+
+/* Article content – slightly smaller text on mobile for readability */
+@media (max-width: 767px) {
+  .articleContent {
+    font-size: 0.9375rem !important;
+    line-height: 1.7 !important;
+  }
+}
+
+@media (max-width: 575px) {
+  .articleContent {
+    font-size: 0.875rem !important;
+    line-height: 1.65 !important;
+    text-align: left;
+  }
+}
+
+/* Content cards – padding and headings on small screens */
+@media (max-width: 575px) {
+  .contentCard {
+    padding: 1rem 0.875rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+  }
+
+  .contentCardIntro {
+    border-left-width: 3px;
+  }
+
+  .articleContent h2 {
+    font-size: 1.25rem !important;
+  }
+
+  .articleContent h3 {
+    font-size: 1.1rem !important;
+  }
+}
+
+/* Tables – horizontal scroll on small screens */
+.articleContent table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 767px) {
+  .articleContent table td,
+  .articleContent table th {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .articleContent table td,
+  .articleContent table th {
+    padding: 0.4rem 0.5rem !important;
+    font-size: 0.8125rem;
+  }
+}
+
+/* Lists – reduce indent on very small screens */
+@media (max-width: 575px) {
+  .articleContent ul li {
+    padding-left: 1.25rem;
+  }
+
+  .articleContent ol {
+    margin-left: 1rem;
+  }
+
+  .articleContent blockquote {
+    padding-left: 1rem;
+    margin: 1em 0;
+  }
+}
+
+/* Form card – responsive padding and title */
+@media (max-width: 767px) {
+  .formCard {
+    padding: 1.25rem !important;
+  }
+
+  .formCardTitle {
+    font-size: 1.2rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .formCard .form-control {
+    padding: 0.65rem 0.875rem !important;
+    font-size: 0.9375rem !important;
+  }
+}
+
+@media (max-width: 575px) {
+  .formCard {
+    padding: 1rem !important;
+  }
+
+  .formCardTitle {
+    font-size: 1.1rem !important;
+    margin-bottom: 0.875rem !important;
+  }
+
+  .formCard .form-control {
+    padding: 0.625rem 0.75rem !important;
+    font-size: 16px !important; /* prevents zoom on iOS */
+  }
+}
+
+/* Submit button – touch-friendly, full width kept */
+.blogDetailSubmitBtn {
+  min-height: 44px;
+}
+
+@media (max-width: 575px) {
+  .blogDetailSubmitBtn {
+    padding: 0.75rem 1rem !important;
+    font-size: 0.9375rem !important;
+    min-height: 44px;
+  }
+}
+
+/* Sidebar cards – spacing and padding on mobile */
+@media (max-width: 767px) {
+  .sidebarCard {
+    padding: 1.25rem !important;
+    margin-top: 1.25rem !important;
+  }
+
+  .sidebarCard:first-of-type {
+    margin-top: 1.25rem;
+  }
+
+  .sidebarCardTitle,
+  .sidebarCard h6 {
+    font-size: 1.2rem !important;
+    margin-bottom: 0.875rem !important;
+  }
+
+  .sidebarCard .recent-title {
+    font-size: 0.9rem !important;
+  }
+}
+
+@media (max-width: 575px) {
+  .sidebarCard {
+    padding: 1rem !important;
+    margin-top: 1rem !important;
+  }
+
+  .sidebarCard:first-of-type {
+    margin-top: 1rem;
+  }
+
+  .sidebarCardTitle,
+  .sidebarCard h6 {
+    font-size: 1.1rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  .sidebarCategoriesWrap {
+    gap: 0.4rem;
+  }
+
+  .sidebarCategoryTag {
+    font-size: 0.8125rem !important;
+    padding: 0.35rem 0.6rem !important;
+  }
+
+  .readMoreCategoriesBtn {
+    font-size: 0.875rem !important;
+    margin-top: 0.5rem;
+  }
+}
+
+/* Sidebar appears below article on tablet/mobile (Bootstrap col-lg-4) – ensure it doesn’t feel cramped */
+@media (max-width: 991px) {
+  .blogDetailWrap aside {
+    margin-top: 0.5rem;
+  }
+}

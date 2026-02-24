@@ -4,9 +4,9 @@ import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import { useEffect, useState } from "react";
 import { LoadingSpinner } from "../contact-us/page";
 import { Pagination, Stack } from "@mui/material";
-import Image from "next/image";
 import BlogListItem from "../components/common/BlogListItem";
 import BlogSidebar from "../components/common/BlogSidebar";
+import BlogFaqSection from "../components/common/BlogFaqSection";
 import SocialFeed from "../components/home/social-feed/socialfeed";
 import SocialFeedsOfMPF from "../components/_homecomponents/SocialFeedsOfMPF";
 import PopularCitiesSection from "../components/home/popular-cities/PopularCitiesSection";
@@ -19,7 +19,6 @@ export default function Blog() {
   const [size, setSize] = useState(3);
   const [investorBlogs, setInvestorBlogs] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
-  const [openFaq, setOpenFaq] = useState(null);
   const faqItems = [
     {
       q: "What kind of property types are available on My Property Fact?",
@@ -129,35 +128,7 @@ export default function Blog() {
       <div className="container d-block d-lg-none my-4 blog-mobile-sidebar-wrap">
         <BlogSidebar showSearch={false} showRecentPosts={true} showLatestProperty={true} />
       </div>
-      <section className="blog-faq-section">
-        <div className="container">
-          <h2 className="faq-title">Frequently Asked Question</h2>
-          <p className="faq-subtitle">
-            Find answers to common questions about property types, filters, and coverage on My Property Fact across India.
-          </p>
-          <div className="faq-list">
-            {faqItems.map((item, index) => (
-              <div key={index} className="faq-item">
-                <div className="faq-head">
-                  <span className="faq-text">{item.q}</span>
-                  <button
-                    className={`faq-plus-wrap ${openFaq === index ? "open" : ""}`}
-                    type="button"
-                    aria-label={openFaq === index ? "Collapse question" : "Expand question"}
-                    aria-expanded={openFaq === index}
-                    onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  >
-                    <Image src="/static/icon/plus.svg" alt="Toggle answer" width={18} height={18} />
-                  </button>
-                </div>
-                {openFaq === index && (
-                  <div className="faq-answer">{item.a}</div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <BlogFaqSection faqItems={faqItems} />
       {investorBlogs.length > 0 && <SocialFeed data={investorBlogs} />}
       <SocialFeedsOfMPF />
       <PopularCitiesSection />

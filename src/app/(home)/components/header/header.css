@@ -435,7 +435,7 @@
   /* reduce side padding */
   padding-bottom: 0;
 
-  background: #000000B3;
+  background: #000000c4;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 
@@ -1195,11 +1195,10 @@
 }
 
 .projects-search-results-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   margin-bottom: 14px;
-  flex-wrap: wrap;
   gap: 8px;
 }
 
@@ -1209,18 +1208,64 @@
   color: #fff;
   text-transform: none;
   letter-spacing: 0.02em;
+  grid-column: 1;
+}
+
+/* Search bar + icon + New search centered in the row */
+.projects-search-results-header-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  justify-content: center;
+  grid-column: 2;
+}
+
+.projects-search-results-header-search-icon {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.projects-search-results-header-input {
+  flex: 1;
+  min-width: 120px;
+  max-width: 220px;
+  padding: 6px 10px;
+  font-size: 14px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.projects-search-results-header-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.projects-search-results-header-input:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.projects-search-results-header-input:focus {
+  border-color: #CDA958;
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .projects-search-back-link {
   background: none;
   border: none;
   padding: 0;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: #CDA958;
   cursor: pointer;
   text-decoration: underline;
   transition: color 0.2s ease, opacity 0.2s ease;
+  flex-shrink: 0;
 }
 
 .projects-search-back-link:hover {
@@ -1538,6 +1583,12 @@
   -ms-touch-action: pan-y !important;
 }
 
+/* Allow main menu (and project search) to scroll when container has touch-action: none */
+.mbMenuContainer.active .mbMenu .scroller {
+  touch-action: pan-y !important;
+  -ms-touch-action: pan-y !important;
+}
+
 
 
 .mbMenuContainer .mbMenu {
@@ -1647,12 +1698,26 @@
   position: relative;
 }
 
-/* Mobile Projects Search */
+/* Mobile Projects Search - aligned with desktop; compact so cards + pagination fit in view */
 .mobile-projects-search {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.mobile-projects-search-title {
+  color: #1a1a1a;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  text-align: left;
+}
+
+.mobile-projects-search-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .mobile-projects-search-input-wrapper {
@@ -1690,13 +1755,31 @@
   width: 100%;
 }
 
+.mobile-projects-explore-btn {
+  background: #0d5834;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.mobile-projects-explore-btn:hover {
+  background: #0a3d24;
+  transform: translateY(-1px);
+}
+
+/* No inner scroll: header + 2 cards + pagination all visible without scrolling */
 .mobile-projects-search-results {
-  max-height: 300px;
-  overflow-y: auto;
-  overflow-x: hidden;
   padding-right: 6px;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
 }
 
 .mobile-projects-search-loader {
@@ -1736,29 +1819,64 @@
 
 .mobile-projects-search-results-header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: stretch;
+  margin-bottom: 8px;
   gap: 6px;
 }
 
 .mobile-projects-search-results-label {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #1a1a1a;
+}
+
+.mobile-projects-search-results-header-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid rgba(13, 88, 52, 0.15);
+  border-radius: 10px;
+  padding: 6px 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  flex: 1;
+  min-width: 0;
+}
+
+.mobile-projects-search-results-header-search-icon {
+  color: #0d5834;
+  font-size: 16px;
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+
+.mobile-projects-search-results-header-input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 8px;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  color: #1a1a1a;
+  outline: none;
+}
+
+.mobile-projects-search-results-header-input::placeholder {
+  color: rgba(0, 0, 0, 0.45);
 }
 
 .mobile-projects-search-back-link {
   background: none;
   border: none;
-  padding: 0;
+  padding: 6px 0;
   font-size: 13px;
   font-weight: 500;
   color: #0d5834;
   cursor: pointer;
   text-decoration: underline;
   transition: color 0.2s ease;
+  flex-shrink: 0;
 }
 
 .mobile-projects-search-back-link:hover {
@@ -1820,14 +1938,14 @@
 .mobile-projects-search-cards {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .mobile-project-search-card {
   display: flex;
   align-items: stretch;
   background: #fff;
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: visible;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -1836,8 +1954,8 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(13, 88, 52, 0.1);
   box-sizing: border-box;
-  padding: 6px;
-  gap: 8px;
+  padding: 5px;
+  gap: 6px;
 }
 
 .mobile-project-search-card:hover {
@@ -1847,8 +1965,8 @@
 
 .mobile-project-search-card-image {
   flex-shrink: 0;
-  width: 78px;
-  min-height: 68px;
+  width: 72px;
+  min-height: 60px;
   overflow: hidden;
   background: #f0f0f0;
   border-radius: 6px;
@@ -1864,7 +1982,7 @@
 
 .mobile-project-search-card-body {
   flex: 1;
-  padding: 6px 8px 6px 0;
+  padding: 4px 6px 4px 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1872,11 +1990,11 @@
 }
 
 .mobile-project-search-card-title {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   color: #000;
-  margin: 0 0 4px 0;
-  line-height: 1.3;
+  margin: 0 0 2px 0;
+  line-height: 1.25;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -1884,10 +2002,10 @@
 }
 
 .mobile-project-search-card-location {
-  font-size: 12px;
+  font-size: 11px;
   color: #6b7280;
-  margin: 0 0 6px 0;
-  line-height: 1.3;
+  margin: 0 0 2px 0;
+  line-height: 1.25;
   font-weight: 400;
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -1896,7 +2014,7 @@
 }
 
 .mobile-project-search-card-price {
-  font-size: 13px;
+  font-size: 12px;
   margin: 0;
   color: #0f766e;
   font-weight: 600;
@@ -1906,10 +2024,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin-top: 12px;
-  padding-top: 10px;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 8px;
   border-top: 1px solid rgba(13, 88, 52, 0.15);
+  flex-shrink: 0;
 }
 
 /* Mobile slider buttons: visible on both light and dark */

@@ -84,7 +84,7 @@ export default async function HeroSection({ projectTypeList, cityList }) {
 
   return (
     <>
-      <div className="position-relative">
+      <div className="position-relative hero-section-wrapper">
         <div className="mpf-hero-banner position-relative">
           <div className="position-relative">
             {/* LCP: first slide rendered as priority image; slider loads after */}

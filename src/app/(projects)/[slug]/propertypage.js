@@ -130,12 +130,12 @@ export default function Property({ projectDetail }) {
   //Setting for banner slider
   const settings = {
     dots: false,
-    infinite: projectDetail.projectDesktopBannerDtoList.length > 1,
+    infinite: (projectDetail.desktopImages?.length ?? 0) > 1,
     speed: 300,
     slidesToShow: 1,
     slidesToScroll: 1,
-    fade: projectDetail.projectDesktopBannerDtoList.length > 1,
-    autoplay: projectDetail.projectDesktopBannerDtoList.length > 1,
+    fade: (projectDetail.desktopImages?.length ?? 0) > 1,
+    autoplay: (projectDetail.desktopImages?.length ?? 0) > 1,
     autoplaySpeed: 3000,
   };
 
@@ -182,9 +182,9 @@ export default function Property({ projectDetail }) {
   //Setting for gallery slider
   const settings1 = {
     dots: false,
-    infinite: projectDetail.projectGalleryImageList.length > 1,
+    infinite: (projectDetail.galleryImages?.length ?? 0) > 1,
     speed: 500,
-    autoplay: projectDetail.projectGalleryImageList.length > 1,
+    autoplay: (projectDetail.galleryImages?.length ?? 0) > 1,
     slidesToShow: 2, // Default for large screens
     arrows: true,
     prevArrow: <GalleryPrevArrow />,
@@ -410,7 +410,7 @@ const addNearbyImageIcon = (benefit) => {
   }, []);
 
   useEffect(() => {
-    setAllAmenities(projectDetail.projectAmenityList.slice(0, 18));
+    setAllAmenities(projectDetail.amenities.slice(0, 18));
     const header = document.querySelector(".project-detail-header");
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -546,9 +546,9 @@ const addNearbyImageIcon = (benefit) => {
   const viewAllAmenities = () => {
     setAmenityButtonStatus((prev) => {
       if (prev === true) {
-        setAllAmenities(projectDetail.projectAmenityList.slice(0, 18));
+        setAllAmenities(projectDetail.amenities.slice(0, 18));
       } else {
-        setAllAmenities(projectDetail.projectAmenityList);
+        setAllAmenities(projectDetail.amenities);
       }
       return !prev; // toggle status
     });
@@ -583,7 +583,7 @@ const addNearbyImageIcon = (benefit) => {
                 <Image
                   width={198}
                   height={50.75}
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.projectLogoImage}`}
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.projectLogo}`}
                   alt="logo"
                   className="img-fluid"
                 />
@@ -756,28 +756,28 @@ const addNearbyImageIcon = (benefit) => {
         {/* Banner container for property detail page  */}
         <div className="slick-slider-container">
           <Slider {...settings}>
-            {projectDetail.projectDesktopBannerDtoList.map((item, index) => {
+            {projectDetail.desktopImages && projectDetail.desktopImages.map((item, index) => {
               const mobileItem =
-                projectDetail.projectMobileBannerDtoList[index]; // pick same index mobile banner
+                projectDetail.mobileImages[index]; // pick same index mobile banner
               return (
                 <picture className="image-con" key={`${item.id}-${index}`}>
                   {/* Mobile first */}
                   {mobileItem && (
                     <source
-                      srcSet={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${mobileItem.slugURL}/${mobileItem.mobileImage}`}
+                      srcSet={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${mobileItem.mobileImage}`}
                       media="(max-width: 640px)" // mobile breakpoint
                     />
                   )}
 
                   {/* Tablet/Laptop (falls back to desktopImage) */}
                   <source
-                    srcSet={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.desktopImage}`}
+                    srcSet={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.desktopImage}`}
                     media="(min-width: 641px)" // tablet/laptop/desktop
                   />
 
                   {/* Default fallback */}
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${item.slugURL}/${item.desktopImage}`}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.desktopImage}`}
                     alt={item.altTag || "Property Banner"}
                     width={2225}
                     height={1065}
@@ -902,7 +902,7 @@ const addNearbyImageIcon = (benefit) => {
                       icon={faLocationDot}
                       className="text-success me-2 fs-5"
                     />
-                    <span>{projectDetail.projectAddress}</span>
+                    <span>{projectDetail.projectLocality}, {projectDetail.city}, {projectDetail.state}</span>
                   </p>
 
                   <p className="fs-5 text-dark mb-2">
@@ -968,7 +968,7 @@ const addNearbyImageIcon = (benefit) => {
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}amenity/${item.image}`}
                     height={60}
                     width={60}
-                    alt={item.mobileAltTag || item.desktopAltTag || ""}
+                    alt={item.altTag || ""}
                     className="mb-3 d-flex mx-auto"
                   />
                 </div>
@@ -1018,7 +1018,7 @@ const addNearbyImageIcon = (benefit) => {
             modules={[Navigation]}
             className="mySwiper p-2"
           >
-            {projectDetail.projectFloorPlanList?.map((item, index) => (
+            {projectDetail.floorPlans?.map((item, index) => (
               <SwiperSlide key={`${item.planType}-${index}`}>
                 <div className="card">
                   <div className="p-3 rounded-sm d-flex mx-auto">
@@ -1071,14 +1071,14 @@ const addNearbyImageIcon = (benefit) => {
             <div className="row justify-content-center">
               <div className="col-12">
                 <Slider {...settings1} className="gallery-slider">
-                  {projectDetail.projectGalleryImageList.map((item, index) => (
+                  {projectDetail.galleryImages.map((item, index) => (
                     <div
                       key={`${index}-${item.id}`}
                       className="project-detail-gallery-container "
                     >
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.galleyImage}`}
-                        alt="gallery_image"
+                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.imageName}`}
+                        alt={item.altTag || "Gallery Image"}
                         fill
                         className="img-fluid rounded-5 object-fit-cover px-2 "
                       />
@@ -1105,7 +1105,7 @@ const addNearbyImageIcon = (benefit) => {
             <div className="col-md-6">
               {/* Nearby Benefits Section */}
               <div className="row g-3">
-                {projectDetail.projectLocationBenefitList.map((item, index) => (
+                {projectDetail.locationBenefits.map((item, index) => (
                   <div key={index} className="col-6">
                     <div className="border rounded-4 p-3 h-100 d-flex align-items-center gap-3 bg-light shadow-sm">
                       {item.benefitName != null ? (
@@ -1139,19 +1139,19 @@ const addNearbyImageIcon = (benefit) => {
                 <div className="row">
                   <div className="col-sm-6 mb-3">
                     <p className="mb-1 text-success fw-semibold">Address</p>
-                    <p className="mb-0">{projectDetail.projectAddress}</p>
+                    <p className="mb-0">{projectDetail.projectLocality || ""}</p>
                   </div>
                   <div className="col-sm-6 mb-3">
                     <p className="mb-1 text-success fw-semibold">State</p>
-                    <p className="mb-0">{projectDetail.stateName}</p>
+                    <p className="mb-0">{projectDetail.state || ""}</p>
                   </div>
                   <div className="col-sm-6 mb-3">
                     <p className="mb-1 text-success fw-semibold">City</p>
-                    <p className="mb-0">{projectDetail.cityName}</p>
+                    <p className="mb-0">{projectDetail.city || ""}</p>
                   </div>
                   <div className="col-sm-6 mb-3">
                     <p className="mb-1 text-success fw-semibold">Country</p>
-                    <p className="mb-0">{projectDetail.countryName}</p>
+                    <p className="mb-0">{projectDetail.country || ""}</p>
                   </div>
                 </div>
 
@@ -1171,7 +1171,7 @@ const addNearbyImageIcon = (benefit) => {
                 style={{ height: "350px" }}
               >
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.locationMapImage}`}
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.locationMap}`}
                   alt="Project Location Map"
                   fill
                   className="object-fit-cover"
@@ -1191,7 +1191,7 @@ const addNearbyImageIcon = (benefit) => {
       <div
         className="container-fluid py-5 mb-5"
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail?.projectDesktopBannerDtoList[0]?.desktopImage}`})`,
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail?.desktopImages[0]?.desktopImage}`})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -1204,7 +1204,7 @@ const addNearbyImageIcon = (benefit) => {
         {/* Section Heading */}
         <div>
           <h2 className="text-center text-white fw-bold mb-5">
-            About The Builder {projectDetail.builderName || ""}
+            About The Builder {projectDetail.builder.builderName || ""}
           </h2>
 
           {/* Description */}
@@ -1213,7 +1213,7 @@ const addNearbyImageIcon = (benefit) => {
               <div
                 className="text-center project-about-container text-white"
                 dangerouslySetInnerHTML={{
-                  __html: sanitizeHtml(projectDetail.builderDescription),
+                  __html: sanitizeHtml(projectDetail.builder.builderDescription),
                 }}
               ></div>
             </div>
@@ -1221,7 +1221,7 @@ const addNearbyImageIcon = (benefit) => {
             {/* Action Buttons */}
             <div className="text-center">
               <Link
-                href={`/builder/${projectDetail.builderSlugURL}`}
+                href={`/builder/${projectDetail.builder.slugURL}`}
                 className="btn btn-success px-4 py-2 rounded-pill shadow-sm"
               >
                 LEARN MORE
@@ -1355,7 +1355,7 @@ const addNearbyImageIcon = (benefit) => {
         <h2 className="text-center mb-4 fw-bold">FAQs</h2>
 
         <div className="faq-container">
-          {projectDetail.projectFaqList.map((item, index) => (
+          {projectDetail.faqs.map((item, index) => (
             <div key={`${item.id}-${index}`} className="faq-item mb-3">
               {/* Question */}
               <div
