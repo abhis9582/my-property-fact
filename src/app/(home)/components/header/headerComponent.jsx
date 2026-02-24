@@ -92,6 +92,7 @@ const HeaderComponent = () => {
   const projectsDropdownRef = useRef(null);
   const scrollPositionRef = useRef(0);
   const projectSearchInputRef = useRef(null);
+  const mobileProjectSearchInputRef = useRef(null);
 
   // Format price for display (lakh/cr) - same as PropertyContainer
   const formatProjectPrice = (price) => {
@@ -297,7 +298,7 @@ const HeaderComponent = () => {
     setShowModal(true);
   };
 
-  // Handle Project Search - debounced: run when user stops typing, show loader until results
+  // Handle Project Search - debounced: run when user stops typing; show loader only during API call, not during debounce
   useEffect(() => {
     const query = projectSearchQuery.trim();
     if (query.length < 2) {
@@ -305,14 +306,13 @@ const HeaderComponent = () => {
       setIsSearchingProjects(false);
       return;
     }
-    // Show loading as soon as user has typed enough
-    setIsSearchingProjects(true);
     const timeoutId = setTimeout(() => {
       const q = projectSearchQuery.trim();
       if (q.length < 2) {
         setIsSearchingProjects(false);
         return;
       }
+      setIsSearchingProjects(true);
       Promise.resolve(searchProjects(q)).then((filtered) => {
         setProjectSearchResults(filtered || []);
         setIsSearchingProjects(false);
@@ -353,11 +353,19 @@ const HeaderComponent = () => {
     setMobileSearchSlideIndex(0);
   }, [projectSearchResults]);
 
-  // Back to search: 
+  // Back to search (desktop focuses desktop input; mobile caller can focus mobile input)
   const handleBackToSearch = () => {
     setProjectSearchResults([]);
     setSearchResultsSlideIndex(0);
-    setTimeout(() => projectSearchInputRef.current?.focus(), 100);
+    setMobileSearchSlideIndex(0);
+    const isMobileMenuOpen = typeof document !== "undefined" && document.getElementById("mbdiv")?.classList.contains("active");
+    setTimeout(() => {
+      if (isMobileMenuOpen && mobileProjectSearchInputRef.current) {
+        mobileProjectSearchInputRef.current.focus();
+      } else {
+        projectSearchInputRef.current?.focus();
+      }
+    }, 100);
   };
 
   // Reset search when dropdown closes
@@ -399,12 +407,11 @@ const HeaderComponent = () => {
           <div className="mpf-logo d-flex align-items-center gap-4">
             <Link href="/">
               <Image
-                src="/logo.png"
+                src="/logo.webp"
                 alt="My Property fact"
                 height={74}
                 width={80}
-                priority
-
+                loading="lazy"
               />
             </Link>
           </div>
@@ -435,21 +442,18 @@ const HeaderComponent = () => {
                             <Link
                               href="/projects/commercial"
                               className="city-dropdown-item plus-jakarta-sans-semi-bold"
-                              prefetch={true}
                             >
                               Commercial
                             </Link>
                             <Link
                               href="/projects/residential"
                               className="city-dropdown-item plus-jakarta-sans-semi-bold"
-                              prefetch={true}
                             >
                               Residential
                             </Link>
                             <Link
                               href="/projects/new-launches"
                               className="city-dropdown-item with-badge plus-jakarta-sans-semi-bold"
-                              prefetch={true}
                             >
                               New Launches{" "}
                               <NewBadge isVisible={isDropdownHovered} />
@@ -701,16 +705,39 @@ const HeaderComponent = () => {
                                         <span className="projects-search-results-label">
                                           Projects
                                         </span>
-                                        <button
-                                          type="button"
-                                          className="projects-search-back-link"
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleBackToSearch();
-                                          }}
-                                        >
-                                          Back to search
-                                        </button>
+                                        <div className="projects-search-results-header-search">
+                                          <FontAwesomeIcon
+                                            icon={faSearch}
+                                            className="projects-search-results-header-search-icon"
+                                          />
+                                          <input
+                                            type="text"
+                                            className="projects-search-results-header-input"
+                                            value={projectSearchQuery}
+                                            onChange={(e) =>
+                                              setProjectSearchQuery(e.target.value)
+                                            }
+                                            onKeyDown={(e) => {
+                                              if (e.key === "Enter") {
+                                                e.preventDefault();
+                                                handleExploreClick();
+                                              }
+                                            }}
+                                            placeholder="Search"
+                                            aria-label="Edit search"
+                                          />
+                                          <button
+                                            type="button"
+                                            className="projects-search-back-link"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleBackToSearch();
+                                            }}
+                                            title="Clear and start new search"
+                                          >
+                                            New search
+                                          </button>
+                                        </div>
                                       </div>
                                       <div className="projects-search-horizontal-slider">
                                         {projectSearchResults.length > 2 && (
@@ -906,31 +933,47 @@ const HeaderComponent = () => {
             </button>
           </div>
           <div className="h-100 scroller">
-            {/* Mobile Projects Search */}
+            {/* Mobile Projects Search - aligned with desktop */}
             <div className="mobile-projects-search">
               {!(projectSearchQuery.trim().length >= 2 && projectSearchResults.length > 0 && !isSearchingProjects) && (
-                <div className="mobile-projects-search-input-wrapper">
-                  <FontAwesomeIcon
-                    icon={faSearch}
-                    className="mobile-projects-search-icon"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Search Your Dream House"
-                    className="mobile-projects-search-input"
-                    value={projectSearchQuery}
-                    onChange={(e) => setProjectSearchQuery(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        if (projectSearchResults?.[0]) {
-                          handleProjectClick(projectSearchResults[0]);
+                <>
+                  <h3 className="mobile-projects-search-title plus-jakarta-sans-semi-bold">
+                    Search Your Dream Home
+                  </h3>
+                  <div className="mobile-projects-search-container">
+                    <div className="mobile-projects-search-input-wrapper">
+                      <FontAwesomeIcon
+                        icon={faSearch}
+                        className="mobile-projects-search-icon"
+                      />
+                      <input
+                        ref={mobileProjectSearchInputRef}
+                        type="text"
+                        placeholder="Search"
+                        className="mobile-projects-search-input"
+                        value={projectSearchQuery}
+                        onChange={(e) => setProjectSearchQuery(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            handleExploreClick();
+                            openMenu();
+                          }
+                        }}
+                      />
+                      <button
+                        type="button"
+                        className="mobile-projects-explore-btn"
+                        onClick={() => {
+                          handleExploreClick();
                           openMenu();
-                        }
-                      }
-                    }}
-                  />
-                </div>
+                        }}
+                      >
+                        Explore
+                      </button>
+                    </div>
+                  </div>
+                </>
               )}
               {projectSearchQuery.trim().length >= 2 && (
                 <div className="mobile-projects-search-results">
@@ -951,16 +994,40 @@ const HeaderComponent = () => {
                         <span className="mobile-projects-search-results-label">
                           Projects
                         </span>
-                        <button
-                          type="button"
-                          className="mobile-projects-search-back-link"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleBackToSearch();
-                          }}
-                        >
-                          Back to search
-                        </button>
+                        <div className="mobile-projects-search-results-header-search">
+                          <FontAwesomeIcon
+                            icon={faSearch}
+                            className="mobile-projects-search-results-header-search-icon"
+                          />
+                          <input
+                            type="text"
+                            className="mobile-projects-search-results-header-input"
+                            value={projectSearchQuery}
+                            onChange={(e) =>
+                              setProjectSearchQuery(e.target.value)
+                            }
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.preventDefault();
+                                handleExploreClick();
+                                openMenu();
+                              }
+                            }}
+                            placeholder="Search"
+                            aria-label="Edit search"
+                          />
+                          <button
+                            type="button"
+                            className="mobile-projects-search-back-link"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleBackToSearch();
+                            }}
+                            title="Clear and start new search"
+                          >
+                            New search
+                          </button>
+                        </div>
                       </div>
                       <div className="mobile-projects-search-cards">
                         {(() => {

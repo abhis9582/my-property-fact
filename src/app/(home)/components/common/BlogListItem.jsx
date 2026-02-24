@@ -10,13 +10,15 @@ export default function BlogListItem({ blog }) {
   return (
     <div className="card-blog border-0 shadow-sm mb-4">
       {blog.blogImage && (
-        <Image
-          width={1200}
-          height={628}
-          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}blog/${blog.blogImage}`}
-          alt={blog.blogTitle}
-          className="img-fluid"
-        />
+        <Link href={`/blog/${blog.slugUrl}`} className="d-block" title={blog.blogTitle}>
+          <Image
+            width={1200}
+            height={628}
+            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}blog/${blog.blogImage}`}
+            alt={blog.blogTitle}
+            className="img-fluid"
+          />
+        </Link>
       )}
       <div className="p-4">
         <h3 className="mb-2 blog-typography-title">

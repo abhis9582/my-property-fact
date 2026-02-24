@@ -1,0 +1,184 @@
+/* Critical CSS - Above the fold styles for faster initial render */
+
+/* Essential CSS Variables */
+:root {
+  --bg-color: #68ac78;
+  --menu-color: #ffffff;
+  --text-color: #cfab5a;
+  --bg-with-gradient: radial-gradient(circle at center, #0d5834, #0c2e23);
+  --heaing-font: "plus-jakarta", "sans-serif";
+  --btn-background: linear-gradient(180deg, #453106 0%, #E6A315 100%);
+  --btn-normal-color: #C9A24D;
+}
+
+/* Critical Layout */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Header Critical Styles */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  background: linear-gradient(to bottom, rgba(10, 20, 40, 0.45), rgba(10, 20, 40, 0.15));
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Hero Banner Critical Styles */
+.mpf-hero-banner,
+.hero-lcp-fallback {
+  position: relative;
+  width: 100%;
+}
+
+@media (min-width: 992px) {
+  .mpf-hero-banner,
+  .hero-lcp-fallback {
+    min-height: 400px;
+    aspect-ratio: unset;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .mpf-hero-banner,
+  .hero-lcp-fallback {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .mpf-hero-banner,
+  .hero-lcp-fallback {
+    aspect-ratio: 768 / 430;
+  }
+}
+
+@media (max-width: 426px) {
+  .mpf-hero-banner,
+  .hero-lcp-fallback {
+    aspect-ratio: 9 / 16;
+  }
+}
+
+.home-banner {
+  width: 100%;
+  display: block;
+  line-height: 0;
+}
+
+.home-banner img,
+.home-banner picture {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Critical Typography */
+h1, h2, h3, h4, h5, h6, button, a {
+  font-family: var(--heaing-font) !important;
+}
+
+/* Critical Utility Classes */
+.position-relative {
+  position: relative !important;
+}
+
+.d-flex {
+  display: flex !important;
+}
+
+.justify-content-between {
+  justify-content: space-between !important;
+}
+
+.align-items-center {
+  align-items: center !important;
+}
+
+.w-100 {
+  width: 100% !important;
+}
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Critical Display Classes */
+.d-none {
+  display: none !important;
+}
+
+.d-block {
+  display: block !important;
+}
+
+@media (min-width: 768px) {
+  .d-md-none {
+    display: none !important;
+  }
+  .d-md-block {
+    display: block !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .d-lg-none {
+    display: none !important;
+  }
+  .d-lg-block {
+    display: block !important;
+  }
+}
+
+/* Container Critical */
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1320px;
+  }
+}

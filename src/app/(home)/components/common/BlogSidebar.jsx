@@ -146,7 +146,6 @@ export default function BlogSidebar({ onSearch, showSearch = true, showRecentPos
       {showRecentPosts && (
         <div className="recent-posts-container sidebar-align-right mb-4">
           <h6 className="fw-semibold mb-2">Recent Posts</h6>
-          <hr className="my-2" />
           <div className="recent-posts-list">
             {recent.map((b, i) => (
               <Link

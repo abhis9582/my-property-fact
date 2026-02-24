@@ -39,12 +39,12 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     // Configure allowed quality values for Next.js 16 compatibility
     qualities: [75, 80, 85, 90, 95, 100],
-    // Disable image optimization if backend is slow (uncomment if needed)
-    // unoptimized: true,
   },
-  // Enable CSS optimization without experimental features
   compiler: {
     styledComponents: true,
+  },
+  experimental: {
+    optimizeCss: true,
   },
 };
 
