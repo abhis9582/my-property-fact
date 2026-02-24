@@ -492,7 +492,7 @@ const HeaderComponent = () => {
                           <div className="dropdown-footer-right-wrapper">
 
                             <p className="dropdown-footer-right">
-                              Email us at services@social@mypropertyfact.com. or call us at 8920024793 (IND Toll-Free)
+                              Email us at social@mypropertyfact.com. or call us at +91 8920024793
                             </p>
                           </div>
                         </div>
@@ -576,7 +576,7 @@ const HeaderComponent = () => {
                           </div>
                           <div className="dropdown-footer-right-wrapper">
                             <p className="dropdown-footer-right">
-                              Email us at services@social@mypropertyfact.com. or call us at 8920024793 (IND Toll-Free)
+                              Email us at social@mypropertyfact.com. or call us at +91 8920024793 
                             </p>
                           </div>
                         </div>
@@ -855,7 +855,7 @@ const HeaderComponent = () => {
                           </div>
                           <div className="dropdown-footer-right-wrapper">
                             <p className="dropdown-footer-right">
-                              Email us at services@social@mypropertyfact.com. or call us at 8920024793 (IND Toll-Free)
+                              Email us at social@mypropertyfact.com. or call us at +91 8920024793 
                             </p>
                           </div>
                         </div>
