@@ -1,8 +1,8 @@
 import CommonBreadCrum from "@/app/(home)/components/common/breadcrum";
 import CommonHeaderBanner from "@/app/(home)/components/common/commonheaderbanner";
 import FooterPage from "@/app/(home)/components/footer/page";
-import Header from "@/app/(home)/components/header/header";
 import ProjectListByFloorTypeClient from "./projectListByFloorTypeClient";
+import HeaderComponent from "@/app/(home)/components/header/headerComponent";
 
 export default function ProjectListByFloorType({ slug }) {
   const title = slug
@@ -10,7 +10,7 @@ export default function ProjectListByFloorType({ slug }) {
     .replace(/\b\w/g, (char) => char.toUpperCase());
   return (
     <>
-      <Header />
+      <HeaderComponent />
       <div className="container-fluid">
         <CommonHeaderBanner
           image={"project-banner.jpg"}
