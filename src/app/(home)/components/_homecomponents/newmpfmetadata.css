@@ -168,6 +168,37 @@
 }
 
 /* Responsive Design */
+
+/* Stable layout for 425px–1023px - prevents hero section instability */
+@media (min-width: 425px) and (max-width: 1023.98px) {
+  .mpf-metadata-container {
+    padding-top: 50px;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin-top: 55px !important;
+  }
+
+  .property-search-card {
+    height: auto;
+    min-height: 120px;
+    padding: 20px 16px;
+  }
+
+  .property-search-title {
+    font-size: 17px;
+    letter-spacing: 2px;
+  }
+
+  .property-buttons-overlay {
+    gap: 10px 12px;
+  }
+
+  .property-buttons-overlay .btn-normal-color {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+}
+
 @media (max-width: 1024px) {
   .right-illustration-container, .left-iilution-container {
     display: none !important;
@@ -272,5 +303,35 @@
   .city-skyline-svg,
   .house-figures-svg {
     max-width: 200px;
+  }
+}
+
+/* Stable layout for 425px–1023px - card below search form (no overlap), like mobile large view */
+@media (min-width: 425px) and (max-width: 1023.98px) {
+  .mpf-metadata-container {
+    padding-top: 24px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    margin-top: 24px !important;
+  }
+
+  .property-search-card {
+    height: auto !important;
+    min-height: 120px;
+    padding: 20px 16px !important;
+  }
+
+  .property-search-title {
+    font-size: 17px;
+    letter-spacing: 2px;
+  }
+
+  .property-buttons-overlay {
+    gap: 10px 12px;
+  }
+
+  .property-buttons-overlay .btn-normal-color {
+    padding: 8px 16px;
+    font-size: 13px;
   }
 }
