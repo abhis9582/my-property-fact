@@ -68,6 +68,7 @@ export default function NewInsight() {
             </div>
           </div>
           <div className="insight-image-wrapper">
+            <Link href="https://sayahomes.com/" target="_blank" rel="noopener noreferrer">
             <Image
               src="/static/saya.png"
               alt="Family"
@@ -75,7 +76,8 @@ export default function NewInsight() {
               height={308}
               className="insight-main-image"
               priority
-            />
+              />
+              </Link>
             {/* <div className="insight-logo-wrapper">
               <Image
                 src="/static/icon/jacob.svg"

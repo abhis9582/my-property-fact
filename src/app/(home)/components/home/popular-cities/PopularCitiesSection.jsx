@@ -87,6 +87,7 @@ export default function PopularCitiesSection() {
             </button>
             <Swiper
               modules={[Navigation]}
+              loop
               navigation={{
                 prevEl: ".popular-cities-prev",
                 nextEl: ".popular-cities-next",

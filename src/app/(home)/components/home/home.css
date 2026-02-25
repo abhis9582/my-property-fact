@@ -217,7 +217,11 @@
   color: #333;
 }
 
-.search-btn-home-page {
+/* Search button: scoped under home-search-container so shape stays consistent when navigating from project page */
+.home-search-container .search-btn-home-page {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: #0d5834 !important;
   border: none !important;
   padding: 12px 32px !important;
@@ -227,12 +231,16 @@
   font-family: var(--text-font) !important;
   font-size: 15px !important;
   font-weight: 500 !important;
+  color: #fff !important;
+  cursor: pointer;
+  min-height: 42px;
 }
 
-.search-btn-home-page:hover {
+.home-search-container .search-btn-home-page:hover {
   background: #0a4528 !important;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(13, 88, 52, 0.4);
+  color: #fff !important;
 }
 
 @keyframes zoomin {

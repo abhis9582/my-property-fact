@@ -405,7 +405,10 @@ const HeaderComponent = () => {
       >
         <div className="container d-flex justify-content-between align-items-center">
           <div className="mpf-logo d-flex align-items-center gap-4">
-            <Link href="/">
+            <Link
+              href="/"
+              onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "instant" })}
+            >
               <Image
                 src="/logo.webp"
                 alt="My Property fact"
@@ -470,7 +473,7 @@ const HeaderComponent = () => {
                               <li key={city.id}>
                                 <Link
                                   href={`/city/${city.slugURL}`}
-                                  className={`text-light text-decoration-none plus-jakarta-sans-semi-bold ${pathname === "/city/" + city.URL
+                                  className={`text-light text-decoration-none plus-jakarta-sans-semi-bold ${pathname === "/city/" + city.slugURL
                                       ? "header-link-active"
                                       : ""
                                     }`}
@@ -483,7 +486,7 @@ const HeaderComponent = () => {
                         </div>
                         <div className="dropdown-footer-bar">
                           <div className="dropdown-footer-left">
-                            <span className="dropdown-footer-label">Contact Us toll free on</span>
+                            <span className="dropdown-footer-label">Contact Us</span>
                             <span className="dropdown-footer-phone">
                               <img src="/static/icon/Vector (1).svg" alt="Phone" className="dropdown-footer-phone-icon" />
                               8920024793
@@ -492,7 +495,7 @@ const HeaderComponent = () => {
                           <div className="dropdown-footer-right-wrapper">
 
                             <p className="dropdown-footer-right">
-                              Email us at social@mypropertyfact.com. or call us at +91 8920024793
+                              Email us at social@mypropertyfact.com
                             </p>
                           </div>
                         </div>
@@ -568,7 +571,7 @@ const HeaderComponent = () => {
                         </div>
                         <div className="dropdown-footer-bar">
                           <div className="dropdown-footer-left">
-                            <span className="dropdown-footer-label">Contact Us toll free on</span>
+                            <span className="dropdown-footer-label">Contact Us</span>
                             <span className="dropdown-footer-phone">
                               <img src="/static/icon/Vector (1).svg" alt="Phone" className="dropdown-footer-phone-icon" />
                               8920024793
@@ -576,7 +579,7 @@ const HeaderComponent = () => {
                           </div>
                           <div className="dropdown-footer-right-wrapper">
                             <p className="dropdown-footer-right">
-                              Email us at social@mypropertyfact.com. or call us at +91 8920024793 
+                              Email us at social@mypropertyfact.com
                             </p>
                           </div>
                         </div>
@@ -847,7 +850,7 @@ const HeaderComponent = () => {
                         </div>
                         <div className="dropdown-footer-bar">
                           <div className="dropdown-footer-left">
-                            <span className="dropdown-footer-label">Contact Us toll free on</span>
+                            <span className="dropdown-footer-label">Contact Us</span>
                             <span className="dropdown-footer-phone">
                               <img src="/static/icon/Vector (1).svg" alt="Phone" className="dropdown-footer-phone-icon" />
                               8920024793
@@ -855,7 +858,7 @@ const HeaderComponent = () => {
                           </div>
                           <div className="dropdown-footer-right-wrapper">
                             <p className="dropdown-footer-right">
-                              Email us at social@mypropertyfact.com. or call us at +91 8920024793 
+                              Email us at social@mypropertyfact.com
                             </p>
                           </div>
                         </div>
@@ -913,7 +916,14 @@ const HeaderComponent = () => {
         <div className="mbMenu" onClick={(e) => e.stopPropagation()}>
           {/* Mobile Menu Header with Logo and Close Button */}
           <div className="mobile-menu-header">
-            <Link href="/" onClick={openMenu} className="mobile-menu-logo">
+            <Link
+              href="/"
+              onClick={() => {
+                window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+                openMenu();
+              }}
+              className="mobile-menu-logo"
+            >
               <Image
                 src="/logo.png"
                 alt="My Property Fact"
