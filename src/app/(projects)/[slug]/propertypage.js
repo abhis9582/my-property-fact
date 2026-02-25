@@ -673,11 +673,27 @@ const addNearbyImageIcon = (benefit) => {
                 <ul className="project-mb-list d-lg-none">
                   <li>
                     <Link
-                      href="#"
+                      href="/"
                       className="text-decoration-none"
-                      onClick={(e) => openMenu(e, "home")}
+                      onClick={() => {
+                        if (menuOpen) {
+                          const menu = document.getElementById("property-mbdiv");
+                          const menuButtons = document.querySelectorAll(".project-menuBtn");
+                          const header = document.querySelector(".project-detail-header");
+                          if (menu) {
+                            menu.classList.remove("active");
+                            menu.style.display = "none";
+                          }
+                          menuButtons?.forEach((btn) => btn.classList.remove("closeMenuBtn"));
+                          header?.classList.remove("notfixed");
+                          setMenuOpen(false);
+                          document.body.classList.remove("menu-open");
+                          document.body.style.overflow = "";
+                          document.body.style.position = "";
+                        }
+                      }}
                     >
-                      Home
+                      Back to Home
                     </Link>
                   </li>
                   <li>

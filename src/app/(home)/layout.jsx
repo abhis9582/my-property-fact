@@ -2,7 +2,6 @@ import "./bootstrap-critical.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { SiteDataProvider } from "@/app/_global_components/contexts/SiteDataContext";
 
 const LazyBelowFold = dynamic(
   () => import("./components/_homecomponents/LazyBelowFold"),
@@ -49,11 +48,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <SiteDataProvider>
+    <>
       <HeaderComponent />
       {children}
       <NewFooterDesign />
       <LazyBelowFold />
-    </SiteDataProvider>
+    </>
   );
 }

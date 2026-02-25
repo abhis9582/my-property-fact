@@ -8,7 +8,7 @@
   transition: opacity 0.8s ease-in-out;
 }
 
-/* Default: only icon visible (no pink-orange pill) */
+/* Default: only icon visible (no pink-orange pill). z-index below header so header stays on top; above slider so button is clickable on mobile */
 .back-to-home-floating {
   position: fixed;
   left: 0.25rem;
@@ -25,9 +25,13 @@
   text-decoration: none;
   border-radius: 50%;
   box-shadow: none;
-  z-index: 1000;
+  z-index: 99999;
   transition: transform 0.3s ease, box-shadow 0.3s ease, padding 0.35s ease,
     background 0.35s ease, border-radius 0.35s ease;
+  /* Ensure touch target is large enough on mobile */
+  min-width: 44px;
+  min-height: 44px;
+  cursor: pointer;
 }
 
 /* On scroll: full pink-orange pill with text */
