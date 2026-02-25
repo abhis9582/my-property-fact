@@ -172,7 +172,7 @@ export default function MasterBHKProjectList() {
       let foundCity = "";
       slugPrefix.map((slug) => {
         if (pathName.includes(slug)) {
-          foundCity = pathName.replace(slug, "").replace(/-/g, " ");          
+          foundCity = pathName.replace(slug, "").replace(/-/g, " ");
         }
       });
       setCityName(foundCity);

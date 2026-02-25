@@ -16,13 +16,6 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const response = await fetchProjectDetailsBySlug(slug);
-  if (!response) {
-    return {
-      title: "Property Not Found",
-      description: "The property you are looking for does not exist.",
-      keywords: ["Property Not Found"],
-    };
-  }
   if (!(response.slugURL === slug)) {
     // Case 1: Master BHK listing page
     return {

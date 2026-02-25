@@ -1,8 +1,8 @@
 import CommonHeaderBanner from "@/app/(home)/components/common/commonheaderbanner";
 import CommonBreadCrum from "@/app/(home)/components/common/breadcrum";
-import Header from "@/app/(home)/components/header/header";
 import MasterBHKProjectList from "./master-bhk-project-list";
 import FooterPage from "@/app/(home)/components/footer/page";
+import HeaderComponent from "@/app/(home)/components/header/headerComponent";
 
 export default function MasterBHKProjectsPage({ slug }) {
   const title = slug
@@ -11,7 +11,7 @@ export default function MasterBHKProjectsPage({ slug }) {
 
   return (
     <>
-      <Header />
+      <HeaderComponent />
       <div className="container-fluid">
         <CommonHeaderBanner
           image={"project-banner.jpg"}
