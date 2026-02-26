@@ -3,6 +3,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import styles from "./Chatbot.module.css";
+import {
+  createInitialChatSession,
+  generateClientChatResponse,
+} from "./chatbotLogicClient";
 
 function createSessionId() {
   return `${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`;
@@ -41,6 +45,7 @@ export default function ChatbotV2() {
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [sessionId, setSessionId] = useState("");
+  const [chatSession, setChatSession] = useState(createInitialChatSession());
   const [isInputDisabled, setIsInputDisabled] = useState(true);
   const [placeholder, setPlaceholder] = useState("Please select an option");
   const messagesEndRef = useRef(null);
@@ -59,6 +64,7 @@ export default function ChatbotV2() {
 
   const resetChatOnClient = () => {
     setSessionId(createSessionId());
+    setChatSession(createInitialChatSession());
     setMessages([getInitialBotMessage()]);
     setInputValue("");
     setIsTyping(false);
@@ -107,28 +113,23 @@ export default function ChatbotV2() {
     setIsTyping(true);
 
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sessionId,
-          message: messageText,
-        }),
-      });
-
-      const data = await response.json();
+      const { nextSession, payload } = await generateClientChatResponse(
+        messageText,
+        chatSession,
+      );
+      setChatSession(nextSession);
       setIsTyping(false);
 
-      if (data.reply || data.projectCards || data.options || data.followUp) {
-        addBotMessageFromPayload(data);
+      if (payload.reply || payload.projectCards || payload.options || payload.followUp) {
+        addBotMessageFromPayload(payload);
       }
 
-      if (data.redirectUrl || data.redirectPath) {
+      if (payload.redirectUrl || payload.redirectPath) {
         setTimeout(() => {
           const redirectUrl =
-            typeof data.redirectUrl === "string" ? data.redirectUrl : "";
+            typeof payload.redirectUrl === "string" ? payload.redirectUrl : "";
           const redirectPath =
-            typeof data.redirectPath === "string" ? data.redirectPath : "";
+            typeof payload.redirectPath === "string" ? payload.redirectPath : "";
           const invalidUrl =
             redirectUrl.startsWith("undefined") || redirectUrl.startsWith("null");
 
