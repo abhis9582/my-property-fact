@@ -173,6 +173,30 @@ function parseProjectPrice(project) {
   return Number.isFinite(price) ? price : null;
 }
 
+function formatProjectDisplayPrice(project) {
+  const startingPrice = String(project?.projectStartingPrice || "").trim();
+  if (startingPrice) return startingPrice;
+
+  const rawPrice = project?.projectPrice;
+  if (rawPrice === null || rawPrice === undefined || rawPrice === "") {
+    return "Price on Request";
+  }
+
+  const numericPrice = Number(rawPrice);
+  if (Number.isFinite(numericPrice)) {
+    if (numericPrice >= 1) {
+      const cr = numericPrice.toFixed(numericPrice % 1 === 0 ? 0 : 2).replace(/\.?0+$/, "");
+      return `₹${cr} Cr* Onwards`;
+    }
+    const lakh = (numericPrice * 100)
+      .toFixed((numericPrice * 100) % 1 === 0 ? 0 : 2)
+      .replace(/\.?0+$/, "");
+    return `₹${lakh} Lakh* Onwards`;
+  }
+
+  return String(rawPrice);
+}
+
 function toNumber(value) {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : null;
@@ -274,7 +298,7 @@ function buildProjectCards(projects = []) {
       id: project.id,
       name: project.projectName,
       location: project.projectAddress || project.cityName,
-      price: project.projectStartingPrice || "Price on Request",
+      price: formatProjectDisplayPrice(project),
       image,
       builder: project.builderName || "N/A",
       status: project.projectStatusName || "N/A",

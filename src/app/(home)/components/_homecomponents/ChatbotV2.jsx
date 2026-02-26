@@ -459,12 +459,14 @@ function ProjectSlider({
   disabled,
 }) {
   const sliderRef = useRef(null);
-  const [showArrow, setShowArrow] = useState(false);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   const checkScroll = () => {
     if (!sliderRef.current) return;
     const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
-    setShowArrow(scrollLeft < scrollWidth - clientWidth - 5);
+    setCanScrollLeft(scrollLeft > 5);
+    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 5);
   };
 
   useEffect(() => {
@@ -472,6 +474,10 @@ function ProjectSlider({
     window.addEventListener("resize", checkScroll);
     return () => window.removeEventListener("resize", checkScroll);
   }, [cards]);
+
+  const scrollLeft = () => {
+    sliderRef.current?.scrollBy({ left: -300, behavior: "smooth" });
+  };
 
   const scrollRight = () => {
     sliderRef.current?.scrollBy({ left: 300, behavior: "smooth" });
@@ -523,10 +529,45 @@ function ProjectSlider({
       </div>
 
       <button
-        className={`${styles.scrollArrow} ${showArrow ? styles.visible : ""}`}
-        onClick={scrollRight}
+        className={`${styles.scrollArrow} ${styles.scrollArrowLeft} ${canScrollLeft ? styles.visible : ""}`}
+        onClick={scrollLeft}
+        aria-label="Scroll left"
+        type="button"
       >
-        &#8594;
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="m15 18-6-6 6-6" />
+        </svg>
+      </button>
+
+      <button
+        className={`${styles.scrollArrow} ${styles.scrollArrowRight} ${canScrollRight ? styles.visible : ""}`}
+        onClick={scrollRight}
+        aria-label="Scroll right"
+        type="button"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="m9 18 6-6-6-6" />
+        </svg>
       </button>
 
       {followUp || cards?.length ? (

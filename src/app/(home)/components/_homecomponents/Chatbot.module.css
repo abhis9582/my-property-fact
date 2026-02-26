@@ -225,14 +225,13 @@
 
 .scrollArrow {
     position: absolute;
-    right: 0;
     top: 50%;
-    transform: translateY(-50%) translateX(50%);
+    transform: translateY(-50%);
     background: #C9A24D;
     border: 1px solid #B8923F;
     box-shadow: 0 4px 6px rgba(201, 162, 77, 0.2);
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -240,21 +239,45 @@
     cursor: pointer;
     z-index: 10;
     color: #ffffff;
-    font-weight: bold;
     transition: all 0.2s ease;
     opacity: 0;
     pointer-events: none;
 }
 
+.scrollArrowLeft {
+    left: 0;
+    transform: translateY(-50%) translateX(-35%);
+}
+
+.scrollArrowRight {
+    right: 0;
+    transform: translateY(-50%) translateX(35%);
+}
+
 .scrollArrow.visible {
     opacity: 1;
     pointer-events: auto;
-    transform: translateY(-50%) translateX(25%);
+}
+
+.scrollArrowLeft.visible {
+    transform: translateY(-50%) translateX(-20%);
+}
+
+.scrollArrowRight.visible {
+    transform: translateY(-50%) translateX(20%);
 }
 
 .scrollArrow:hover {
     background: #B8923F;
     box-shadow: 0 6px 12px rgba(201, 162, 77, 0.3);
+}
+
+.scrollArrowLeft:active {
+    transform: translateY(-50%) translateX(-20%) scale(0.95);
+}
+
+.scrollArrowRight:active {
+    transform: translateY(-50%) translateX(20%) scale(0.95);
 }
 
 .projectSlider {
@@ -504,10 +527,10 @@
 
 .chatScrollHint {
     position: absolute;
-    right: 14px;
-    bottom: 66px;
-    width: 34px;
-    height: 34px;
+    left: 50%;
+    bottom: 68px;
+    width: 36px;
+    height: 36px;
     border: none;
     border-radius: 50%;
     background: #C9A24D;
@@ -517,13 +540,20 @@
     justify-content: center;
     cursor: pointer;
     z-index: 3;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16);
-    transition: transform 0.2s ease, background 0.2s ease;
+    transform: translateX(-50%);
+    border: 1px solid #B8923F;
+    box-shadow: 0 4px 10px rgba(201, 162, 77, 0.35);
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .chatScrollHint:hover {
     background: #B8923F;
-    transform: translateY(-2px);
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 6px 14px rgba(201, 162, 77, 0.4);
+}
+
+.chatScrollHint:active {
+    transform: translateX(-50%) scale(0.96);
 }
 
 /* Typing Indicator */
