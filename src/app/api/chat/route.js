@@ -11,7 +11,11 @@ function safeParseCookieState(rawValue) {
   try {
     return JSON.parse(rawValue);
   } catch {
-    return null;
+    try {
+      return JSON.parse(decodeURIComponent(rawValue));
+    } catch {
+      return null;
+    }
   }
 }
 
