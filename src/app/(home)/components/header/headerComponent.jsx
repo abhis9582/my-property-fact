@@ -83,6 +83,7 @@ const HeaderComponent = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isConditionalHeader, setIsConditionalHeader] = useState(false);
   // Project search state
+  const [projectSearchInput, setProjectSearchInput] = useState("");
   const [projectSearchQuery, setProjectSearchQuery] = useState("");
   const [projectSearchResults, setProjectSearchResults] = useState([]);
   const [isSearchingProjects, setIsSearchingProjects] = useState(false);
@@ -298,20 +299,24 @@ const HeaderComponent = () => {
     setShowModal(true);
   };
 
-  // Handle Project Search - debounced: run when user stops typing; show loader only during API call, not during debounce
+  // Handle Project Search - keep typing responsive by debouncing actual search work
   useEffect(() => {
-    const query = projectSearchQuery.trim();
+    const query = projectSearchInput.trim();
     if (query.length < 2) {
+      setProjectSearchQuery("");
       setProjectSearchResults([]);
       setIsSearchingProjects(false);
       return;
     }
     const timeoutId = setTimeout(() => {
-      const q = projectSearchQuery.trim();
+      const q = projectSearchInput.trim();
       if (q.length < 2) {
+        setProjectSearchQuery("");
+        setProjectSearchResults([]);
         setIsSearchingProjects(false);
         return;
       }
+      setProjectSearchQuery(q);
       setIsSearchingProjects(true);
       Promise.resolve(searchProjects(q)).then((filtered) => {
         setProjectSearchResults(filtered || []);
@@ -320,14 +325,15 @@ const HeaderComponent = () => {
         setProjectSearchResults([]);
         setIsSearchingProjects(false);
       });
-    }, 400);
+    }, 280);
     return () => clearTimeout(timeoutId);
-  }, [projectSearchQuery, searchProjects]);
+  }, [projectSearchInput, searchProjects]);
 
   // Handle project click navigation
   const handleProjectClick = (project) => {
     if (project.slugURL) {
       router.push(`/${project.slugURL}`);
+      setProjectSearchInput("");
       setProjectSearchQuery("");
       setProjectSearchResults([]);
     }
@@ -335,13 +341,16 @@ const HeaderComponent = () => {
 
   // Handle Explore button click
   const handleExploreClick = () => {
+    const searchValue = projectSearchInput.trim();
     if (projectSearchResults.length > 0 && projectSearchResults[0]?.slugURL) {
       router.push(`/${projectSearchResults[0].slugURL}`);
+      setProjectSearchInput("");
       setProjectSearchQuery("");
       setProjectSearchResults([]);
-    } else if (projectSearchQuery.trim().length >= 2) {
+    } else if (searchValue.length >= 2) {
       // Navigate to projects page with search query
-      router.push(`/projects?search=${encodeURIComponent(projectSearchQuery)}`);
+      router.push(`/projects?search=${encodeURIComponent(searchValue)}`);
+      setProjectSearchInput("");
       setProjectSearchQuery("");
       setProjectSearchResults([]);
     }
@@ -355,6 +364,8 @@ const HeaderComponent = () => {
 
   // Back to search (desktop focuses desktop input; mobile caller can focus mobile input)
   const handleBackToSearch = () => {
+    setProjectSearchInput("");
+    setProjectSearchQuery("");
     setProjectSearchResults([]);
     setSearchResultsSlideIndex(0);
     setMobileSearchSlideIndex(0);
@@ -380,6 +391,7 @@ const HeaderComponent = () => {
           projectsLi?.matches(":hover") ||
           projectsDropdownRef.current?.matches(":hover");
         if (!isHovering) {
+          setProjectSearchInput("");
           setProjectSearchQuery("");
           setProjectSearchResults([]);
         }
@@ -651,7 +663,7 @@ const HeaderComponent = () => {
                           </div>
                           <div className="city-dropdown-right projects-search-section">
                             <div className="projects-search-wrapper">
-                              {!(projectSearchQuery.trim().length >= 2 && projectSearchResults.length > 0 && !isSearchingProjects) && (
+                                      {!(projectSearchQuery.trim().length >= 2 && projectSearchResults.length > 0 && !isSearchingProjects) && (
                                 <>
                                   <h3 className="projects-search-title plus-jakarta-sans-semi-bold">
                                     Search Your Dream Home
@@ -667,9 +679,9 @@ const HeaderComponent = () => {
                                         type="text"
                                         placeholder="Search"
                                         className="projects-search-input"
-                                        value={projectSearchQuery}
+                                        value={projectSearchInput}
                                         onChange={(e) =>
-                                          setProjectSearchQuery(e.target.value)
+                                          setProjectSearchInput(e.target.value)
                                         }
                                         onKeyDown={(e) => {
                                           if (e.key === "Enter") {
@@ -716,9 +728,9 @@ const HeaderComponent = () => {
                                           <input
                                             type="text"
                                             className="projects-search-results-header-input"
-                                            value={projectSearchQuery}
+                                            value={projectSearchInput}
                                             onChange={(e) =>
-                                              setProjectSearchQuery(e.target.value)
+                                              setProjectSearchInput(e.target.value)
                                             }
                                             onKeyDown={(e) => {
                                               if (e.key === "Enter") {
@@ -961,8 +973,8 @@ const HeaderComponent = () => {
                         type="text"
                         placeholder="Search"
                         className="mobile-projects-search-input"
-                        value={projectSearchQuery}
-                        onChange={(e) => setProjectSearchQuery(e.target.value)}
+                        value={projectSearchInput}
+                        onChange={(e) => setProjectSearchInput(e.target.value)}
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             e.preventDefault();
@@ -1012,9 +1024,9 @@ const HeaderComponent = () => {
                           <input
                             type="text"
                             className="mobile-projects-search-results-header-input"
-                            value={projectSearchQuery}
+                            value={projectSearchInput}
                             onChange={(e) =>
-                              setProjectSearchQuery(e.target.value)
+                              setProjectSearchInput(e.target.value)
                             }
                             onKeyDown={(e) => {
                               if (e.key === "Enter") {

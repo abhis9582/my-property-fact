@@ -67,10 +67,10 @@ export default async function PropertyPage({ params }) {
   );
   
   if (isCitySlug) {
-    return <MasterBHKProjectsPage slug={slug} />;
+    return <MasterBHKProjectsPage slug={slug} cityList={cityList} />;
   } else if (isFloorTypeSlug) {
     {
-      return <ProjectListByFloorType slug={slug} />;
+      return <ProjectListByFloorType slug={slug} cityList={cityList} />;
     }
   } else if (isProjectSlug) {
     return (

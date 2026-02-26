@@ -4,6 +4,13 @@ import { LoadingSpinner } from "@/app/(home)/contact-us/page";
 import { useEffect, useState } from "react";
 import { fetchAllProjects } from "../masterFunction";
 
+const normalizeFloorType = (value = "") => {
+  const normalized = value.toLowerCase().trim().replace(/\s+/g, " ");
+  if (normalized === "shop" || normalized === "shops") return "shops";
+  if (normalized === "food courts") return "food court";
+  return normalized;
+};
+
 export default function ProjectListByFloorTypeClient({ title }) {
   const [projects, setProjects] = useState([]);
   const [filteredProjectsByBrType, setFilteredProjectsByBrType] = useState([]);
@@ -18,9 +25,9 @@ export default function ProjectListByFloorTypeClient({ title }) {
           .filter((item) => {
             const types = item.projectConfiguration
               .split(",")
-              .map((type) => type.toUpperCase().trim());
+              .map((type) => normalizeFloorType(type));
             setLoading(false);
-            return types?.includes(bhkType.toUpperCase());
+            return types?.includes(normalizeFloorType(bhkType));
           });
       }
       setLoading(false);

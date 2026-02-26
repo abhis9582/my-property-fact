@@ -11,14 +11,12 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import PrivacyPolicyModal from "../privacy-policy/PrivacyPolicyModal";
 import { useSiteData } from "@/app/_global_components/contexts/SiteDataContext";
 import "./newfooter.css";
 
 export default function NewFooterDesign({ compactTop = false, cityList: cityListProp }) {
   const { cityList: contextCityList = [] } = useSiteData();
   const [isMounted, setIsMounted] = useState(false);
-  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -286,13 +284,9 @@ export default function NewFooterDesign({ compactTop = false, cityList: cityList
                     <Link href="/contact-us" className="footer-link">Contact Us</Link>
                   </li>
                   <li>
-                    <button
-                      onClick={() => setShowPrivacyModal(true)}
-                      className="footer-link privacy-policy-btn"
-                      style={{ cursor: 'pointer', background: 'none', border: 'none', padding: 0, textAlign: 'left' }}
-                    >
+                    <Link href="/privacy-policy" className="footer-link">
                       Privacy Policy
-                    </button>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -398,11 +392,6 @@ export default function NewFooterDesign({ compactTop = false, cityList: cityList
         </button>
       )} */}
 
-      {/* Privacy Policy Modal */}
-      <PrivacyPolicyModal 
-        show={showPrivacyModal} 
-        onHide={() => setShowPrivacyModal(false)} 
-      />
     </div>
   );
 }

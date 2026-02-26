@@ -14,6 +14,48 @@ export default function MasterBHKProjectList() {
   const [loading, setLoading] = useState(true);
   const [cityName, setCityName] = useState("");
   const [floorTypeList, setFloorTypeList] = useState([]);
+
+  const normalizeFloorType = (value = "") => {
+    const normalized = value.toLowerCase().trim().replace(/\s+/g, " ");
+    if (normalized === "shop" || normalized === "shops") {
+      return { label: "Shops", slugType: "shops" };
+    }
+    if (normalized === "food courts") {
+      return { label: "Food Court", slugType: "food-court" };
+    }
+    return {
+      label: normalized.replace(/\b\w/g, (char) => char.toUpperCase()),
+      slugType: normalized.replace(/\s+/g, "-"),
+    };
+  };
+
+  const buildFloorTypeList = (projectData, city) => {
+    const cityKey = city.trim().toLowerCase();
+    const floorTypesMap = new Map();
+
+    projectData
+      .filter((item) => item.cityName.toLowerCase() === cityKey)
+      .forEach((item) => {
+        item.projectConfiguration
+          .split(",")
+          .map((type) => type.trim())
+          .filter(Boolean)
+          .forEach((type) => {
+            const normalized = normalizeFloorType(type);
+            if (!floorTypesMap.has(normalized.slugType)) {
+              floorTypesMap.set(normalized.slugType, {
+                label: normalized.label,
+                slugType: normalized.slugType,
+                city: item.cityName,
+              });
+            }
+          });
+      });
+
+    return Array.from(floorTypesMap.values()).sort((a, b) =>
+      a.label.localeCompare(b.label),
+    );
+  };
   const getListOfProjectFromBkType = async () => {
     const bkType = searchParams.get("type");
     let cat = "";
@@ -44,22 +86,7 @@ export default function MasterBHKProjectList() {
               item.propertyTypeName.toLowerCase() === "residential" &&
               item.cityName.toLowerCase() === cityName.trim().toLowerCase()
           );
-          setFloorTypeList(
-            Array.from(
-              new Set(
-                filteredData
-                  .filter(
-                    (item) =>
-                      item.cityName.toLowerCase() === cityName.toLowerCase()
-                  )
-                  .flatMap((item) =>
-                    item.projectConfiguration
-                      .split(",")
-                      .map((type) => `${type.trim()}|${item.cityName}`)
-                  )
-              )
-            )
-          );
+          setFloorTypeList(buildFloorTypeList(filteredData, cityName));
           break;
         case "new-projects":
           filteredData = projects.filter(
@@ -67,22 +94,7 @@ export default function MasterBHKProjectList() {
               item.projectStatusName === "New Launched" &&
               item.cityName.toLowerCase() === cityName.toLowerCase()
           );
-          setFloorTypeList(
-            Array.from(
-              new Set(
-                filteredData
-                  .filter(
-                    (item) =>
-                      item.cityName.toLowerCase() === cityName.toLowerCase()
-                  )
-                  .flatMap((item) =>
-                    item.projectConfiguration
-                      .split(",")
-                      .map((type) => `${type.trim()}|${item.cityName}`)
-                  )
-              )
-            )
-          );
+          setFloorTypeList(buildFloorTypeList(filteredData, cityName));
           break;
         case "flats":
           filteredData = projects.filter(
@@ -90,22 +102,7 @@ export default function MasterBHKProjectList() {
               item.cityName.toLowerCase() === cityName.trim().toLowerCase() &&
               item.propertyTypeName.toLowerCase() === "residential"
           );
-          setFloorTypeList(
-            Array.from(
-              new Set(
-                filteredData
-                  .filter(
-                    (item) =>
-                      item.cityName.toLowerCase() === cityName.toLowerCase()
-                  )
-                  .flatMap((item) =>
-                    item.projectConfiguration
-                      .split(",")
-                      .map((type) => `${type.trim()}|${item.cityName}`)
-                  )
-              )
-            )
-          );
+          setFloorTypeList(buildFloorTypeList(filteredData, cityName));
           break;
         case "commercial":
           filteredData = projects.filter(
@@ -113,44 +110,14 @@ export default function MasterBHKProjectList() {
               item.propertyTypeName.toLowerCase() === "commercial" &&
               item.cityName.toLowerCase() === cityName.toLowerCase()
           );
-          setFloorTypeList(
-            Array.from(
-              new Set(
-                filteredData
-                  .filter(
-                    (item) =>
-                      item.cityName.toLowerCase() === cityName.toLowerCase()
-                  )
-                  .flatMap((item) =>
-                    item.projectConfiguration
-                      .split(",")
-                      .map((type) => `${type.trim()}|${item.cityName}`)
-                  )
-              )
-            )
-          );
+          setFloorTypeList(buildFloorTypeList(filteredData, cityName));
           break;
         default:
           filteredData = projects.filter(
             (item) =>
               item.cityName.toLowerCase() === cityName.trim().toLowerCase()
           );
-          setFloorTypeList(
-            Array.from(
-              new Set(
-                filteredData
-                  .filter(
-                    (item) =>
-                      item.cityName.toLowerCase() === cityName.toLowerCase()
-                  )
-                  .flatMap((item) =>
-                    item.projectConfiguration
-                      .split(",")
-                      .map((type) => `${type.trim()}|${item.cityName}`)
-                  )
-              )
-            )
-          );
+          setFloorTypeList(buildFloorTypeList(filteredData, cityName));
           break;
       }
       setLoading(false);
@@ -219,18 +186,17 @@ export default function MasterBHKProjectList() {
           className="bg-light py-5 mt-5 text-center font-gotham-medium fs-4 text-uppercase text-dark d-flex justify-content-center align-items-center
         gap-3 flex-wrap"
         >
-          {floorTypeList.map((unique) => {
-            const [type, city] = unique.split("|");
+          {floorTypeList.map((floorType) => {
             return (
               <Link
-                key={unique}
+                key={`${floorType.slugType}|${floorType.city}`}
                 className="text-dark text-decoration-none bg-secondary rounded-3 px-3 py-2 fs-6 border border-secondary bg-white"
-                href={`${type
-                  .toLowerCase()
-                  .split(" ")
-                  .join("-")}-in-${city.trim().replace(' ', '-').toLowerCase()}`}
+                href={`${floorType.slugType}-in-${floorType.city
+                  .trim()
+                  .replace(/\s+/g, "-")
+                  .toLowerCase()}`}
               >
-                {type} in {city}
+                {floorType.label} in {floorType.city}
               </Link>
             );
           })}

@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import {
   faFacebook,
   faInstagram,
@@ -12,10 +11,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./footer.css";
 import Link from "next/link";
 import CityList from "../common/citylistcard";
-import PrivacyPolicyModal from "../privacy-policy/PrivacyPolicyModal";
 
 export default function Footer({ cityList = [], projectTypes = [] }) {
-  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   // Defining footer media array
   const mediaArr = [
     {
@@ -166,13 +163,12 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
                   </li>
                 ))}
                 <li>
-                  <button
-                    className="footer-text text-decoration-none border-0 bg-transparent p-0"
-                    onClick={() => setShowPrivacyModal(true)}
-                    style={{ cursor: 'pointer' }}
+                  <Link
+                    className="footer-text text-decoration-none"
+                    href="/privacy-policy"
                   >
                     Privacy Policy
-                  </button>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -257,21 +253,14 @@ export default function Footer({ cityList = [], projectTypes = [] }) {
           purchase-related decisions.
         </p>
         <div className="text-center pb-3">
-          <button
-            className="footer-text text-decoration-none border-0 bg-transparent p-0"
-            onClick={() => setShowPrivacyModal(true)}
-            style={{ cursor: 'pointer' }}
+          <Link
+            className="footer-text text-decoration-none"
+            href="/privacy-policy"
           >
             Privacy Policy
-          </button>
+          </Link>
         </div>
       </div>
-      
-      {/* Privacy Policy Modal */}
-      <PrivacyPolicyModal 
-        show={showPrivacyModal} 
-        onHide={() => setShowPrivacyModal(false)} 
-      />
     </footer>
   );
 }

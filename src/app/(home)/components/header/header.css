@@ -1334,6 +1334,7 @@
   transition: transform 0.35s ease-out;
   will-change: transform;
   transform: translateX(calc(-1 * var(--slide-index, 0) * var(--project-search-slide-width)));
+  margin-top: 20px;
 }
 
 /* Project search card – match design: 302×133px, image ~40–45% width, clean typography */
