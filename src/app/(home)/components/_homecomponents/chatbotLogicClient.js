@@ -1,6 +1,3 @@
-import axios from "axios";
-
-const API_URL = `${process.env.NEXT_PUBLIC_API_URL}projects/search-by-type-city-budget`;
 const IMAGE_BASE_URL = `${process.env.NEXT_PUBLIC_IMAGE_URL}properties/`;
 
 const PROPERTY_TYPE_MAP = {
@@ -82,7 +79,7 @@ const CHAT_STATES = {
 export function createInitialChatSession() {
   return {
     step: CHAT_STATES.WELCOME,
-    data: { type: null, city: null, budget: null },
+    data: { type: null, propertyTypeId: null, city: null, budget: null },
     results: { allProjects: [], currentIndex: 0 },
   };
 }
@@ -108,6 +105,32 @@ function resolvePropertyType(message) {
   return null;
 }
 
+function resolveProjectTypeId(typeKey, projectTypes = []) {
+  const list = Array.isArray(projectTypes) ? projectTypes : [];
+  const normalizedType = normalizeText(typeKey);
+
+  if (!list.length) {
+    return PROPERTY_TYPE_MAP[normalizedType] || null;
+  }
+
+  if (normalizedType === "new launch") {
+    const match = list.find((type) => {
+      const name = normalizeText(type?.projectTypeName || "");
+      return name === "new launches" || name === "new launch";
+    });
+    return match?.id || null;
+  }
+
+  if (normalizedType === "commercial" || normalizedType === "residential") {
+    const match = list.find(
+      (type) => normalizeText(type?.projectTypeName || "") === normalizedType,
+    );
+    return match?.id || null;
+  }
+
+  return null;
+}
+
 function resolveCity(message) {
   const normalizedInput = normalizeCityInput(message);
   if (!normalizedInput) return null;
@@ -128,18 +151,86 @@ function resolveCity(message) {
 function resolveBudget(message) {
   const msg = normalizeText(message);
   const mapped = {
-    "up to ₹1 cr": "Up to 1Cr",
-    "₹1 cr – ₹3 cr": "1Cr-3Cr",
-    "₹3 cr – ₹5 cr": "3Cr-5Cr",
-    "above ₹5 cr": "Above 5Cr",
-    "up to 1 cr": "Up to 1Cr",
-    "upto 1 cr": "Up to 1Cr",
-    "1 cr - 3 cr": "1Cr-3Cr",
-    "3 cr - 5 cr": "3Cr-5Cr",
-    "above 5 cr": "Above 5Cr",
-    "above 5cr": "Above 5Cr",
+    "up to ₹1 cr": "Up to 1Cr*",
+    "₹1 cr – ₹3 cr": "1-3 Cr*",
+    "₹3 cr – ₹5 cr": "3-5 Cr*",
+    "above ₹5 cr": "Above 5 Cr*",
+    "up to 1 cr": "Up to 1Cr*",
+    "upto 1 cr": "Up to 1Cr*",
+    "up to 1cr+": "Up to 1Cr*",
+    "upto 1cr+": "Up to 1Cr*",
+    "1 cr - 3 cr": "1-3 Cr*",
+    "3 cr - 5 cr": "3-5 Cr*",
+    "above 5 cr": "Above 5 Cr*",
+    "above 5cr": "Above 5 Cr*",
   };
   return mapped[msg] || null;
+}
+
+function parseProjectPrice(project) {
+  const rawPrice = project?.projectPrice;
+  const price = parseFloat(rawPrice);
+  return Number.isFinite(price) ? price : null;
+}
+
+function toNumber(value) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function applyWebsiteLikeFilters(projects, session, projectTypes = []) {
+  const selectedType = session?.data?.type;
+  const selectedTypeId = session?.data?.propertyTypeId;
+  const selectedBudget = session?.data?.budget;
+  const selectedTypeMeta = Array.isArray(projectTypes)
+    ? projectTypes.find((type) => toNumber(type?.id) === toNumber(selectedTypeId))
+    : null;
+
+  return projects.filter((project) => {
+    // Mirror Projects page behavior for property-type filtering.
+    if (selectedTypeMeta) {
+      if (normalizeText(selectedTypeMeta.projectTypeName || "") === "new launches") {
+        if (project?.projectStatusName !== "New Launched") return false;
+      } else {
+        const projectTypeId = toNumber(project?.propertyTypeId);
+        const selectedId = toNumber(selectedTypeMeta.id);
+        if (
+          project?.propertyTypeName !== selectedTypeMeta.projectTypeName &&
+          projectTypeId !== selectedId
+        ) {
+          return false;
+        }
+      }
+    } else if (selectedTypeId) {
+      if (toNumber(project?.propertyTypeId) !== toNumber(selectedTypeId)) return false;
+    } else if (selectedType === "commercial") {
+      const projectTypeId = toNumber(project?.propertyTypeId);
+      if (project?.propertyTypeName !== "Commercial" && projectTypeId !== 2) return false;
+    } else if (selectedType === "residential") {
+      const projectTypeId = toNumber(project?.propertyTypeId);
+      if (project?.propertyTypeName !== "Residential" && projectTypeId !== 1) return false;
+    } else if (selectedType === "new launch") {
+      if (project?.projectStatusName !== "New Launched") return false;
+    }
+
+    if (!selectedBudget) return true;
+
+    const price = parseProjectPrice(project);
+    if (price === null) return false;
+
+    switch (selectedBudget) {
+      case "Up to 1Cr*":
+        return price <= 1;
+      case "1-3 Cr*":
+        return price >= 1 && price < 3;
+      case "3-5 Cr*":
+        return price >= 3 && price < 5;
+      case "Above 5 Cr*":
+        return price >= 5;
+      default:
+        return true;
+    }
+  });
 }
 
 function projectMatchesSelectedCity(project, selectedCity) {
@@ -163,6 +254,7 @@ function projectMatchesSelectedCity(project, selectedCity) {
 function buildProjectCards(projects = []) {
   return projects.map((project) => {
     const slug =
+      project.slugURL ||
       project.projectSlug ||
       String(project.projectName || "")
         .toLowerCase()
@@ -192,7 +284,7 @@ function buildProjectCards(projects = []) {
 }
 
 function buildRedirect(data) {
-  const typeId = PROPERTY_TYPE_MAP[data.type] || 1;
+  const typeId = data.propertyTypeId || PROPERTY_TYPE_MAP[data.type] || 1;
   const normalizedCity = normalizeCityInput(data.city);
   const cityId = CITY_MAP[normalizedCity];
   const budget = data.budget;
@@ -232,8 +324,21 @@ function createProjectBatch(session) {
   };
 }
 
-async function fetchProjects(session) {
-  const typeId = PROPERTY_TYPE_MAP[session.data.type] || 1;
+function getWebsiteFilteredProjects(session, projectList = [], projectTypes = []) {
+  const normalizedCity = normalizeCityInput(session.data.city);
+  const selectedCityId = CITY_MAP[normalizedCity];
+  const allProjects = Array.isArray(projectList) ? projectList : [];
+
+  const cityMatchedProjects = allProjects.filter((project) => {
+    const projectCityId = toNumber(project?.cityId);
+    if (selectedCityId && projectCityId === toNumber(selectedCityId)) return true;
+    return normalizeText(project?.cityName || "") === normalizedCity;
+  });
+
+  return applyWebsiteLikeFilters(cityMatchedProjects, session, projectTypes);
+}
+
+function fetchProjects(session, projectList = [], projectTypes = []) {
   const normalizedCity = normalizeCityInput(session.data.city);
   const cityId = CITY_MAP[normalizedCity];
 
@@ -244,18 +349,7 @@ async function fetchProjects(session) {
     };
   }
 
-  const response = await axios.get(API_URL, {
-    params: {
-      propertyType: typeId,
-      propertyLocation: cityId,
-      budget: session.data.budget,
-    },
-  });
-
-  const allProjects = Array.isArray(response.data) ? response.data : [];
-  session.results.allProjects = allProjects.filter((project) =>
-    projectMatchesSelectedCity(project, normalizedCity),
-  );
+  session.results.allProjects = getWebsiteFilteredProjects(session, projectList, projectTypes);
   session.results.currentIndex = 0;
   session.step = CHAT_STATES.SHOWING_RESULTS;
 
@@ -266,13 +360,15 @@ function handleResultsState(message, session) {
   const msg = normalizeText(message);
 
   if (["refine search", "change filters"].includes(msg)) {
-    session.step = CHAT_STATES.AWAIT_CITY;
+    session.step = CHAT_STATES.WELCOME;
+    session.data.type = null;
+    session.data.propertyTypeId = null;
     session.data.city = null;
     session.data.budget = null;
     session.results = { allProjects: [], currentIndex: 0 };
     return {
-      reply: "Sure, choose city again.",
-      options: CITY_OPTIONS,
+      reply: "Sure, let us refine. Please select your property type.",
+      options: ["Commercial", "Residential", "New Launch"],
     };
   }
 
@@ -295,7 +391,12 @@ function handleResultsState(message, session) {
   return null;
 }
 
-export async function generateClientChatResponse(message, session) {
+export async function generateClientChatResponse(
+  message,
+  session,
+  projectList = [],
+  projectTypes = [],
+) {
   const nextSession = structuredClone(session || createInitialChatSession());
   const msg = normalizeText(message);
 
@@ -337,6 +438,7 @@ export async function generateClientChatResponse(message, session) {
     }
 
     nextSession.data.type = propertyType;
+    nextSession.data.propertyTypeId = resolveProjectTypeId(propertyType, projectTypes);
     nextSession.step = CHAT_STATES.AWAIT_CITY;
     return {
       nextSession,
@@ -409,7 +511,17 @@ export async function generateClientChatResponse(message, session) {
 
     nextSession.data.budget = budget;
     try {
-      const payload = await fetchProjects(nextSession);
+      if (!Array.isArray(projectList) || projectList.length === 0) {
+        return {
+          nextSession,
+          payload: {
+            reply: "Project data is loading. Please try again in a moment.",
+            options: ["Restart"],
+          },
+        };
+      }
+
+      const payload = fetchProjects(nextSession, projectList, projectTypes);
       return { nextSession, payload };
     } catch (error) {
       console.error("Client chatbot fetch failed:", error);

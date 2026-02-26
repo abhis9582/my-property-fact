@@ -7,6 +7,7 @@ import {
   createInitialChatSession,
   generateClientChatResponse,
 } from "./chatbotLogicClient";
+import { useSiteData } from "@/app/_global_components/contexts/SiteDataContext";
 
 function createSessionId() {
   return `${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`;
@@ -40,6 +41,7 @@ function toMessage(payload, type = "bot") {
 }
 
 export default function ChatbotV2() {
+  const { projectList = [], projectTypes = [] } = useSiteData();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([getInitialBotMessage()]);
   const [inputValue, setInputValue] = useState("");
@@ -153,6 +155,8 @@ export default function ChatbotV2() {
       const { nextSession, payload } = await generateClientChatResponse(
         messageText,
         chatSession,
+        projectList,
+        projectTypes,
       );
       setChatSession(nextSession);
       setIsTyping(false);
