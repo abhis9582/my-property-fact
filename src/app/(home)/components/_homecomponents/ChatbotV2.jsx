@@ -43,7 +43,7 @@ function toMessage(payload, type = "bot") {
 export default function ChatbotV2() {
   const { projectList = [], projectTypes = [] } = useSiteData();
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([getInitialBotMessage()]);
+  const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [sessionId, setSessionId] = useState("");
@@ -51,12 +51,22 @@ export default function ChatbotV2() {
   const [isInputDisabled, setIsInputDisabled] = useState(true);
   const [placeholder, setPlaceholder] = useState("Please select an option");
   const [showScrollHint, setShowScrollHint] = useState(false);
+  const [hasShownOpenTyping, setHasShownOpenTyping] = useState(false);
   const messagesContainerRef = useRef(null);
   const latestProjectMessageRef = useRef(null);
   const messagesEndRef = useRef(null);
+  const openTypingTimeoutRef = useRef(null);
 
   useEffect(() => {
     setSessionId(createSessionId());
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (openTypingTimeoutRef.current) {
+        clearTimeout(openTypingTimeoutRef.current);
+      }
+    };
   }, []);
 
   const updateScrollHint = () => {
@@ -99,7 +109,42 @@ export default function ChatbotV2() {
     }
   }, [messages, isTyping]);
 
-  const toggleChat = () => setIsOpen((prev) => !prev);
+  const startOpenTypingIntro = () => {
+    if (openTypingTimeoutRef.current) {
+      clearTimeout(openTypingTimeoutRef.current);
+    }
+
+    setMessages([]);
+    setIsTyping(true);
+    setIsInputDisabled(true);
+    setPlaceholder("Please wait...");
+
+    openTypingTimeoutRef.current = setTimeout(() => {
+      setIsTyping(false);
+      setMessages([getInitialBotMessage()]);
+      setIsInputDisabled(true);
+      setPlaceholder("Please select an option");
+      setHasShownOpenTyping(true);
+      openTypingTimeoutRef.current = null;
+    }, 900);
+  };
+
+  const toggleChat = () => {
+    if (isOpen) {
+      if (openTypingTimeoutRef.current) {
+        clearTimeout(openTypingTimeoutRef.current);
+        openTypingTimeoutRef.current = null;
+      }
+      setIsTyping(false);
+      setIsOpen(false);
+      return;
+    }
+
+    setIsOpen(true);
+    if (!hasShownOpenTyping && messages.length === 0) {
+      startOpenTypingIntro();
+    }
+  };
 
   const resetChatOnClient = () => {
     setSessionId(createSessionId());
@@ -109,6 +154,7 @@ export default function ChatbotV2() {
     setIsTyping(false);
     setIsInputDisabled(true);
     setPlaceholder("Please select an option");
+    setHasShownOpenTyping(true);
   };
 
   const addUserMessage = (text) => {
@@ -150,6 +196,8 @@ export default function ChatbotV2() {
     addUserMessage(messageText);
     setInputValue("");
     setIsTyping(true);
+    const typingStartTs = Date.now();
+    const minTypingDurationMs = 900;
 
     try {
       const { nextSession, payload } = await generateClientChatResponse(
@@ -158,6 +206,12 @@ export default function ChatbotV2() {
         projectList,
         projectTypes,
       );
+      const elapsedTypingMs = Date.now() - typingStartTs;
+      if (elapsedTypingMs < minTypingDurationMs) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, minTypingDurationMs - elapsedTypingMs)
+        );
+      }
       setChatSession(nextSession);
       setIsTyping(false);
 
@@ -185,6 +239,12 @@ export default function ChatbotV2() {
       }
     } catch (error) {
       console.error("Chatbot sendMessage failed:", error);
+      const elapsedTypingMs = Date.now() - typingStartTs;
+      if (elapsedTypingMs < minTypingDurationMs) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, minTypingDurationMs - elapsedTypingMs)
+        );
+      }
       setIsTyping(false);
       addBotMessageFromPayload({
         reply: "Could not connect right now. Please try again.",
@@ -234,16 +294,24 @@ export default function ChatbotV2() {
         {!isOpen ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
+            width="40"
+            height="40"
+            viewBox="0 0 32 32"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth="2.2"
             strokeLinecap="round"
             strokeLinejoin="round"
           >
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            <path d="M12 6h8" />
+            <path d="M16 3.5v2.5" />
+            <rect x="6" y="7.5" width="20" height="15" rx="5.5" />
+            <circle cx="12.2" cy="14.5" r="1.2" fill="currentColor" stroke="none" />
+            <circle cx="19.8" cy="14.5" r="1.2" fill="currentColor" stroke="none" />
+            <path d="M12 18.5h8" />
+            <path d="M10 22.5v3.2l3.2-3.2" />
+            <path d="M20.5 22.5v2.2h-9v-2.2" />
+            <path d="M13 24.7v-1.6h6v1.6" />
           </svg>
         ) : (
           <svg
@@ -504,7 +572,12 @@ function ProjectSlider({
               }}
             />
             <div className={styles.pCardContent}>
-              <h4>{card.name}</h4>
+              <div className={styles.pTitleRow}>
+                <h4 className={styles.pTitle}>{card.name}</h4>
+                {card.propertyType ? (
+                  <span className={styles.pTypeTag}>{card.propertyType}</span>
+                ) : null}
+              </div>
               <p className={styles.pLoc}>📍 {card.location}</p>
               <div className={styles.pDetails}>
                 <span className={styles.pPrice}>{card.price}</span>
