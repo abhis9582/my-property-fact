@@ -3,6 +3,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import styles from "./Chatbot.module.css";
+import {
+  createInitialChatSession,
+  generateClientChatResponse,
+} from "./chatbotLogicClient";
+import { useSiteData } from "@/app/_global_components/contexts/SiteDataContext";
 
 function createSessionId() {
   return `${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`;
@@ -36,22 +41,61 @@ function toMessage(payload, type = "bot") {
 }
 
 export default function ChatbotV2() {
+  const { projectList = [], projectTypes = [] } = useSiteData();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([getInitialBotMessage()]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [sessionId, setSessionId] = useState("");
+  const [chatSession, setChatSession] = useState(createInitialChatSession());
   const [isInputDisabled, setIsInputDisabled] = useState(true);
   const [placeholder, setPlaceholder] = useState("Please select an option");
+  const [showScrollHint, setShowScrollHint] = useState(false);
+  const messagesContainerRef = useRef(null);
+  const latestProjectMessageRef = useRef(null);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
     setSessionId(createSessionId());
   }, []);
 
+  const updateScrollHint = () => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    const distanceFromBottom =
+      container.scrollHeight - container.scrollTop - container.clientHeight;
+    setShowScrollHint(distanceFromBottom > 24);
+  };
+
   useEffect(() => {
+    const container = messagesContainerRef.current;
+    if (!container) return undefined;
+
+    const handleScroll = () => updateScrollHint();
+    container.addEventListener("scroll", handleScroll);
+    updateScrollHint();
+
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const latestMessage = messages[messages.length - 1];
+
+    if (latestMessage?.projectCards?.length) {
+      // Keep first visible area at project cards, not CTA/follow-up buttons.
+      latestProjectMessageRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+      setTimeout(updateScrollHint, 250);
+      return;
+    }
+
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      setTimeout(updateScrollHint, 250);
     }
   }, [messages, isTyping]);
 
@@ -59,6 +103,7 @@ export default function ChatbotV2() {
 
   const resetChatOnClient = () => {
     setSessionId(createSessionId());
+    setChatSession(createInitialChatSession());
     setMessages([getInitialBotMessage()]);
     setInputValue("");
     setIsTyping(false);
@@ -107,28 +152,25 @@ export default function ChatbotV2() {
     setIsTyping(true);
 
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sessionId,
-          message: messageText,
-        }),
-      });
-
-      const data = await response.json();
+      const { nextSession, payload } = await generateClientChatResponse(
+        messageText,
+        chatSession,
+        projectList,
+        projectTypes,
+      );
+      setChatSession(nextSession);
       setIsTyping(false);
 
-      if (data.reply || data.projectCards || data.options || data.followUp) {
-        addBotMessageFromPayload(data);
+      if (payload.reply || payload.projectCards || payload.options || payload.followUp) {
+        addBotMessageFromPayload(payload);
       }
 
-      if (data.redirectUrl || data.redirectPath) {
+      if (payload.redirectUrl || payload.redirectPath) {
         setTimeout(() => {
           const redirectUrl =
-            typeof data.redirectUrl === "string" ? data.redirectUrl : "";
+            typeof payload.redirectUrl === "string" ? payload.redirectUrl : "";
           const redirectPath =
-            typeof data.redirectPath === "string" ? data.redirectPath : "";
+            typeof payload.redirectPath === "string" ? payload.redirectPath : "";
           const invalidUrl =
             redirectUrl.startsWith("undefined") || redirectUrl.startsWith("null");
 
@@ -171,6 +213,15 @@ export default function ChatbotV2() {
       return;
     }
     sendMessage(optionText);
+  };
+
+  const scrollMessagesToBottom = () => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    container.scrollTo({
+      top: container.scrollHeight,
+      behavior: "smooth",
+    });
   };
 
   return (
@@ -252,7 +303,7 @@ export default function ChatbotV2() {
           </button>
         </div>
 
-        <div className={styles.messages}>
+        <div className={styles.messages} ref={messagesContainerRef}>
           {messages.map((message, index) => {
             const isLastMessage = index === messages.length - 1;
 
@@ -269,23 +320,31 @@ export default function ChatbotV2() {
                 ) : null}
 
                 {message.projectCards?.length ? (
-                  <ProjectSlider
-                    cards={message.projectCards}
-                    followUp={message.followUp}
-                    options={message.options}
-                    disabled={!isLastMessage}
-                    onOptionClick={handleOptionClick}
-                    onEnquire={(projectName) => {
-                      setMessages((prev) => [
-                        ...prev,
-                        {
-                          id: `form-${Date.now()}`,
-                          type: "form",
-                          projectName,
-                        },
-                      ]);
-                    }}
-                  />
+                  <div
+                    ref={
+                      isLastMessage && message.projectCards?.length
+                        ? latestProjectMessageRef
+                        : null
+                    }
+                  >
+                    <ProjectSlider
+                      cards={message.projectCards}
+                      followUp={message.followUp}
+                      options={message.options}
+                      disabled={!isLastMessage}
+                      onOptionClick={handleOptionClick}
+                      onEnquire={(projectName) => {
+                        setMessages((prev) => [
+                          ...prev,
+                          {
+                            id: `form-${Date.now()}`,
+                            type: "form",
+                            projectName,
+                          },
+                        ]);
+                      }}
+                    />
+                  </div>
                 ) : null}
 
                 {message.followUp && !message.projectCards?.length ? (
@@ -329,6 +388,29 @@ export default function ChatbotV2() {
           ) : null}
           <div ref={messagesEndRef} />
         </div>
+
+        {showScrollHint ? (
+          <button
+            className={styles.chatScrollHint}
+            onClick={scrollMessagesToBottom}
+            aria-label="Scroll down"
+            title="Scroll down"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+        ) : null}
 
         <div className={styles.inputArea}>
           <input
@@ -377,12 +459,14 @@ function ProjectSlider({
   disabled,
 }) {
   const sliderRef = useRef(null);
-  const [showArrow, setShowArrow] = useState(false);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   const checkScroll = () => {
     if (!sliderRef.current) return;
     const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
-    setShowArrow(scrollLeft < scrollWidth - clientWidth - 5);
+    setCanScrollLeft(scrollLeft > 5);
+    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 5);
   };
 
   useEffect(() => {
@@ -390,6 +474,10 @@ function ProjectSlider({
     window.addEventListener("resize", checkScroll);
     return () => window.removeEventListener("resize", checkScroll);
   }, [cards]);
+
+  const scrollLeft = () => {
+    sliderRef.current?.scrollBy({ left: -300, behavior: "smooth" });
+  };
 
   const scrollRight = () => {
     sliderRef.current?.scrollBy({ left: 300, behavior: "smooth" });
@@ -441,10 +529,45 @@ function ProjectSlider({
       </div>
 
       <button
-        className={`${styles.scrollArrow} ${showArrow ? styles.visible : ""}`}
-        onClick={scrollRight}
+        className={`${styles.scrollArrow} ${styles.scrollArrowLeft} ${canScrollLeft ? styles.visible : ""}`}
+        onClick={scrollLeft}
+        aria-label="Scroll left"
+        type="button"
       >
-        &#8594;
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="m15 18-6-6 6-6" />
+        </svg>
+      </button>
+
+      <button
+        className={`${styles.scrollArrow} ${styles.scrollArrowRight} ${canScrollRight ? styles.visible : ""}`}
+        onClick={scrollRight}
+        aria-label="Scroll right"
+        type="button"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="m9 18 6-6-6-6" />
+        </svg>
       </button>
 
       {followUp || cards?.length ? (
