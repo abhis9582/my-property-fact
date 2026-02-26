@@ -48,15 +48,52 @@ export default function ChatbotV2() {
   const [chatSession, setChatSession] = useState(createInitialChatSession());
   const [isInputDisabled, setIsInputDisabled] = useState(true);
   const [placeholder, setPlaceholder] = useState("Please select an option");
+  const [showScrollHint, setShowScrollHint] = useState(false);
+  const messagesContainerRef = useRef(null);
+  const latestProjectMessageRef = useRef(null);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
     setSessionId(createSessionId());
   }, []);
 
+  const updateScrollHint = () => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    const distanceFromBottom =
+      container.scrollHeight - container.scrollTop - container.clientHeight;
+    setShowScrollHint(distanceFromBottom > 24);
+  };
+
   useEffect(() => {
+    const container = messagesContainerRef.current;
+    if (!container) return undefined;
+
+    const handleScroll = () => updateScrollHint();
+    container.addEventListener("scroll", handleScroll);
+    updateScrollHint();
+
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const latestMessage = messages[messages.length - 1];
+
+    if (latestMessage?.projectCards?.length) {
+      // Keep first visible area at project cards, not CTA/follow-up buttons.
+      latestProjectMessageRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+      setTimeout(updateScrollHint, 250);
+      return;
+    }
+
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      setTimeout(updateScrollHint, 250);
     }
   }, [messages, isTyping]);
 
@@ -174,6 +211,15 @@ export default function ChatbotV2() {
     sendMessage(optionText);
   };
 
+  const scrollMessagesToBottom = () => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    container.scrollTo({
+      top: container.scrollHeight,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <>
       <button
@@ -253,7 +299,7 @@ export default function ChatbotV2() {
           </button>
         </div>
 
-        <div className={styles.messages}>
+        <div className={styles.messages} ref={messagesContainerRef}>
           {messages.map((message, index) => {
             const isLastMessage = index === messages.length - 1;
 
@@ -270,23 +316,31 @@ export default function ChatbotV2() {
                 ) : null}
 
                 {message.projectCards?.length ? (
-                  <ProjectSlider
-                    cards={message.projectCards}
-                    followUp={message.followUp}
-                    options={message.options}
-                    disabled={!isLastMessage}
-                    onOptionClick={handleOptionClick}
-                    onEnquire={(projectName) => {
-                      setMessages((prev) => [
-                        ...prev,
-                        {
-                          id: `form-${Date.now()}`,
-                          type: "form",
-                          projectName,
-                        },
-                      ]);
-                    }}
-                  />
+                  <div
+                    ref={
+                      isLastMessage && message.projectCards?.length
+                        ? latestProjectMessageRef
+                        : null
+                    }
+                  >
+                    <ProjectSlider
+                      cards={message.projectCards}
+                      followUp={message.followUp}
+                      options={message.options}
+                      disabled={!isLastMessage}
+                      onOptionClick={handleOptionClick}
+                      onEnquire={(projectName) => {
+                        setMessages((prev) => [
+                          ...prev,
+                          {
+                            id: `form-${Date.now()}`,
+                            type: "form",
+                            projectName,
+                          },
+                        ]);
+                      }}
+                    />
+                  </div>
                 ) : null}
 
                 {message.followUp && !message.projectCards?.length ? (
@@ -330,6 +384,29 @@ export default function ChatbotV2() {
           ) : null}
           <div ref={messagesEndRef} />
         </div>
+
+        {showScrollHint ? (
+          <button
+            className={styles.chatScrollHint}
+            onClick={scrollMessagesToBottom}
+            aria-label="Scroll down"
+            title="Scroll down"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+        ) : null}
 
         <div className={styles.inputArea}>
           <input

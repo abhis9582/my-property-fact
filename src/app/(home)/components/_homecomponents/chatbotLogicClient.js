@@ -287,6 +287,7 @@ function handleResultsState(message, session) {
     }
     return {
       reply: "Redirecting you to all matching projects...",
+      options: ["Restart"],
       ...redirect,
     };
   }
