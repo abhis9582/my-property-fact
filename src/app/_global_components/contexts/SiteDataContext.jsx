@@ -6,6 +6,7 @@ import {
   useState,
   useEffect,
   useCallback,
+  useMemo,
 } from "react";
 
 const apiBase = process.env.NEXT_PUBLIC_API_URL || "";
@@ -27,6 +28,22 @@ export function SiteDataProvider({ children }) {
   const [projectList, setProjectList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Build a lowercase search index once per project list update.
+  // This keeps typing/search interactions smoother on mobile devices.
+  const searchableProjects = useMemo(() => {
+    const list = projectList || [];
+    return list.map((project) => {
+      const searchText = [
+        project?.projectName || project?.name || "",
+        project?.cityName || "",
+      ]
+        .join(" ")
+        .toLowerCase();
+
+      return { project, searchText };
+    });
+  }, [projectList]);
 
   useEffect(() => {
     let cancelled = false;
@@ -89,15 +106,16 @@ export function SiteDataProvider({ children }) {
   const searchProjects = useCallback(async (query) => {
     const q = (query || "").trim().toLowerCase();
     if (q.length < 2) return [];
-    const list = projectList || [];
-    return list
-      .filter((project) => {
-        const name = (project.projectName || project.name || "").toLowerCase();
-        const city = (project.cityName || "").toLowerCase();
-        return name.includes(q) || city.includes(q);
-      })
-      .slice(0, 50);
-  }, [projectList]);
+    const results = [];
+    for (let i = 0; i < searchableProjects.length; i += 1) {
+      const item = searchableProjects[i];
+      if (item.searchText.includes(q)) {
+        results.push(item.project);
+        if (results.length >= 50) break;
+      }
+    }
+    return results;
+  }, [searchableProjects]);
 
   const value = {
     cityList,

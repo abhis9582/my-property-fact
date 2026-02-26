@@ -66,6 +66,48 @@ const ALLOWED_CITIES = Object.keys(CITY_MAP).sort(
   (a, b) => b.length - a.length,
 );
 
+const CITY_VARIANTS = Object.entries(CITY_ALIASES).reduce(
+  (acc, [alias, canonical]) => {
+    if (!acc[canonical]) acc[canonical] = new Set([canonical]);
+    acc[canonical].add(alias);
+    return acc;
+  },
+  {},
+);
+
+function escapeRegex(text) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function normalizeCityInput(rawCity = "") {
+  const city = String(rawCity).trim().toLowerCase();
+  if (!city) return "";
+  return CITY_ALIASES[city] || city;
+}
+
+function getCityVariants(cityKey) {
+  const normalized = normalizeCityInput(cityKey);
+  const variants = CITY_VARIANTS[normalized]
+    ? Array.from(CITY_VARIANTS[normalized])
+    : [normalized];
+  return variants.filter(Boolean);
+}
+
+function projectMatchesSelectedCity(project, selectedCity) {
+  const variants = getCityVariants(selectedCity);
+  if (!variants.length) return false;
+
+  const haystack = [project?.cityName, project?.projectAddress]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  return variants.some((variant) => {
+    const regex = new RegExp(`\\b${escapeRegex(variant)}\\b`, "i");
+    return regex.test(haystack);
+  });
+}
+
 const STATES = {
   WELCOME: "WELCOME",
   TYPE_SELECTED: "TYPE",
@@ -124,11 +166,15 @@ async function generateAIResponse(message, sessionId) {
     !session?.flags?.waitingForConfirmation &&
     session.step !== STATES.RESULTS
   ) {
+    if (session?.data?.type && session?.data?.city && session?.data?.budget) {
+      session.step = STATES.RESULTS;
+    } else {
     session.step = STATES.WELCOME;
     return {
       reply: `Great! Let's find more properties.\n\nPlease select your property type to get started.`,
       options: ["Commercial", "Residential", "New Launch"],
     };
+    }
   }
   if (
     (msg === "no, thank you" || msg === "no") &&
@@ -176,10 +222,7 @@ async function generateAIResponse(message, sessionId) {
       }
 
     case STATES.TYPE_SELECTED:
-      let inputCity = msg.trim().toLowerCase();
-      if (CITY_ALIASES[inputCity]) {
-        inputCity = CITY_ALIASES[inputCity];
-      }
+      let inputCity = normalizeCityInput(msg);
 
       if (inputCity === "other") {
         session.flags = { waitingForCity: true };
@@ -425,7 +468,8 @@ async function generateAIResponse(message, sessionId) {
 
       try {
         const typeId = PROPERTY_TYPE_MAP[session.data.type] || 1;
-        const cityId = CITY_MAP[session.data.city];
+        const normalizedSelectedCity = normalizeCityInput(session.data.city);
+        const cityId = CITY_MAP[normalizedSelectedCity];
 
         if (!cityId) {
           return {
@@ -450,7 +494,13 @@ async function generateAIResponse(message, sessionId) {
           },
         });
 
-        session.data.allProjects = response.data || [];
+        const allProjects = Array.isArray(response.data) ? response.data : [];
+        const cityMatchedProjects = allProjects.filter((project) =>
+          projectMatchesSelectedCity(project, normalizedSelectedCity),
+        );
+
+        // Prevent cross-city suggestions when upstream API returns broad data.
+        session.data.allProjects = cityMatchedProjects;
         session.data.currentIndex = 0;
 
         const getNextBatch = () => {
@@ -526,14 +576,24 @@ async function generateAIResponse(message, sessionId) {
     case STATES.RESULTS:
       if (["yes", "yes, please", "sure"].includes(msg)) {
         const typeId = PROPERTY_TYPE_MAP[session.data.type] || 1;
-        const cityId = CITY_MAP[session.data.city] || 2;
-        const cityName = encodeURIComponent(session.data.city || "");
+        const normalizedSelectedCity = normalizeCityInput(session.data.city);
+        const cityId = CITY_MAP[normalizedSelectedCity];
+        const cityName = encodeURIComponent(normalizedSelectedCity || "");
         const apiBudget = session.data.budget;
-        const targetUrl = `${process.env.NEXT_PUBLIC_UI_URL}/projects?propertyType=${typeId}&propertyLocation=${cityId}&cityName=${cityName}&budget=${encodeURIComponent(apiBudget)}`;
+        if (!cityId || !apiBudget) {
+          return {
+            reply: `I couldn't prepare the project page link. Please restart once, and I'll help you again.`,
+            options: ["Restart"],
+          };
+        }
+        const targetPath = `/projects?propertyType=${typeId}&propertyLocation=${cityId}&cityName=${cityName}&budget=${encodeURIComponent(apiBudget)}`;
+        const uiBase = (process.env.NEXT_PUBLIC_UI_URL || "").replace(/\/$/, "");
+        const targetUrl = uiBase ? `${uiBase}${targetPath}` : targetPath;
 
         return {
           reply: `Redirecting you to view more projects on our website...`,
           redirectUrl: targetUrl,
+          redirectPath: targetPath,
         };
       }
 

@@ -119,10 +119,21 @@ export default function Chatbot() {
       const data = await response.json();
       setIsTyping(false);
 
-      if (data.redirectUrl) {
+      if (data.redirectUrl || data.redirectPath) {
         if (data.reply) addMessage(data.reply, "bot");
         setTimeout(() => {
-          window.location.href = data.redirectUrl;
+          const redirectUrl = typeof data.redirectUrl === "string" ? data.redirectUrl : "";
+          const redirectPath = typeof data.redirectPath === "string" ? data.redirectPath : "";
+          const hasBrokenEnvPrefix =
+            redirectUrl.startsWith("undefined") || redirectUrl.startsWith("null");
+
+          if (redirectUrl && !hasBrokenEnvPrefix) {
+            window.location.assign(redirectUrl);
+            return;
+          }
+          if (redirectPath) {
+            window.location.assign(redirectPath);
+          }
         }, 1500);
       } else if (data.reply) {
         addMessage(

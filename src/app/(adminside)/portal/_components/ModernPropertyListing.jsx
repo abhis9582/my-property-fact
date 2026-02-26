@@ -1079,13 +1079,12 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
 
     try {
       // Get authentication token (skip check in dev so form can be tested without login)
-      const token = Cookies.get("token");
-      const isDev = process.env.NODE_ENV === "development";
-      if (!token && !isDev) {
-        alert("You must be logged in to submit a property");
-        setIsSubmitting(false);
-        return;
-      }
+      
+      // if (!token && !isDev) {
+      //   alert("You must be logged in to submit a property");
+      //   setIsSubmitting(false);
+      //   return;
+      // }
 
       // Dev only: bypass API and simulate success so you can verify form resets (no pre-filled data after submit)
       // if (isDev) {
@@ -1347,13 +1346,9 @@ export default function ModernPropertyListing({ listingId: propListingId }) {
     setDraftSaved(false);
 
     try {
-      const token = Cookies.get("token");
+      
 
-      if (!token) {
-        alert("You must be logged in to save a draft");
-        setIsSavingDraft(false);
-        return;
-      }
+     
 
       // Create FormData for file upload
       const formDataObj = new FormData();

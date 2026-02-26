@@ -6,6 +6,32 @@ import CommonHeaderBanner from "../components/common/commonheaderbanner";
 import CommonBreadCrum from "../components/common/breadcrum";
 
 export default function WebStories({ webStoryList }) {
+    const titleClampStyle = {
+        display: "-webkit-box",
+        WebkitLineClamp: 2,
+        WebkitBoxOrient: "vertical",
+        overflow: "hidden",
+        minHeight: "3rem",
+    };
+
+    const descriptionClampStyle = {
+        display: "-webkit-box",
+        WebkitLineClamp: 3,
+        WebkitBoxOrient: "vertical",
+        overflow: "hidden",
+        minHeight: "4.5rem",
+    };
+
+    const imageWrapperStyle = {
+        position: "relative",
+        width: "100%",
+        aspectRatio: "3 / 4",
+        overflow: "hidden",
+        borderTopLeftRadius: "inherit",
+        borderTopRightRadius: "inherit",
+        backgroundColor: "#f5f5f5",
+    };
+
     return (
         <>
             <CommonHeaderBanner
@@ -20,24 +46,28 @@ export default function WebStories({ webStoryList }) {
                     {webStoryList
                         .filter((item) => item.webStories.length > 0)
                         .map((item, index) => (
-                            <div key={index} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                            <div key={index} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex">
                                 <Link
-                                    className="card h-100 text-decoration-none text-dark shadow-sm"
+                                    className="card h-100 w-100 text-decoration-none text-dark shadow-sm"
                                     href={`${process.env.NEXT_PUBLIC_API_URL}web-story/${item.categoryName}`}
                                 >
-                                    <div className="">
+                                    <div style={imageWrapperStyle}>
                                         <Image
                                             src={`${process.env.NEXT_PUBLIC_IMAGE_URL}web-story/${item.storyCategoryImage}`}
                                             alt={item.categoryName}
-                                            width={150}
-                                            height={450}
+                                            fill
+                                            sizes="(max-width: 576px) 100vw, (max-width: 992px) 50vw, 25vw"
                                             className="card-img-top"
-                                            
+                                            style={{ objectFit: "cover" }}
                                         />
                                     </div>
-                                    <div className="card-body">
-                                        <h5 className="card-title text-capitalize">{item.categoryName}</h5>
-                                        <p className="card-text">{item.categoryDescription}</p>
+                                    <div className="card-body d-flex flex-column">
+                                        <h5 className="card-title text-capitalize" style={titleClampStyle}>
+                                            {item.categoryName}
+                                        </h5>
+                                        <p className="card-text mb-0" style={descriptionClampStyle}>
+                                            {item.categoryDescription}
+                                        </p>
                                     </div>
                                 </Link>
                             </div>
