@@ -294,6 +294,14 @@ function buildProjectCards(projects = []) {
           ? `${IMAGE_BASE_URL}${slug}/${imageFile}`
           : "https://via.placeholder.com/300x200?text=No+Image";
 
+    const normalizedType = normalizeText(project?.propertyTypeName || "");
+    const propertyType =
+      normalizedType.includes("commercial") || toNumber(project?.propertyTypeId) === 2
+        ? "Commercial"
+        : normalizedType.includes("residential") || toNumber(project?.propertyTypeId) === 1
+          ? "Residential"
+          : null;
+
     return {
       id: project.id,
       name: project.projectName,
@@ -302,6 +310,7 @@ function buildProjectCards(projects = []) {
       image,
       builder: project.builderName || "N/A",
       status: project.projectStatusName || "N/A",
+      propertyType,
       link: `${process.env.NEXT_PUBLIC_UI_URL}/${slug}`,
     };
   });
@@ -356,7 +365,7 @@ function getWebsiteFilteredProjects(session, projectList = [], projectTypes = []
   const cityMatchedProjects = allProjects.filter((project) => {
     const projectCityId = toNumber(project?.cityId);
     if (selectedCityId && projectCityId === toNumber(selectedCityId)) return true;
-    return normalizeText(project?.cityName || "") === normalizedCity;
+    return projectMatchesSelectedCity(project, normalizedCity);
   });
 
   return applyWebsiteLikeFilters(cityMatchedProjects, session, projectTypes);
@@ -364,11 +373,9 @@ function getWebsiteFilteredProjects(session, projectList = [], projectTypes = []
 
 function fetchProjects(session, projectList = [], projectTypes = []) {
   const normalizedCity = normalizeCityInput(session.data.city);
-  const cityId = CITY_MAP[normalizedCity];
-
-  if (!cityId) {
+  if (!normalizedCity) {
     return {
-      reply: "City mapping not found. Please select city again.",
+      reply: "Please type a valid city name.",
       options: CITY_OPTIONS,
     };
   }
@@ -502,18 +509,41 @@ export async function generateClientChatResponse(
   }
 
   if (nextSession.step === CHAT_STATES.AWAIT_CUSTOM_CITY) {
+    if (msg === "other") {
+      return {
+        nextSession,
+        payload: { reply: "Please type your preferred city name.", options: [] },
+      };
+    }
+
     const city = resolveCity(msg);
-    if (!city) {
+    const customCity = normalizeCityInput(message);
+    if (!city && !customCity) {
       return {
         nextSession,
         payload: {
-          reply: "I do not have mapped data for this city right now. Please choose from list.",
+          reply: "Please type your preferred city name.",
+          options: [],
+        },
+      };
+    }
+
+    const selectedCity = city || customCity;
+    const hasRelatedProjects =
+      Array.isArray(projectList) &&
+      projectList.some((project) => projectMatchesSelectedCity(project, selectedCity));
+
+    if (!hasRelatedProjects) {
+      return {
+        nextSession,
+        payload: {
+          reply: "You Entered Wrong Input. Select City Name from Below or Provide Correct City Name",
           options: CITY_OPTIONS,
         },
       };
     }
 
-    nextSession.data.city = city;
+    nextSession.data.city = selectedCity;
     nextSession.step = CHAT_STATES.AWAIT_BUDGET;
     return {
       nextSession,
