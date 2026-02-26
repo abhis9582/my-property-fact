@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 
-const Chatbot = dynamic(() => import("./Chatbot"), {
+const ChatbotV2 = dynamic(() => import("./ChatbotV2"), {
   ssr: false,
   loading: () => null,
 });
@@ -16,7 +16,7 @@ export default function LazyBelowFold() {
   return (
     <>
       <ScrollToTop />
-      <Chatbot />
+      <ChatbotV2 />
     </>
   );
 }
