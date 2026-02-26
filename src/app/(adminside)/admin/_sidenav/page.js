@@ -117,7 +117,7 @@ export default function SideNav({ onLinkClick }) {
     // Sidebar
     <nav id="sidebar">
       <div className="sidebar-header">
-        <Image src={"/logo.png"} alt="mpf-logo" width={100} height={100} />
+        <Image src={"/logo.webp"} alt="mpf-logo" width={100} height={100} />
       </div>
       <ul className="list-unstyled components">
         <li className={isActive("/admin/dashboard") ? "active" : ""}>

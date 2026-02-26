@@ -685,7 +685,7 @@ const addNearbyImageIcon = (benefit) => {
                 <div className="project-mbMenu-header d-flex align-items-center justify-content-between mb-4">
                   <Link href="/">
                     <Image
-                      src="/logo.png"
+                      src="/logo.webp"
                       alt="My Property Fact"
                       width={50}
                       height={55}
@@ -774,7 +774,7 @@ const addNearbyImageIcon = (benefit) => {
             <div className="logo d-none d-lg-block px-4">
               <Link href="/">
                 <Image
-                  src="/logo.png"
+                  src="/logo.webp"
                   alt="mpf-logo"
                   width={70}
                   height={70}
