@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import {
   generateAIResponse,
   sessions,
-} from "@/app/_global_components/chatbotLogic";
+} from "@/app/_global_components/chatbotLogicV2";
 
 const CHAT_STATE_COOKIE = "mpf_chat_state";
 
