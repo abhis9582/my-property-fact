@@ -112,6 +112,7 @@ const getFieldVisibility = (listingType, subType, status) => {
 };
 
 export default function ModernPropertyListing({ listingId: propListingId }) {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -2460,7 +2461,7 @@ function LocationAreaStep({
 
   // Filter projects based on search term
   const filteredProjects = projectList
-    .filter((project) => {
+    .filter(project => project.propertyTypeName === data.listingType).filter((project) => {
       if (!projectSearchTerm.trim()) return false; // Don't show all when empty
       const projectName = (
         project.projectName ||
