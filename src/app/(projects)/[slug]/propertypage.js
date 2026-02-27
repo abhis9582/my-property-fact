@@ -575,6 +575,11 @@ const addNearbyImageIcon = (benefit) => {
     return <NotFound />;
   }
 
+  const imageBase = process.env.NEXT_PUBLIC_IMAGE_URL || "";
+  const slugURL = projectDetail.slugURL || "";
+  const projectImageSrc = (filename) =>
+    filename && slugURL ? `${imageBase}properties/${slugURL}/${filename}` : "/static/no_image.png";
+
   const viewAllAmenities = () => {
     const amenitiesList = projectDetail.amenities || [];
     setAmenityButtonStatus((prev) => {
@@ -617,7 +622,7 @@ const addNearbyImageIcon = (benefit) => {
                 <Image
                   width={198}
                   height={50.75}
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.projectLogo}`}
+                  src={projectImageSrc(projectDetail.projectLogo)}
                   alt="logo"
                   className="img-fluid"
                 />
@@ -796,22 +801,24 @@ const addNearbyImageIcon = (benefit) => {
               return (
                 <picture className="image-con" key={`${item.id}-${index}`}>
                   {/* Mobile first */}
-                  {mobileItem && (
+                  {mobileItem?.mobileImage && (
                     <source
-                      srcSet={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${mobileItem.mobileImage}`}
+                      srcSet={projectImageSrc(mobileItem.mobileImage)}
                       media="(max-width: 640px)" // mobile breakpoint
                     />
                   )}
 
                   {/* Tablet/Laptop (falls back to desktopImage) */}
-                  <source
-                    srcSet={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.desktopImage}`}
-                    media="(min-width: 641px)" // tablet/laptop/desktop
-                  />
+                  {item.desktopImage && (
+                    <source
+                      srcSet={projectImageSrc(item.desktopImage)}
+                      media="(min-width: 641px)" // tablet/laptop/desktop
+                    />
+                  )}
 
                   {/* Default fallback */}
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.desktopImage}`}
+                    src={projectImageSrc(item.desktopImage)}
                     alt={item.altTag || "Property Banner"}
                     width={2225}
                     height={1065}
@@ -1111,7 +1118,7 @@ const addNearbyImageIcon = (benefit) => {
                       className="project-detail-gallery-container "
                     >
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${item.imageName}`}
+                        src={projectImageSrc(item.imageName)}
                         alt={item.altTag || "Gallery Image"}
                         fill
                         className="img-fluid rounded-5 object-fit-cover px-2 "
@@ -1205,7 +1212,7 @@ const addNearbyImageIcon = (benefit) => {
                 style={{ height: "350px" }}
               >
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail.locationMap}`}
+                  src={projectImageSrc(projectDetail.locationMap)}
                   alt="Project Location Map"
                   fill
                   className="object-fit-cover"
@@ -1225,7 +1232,7 @@ const addNearbyImageIcon = (benefit) => {
       <div
         className="container-fluid py-5 mb-5"
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${`${process.env.NEXT_PUBLIC_IMAGE_URL}properties/${projectDetail.slugURL}/${projectDetail?.desktopImages?.[0]?.desktopImage || ""}`})`,
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${projectImageSrc(projectDetail?.desktopImages?.[0]?.desktopImage)})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
