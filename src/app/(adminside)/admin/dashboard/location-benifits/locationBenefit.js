@@ -13,6 +13,21 @@ import DataTable from "../common-model/data-table";
 import { useRouter } from "next/navigation";
 export default function LocationBenefit({ list, projectList }) {
   const router = useRouter();
+
+  // Show all projects in table; projects with no benefits have empty locationBenefits so user can add from modal
+  const mergedList = (projectList ?? []).map((project, index) => {
+    const benefitsData = (list ?? []).find(
+      (item) => Number(item.projectId) === Number(project.id)
+    );
+    return {
+      projectId: project.id,
+      projectName: project.projectName ?? project.name ?? "–",
+      slugUrl: project.slugURL ?? project.slugUrl,
+      locationBenefits: benefitsData?.locationBenefits ?? [],
+      index: index + 1,
+      id: project.id,
+    };
+  });
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState("");
   const [buttonName, setButtonName] = useState("");
@@ -20,10 +35,8 @@ export default function LocationBenefit({ list, projectList }) {
   const [projectId, setProjectId] = useState("");
   const [bName, setBname] = useState("");
   const [distance, setDistance] = useState("");
-  const [icon, setIcon] = useState("");
   const [confirmBox, setConfirmBox] = useState(false);
   const [id, setId] = useState(0);
-  const [previewImage, setPreviewImage] = useState(null);
   const [showLoading, setShowLoading] = useState(false);
   const [allBenefits, setAllBenefits] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
@@ -41,7 +54,6 @@ export default function LocationBenefit({ list, projectList }) {
     if (form.checkValidity() === true) {
       try {
         const formData = new FormData();
-        formData.append("iconImage", icon);
         formData.append("benefitName", bName);
         formData.append("distance", distance);
         formData.append("projectId", projectId);
@@ -73,17 +85,11 @@ export default function LocationBenefit({ list, projectList }) {
     setValidated(true);
   };
 
-  const handleFileChange = (e) => {
-    setIcon(e.target.files[0]);
-  };
-
   const openAddModel = () => {
     setShowModal(true);
     setId(0);
     setDistance("");
     setBname("");
-    setIcon(null);
-    setPreviewImage(null);
     setProjectId("");
     setTitle("Add New Location Benefit");
     setButtonName("Add");
@@ -95,10 +101,8 @@ export default function LocationBenefit({ list, projectList }) {
     setShowModal(true);
     setBname(item.benefitName ?? "");
     setDistance(item.distance !== undefined && item.distance !== null ? item.distance.split(" ")[0] : "");
-    setIcon(null);
     setProjectId(item.projectId ?? "");
     setId(item.id ?? 0);
-    setPreviewImage(item.image ? `${process.env.NEXT_PUBLIC_IMAGE_URL}location-benefit/${item.image}` : null);
     setTitle("Edit Location Benefit");
     setButtonName("Update");
     setValidated(false);
@@ -117,7 +121,6 @@ export default function LocationBenefit({ list, projectList }) {
 
   const openViewAllModal = (row) => {
     setSelectedData(row.locationBenefits ?? []);
-    console.log(row.locationBenefits);
     setSelectedProjectName(row.projectName ?? "Location Benefits");
     setSelectedProjectId(row.projectId ?? null);
   };
@@ -126,6 +129,24 @@ export default function LocationBenefit({ list, projectList }) {
     setSelectedData(null);
     setSelectedProjectName("");
     setSelectedProjectId(null);
+  };
+
+  const openAddBenefitForProject = () => {
+    const projectIdToUse = selectedProjectId;
+    closeViewAllModal();
+    setId(0);
+    setDistance("");
+    setBname("");
+    setProjectId(projectIdToUse ?? "");
+    setTitle("Add nearby benefit");
+    setButtonName("Add");
+    setValidated(false);
+    setShowModal(true);
+  };
+
+  const handleDeleteBenefit = (item) => {
+    setId(item.id);
+    setConfirmBox(true);
   };
 
   const handleEditFromViewAll = (item) => {
@@ -212,17 +233,16 @@ export default function LocationBenefit({ list, projectList }) {
   return (
     <>
       <DashboardHeader
-        buttonName={"+ Add New"}
         functionName={openAddModel}
         heading={"Manage Location Benefits"}
       />
       <div className="table-container">
         <DataTable
           columns={columns}
-          list={list.map((item) => ({
+          list={mergedList.map((item) => ({
             ...item,
-            distance: item.locationBenefits.map((item) => item.distance),
-            benefitName: item.locationBenefits.map((item) => item.benefitName),
+            distance: (item.locationBenefits || []).map((lb) => lb.distance),
+            benefitName: (item.locationBenefits || []).map((lb) => lb.benefitName),
           }))}
         />
       </div>
@@ -233,6 +253,12 @@ export default function LocationBenefit({ list, projectList }) {
           <Modal.Title>Location Benefits – {selectedProjectName}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <span className="text-muted">Manage nearby benefits for this project</span>
+            <Button variant="success" size="sm" onClick={openAddBenefitForProject}>
+              + Set nearby benefit
+            </Button>
+          </div>
           {selectedData?.length > 0 ? (
             <Table bordered hover responsive>
               <thead>
@@ -248,15 +274,24 @@ export default function LocationBenefit({ list, projectList }) {
                   <tr key={item.id ?? index}>
                     <td>{index + 1}</td>
                     <td>{item.benefitName}</td>
-                    <td>{item.distance.split(" ")[0]} {item.distance.split(" ")[1] ?? "Km"}</td>
+                    <td>{item.distance ? `${item.distance.split(" ")[0]} ${item.distance.split(" ")[1] ?? "Km"}` : "–"}</td>
                     <td>
                       <Button
                         variant="outline-primary"
                         size="sm"
+                        className="me-2"
                         onClick={() => handleEditFromViewAll(item)}
                       >
                         <FontAwesomeIcon icon={faPencil} className="me-1" />
                         Edit
+                      </Button>
+                      <Button
+                        variant="outline-danger"
+                        size="sm"
+                        onClick={() => handleDeleteBenefit(item)}
+                      >
+                        <FontAwesomeIcon icon={faTrash} className="me-1" />
+                        Delete
                       </Button>
                     </td>
                   </tr>
@@ -275,17 +310,6 @@ export default function LocationBenefit({ list, projectList }) {
         </Modal.Header>
         <Modal.Body>
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
-            {id === 0 && (
-              <>
-                {previewImage && (
-                  <Image src={previewImage} alt="image" width={50} />
-                )}
-                <Form.Group controlId="selectIcon" className="mb-3">
-                  <Form.Label>Select icon</Form.Label>
-                  <Form.Control type="file" onChange={handleFileChange} />
-                </Form.Group>
-              </>
-            )}
             <Form.Group controlId="selectPorject">
               <Form.Label>Select Project</Form.Label>
               <Form.Select
@@ -350,6 +374,7 @@ export default function LocationBenefit({ list, projectList }) {
         confirmBox={confirmBox}
         setConfirmBox={setConfirmBox}
         api={`${process.env.NEXT_PUBLIC_API_URL}location-benefit/delete/${id}`}
+        fetchAllHeadersList={closeViewAllModal}
       />
     </>
   );
